@@ -1,0 +1,19 @@
+﻿Android Studio 参考サイト
+
+○Android Studioのプロジェクトの意味
+http://qiita.com/Futo23/items/e1b6f39f050792ef574d#_reference-e4019a0b9d1d504cfff8
+・Manifests→アプリのエントリポイントが記載　activity android:name=MainActivity
+その他、アプリの名前などの基本情報を記入する場所
+・MainActivity.java→OnCreateからプログラムは始まる。
+setContentViewでxmlファイルに記載されたレイアウトを表示する
+・ActivityMain.xml→setContentViewで表示するもの
+
+○surface view
+
+http://njf.jp/?p=3422
+http://dixq.net/Android/
+http://yamato-iphone.blogspot.jp/2013/01/surfaceview.html
+http://puyooboe.blogspot.jp/2015/03/androidsurfaceview.html
+http://ichitcltk.hustle.ne.jp/gudon2/index.php?pageType=file&id=Android035_Graphics2_SurfaceView
+http://www.magicvox.net/archive/2015/02101014/#f071cdf6
+http://boco.hp3200.com/game-devs/surfaceview/index.html
