@@ -1,4 +1,4 @@
-﻿Android Studio 参考サイト
+Android Studio 参考サイト
 
 ○Android Studioのプロジェクトの意味
 http://qiita.com/Futo23/items/e1b6f39f050792ef574d#_reference-e4019a0b9d1d504cfff8
@@ -17,3 +17,9 @@ http://puyooboe.blogspot.jp/2015/03/androidsurfaceview.html
 http://ichitcltk.hustle.ne.jp/gudon2/index.php?pageType=file&id=Android035_Graphics2_SurfaceView
 http://www.magicvox.net/archive/2015/02101014/#f071cdf6
 http://boco.hp3200.com/game-devs/surfaceview/index.html
+
+surfaceview
+http://qiita.com/croquette0212/items/24dc2b6de3730e831aab
+
+surfaceviewのリファレンス
+https://developer.android.com/reference/android/view/SurfaceView.html
