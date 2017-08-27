@@ -6,6 +6,6 @@ jstring
 Java_com_example_ryomasenda_senda_1testapp2_MainActivity_stringFromJNI(
         JNIEnv *env,
         jobject /* this */) {
-    std::string hello = "Hello from SENDA";
+    std::string hello = "Hello from INA";
     return env->NewStringUTF(hello.c_str());
 }
