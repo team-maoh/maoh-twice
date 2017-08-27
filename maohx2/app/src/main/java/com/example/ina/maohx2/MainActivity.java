@@ -30,6 +30,10 @@ public class MainActivity extends Activity {
 
 class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 
+    //commit確認欄(後で消します)
+    //senda-commit0827
+
+
     //画像読み込み
     Resources res = this.getContext().getResources();
     Bitmap neco = BitmapFactory.decodeResource(res, R.drawable.neco);
