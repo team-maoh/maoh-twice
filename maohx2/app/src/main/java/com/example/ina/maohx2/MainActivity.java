@@ -25,6 +25,8 @@ public class MainActivity extends Activity {
     }
 }
 
+//test tkn
+
 
 class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 
