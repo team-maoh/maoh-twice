@@ -42,13 +42,14 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
 
 
     //画像読み込み
-    //Resources res = this.getContext().getResources();
-    //Bitmap neco = BitmapFactory.decodeResource(res, R.drawable.neco);
+    Resources res = this.getContext().getResources();
+    Bitmap neco = BitmapFactory.decodeResource(res, R.drawable.neco);
     Paint paint = new Paint();
     private SurfaceHolder holder;
     private Thread thread;
-    List<Float> pointArray = new ArrayList<Float>();
 
+    double x = 0;
+    double y = 0;
 
     public CustomSurfaceView(Context context) {
         super(context);
@@ -69,12 +70,6 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
     public void surfaceCreated(SurfaceHolder holder) {
         thread = new Thread(this);
         thread.start();
-        // SurfaceViewが作成された時の処理（初期画面の描画等）を記述
-        //Canvas canvas = holder.lockCanvas();
-
-        // この間にグラフィック描画のコードを記述する。
-        //canvas.drawBitmap(neco, 300, 100, paint);
-        //holder.unlockCanvasAndPost(canvas);
     }
 
     @Override
@@ -94,17 +89,8 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
             synchronized(holder){
                 //キャンバスに図形を描画
                 canvas.drawColor(Color.WHITE);
-                int pointCount = pointArray.size();
-                for(int i = 0; i + 3 < pointCount; i += 2){
-                    try{
-                        canvas.drawLine(pointArray.get(i), pointArray.get(i + 1), pointArray.get(i + 2), pointArray.get(i + 3), new Paint());
-
-                    }catch(Exception err){
-
-                    }
-                }
+                canvas.drawBitmap(neco, (int)x, (int)y, paint);
             }
-
         }finally{
             if(canvas != null){
                 holder.unlockCanvasAndPost(canvas);
@@ -129,15 +115,13 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
         switch(event.getAction()){
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
-                pointArray.add(event.getX());
-                pointArray.add(event.getY());
+                x = event.getX();
+                y = event.getY();
                 drawOnThread();
                 //描画
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                pointArray.clear();
-                //1筆書きをクリア
                 break;
         }
 
