@@ -15,6 +15,9 @@ import android.graphics.BitmapFactory;
 import java.util.*;
 import android.view.MotionEvent;
 
+import android.widget.TextView;
+import android.view.ViewGroup.LayoutParams;
+
 public class MainActivity extends Activity {
 
     @Override
@@ -22,6 +25,12 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(new CustomSurfaceView(this));
+
+        //TextView tv = new TextView(this);
+        //ReturnPosition return_position = new ReturnPosition();
+        //tv.setText(return_position.GetX() + "," + return_position.GetY());
+        //setContentView(tv, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+
     }
 }
 
@@ -29,8 +38,8 @@ public class MainActivity extends Activity {
 class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 
     //画像読み込み
-    Resources res = this.getContext().getResources();
-    Bitmap neco = BitmapFactory.decodeResource(res, R.drawable.neco);
+    //Resources res = this.getContext().getResources();
+    //Bitmap neco = BitmapFactory.decodeResource(res, R.drawable.neco);
     Paint paint = new Paint();
     private SurfaceHolder holder;
     private Thread thread;
@@ -40,9 +49,11 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
     public CustomSurfaceView(Context context) {
         super(context);
 
-
+        setZOrderOnTop(true);
+        /// このビューの描画内容がウインドウの最前面に来るようにする。
         holder = getHolder();
-        getHolder().addCallback(this);
+        holder.addCallback(this);
+        paint.setColor(Color.BLUE);
     }
 
     @Override
@@ -52,20 +63,14 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-
+        thread = new Thread(this);
+        thread.start();
         // SurfaceViewが作成された時の処理（初期画面の描画等）を記述
-        Canvas canvas = holder.lockCanvas();
+        //Canvas canvas = holder.lockCanvas();
 
         // この間にグラフィック描画のコードを記述する。
-        canvas.drawBitmap(neco, 0, 0, paint);
-        //paint.setColor(Color.GREEN);
-        //canvas.drawRect(0, 0, 50, 50, paint);
-
-
-
-        // この間にグラフィック描画のコードを記述する。
-
-        holder.unlockCanvasAndPost(canvas);
+        //canvas.drawBitmap(neco, 300, 100, paint);
+        //holder.unlockCanvasAndPost(canvas);
     }
 
     @Override
@@ -75,9 +80,10 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
 
     /**描画スレッドを実行する。*/
     @Override
-    public void run()
-    {
+    public void run(){
+
         Canvas canvas = null;
+
         try{
             canvas = holder.lockCanvas(null);
             //キャンバスをロック
@@ -87,13 +93,14 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
                 int pointCount = pointArray.size();
                 for(int i = 0; i + 3 < pointCount; i += 2){
                     try{
-                        canvas.drawLine(pointArray.get(i), pointArray.get(i + 1),
-                                pointArray.get(i + 2), pointArray.get(i + 3), new Paint());
+                        canvas.drawLine(pointArray.get(i), pointArray.get(i + 1), pointArray.get(i + 2), pointArray.get(i + 3), new Paint());
+
                     }catch(Exception err){
 
                     }
                 }
             }
+
         }finally{
             if(canvas != null){
                 holder.unlockCanvasAndPost(canvas);
@@ -114,8 +121,7 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
 
     //なぞられた点を記録するリスト
     @Override
-    public boolean onTouchEvent(MotionEvent event)
-    {
+    public boolean onTouchEvent(MotionEvent event) {
         switch(event.getAction()){
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
