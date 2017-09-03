@@ -20,8 +20,6 @@ import android.view.ViewGroup.LayoutParams;
 
 public class MainActivity extends Activity {
 
-    //warashi
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,15 +99,12 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
         }
     }
 
-
-
     /**スレッドを初期化して実行する。*/
     private void drawOnThread()
     {
         thread = new Thread(this);
         thread.start();
     }
-
 
     //なぞられた点を記録するリスト
     @Override
