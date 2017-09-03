@@ -1,0 +1,27 @@
+﻿import android.util.Log;
+
+Log.★(TAG,message);
+
+★に入る文字(メソッド名)
+V : 全てのログ情報　verbose
+D : デバッグ情報 debag
+I : 情報 indo 
+W : 警告 warn
+E : 致命的な問題 error
+
+String TAG : 後でログを識別するためのキー。自分が識別できるならなんでも良い。
+クラスの名前、例えば”MainActivity”などを入れておくのが普通
+Private final static String TAG = と、メンバ変数で持っておくと良いかもしれない
+
+String message : 表示したい文字列
+
+○表示方法
+Android Studioの下部分の、Android Monitorタブの、logcatタブを選択。
+・デバッグしているデバイスを選択
+・該当のパッケージを選択(com.example.user.maohx2など)
+・★に入れた文字に対応した内容を選択(infoなど)
+・Show only selected applicationを選択
+・Massage内容以外にも様々な文字がコンソールに出現するので、
+検索欄に表示するメッセージの一部を入れると良い。
+
+Takano 2017/09/03
