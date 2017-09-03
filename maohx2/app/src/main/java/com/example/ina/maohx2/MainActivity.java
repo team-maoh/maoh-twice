@@ -25,7 +25,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         Graphic graphic = new Graphic(this);
         setContentView(graphic);
-        graphic.SetImage("neco",0,0);
         //TextView tv = new TextView(this);
         //ReturnPosition return_position = new ReturnPosition();
         //tv.setText(return_position.GetX() + "," + return_position.GetY());
