@@ -20,6 +20,8 @@ import android.view.ViewGroup.LayoutParams;
 
 public class MainActivity extends Activity {
 
+    //warashi
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
