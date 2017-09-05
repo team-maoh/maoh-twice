@@ -1,5 +1,6 @@
 package com.example.ina.maohx2;
 
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -13,18 +14,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 //import java.util.ArrayList;
 import java.util.*;
-import android.view.MotionEvent;
 
-import android.widget.TextView;
-import android.view.ViewGroup.LayoutParams;
+import android.view.MotionEvent;
 
 public class MainActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Graphic graphic = new Graphic(this);
-        setContentView(graphic);
+
+        setContentView(new CustomSurfaceView(this));
+
         //TextView tv = new TextView(this);
         //ReturnPosition return_position = new ReturnPosition();
         //tv.setText(return_position.GetX() + "," + return_position.GetY());
@@ -33,13 +33,7 @@ public class MainActivity extends Activity {
     }
 }
 
-
-
 class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
-
-    //commit確認欄(後で消します)
-    //senda-commit0827
-
 
     //画像読み込み
     Resources res = this.getContext().getResources();
@@ -48,21 +42,29 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
     private SurfaceHolder holder;
     private Thread thread;
 
-    double x = 0;
-    double y = 0;
+    int touch = -1;
+
+    double x = 0, y = 0;
+
+    GameSystem game_system;
+
+
 
     public CustomSurfaceView(Context context) {
         super(context);
-
         setZOrderOnTop(true);
         /// このビューの描画内容がウインドウの最前面に来るようにする。
         holder = getHolder();
         holder.addCallback(this);
         paint.setColor(Color.BLUE);
+
+        game_system = new GameSystem();
+        game_system.Init(holder, neco);
+
     }
 
     @Override
-    public void surfaceChanged (SurfaceHolder holder, int format, int width, int height) {
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         // SurfaceViewが変化（画面の大きさ，ピクセルフォーマット）した時のイベントの処理を記述
     }
 
@@ -77,55 +79,68 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
         // SurfaceViewが廃棄されたる時の処理を記述
     }
 
-    /**描画スレッドを実行する。*/
+    /*
+     * 描画スレッドを実行する。
+     */
     @Override
-    public void run(){
-        /*
-        Canvas canvas = null;
+    public void run() {
+        while (thread!=null) {
 
-        try{
-            canvas = holder.lockCanvas(null);
-            //キャンバスをロック
-            synchronized(holder){
-                //キャンバスに図形を描画
-                canvas.drawColor(Color.WHITE);
-                canvas.drawBitmap(neco, (int)x, (int)y, paint);
-            }
-        }finally{
-            if(canvas != null){
-                holder.unlockCanvasAndPost(canvas);
-                //ロックを解除して描画
-            }
+
+
+            game_system.Update(x, y, touch);
+            game_system.Draw(x, y, touch);
         }
-        */
     }
 
-    /**スレッドを初期化して実行する。*/
-    private void drawOnThread()
-    {
+    /*
+     * スレッドを初期化して実行する。
+     */
+/*
+    private void drawOnThread() {
         thread = new Thread(this);
         thread.start();
     }
+*/
 
-    //なぞられた点を記録するリスト
+
+    //目標地点を記録するリスト
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch(event.getAction()){
+        switch (event.getAction()) {
+            //タッチした座標を目標座標として格納
             case MotionEvent.ACTION_DOWN:
+                x = event.getX();
+                y = event.getY();
+                //drawOnThread();
+
+                /*
+                if(moving == true){
+                    reset = true;
+                    i = 0;
+                }
+                */
+                touch = 0;
+                break;
             case MotionEvent.ACTION_MOVE:
                 x = event.getX();
                 y = event.getY();
-                drawOnThread();
                 //描画
+                touch = 1;
                 break;
             case MotionEvent.ACTION_UP:
+                x = event.getX();
+                y = event.getY();
+                touch = 2;
+                break;
             case MotionEvent.ACTION_CANCEL:
+                x = event.getX();
+                y = event.getY();
+                touch = 3;
                 break;
         }
 
         //return super.onTouchEvent(event);
         return true;
     }
-
-
 }
