@@ -16,9 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Graphic">
+        <activity android:name=".DungeonActivity">
             <intent-filter>
-                <action android:name="android.intent.action.GRAPHIC" />
+                <action android:name="android.intent.action.DUNGEON" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

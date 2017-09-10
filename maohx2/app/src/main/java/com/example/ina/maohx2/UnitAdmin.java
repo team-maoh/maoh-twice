@@ -8,8 +8,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
-import static java.lang.Math.abs;
-
 /*
  * Created by ina on 2017/09/05.
  */
@@ -17,8 +15,8 @@ import static java.lang.Math.abs;
 public class UnitAdmin {
 
     double x, y;
-    int STEP, ENCOUNT_STEPS;
-    int dx, dy, dst_steps, now_steps, total_steps;
+    int dx, dy, N;
+    int move_frame;
 
 
     Paint paint = new Paint();
@@ -30,49 +28,74 @@ public class UnitAdmin {
         holder = m_holder;
         neco = m_neco;
 
-        x = 0;//現在座標
+        x = 0;
         y = 0;
-        dx = 0;//移動距離(differential x)
+        dx = 0;
         dy = 0;
-        STEP = 20;//歩幅( (dx)^2 + (dy)^2 = (STEP)^2 )
-        dst_steps = 1;//今の目標地点までの歩数
-        now_steps = 0;//前の目標地点にたどり着いてから今までに歩いた歩数
-        total_steps = 0;//アプリ起動から現在までの総歩数
-        ENCOUNT_STEPS = 100;//この歩数ごとにエンカウントする
+        N = 100;
+        move_frame = 0;
         moving = false;
     }
 
+
     public void Update(double touch_x, double touch_y, int touch_state) {
 
-        if (touch_state == 0 || touch_state == 1) {
 
-            dst_steps = (int)(Math.pow( Math.pow(touch_x - x, 2.0) + Math.pow(touch_y - y, 2.0) , 0.5) / (double)STEP);
-            dst_steps++;//dst_steps = 0 のときゼロ除算が発生するので
-            dx = (int) ((touch_x - x) / dst_steps);
-            dy = (int) ((touch_y - y) / dst_steps);
+        if (touch_state == 0) {
+            dx = (int) ((touch_x - x) / N);
+            dy = (int) ((touch_y - y) / N);
             moving = true;
-            now_steps = 0;
+            move_frame = 0;
         }
-/*
+
         if(touch_state == 1){
+
             System.out.println("move_frame:" + move_frame);
+
         }
-*/
+
+
+            /*
+            try {
+
+                dx = (int) ((next_x - x) / N);
+                dy = (int) ((next_y - y) / N);
+
+                for (int i = 0; i < N; i++) {
+                    if (reset == true) {
+                        //System.out.println(x);
+                        break;
+                    }
+
+                  //System.out.println(x);
+                  //System.out.println(y);
+                    //キャンバスに図形を描画
+                    x += dx;
+                    y += dy;
+                }
+            } finally {
+                //moving = false;
+                //reset = false;
+            }
+
+        }
+        */
+
+
+
+
         if (moving == true) {
             x += dx;
             y += dy;
-            now_steps++;
-            total_steps++;
+            move_frame++;
 
-            if(now_steps == dst_steps) {
-                now_steps = 0;
+            if(move_frame == N) {
+                move_frame = 0;
                 moving = false;
-                System.out.println("N="+dst_steps);//N=1のとき、到着すると画像が消える
-            }
-            if(total_steps % ENCOUNT_STEPS == 0){
-                System.out.println("敵と遭遇");
             }
         }
+
+
     }
 
     public void Draw(double touch_x, double touch_y, int touch_state) {
