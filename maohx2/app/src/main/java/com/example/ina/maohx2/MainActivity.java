@@ -12,25 +12,20 @@ import android.view.SurfaceView;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.content.Intent;
 //import java.util.ArrayList;
 import java.util.*;
 
 import android.view.MotionEvent;
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(new CustomSurfaceView(this));
-
-        //TextView tv = new TextView(this);
-        //ReturnPosition return_position = new ReturnPosition();
-        //tv.setText(return_position.GetX() + "," + return_position.GetY());
-        //setContentView(tv, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-
+        setImage();
     }
+
 }
 
 class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {

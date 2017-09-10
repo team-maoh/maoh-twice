@@ -1,42 +1,43 @@
 package com.example.ina.maohx2;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-//import java.util.ArrayList;
-import java.util.*;
 import android.view.MotionEvent;
+import android.view.View;
 
 /**
  * Created by ryomasenda on 2017/09/03.
  */
 
-public class Graphic extends SurfaceView implements SurfaceHolder.Callback, Runnable{
+public class Graphic{
 
-    //commit確認欄(後で消します)
-    //senda-commit0827
+    SurfaceView setImage(Context context){
+        return new BaseSurfaceView(context);
+    }
 
+}
+
+class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable{
 
     //画像読み込み
     Resources res = this.getContext().getResources();
     Paint paint = new Paint();
     private SurfaceHolder holder;
     private Thread thread;
-    private Canvas canvas;
+    //private Canvas canvas;
     Bitmap imageMap;
 
     float x = 0;
     float y = 0;
 
-    public Graphic(Context context) {
+    public BaseSurfaceView(Context context) {
         super(context);
 
         setZOrderOnTop(true);
@@ -54,6 +55,7 @@ public class Graphic extends SurfaceView implements SurfaceHolder.Callback, Runn
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         thread = new Thread(this);
+        SetImage("neco",0,0);
         thread.start();
     }
 
@@ -65,6 +67,8 @@ public class Graphic extends SurfaceView implements SurfaceHolder.Callback, Runn
     /**描画スレッドを実行する。*/
     @Override
     public void run(){
+        Canvas canvas = null;
+
         try{
             canvas = holder.lockCanvas(null);
             //キャンバスをロック
@@ -108,12 +112,13 @@ public class Graphic extends SurfaceView implements SurfaceHolder.Callback, Runn
         return true;
     }
 
-    public void SetImage(String name, float _x, float _y){
+    public SurfaceView SetImage(String name, float _x, float _y){
         x = _x;
         y = _y;
         int resId = getResources().getIdentifier(name,"drawable",this.getContext().getPackageName());
         imageMap = BitmapFactory.decodeResource(res, resId);
         drawOnThread();
+        return this;
     }
 
 }
