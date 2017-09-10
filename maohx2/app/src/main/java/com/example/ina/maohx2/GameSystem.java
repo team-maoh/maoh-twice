@@ -16,7 +16,6 @@ public class GameSystem {
         unit_admin = new UnitAdmin();
         unit_admin.Init(m_holder, m_neco);
 
-
     }
 
     public void Update(double touch_x, double touch_y, int touch_state) {

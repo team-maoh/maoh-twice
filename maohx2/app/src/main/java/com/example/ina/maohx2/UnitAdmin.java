@@ -57,7 +57,6 @@ public class UnitAdmin {
 
             /*
             try {
-
                 dx = (int) ((next_x - x) / N);
                 dy = (int) ((next_y - y) / N);
 
@@ -77,7 +76,6 @@ public class UnitAdmin {
                 //moving = false;
                 //reset = false;
             }
-
         }
         */
 

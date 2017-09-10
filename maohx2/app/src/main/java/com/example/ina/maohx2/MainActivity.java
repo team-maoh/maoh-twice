@@ -13,7 +13,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.content.Intent;
-//import java.util.ArrayList;
 import java.util.*;
 
 import android.view.MotionEvent;
@@ -23,9 +22,9 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setImage();
+        //setImage();
+        setContentView(new CustomSurfaceView(this));
     }
-
 }
 
 class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
@@ -38,7 +37,6 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
     private Thread thread;
 
     int touch = -1;
-
     double x = 0, y = 0;
 
     GameSystem game_system;
@@ -51,8 +49,8 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
         /// このビューの描画内容がウインドウの最前面に来るようにする。
         holder = getHolder();
         holder.addCallback(this);
-        paint.setColor(Color.BLUE);
 
+        paint.setColor(Color.BLUE);
         game_system = new GameSystem();
         game_system.Init(holder, neco);
 
@@ -80,9 +78,6 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
     @Override
     public void run() {
         while (thread!=null) {
-
-
-
             game_system.Update(x, y, touch);
             game_system.Draw(x, y, touch);
         }
@@ -115,6 +110,7 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
                     i = 0;
                 }
                 */
+
                 touch = 0;
                 break;
             case MotionEvent.ACTION_MOVE:
