@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.text.method.Touch;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.content.res.Resources;
@@ -18,13 +19,69 @@ import android.view.View;
 
 public class Graphic{
 
-    SurfaceView setImage(Context context){
-        return new BaseSurfaceView(context);
+    enum Mode {
+        EMPTY,
+        IMAGE_AT,
+        DRAW,
+    }
+
+    Context context;
+    static Mode mode = Mode.EMPTY;
+    static LAYER layer = LAYER.NOTHING;
+    static String name = "";
+    static float x = 0;
+    static float y = 0;
+
+    Graphic(Context _context){
+        context = _context;
+    }
+
+    SurfaceView setMoveImage(String _name) {
+        mode = Mode.DRAW;
+        name = _name;
+        return new CustomSurfaceView(context);
+    }
+
+    SurfaceView getImageAt(String _name,float _x,float _y){
+        mode = Mode.IMAGE_AT;
+        name = _name;
+        x = _x;
+        y = _y;
+        return new CustomSurfaceView(context);
+    }
+
+    SurfaceView getImageAt(String _name,float _x,float _y, LAYER _layer){
+        mode = Mode.IMAGE_AT;
+        name = _name;
+        x = _x;
+        y = _y;
+        layer = _layer;
+        return new CustomSurfaceView(context);
+    }
+
+    public Mode getMode(){
+        return mode;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public float getX(){
+        return x;
+    }
+
+    public float getY(){
+        return y;
+    }
+
+    public LAYER getLayer(){
+        return layer;
     }
 
 }
 
-class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable{
+class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable{
 
     //画像読み込み
     Resources res = this.getContext().getResources();
@@ -33,18 +90,21 @@ class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Run
     private Thread thread;
     //private Canvas canvas;
     Bitmap imageMap;
+    Graphic graphic;
 
     float x = 0;
     float y = 0;
 
-    public BaseSurfaceView(Context context) {
+    public CustomSurfaceView(Context context) {
         super(context);
 
-        setZOrderOnTop(true);
         /// このビューの描画内容がウインドウの最前面に来るようにする。
         holder = getHolder();
         holder.addCallback(this);
         paint.setColor(Color.BLUE);
+        graphic = new Graphic(context);
+
+        setZ((float)(graphic.getLayer().ordinal()));
     }
 
     @Override
@@ -54,9 +114,21 @@ class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Run
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        thread = new Thread(this);
-        SetImage("neco",0,0);
-        thread.start();
+        switch (graphic.getMode()){
+            case EMPTY:
+                break;
+            case IMAGE_AT:
+                thread = new Thread(this);
+                SetImage(graphic.getName(),graphic.getX(),graphic.getY());
+                thread.start();
+                break;
+            case DRAW:
+                thread = new Thread(this);
+                SetImage(graphic.getName(),0,0);
+                thread.start();
+                break;
+
+        }
     }
 
     @Override
@@ -100,14 +172,15 @@ class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Run
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
         case MotionEvent.ACTION_MOVE:
-            SetImage("neco",event.getX(),event.getY());
+            x = event.getX();
+            y = event.getY();
+            drawOnThread();
             //描画
             break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 break;
-    }
-
+        }
         //return super.onTouchEvent(event);
         return true;
     }
@@ -117,7 +190,7 @@ class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Run
         y = _y;
         int resId = getResources().getIdentifier(name,"drawable",this.getContext().getPackageName());
         imageMap = BitmapFactory.decodeResource(res, resId);
-        drawOnThread();
+        //drawOnThread();
         return this;
     }
 
