@@ -1,9 +1,8 @@
 package com.example.ina.maohx2;
 
-
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Canvas;
+//import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -23,9 +22,9 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setImage();
+        //setImage();
+        setContentView(new CustomSurfaceView(this));
     }
-
 }
 
 class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
@@ -43,11 +42,11 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
 
     GameSystem game_system;
 
-
-
     public CustomSurfaceView(Context context) {
+
         super(context);
         setZOrderOnTop(true);
+
         /// このビューの描画内容がウインドウの最前面に来るようにする。
         holder = getHolder();
         holder.addCallback(this);
@@ -55,7 +54,6 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
 
         game_system = new GameSystem();
         game_system.Init(holder, neco);
-
     }
 
     @Override
@@ -79,9 +77,7 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
      */
     @Override
     public void run() {
-        while (thread!=null) {
-
-
+        while (thread != null) {
 
             game_system.Update(x, y, touch);
             game_system.Draw(x, y, touch);
@@ -98,7 +94,6 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
     }
 */
 
-
     //目標地点を記録するリスト
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -108,7 +103,6 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
                 x = event.getX();
                 y = event.getY();
                 //drawOnThread();
-
                 /*
                 if(moving == true){
                     reset = true;

@@ -3,7 +3,7 @@ package com.example.ina.maohx2;
 import android.graphics.Bitmap;
 import android.view.SurfaceHolder;
 
-/**
+/*
  * Created by ina on 2017/09/05.
  */
 
@@ -15,7 +15,6 @@ public class GameSystem {
 
         unit_admin = new UnitAdmin();
         unit_admin.Init(m_holder, m_neco);
-
 
     }
 

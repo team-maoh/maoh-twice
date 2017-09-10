@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.content.Context;
 
-/**
+/*
  * Created by ryomasenda on 2017/09/08.
  */
 
