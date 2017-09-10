@@ -39,7 +39,7 @@ public class Graphic{
     SurfaceView setMoveImage(String _name) {
         mode = Mode.DRAW;
         name = _name;
-        return new CustomSurfaceView(context);
+        return new GraphicSurfaceView(context);
     }
 
     SurfaceView getImageAt(String _name,float _x,float _y){
@@ -47,7 +47,7 @@ public class Graphic{
         name = _name;
         x = _x;
         y = _y;
-        return new CustomSurfaceView(context);
+        return new GraphicSurfaceView(context);
     }
 
     SurfaceView getImageAt(String _name,float _x,float _y, LAYER _layer){
@@ -56,7 +56,7 @@ public class Graphic{
         x = _x;
         y = _y;
         layer = _layer;
-        return new CustomSurfaceView(context);
+        return new GraphicSurfaceView(context);
     }
 
     public Mode getMode(){
@@ -81,7 +81,7 @@ public class Graphic{
 
 }
 
-class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable{
+class GraphicSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable{
 
     //画像読み込み
     Resources res = this.getContext().getResources();
@@ -95,7 +95,7 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
     float x = 0;
     float y = 0;
 
-    public CustomSurfaceView(Context context) {
+    public GraphicSurfaceView(Context context) {
         super(context);
 
         /// このビューの描画内容がウインドウの最前面に来るようにする。
@@ -147,7 +147,7 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
 
             synchronized(holder){
                 //キャンバスに図形を描画
-                canvas.drawColor(Color.WHITE);
+                canvas.drawColor(Color.argb(100,100,0,0));
                 canvas.drawBitmap(imageMap, (int)x, (int)y, paint);
             }
         }finally{

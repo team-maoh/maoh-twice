@@ -23,7 +23,8 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setImage();
+        layout.addView(new CustomSurfaceView(this));
+        //setContentView(new CustomSurfaceView(this));
     }
 
 }
@@ -47,7 +48,8 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
 
     public CustomSurfaceView(Context context) {
         super(context);
-        setZOrderOnTop(true);
+        //setZOrderOnTop(true);
+        setZ(-1);
         /// このビューの描画内容がウインドウの最前面に来るようにする。
         holder = getHolder();
         holder.addCallback(this);
