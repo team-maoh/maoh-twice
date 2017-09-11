@@ -23,7 +23,9 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setImage();
+        setContentView(new CustomSurfaceView(this));
+
+        //setImage();
     }
 
 }
@@ -54,7 +56,7 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
         paint.setColor(Color.BLUE);
 
         game_system = new GameSystem();
-        game_system.Init(holder, neco);
+        game_system.init(holder, neco);
 
     }
 
@@ -83,8 +85,8 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
 
 
 
-            game_system.Update(x, y, touch);
-            game_system.Draw(x, y, touch);
+            game_system.update(x, y, touch);
+            game_system.draw(x, y, touch);
         }
     }
 

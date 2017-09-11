@@ -9,27 +9,28 @@ import android.view.SurfaceHolder;
 
 public class GameSystem {
 
-    UnitAdmin unit_admin;
+    MapObjectAdmin map_object_admin;
 
-    public void Init(SurfaceHolder m_holder, Bitmap m_neco) {
+    public void init(SurfaceHolder holder, Bitmap neco) {
 
-        unit_admin = new UnitAdmin();
-        unit_admin.Init(m_holder, m_neco);
+        map_object_admin = new MapObjectAdmin();
+        map_object_admin.init(holder, neco);
 
-
-    }
-
-    public void Update(double touch_x, double touch_y, int touch_state) {
-
-        unit_admin.Update(touch_x, touch_y, touch_state);
 
     }
 
-    public void Draw(double touch_x, double touch_y, int touch_state) {
+    public void update(double touch_x, double touch_y, int touch_state) {
 
-        unit_admin.Draw(touch_x, touch_y, touch_state);
+        map_object_admin.update(touch_x, touch_y, touch_state);
 
     }
 
-    public GameSystem(){}
+    public void draw(double touch_x, double touch_y, int touch_state) {
+
+        map_object_admin.draw(touch_x, touch_y, touch_state);
+
+    }
+
+    public GameSystem() {
+    }
 }
