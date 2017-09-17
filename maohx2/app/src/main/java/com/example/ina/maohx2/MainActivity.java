@@ -1,6 +1,5 @@
 package com.example.ina.maohx2;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -27,7 +26,6 @@ public class MainActivity extends BaseActivity {
 
         //setImage();
     }
-
 }
 
 class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
@@ -35,6 +33,8 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
     //画像読み込み
     Resources res = this.getContext().getResources();
     Bitmap neco = BitmapFactory.decodeResource(res, R.drawable.neco);
+    Bitmap apple = BitmapFactory.decodeResource(res, R.drawable.apple);
+    Bitmap slime = BitmapFactory.decodeResource(res, R.drawable.slime);
     Paint paint = new Paint();
     private SurfaceHolder holder;
     private Thread thread;
@@ -45,8 +45,6 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
 
     GameSystem game_system;
 
-
-
     public CustomSurfaceView(Context context) {
         super(context);
         setZOrderOnTop(true);
@@ -56,7 +54,7 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
         paint.setColor(Color.BLUE);
 
         game_system = new GameSystem();
-        game_system.init(holder, neco);
+        game_system.init(holder, neco, apple, slime);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
 
     }
 
@@ -83,8 +81,6 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
     public void run() {
         while (thread!=null) {
 
-
-
             game_system.update(x, y, touch);
             game_system.draw(x, y, touch);
         }
@@ -100,7 +96,6 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
     }
 */
 
-
     //目標地点を記録するリスト
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -111,12 +106,6 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
                 y = event.getY();
                 //drawOnThread();
 
-                /*
-                if(moving == true){
-                    reset = true;
-                    i = 0;
-                }
-                */
                 touch = 0;
                 break;
             case MotionEvent.ACTION_MOVE:
