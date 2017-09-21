@@ -11,11 +11,10 @@ public class GameSystem {
 
     MapObjectAdmin map_object_admin;
 
-    public void init(SurfaceHolder holder, Bitmap neco, Bitmap apple,  Bitmap banana,Bitmap slime) {
+    public void init(SurfaceHolder holder, Bitmap neco, Bitmap apple, Bitmap slime) {
 
         map_object_admin = new MapObjectAdmin();
-        map_object_admin.init(holder, neco, apple, banana, slime);//MapObjectAdmin.javaのinitを実行
-
+        map_object_admin.init(holder, neco, apple, slime);//MapObjectAdmin.javaのinitを実行
     }
 
     public void update(double touch_x, double touch_y, int touch_state) {
@@ -27,6 +26,7 @@ public class GameSystem {
     public void draw(double touch_x, double touch_y, int touch_state) {
 
         map_object_admin.draw(touch_x, touch_y, touch_state);
+
     }
 
     public GameSystem() {
