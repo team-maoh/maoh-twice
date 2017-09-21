@@ -34,6 +34,7 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
     Resources res = this.getContext().getResources();
     Bitmap neco = BitmapFactory.decodeResource(res, R.drawable.neco);
     Bitmap apple = BitmapFactory.decodeResource(res, R.drawable.apple);
+    Bitmap banana = BitmapFactory.decodeResource(res, R.drawable.banana);
     Bitmap slime = BitmapFactory.decodeResource(res, R.drawable.slime);
     Paint paint = new Paint();
     private SurfaceHolder holder;
@@ -54,7 +55,7 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
         paint.setColor(Color.BLUE);
 
         game_system = new GameSystem();
-        game_system.init(holder, neco, apple, slime);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
+        game_system.init(holder, neco, apple, banana, slime);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
 
     }
 

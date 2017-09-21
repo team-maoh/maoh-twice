@@ -12,6 +12,7 @@ public class MapPlayer extends MapUnit {
     int ENCOUNT_STEPS;
     int total_steps;
     int STEP;
+
     @Override
     public void init(SurfaceHolder holder, Bitmap draw_object, MapObjectAdmin map_object_admin) {
         super.init(holder, draw_object, map_object_admin);
@@ -45,7 +46,7 @@ public class MapPlayer extends MapUnit {
                 moving = false;
             }
             if(total_steps % ENCOUNT_STEPS == 0){
-                System.out.println("敵と遭遇");
+                System.out.println("一定歩数歩いたので敵と遭遇");
             }
         }
     }

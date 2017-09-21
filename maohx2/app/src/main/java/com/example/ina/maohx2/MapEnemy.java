@@ -27,10 +27,11 @@ public class MapEnemy extends MapUnit {
     @Override
     public void update(double touch_x, double touch_y, int touch_state) {
 
-        player = map_object_admin.getUnit(0);
+//        player = map_object_admin.getUnit(0);
+        player = map_object_admin.map_unit[0];
 
-        dst_x = player.getMapX();//getMapX(),getMapY()はMapObject内部に記述されている
-        dst_y = player.getMapY();
+        dst_x = player.x;//getMapX(),getMapY()はMapObject内部に記述されている
+        dst_y = player.y;
 
         dst_steps = (int) (Math.pow(Math.pow(dst_x - x, 2.0) + Math.pow(dst_y - y, 2.0), 0.5) / (double) STEP);
         dst_steps++;//dst_steps = 0 のときゼロ除算が発生するので
