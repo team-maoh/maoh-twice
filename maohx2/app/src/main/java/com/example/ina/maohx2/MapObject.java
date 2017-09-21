@@ -11,6 +11,7 @@ import android.view.SurfaceHolder;
 
 abstract public class MapObject {
 
+
     double x, y;
     SurfaceHolder holder;
     Bitmap draw_object;
