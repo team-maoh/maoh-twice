@@ -5,6 +5,8 @@ import android.view.SurfaceHolder;
 
 import java.util.Random;
 
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * Created by Fuusya on 2017/09/11.
  */
@@ -18,6 +20,15 @@ public class MapEnemy extends MapUnit {
     @Override
     public void init(SurfaceHolder holder, Bitmap draw_object, MapObjectAdmin map_object_admin) {
         super.init(holder, draw_object, map_object_admin);
+        STEP = 10;
+        Random random = new Random();
+        x = random.nextDouble() * 1000;
+        y = random.nextDouble() * 600;
+    }
+
+    @Override
+    public void init(GL10 gl, MySprite draw_object, MapObjectAdmin map_object_admin) {
+        super.init(gl,draw_object, map_object_admin);
         STEP = 10;
         Random random = new Random();
         x = random.nextDouble() * 1000;

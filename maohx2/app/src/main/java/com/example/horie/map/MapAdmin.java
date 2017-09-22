@@ -147,7 +147,7 @@ public class MapAdmin {
         }
         //左右のマスに移動
         else if(worldToMap(player_world_y) == worldToMap(next_player_world_y)){
-            if()
+            //if()
             direction = 2;
         }
         //上下のマスに移動

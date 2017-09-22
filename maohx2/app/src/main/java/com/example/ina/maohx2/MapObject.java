@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * Created by Fuusya on 2017/09/11.
  */
@@ -20,6 +22,9 @@ abstract public class MapObject {
     boolean exists;//自身がマップ上に存在しているかどうか
     int id;
 
+    MySprite sprite_object;
+    GL10 gl;
+
     public void init(SurfaceHolder _holder, Bitmap _draw_object) {
         holder = _holder;
         draw_object = _draw_object;
@@ -28,6 +33,20 @@ abstract public class MapObject {
         exists = true;
         id = -1;
     }
+
+    public void init(GL10 _gl, MySprite draw_object) {
+        //icon_width = draw_object.getWidth();
+        //icon_height = draw_object.getHeight();
+
+        gl = _gl;
+        sprite_object = draw_object;
+
+        exists = true;
+        id = -1;
+    }
+
+
+
 
     public void update(double touch_x, double touch_y, int touch_state) {
     }
@@ -39,6 +58,14 @@ abstract public class MapObject {
                 canvas.drawBitmap(draw_object, (int) x - icon_width / 2, (int) y - icon_height / 2, paint);
             }
         }
+    }
+
+    public void draw(GL10 _gl) {
+
+            if (exists == true) {
+                sprite_object.draw(_gl,(float) x,(float) y);
+            }
+
     }
 
     public double getMapX() {

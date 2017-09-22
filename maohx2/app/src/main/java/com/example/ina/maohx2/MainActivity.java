@@ -17,6 +17,7 @@ import java.util.*;
 
 import android.view.MotionEvent;
 
+/*
 public class MainActivity extends BaseActivity {
 
     @Override
@@ -27,8 +28,28 @@ public class MainActivity extends BaseActivity {
         //setImage();
     }
 }
+*/
+
+
+public class MainActivity extends Activity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // GLSurfaceViewを設定します
+        setContentView(new MyGLView(this));
+    }
+
+}
+
+
 
 class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
+
+
+
+
 
     //画像読み込み
     Resources res = this.getContext().getResources();
@@ -56,7 +77,6 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
 
         game_system = new GameSystem();
         game_system.init(holder, neco, apple, banana, slime);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
-
     }
 
     @Override

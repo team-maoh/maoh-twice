@@ -3,6 +3,8 @@ package com.example.ina.maohx2;
 import android.graphics.Bitmap;
 import android.view.SurfaceHolder;
 
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * Created by Fuusya on 2017/09/11.
  */
@@ -16,6 +18,17 @@ public class MapPlayer extends MapUnit {
     @Override
     public void init(SurfaceHolder holder, Bitmap draw_object, MapObjectAdmin map_object_admin) {
         super.init(holder, draw_object, map_object_admin);
+
+        total_steps = 0;//アプリ起動から現在までの総歩数
+        ENCOUNT_STEPS = 100;//この歩数ごとにエンカウントする
+        STEP = 20;//歩幅( (dx)^2 + (dy)^2 = (STEP)^2 )
+        x = 500;
+        y = 500;
+    }
+
+    @Override
+    public void init(GL10 gl, MySprite draw_object, MapObjectAdmin map_object_admin) {
+        super.init(gl, draw_object, map_object_admin);
 
         total_steps = 0;//アプリ起動から現在までの総歩数
         ENCOUNT_STEPS = 100;//この歩数ごとにエンカウントする

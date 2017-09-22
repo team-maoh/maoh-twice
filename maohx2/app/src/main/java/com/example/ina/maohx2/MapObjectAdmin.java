@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.view.SurfaceHolder;
 
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * Created by ina on 2017/09/05.
  */
@@ -21,6 +23,7 @@ public class MapObjectAdmin {
     double REACH_OF_PLAYER = 100.0;//プレイヤーのアイテム取得半径
     double item_distance, enemy_distance;
     BagItem bag_item;
+    ImageAdmin image_admin;
 
     public void init(SurfaceHolder _holder, Bitmap draw_player, Bitmap draw_apple, Bitmap draw_banana, Bitmap draw_enemy) {
         //↑draw_player = neco, draw_item = apple, draw_enemy = slime (GameSystem.java参照)
@@ -53,8 +56,39 @@ public class MapObjectAdmin {
 
         bag_item = new BagItem();
         bag_item.init();
-
     }
+
+    public void init(ImageAdmin _image_admin) {
+        image_admin = _image_admin;
+
+        map_unit[0] = new MapPlayer();
+        map_unit[0].init(image_admin.getGL10(), image_admin.getImage(0), this);
+        player_x = map_unit[0].getMapX();
+        player_y = map_unit[0].getMapY();
+
+        for (int i = 0; i < NUM_OF_ENEMY; i++) {
+            map_enemy[i] = new MapEnemy();
+            map_enemy[i].init(image_admin.getGL10(), image_admin.getImage(1), this);
+        }
+
+        for (int i = 0; i < 2; i++) {
+            map_item[i] = new MapItem();
+            map_item[i].init(image_admin.getGL10(), image_admin.getImage(2), this);
+            map_item[i].setId(1);
+        }
+        for (int i = 2; i < NUM_OF_ITEM; i++) {
+            map_item[i] = new MapItem();
+            map_item[i].init(image_admin.getGL10(), image_admin.getImage(3), this);
+            map_item[i].setId(2);
+        }
+
+        item_distance = 0.0;
+        enemy_distance = 0.0;
+
+        bag_item = new BagItem();
+        bag_item.init();
+    }
+
 
     public void update(double touch_x, double touch_y, int touch_state) {
 
@@ -109,6 +143,23 @@ public class MapObjectAdmin {
             }
         }
         holder.unlockCanvasAndPost(canvas);
+    }
+
+    public void draw(GL10 gl) {
+
+        map_unit[0].draw(gl);
+
+        for (int i = 0; i < NUM_OF_ITEM; i++) {
+            if (map_item[i].exists() == true) {
+                map_item[i].draw(gl);
+            }
+        }
+
+        for (int i = 0; i < NUM_OF_ENEMY; i++) {
+            if (map_enemy[i].exists() == true) {
+                map_enemy[i].draw(gl);
+            }
+        }
     }
 
     public MapUnit getUnit(int unit_num) {
