@@ -1,7 +1,10 @@
 package com.example.ina.maohx2;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.view.SurfaceHolder;
+
+import com.example.horie.map.MapAdmin;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -12,11 +15,14 @@ import javax.microedition.khronos.opengles.GL10;
 public class GameSystem {
 
     MapObjectAdmin map_object_admin;
+    MapAdmin map_admin;
+    SurfaceHolder holder;
 
-    public void init(SurfaceHolder holder, Bitmap neco, Bitmap apple,  Bitmap banana,Bitmap slime) {
-
+    public void init(SurfaceHolder m_holder, Bitmap neco, Bitmap apple,  Bitmap banana,Bitmap slime) {
+        map_admin = new MapAdmin(m_holder);
         map_object_admin = new MapObjectAdmin();
-        map_object_admin.init(holder, neco, apple, banana, slime);//MapObjectAdmin.javaのinitを実行
+        map_object_admin.init(m_holder, neco, apple, banana, slime);//MapObjectAdmin.javaのinitを実行
+        holder = m_holder;
     }
 
     public void init(ImageAdmin image_admin) {
@@ -33,8 +39,11 @@ public class GameSystem {
     }
 
     public void draw(double touch_x, double touch_y, int touch_state) {
-
-        map_object_admin.draw(touch_x, touch_y, touch_state);
+        Canvas canvas = null;
+        canvas = holder.lockCanvas(null);
+        map_admin.drawMap(canvas);
+        map_object_admin.draw(touch_x, touch_y, touch_state, canvas);
+        holder.unlockCanvasAndPost(canvas);
     }
 
     public void draw(GL10 gl) {

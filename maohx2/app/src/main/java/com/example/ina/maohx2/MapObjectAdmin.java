@@ -123,11 +123,8 @@ public class MapObjectAdmin {
         }
     }
 
-    public void draw(double touch_x, double touch_y, int touch_state) {
-
-        Canvas canvas = null;
-        canvas = holder.lockCanvas(null);
-        canvas.drawColor(Color.BLACK);
+    public void draw(double touch_x, double touch_y, int touch_state, Canvas canvas) {
+        //canvas.drawColor(Color.BLACK);
 
         map_unit[0].draw(touch_x, touch_y, touch_state, canvas);
 
@@ -142,7 +139,6 @@ public class MapObjectAdmin {
                 map_enemy[i].draw(touch_x, touch_y, touch_state, canvas);
             }
         }
-        holder.unlockCanvasAndPost(canvas);
     }
 
     public void draw(GL10 gl) {

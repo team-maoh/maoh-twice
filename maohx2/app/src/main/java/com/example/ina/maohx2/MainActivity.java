@@ -17,7 +17,7 @@ import java.util.*;
 
 import android.view.MotionEvent;
 
-/*
+
 public class MainActivity extends BaseActivity {
 
     @Override
@@ -28,9 +28,9 @@ public class MainActivity extends BaseActivity {
         //setImage();
     }
 }
-*/
 
 
+/*
 public class MainActivity extends Activity {
 
     @Override
@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
     }
 
 }
-
+*/
 
 
 class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {

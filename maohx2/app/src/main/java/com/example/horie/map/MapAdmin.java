@@ -166,7 +166,7 @@ public class MapAdmin {
             if(map_data[next_player_map_x][next_player_map_y].isWall()) {
                 direction = 1;
             }
-            //移動先のマス壁でない
+            //移動先のマスが壁でない
             else{
                 direction = 0;
             }
