@@ -140,26 +140,132 @@ public class MapAdmin {
     }
 
     public int detectWallDirection(int player_world_x, int player_world_y, int next_player_world_x, int next_player_world_y){
-        int direction = 0;//0 = 壁なし, 1 = 水平, 2 = 垂直
+        int direction = 0;//0 : 壁なし, 1 : 水平, 2 : 垂直
+        int player_map_x = worldToMap(player_world_x);//移動前のマップ座標x
+        int player_map_y = worldToMap(player_world_y);//移動前のマップ座標y
+        int next_player_map_x = worldToMap(next_player_world_x);//移動後のマップ座標x
+        int next_player_map_y = worldToMap(next_player_world_y);//移動後のマップ座標y
         //プレイヤー座標と移動座標が同じマス
-        if(worldToMap(player_world_x) == worldToMap(next_player_world_x) && worldToMap(player_world_y) == worldToMap(next_player_world_y)){
+        if(player_map_x == next_player_map_x && player_map_y == next_player_map_y){
             direction = 0;
         }
         //左右のマスに移動
-        else if(worldToMap(player_world_y) == worldToMap(next_player_world_y)){
-            //if()
-            direction = 2;
+        else if(player_map_y == next_player_map_y){
+            //次の移動先のマスが壁である
+            if(map_data[next_player_map_x][next_player_map_y].isWall()) {
+                direction = 2;
+            }
+            //移動先のマスが壁でない
+            else{
+                direction = 0;
+            }
         }
         //上下のマスに移動
-        else if(worldToMap(player_world_x) == worldToMap(next_player_world_x)){
-            direction = 1;
+        else if(player_map_x == next_player_map_x){
+            //移動先のマスが壁である
+            if(map_data[next_player_map_x][next_player_map_y].isWall()) {
+                direction = 1;
+            }
+            //移動先のマス壁でない
+            else{
+                direction = 0;
+            }
         }
         //斜めのマスに移動
         else{
-            double a, b;//y = ax + b
+            double a, b, x_up, y_up, x_down, y_down, x_left, y_left, x_right, y_right, dst2_left, dst2_right, dst2_up, dst2_down;
+            //1次関数y = ax + bを求める
             a = (next_player_world_y - player_world_y)/(next_player_world_x - player_world_x);
             b = player_world_y - a * player_world_x;
-
+            x_left = magnification * (player_map_x - 1);
+            y_left = a * x_left + b;  //x = 100 * (player_map_x - 1)の時のy座標(左の垂直壁のy座標)
+            x_right = magnification * (player_map_x);
+            y_right = a * x_right + b;     //x = 100 * (player_map_x)の時のy座標(右の垂直壁のy座標)
+            y_up = magnification * (player_map_y - 1);
+            x_up = (y_up - b) / a;  //y = 100 * (player_map_y - 1)の時のx座標(上の水平壁のx座標)
+            y_down = magnification * (player_map_y);
+            x_down = (y_down - b) / a;    //y = 100 * (player_map_y)の時のx座標(下の水平壁のx座標)
+            //それぞれの壁の交点までの距離の2乗
+            dst2_left = Math.pow(x_left - player_world_x, 2) + Math.pow(y_left - player_world_y, 2);
+            dst2_right = Math.pow(x_right - player_world_x, 2) + Math.pow(y_right - player_world_y, 2);
+            dst2_up = Math.pow(x_up - player_world_x, 2) + Math.pow(y_up - player_world_y, 2);
+            dst2_down = Math.pow(x_down - player_world_x, 2) + Math.pow(y_down - player_world_y, 2);
+            //移動先が左上
+            if(next_player_map_x == player_map_x - 1 && next_player_map_y == player_map_y - 1){
+                if(dst2_left >= dst2_up){
+                    if(map_data[player_map_x][player_map_y - 1].isWall()){
+                        direction = 1;
+                    }
+                    else if(map_data[player_map_x - 1][player_map_y - 1].isWall()){
+                        direction = 2;
+                    }
+                }
+                else if(dst2_left < dst2_up){
+                    if(map_data[player_map_x - 1][player_map_y].isWall()){
+                        direction = 2;
+                    }
+                    else if(map_data[player_map_x - 1][player_map_y - 1].isWall()){
+                        direction = 1;
+                    }
+                }
+            }
+            //移動先が右上
+            if(next_player_map_x == player_map_x + 1 && next_player_map_y == player_map_y - 1){
+                if(dst2_right >= dst2_up){
+                    if(map_data[player_map_x][player_map_y - 1].isWall()){
+                        direction = 1;
+                    }
+                    else if(map_data[player_map_x + 1][player_map_y - 1].isWall()){
+                        direction = 2;
+                    }
+                }
+                else if(dst2_right < dst2_up){
+                    if(map_data[player_map_x + 1][player_map_y].isWall()){
+                        direction = 2;
+                    }
+                    else if(map_data[player_map_x + 1][player_map_y - 1].isWall()){
+                        direction = 1;
+                    }
+                }
+            }
+            //移動先が左下
+            if(next_player_map_x == player_map_x - 1 && next_player_map_y == player_map_y + 1){
+                if(dst2_left >= dst2_down){
+                    if(map_data[player_map_x][player_map_y + 1].isWall()){
+                        direction = 1;
+                    }
+                    else if(map_data[player_map_x - 1][player_map_y + 1].isWall()){
+                        direction = 2;
+                    }
+                }
+                else if(dst2_left < dst2_down){
+                    if(map_data[player_map_x - 1][player_map_y].isWall()){
+                        direction = 2;
+                    }
+                    else if(map_data[player_map_x - 1][player_map_y + 1].isWall()){
+                        direction = 1;
+                    }
+                }
+            }
+            //移動先が右下
+            if(next_player_map_x == player_map_x + 1 && next_player_map_y == player_map_y + 1){
+                if(dst2_right >= dst2_down){
+                    if(map_data[player_map_x][player_map_y + 1].isWall()){
+                        direction = 1;
+                    }
+                    else if(map_data[player_map_x + 1][player_map_y + 1].isWall()){
+                        direction = 2;
+                    }
+                }
+                else if(dst2_right < dst2_down){
+                    if(map_data[player_map_x + 1][player_map_y].isWall()){
+                        direction = 2;
+                    }
+                    else if(map_data[player_map_x + 1][player_map_y + 1].isWall()){
+                        direction = 1;
+                    }
+                }
+            }
         }
         return direction;
     }
