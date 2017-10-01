@@ -61,8 +61,10 @@ public class MapAdmin {
     int map_size_y = map_data_int.length;
     int magnification = 128;
     Paint paint = new Paint();
-    Point point = new Point(0, 0);
+    Point display_size = new Point(0, 0);
+    Point map_offset = new Point(0, 0);
     SurfaceHolder holder;
+    Camera camera = new Camera();
 
 
     public int getMap_size_x(){
@@ -77,8 +79,12 @@ public class MapAdmin {
         map_data[i][j].setWallFlag(isWall);
     }
 
-    public MapAdmin(SurfaceHolder m_holder, Activity activity, Point display_size){
+    public MapAdmin(SurfaceHolder m_holder, Activity activity, Point m_display_size){
         holder = m_holder;
+        //ディスプレイサイズ取得
+        display_size.x = m_display_size.x;
+        display_size.y = m_display_size.y;
+        camera.setDisplaySize(display_size);
         map_data = new Chip[map_size_x][map_size_y];
         for(int i = 0;i < map_size_x;i++) {
             for (int j = 0; j < map_size_y; j++) {
@@ -92,7 +98,7 @@ public class MapAdmin {
         //intToChip(map_data_int);//デバッグ用x, yが反転する
         //DisplaySizeCheck display_size_check = new DisplaySizeCheck();
         //point = display_size_check.getDisplaySize(activity);
-        System.out.println("display width:x = "+display_size.x+",y = "+display_size.y);
+        //System.out.println("display width:x = "+display_size.x+",y = "+display_size.y);
     }
 
     //壁かどうかマップ座標で判定
@@ -117,7 +123,7 @@ public class MapAdmin {
         Section section = new Section();
         section.setAll(0, map_size_x - 1, 0, map_size_y - 1);
         section.divideSection(10);
-        section.updateMapData(this.map_data);
+        section.updateMapData(map_data);
     }
 
     public int detectWallDirection(double player_world_x_double, double player_world_y_duoble, double next_player_world_x_double, double next_player_world_y_double){
@@ -259,7 +265,7 @@ public class MapAdmin {
     public void drawMap(Canvas canvas) {
         //int chip_height = 10;
         //int chip_width  = 10;
-        
+        map_offset.set(camera.getCameraOffset(1500,2000).x, camera.getCameraOffset(1500,2000).y);
         for(int i = 0;i < this.getMap_size_x();i++){
             for(int j = 0;j < this.getMap_size_y();j++){
                 if(this.isWall(i,j) == false){
@@ -268,7 +274,7 @@ public class MapAdmin {
                 else {
                     paint.setColor(Color.RED);//壁は
                 }
-                canvas.drawRect(magnification*i,magnification*j,magnification*(i+1),magnification*(j+1),paint);
+                canvas.drawRect(magnification*i-map_offset.x,magnification*j-map_offset.y,magnification*(i+1)-map_offset.x,magnification*(j+1)-map_offset.y,paint);
             }
         }
         //デバッグ用
