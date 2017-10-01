@@ -5,7 +5,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.content.res.Resources;
@@ -16,16 +19,31 @@ import android.content.Intent;
 import java.util.*;
 
 import android.view.MotionEvent;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
 public class MainActivity extends BaseActivity {
-
+    CustomSurfaceView custom_surface_view;
+    boolean game_system_flag = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(new CustomSurfaceView(this));
-
+        custom_surface_view = new CustomSurfaceView(this);
+        setContentView(custom_surface_view);
         //setImage();
+    }
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(!game_system_flag) {
+            custom_surface_view.runGameSystem(custom_surface_view.getWidth(), custom_surface_view.getHeight());
+            custom_surface_view.runThread();
+            game_system_flag = true;
+        }
     }
 }
 
@@ -58,8 +76,10 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
     Bitmap banana = BitmapFactory.decodeResource(res, R.drawable.banana);
     Bitmap slime = BitmapFactory.decodeResource(res, R.drawable.slime);
     Paint paint = new Paint();
+    Point display_size = new Point(0, 0);
     private SurfaceHolder holder;
     private Thread thread;
+    Context context;
 
     int touch = -1;
 
@@ -67,16 +87,32 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
 
     GameSystem game_system;
 
-    public CustomSurfaceView(Context context) {
-        super(context);
+    public CustomSurfaceView(Context m_context) {
+        super(m_context);
         setZOrderOnTop(true);
         /// このビューの描画内容がウインドウの最前面に来るようにする。
         holder = getHolder();
         holder.addCallback(this);
         paint.setColor(Color.BLUE);
+        context = m_context;
+        }
 
+    public void runGameSystem(int display_width,int display_height){
+        display_size.x = display_width;
+        display_size.y = display_height;
         game_system = new GameSystem();
-        game_system.init(holder, neco, apple, banana, slime);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
+        game_system.init(holder, neco, apple, banana, slime,(Activity)context,display_size);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
+    }
+
+    /*public void runGetDisplaySize(){
+        WindowManager window_manager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = window_manager.getDefaultDisplay();
+        display.getSize(display_size);
+    }*/
+
+    public void runThread(){
+        thread = new Thread(this);
+        thread.start();
     }
 
     @Override
@@ -86,8 +122,7 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        thread = new Thread(this);
-        thread.start();
+
     }
 
     @Override
