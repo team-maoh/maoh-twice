@@ -16,6 +16,8 @@ import android.view.View;
  * Created by ryomasenda on 2017/09/03.
  */
 
+
+/*
 public class Graphic{
 
     SurfaceView setImage(Context context){
@@ -23,23 +25,59 @@ public class Graphic{
     }
 
 }
+*/
 
-class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable{
+class BitmapData{
+    int id;
+    Context context;
+    float x;
+    float y;
+    String filename;
+    Bitmap bitmap;
+    static Resources res;
 
-    //画像読み込み
-    Resources res = this.getContext().getResources();
+    public BitmapData(){
+    }
+
+    public void init(Context _context){
+        context = _context;
+        res = context.getResources();
+    }
+
+    void setBitmapData(float _x, float _y, String _filename){
+        x = _x;
+        y = _y;
+        filename = _filename;
+        int resId = res.getIdentifier(filename,"drawable",context.getPackageName());
+        bitmap = BitmapFactory.decodeResource(res, resId);
+    }
+
+    Bitmap getBitmap(){
+        return bitmap;
+    }
+
+}
+
+public class Graphic extends SurfaceView implements SurfaceHolder.Callback {
+
     Paint paint = new Paint();
     private SurfaceHolder holder;
-    private Thread thread;
-    //private Canvas canvas;
-    Bitmap imageMap;
+    //private Thread thread;
+    BitmapData[] bitmapDatas = new BitmapData[1024];
+    int bitmapMax = 0;
+
+    public boolean created = false;
 
     float x = 0;
     float y = 0;
 
-    public BaseSurfaceView(Context context) {
+    public Graphic(Context context) {
         super(context);
+        for(int i = 0; i<1024;i++){
+            bitmapDatas[i] = new BitmapData();
+        }
 
+        bitmapDatas[0].init(context);
         setZOrderOnTop(true);
         /// このビューの描画内容がウインドウの最前面に来るようにする。
         holder = getHolder();
@@ -54,9 +92,7 @@ class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Run
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        thread = new Thread(this);
-        SetImage("neco",0,0);
-        thread.start();
+        //thread呼び出し
     }
 
     @Override
@@ -64,61 +100,20 @@ class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Run
         // SurfaceViewが廃棄されたる時の処理を記述
     }
 
-    /**描画スレッドを実行する。*/
-    @Override
-    public void run(){
+    public void draw() {
+        while (!created);
         Canvas canvas = null;
-
-        try{
-            canvas = holder.lockCanvas(null);
-            //キャンバスをロック
-
-            synchronized(holder){
-                //キャンバスに図形を描画
-                canvas.drawColor(Color.WHITE);
-                canvas.drawBitmap(imageMap, (int)x, (int)y, paint);
-            }
-        }finally{
-            if(canvas != null) {
-                holder.unlockCanvasAndPost(canvas);
-                //ロックを解除して描画
-            }
+        canvas = holder.lockCanvas();
+        canvas.drawColor(Color.WHITE);
+        for(int i = 0; i<bitmapMax; i++){
+            canvas.drawBitmap(bitmapDatas[i].getBitmap(), 100, 100, paint);
         }
-
+        holder.unlockCanvasAndPost(canvas);
     }
 
-    /**スレッドを初期化して実行する。*/
-    private void drawOnThread()
-    {
-        thread = new Thread(this);
-        thread.start();
-    }
-
-    //なぞられた点を記録するリスト
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-        case MotionEvent.ACTION_MOVE:
-            SetImage("neco",event.getX(),event.getY());
-            //描画
-            break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                break;
-    }
-
-        //return super.onTouchEvent(event);
-        return true;
-    }
-
-    public SurfaceView SetImage(String name, float _x, float _y){
-        x = _x;
-        y = _y;
-        int resId = getResources().getIdentifier(name,"drawable",this.getContext().getPackageName());
-        imageMap = BitmapFactory.decodeResource(res, resId);
-        drawOnThread();
-        return this;
+    public void setImage(String name, float x, float y){
+        bitmapDatas[bitmapMax].setBitmapData(x,y,name);
+        bitmapMax = bitmapMax + 1;
     }
 
 }

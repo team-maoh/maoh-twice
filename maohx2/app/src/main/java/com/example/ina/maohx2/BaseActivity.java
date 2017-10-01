@@ -9,25 +9,27 @@ import android.content.Context;
  * Created by ryomasenda on 2017/09/08.
  */
 
+enum Layer{
+    BACKGROUND,
+    CHARACTER,
+}
+
 public abstract class BaseActivity extends Activity {
-    LinearLayout layout;
     Graphic graphic;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        layout = new LinearLayout(this);
-        graphic = new Graphic();
-        setContentView(layout);
+        graphic = new Graphic(this);
+        setContentView(graphic);
     }
 
-    void setImage(){
-        layout.addView(graphic.setImage(this));
+    void setImage(String name, float x, float y){
+        graphic.setImage(name,x,y);
     }
 
-    /*
-    void setImageAt(String name, float x, float y){
-        layout.addView();
+    void draw(){
+        graphic.draw();
     }
-    */
+
 }
