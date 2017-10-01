@@ -4,6 +4,8 @@ package com.example.graphic;
  * Created by ryomasenda on 2017/10/01.
  */
 
+//描画レイヤー
+    //レイヤーを増やす場合は、下のLayerManagerにも反映させてください。
 enum Layer{
     BACK,
     BACKGROUND,
@@ -17,6 +19,7 @@ public class LayerManager {
 
     }
 
+    //簡易レイヤー名からレイヤーを取得
     public Layer getLayer(String layerName){
         switch (layerName){
             case "back":
@@ -32,6 +35,7 @@ public class LayerManager {
         }
     }
 
+    //レイヤー番号からレイヤーを取得
     public Layer getLayer(int layerNum){
         switch (layerNum){
             case 0:

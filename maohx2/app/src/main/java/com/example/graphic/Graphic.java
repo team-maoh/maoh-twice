@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.content.res.AssetManager;
@@ -17,25 +16,25 @@ import java.io.IOException;
  * Created by ryomasenda on 2017/09/03.
  */
 
+
+//セットされた描画データ
 class BitmapData{
-    int id;
-    Context context;
     public double x;
     public double y;
-    String filename;
     public Bitmap bitmap;
 
-    public BitmapData(){
+    private Context context;
+
+    BitmapData(){
     }
 
     public void init(Context _context){
         context = _context;
     }
 
-    void setBitmapData(String folderName, String _filename, double _x, double _y){
+    void setBitmapData(String folderName, String filename, double _x, double _y){
         x = _x;
         y = _y;
-        filename = _filename;
 
         try {
             bitmap = loadBitmapAsset("image" + "/" + folderName + "/" + filename, context);
@@ -44,7 +43,7 @@ class BitmapData{
         }
     }
 
-    public static final Bitmap loadBitmapAsset(String fileName, Context context) throws IOException {
+    static final Bitmap loadBitmapAsset(String fileName, Context context) throws IOException {
         final AssetManager assetManager = context.getAssets();
         BufferedInputStream bis = null;
         try {
@@ -61,7 +60,7 @@ class BitmapData{
 
 }
 
-public class Graphic extends SurfaceView implements SurfaceHolder.Callback {
+public class Graphic {
 
     //定数
     final int LAYER_MAX = Layer.FRONT.ordinal() + 1;
@@ -71,46 +70,31 @@ public class Graphic extends SurfaceView implements SurfaceHolder.Callback {
     BitmapData[][] bitmapDatas = new BitmapData[LAYER_MAX][BITMAP_MAX];
     int bitmapMax[] = new int[LAYER_MAX];
 
-
     Paint paint = new Paint();
-    private SurfaceHolder holder;
+    SurfaceHolder holder;
 
     public Graphic(Context context) {
-        super(context);
         for(int i = 0; i<LAYER_MAX;i++) {
-            for (int j = 0; j < BITMAP_MAX; ) {
+            for (int j = 0; j < BITMAP_MAX; j++) {
                 bitmapDatas[i][j] = new BitmapData();
             }
         }
         bitmapDatas[0][0].init(context);
 
-        setZOrderOnTop(true);
-        /// このビューの描画内容がウインドウの最前面に来るようにする。
-        holder = getHolder();
-        holder.addCallback(this);
         paint.setColor(Color.BLUE);
-    }
-
-    @Override
-    public void surfaceChanged (SurfaceHolder holder, int format, int width, int height) {
-        // SurfaceViewが変化（画面の大きさ，ピクセルフォーマット）した時のイベントの処理を記述
-    }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        setImage("item/apple.png", 100,100);
-        draw();
-        //thread呼び出し
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        // SurfaceViewが廃棄されたる時の処理を記述
     }
 
     /*
     ここから呼び出される関数
      */
+
+    public void setHolder(SurfaceHolder _holder){
+        holder = _holder;
+    }
+
+    public SurfaceHolder getHolder(){
+        return holder;
+    }
 
     public void draw() {
         Canvas canvas = null;

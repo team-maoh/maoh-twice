@@ -2,7 +2,9 @@ package com.example.ina.maohx2;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.SurfaceHolder;
 
+import android.view.SurfaceView;
 import com.example.graphic.Graphic;
 
 /**
@@ -10,16 +12,15 @@ import com.example.graphic.Graphic;
  */
 
 public abstract class BaseActivity extends Activity {
-    Graphic graphic;
+    SurfaceView surfaceView;
+    SurfaceHolder holder;
+    Graphic graphic = new Graphic(this);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        graphic = new Graphic(this);
-        setContentView(graphic);
+        graphic.setHolder(holder);
     }
-
-
 
     /*
     以下グラフィック用関数
@@ -27,17 +28,20 @@ public abstract class BaseActivity extends Activity {
     draw() :セットされた内容を描画
      */
 
-    void setImage(String name, double x, double y){
-        graphic.setImage(name,x,y);
+    void setImage(String name, double x, double y) {
+        graphic.setImage(name, x, y);
     }
 
     //レイヤー指定あり
-    void setImage(String name, double x, double y, String layerName){
-        graphic.setImage(name,x,y,layerName);
+    void setImage(String name, double x, double y, String layerName) {
+        graphic.setImage(name, x, y, layerName);
     }
 
-    void draw(){
+    void draw() {
         graphic.draw();
     }
 
+    /*
+    以上グラフィック関数
+     */
 }
