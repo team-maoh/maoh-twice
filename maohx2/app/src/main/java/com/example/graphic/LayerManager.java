@@ -1,4 +1,4 @@
-package com.example.ina.maohx2;
+package com.example.graphic;
 
 /**
  * Created by ryomasenda on 2017/10/01.

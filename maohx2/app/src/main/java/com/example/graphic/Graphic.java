@@ -1,4 +1,4 @@
-package com.example.ina.maohx2;
+package com.example.graphic;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,17 +6,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.view.MotionEvent;
-import android.view.View;
 import android.content.res.AssetManager;
-import android.content.res.AssetFileDescriptor;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by ryomasenda on 2017/09/03.
@@ -68,26 +63,27 @@ class BitmapData{
 
 public class Graphic extends SurfaceView implements SurfaceHolder.Callback {
 
+    //定数
     final int LAYER_MAX = Layer.FRONT.ordinal() + 1;
     final int BITMAP_MAX = 128;
 
-    Paint paint = new Paint();
-    private SurfaceHolder holder;
-    //private Thread thread
-
+    //ビットマップデータの配列(レイヤー番号*ビットマップ番号)
     BitmapData[][] bitmapDatas = new BitmapData[LAYER_MAX][BITMAP_MAX];
     int bitmapMax[] = new int[LAYER_MAX];
 
-    public boolean created = false;
+
+    Paint paint = new Paint();
+    private SurfaceHolder holder;
 
     public Graphic(Context context) {
         super(context);
-        for(int i = 0; i<LAYER_MAX;i++){
-            for(int j = 0; j<BITMAP_MAX;)
-            bitmapDatas[i][j] = new BitmapData();
+        for(int i = 0; i<LAYER_MAX;i++) {
+            for (int j = 0; j < BITMAP_MAX; ) {
+                bitmapDatas[i][j] = new BitmapData();
+            }
         }
-
         bitmapDatas[0][0].init(context);
+
         setZOrderOnTop(true);
         /// このビューの描画内容がウインドウの最前面に来るようにする。
         holder = getHolder();
@@ -112,6 +108,10 @@ public class Graphic extends SurfaceView implements SurfaceHolder.Callback {
         // SurfaceViewが廃棄されたる時の処理を記述
     }
 
+    /*
+    ここから呼び出される関数
+     */
+
     public void draw() {
         Canvas canvas = null;
         canvas = holder.lockCanvas();
@@ -125,9 +125,9 @@ public class Graphic extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void setImage(String name, double x, double y){
-        String[] splitname = name.split("/",0);
-        String folderName = splitname[0];
-        String fileName = splitname[1];
+        String[] splitName = name.split("/",0);
+        String folderName = splitName[0];
+        String fileName = splitName[1];
 
         int layerNum = (new LayerManager().getLayer(folderName)).ordinal();
         bitmapDatas[layerNum][bitmapMax[layerNum]].setBitmapData(folderName,fileName,x,y);
@@ -135,9 +135,9 @@ public class Graphic extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void setImage(String name, double x, double y, String layerName){
-        String[] splitname = name.split("/",0);
-        String folderName = splitname[0];
-        String fileName = splitname[1];
+        String[] splitName = name.split("/",0);
+        String folderName = splitName[0];
+        String fileName = splitName[1];
 
         int layerNum = (new LayerManager().getLayer(layerName)).ordinal();
         bitmapDatas[layerNum][bitmapMax[layerNum]].setBitmapData(folderName,fileName,x,y);
