@@ -1,4 +1,4 @@
-package com.kmhanko.database;
+package com.example.kmhanko.database;
 
 import android.content.Context;
 import java.io.IOException;
@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
-
-import com.kmhanko.sound.SoundAdmin;
 
 /**
  * Created by user on 2017/09/03.
