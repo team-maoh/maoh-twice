@@ -9,11 +9,6 @@ import android.content.Context;
  * Created by ryomasenda on 2017/09/08.
  */
 
-enum Layer{
-    BACKGROUND,
-    CHARACTER,
-}
-
 public abstract class BaseActivity extends Activity {
     Graphic graphic;
 
@@ -24,8 +19,12 @@ public abstract class BaseActivity extends Activity {
         setContentView(graphic);
     }
 
-    void setImage(String name, float x, float y){
+    void setImage(String name, double x, double y){
         graphic.setImage(name,x,y);
+    }
+
+    void setImage(String name, double x, double y, String layerName){
+        graphic.setImage(name,x,y,layerName);
     }
 
     void draw(){
