@@ -1,4 +1,4 @@
-package com.kmhanko.database;
+package com.example.kmhanko.database;
 
 //sqlite関係
 import android.database.sqlite.SQLiteOpenHelper;

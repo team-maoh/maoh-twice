@@ -1,4 +1,4 @@
-package com.kmhanko.sound;
+package com.example.kmhanko.sound;
 
 import android.content.Context;
 
@@ -18,7 +18,7 @@ import android.media.SoundPool;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.kmhanko.database.MyDatabase;
+import com.example.kmhanko.database.MyDatabase;
 
 
 /**

@@ -1,7 +1,9 @@
 package com.example.ina.maohx2;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.view.SurfaceHolder;
 
 import com.example.horie.map.MapAdmin;
@@ -18,8 +20,8 @@ public class GameSystem {
     MapAdmin map_admin;
     SurfaceHolder holder;
 
-    public void init(SurfaceHolder m_holder, Bitmap neco, Bitmap apple,  Bitmap banana,Bitmap slime) {
-        map_admin = new MapAdmin(m_holder);
+    public void init(SurfaceHolder m_holder, Bitmap neco, Bitmap apple, Bitmap banana, Bitmap slime, Activity activity, Point display_size) {
+        map_admin = new MapAdmin(m_holder, activity, display_size);
         map_object_admin = new MapObjectAdmin();
         map_object_admin.init(m_holder, neco, apple, banana, slime);//MapObjectAdmin.javaのinitを実行
         holder = m_holder;

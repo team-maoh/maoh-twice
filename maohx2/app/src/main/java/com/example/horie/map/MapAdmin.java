@@ -1,10 +1,16 @@
 package com.example.horie.map;
 
 
+import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
+import android.view.Display;
 import android.view.SurfaceHolder;
+import android.view.WindowManager;
+
+import static android.content.Context.WINDOW_SERVICE;
 
 /**
  * Created by horie on 2017/08/30.
@@ -53,9 +59,12 @@ public class MapAdmin {
     final int MAX_MAP_SIZE_Y = 1024;
     int map_size_x = map_data_int[0].length;
     int map_size_y = map_data_int.length;
-    int magnification = 40;
+    int magnification = 128;
     Paint paint = new Paint();
+    Point display_size = new Point(0, 0);
+    Point map_offset = new Point(0, 0);
     SurfaceHolder holder;
+    Camera camera = new Camera();
 
 
     public int getMap_size_x(){
@@ -70,37 +79,30 @@ public class MapAdmin {
         map_data[i][j].setWallFlag(isWall);
     }
 
-    public MapAdmin(SurfaceHolder m_holder){
+    public MapAdmin(SurfaceHolder m_holder, Activity activity, Point m_display_size){
         holder = m_holder;
+        //ディスプレイサイズ取得
+        display_size.x = m_display_size.x;
+        display_size.y = m_display_size.y;
+        camera.setDisplaySize(display_size);
         map_data = new Chip[map_size_x][map_size_y];
         for(int i = 0;i < map_size_x;i++) {
             for (int j = 0; j < map_size_y; j++) {
                 map_data[i][j] = new Chip();
             }
         }
-        System.out.println("size i = "+map_data_int.length+",j = "+map_data_int[0].length);
-        createMap();//自動生成
-        //createMapForDebug();//デバッグ用マップ(ボツ)
-        //transportMatrix();//デバッグ用
-        //intToChip(t_map_data_int);//デバッグ用
-        //intToChip(map_data_int);//x, yが反転する
+        //System.out.println("size i = "+map_data_int.length+",j = "+map_data_int[0].length);
+        //createMap();//自動生成
+        transportMatrix();//デバッグ用
+        intToChip(t_map_data_int);//デバッグ用
+        //intToChip(map_data_int);//デバッグ用x, yが反転する
+        //DisplaySizeCheck display_size_check = new DisplaySizeCheck();
+        //point = display_size_check.getDisplaySize(activity);
+        //System.out.println("display width:x = "+display_size.x+",y = "+display_size.y);
     }
 
-    /*public void intToChip(int[][] m_map_data) {
-        for(int i = 0;i < m_map_data.length;i++) {
-            for (int j = 0; j < m_map_data[i].length; j++) {
-                if(m_map_data[i][j] == 0){
-                    map_data[i][j].setWallFlag(false);
-                }
-                else{
-                    map_data[i][j].setWallFlag(true);
-                }
-            }
-        }
-    }*/
-
     //壁かどうかマップ座標で判定
-    public boolean isWall(int x,int y){
+    private boolean isWall(int x,int y){
         try {
             return map_data[x][y].isWall();
         }catch(ArrayIndexOutOfBoundsException e) {
@@ -112,53 +114,23 @@ public class MapAdmin {
     }
 
     //壁かどうかワールドマップで判定
-    public boolean isWallWorld(int world_x, int world_y, int magnification_x, int magnification_y){
+    private boolean isWallWorld(int world_x, int world_y, int magnification_x, int magnification_y){
         return map_data[worldToMap(world_x)][worldToMap(world_y)].isWall();
     }
 
     //マップの自動生成
-    public void createMap(){
+    private void createMap(){
         Section section = new Section();
         section.setAll(0, map_size_x - 1, 0, map_size_y - 1);
         section.divideSection(10);
-        section.updateMapData(this.map_data);
+        section.updateMapData(map_data);
     }
 
-    //デバッグ用マップ
-    public void createMapForDebug(){
-        for(int i = 0;i < map_size_x;i++){
-            map_data[i][0].setWallFlag(true);
-            map_data[i][map_size_y - 1].setWallFlag(true);
-        }
-        for(int j = 0;j < map_size_y;j++){
-            map_data[0][j].setWallFlag(true);
-            map_data[map_size_x - 1][j].setWallFlag(true);
-        }
-        for(int i = 0;i < 66;i++){
-            map_data[i][30].setWallFlag(true);
-        }
-        for(int j = 30;j < 50;j++) {
-            map_data[66][j].setWallFlag(true);
-            map_data[33][j].setWallFlag(true);
-        }
-        for(int i = 40;i < 100;i++){
-            map_data[i][120].setWallFlag(true);
-        }
-        for(int i = 40;i < 80;i++){
-            map_data[i][80].setWallFlag(true);
-        }
-        for(int i = 60;i < 80;i++){
-            map_data[i][100].setWallFlag(true);
-        }
-        for(int j = 80;j < 120;j++){
-            map_data[40][j].setWallFlag(true);
-        }
-        for(int j = 80;j <= 100;j++){
-            map_data[80][j].setWallFlag(true);
-        }
-    }
-
-    public int detectWallDirection(int player_world_x, int player_world_y, int next_player_world_x, int next_player_world_y){
+    public int detectWallDirection(double player_world_x_double, double player_world_y_duoble, double next_player_world_x_double, double next_player_world_y_double){
+        int player_world_x = (int)player_world_x_double;
+        int player_world_y = (int)player_world_y_duoble;
+        int next_player_world_x = (int)next_player_world_x_double;
+        int next_player_world_y = (int)next_player_world_y_double;
         int direction = 0;//0 : 壁なし, 1 : 水平, 2 : 垂直
         int player_map_x = worldToMap(player_world_x);//移動前のマップ座標x
         int player_map_y = worldToMap(player_world_y);//移動前のマップ座標y
@@ -293,7 +265,7 @@ public class MapAdmin {
     public void drawMap(Canvas canvas) {
         //int chip_height = 10;
         //int chip_width  = 10;
-        
+        map_offset.set(camera.getCameraOffset(1500,2000).x, camera.getCameraOffset(1500,2000).y);
         for(int i = 0;i < this.getMap_size_x();i++){
             for(int j = 0;j < this.getMap_size_y();j++){
                 if(this.isWall(i,j) == false){
@@ -302,13 +274,18 @@ public class MapAdmin {
                 else {
                     paint.setColor(Color.RED);//壁は
                 }
-                canvas.drawRect(magnification*i,magnification*j,magnification*(i+1),magnification*(j+1),paint);
+                canvas.drawRect(magnification*i-map_offset.x,magnification*j-map_offset.y,magnification*(i+1)-map_offset.x,magnification*(j+1)-map_offset.y,paint);
             }
         }
+        //デバッグ用
+        /*paint.setColor(Color.RED);
+        canvas.drawRect(0,0,1080,1794,paint);
+        paint.setColor(Color.GREEN);
+        canvas.drawRect(1,1,1079,1703,paint);*/
     }
 
     //ワールドマップ座標からマップ座標に変更
-    public int worldToMap(int world_coordinate){
+    private int worldToMap(int world_coordinate){
         return world_coordinate / magnification;
     }
 
@@ -326,7 +303,7 @@ public class MapAdmin {
         }
     }
 
-    //転置行列に変換
+    //map_data_intを転置行列に変換
     public void transportMatrix(){
         for(int i = 0;i < map_data_int.length;i++){
             for(int j = 0;j < map_data_int[0].length;j++){
