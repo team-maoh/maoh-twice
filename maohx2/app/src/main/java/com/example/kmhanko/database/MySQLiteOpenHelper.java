@@ -20,10 +20,12 @@ import java.io.OutputStream;
 
 /**
  * Created by user on 2017/09/03.
+ * version : 1.00
  */
 
 
-//SQLiteOpenHelperは、Databaseのインスタンスを簡略化するためのサポートクラス。dbと一対一で存在する必要あり
+//SQLiteOpenHelperは、Databaseのインスタンスを簡略化するためのサポートクラス。私の作ったこのクラスは、dbと一対一で存在する必要がある設計となっている。
+//どうせ一対一なら、軽傷でRead用とWrite用の二種類のヘルパーに分けたほうがいいかもしれない
 public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
     private String db_name;
@@ -47,19 +49,17 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         //DBファイルを探し読み込む
         mDatabasePath = mContext.getDatabasePath(db_name);
         if (!mDatabasePath.exists()) {
-            System.out.println("dg_mes:"+"db is not found.");
+            System.out.println("dg_mes:"+ db_name +" is not found.");
         }
-
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        //dbが存在しない状態でOpenすると、これが呼ばれ、dbに新規作成されたインスタンスがもらえる。
         System.out.println("dg_mes:"+db_name+" onCreate.");
     }
 
-    //Assetsを利用しているため、読み込み専用
-    public void copyDataBaseFromAsset(SQLiteDatabase database) throws IOException {
+    //assetsフォルダ内のDBファイルをdatabasesフォルダ内のDBファイルにコピーするメソッド。同名のファイルでなければならない。
+    public void copyDataBaseFromAssets() throws IOException {
         //database.close();
 
         //dbのコピーの下準備
@@ -73,26 +73,22 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         input.close();
     }
 
-    private void copyDataBase_ww() throws IOException {
-        //dbのコピーの下準備
-        InputStream input = mContext.getAssets().open(db_asset); //assetフォルダ内のdbファイルを格納
-        OutputStream  output = new FileOutputStream(mDatabasePath); //このクラスで扱うdbを指定
-        copy(input, output);//このクラスで扱うdbに、assets内のdbをコピーする。
-
-        //streamを閉じる
-        output.flush();
-        output.close();
-        input.close();
-    }
-
     //データベースが存在するかどうかを返すメソッド
-    private boolean checkDataBaseExist() {
+    private boolean checkDataBaseExist(String mode) {
         String dbPath = mDatabasePath.getAbsolutePath();
         SQLiteDatabase checkDb = null;
 
-        //TODO:rとwでわける？
+        int open_mode;
+        if (mode.equals("r")) {
+            open_mode = SQLiteDatabase.OPEN_READONLY;
+        } else if (mode.equals("w")) {
+            open_mode = SQLiteDatabase.OPEN_READWRITE;
+        } else {
+            throw new Error("MySQLiteOpenHelper.checkDataBaseExist : please set r or w");
+        }
+
         try {
-            checkDb = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
+            checkDb = SQLiteDatabase.openDatabase(dbPath, null, open_mode);
         } catch (SQLiteException e) {
             //DBはまだ存在していない
         }
@@ -115,27 +111,43 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         f.delete();
         return false;
         */
+
         return false;
     }
 
-    //空のデータベースを作成するメソッド
-    public boolean createEmptyDataBase_w() throws IOException {
-        boolean dbExist = checkDataBaseExist();
+    //DBファイルが無い場合はAssetsからコピーし、DBファイルがある場合は特に何もしないメソッド
+    public void createEmptyDataBase_w() throws IOException {
+        boolean dbExist = checkDataBaseExist("w");
         if (dbExist) {
-            return false;
+            //ファイルが存在したので、特に何もしない
         } else {
+            //DBファイルが作成される。
             super.getWritableDatabase();
-            return true;
+            try {
+                //DBファイルをAssetsからコピーする
+                copyDataBaseFromAssets();
+
+                //コピーした結果のDBファイルがちゃんと生成されたかを確認する
+                String dbPath = mDatabasePath.getAbsolutePath();
+                SQLiteDatabase checkDb = null;
+                try {
+                    checkDb = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
+                } catch (SQLiteException e) {
+                    e.printStackTrace();
+                }
+
+                //ちゃんと生成されていたなら、バージョンをセットして終了
+                if (checkDb != null) {
+                    checkDb.setVersion(db_version);
+                    checkDb.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-
-    //TODO:ちゃんと継承で分けた方が良いかもしれない
-    public SQLiteDatabase copyDataBase(SQLiteDatabase database) throws IOException {
-        copyDataBaseFromAsset(database);
-        return super.getReadableDatabase();
-    }
-
+    //CopyFromAssets用
     private int copy(InputStream input, OutputStream output) throws IOException {
         byte[] buffer = new byte[1024 * 4];
         int count = 0,n = 0;
@@ -146,12 +158,15 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         return count;
     }
 
-    public SQLiteDatabase openDataBase_w() throws SQLException {
-        return super.getWritableDatabase();
-    }
-
-    public SQLiteDatabase openDataBase_r() throws SQLException {
-        return super.getReadableDatabase();
+    //引数がwならgetWritable()を、rならgetReadable()を呼び出すだけのメソッド
+    public SQLiteDatabase openDataBase(String mode) {
+        if (mode.equals("r")) {
+            return super.getReadableDatabase();
+        } else if (mode.equals("w")) {
+            return super.getWritableDatabase();
+        } else {
+            throw new Error("MySQLiteOpenHelper.copyDataBase : please set r or w");
+        }
     }
 
     @Override
@@ -166,7 +181,6 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
             super.close();
         }
     }
-
 
 }
 

@@ -54,3 +54,16 @@ void stop(String name)
         String name : 効果音名
     説明 : 指定の効果音を停止する。再開する方法はない。
 
+・クラス使用例
+@MainActicityにおける下準備
+MyDatabaseAdmin database_admin = new MyDatabaseAdmin(this);//データベース準備
+database_admin.addMyDatabase("soundDB","soundDB.db",1,"r");//サウンドのデータベース読み込み
+sound_admin = new SoundAdmin(this);//インスタンス化
+sound_admin.setDatabase(database_admin.getMyDatabase("soundDB"));//データベースを渡す
+
+@要所要所
+sound_admin.loadSoundPack("sound_pack_map");//サウンドパックを読み込む
+
+@効果音を鳴らすとき
+sound_admin.play("waik")//サウンドを鳴らす
+

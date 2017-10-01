@@ -1,7 +1,6 @@
 package com.kmhanko.sound;
 
 import android.content.Context;
-import java.io.File;
 
 //例外関係
 import java.io.IOException;
@@ -19,13 +18,15 @@ import android.media.SoundPool;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.kmhanko.database.MyDatabaseAdmin;
 import com.kmhanko.database.MyDatabase;
 
 
 /**
  * Created by user on 2017/09/10.
+ * version : 1.00
  */
+
+//TODO:再生の度に、DBから読み出しをしているが、よくないかもしれないので、直した方がいいかもしれない。
 
 public class SoundAdmin {
 
@@ -42,6 +43,7 @@ public class SoundAdmin {
     //TODO:Builder
 
     private List<Integer> sound_ID = new ArrayList<Integer>(SOUND_LOAD_NUM);
+
     private List<Integer> stream_ID = new ArrayList<Integer>(SOUND_LOAD_NUM);
 
     //private MyDatabaseAdmin database_admin;
@@ -71,10 +73,6 @@ public class SoundAdmin {
         isLoaded = false;
     }
 
-    public void setDatabase(MyDatabase _database) {
-        database = _database;
-    }
-
     /*
     public void init(MyDatabaseAdmin _database_admin) {
         database_admin = _database_admin;
@@ -93,6 +91,10 @@ public class SoundAdmin {
     }
 
     //****ユーザーが普段使用するメソッド****
+    public void setDatabase(MyDatabase _database) {
+        database = _database;
+    }
+
     public boolean play(String name) {
         return this.play(name, 1.0f, 1.0f, 0, 0, 1.0f);
     }
@@ -100,7 +102,6 @@ public class SoundAdmin {
     public boolean play(String name, float leftVolume, float rightVolume, int priority, int loop, float rate) {
         //ロードしたID, 左音量, 右音量, 優先度, ループ,再生速度
         int id = getSoundID(name);
-        int i = 0;
         int stid = sp.play(id, leftVolume, rightVolume, priority, loop, rate);
         stream_ID.add(id - 1, stid);
         return true;
@@ -146,7 +147,7 @@ public class SoundAdmin {
 
         List<String> l_filename = new ArrayList<String>();
 
-        l_filename = database.getString("filename", sound_pack_table_name, null);
+        l_filename = database.getString(sound_pack_table_name, "filename", null);
 
 
         for (int i = 0; i < l_filename.size(); i++) {
@@ -272,6 +273,4 @@ public class SoundAdmin {
 サウンドパックのロードは、場面場面によって行う。
 例えば、戦闘用パックは、戦闘開始時に読み込むなど。
 そしてパックはデータベースで管理する。
-
-
  */
