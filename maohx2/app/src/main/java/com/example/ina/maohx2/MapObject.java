@@ -13,7 +13,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 abstract public class MapObject {
 
-
     double x, y;
     SurfaceHolder holder;
     Bitmap draw_object;
@@ -45,9 +44,6 @@ abstract public class MapObject {
         id = -1;
     }
 
-
-
-
     public void update(double touch_x, double touch_y, int touch_state) {
     }
 
@@ -78,14 +74,14 @@ abstract public class MapObject {
 
     public boolean exists() { return exists; }
 
-    public void setExists(boolean input_exists){
-        exists = input_exists;
+    public void setExists(boolean _exists){
+        exists = _exists;
     }
 
     public int getId(){return id;}
 
-    public void setId(int input_id){
-        id = input_id;
+    public void setId(int _id){
+        id = _id;
     }
 
 }

@@ -74,6 +74,10 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
     Bitmap neco = BitmapFactory.decodeResource(res, R.drawable.neco);
     Bitmap apple = BitmapFactory.decodeResource(res, R.drawable.apple);
     Bitmap banana = BitmapFactory.decodeResource(res, R.drawable.banana);
+    //藤原追加
+    Bitmap grape = BitmapFactory.decodeResource(res, R.drawable.grape);
+    Bitmap watermelon = BitmapFactory.decodeResource(res, R.drawable.watermelon);
+
     Bitmap slime = BitmapFactory.decodeResource(res, R.drawable.slime);
     Paint paint = new Paint();
     Point display_size = new Point(0, 0);
@@ -101,7 +105,7 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
         display_size.x = display_width;
         display_size.y = display_height;
         game_system = new GameSystem();
-        game_system.init(holder, neco, apple, banana, slime,(Activity)context,display_size);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
+        game_system.init(holder, neco, apple, banana, grape, watermelon, slime,(Activity)context,display_size);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
     }
 
     /*public void runGetDisplaySize(){

@@ -20,10 +20,10 @@ public class GameSystem {
     MapAdmin map_admin;
     SurfaceHolder holder;
 
-    public void init(SurfaceHolder m_holder, Bitmap neco, Bitmap apple, Bitmap banana, Bitmap slime, Activity activity, Point display_size) {
+    public void init(SurfaceHolder m_holder, Bitmap neco, Bitmap apple, Bitmap banana,Bitmap grape, Bitmap watermelon, Bitmap slime, Activity activity, Point display_size) {
         map_admin = new MapAdmin(m_holder, activity, display_size);
         map_object_admin = new MapObjectAdmin();
-        map_object_admin.init(m_holder, neco, apple, banana, slime);//MapObjectAdmin.javaのinitを実行
+        map_object_admin.init(m_holder, neco, apple, banana,grape,watermelon, slime,map_admin);//MapObjectAdmin.javaのinitを実行
         holder = m_holder;
     }
 

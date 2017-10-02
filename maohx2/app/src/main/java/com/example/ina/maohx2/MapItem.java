@@ -23,7 +23,7 @@ public class MapItem extends MapObject {
 
         Random random = new Random();
         x = random.nextDouble() * 1000;//アイテムが発生する座標
-        y = random.nextDouble() * 600;
+        y = random.nextDouble() * 1300;
     }
 
     public void init(GL10 gl, MySprite draw_object, MapObjectAdmin _map_object_admin) {
@@ -33,7 +33,7 @@ public class MapItem extends MapObject {
 
         Random random = new Random();
         x = random.nextDouble() * 1000;//アイテムが発生する座標
-        y = random.nextDouble() * 600;
+        y = random.nextDouble() * 1300;
     }
 
     @Override
