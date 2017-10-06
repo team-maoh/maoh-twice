@@ -75,13 +75,7 @@ public class MapAdmin {
         return map_size_y;
     }
 
-    public int getCameraOffset_x(){
-        return camera.getCameraOffset(1500,2000).x;
-    }
 
-    public int getCameraOffset_y(){
-        return camera.getCameraOffset(1500,2000).y;
-    }
 
     public void setMap_data(int i,int j,boolean isWall){
         map_data[i][j].setWallFlag(isWall);

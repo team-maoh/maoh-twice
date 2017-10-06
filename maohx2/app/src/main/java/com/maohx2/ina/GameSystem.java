@@ -42,7 +42,7 @@ public class GameSystem {
         dungeon_user_interface = _dungeon_user_interface;
         map_admin = new MapAdmin(_holder, activity, display_size);
         map_object_admin = new MapObjectAdmin();
-        map_object_admin.init(_holder, neco, apple, banana,grape,watermelon, slime, map_admin);//MapObjectAdmin.javaのinitを実行
+        map_object_admin.init(_holder, dungeon_user_interface, neco, apple, banana,grape,watermelon, slime, map_admin);//MapObjectAdmin.javaのinitを実行
         holder = _holder;
     }
 
