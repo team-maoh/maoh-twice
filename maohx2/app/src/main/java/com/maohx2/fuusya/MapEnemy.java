@@ -1,6 +1,5 @@
 package com.maohx2.fuusya;
 
-
 import android.graphics.Bitmap;
 import android.view.SurfaceHolder;
 

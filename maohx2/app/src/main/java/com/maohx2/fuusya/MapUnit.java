@@ -1,6 +1,5 @@
 package com.maohx2.fuusya;
 
-
 import android.graphics.Bitmap;
 import android.view.SurfaceHolder;
 
@@ -19,7 +18,7 @@ public class MapUnit extends MapObject {
     int dst_steps, now_steps;
     boolean moving;
     MapObjectAdmin map_object_admin;
-    double REACH_FOR_WALL = 25.0;
+    double REACH_FOR_WALL = 5.0;
 
     public void init(SurfaceHolder holder, Bitmap draw_object, MapObjectAdmin map_object_admin, MapAdmin _map_admin) {
     }
@@ -53,8 +52,6 @@ public class MapUnit extends MapObject {
 
     public void update(){
 
-
     }
-
 
 }

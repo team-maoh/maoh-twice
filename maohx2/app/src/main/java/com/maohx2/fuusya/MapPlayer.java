@@ -1,6 +1,5 @@
 package com.maohx2.fuusya;
 
-
 import android.graphics.Bitmap;
 import android.view.SurfaceHolder;
 
@@ -22,6 +21,7 @@ public class MapPlayer extends MapUnit {
     int ENCOUNT_STEPS;
     int total_steps, STEP;
     MapAdmin map_admin;
+    boolean kari = true;
 
     @Override
     public void init(SurfaceHolder holder, Bitmap draw_object, MapObjectAdmin map_object_admin, MapAdmin _map_admin) {
@@ -34,8 +34,8 @@ public class MapPlayer extends MapUnit {
         STEP = 10;//歩幅( (dx)^2 + (dy)^2 = (STEP)^2 )
 //        x = 900;
 //        y = 1600;
-        x = 700;
-        y = 700;
+        x = 10;
+        y = 10;
     }
 
     @Override
@@ -45,12 +45,21 @@ public class MapPlayer extends MapUnit {
         total_steps = 0;//アプリ起動から現在までの総歩数
         ENCOUNT_STEPS = 300;//この歩数ごとにエンカウントする
         STEP = 10;//歩幅( (dx)^2 + (dy)^2 = (STEP)^2 )
-        x = 700;
-        y = 700;
+        x = 10;
+        y = 10;
     }
 
     @Override
     public void update(double touch_x, double touch_y, int touch_state) {
+
+        //仮
+        /*
+        if (kari == true) {
+            x = +map_admin.getCameraOffset_x();
+            y = +map_admin.getCameraOffset_y();
+            kari = false;
+        }
+        */
 
         if (touch_state == 0 || touch_state == 1) {
             dst_steps = (int) myDistance(touch_x, touch_y, x, y) / STEP;
@@ -58,18 +67,15 @@ public class MapPlayer extends MapUnit {
             dx = ((touch_x - x) / dst_steps);
             dy = ((touch_y - y) / dst_steps);
 
-            /*
             x_reach = Math.signum(dx) * REACH_FOR_WALL;
             y_reach = Math.signum(dy) * REACH_FOR_WALL;
-            */
 
             moving = true;
 //            now_steps = 0;
         }
         if (moving == true) {
 
-            /*
-            switch (detectWall(x + dx, y + dy, x + dx + x_reach, y + dy + y_reach)) {
+            switch (detectWall(x, y, x + dx + x_reach, y + dy + y_reach)) {
                 case 0://壁なし
                     x += dx;
                     y += dy;
@@ -86,7 +92,11 @@ public class MapPlayer extends MapUnit {
                     break;
                 default:
                     break;
-            }*/
+            }
+            /*
+            x = +map_admin.getCameraOffset_x();
+            y = +map_admin.getCameraOffset_y();
+            */
 
                         /*
             //自分と壁との距離を外積で求めようとした
@@ -119,6 +129,7 @@ public class MapPlayer extends MapUnit {
             dy += sink*sin((border_theta[0]+border_theta[1])/2.0);
             */
 
+                        /*
             for (double theta = 0.0; theta < 360.0; theta += 3.0) {
                 if (hasUpdateDxDy(theta) == true) {
                     break;
@@ -126,6 +137,7 @@ public class MapPlayer extends MapUnit {
             }
             x += dx;
             y += dy;
+            */
 
             System.out.println("dx" + dx);
             System.out.println("dy" + dy);
@@ -186,6 +198,14 @@ public class MapPlayer extends MapUnit {
 
     private int detectWall(double x1, double y1, double x2, double y2) {
         return map_admin.detectWallDirection((int) x1, (int) y1, (int) x2, (int) y2);
+    }
+
+    public double getPlayerWorldX(){
+        return x;
+    }
+
+    public double getPlayerWorldY(){
+        return y;
     }
 
 }

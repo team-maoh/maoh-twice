@@ -1,6 +1,5 @@
 package com.maohx2.fuusya;
 
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -54,7 +53,7 @@ abstract public class MapObject {
 
         synchronized (holder) {
             if (exists == true) {
-                canvas.drawBitmap(draw_object, (int) x - icon_width / 2, (int) y - icon_height / 2, paint);
+                canvas.drawBitmap(draw_object, (int) x - icon_width / 2 , (int) y - icon_height / 2, paint);
             }
         }
     }
