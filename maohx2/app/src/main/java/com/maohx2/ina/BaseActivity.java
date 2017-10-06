@@ -7,6 +7,8 @@ import android.view.SurfaceHolder;
 
 import android.view.SurfaceView;
 
+import com.maohx2.ina.Draw.Graphic;
+
 /**
  * Created by ryomasenda on 2017/09/08.
  */

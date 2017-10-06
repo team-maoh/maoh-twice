@@ -2,71 +2,46 @@ package com.maohx2.ina;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.content.Intent;
-//import java.util.ArrayList;
-import java.util.*;
-
 import android.view.MotionEvent;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+import com.maohx2.ina.UI.BattleUserInterface;
+import com.maohx2.ina.UI.DungeonUserInterface;
+
+import static com.maohx2.ina.Constants.Touch.TouchState;
+
 
 
 public class MainActivity extends BaseActivity {
-    CustomSurfaceView custom_surface_view;
+    DungeonSurfaceView dungeon_surface_view;
     boolean game_system_flag = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        custom_surface_view = new CustomSurfaceView(this);
-        setContentView(custom_surface_view);
+        dungeon_surface_view = new DungeonSurfaceView(this);
+        setContentView(dungeon_surface_view);
         //setImage();
     }
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if(!game_system_flag) {
-            custom_surface_view.runGameSystem(custom_surface_view.getWidth(), custom_surface_view.getHeight());
-            custom_surface_view.runThread();
+            dungeon_surface_view.runGameSystem(dungeon_surface_view.getWidth(), dungeon_surface_view.getHeight());
+            dungeon_surface_view.runThread();
             game_system_flag = true;
         }
     }
 }
 
-
-/*
-public class MainActivity extends Activity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // GLSurfaceViewを設定します
-        setContentView(new MyGLView(this));
-    }
-
-}
-*/
-
-
-class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
-
-
-
+class DungeonSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 
 
     //画像読み込み
@@ -85,13 +60,15 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
     private Thread thread;
     Context context;
 
-    int touch = -1;
+    DungeonUserInterface dungeon_user_interface;
+    double touch_x = 0;
+    double touch_y = 0;
+    TouchState touch_state = TouchState.AWAY;
 
-    double x = 0, y = 0;
 
     GameSystem game_system;
 
-    public CustomSurfaceView(Context m_context) {
+    public DungeonSurfaceView(Context m_context) {
         super(m_context);
         setZOrderOnTop(true);
         /// このビューの描画内容がウインドウの最前面に来るようにする。
@@ -99,20 +76,15 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
         holder.addCallback(this);
         paint.setColor(Color.BLUE);
         context = m_context;
-        }
+    }
 
     public void runGameSystem(int display_width,int display_height){
         display_size.x = display_width;
         display_size.y = display_height;
         game_system = new GameSystem();
-        game_system.init(holder, neco, apple, banana, grape, watermelon, slime,(Activity)context,display_size);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
+        dungeon_user_interface = new DungeonUserInterface();
+        game_system.init(holder, dungeon_user_interface, neco, apple, banana, grape, watermelon, slime,(Activity)context,display_size);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
     }
-
-    /*public void runGetDisplaySize(){
-        WindowManager window_manager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = window_manager.getDefaultDisplay();
-        display.getSize(display_size);
-    }*/
 
     public void runThread(){
         thread = new Thread(this);
@@ -120,73 +92,179 @@ class CustomSurfaceView extends SurfaceView implements SurfaceHolder.Callback, R
     }
 
     @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        // SurfaceViewが変化（画面の大きさ，ピクセルフォーマット）した時のイベントの処理を記述
-    }
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
 
     @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-
-    }
+    public void surfaceCreated(SurfaceHolder holder) {}
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        // SurfaceViewが廃棄されたる時の処理を記述
-    }
+    public void surfaceDestroyed(SurfaceHolder holder) {}
 
-    /*
-     * 描画スレッドを実行する。
-     */
+
     @Override
     public void run() {
         while (thread!=null) {
 
-            game_system.update(x, y, touch);
-            game_system.draw(x, y, touch);
+            game_system.update(touch_x, touch_y, touch_state);
+            game_system.draw(touch_x, touch_y, touch_state);
         }
     }
-
-    /*
-     * スレッドを初期化して実行する。
-     */
-/*
-    private void drawOnThread() {
-        thread = new Thread(this);
-        thread.start();
-    }
-*/
 
     //目標地点を記録するリスト
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            //タッチした座標を目標座標として格納
-            case MotionEvent.ACTION_DOWN:
-                x = event.getX();
-                y = event.getY();
-                //drawOnThread();
 
-                touch = 0;
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                touch_state = TouchState.DOWN;
+                touch_x = event.getX();
+                touch_y = event.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                x = event.getX();
-                y = event.getY();
-                //描画
-                touch = 1;
+                touch_state = TouchState.MOVE;
+                touch_x = event.getX();
+                touch_y = event.getY();
                 break;
             case MotionEvent.ACTION_UP:
-                x = event.getX();
-                y = event.getY();
-                touch = 2;
+                touch_state = TouchState.UP;
                 break;
             case MotionEvent.ACTION_CANCEL:
-                x = event.getX();
-                y = event.getY();
-                touch = 3;
                 break;
         }
 
-        //return super.onTouchEvent(event);
         return true;
     }
 }
+
+
+/*
+public class MainActivity extends Activity {
+
+    RelativeLayout layout;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        layout = new RelativeLayout(this);
+        layout.setBackgroundColor(Color.WHITE);
+//        layer_admin = new LayerAdmin(getApplicationContext());
+//        TouchSV touch = new TouchSV(this);
+//        BaseSurfaceView[] layer = new BaseSurfaceView[7];
+//        layer[0] = new CustomSurfaceView(this,layer_admin);
+//        for (int i = 1; i < 7; i++)
+//            layer[i] = new BaseSurfaceView(this);
+//        layer_admin.setLayer(0, layer[0]);
+//        for (int i = 1; i < 7; i++){
+//            layer_admin.setLayer(i, layer[i]);
+//        }
+//        for(int i = 0; i < 7; i++) {
+//            layout.addView(layer_admin.getLayer(i));
+//        }
+        layout.addView(new BattleSurfaceView(this));
+        setContentView(layout);
+//        layer_admin.startThread();
+//        layout.addView(new CustomSurfaceView(this));
+//        setContentView(layout);
+    }
+}
+
+
+class BattleSurfaceView extends BaseSurfaceView implements SurfaceHolder.Callback, Runnable {
+
+    Paint paint = new Paint();
+    private SurfaceHolder holder;
+    private Thread thread;
+
+    double touch_x = 0;
+    double touch_y = 0;
+
+    TouchState touch_state = TouchState.AWAY;
+
+
+    BattleUserInterface battle_user_interface;
+    GameSystem game_system;
+
+    public BattleSurfaceView(Context context) {
+        super(context);
+        setZOrderOnTop(true);
+        holder = getHolder();
+        holder.addCallback(this);
+        paint.setColor(Color.BLUE);
+
+        battle_user_interface = new BattleUserInterface();
+        battle_user_interface.init();
+
+        game_system = new GameSystem();
+        game_system.init(holder, battle_user_interface);
+
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        thread = new Thread(this);
+        thread.start();
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {}
+
+
+    @Override
+    public void run() {
+
+
+        while (true) {
+            battle_user_interface.updateTouchState(touch_x, touch_y, touch_state);
+            game_system.updata();
+            game_system.draw();
+        }
+
+    }
+
+
+    //なぞられた点を記録するリスト
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                touch_state = TouchState.DOWN;
+                touch_x = event.getX();
+                touch_y = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                touch_state = TouchState.MOVE;
+                touch_x = event.getX();
+                touch_y = event.getY();
+                break;
+            case MotionEvent.ACTION_UP:
+                touch_state = TouchState.UP;
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                break;
+        }
+
+        return true;
+    }
+}
+
+
+*/
+
+/*
+public class MainActivity extends Activity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // GLSurfaceViewを設定します
+        setContentView(new MyGLView(this));
+    }
+
+}
+*/
