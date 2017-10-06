@@ -1,4 +1,5 @@
-package com.example.ina.maohx2;
+package com.maohx2.ina;
+
 
 /**
  * Created by ina on 2017/08/30.

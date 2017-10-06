@@ -1,4 +1,5 @@
-package com.example.ina.maohx2;
+package com.maohx2.ina;
+
 
 import android.os.Bundle;
 import android.widget.LinearLayout;

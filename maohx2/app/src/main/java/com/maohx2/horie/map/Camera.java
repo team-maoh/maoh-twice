@@ -1,4 +1,4 @@
-package com.example.horie.map;
+package com.maohx2.horie.map;
 
 import android.app.Activity;
 import android.graphics.Point;

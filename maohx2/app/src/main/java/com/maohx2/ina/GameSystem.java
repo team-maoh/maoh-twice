@@ -1,11 +1,13 @@
-package com.example.ina.maohx2;
+package com.maohx2.ina;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
+import android.graphics.Point;
 import android.view.SurfaceHolder;
 
-import com.example.horie.map.MapAdmin;
+import com.maohx2.fuusya.MapObjectAdmin;
+import com.maohx2.horie.map.MapAdmin;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -19,10 +21,10 @@ public class GameSystem {
     MapAdmin map_admin;
     SurfaceHolder holder;
 
-    public void init(SurfaceHolder m_holder, Bitmap neco, Bitmap apple,  Bitmap banana, Bitmap grape, Bitmap watermelon, Bitmap slime) {
-        map_admin = new MapAdmin(m_holder);
+    public void init(SurfaceHolder m_holder, Bitmap neco, Bitmap apple, Bitmap banana,Bitmap grape, Bitmap watermelon, Bitmap slime, Activity activity, Point display_size) {
+        map_admin = new MapAdmin(m_holder, activity, display_size);
         map_object_admin = new MapObjectAdmin();
-        map_object_admin.init(m_holder, neco, apple, banana, grape, watermelon, slime, map_admin);//MapObjectAdmin.javaのinitを実行
+        map_object_admin.init(m_holder, neco, apple, banana,grape,watermelon, slime, map_admin);//MapObjectAdmin.javaのinitを実行
         holder = m_holder;
     }
 
@@ -42,10 +44,8 @@ public class GameSystem {
     public void draw(double touch_x, double touch_y, int touch_state) {
         Canvas canvas = null;
         canvas = holder.lockCanvas(null);
-        canvas.drawColor(Color.BLACK);
         map_admin.drawMap(canvas);
         map_object_admin.draw(touch_x, touch_y, touch_state, canvas);
-//        map_object_admin.draw(touch_x, touch_y, touch_state);
         holder.unlockCanvasAndPost(canvas);
     }
 

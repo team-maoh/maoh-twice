@@ -1,4 +1,4 @@
-package com.example.horie.map;
+package com.maohx2.horie.map;
 
 /**
  * Created by horie on 2017/09/03.

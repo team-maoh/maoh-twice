@@ -1,4 +1,4 @@
-package com.example.kmhanko.database;
+package com.maohx2.kmhanko.database;
 
 import android.content.Context;
 import java.io.IOException;

@@ -1,119 +1,131 @@
-package com.example.ina.maohx2;
+package com.maohx2.ina;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.view.MotionEvent;
-import android.view.View;
+import android.content.res.AssetManager;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
 
 /**
  * Created by ryomasenda on 2017/09/03.
  */
 
 
-/*
-public class Graphic{
-
-    SurfaceView setImage(Context context){
-        return new BaseSurfaceView(context);
-    }
-
-}
-*/
-
+//セットされた描画データ
 class BitmapData{
-    int id;
-    Context context;
-    float x;
-    float y;
-    String filename;
-    Bitmap bitmap;
-    static Resources res;
+    public double x;
+    public double y;
+    public Bitmap bitmap;
 
-    public BitmapData(){
+    private Context context;
+
+    BitmapData(){
     }
 
     public void init(Context _context){
         context = _context;
-        res = context.getResources();
     }
 
-    void setBitmapData(float _x, float _y, String _filename){
+    void setBitmapData(String folderName, String filename, double _x, double _y){
         x = _x;
         y = _y;
-        filename = _filename;
-        int resId = res.getIdentifier(filename,"drawable",context.getPackageName());
-        bitmap = BitmapFactory.decodeResource(res, resId);
+
+        try {
+            bitmap = loadBitmapAsset("image" + "/" + folderName + "/" + filename, context);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    Bitmap getBitmap(){
-        return bitmap;
+    static final Bitmap loadBitmapAsset(String fileName, Context context) throws IOException {
+        final AssetManager assetManager = context.getAssets();
+        BufferedInputStream bis = null;
+        try {
+            bis = new BufferedInputStream(assetManager.open(fileName));
+            return BitmapFactory.decodeStream(bis);
+        } finally {
+            try {
+                bis.close();
+            } catch (Exception e) {
+                //IOException, NullPointerException
+            }
+        }
     }
 
 }
 
-public class Graphic extends SurfaceView implements SurfaceHolder.Callback {
+public class Graphic {
+
+    //定数
+    final int LAYER_MAX = Layer.FRONT.ordinal() + 1;
+    final int BITMAP_MAX = 128;
+
+    //ビットマップデータの配列(レイヤー番号*ビットマップ番号)
+    BitmapData[][] bitmapDatas = new BitmapData[LAYER_MAX][BITMAP_MAX];
+    int bitmapMax[] = new int[LAYER_MAX];
 
     Paint paint = new Paint();
-    private SurfaceHolder holder;
-    //private Thread thread;
-    BitmapData[] bitmapDatas = new BitmapData[1024];
-    int bitmapMax = 0;
-
-    public boolean created = false;
-
-    float x = 0;
-    float y = 0;
+    SurfaceHolder holder;
 
     public Graphic(Context context) {
-        super(context);
-        for(int i = 0; i<1024;i++){
-            bitmapDatas[i] = new BitmapData();
+        for(int i = 0; i<LAYER_MAX;i++) {
+            for (int j = 0; j < BITMAP_MAX; j++) {
+                bitmapDatas[i][j] = new BitmapData();
+            }
         }
+        bitmapDatas[0][0].init(context);
 
-        bitmapDatas[0].init(context);
-        setZOrderOnTop(true);
-        /// このビューの描画内容がウインドウの最前面に来るようにする。
-        holder = getHolder();
-        holder.addCallback(this);
         paint.setColor(Color.BLUE);
     }
 
-    @Override
-    public void surfaceChanged (SurfaceHolder holder, int format, int width, int height) {
-        // SurfaceViewが変化（画面の大きさ，ピクセルフォーマット）した時のイベントの処理を記述
+    /*
+    ここから呼び出される関数
+     */
+
+    public void setHolder(SurfaceHolder _holder){
+        holder = _holder;
     }
 
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        //thread呼び出し
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        // SurfaceViewが廃棄されたる時の処理を記述
+    public SurfaceHolder getHolder(){
+        return holder;
     }
 
     public void draw() {
-        while (!created);
         Canvas canvas = null;
         canvas = holder.lockCanvas();
         canvas.drawColor(Color.WHITE);
-        for(int i = 0; i<bitmapMax; i++){
-            canvas.drawBitmap(bitmapDatas[i].getBitmap(), 100, 100, paint);
+        for(int i = 0; i<LAYER_MAX; i++){
+            for(int j = 0; j<bitmapMax[i]; j++) {
+                canvas.drawBitmap(bitmapDatas[i][j].bitmap, (float)bitmapDatas[i][j].x, (float)bitmapDatas[i][j].y, paint);
+            }
         }
         holder.unlockCanvasAndPost(canvas);
     }
 
-    public void setImage(String name, float x, float y){
-        bitmapDatas[bitmapMax].setBitmapData(x,y,name);
-        bitmapMax = bitmapMax + 1;
+    public void setImage(String name, double x, double y){
+        String[] splitName = name.split("/",0);
+        String folderName = splitName[0];
+        String fileName = splitName[1];
+
+        int layerNum = (new LayerManager().getLayer(folderName)).ordinal();
+        bitmapDatas[layerNum][bitmapMax[layerNum]].setBitmapData(folderName,fileName,x,y);
+        bitmapMax[layerNum] = bitmapMax[layerNum] + 1;
+    }
+
+    public void setImage(String name, double x, double y, String layerName){
+        String[] splitName = name.split("/",0);
+        String folderName = splitName[0];
+        String fileName = splitName[1];
+
+        int layerNum = (new LayerManager().getLayer(layerName)).ordinal();
+        bitmapDatas[layerNum][bitmapMax[layerNum]].setBitmapData(folderName,fileName,x,y);
+        bitmapMax[layerNum] = bitmapMax[layerNum] + 1;
     }
 
 }

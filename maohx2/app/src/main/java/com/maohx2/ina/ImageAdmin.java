@@ -1,4 +1,5 @@
-package com.example.ina.maohx2;
+package com.maohx2.ina;
+
 
 import javax.microedition.khronos.opengles.GL10;
 
