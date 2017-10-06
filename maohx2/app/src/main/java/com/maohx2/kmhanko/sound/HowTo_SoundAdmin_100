@@ -1,0 +1,69 @@
+■クラス　SoundAdmin
+・コンストラクタ引数
+Context
+・説明
+効果音を読み込み・再生するクラス。
+
+・メソッド
+boolean loadSoundPack(String sound_pack_table_name)
+    引数 :
+        String sound_pack_table_name : DBにおけるテーブル名
+    説明 : テーブルに記載された効果音群を読み込み、アクティブに使えるようにする。
+    すでに他のテーブルの効果音群が読み込まれている場合は、先に解放を行う。
+
+void release()
+    説明 : loadSoundPackで読み込んだ効果音群を解放し、読み込む前に戻す。
+
+void play(String name)
+    引数 :
+        String name : DBにおいて定めた効果音名
+    説明 : 効果音を再生する。
+
+void play(String name, float leftVolume, float rightVolume, int priority, int loop, float rate)
+    引数 :
+        String name : 効果音名
+        float leftVolume : 左音量(小0.0 ~ 1.0大)
+        float rightVolume : 右音量(小0.0 ~ 1.0大)
+        int priority : 優先度(0が最低)
+        int loop : 繰り返し再生回数(-1 : 無限回　0 : 一回)
+        float rate : 再生速度(0.5 ~ 2.0[倍])
+    説明 : 効果音を再生する。
+
+void resume(String name)
+    引数 :
+        String name : 効果音名
+    説明 : 指定の効果音を一時停止する。pauseメソッドで再開する。
+
+void pause(String name)
+    引数 :
+        String name : 効果音名
+    説明 : 一時停止している指定の効果音の再生を再開する。
+
+void autoResume()
+    引数 :
+        String name : 効果音名
+    説明 : 全ての効果音を一時停止する。autoPauseメソッドで再開する。
+
+void autoPause()
+    引数 :
+        String name : 効果音名
+    説明 : 一時停止している全ての効果音の再生を再開する。
+
+void stop(String name)
+    引数 :
+        String name : 効果音名
+    説明 : 指定の効果音を停止する。再開する方法はない。
+
+・クラス使用例
+@MainActicityにおける下準備
+MyDatabaseAdmin database_admin = new MyDatabaseAdmin(this);//データベース準備
+database_admin.addMyDatabase("soundDB","soundDB.db",1,"r");//サウンドのデータベース読み込み
+sound_admin = new SoundAdmin(this);//インスタンス化
+sound_admin.setDatabase(database_admin.getMyDatabase("soundDB"));//データベースを渡す
+
+@要所要所
+sound_admin.loadSoundPack("sound_pack_map");//サウンドパックを読み込む
+
+@効果音を鳴らすとき
+sound_admin.play("waik")//サウンドを鳴らす
+
