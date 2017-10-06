@@ -3,8 +3,13 @@ package com.maohx2.fuusya;
 
 import android.graphics.Bitmap;
 import android.view.SurfaceHolder;
+import static com.maohx2.ina.Constants.Touch.TouchState;
 
-import com.maohx2.ina.MySprite;
+
+
+//import com.maohx2.ina.MySprite;
+
+import com.maohx2.ina.waste.MySprite;
 
 import java.util.Random;
 
@@ -40,7 +45,7 @@ public class MapItem extends MapObject {
     }
 
     @Override
-    public void update(double touch_x, double touch_y, int touch_state) {
+    public void update(double touch_x, double touch_y, TouchState touch_state) {
         super.update(touch_x, touch_y, touch_state);
     }
 }

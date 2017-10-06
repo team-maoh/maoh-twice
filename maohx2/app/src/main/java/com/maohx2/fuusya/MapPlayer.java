@@ -4,7 +4,11 @@ import android.graphics.Bitmap;
 import android.view.SurfaceHolder;
 
 import com.maohx2.horie.map.MapAdmin;
-import com.maohx2.ina.MySprite;
+import com.maohx2.ina.Constants;
+import com.maohx2.ina.waste.MySprite;
+//import com.maohx2.ina.MySprite;
+import static com.maohx2.ina.Constants.Touch.TouchState;
+
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -50,7 +54,7 @@ public class MapPlayer extends MapUnit {
     }
 
     @Override
-    public void update(double touch_x, double touch_y, int touch_state) {
+    public void update(double touch_x, double touch_y, TouchState touch_state) {
 
         //仮
         /*
@@ -61,7 +65,7 @@ public class MapPlayer extends MapUnit {
         }
         */
 
-        if (touch_state == 0 || touch_state == 1) {
+        if (touch_state == TouchState.DOWN || touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE) {
             dst_steps = (int) myDistance(touch_x, touch_y, x, y) / STEP;
             dst_steps++;//dst_steps = 0 のときゼロ除算が発生するので
             dx = ((touch_x - x) / dst_steps);
@@ -197,7 +201,7 @@ public class MapPlayer extends MapUnit {
     }
 
     private int detectWall(double x1, double y1, double x2, double y2) {
-        return map_admin.detectWallDirection((int) x1, (int) y1, (int) x2, (int) y2);
+        return map_admin.detectWallDirection( x1, y1, x2, y2);
     }
 
     public double getPlayerWorldX(){

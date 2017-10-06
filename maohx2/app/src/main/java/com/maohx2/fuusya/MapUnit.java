@@ -4,7 +4,8 @@ import android.graphics.Bitmap;
 import android.view.SurfaceHolder;
 
 import com.maohx2.horie.map.MapAdmin;
-import com.maohx2.ina.MySprite;
+import com.maohx2.ina.waste.MySprite;
+//import com.maohx2.ina.MySprite;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -50,8 +51,6 @@ public class MapUnit extends MapObject {
 
     }
 
-    public void update(){
-
-    }
+//    public void update(){}
 
 }

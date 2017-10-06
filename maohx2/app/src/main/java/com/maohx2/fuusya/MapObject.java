@@ -4,8 +4,15 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
+import static com.maohx2.ina.Constants.Touch.TouchState;
 
-import com.maohx2.ina.MySprite;
+
+
+import com.maohx2.horie.map.MapAdmin;
+import com.maohx2.ina.waste.MySprite;
+//import com.maohx2.ina.MySprite;
+
+import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -46,14 +53,17 @@ abstract public class MapObject {
         id = -1;
     }
 
-    public void update(double touch_x, double touch_y, int touch_state) {
+    public void update(double touch_x, double touch_y, TouchState touch_state) {
     }
 
-    public void draw(double touch_x, double touch_y, int touch_state, Canvas canvas) {
+    public void draw(double touch_x, double touch_y,  TouchState touch_state, Canvas canvas, MapAdmin _map_admin) {
+
+        MapAdmin map_admin = _map_admin;
 
         synchronized (holder) {
             if (exists == true) {
-                canvas.drawBitmap(draw_object, (int) x - icon_width / 2 , (int) y - icon_height / 2, paint);
+                canvas.drawBitmap(draw_object, (int) x - icon_width / 2 - map_admin.getMap_size_x() , (int) y - icon_height / 2 - map_admin.getMap_size_y(), paint);
+//                canvas.drawBitmap(draw_object, (int) x - icon_width / 2 , (int) y - icon_height / 2, paint);
             }
         }
     }

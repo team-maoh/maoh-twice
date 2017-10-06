@@ -6,12 +6,13 @@ import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
 import com.maohx2.horie.map.MapAdmin;
-import com.maohx2.ina.ImageAdmin;
+import com.maohx2.ina.UI.DungeonUserInterface;
+//import com.maohx2.ina.ImageAdmin;
 
 import javax.microedition.khronos.opengles.GL10;
 
 import static java.lang.Math.pow;
-
+import static com.maohx2.ina.Constants.Touch.TouchState;
 /**
  * Created by ina on 2017/09/05.
  */
@@ -28,10 +29,10 @@ public class MapObjectAdmin {
     int REACH_OF_PLAYER = 25;//プレイヤーのアイテム取得半径
     int item_distance, enemy_distance;
     BagItemAdmin bag_item_admin;
-    ImageAdmin image_admin;
+//    ImageAdmin image_admin;
     MapAdmin map_admin;
 
-    public void init(SurfaceHolder _holder, Bitmap draw_player, Bitmap draw_apple, Bitmap draw_banana, Bitmap draw_grape, Bitmap draw_watermelon, Bitmap draw_enemy, MapAdmin _map_admin) {
+    public void init(SurfaceHolder _holder, DungeonUserInterface _dungeon_user_interface, Bitmap draw_player, Bitmap draw_apple, Bitmap draw_banana, Bitmap draw_grape, Bitmap draw_watermelon, Bitmap draw_enemy, MapAdmin _map_admin) {
         //↑draw_player = neco, draw_item = apple, draw_enemy = slime (GameSystem.java参照)
 
         holder = _holder;
@@ -76,7 +77,7 @@ public class MapObjectAdmin {
         bag_item_admin.init();
     }
 
-
+/*
     public void init(ImageAdmin _image_admin) {
         image_admin = _image_admin;
 
@@ -107,9 +108,9 @@ public class MapObjectAdmin {
         bag_item_admin = new BagItemAdmin();
         bag_item_admin.init();
     }
+*/
 
-
-    public void update(double touch_x, double touch_y, int touch_state) {
+    public void update(double touch_x, double touch_y, TouchState touch_state) {
 
         map_unit[0].update(touch_x, touch_y, touch_state);
         player_x = map_unit[0].getMapX();
@@ -144,20 +145,20 @@ public class MapObjectAdmin {
         }
     }
 
-    public void draw(double touch_x, double touch_y, int touch_state, Canvas canvas) {
+    public void draw(double touch_x, double touch_y, TouchState touch_state, Canvas canvas) {
         //canvas.drawColor(Color.BLACK);
 
-        map_unit[0].draw(touch_x, touch_y, touch_state, canvas);
+        map_unit[0].draw(touch_x, touch_y, touch_state, canvas , map_admin);
 
         for (int i = 0; i < NUM_OF_ITEM; i++) {
             if (map_item[i].exists() == true) {
-                map_item[i].draw(touch_x, touch_y, touch_state, canvas);
+                map_item[i].draw(touch_x, touch_y, touch_state, canvas , map_admin);
             }
         }
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
             if (map_enemy[i].exists() == true) {
-                map_enemy[i].draw(touch_x, touch_y, touch_state, canvas);
+                map_enemy[i].draw(touch_x, touch_y, touch_state, canvas, map_admin);
             }
         }
 

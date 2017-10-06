@@ -3,10 +3,16 @@ package com.maohx2.fuusya;
 import android.graphics.Bitmap;
 import android.view.SurfaceHolder;
 
-import com.maohx2.ina.MySprite;
+import static com.maohx2.ina.Constants.Touch.TouchState;
+
+
+
+
+//import com.maohx2.ina.MySprite;
+// import com.maohx2.ina.waste.MySprite;
 
 import java.util.Random;
-
+import com.maohx2.ina.waste.MySprite;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
@@ -38,7 +44,7 @@ public class MapEnemy extends MapUnit {
     }
 
     @Override
-    public void update(double touch_x, double touch_y, int touch_state) {
+    public void update(double touch_x, double touch_y,TouchState touch_state) {
 
 //        player = map_object_admin.getUnit(0);
         player = map_object_admin.map_unit[0];
