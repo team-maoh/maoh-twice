@@ -11,7 +11,9 @@ import static java.lang.Math.pow;
 // import com.maohx2.ina.waste.MySprite;
 
 import java.util.Random;
+
 import com.maohx2.ina.waste.MySprite;
+
 import javax.microedition.khronos.opengles.GL10;
 
 /**
@@ -21,41 +23,63 @@ import javax.microedition.khronos.opengles.GL10;
 public class MapEnemy extends MapUnit {
 
     MapPlayer player;
-    int STEP;
+    int STEP = 10;
+    int chase_count;
+    int PERIOD_FRAMES_OF_CHASE = 15;//[単位:フレーム]/Enemyはこの枚数ごとに目標座標を更新する
     double dst_x = 100, dst_y = 100;
 
     @Override
     public void init(SurfaceHolder holder, Bitmap draw_object, MapObjectAdmin map_object_admin) {
         super.init(holder, draw_object, map_object_admin);
-        STEP = 10;
+        player = map_object_admin.getPlayer();
+
         Random random = new Random();
         x = random.nextDouble() * 1000;
         y = random.nextDouble() * 600;
+
+        chase_count = 0;
     }
 
     @Override
     public void init(GL10 gl, MySprite draw_object, MapObjectAdmin map_object_admin) {
-        super.init(gl,draw_object, map_object_admin);
-        STEP = 10;
+        super.init(gl, draw_object, map_object_admin);
+        player = map_object_admin.getPlayer();
+
         Random random = new Random();
         x = random.nextDouble() * 1000;
         y = random.nextDouble() * 600;
     }
 
     @Override
-    public void update(double touch_x, double touch_y,TouchState touch_state) {
+    public void update(double touch_x, double touch_y, TouchState touch_state) {
 
-        player = map_object_admin.getPlayer();
+        /*
+        if (myDistance(x, y, dst_x, dst_y) < PLAYER_STEP*CHASE_STEPS) {
+            dst_x = player.getPlayerWorldX();
+            dst_y = player.getPlayerWorldY();
+        } else {
+            dst_x = player.getChaseWorldX();
+            dst_y = player.getChaseWorldY();
+        }
+        */
 
-        dst_x = player.x;//getMapX(),getMapY()はMapObject内部に記述されている
-        dst_y = player.y;
+        chase_count++;
+        if(chase_count > PERIOD_FRAMES_OF_CHASE){
+            dst_x = player.getPlayerWorldX();
+            dst_y = player.getPlayerWorldY();
+            chase_count = 0;
+        }
 
-        dst_steps = (int) (pow(pow(dst_x - x, 2.0) + pow(dst_y - y, 2.0), 0.5) / (double) STEP);
+        dst_steps = (int) (myDistance(x, y, dst_x, dst_y) / (double) STEP);
         dst_steps++;//dst_steps = 0 のときゼロ除算が発生するので
 
         dx = (int) ((dst_x - x) / dst_steps);
         dy = (int) ((dst_y - y) / dst_steps);
         x += dx;
         y += dy;
+    }
+
+    private double myDistance(double x1, double y1, double x2, double y2) {
+        return (pow(pow(x1 - x2, 2.0) + pow(y1 - y2, 2.0), 0.5));
     }
 }

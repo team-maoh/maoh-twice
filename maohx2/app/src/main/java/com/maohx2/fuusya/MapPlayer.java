@@ -5,7 +5,9 @@ import android.view.SurfaceHolder;
 
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.ina.waste.MySprite;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 //import com.maohx2.ina.MySprite;
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
@@ -22,24 +24,23 @@ import static java.lang.Math.sin;
 
 public class MapPlayer extends MapUnit {
 
-    int ENCOUNT_STEPS;
-    int total_steps, STEP;
+    int ENCOUNT_STEPS = 500;
+    int steps_count;
     MapAdmin map_admin;
     boolean kari = true;
-    int CHASE_STEPS = 10;//名前は仮/EnemyはPlayerの{現在座標ではなく}CHASE_STESP歩前の座標を追いかける
     int chase_num;
-    double[] chase_x = new double[10];
-    double[] chase_y = new double[10];
+    double[] chase_x = new double[CHASE_STEPS];
+    double[] chase_y = new double[CHASE_STEPS];
+    DungeonUserInterface dungeon_user_interface;
 
-    @Override
-    public void init(SurfaceHolder holder, Bitmap draw_object, MapObjectAdmin map_object_admin, MapAdmin _map_admin) {
+    public void init(SurfaceHolder holder, Bitmap draw_object, MapObjectAdmin map_object_admin, MapAdmin _map_admin, DungeonUserInterface _duneon_user_interface, SoundAdmin _sound_admin) {
         super.init(holder, draw_object, map_object_admin);
 
-        map_admin = _map_admin;//追加
+        dungeon_user_interface = _duneon_user_interface;
+        map_admin = _map_admin;
+        sound_admin = _sound_admin;
 
-        total_steps = 0;//アプリ起動から現在までの総歩数
-        ENCOUNT_STEPS = 300;//この歩数ごとにエンカウントする
-        STEP = 10;//歩幅( (dx)^2 + (dy)^2 = (STEP)^2 )
+        steps_count = 0;//歩数
 //        x = 900;
 //        y = 1600;
         x = 50;
@@ -57,9 +58,7 @@ public class MapPlayer extends MapUnit {
     public void init(GL10 gl, MySprite draw_object, MapObjectAdmin map_object_admin) {
         super.init(gl, draw_object, map_object_admin);
 
-        total_steps = 0;//アプリ起動から現在までの総歩数
-        ENCOUNT_STEPS = 300;//この歩数ごとにエンカウントする
-        STEP = 10;//歩幅( (dx)^2 + (dy)^2 = (STEP)^2 )
+        steps_count = 0;//歩数
         x = 10;
         y = 10;
 
@@ -74,7 +73,11 @@ public class MapPlayer extends MapUnit {
     }
 
     @Override
-    public void update(double touch_x, double touch_y, TouchState touch_state) {
+    public void update(double _touch_x, double _touch_y, TouchState touch_state) {
+
+        //TouchState touch_state = dungeon_user_interface.getTouchState();// nullが出る
+        double touch_x = dungeon_user_interface.getTouchX();
+        double touch_y = dungeon_user_interface.getTouchY();
 
         //仮
         /*
@@ -86,7 +89,7 @@ public class MapPlayer extends MapUnit {
         */
 
         if (touch_state == TouchState.DOWN || touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE) {
-            dst_steps = (int) myDistance(touch_x, touch_y, x, y) / STEP;
+            dst_steps = (int) myDistance(touch_x, touch_y, x, y) / PLAYER_STEP;
             dst_steps++;//dst_steps = 0 のときゼロ除算が発生するので
             dx = ((touch_x - x) / dst_steps);
             dy = ((touch_y - y) / dst_steps);
@@ -99,6 +102,7 @@ public class MapPlayer extends MapUnit {
         }
         if (moving == true) {
 
+            /*
             switch (detectWall(x, y, x + dx + x_reach, y + dy + y_reach)) {
                 case 0://壁なし
                     x += dx;
@@ -117,6 +121,7 @@ public class MapPlayer extends MapUnit {
                 default:
                     break;
             }
+            */
             /*
             x = +map_admin.getCameraOffset_x();
             y = +map_admin.getCameraOffset_y();
@@ -158,10 +163,9 @@ public class MapPlayer extends MapUnit {
                 if (hasUpdateDxDy(theta) == true) {
                     break;
                 }
-            }
+            }*/
             x += dx;
             y += dy;
-            */
 
             //(x, y)を格納
             chase_x[chase_num] = x;
@@ -174,14 +178,18 @@ public class MapPlayer extends MapUnit {
             System.out.println("dx" + dx);
             System.out.println("dy" + dy);
 
-            //自分と目標点の距離がSTEP未満になる or 次ステップで自分のx(またはy)座標が目標点のそれを通り過ぎる
-            if (STEP > myDistance(touch_x, touch_y, x, y) || 0 > (touch_x - (x + dx)) * dx || 0 > (touch_y - (y + dy)) * dy) {
+            //自分と目標点の距離がPLAYER_STEP未満になる or 次ステップで自分のx(またはy)座標が目標点のそれを通り過ぎる
+            if (PLAYER_STEP > myDistance(touch_x, touch_y, x, y) || 0 > (touch_x - (x + dx)) * dx || 0 > (touch_y - (y + dy)) * dy) {
                 moving = false;
             }
 
-            total_steps++;
-            if (total_steps % ENCOUNT_STEPS == 0) {
+            steps_count++;
+            if (steps_count >= ENCOUNT_STEPS) {
                 System.out.println("一定歩数歩いたので敵と遭遇");
+                steps_count = 0;
+            }
+            if(steps_count % 20 == 0){
+                sound_admin.play("walk");
             }
 
         }
@@ -219,8 +227,8 @@ public class MapPlayer extends MapUnit {
                 wy = -wy;
             }
 
-            dx = (dx * wx + dy + wy) * wx;
-            dy = (dx * wx + dy + wy) * wy;
+            dx = (dx * wx + dy * wy) * wx;
+            dy = (dx * wx + dy * wy) * wy;
 
             return true;
         }

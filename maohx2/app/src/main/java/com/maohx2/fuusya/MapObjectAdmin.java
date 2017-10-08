@@ -7,6 +7,7 @@ import android.view.SurfaceHolder;
 
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.UI.DungeonUserInterface;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 //import com.maohx2.ina.ImageAdmin;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -28,19 +29,23 @@ public class MapObjectAdmin {
     MapEnemy[] map_enemy = new MapEnemy[NUM_OF_ENEMY];
     SurfaceHolder holder;
     int REACH_OF_PLAYER = 25;//プレイヤーのアイテム取得半径
-    int item_distance, enemy_distance;
+    double item_distance, enemy_distance;
     BagItemAdmin bag_item_admin;
 //    ImageAdmin image_admin;
     MapAdmin map_admin;
+    SoundAdmin sound_admin;
+    DungeonUserInterface dungeon_user_interface;
 
-    public void init(SurfaceHolder _holder, DungeonUserInterface _dungeon_user_interface, Bitmap draw_player, Bitmap draw_apple, Bitmap draw_banana, Bitmap draw_grape, Bitmap draw_watermelon, Bitmap draw_enemy, MapAdmin _map_admin) {
+    public void init(SurfaceHolder _holder, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Bitmap draw_player, Bitmap draw_apple, Bitmap draw_banana, Bitmap draw_grape, Bitmap draw_watermelon, Bitmap draw_enemy, MapAdmin _map_admin) {
         //↑draw_player = neco, draw_item = apple, draw_enemy = slime (GameSystem.java参照)
 
         holder = _holder;
 
+        dungeon_user_interface = _dungeon_user_interface;
         map_admin = _map_admin;
+        sound_admin = _sound_admin;
         map_player = new MapPlayer();
-        map_player.init(_holder, draw_player, this, map_admin);
+        map_player.init(_holder, draw_player, this, map_admin, dungeon_user_interface, _sound_admin);
         player_x = map_player.getMapX();
         player_y = map_player.getMapY();
 
@@ -131,6 +136,7 @@ public class MapObjectAdmin {
 
             if (item_distance < REACH_OF_PLAYER && map_item[i].exists() == true) {
                 System.out.println("アイテム獲得");
+                sound_admin.play("getitem");
                 bag_item_admin.setItemIdToBagItem(map_item[i].getId());//アイテムidを引き渡す
                 map_item[i].setExists(false);
             }
@@ -142,7 +148,7 @@ public class MapObjectAdmin {
 
             if (enemy_distance < REACH_OF_PLAYER && map_enemy[i].exists() == true) {
                 System.out.println("ジオ敵と接触");
-                map_enemy[i].setExists(false);//接触すると敵が消える(戦闘に突入する)
+//XXX                map_enemy[i].setExists(false);//接触すると敵が消える(戦闘に突入する)
             }
         }
     }
@@ -212,7 +218,7 @@ public class MapObjectAdmin {
     }
 
     //(x1, y1)と(x2, y2)の距離を返す
-    int myDistance(double x1, double y1, double x2, double y2) {
-        return (int) pow(pow(x1 - x2, 2.0) + pow(y1 - y2, 2.0), 0.5);
+    double myDistance(double x1, double y1, double x2, double y2) {
+        return pow(pow(x1 - x2, 2.0) + pow(y1 - y2, 2.0), 0.5);
     }
 }

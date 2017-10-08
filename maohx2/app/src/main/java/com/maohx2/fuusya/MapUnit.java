@@ -5,6 +5,7 @@ import android.view.SurfaceHolder;
 
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.waste.MySprite;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 //import com.maohx2.ina.MySprite;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -19,9 +20,12 @@ public class MapUnit extends MapObject {
     int dst_steps, now_steps;
     boolean moving;
     MapObjectAdmin map_object_admin;
+    int PLAYER_STEP = 40;
+    int CHASE_STEPS = 10;//名前は仮/EnemyはPlayerの{現在座標ではなく}CHASE_STESP歩前の座標を追いかける
     double REACH_FOR_WALL = 5.0;
+    SoundAdmin sound_admin;
 
-    public void init(SurfaceHolder holder, Bitmap draw_object, MapObjectAdmin map_object_admin, MapAdmin _map_admin) {
+    public void init(SurfaceHolder holder, Bitmap draw_object, MapObjectAdmin map_object_admin, MapAdmin _map_admin, SoundAdmin _sound_admin) {
     }
 
     public void init(SurfaceHolder _holder, Bitmap _draw_object, MapObjectAdmin _map_object_admin) {
