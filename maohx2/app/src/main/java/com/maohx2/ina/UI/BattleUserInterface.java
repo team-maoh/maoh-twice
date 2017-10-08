@@ -24,7 +24,6 @@ public class BattleUserInterface extends UserInterface {
     int selected_circle_num;
 
 
-
     @Override
     public void init() {
         super.init();
@@ -40,9 +39,7 @@ public class BattleUserInterface extends UserInterface {
         for (int i = -3; i <= 4; i++) {
             if (i < 0) {
                 direction_section_check[8 + i] = Math.PI * (2 * i - 1) / 8;
-            }
-
-            else {
+            } else {
                 direction_section_check[i] = Math.PI * (2 * i - 1) / 8;
             }
         }
@@ -57,9 +54,9 @@ public class BattleUserInterface extends UserInterface {
             circle_center_list_y[i] = 0;
             circle_radius_list[i] = 0;
             box_left_list[i] = 0;
-            box_top_list[i] =  0;
-            box_right_list[i] =  0;
-            box_down_list[i] =  0;
+            box_top_list[i] = 0;
+            box_right_list[i] = 0;
+            box_down_list[i] = 0;
         }
 
         circle_touch_index_num = 0;
@@ -82,7 +79,7 @@ public class BattleUserInterface extends UserInterface {
 
         if (touch_state == TouchState.UP) {
 
-            if(battle_palette_mode == 2){
+            if (battle_palette_mode == 2) {
                 selected_circle_num = select_circle_num;
             }
 
@@ -107,8 +104,6 @@ public class BattleUserInterface extends UserInterface {
     }
 
 
-
-
     public void drawBattlePalette(Canvas canvas) {
 
         if (battle_palette_mode == 0) {
@@ -127,17 +122,16 @@ public class BattleUserInterface extends UserInterface {
 
             for (int i = 0; i < 8; i++) {
 
-                if(i == select_circle_num){
+                if (i == select_circle_num) {
                     paint.setColor(CIRCLE_COLOR[i]);
                     canvas.drawCircle(1000 + (int) (120 * COS[i]), 600 - (int) (120 * SIN[i]), 30.0f, paint);
-                } else{
+                } else {
                     paint.setColor(CIRCLE_COLOR[i]);
                     canvas.drawCircle(1000 + (int) (120 * COS[i]), 600 - (int) (120 * SIN[i]), 10.0f, paint);
                 }
             }
         }
     }
-
 
 
 }

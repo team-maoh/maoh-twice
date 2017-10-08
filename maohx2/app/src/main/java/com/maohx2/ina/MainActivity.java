@@ -15,6 +15,8 @@ import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.DungeonUserInterface;
+import com.maohx2.ina.UI.MapUserInterface;
+import com.maohx2.ina.UI.UserInterface;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
@@ -137,7 +139,11 @@ class DungeonSurfaceView extends SurfaceView implements SurfaceHolder.Callback, 
 }
 
 
+
+
+
 /*
+
 public class MainActivity extends Activity {
 
     RelativeLayout layout;
@@ -168,6 +174,9 @@ public class MainActivity extends Activity {
 //        setContentView(layout);
     }
 }
+
+
+
 
 
 class BattleSurfaceView extends BaseSurfaceView implements SurfaceHolder.Callback, Runnable {
@@ -254,6 +263,109 @@ class BattleSurfaceView extends BaseSurfaceView implements SurfaceHolder.Callbac
 
 
 */
+
+
+/*
+public class MainActivity extends Activity {
+
+    RelativeLayout layout;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        layout = new RelativeLayout(this);
+        layout.setBackgroundColor(Color.WHITE);
+        layout.addView(new MapSurfaceView(this));
+        setContentView(layout);
+
+    }
+}
+
+
+class MapSurfaceView extends BaseSurfaceView implements SurfaceHolder.Callback, Runnable {
+
+    Paint paint = new Paint();
+    private SurfaceHolder holder;
+    private Thread thread;
+
+    double touch_x = 0;
+    double touch_y = 0;
+
+    TouchState touch_state = TouchState.AWAY;
+
+
+    UserInterface map_user_interface;
+    GameSystem game_system;
+
+    public MapSurfaceView(Context context) {
+        super(context);
+        setZOrderOnTop(true);
+        holder = getHolder();
+        holder.addCallback(this);
+        paint.setColor(Color.BLUE);
+
+        map_user_interface = new UserInterface();
+        map_user_interface.init();
+
+        game_system = new GameSystem();
+        game_system.init(holder, map_user_interface);
+
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        thread = new Thread(this);
+        thread.start();
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {}
+
+
+    @Override
+    public void run() {
+
+
+        while (true) {
+            map_user_interface.updateTouchState(touch_x, touch_y, touch_state);
+            game_system.updata();
+            game_system.draw();
+        }
+
+    }
+
+
+    //なぞられた点を記録するリスト
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                touch_state = TouchState.DOWN;
+                touch_x = event.getX();
+                touch_y = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                touch_state = TouchState.MOVE;
+                touch_x = event.getX();
+                touch_y = event.getY();
+                break;
+            case MotionEvent.ACTION_UP:
+                touch_state = TouchState.UP;
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                break;
+        }
+
+        return true;
+    }
+}
+*/
+
 
 /*
 public class MainActivity extends Activity {

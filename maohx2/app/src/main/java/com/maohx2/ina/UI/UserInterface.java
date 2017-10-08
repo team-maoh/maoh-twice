@@ -22,6 +22,8 @@ public class UserInterface {
     double box_right_list[] =  new double[100];
     double box_down_list[] =  new double[100];
 
+    int item_id;
+
 
     public void init() {
 
@@ -113,6 +115,36 @@ public class UserInterface {
         return false;
     }
 
+
+    public boolean checkUI(int id, int touch_way) {
+        int index_num = id % 1000;
+
+        if(touch_way == 2) {
+            if (touch_state == TouchState.UP && (id - index_num) / 1000 == 314) {
+                if (Math.pow(circle_center_list_x[index_num] - touch_x, 2) + Math.pow(circle_center_list_y[index_num] - touch_y, 2) <= Math.pow(circle_radius_list[index_num], 2)) {
+                    return true;
+                }
+            }
+        }
+
+
+        else if ((id - index_num) / 1000 == 314) {
+            if (Math.pow(circle_center_list_x[index_num] - touch_x, 2) + Math.pow(circle_center_list_y[index_num] - touch_y, 2) <= Math.pow(circle_radius_list[index_num], 2)) {
+                return true;
+            }
+        }
+
+
+        if ((id - index_num) / 1000 == 8010) {
+            if((touch_state == TouchState.DOWN || touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE) && (touch_x >= box_left_list[index_num] && touch_x <= box_right_list[index_num]) && (touch_y >= box_top_list[index_num] && touch_y < box_down_list[index_num])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
     public boolean checkCircleTouchUI(double center_x, double center_y, double circle_radius) {
 
         if (Math.pow(center_x - touch_x, 2) + Math.pow(center_y - touch_y, 2) <= Math.pow(circle_radius, 2)) {
@@ -145,8 +177,6 @@ public class UserInterface {
         circle_touch_index_num = 0;
     }
 
-
-
     public void resetUI() {
 
         resetCircleUI();
@@ -154,4 +184,12 @@ public class UserInterface {
     }
 
 
+    public int getItemID(){
+
+        return item_id;
+    }
+
+    public void setItemID(int _item_id) {
+        item_id = _item_id;
+    }
 }

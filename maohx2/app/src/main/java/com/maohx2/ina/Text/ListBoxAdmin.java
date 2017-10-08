@@ -4,6 +4,7 @@ package com.maohx2.ina.Text;
 import android.graphics.Canvas;
 
 import com.maohx2.ina.UI.BattleUserInterface;
+import com.maohx2.ina.UI.UserInterface;
 
 /**
  * Created by ina on 2017/10/01.
@@ -12,13 +13,13 @@ import com.maohx2.ina.UI.BattleUserInterface;
 public class ListBoxAdmin {
 
     ListBox list_box[] = new ListBox[100];
-    BattleUserInterface battle_user_interface;
+    UserInterface user_interface;
 
-    public void init(BattleUserInterface _battle_user_interface) {
-        battle_user_interface = _battle_user_interface;
+    public void init(UserInterface _user_interface) {
+        user_interface = _user_interface;
         list_box[0] = new ListBox();
 
-        list_box[0].init(battle_user_interface);
+        list_box[0].init(_user_interface);
     }
 
 

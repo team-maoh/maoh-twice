@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import com.maohx2.ina.Constants.Touch.TouchState;
 import com.maohx2.ina.UI.BattleUserInterface;
+import com.maohx2.ina.UI.UserInterface;
 
 /**
  * Created by ina on 2017/10/01.
@@ -25,9 +26,9 @@ public class ListBox {
     int select_content_num;
     int selected_content_num;
     Paint paint;
-    BattleUserInterface battle_user_interface;
+    UserInterface user_interface;
 
-    public void init(BattleUserInterface _battle_user_interface) {
+    public void init(UserInterface _user_interface) {
         box_up_left_x = 850;
         box_up_left_y = 100;
         box_down_right_x = 1000;
@@ -42,10 +43,10 @@ public class ListBox {
         select_content_num = -1;
         selected_content_num = -1;
 
-        battle_user_interface = _battle_user_interface;
+        user_interface = _user_interface;
 
         for(int i = 0; i < content_num; i++) {
-            touch_id[i] = battle_user_interface.setBoxTouchUI(box_up_left_x, box_up_left_y + content_height * i, box_down_right_x, box_up_left_y + content_height * (i + 1));
+            touch_id[i] = user_interface.setBoxTouchUI(box_up_left_x, box_up_left_y + content_height * i, box_down_right_x, box_up_left_y + content_height * (i + 1));
             alpha[i] = 100;
         }
     }
@@ -67,7 +68,7 @@ public class ListBox {
 
         if(selected_content_num != -1) {
             paint.setColor(Color.argb(100, 100 * ((selected_content_num + 0) % 3), 100 * ((selected_content_num + 1) % 3), 100 * ((selected_content_num + 2) % 3)));
-            canvas.drawCircle(200, 200, 50.0f, paint);
+            canvas.drawCircle(1000, 700, 50.0f, paint);
         }
 
 /*
@@ -83,14 +84,20 @@ public class ListBox {
     public void update(){
         for(int i = 0; i < content_num; i++) {
 
-            if (battle_user_interface.checkUI(touch_id[i]) == false) {
+            if(user_interface.getTouchState() == TouchState.UP){
+                user_interface.setItemID(-1);
+            }
+
+            //タッチ判定、falseがタッチされていない
+            if (user_interface.checkUI(touch_id[i]) == false) {
                 alpha[i] = 100;
             } else {
                 alpha[i] = 255;
                 select_content_num = i;
+                user_interface.setItemID(i);
             }
 
-            if(battle_user_interface.getTouchState() == TouchState.UP){
+            if(user_interface.getTouchState() == TouchState.UP){
                 selected_content_num = select_content_num;
             }
         }

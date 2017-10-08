@@ -9,10 +9,13 @@ import android.view.SurfaceHolder;
 import com.maohx2.fuusya.MapObjectAdmin;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
+import com.maohx2.ina.Map.GeoSlotAdmin;
 import com.maohx2.ina.Text.ListBoxAdmin;
 import com.maohx2.ina.Text.TextBoxAdmin;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.DungeonUserInterface;
+import com.maohx2.ina.UI.MapUserInterface;
+import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.waste.ImageAdmin;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -76,14 +79,15 @@ public class GameSystem {
 }
 
 
+
 /*
 /**
  * Created by ina on 2017/09/21.
  */
 
 
-
 /*
+
 public class GameSystem {
 
     BattleUnitAdmin battle_unit_admin;
@@ -133,5 +137,69 @@ public class GameSystem {
     }
 }
 
+
+
+
+
+
+
+*/
+
+
+
+
+/**
+ * Created by ina on 2017/10/01.
+ */
+
+/*
+
+public class GameSystem {
+
+    SurfaceHolder holder;
+    Paint paint = new Paint();
+    Canvas canvas;
+    UserInterface map_user_interface;
+    TextBoxAdmin text_box_admin;
+    ListBoxAdmin list_box_admin;
+    GeoSlotAdmin geo_slot_admin;
+
+    public void init(SurfaceHolder _holder, UserInterface _map_user_interface) {
+
+        holder = _holder;
+        canvas = null;
+        map_user_interface = _map_user_interface;
+        geo_slot_admin = new GeoSlotAdmin();
+        text_box_admin = new TextBoxAdmin();
+        list_box_admin = new ListBoxAdmin();
+        geo_slot_admin.init(map_user_interface);
+        text_box_admin.init(map_user_interface);
+        list_box_admin.init(map_user_interface);
+    }
+
+
+    public void updata() {
+
+        geo_slot_admin.updata();
+        text_box_admin.update();
+        list_box_admin.update();
+        //map_user_interface.update();
+    }
+
+
+    public void draw() {
+        canvas = null;
+        canvas = holder.lockCanvas(null);
+        canvas.drawColor(Color.WHITE);
+        paint.setAntiAlias(true);
+
+        geo_slot_admin.draw(canvas);
+        text_box_admin.draw(canvas);
+        list_box_admin.draw(canvas);
+
+        holder.unlockCanvasAndPost(canvas);
+
+    }
+}
 
 */

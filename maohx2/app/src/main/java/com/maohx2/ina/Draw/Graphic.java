@@ -127,5 +127,4 @@ public class Graphic {
         bitmapDatas[layerNum][bitmapMax[layerNum]].setBitmapData(folderName,fileName,x,y);
         bitmapMax[layerNum] = bitmapMax[layerNum] + 1;
     }
-
 }
