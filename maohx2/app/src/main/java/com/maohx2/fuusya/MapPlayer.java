@@ -26,6 +26,10 @@ public class MapPlayer extends MapUnit {
     int total_steps, STEP;
     MapAdmin map_admin;
     boolean kari = true;
+    int CHASE_STEPS = 10;//名前は仮/EnemyはPlayerの{現在座標ではなく}CHASE_STESP歩前の座標を追いかける
+    int chase_num;
+    double[] chase_x = new double[10];
+    double[] chase_y = new double[10];
 
     @Override
     public void init(SurfaceHolder holder, Bitmap draw_object, MapObjectAdmin map_object_admin, MapAdmin _map_admin) {
@@ -38,8 +42,15 @@ public class MapPlayer extends MapUnit {
         STEP = 10;//歩幅( (dx)^2 + (dy)^2 = (STEP)^2 )
 //        x = 900;
 //        y = 1600;
-        x = 10;
-        y = 10;
+        x = 50;
+        y = 50;
+        chase_num = 0;
+
+        for (int i = 0; i < 10; i++) {
+            chase_x[i] = x;
+            chase_y[i] = y;
+        }
+        chase_num++;
     }
 
     @Override
@@ -51,6 +62,15 @@ public class MapPlayer extends MapUnit {
         STEP = 10;//歩幅( (dx)^2 + (dy)^2 = (STEP)^2 )
         x = 10;
         y = 10;
+
+        chase_num = 0;
+
+        for (int i = 0; i < 10; i++) {
+            chase_x[i] = x;
+            chase_y[i] = y;
+        }
+        chase_num++;
+
     }
 
     @Override
@@ -143,6 +163,14 @@ public class MapPlayer extends MapUnit {
             y += dy;
             */
 
+            //(x, y)を格納
+            chase_x[chase_num] = x;
+            chase_y[chase_num] = y;
+            chase_num++;
+            if (chase_num >= CHASE_STEPS) {
+                chase_num = 0;
+            }
+
             System.out.println("dx" + dx);
             System.out.println("dy" + dy);
 
@@ -201,15 +229,23 @@ public class MapPlayer extends MapUnit {
     }
 
     private int detectWall(double x1, double y1, double x2, double y2) {
-        return map_admin.detectWallDirection( x1, y1, x2, y2);
+        return map_admin.detectWallDirection(x1, y1, x2, y2);
     }
 
-    public double getPlayerWorldX(){
+    public double getPlayerWorldX() {
         return x;
     }
 
-    public double getPlayerWorldY(){
+    public double getPlayerWorldY() {
         return y;
+    }
+
+    public double getChaseWorldX() {
+        return chase_x[chase_num];
+    }
+
+    public double getChaseWorldY() {
+        return chase_y[chase_num];
     }
 
 }

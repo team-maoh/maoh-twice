@@ -21,8 +21,9 @@ public class MapObjectAdmin {
 
     int NUM_OF_ENEMY = 5;
     int NUM_OF_ITEM = 10;// > 2
-    MapUnit[] map_unit = new MapUnit[1];
+    MapPlayer map_player;
     double player_x, player_y;
+    double chase_x, chase_y;
     MapItem[] map_item = new MapItem[NUM_OF_ITEM];
     MapEnemy[] map_enemy = new MapEnemy[NUM_OF_ENEMY];
     SurfaceHolder holder;
@@ -38,10 +39,10 @@ public class MapObjectAdmin {
         holder = _holder;
 
         map_admin = _map_admin;
-        map_unit[0] = new MapPlayer();
-        map_unit[0].init(_holder, draw_player, this, map_admin);
-        player_x = map_unit[0].getMapX();
-        player_y = map_unit[0].getMapY();
+        map_player = new MapPlayer();
+        map_player.init(_holder, draw_player, this, map_admin);
+        player_x = map_player.getMapX();
+        player_y = map_player.getMapY();
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
             map_enemy[i] = new MapEnemy();
@@ -69,7 +70,6 @@ public class MapObjectAdmin {
             map_item[i].setId(4);
         }
 
-
         item_distance = 0;
         enemy_distance = 0;
 
@@ -81,10 +81,10 @@ public class MapObjectAdmin {
     public void init(ImageAdmin _image_admin) {
         image_admin = _image_admin;
 
-        map_unit[0] = new MapPlayer();
-        map_unit[0].init(image_admin.getGL10(), image_admin.getImage(0), this);
-        player_x = map_unit[0].getMapX();
-        player_y = map_unit[0].getMapY();
+        map_player = new MapPlayer();
+        map_player.init(image_admin.getGL10(), image_admin.getImage(0), this);
+        player_x = map_player.getMapX();
+        player_y = map_player.getMapY();
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
             map_enemy[i] = new MapEnemy();
@@ -112,9 +112,11 @@ public class MapObjectAdmin {
 
     public void update(double touch_x, double touch_y, TouchState touch_state) {
 
-        map_unit[0].update(touch_x, touch_y, touch_state);
-        player_x = map_unit[0].getMapX();
-        player_y = map_unit[0].getMapY();
+        map_player.update(touch_x, touch_y, touch_state);
+        player_x = map_player.getMapX();
+        player_y = map_player.getMapY();
+        chase_x = map_player.getChaseWorldX();
+        chase_y = map_player.getChaseWorldY();
 
         for (int i = 0; i < NUM_OF_ITEM; i++)
             map_item[i].update(touch_x, touch_y, touch_state);
@@ -148,7 +150,7 @@ public class MapObjectAdmin {
     public void draw(double touch_x, double touch_y, TouchState touch_state, Canvas canvas) {
         //canvas.drawColor(Color.BLACK);
 
-        map_unit[0].draw(touch_x, touch_y, touch_state, canvas , map_admin);
+        map_player.draw(touch_x, touch_y, touch_state, canvas , map_admin);
 
         for (int i = 0; i < NUM_OF_ITEM; i++) {
             if (map_item[i].exists() == true) {
@@ -171,7 +173,7 @@ public class MapObjectAdmin {
         canvas = holder.lockCanvas(null);
         canvas.drawColor(Color.BLACK);
 
-        map_unit[0].draw(touch_x, touch_y, touch_state, canvas);
+        map_player.draw(touch_x, touch_y, touch_state, canvas);
 
         for (int i = 0; i < NUM_OF_ITEM; i++) {
             if (map_item[i].exists() == true) {
@@ -190,7 +192,7 @@ public class MapObjectAdmin {
 
     public void draw(GL10 gl) {
 
-        map_unit[0].draw(gl);
+        map_player.draw(gl);
 
         for (int i = 0; i < NUM_OF_ITEM; i++) {
             if (map_item[i].exists() == true) {
@@ -205,8 +207,8 @@ public class MapObjectAdmin {
         }
     }
 
-    public MapUnit getUnit(int unit_num) {
-        return map_unit[unit_num];
+    public MapPlayer getPlayer() {
+        return map_player;
     }
 
     //(x1, y1)と(x2, y2)の距離を返す
