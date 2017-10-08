@@ -120,8 +120,10 @@ public class MapObjectAdmin {
         map_player.update(touch_x, touch_y, touch_state);
         player_x = map_player.getMapX();
         player_y = map_player.getMapY();
+        /*
         chase_x = map_player.getChaseWorldX();
         chase_y = map_player.getChaseWorldY();
+        */
 
         for (int i = 0; i < NUM_OF_ITEM; i++)
             map_item[i].update(touch_x, touch_y, touch_state);
@@ -148,7 +150,7 @@ public class MapObjectAdmin {
 
             if (enemy_distance < REACH_OF_PLAYER && map_enemy[i].exists() == true) {
                 System.out.println("ジオ敵と接触");
-//XXX                map_enemy[i].setExists(false);//接触すると敵が消える(戦闘に突入する)
+                map_enemy[i].setExists(false);//接触すると敵が消える(戦闘に突入する)
             }
         }
     }

@@ -20,7 +20,7 @@ public class MapUnit extends MapObject {
     int dst_steps, now_steps;
     boolean moving;
     MapObjectAdmin map_object_admin;
-    int PLAYER_STEP = 40;
+    int PLAYER_STEP = 20;
     int CHASE_STEPS = 10;//名前は仮/EnemyはPlayerの{現在座標ではなく}CHASE_STESP歩前の座標を追いかける
     double REACH_FOR_WALL = 5.0;
     SoundAdmin sound_admin;

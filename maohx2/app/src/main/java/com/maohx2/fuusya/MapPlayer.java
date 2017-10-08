@@ -17,6 +17,7 @@ import javax.microedition.khronos.opengles.GL10;
 import static java.lang.Math.cos;
 import static java.lang.Math.pow;
 import static java.lang.Math.sin;
+import static java.lang.StrictMath.signum;
 
 /**
  * Created by Fuusya on 2017/09/11.
@@ -24,10 +25,9 @@ import static java.lang.Math.sin;
 
 public class MapPlayer extends MapUnit {
 
-    int ENCOUNT_STEPS = 500;
-    int steps_count;
+    int ENCOUNT_STEPS = 500;//この歩数ごとに敵とエンカウントする
+    int steps_count;//歩数（敵とのエンカウントに使う）
     MapAdmin map_admin;
-    boolean kari = true;
     int chase_num;
     double[] chase_x = new double[CHASE_STEPS];
     double[] chase_y = new double[CHASE_STEPS];
@@ -41,8 +41,6 @@ public class MapPlayer extends MapUnit {
         sound_admin = _sound_admin;
 
         steps_count = 0;//歩数
-//        x = 900;
-//        y = 1600;
         x = 50;
         y = 50;
         chase_num = 0;
@@ -79,26 +77,16 @@ public class MapPlayer extends MapUnit {
         double touch_x = dungeon_user_interface.getTouchX();
         double touch_y = dungeon_user_interface.getTouchY();
 
-        //仮
-        /*
-        if (kari == true) {
-            x = +map_admin.getCameraOffset_x();
-            y = +map_admin.getCameraOffset_y();
-            kari = false;
-        }
-        */
-
         if (touch_state == TouchState.DOWN || touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE) {
             dst_steps = (int) myDistance(touch_x, touch_y, x, y) / PLAYER_STEP;
             dst_steps++;//dst_steps = 0 のときゼロ除算が発生するので
             dx = ((touch_x - x) / dst_steps);
             dy = ((touch_y - y) / dst_steps);
 
-            x_reach = Math.signum(dx) * REACH_FOR_WALL;
-            y_reach = Math.signum(dy) * REACH_FOR_WALL;
+            x_reach = signum(dx) * REACH_FOR_WALL;
+            y_reach = signum(dy) * REACH_FOR_WALL;
 
             moving = true;
-//            now_steps = 0;
         }
         if (moving == true) {
 
@@ -121,10 +109,6 @@ public class MapPlayer extends MapUnit {
                 default:
                     break;
             }
-            */
-            /*
-            x = +map_admin.getCameraOffset_x();
-            y = +map_admin.getCameraOffset_y();
             */
 
                         /*
@@ -168,15 +152,13 @@ public class MapPlayer extends MapUnit {
             y += dy;
 
             //(x, y)を格納
+            /*
             chase_x[chase_num] = x;
             chase_y[chase_num] = y;
             chase_num++;
             if (chase_num >= CHASE_STEPS) {
                 chase_num = 0;
-            }
-
-            System.out.println("dx" + dx);
-            System.out.println("dy" + dy);
+            }*/
 
             //自分と目標点の距離がPLAYER_STEP未満になる or 次ステップで自分のx(またはy)座標が目標点のそれを通り過ぎる
             if (PLAYER_STEP > myDistance(touch_x, touch_y, x, y) || 0 > (touch_x - (x + dx)) * dx || 0 > (touch_y - (y + dy)) * dy) {
@@ -188,8 +170,8 @@ public class MapPlayer extends MapUnit {
                 System.out.println("一定歩数歩いたので敵と遭遇");
                 steps_count = 0;
             }
-            if(steps_count % 20 == 0){
-                sound_admin.play("walk");
+            if (steps_count % 20 == 0) {
+                sound_admin.play("walk");//足音SE
             }
 
         }
@@ -248,6 +230,7 @@ public class MapPlayer extends MapUnit {
         return y;
     }
 
+    /*
     public double getChaseWorldX() {
         return chase_x[chase_num];
     }
@@ -255,5 +238,6 @@ public class MapPlayer extends MapUnit {
     public double getChaseWorldY() {
         return chase_y[chase_num];
     }
+    */
 
 }
