@@ -29,6 +29,12 @@ public final class Constants {
             UP,
             AWAY;
         }
+
+        public enum TouchWay {
+            DOWN_MOMENT,
+            MOVE,
+            UP_MOMENT,
+        }
     }
 
     public static class BattleUnit {

@@ -31,12 +31,12 @@ public abstract class BaseActivity extends Activity {
      */
 
     void setImage(String name, double x, double y) {
-        graphic.setImage(name, x, y);
+        //graphic.setImage(name, x, y);
     }
 
     //レイヤー指定あり
     void setImage(String name, double x, double y, String layerName) {
-        graphic.setImage(name, x, y, layerName);
+        //graphic.setImage(name, x, y, layerName);
     }
 
     void draw() {

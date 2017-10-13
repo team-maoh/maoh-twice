@@ -18,47 +18,7 @@ import java.io.IOException;
 
 
 //セットされた描画データ
-class BitmapData{
-    public double x;
-    public double y;
-    public Bitmap bitmap;
 
-    private Context context;
-
-    BitmapData(){
-    }
-
-    public void init(Context _context){
-        context = _context;
-    }
-
-    void setBitmapData(String folderName, String filename, double _x, double _y){
-        x = _x;
-        y = _y;
-
-        try {
-            bitmap = loadBitmapAsset("image" + "/" + folderName + "/" + filename, context);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    static final Bitmap loadBitmapAsset(String fileName, Context context) throws IOException {
-        final AssetManager assetManager = context.getAssets();
-        BufferedInputStream bis = null;
-        try {
-            bis = new BufferedInputStream(assetManager.open(fileName));
-            return BitmapFactory.decodeStream(bis);
-        } finally {
-            try {
-                bis.close();
-            } catch (Exception e) {
-                //IOException, NullPointerException
-            }
-        }
-    }
-
-}
 
 public class Graphic {
 
@@ -79,8 +39,6 @@ public class Graphic {
                 bitmapDatas[i][j] = new BitmapData();
             }
         }
-        bitmapDatas[0][0].init(context);
-
         paint.setColor(Color.BLUE);
     }
 
@@ -88,43 +46,49 @@ public class Graphic {
     ここから呼び出される関数
      */
 
-    public void setHolder(SurfaceHolder _holder){
-        holder = _holder;
-    }
-
-    public SurfaceHolder getHolder(){
-        return holder;
-    }
-
     public void draw() {
         Canvas canvas = null;
         canvas = holder.lockCanvas();
         canvas.drawColor(Color.WHITE);
         for(int i = 0; i<LAYER_MAX; i++){
             for(int j = 0; j<bitmapMax[i]; j++) {
-                canvas.drawBitmap(bitmapDatas[i][j].bitmap, (float)bitmapDatas[i][j].x, (float)bitmapDatas[i][j].y, paint);
+//                canvas.drawBitmap(bitmapDatas[i][j].bitmap, (float)bitmapDatas[i][j].x, (float)bitmapDatas[i][j].y, paint);
             }
         }
         holder.unlockCanvasAndPost(canvas);
     }
 
-    public void setImage(String name, double x, double y){
+
+
+
+
+    public void drawBooking(String name, double x, double y){
         String[] splitName = name.split("/",0);
         String folderName = splitName[0];
         String fileName = splitName[1];
 
         int layerNum = (new LayerManager().getLayer(folderName)).ordinal();
-        bitmapDatas[layerNum][bitmapMax[layerNum]].setBitmapData(folderName,fileName,x,y);
+//        bitmapDatas[layerNum][bitmapMax[layerNum]].setBitmapData(folderName,fileName,x,y);
         bitmapMax[layerNum] = bitmapMax[layerNum] + 1;
     }
 
-    public void setImage(String name, double x, double y, String layerName){
+    public void drawBooking(String name, double x, double y, String layerName){
         String[] splitName = name.split("/",0);
         String folderName = splitName[0];
         String fileName = splitName[1];
 
         int layerNum = (new LayerManager().getLayer(layerName)).ordinal();
-        bitmapDatas[layerNum][bitmapMax[layerNum]].setBitmapData(folderName,fileName,x,y);
+//        bitmapDatas[layerNum][bitmapMax[layerNum]].setBitmapData(folderName,fileName,x,y);
         bitmapMax[layerNum] = bitmapMax[layerNum] + 1;
+    }
+
+
+
+    public void setHolder(SurfaceHolder _holder){
+        holder = _holder;
+    }
+
+    public SurfaceHolder getHolder(){
+        return holder;
     }
 }

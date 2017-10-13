@@ -17,6 +17,9 @@ import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.ina.UI.MapUserInterface;
 import com.maohx2.ina.UI.UserInterface;
+import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+import com.maohx2.kmhanko.database.MyDatabase;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
@@ -66,7 +69,8 @@ class DungeonSurfaceView extends SurfaceView implements SurfaceHolder.Callback, 
     double touch_x = 0;
     double touch_y = 0;
     TouchState touch_state = TouchState.AWAY;
-
+    SoundAdmin sound_admin;
+    MyDatabaseAdmin my_database_admin;
 
     GameSystem game_system;
 
@@ -80,12 +84,19 @@ class DungeonSurfaceView extends SurfaceView implements SurfaceHolder.Callback, 
         context = m_context;
     }
 
-    public void runGameSystem(int display_width,int display_height){
+    public void runGameSystem(int display_width,int display_height) {
         display_size.x = display_width;
         display_size.y = display_height;
         game_system = new GameSystem();
         dungeon_user_interface = new DungeonUserInterface();
-        game_system.init(holder, dungeon_user_interface, neco, apple, banana, grape, watermelon, slime,(Activity)context,display_size);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
+        sound_admin = new SoundAdmin(context);
+        my_database_admin = new MyDatabaseAdmin(context);
+        dungeon_user_interface.init();
+        my_database_admin.addMyDatabase("soundDB", "soundDB.db", 1, "r");//データベースのコピーしMySQLiteのdbを扱いやすいMyDataBase型にしている
+        MyDatabase database = my_database_admin.getMyDatabase("soundDB");
+        sound_admin.setDatabase(database);//扱いやすいやつをセットしている
+        sound_admin.loadSoundPack("sound_pack_map");
+        game_system.init(holder, dungeon_user_interface, sound_admin, neco, apple, banana, grape, watermelon, slime,(Activity)context,display_size);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
     }
 
     public void runThread(){
@@ -107,6 +118,7 @@ class DungeonSurfaceView extends SurfaceView implements SurfaceHolder.Callback, 
     public void run() {
         while (thread!=null) {
 
+            dungeon_user_interface.updateTouchState(touch_x, touch_y, touch_state);
             game_system.update(touch_x, touch_y, touch_state);
             game_system.draw(touch_x, touch_y, touch_state);
         }
@@ -133,7 +145,6 @@ class DungeonSurfaceView extends SurfaceView implements SurfaceHolder.Callback, 
             case MotionEvent.ACTION_CANCEL:
                 break;
         }
-
         return true;
     }
 }

@@ -17,6 +17,7 @@ import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.ina.UI.MapUserInterface;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.waste.ImageAdmin;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -41,11 +42,11 @@ public class GameSystem {
     SurfaceHolder holder;
     DungeonUserInterface dungeon_user_interface;
 
-    public void init(SurfaceHolder _holder, DungeonUserInterface _dungeon_user_interface, Bitmap neco, Bitmap apple, Bitmap banana,Bitmap grape, Bitmap watermelon, Bitmap slime, Activity activity, Point display_size) {
+    public void init(SurfaceHolder _holder, DungeonUserInterface _dungeon_user_interface, SoundAdmin sound_admin,Bitmap neco, Bitmap apple, Bitmap banana, Bitmap grape, Bitmap watermelon, Bitmap slime, Activity activity, Point display_size) {
         dungeon_user_interface = _dungeon_user_interface;
         map_admin = new MapAdmin(_holder, activity, display_size);
         map_object_admin = new MapObjectAdmin();
-        map_object_admin.init(_holder, dungeon_user_interface, neco, apple, banana,grape,watermelon, slime, map_admin);//MapObjectAdmin.javaのinitを実行
+        map_object_admin.init(_holder, dungeon_user_interface, sound_admin, neco, apple, banana,grape,watermelon, slime, map_admin);//MapObjectAdmin.javaのinitを実行
         holder = _holder;
     }
 

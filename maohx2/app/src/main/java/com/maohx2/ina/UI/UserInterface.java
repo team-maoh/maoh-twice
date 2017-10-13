@@ -100,11 +100,14 @@ public class UserInterface {
 
     public boolean checkUI(int id) {
         int index_num = id % 1000;
+
+
         if ((id - index_num) / 1000 == 314) {
             if (Math.pow(circle_center_list_x[index_num] - touch_x, 2) + Math.pow(circle_center_list_y[index_num] - touch_y, 2) <= Math.pow(circle_radius_list[index_num], 2)) {
                 return true;
             }
         }
+
 
         if ((id - index_num) / 1000 == 8010) {
             if((touch_state == TouchState.DOWN || touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE) && (touch_x >= box_left_list[index_num] && touch_x <= box_right_list[index_num]) && (touch_y >= box_top_list[index_num] && touch_y < box_down_list[index_num])) {
@@ -112,14 +115,55 @@ public class UserInterface {
             }
         }
 
+
         return false;
     }
 
-
-    public boolean checkUI(int id, int touch_way) {
+    public boolean checkUI(int id, TouchWay touch_way) {
         int index_num = id % 1000;
 
-        if(touch_way == 2) {
+        if ((id - index_num) / 1000 == 314) {
+            switch (touch_way) {
+                case DOWN_MOMENT:
+                    if ((touch_state == TouchState.DOWN) && (Math.pow(circle_center_list_x[index_num] - touch_x, 2) + Math.pow(circle_center_list_y[index_num] - touch_y, 2) <= Math.pow(circle_radius_list[index_num], 2))) {
+                        return true;
+                    }
+                    break;
+                case MOVE:
+                    if((touch_state == TouchState.DOWN || touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE) && (Math.pow(circle_center_list_x[index_num] - touch_x, 2) + Math.pow(circle_center_list_y[index_num] - touch_y, 2) <= Math.pow(circle_radius_list[index_num], 2))){
+                        return true;
+                    }
+                    break;
+                case UP_MOMENT:
+                    if ((touch_state == TouchState.UP) && (Math.pow(circle_center_list_x[index_num] - touch_x, 2) + Math.pow(circle_center_list_y[index_num] - touch_y, 2) <= Math.pow(circle_radius_list[index_num], 2))) {
+                        return true;
+                    }
+                    break;
+            }
+        }
+
+        else if ((id - index_num) / 1000 == 8010) {
+            switch (touch_way) {
+                case DOWN_MOMENT:
+                    if((touch_state == TouchState.DOWN) && (touch_x >= box_left_list[index_num] && touch_x <= box_right_list[index_num]) && (touch_y >= box_top_list[index_num] && touch_y < box_down_list[index_num])) {
+                        return true;
+                    }
+                    break;
+                case MOVE:
+                    if((touch_state == TouchState.DOWN || touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE) && (touch_x >= box_left_list[index_num] && touch_x <= box_right_list[index_num]) && (touch_y >= box_top_list[index_num] && touch_y < box_down_list[index_num])) {
+                    return true;
+                }
+                    break;
+                case UP_MOMENT:
+                    if((touch_state == TouchState.UP) && (touch_x >= box_left_list[index_num] && touch_x <= box_right_list[index_num]) && (touch_y >= box_top_list[index_num] && touch_y < box_down_list[index_num])) {
+                    return true;
+                }
+                    break;
+            }
+        }
+
+        /*
+        if(touch_way == TouchWay.DOWN_MOMENT) {
             if (touch_state == TouchState.UP && (id - index_num) / 1000 == 314) {
                 if (Math.pow(circle_center_list_x[index_num] - touch_x, 2) + Math.pow(circle_center_list_y[index_num] - touch_y, 2) <= Math.pow(circle_radius_list[index_num], 2)) {
                     return true;
@@ -140,6 +184,7 @@ public class UserInterface {
                 return true;
             }
         }
+        */
 
         return false;
     }

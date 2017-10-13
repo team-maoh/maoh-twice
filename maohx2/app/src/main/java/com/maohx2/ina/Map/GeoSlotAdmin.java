@@ -2,6 +2,7 @@ package com.maohx2.ina.Map;
 
 import android.graphics.Canvas;
 
+import com.maohx2.ina.Constants;
 import com.maohx2.ina.UI.UserInterface;
 
 /**
@@ -31,7 +32,7 @@ public class GeoSlotAdmin {
     public void updata(){
 
         for(int i = 0; i < 10; i++) {
-            if(user_interface.checkUI(geo_slots[i].getTouchID(),2) == true){
+            if(user_interface.checkUI(geo_slots[i].getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true){
                 System.out.println(user_interface.getItemID());
                 geo_slots[i].setItemID(user_interface.getItemID());
             }
