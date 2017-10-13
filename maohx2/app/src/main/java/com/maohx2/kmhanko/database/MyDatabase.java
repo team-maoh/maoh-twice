@@ -47,6 +47,10 @@ public class MyDatabase {
 
         try {
             if (load_mode == "r") {
+
+                //TODO:PATHがおかしい。
+                mDbHelper.getReadableDatabase();
+
                 //DBファイルがあろうがなかろうが、Assetsからコピー
                 mDbHelper.copyDataBaseFromAssets();
 
@@ -216,6 +220,13 @@ public class MyDatabase {
         c.close();
         return buf;
     }
+
+    //その他
+    public int getSize(String t_name) {
+        Cursor c = getCursor(t_name, "rowid", null);
+        return c.getCount();
+    }
+
 
     //データベースにデータを書き出す関数
     public void execSQL(String sql) {

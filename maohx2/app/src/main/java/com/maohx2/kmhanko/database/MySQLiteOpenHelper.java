@@ -1,6 +1,5 @@
 package com.maohx2.kmhanko.database;
 
-
 //sqlite関係
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;

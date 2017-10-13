@@ -1,5 +1,4 @@
 package com.maohx2.kmhanko.database;
-
 /**
  * Created by user on 2017/09/17.
  * version : 1.00
