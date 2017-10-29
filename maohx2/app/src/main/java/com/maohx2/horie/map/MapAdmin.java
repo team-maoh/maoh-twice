@@ -6,11 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.view.Display;
 import android.view.SurfaceHolder;
-import android.view.WindowManager;
 
-import static android.content.Context.WINDOW_SERVICE;
 
 /**
  * Created by horie on 2017/08/30.
@@ -76,11 +73,11 @@ public class MapAdmin {
     }
 
     public int getCameraOffset_x(){
-        return camera.getCameraOffset(1500,2000).x;
+        return camera.getCameraOffset().x;
     }
 
     public int getCameraOffset_y(){
-        return camera.getCameraOffset(1500,2000).y;
+        return camera.getCameraOffset().y;
     }
 
 
@@ -275,7 +272,8 @@ public class MapAdmin {
     public void drawMap(Canvas canvas) {
         //int chip_height = 10;
         //int chip_width  = 10;
-        map_offset.set(camera.getCameraOffset(1500,2000).x, camera.getCameraOffset(1500,2000).y);
+        camera.setCameraOffset(0, 0);
+        map_offset.set(camera.getCameraOffset().x, camera.getCameraOffset().y);
         for(int i = 0;i < this.getMap_size_x();i++){
             for(int j = 0;j < this.getMap_size_y();j++){
                 if(this.isWall(i,j) == false){

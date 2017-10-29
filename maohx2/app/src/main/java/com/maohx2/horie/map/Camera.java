@@ -4,16 +4,20 @@ import android.app.Activity;
 import android.graphics.Point;
 
 public class Camera {
-    Point display_size = new Point(0,0);
+    Point display_size = new Point(0, 0);
+    Point camera_offset = new Point(0, 0);
+
+    public void Camera(){}
 
     public void setDisplaySize(Point m_display_size){
-        display_size.x = m_display_size.x;
-        display_size.y = m_display_size.y;
+        display_size.set(m_display_size.x, m_display_size.y);
     }
-    public Point getCameraOffset(double world_x, double world_y){
-        Point map_offset = new Point(0,0);
-        map_offset.x = (int)world_x - display_size.x;
-        map_offset.y = (int)world_y - display_size.y;
-        return map_offset;
+
+    public void setCameraOffset(double world_x, double world_y){
+        camera_offset.set((int)world_x - display_size.x/2, (int)world_y - display_size.y/2);
+    }
+
+    public Point getCameraOffset(){
+        return camera_offset;
     }
 }
