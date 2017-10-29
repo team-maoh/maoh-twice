@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.maohx2.ina.Constants;
-import com.maohx2.ina.GameSystem;
 import com.maohx2.ina.UI.UserInterface;
 
 /**
@@ -30,7 +29,7 @@ public class LoopSelectButton {
     int color_b;
 
     static UserInterface map_user_interface;
-    static GameSystem game_system;
+    //static GameSystem game_system;
 
     Paint paint = new Paint();
 
@@ -48,9 +47,7 @@ public class LoopSelectButton {
     static public void setMapUserInterface(UserInterface _map_user_interface) {
         map_user_interface = _map_user_interface;
     }
-    static public void setGameSystem(GameSystem _game_system) {
-        game_system = _game_system;
-    }
+    //static public void setGameSystem(GameSystem _game_system) { game_system = _game_system; }
 
     public void draw(Canvas canvas) {
         //消える予定

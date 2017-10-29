@@ -5,10 +5,7 @@ import java.util.ArrayList;
 
 import android.graphics.Canvas;
 
-import com.maohx2.ina.GameSystem;
-
 import com.maohx2.ina.UI.UserInterface;
-import com.maohx2.ina.UI.MapUserInterface;
 import com.maohx2.kmhanko.database.MyDatabase;
 
 /**
@@ -21,7 +18,7 @@ public class DungeonSelectButtonAdmin {
 
     MyDatabase database;
 
-    GameSystem game_system;
+    //GameSystem game_system;
 
     List<DungeonSelectButton> dungeon_select_button = new ArrayList<DungeonSelectButton>();
 
@@ -30,8 +27,8 @@ public class DungeonSelectButtonAdmin {
     public DungeonSelectButtonAdmin() {
     }
 
-    public void init(GameSystem _game_system, UserInterface _map_user_interface, MyDatabase _database) {
-        game_system = _game_system;
+    public void init(UserInterface _map_user_interface, MyDatabase _database) {
+        //game_system = _game_system;
         map_user_interface = _map_user_interface;
         database = _database;
 
@@ -51,7 +48,7 @@ public class DungeonSelectButtonAdmin {
 
         //staticなものを代入
         DungeonSelectButton.setMapUserInterface(map_user_interface);
-        DungeonSelectButton.setGameSystem(game_system);
+        //DungeonSelectButton.setGameSystem(game_system);
 
         //インスタンス化
  for (int i = 0; i < size; i++) {

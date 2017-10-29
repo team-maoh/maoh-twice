@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import android.graphics.Canvas;
 
 import com.maohx2.ina.UI.UserInterface;
-import com.maohx2.ina.UI.MapUserInterface;
 import com.maohx2.kmhanko.database.MyDatabase;
-import com.maohx2.ina.GameSystem;
 
 /**
  * Created by user on 2017/10/08.
@@ -25,13 +23,13 @@ public class LoopSelectButtonAdmin {
     List<LoopSelectButton> loop_select_button = new ArrayList<LoopSelectButton>();
 
     UserInterface map_user_interface;
-    GameSystem game_system;
+    //GameSystem game_system;
 
     public LoopSelectButtonAdmin() {
     }
 
-    public void init(GameSystem _game_system, UserInterface _map_user_interface, MyDatabase _database) {
-        game_system = _game_system;
+    public void init(UserInterface _map_user_interface, MyDatabase _database) {
+        //game_system = _game_system;
         map_user_interface = _map_user_interface;
         database = _database;
 
@@ -53,7 +51,7 @@ public class LoopSelectButtonAdmin {
 
         //staticなものを代入
         LoopSelectButton.setMapUserInterface(map_user_interface);
-        LoopSelectButton.setGameSystem(game_system);
+        //LoopSelectButton.setGameSystem(game_system);
 
         //インスタンス化
         for (int i = 0; i < size; i++) {
