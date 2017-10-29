@@ -8,7 +8,6 @@ import java.io.IOException;
 //Assets関係
 import android.content.res.AssetManager;
 import android.content.res.AssetFileDescriptor;
-import java.io.InputStream;
 
 //オーディオ関係
 import android.media.AudioManager;
@@ -23,7 +22,8 @@ import com.maohx2.kmhanko.database.MyDatabase;
 
 /**
  * Created by user on 2017/09/10.
- * version : 1.00
+ * version : 1.01
+ * 文字列がMonitorに
  */
 
 //TODO:再生の度に、DBから読み出しをしているが、よくないかもしれないので、直した方がいいかもしれない。
@@ -85,8 +85,7 @@ public class SoundAdmin {
             return sound_ID.get(buf);
         } catch (ArrayIndexOutOfBoundsException e) {
             //TODO:エラー
-            System.out.println("dg_mes:" + "SoundAdmin: error : Cannot get SoundID " + buf + " " + e);
-            return 0;
+            throw new Error("SoundAdmin#getSoundID : Cannot get SoundID " + buf + " " + e);
         }
     }
 
@@ -151,26 +150,23 @@ public class SoundAdmin {
 
 
         for (int i = 0; i < l_filename.size(); i++) {
-            InputStream is = null;
             try {
                 //音声ファイル読み込み
                 AssetFileDescriptor fd = asm.openFd(FOLDER + "/" + l_filename.get(i));
                 sound_ID.add(i,sp.load(fd, 1));
                 stream_ID.add(i, 0);//これがないと後でOutOfになる
 
-                System.out.println("dg_mes:" + " filename:" + l_filename.get(i) + " id:" + sound_ID.get(i));
+                //System.out.println("dg_mes:" + " filename:" + l_filename.get(i) + " id:" + sound_ID.get(i));
             } catch (IOException e) {
                 e.printStackTrace();
-                System.out.println("dg_mes:" + "soundload: error " + l_filename.get(i));
+                throw new Error("SoundAdmin#loadSoundPack" + l_filename.get(i));
             }
         }
 
         //System.out.println("dg_mes:" + sound_ID.get(0) + " "+ sound_ID.get(1) + " " + sound_ID.get(2));
 
-
         if (SOUND_LOAD_NUM < l_filename.size()) {
-            System.out.println("dg_mes:" + "number of sound is over : " + l_filename.size());
-            return false;
+            throw new Error("SoundAdmin#loadSoundPack : number of sound is over : " + l_filename.size());
         }
         return true;
     }

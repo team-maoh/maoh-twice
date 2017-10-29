@@ -28,6 +28,8 @@ import java.io.OutputStream;
 //どうせ一対一なら、軽傷でRead用とWrite用の二種類のヘルパーに分けたほうがいいかもしれない
 public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
+    private static final String FOLDER_NAME = "database";
+
     private String db_name;
     private String db_asset;
     private int db_version;

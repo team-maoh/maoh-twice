@@ -15,7 +15,12 @@ import android.content.ContentValues;
 
 /**
  * Created by user on 2017/09/03.
- * version : 1.00
+ * version : 1.01
+ * getStringするとき、読み込み順序がおかしくなるバグを修正
+ * データベースを読み込みするとき発生するエラーを修正
+ * getSize()追加
+ * getTables()追加
+ * getBoolean()追加
  */
 
 public class MyDatabase {
@@ -69,6 +74,7 @@ public class MyDatabase {
         } catch (IOException e) {
             //TODO : エラー処理
             e.printStackTrace();
+            throw new Error("タカノ : "+ e);
         }
 
         return true;
@@ -97,13 +103,13 @@ public class MyDatabase {
         return db.rawQuery(sql_script , null);
     }
     private Cursor getCursor(String t_name, String c_name) {
-        return db.rawQuery("SELECT "+c_name+" FROM "+t_name, null);
+        return db.rawQuery("SELECT "+c_name+" FROM "+t_name+" ORDER BY rowid ASC", null);
     }
     private Cursor getCursor(String t_name, String c_name, String w_script) {
         if (w_script == null) {
             return getCursor(t_name, c_name);
         }
-        return db.rawQuery("SELECT "+c_name+" FROM "+t_name+" WHERE "+w_script,null);
+        return db.rawQuery("SELECT "+c_name+" FROM "+t_name+" WHERE "+w_script+" ORDER BY rowid ASC",null);
     }
 
 
@@ -159,7 +165,33 @@ public class MyDatabase {
         }
         boolean isEof = c.moveToFirst();
         while (isEof) {
+            String str = c.getString(0);
             buf.add(c.getString(0));
+            isEof = c.moveToNext();
+        }
+        c.close();
+        return buf;
+    }
+
+    public List<Boolean> getBoolean(String t_name, String c_name) {
+        return getBoolean(t_name, c_name, null);
+    }
+    public List<Boolean> getBoolean(String t_name, String c_name, String w_script) {
+        Cursor c = getCursor(t_name, c_name, w_script);
+        List<Boolean> buf = new ArrayList<Boolean>();
+        //該当要素が存在しない場合
+        if (c.getCount() == 0) {
+            return buf;
+        }
+        boolean isEof = c.moveToFirst();
+        while (isEof) {
+            String str = c.getString(0);
+            if (str.equals("true")) {
+                buf.add(true);
+            }
+            if (str.equals("false")) {
+                buf.add(false);
+            }
             isEof = c.moveToNext();
         }
         c.close();
@@ -227,6 +259,28 @@ public class MyDatabase {
         return c.getCount();
     }
 
+    public List<String> getTables() {
+        //getCursor("select name from sqlite_master where type=’table’ order by name");
+        //return getString("name","sqlite_master","type = 'table'");
+        //return getString("name","sqlite_master","type='table'");
+
+        Cursor c = getCursor("select name from sqlite_master where type='table'");//なんかここでこうやって書かないと読めない
+        List<String> buf = new ArrayList<String>();
+        //該当要素が存在しない場合
+        if (c.getCount() == 0) {
+            return buf;
+        }
+        boolean isEof = c.moveToFirst();
+        while (isEof) {
+            String str = c.getString(0);
+            buf.add(c.getString(0));
+            isEof = c.moveToNext();
+        }
+        c.close();
+        return buf;
+    }
+
+
 
     //データベースにデータを書き出す関数
     public void execSQL(String sql) {
@@ -236,7 +290,7 @@ public class MyDatabase {
 
     private ContentValues makeContentValues(String[] c_names, String[] values) {
         if (c_names.length != values.length) {
-            throw new Error("MyDatabase.insert : c_names.size != values.size");
+            throw new Error("タカノ : MyDatabase.insert : c_names.size != values.size");
         }
         int size = c_names.length;
 
