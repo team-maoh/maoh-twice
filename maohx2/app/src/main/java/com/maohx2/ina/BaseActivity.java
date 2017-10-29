@@ -7,7 +7,10 @@ import android.view.SurfaceHolder;
 
 import android.view.SurfaceView;
 
+import com.maohx2.ina.Draw.BookingData;
 import com.maohx2.ina.Draw.Graphic;
+
+import static com.maohx2.ina.Constants.Bitmap.*;
 
 /**
  * Created by ryomasenda on 2017/09/08.
@@ -16,19 +19,15 @@ import com.maohx2.ina.Draw.Graphic;
 public abstract class BaseActivity extends Activity {
     SurfaceView surfaceView;
     SurfaceHolder holder;
-    Graphic graphic = new Graphic(this);
+    //Graphic graphic = new Graphic(this);
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        graphic.setHolder(holder);
+        //graphic.setHolder(holder);
     }
 
-    /*
-    以下グラフィック用関数
-    setImage() :関数で描画する内容をセット
-    draw() :セットされた内容を描画
-     */
 
     void setImage(String name, double x, double y) {
         //graphic.setImage(name, x, y);
@@ -39,9 +38,9 @@ public abstract class BaseActivity extends Activity {
         //graphic.setImage(name, x, y, layerName);
     }
 
-    void draw() {
-        graphic.draw();
-    }
+    //void draw() {
+      //  graphic.draw();
+   // }
 
     /*
     以上グラフィック関数

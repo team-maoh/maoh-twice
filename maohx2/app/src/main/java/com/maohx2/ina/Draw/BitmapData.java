@@ -13,7 +13,12 @@ class BitmapData{
 
 
 
-    BitmapData(){}
+    BitmapData(){
+        image_name = "";
+    }
+
+
+
 
     Bitmap getBitmap(){
         return bitmap;
@@ -23,7 +28,6 @@ class BitmapData{
         bitmap = _bitmap;
     }
 
-
     String getImageName(){
         return image_name;
     }
@@ -32,22 +36,4 @@ class BitmapData{
         image_name = _image_name;
     }
 
-
-
-/*
-    static final Bitmap loadBitmapAsset(String fileName, Context context) throws IOException {
-        final AssetManager assetManager = context.getAssets();
-        BufferedInputStream bis = null;
-        try {
-            bis = new BufferedInputStream(assetManager.open(fileName));
-            return BitmapFactory.decodeStream(bis);
-        } finally {
-            try {
-                bis.close();
-            } catch (Exception e) {
-                //IOException, NullPointerException
-            }
-        }
-    }
-    */
 }

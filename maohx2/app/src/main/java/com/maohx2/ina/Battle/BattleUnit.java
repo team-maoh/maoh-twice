@@ -9,7 +9,7 @@ abstract public class BattleUnit {
     int max_hit_point;
     int hit_point;
     int attack;
-    int attacked_unit_num;
+    int attack_unit_num;
     boolean exist;
 
 
@@ -17,12 +17,14 @@ abstract public class BattleUnit {
 
     public void init(){
 
-        max_hit_point = 10000;
-        hit_point = 10000;
+        max_hit_point = 10;
+        hit_point = max_hit_point;
         attack = 1;
-        attacked_unit_num = -1;
+        attack_unit_num = -1;
         exist = true;
     }
+
+    public void update(){}
 
     public  boolean isExist(){
 
@@ -64,12 +66,14 @@ abstract public class BattleUnit {
         max_hit_point = _max_hit_point;
     }
 
+    //のちに技について保存したクラスを返すことになるかも
+    //技の対象、ダメージ、技の名前、などなどを保存している
     public int getAttackUnitNum() {
-        return attacked_unit_num;
+        return attack_unit_num;
     }
 
     public void setAttackUnitNum(int _attack_unit_num) {
-        attacked_unit_num = _attack_unit_num;
+        attack_unit_num = _attack_unit_num;
     }
 
 

@@ -16,7 +16,7 @@ import android.graphics.Paint;
 import android.opengl.GLSurfaceView.Renderer;
 import android.view.SurfaceHolder;
 
-import com.maohx2.ina.GameSystem;
+import com.maohx2.ina.DungeonGameSystem;
 import com.maohx2.ina.R;
 
 
@@ -64,7 +64,7 @@ public class MyRenderer implements Renderer {
 
 
     //画像読み込み
-    GameSystem game_system;
+    DungeonGameSystem game_system;
     ImageAdmin image_admin;
 
 
@@ -88,7 +88,7 @@ public class MyRenderer implements Renderer {
         APP_SIZE_W = _APP_SIZE_W;
         APP_SIZE_H = _APP_SIZE_H;
 
-        game_system = new GameSystem();
+        game_system = new DungeonGameSystem();
         image_admin = new ImageAdmin();
     }
 

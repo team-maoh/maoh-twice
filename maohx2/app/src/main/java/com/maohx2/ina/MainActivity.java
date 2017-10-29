@@ -13,6 +13,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
+
+import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.ina.UI.MapUserInterface;
@@ -35,6 +37,7 @@ public class MainActivity extends BaseActivity {
         setContentView(dungeon_surface_view);
         //setImage();
     }
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -44,10 +47,23 @@ public class MainActivity extends BaseActivity {
             game_system_flag = true;
         }
     }
+
+    //ここでメインループを止める
+    @Override
+    protected void onStop(){
+        super.onStop();
+        System.out.println("onStop!!");
+    }
+
+    //ここでメインループを再開する
+    @Override
+    public void onResume(){
+        super.onResume();
+    }
+
 }
-
+/*
 class DungeonSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
-
 
     //画像読み込み
     Resources res = this.getContext().getResources();
@@ -74,6 +90,9 @@ class DungeonSurfaceView extends SurfaceView implements SurfaceHolder.Callback, 
 
     GameSystem game_system;
 
+    Graphic graphic;
+
+
     public DungeonSurfaceView(Context m_context) {
         super(m_context);
         setZOrderOnTop(true);
@@ -89,14 +108,18 @@ class DungeonSurfaceView extends SurfaceView implements SurfaceHolder.Callback, 
         display_size.y = display_height;
         game_system = new GameSystem();
         dungeon_user_interface = new DungeonUserInterface();
+        graphic = new Graphic(display_width, display_height);
         sound_admin = new SoundAdmin(context);
         my_database_admin = new MyDatabaseAdmin(context);
         dungeon_user_interface.init();
         my_database_admin.addMyDatabase("soundDB", "soundDB.db", 1, "r");//データベースのコピーしMySQLiteのdbを扱いやすいMyDataBase型にしている
         MyDatabase database = my_database_admin.getMyDatabase("soundDB");
+        my_database_admin.addMyDatabase("imageDB", "image_test.db", 1, "r");
         sound_admin.setDatabase(database);//扱いやすいやつをセットしている
         sound_admin.loadSoundPack("sound_pack_map");
-        game_system.init(holder, dungeon_user_interface, sound_admin, neco, apple, banana, grape, watermelon, slime,(Activity)context,display_size);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
+        graphic.init(context, holder, my_database_admin.getMyDatabase("imageDB"));
+        game_system.init(context, holder, graphic, dungeon_user_interface, sound_admin, neco, apple, banana, grape, watermelon, slime,(Activity)context,display_size);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
+
     }
 
     public void runThread(){
@@ -145,240 +168,11 @@ class DungeonSurfaceView extends SurfaceView implements SurfaceHolder.Callback, 
             case MotionEvent.ACTION_CANCEL:
                 break;
         }
-        return true;
-    }
-}
-
-
-
-
-
-/*
-
-public class MainActivity extends Activity {
-
-    RelativeLayout layout;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        layout = new RelativeLayout(this);
-        layout.setBackgroundColor(Color.WHITE);
-//        layer_admin = new LayerAdmin(getApplicationContext());
-//        TouchSV touch = new TouchSV(this);
-//        BaseSurfaceView[] layer = new BaseSurfaceView[7];
-//        layer[0] = new CustomSurfaceView(this,layer_admin);
-//        for (int i = 1; i < 7; i++)
-//            layer[i] = new BaseSurfaceView(this);
-//        layer_admin.setLayer(0, layer[0]);
-//        for (int i = 1; i < 7; i++){
-//            layer_admin.setLayer(i, layer[i]);
-//        }
-//        for(int i = 0; i < 7; i++) {
-//            layout.addView(layer_admin.getLayer(i));
-//        }
-        layout.addView(new BattleSurfaceView(this));
-        setContentView(layout);
-//        layer_admin.startThread();
-//        layout.addView(new CustomSurfaceView(this));
-//        setContentView(layout);
-    }
-}
-
-
-
-
-
-class BattleSurfaceView extends BaseSurfaceView implements SurfaceHolder.Callback, Runnable {
-
-    Paint paint = new Paint();
-    private SurfaceHolder holder;
-    private Thread thread;
-
-    double touch_x = 0;
-    double touch_y = 0;
-
-    TouchState touch_state = TouchState.AWAY;
-
-
-    BattleUserInterface battle_user_interface;
-    GameSystem game_system;
-
-    public BattleSurfaceView(Context context) {
-        super(context);
-        setZOrderOnTop(true);
-        holder = getHolder();
-        holder.addCallback(this);
-        paint.setColor(Color.BLUE);
-
-        battle_user_interface = new BattleUserInterface();
-        battle_user_interface.init();
-
-        game_system = new GameSystem();
-        game_system.init(holder, battle_user_interface);
-
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
-
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        thread = new Thread(this);
-        thread.start();
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {}
-
-
-    @Override
-    public void run() {
-
-
-        while (true) {
-            battle_user_interface.updateTouchState(touch_x, touch_y, touch_state);
-            game_system.updata();
-            game_system.draw();
-        }
-
-    }
-
-
-    //なぞられた点を記録するリスト
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                touch_state = TouchState.DOWN;
-                touch_x = event.getX();
-                touch_y = event.getY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                touch_state = TouchState.MOVE;
-                touch_x = event.getX();
-                touch_y = event.getY();
-                break;
-            case MotionEvent.ACTION_UP:
-                touch_state = TouchState.UP;
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                break;
-        }
 
         return true;
     }
 }
 
-
-*/
-
-
-/*
-public class MainActivity extends Activity {
-
-    RelativeLayout layout;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        layout = new RelativeLayout(this);
-        layout.setBackgroundColor(Color.WHITE);
-        layout.addView(new MapSurfaceView(this));
-        setContentView(layout);
-
-    }
-}
-
-
-class MapSurfaceView extends BaseSurfaceView implements SurfaceHolder.Callback, Runnable {
-
-    Paint paint = new Paint();
-    private SurfaceHolder holder;
-    private Thread thread;
-
-    double touch_x = 0;
-    double touch_y = 0;
-
-    TouchState touch_state = TouchState.AWAY;
-
-
-    UserInterface map_user_interface;
-    GameSystem game_system;
-
-    public MapSurfaceView(Context context) {
-        super(context);
-        setZOrderOnTop(true);
-        holder = getHolder();
-        holder.addCallback(this);
-        paint.setColor(Color.BLUE);
-
-        map_user_interface = new UserInterface();
-        map_user_interface.init();
-
-        game_system = new GameSystem();
-        game_system.init(holder, map_user_interface);
-
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
-
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        thread = new Thread(this);
-        thread.start();
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {}
-
-
-    @Override
-    public void run() {
-
-
-        while (true) {
-            map_user_interface.updateTouchState(touch_x, touch_y, touch_state);
-            game_system.updata();
-            game_system.draw();
-        }
-
-    }
-
-
-    //なぞられた点を記録するリスト
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                touch_state = TouchState.DOWN;
-                touch_x = event.getX();
-                touch_y = event.getY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                touch_state = TouchState.MOVE;
-                touch_x = event.getX();
-                touch_y = event.getY();
-                break;
-            case MotionEvent.ACTION_UP:
-                touch_state = TouchState.UP;
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                break;
-        }
-
-        return true;
-    }
-}
-*/
-
-
-/*
 public class MainActivity extends Activity {
 
     @Override
