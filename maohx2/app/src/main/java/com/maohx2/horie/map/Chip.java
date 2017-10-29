@@ -12,6 +12,11 @@ public class Chip {
         isStairs = false;
     }
 
+    public void initializeChip(){
+        isWall = false;
+        isStairs = false;
+    }
+
     //getter
     public boolean isWall(){
         return isWall;
