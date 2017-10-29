@@ -1,6 +1,7 @@
 package com.maohx2.fuusya;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
@@ -36,7 +37,7 @@ public class MapObjectAdmin {
     SoundAdmin sound_admin;
     DungeonUserInterface dungeon_user_interface;
 
-    public void init(SurfaceHolder _holder, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Bitmap draw_player, Bitmap draw_apple, Bitmap draw_banana, Bitmap draw_grape, Bitmap draw_watermelon, Bitmap draw_enemy, MapAdmin _map_admin) {
+    public void init(Context context, SurfaceHolder _holder, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Bitmap draw_player, Bitmap draw_apple, Bitmap draw_banana, Bitmap draw_grape, Bitmap draw_watermelon, Bitmap draw_enemy, MapAdmin _map_admin) {
         //↑draw_player = neco, draw_item = apple, draw_enemy = slime (GameSystem.java参照)
 
         holder = _holder;
