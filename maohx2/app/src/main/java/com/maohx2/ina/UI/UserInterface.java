@@ -1,5 +1,9 @@
 package com.maohx2.ina.UI;
 
+import android.graphics.PointF;
+
+import com.maohx2.ina.GlobalConstants;
+
 import static com.maohx2.ina.Constants.Touch.*;
 
 /**
@@ -23,6 +27,19 @@ public class UserInterface {
     double box_down_list[] =  new double[100];
 
     int item_id;
+
+    final int DISP_X;
+    final int DISP_Y;
+    final PointF NORMARIZED_DISP_RATE;
+    final PointF DISP_NORMARIZED_RATE;
+
+
+    public UserInterface(GlobalConstants global_constants){
+        DISP_X = global_constants.DISP_X;
+        DISP_Y = global_constants.DISP_Y;
+        NORMARIZED_DISP_RATE = global_constants.NORMARIZED_DISP_RATE;
+        DISP_NORMARIZED_RATE = global_constants.DISP_NORMARIZED_RATE;
+    }
 
 
     public void init() {
@@ -65,58 +82,33 @@ public class UserInterface {
     }
 
     public double getTouchX() {
-        return touch_x;
+        return DISP_NORMARIZED_RATE.x*touch_x;
     }
 
-    public double getTouchY() {
-        return touch_y;
-    }
+    public double getTouchY() { return DISP_NORMARIZED_RATE.y*touch_y; }
 
     public TouchState getTouchState() {
         return touch_state;
     }
 
     public int setCircleTouchUI(double center_x, double center_y, double ciclre_radius) {
-        circle_center_list_x[circle_touch_index_num] = center_x;
-        circle_center_list_y[circle_touch_index_num] = center_y;
-        circle_radius_list[circle_touch_index_num] = ciclre_radius;
+        circle_center_list_x[circle_touch_index_num] = NORMARIZED_DISP_RATE.x*center_x;
+        circle_center_list_y[circle_touch_index_num] = NORMARIZED_DISP_RATE.y*center_y;
+        circle_radius_list[circle_touch_index_num] = ciclre_radius;//todo:ここヤバイ(倍率設定をのちにしなければならない)
         int id = 314000 + circle_touch_index_num;
         circle_touch_index_num++;
         return id;
     }
 
     public int setBoxTouchUI(double left, double top, double right, double down) {
-        box_left_list[box_touch_index_num] = left;
-        box_top_list[box_touch_index_num] = top;
-        box_right_list[box_touch_index_num] = right;
-        box_down_list[box_touch_index_num] = down;
+        box_left_list[box_touch_index_num] = NORMARIZED_DISP_RATE.x*left;
+        box_top_list[box_touch_index_num] = NORMARIZED_DISP_RATE.y*top;
+        box_right_list[box_touch_index_num] = NORMARIZED_DISP_RATE.x*right;
+        box_down_list[box_touch_index_num] = NORMARIZED_DISP_RATE.y*down;
 
-//        box_height_list[circle_touch_index_num] = height;
-//        box_width_list[circle_touch_index_num] = width;
         int id = 8010000 + box_touch_index_num;
         box_touch_index_num++;
         return id;
-    }
-
-    public boolean checkUI(int id) {
-        int index_num = id % 1000;
-
-
-        if ((id - index_num) / 1000 == 314) {
-            if (Math.pow(circle_center_list_x[index_num] - touch_x, 2) + Math.pow(circle_center_list_y[index_num] - touch_y, 2) <= Math.pow(circle_radius_list[index_num], 2)) {
-                return true;
-            }
-        }
-
-
-        if ((id - index_num) / 1000 == 8010) {
-            if((touch_state == TouchState.DOWN || touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE) && (touch_x >= box_left_list[index_num] && touch_x <= box_right_list[index_num]) && (touch_y >= box_top_list[index_num] && touch_y < box_down_list[index_num])) {
-                return true;
-            }
-        }
-
-
-        return false;
     }
 
     public boolean checkUI(int id, TouchWay touch_way) {

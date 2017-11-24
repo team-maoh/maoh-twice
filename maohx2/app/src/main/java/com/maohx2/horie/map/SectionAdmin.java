@@ -10,30 +10,28 @@ import java.util.Random;
 
 public class SectionAdmin {
     int section_max_num;
-    int now_leaves_number = 0;//使われているleaves[]の数
+    int now_leaves_number = 0;
     int divide_times = 0;
     Point map_size = new Point(0,0);
     Section root_section;
+    Section area_max_section;
     Section leaves[];
-    boolean is_leaves_connected[];//leavesが他のセクションと繋がっているかどうか
-    boolean is_leaves_checked[];//leavesがcheckRoomConnectedを行ったかどうか
+
     public void setSection_max_num(int num){
         section_max_num = num;
     }
 
     public SectionAdmin(int m_section_max_num, Point m_map_size){
         setSection_max_num(m_section_max_num);
-        is_leaves_connected = new boolean[m_section_max_num];
-        is_leaves_checked = new boolean[m_section_max_num];
         leaves = new Section[m_section_max_num];
         for(int i = 0;i < m_section_max_num;i++){
             leaves[i] = new Section();
-            is_leaves_connected[i] = false;
-            is_leaves_checked[i] = false;
         }
         map_size.set(m_map_size.x-1, m_map_size.y-1);
         root_section = new Section();
         root_section.setAll(0, 0, map_size.x, map_size.y);
+        area_max_section = new Section();
+        area_max_section.setAll(0, 0, 0, 0);
     }
 
     public void updateMapData(Chip[][] m_map_data){
@@ -44,7 +42,6 @@ public class SectionAdmin {
         updateLeaves(root_section);
     }
 
-    //leafの更新
     public void updateLeaves(Section m_section){
         //ルートセクションだった場合はleaves[]は1つも使われていない
         if(m_section == root_section){
@@ -64,7 +61,6 @@ public class SectionAdmin {
                 if(leaves[i].area == 0) {
                     leaves[i] = m_section;
                     now_leaves_number = i;
-                    leaves[i].setSectionNumber(i);
                     break;
                 }
             }
@@ -144,7 +140,6 @@ public class SectionAdmin {
         divideSection(root_section);
     }
 
-    //セクションの分割
     public void divideSection(Section m_section){
         divide_times++;
         int buf_space = 13;//分割するときに上下左右をどれだけ空けるか
@@ -203,24 +198,21 @@ public class SectionAdmin {
         }
         //生成されたセクションが上限以下だった場合セクションをさらに作る
         if(divide_times < section_max_num-1){
-            /*面積最大のセクションを探す*/
-            Section area_max_section;
-            area_max_section = searchAreaMaxSection(root_section);
-            divideSection(area_max_section);
-
-            /*2択バージョン*/
-            /*if(m_section.hasChildren) {
+            /*
+            //面積最大のセクションを探す
+            searchAreaMaxSection(root_section);
+            */
+            if(m_section.hasChildren) {
                 if (m_section.getChildren1().area > m_section.getChildren2().area) {
                     divideSection(m_section.getChildren1());
                 } else {
                     divideSection(m_section.getChildren2());
                 }
-            }*/
+            }
         }
         makeRoom(root_section);
     }
 
-    //部屋を作る
     private void makeRoom(Section m_section){
         if(m_section.hasChildren){
             makeRoom(m_section.getChildren1());
@@ -238,256 +230,186 @@ public class SectionAdmin {
         int now_room_point;
         int connected_room_point;
         Random rnd = new Random();
-        main_loop:
+        int chosen_section_num = rnd.nextInt(now_leaves_number);
+        Section now_section = leaves[chosen_section_num];//接続するセクション
+        //方向を決める
         for(;;) {
-            int chosen_section_num = rnd.nextInt(now_leaves_number);
-            Section now_section = leaves[chosen_section_num];//接続するセクション
-            //方向を決める
-            for (; ; ) {
-                neighbor_direction = rnd.nextInt(4);//0:上,1:下,2:左,3:右
-                //System.out.println("d = "+neighbor_direction);
-                if (neighbor_direction == 0 && now_section.upper_neighbor_num != 0) {
-                    break;
-                } else if (neighbor_direction == 1 && now_section.lower_neighbor_num != 0) {
-                    break;
-                } else if (neighbor_direction == 2 && now_section.left_neighbor_num != 0) {
-                    break;
-                } else if (neighbor_direction == 3 && now_section.right_neighbor_num != 0) {
-                    break;
-                }
+            neighbor_direction = rnd.nextInt(4);//0:上,1:下,2:左,3:右
+            //System.out.println("d = "+neighbor_direction);
+            if (neighbor_direction == 0 && now_section.upper_neighbor_num != 0) {
+                break;
             }
-            //System.out.println("section = "+chosen_section_num+", direction = "+neighbor_direction);
-            //接続する部屋を選ぶ
-            outside:
-            for (; ; ) {
-                //上と繋ぐ
-                if (neighbor_direction == 0) {
-                    neighbor_room_num = rnd.nextInt(now_section.upper_neighbor_num + 1);
-                    Section connected_section = now_section.upper_neighbor[neighbor_room_num];//接続されるセクション
-                    int now_room_left = now_section.room.getLeft();
-                    int now_room_right = now_section.room.getRight();
-                    int connected_room_left = connected_section.room.getLeft();
-                    int connected_room_right = connected_section.room.getRight();
-                    for (int i = 0; i < section_max_num - 1; i++) {
-                        if (now_section.connected_upper_leaf_num[i] == connected_section.section_number)
-                            break outside;
-                    }
-                    if (now_room_left <= connected_room_left && now_room_right >= connected_room_right) {
-                        now_room_point = rnd.nextInt(connected_room_right - connected_room_left + 1) + connected_room_left;//通路を作る位置
-                        connected_room_point = rnd.nextInt(connected_room_right - connected_room_left + 1) + connected_room_left;
-                    } else if (now_room_left <= connected_room_left) {
-                        if ((now_room_right - connected_room_left) < 5) {
-                            break;
-                        }
-                        now_room_point = rnd.nextInt(now_room_right - connected_room_left + 1) + connected_room_left;//通路を作る位置
-                        connected_room_point = rnd.nextInt(now_room_right - connected_room_left + 1) + connected_room_left;
-                    } else if (now_room_right >= connected_room_right) {
-                        if ((connected_room_right - now_room_left) < 5) {
-                            break;
-                        }
-                        now_room_point = rnd.nextInt(connected_room_right - now_room_left + 1) + now_room_left;//通路を作る位置
-                        connected_room_point = rnd.nextInt(connected_room_right - now_room_left + 1) + now_room_left;
-                    } else {
-                        now_room_point = rnd.nextInt(now_room_right - now_room_left + 1) + now_room_left;//通路を作る位置
-                        connected_room_point = rnd.nextInt(now_room_right - now_room_left + 1) + now_room_left;
-                    }
-                    makeVerticalPath(now_room_point, now_section.room.getTop(), connected_room_point, connected_section.room.getBottom(), now_section.getTop(), map_data);
-                    now_section.setConnectedUpperLeafNum(connected_section.getSectionNumber());
-                    connected_section.setConnectedLowerLeafNum(chosen_section_num);
-                    break;
-                }
-                //下と繋ぐ
-                else if (neighbor_direction == 1) {
-                    neighbor_room_num = rnd.nextInt(now_section.lower_neighbor_num + 1);
-                    Section connected_section = now_section.lower_neighbor[neighbor_room_num];//接続されるセクション
-                    int now_room_left = now_section.room.getLeft();
-                    int now_room_right = now_section.room.getRight();
-                    int connected_room_left = connected_section.room.getLeft();
-                    int connected_room_right = connected_section.room.getRight();
-                    for (int i = 0; i < section_max_num - 1; i++) {
-                        if (now_section.connected_lower_leaf_num[i] == connected_section.section_number)
-                            break outside;
-                    }
-                    if (now_room_left <= connected_room_left && now_room_right >= connected_room_right) {
-                        now_room_point = rnd.nextInt(connected_room_right - connected_room_left + 1) + connected_room_left;//通路を作る位置
-                        connected_room_point = rnd.nextInt(connected_room_right - connected_room_left + 1) + connected_room_left;
-                    } else if (now_room_left <= connected_room_left) {
-                        if ((now_room_right - connected_room_left) < 5) {
-                            break;
-                        }
-                        now_room_point = rnd.nextInt(now_room_right - connected_room_left + 1) + connected_room_left;//通路を作る位置
-                        connected_room_point = rnd.nextInt(now_room_right - connected_room_left + 1) + connected_room_left;
-                    } else if (now_room_right >= connected_room_right) {
-                        if ((connected_room_right - now_room_left) < 5) {
-                            break;
-                        }
-                        now_room_point = rnd.nextInt(connected_room_right - now_room_left + 1) + now_room_left;//通路を作る位置
-                        connected_room_point = rnd.nextInt(connected_room_right - now_room_left + 1) + now_room_left;
-                    } else {
-                        now_room_point = rnd.nextInt(now_room_right - now_room_left + 1) + now_room_left;//通路を作る位置
-                        connected_room_point = rnd.nextInt(now_room_right - now_room_left + 1) + now_room_left;
-                    }
-                    //now_room_point = rnd.nextInt(now_room_right - now_room_left + 1) + now_room_left;//通路を作る位置
-                    //connected_room_point = rnd.nextInt(connected_room_right - connected_room_left + 1) + connected_room_left;
-                    makeVerticalPath(connected_room_point, connected_section.room.getTop(), now_room_point, now_section.room.getBottom(), now_section.getBottom(), map_data);
-                    now_section.setConnectedLowerLeafNum(connected_section.getSectionNumber());
-                    connected_section.setConnectedUpperLeafNum(chosen_section_num);
-                    break;
-                } else if (neighbor_direction == 2) {//左と繋ぐ
-                    neighbor_room_num = rnd.nextInt(now_section.left_neighbor_num + 1);
-                    Section connected_section = now_section.left_neighbor[neighbor_room_num];//接続されるセクション
-                    int now_room_top = now_section.room.getTop();
-                    int now_room_bottom = now_section.room.getBottom();
-                    int connected_room_top = connected_section.room.getTop();
-                    int connected_room_bottom = connected_section.room.getBottom();
-                    for (int i = 0; i < section_max_num - 1; i++) {
-                        if (now_section.connected_left_leaf_num[i] == connected_section.section_number)
-                            break outside;
-                    }
-                    //nowの方がでかい
-                    if (now_room_bottom >= connected_room_bottom && now_room_top <= connected_room_top) {
-                        now_room_point = rnd.nextInt(connected_room_bottom - connected_room_top + 1) + connected_room_top;//通路を作る位置
-                        connected_room_point = rnd.nextInt(connected_room_bottom - connected_room_top + 1) + connected_room_top;
-                    }
-                    //nowが下
-                    else if (now_room_bottom >= connected_room_bottom && now_room_top > connected_room_top) {
-                        if ((connected_room_bottom - now_room_top) < 5) {
-                            break;
-                        }
-                        now_room_point = rnd.nextInt(connected_room_bottom - now_room_top + 1) + now_room_top;//通路を作る位置
-                        connected_room_point = rnd.nextInt(connected_room_bottom - now_room_top + 1) + now_room_top;
-                    }
-                    //nowが上
-                    else if (now_room_top <= connected_room_top && now_room_bottom < connected_room_bottom) {
-                        if ((now_room_bottom - connected_room_top) < 5) {
-                            break;
-                        }
-                        now_room_point = rnd.nextInt(now_room_bottom - connected_room_top + 1) + connected_room_top;//通路を作る位置
-                        connected_room_point = rnd.nextInt(now_room_bottom - connected_room_top + 1) + connected_room_top;
-                    }
-                    //nowの方が小さい
-                    else if (now_room_top > connected_room_top && now_room_bottom < connected_room_bottom) {
-                        now_room_point = rnd.nextInt(now_room_bottom - now_room_top + 1) + now_room_top;//通路を作る位置
-                        connected_room_point = rnd.nextInt(now_room_bottom - now_room_top + 1) + now_room_top;
-                    } else {
-                        now_room_point = 0;
-                        connected_room_point = 0;
-                    }
-                    makeHorizontalPath(now_room_point, now_section.room.getLeft(), connected_room_point, connected_section.room.getRight(), now_section.getLeft(), map_data);
-                    now_section.setConnectedLeftLeafNum(connected_section.getSectionNumber());
-                    connected_section.setConnectedRightLeafNum(chosen_section_num);
-                    break;
-                } else {//右と繋ぐ
-                    neighbor_room_num = rnd.nextInt(now_section.right_neighbor_num + 1);
-                    Section connected_section = now_section.right_neighbor[neighbor_room_num];//接続されるセクション
-                    int now_room_top = now_section.room.getTop();
-                    int now_room_bottom = now_section.room.getBottom();
-                    int connected_room_top = connected_section.room.getTop();
-                    int connected_room_bottom = connected_section.room.getBottom();
-                    for (int i = 0; i < section_max_num - 1; i++) {
-                        if (now_section.connected_right_leaf_num[i] == connected_section.section_number)
-                            break outside;
-                    }
-                    //nowの方がでかい
-                    if (now_room_bottom >= connected_room_bottom && now_room_top <= connected_room_top) {
-                        now_room_point = rnd.nextInt(connected_room_bottom - connected_room_top + 1) + connected_room_top;//通路を作る位置
-                        connected_room_point = rnd.nextInt(connected_room_bottom - connected_room_top + 1) + connected_room_top;
-                    }
-                    //nowが下
-                    else if (now_room_bottom >= connected_room_bottom && now_room_top > connected_room_top) {
-                        if ((connected_room_bottom - now_room_top) < 5) {
-                            break;
-                        }
-                        now_room_point = rnd.nextInt(connected_room_bottom - now_room_top + 1) + now_room_top;//通路を作る位置
-                        connected_room_point = rnd.nextInt(connected_room_bottom - now_room_top + 1) + now_room_top;
-                    }
-                    //nowが上
-                    else if (now_room_top <= connected_room_top && now_room_bottom < connected_room_bottom) {
-                        if ((now_room_bottom - connected_room_top) < 5) {
-                            break;
-                        }
-                        now_room_point = rnd.nextInt(now_room_bottom - connected_room_top + 1) + connected_room_top;//通路を作る位置
-                        connected_room_point = rnd.nextInt(now_room_bottom - connected_room_top + 1) + connected_room_top;
-                    }
-                    //nowの方が小さい
-                    else if (now_room_top > connected_room_top && now_room_bottom < connected_room_bottom) {
-                        now_room_point = rnd.nextInt(now_room_bottom - now_room_top + 1) + now_room_top;//通路を作る位置
-                        connected_room_point = rnd.nextInt(now_room_bottom - now_room_top + 1) + now_room_top;
-                    } else {
-                        now_room_point = 0;
-                        connected_room_point = 0;
-                    }
-                    makeHorizontalPath(connected_room_point, connected_section.room.getLeft(), now_room_point, now_section.room.getRight(), now_section.getRight(), map_data);
-                    now_section.setConnectedRightLeafNum(connected_section.getSectionNumber());
-                    connected_section.setConnectedLeftLeafNum(chosen_section_num);
-                    break;
-                }
+            else if(neighbor_direction == 1 && now_section.lower_neighbor_num != 0) {
+                break;
             }
-            if(isRoomConnected()){
-                break main_loop;
+            else if(neighbor_direction == 2 && now_section.left_neighbor_num != 0) {
+                break;
+            }
+            else if(neighbor_direction == 3 && now_section.right_neighbor_num != 0) {
+                break;
+            }
+        }
+        //System.out.println("section = "+chosen_section_num+", direction = "+neighbor_direction);
+        //接続する部屋を選ぶ
+        for(;;) {
+            //上と繋ぐ
+            if (neighbor_direction == 0) {
+                neighbor_room_num = rnd.nextInt(now_section.upper_neighbor_num + 1);
+                Section connected_section = now_section.upper_neighbor[neighbor_room_num];//接続されるセクション
+                int now_room_left = now_section.room.getLeft();
+                int now_room_right = now_section.room.getRight();
+                int connected_room_left = connected_section.room.getLeft();
+                int connected_room_right = connected_section.room.getRight();
+                if(now_room_left <= connected_room_left && now_room_right >= connected_room_right){
+                    now_room_point = rnd.nextInt(connected_room_right - connected_room_left + 1) + connected_room_left;//通路を作る位置
+                    connected_room_point = rnd.nextInt(connected_room_right - connected_room_left + 1) + connected_room_left;
+                }
+                else if(now_room_left <= connected_room_left){
+                    if((now_room_right - connected_room_left) < 5) {
+                        break;
+                    }
+                    now_room_point = rnd.nextInt(now_room_right - connected_room_left + 1) + connected_room_left;//通路を作る位置
+                    connected_room_point = rnd.nextInt(now_room_right - connected_room_left + 1) + connected_room_left;
+                }
+                else if(now_room_right >= connected_room_right) {
+                    if((connected_room_right - now_room_left) < 5) {
+                        break;
+                    }
+                    now_room_point = rnd.nextInt(connected_room_right - now_room_left + 1) + now_room_left;//通路を作る位置
+                    connected_room_point = rnd.nextInt(connected_room_right - now_room_left + 1) + now_room_left;
+                }
+                else {
+                    now_room_point = rnd.nextInt(now_room_right - now_room_left + 1) + now_room_left;//通路を作る位置
+                    connected_room_point = rnd.nextInt(now_room_right - now_room_left + 1) + now_room_left;
+                }
+                makeVerticalPath(now_room_point, now_section.room.getTop(), connected_room_point, connected_section.room.getBottom(), now_section.getTop(), map_data);
+                break;
+            }
+            //下と繋ぐ
+            else if (neighbor_direction == 1) {
+                neighbor_room_num = rnd.nextInt(now_section.lower_neighbor_num + 1);
+                Section connected_section = now_section.lower_neighbor[neighbor_room_num];//接続されるセクション
+                int now_room_left = now_section.room.getLeft();
+                int now_room_right = now_section.room.getRight();
+                int connected_room_left = connected_section.room.getLeft();
+                int connected_room_right = connected_section.room.getRight();
+                if(now_room_left <= connected_room_left && now_room_right >= connected_room_right){
+                    now_room_point = rnd.nextInt(connected_room_right - connected_room_left + 1) + connected_room_left;//通路を作る位置
+                    connected_room_point = rnd.nextInt(connected_room_right - connected_room_left + 1) + connected_room_left;
+                }
+                else if(now_room_left <= connected_room_left){
+                    if((now_room_right - connected_room_left) < 5) {
+                        break;
+                    }
+                    now_room_point = rnd.nextInt(now_room_right - connected_room_left + 1) + connected_room_left;//通路を作る位置
+                    connected_room_point = rnd.nextInt(now_room_right - connected_room_left + 1) + connected_room_left;
+                }
+                else if(now_room_right >= connected_room_right) {
+                    if((connected_room_right - now_room_left) < 5) {
+                        break;
+                    }
+                    now_room_point = rnd.nextInt(connected_room_right - now_room_left + 1) + now_room_left;//通路を作る位置
+                    connected_room_point = rnd.nextInt(connected_room_right - now_room_left + 1) + now_room_left;
+                }
+                else {
+                    now_room_point = rnd.nextInt(now_room_right - now_room_left + 1) + now_room_left;//通路を作る位置
+                    connected_room_point = rnd.nextInt(now_room_right - now_room_left + 1) + now_room_left;
+                }
+                //now_room_point = rnd.nextInt(now_room_right - now_room_left + 1) + now_room_left;//通路を作る位置
+                //connected_room_point = rnd.nextInt(connected_room_right - connected_room_left + 1) + connected_room_left;
+                makeVerticalPath(connected_room_point, connected_section.room.getTop(), now_room_point, now_section.room.getBottom(), now_section.getBottom(), map_data);
+                break;
+            }
+            else if (neighbor_direction == 2) {//左と繋ぐ
+                neighbor_room_num = rnd.nextInt(now_section.left_neighbor_num + 1);
+                Section connected_section = now_section.left_neighbor[neighbor_room_num];//接続されるセクション
+                int now_room_top = now_section.room.getTop();
+                int now_room_bottom = now_section.room.getBottom();
+                int connected_room_top = connected_section.room.getTop();
+                int connected_room_bottom = connected_section.room.getBottom();
+                //nowの方がでかい
+                if(now_room_bottom >= connected_room_bottom && now_room_top <= connected_room_top){
+                    now_room_point = rnd.nextInt(connected_room_bottom - connected_room_top + 1) + connected_room_top;//通路を作る位置
+                    connected_room_point = rnd.nextInt(connected_room_bottom - connected_room_top + 1) + connected_room_top;
+                }
+                //nowが下
+                else if(now_room_bottom >= connected_room_bottom && now_room_top > connected_room_top){
+                    if((connected_room_bottom - now_room_top) < 5){
+                        break;
+                    }
+                    now_room_point = rnd.nextInt(connected_room_bottom - now_room_top + 1) + now_room_top;//通路を作る位置
+                    connected_room_point = rnd.nextInt(connected_room_bottom - now_room_top + 1) + now_room_top;
+                }
+                //nowが上
+                else if(now_room_top <= connected_room_top && now_room_bottom < connected_room_bottom){
+                    if((now_room_bottom - connected_room_top) < 5){
+                        break;
+                    }
+                    now_room_point = rnd.nextInt(now_room_bottom - connected_room_top + 1) + connected_room_top;//通路を作る位置
+                    connected_room_point = rnd.nextInt(now_room_bottom - connected_room_top + 1) + connected_room_top;
+                }
+                //nowの方が小さい
+                else if(now_room_top > connected_room_top && now_room_bottom < connected_room_bottom){
+                    now_room_point = rnd.nextInt(now_room_bottom - now_room_top + 1) + now_room_top;//通路を作る位置
+                    connected_room_point = rnd.nextInt(now_room_bottom - now_room_top + 1) + now_room_top;
+                }
+                else{
+                    now_room_point = 0;
+                    connected_room_point = 0;
+                }
+                makeHorizontalPath(now_room_point, now_section.room.getLeft(), connected_room_point, connected_section.room.getRight(), now_section.getLeft(), map_data);
+                break;
+            }
+            else {//右と繋ぐ
+                neighbor_room_num = rnd.nextInt(now_section.right_neighbor_num + 1);
+                Section connected_section = now_section.right_neighbor[neighbor_room_num];//接続されるセクション
+                int now_room_top = now_section.room.getTop();
+                int now_room_bottom = now_section.room.getBottom();
+                int connected_room_top = connected_section.room.getTop();
+                int connected_room_bottom = connected_section.room.getBottom();
+                //nowの方がでかい
+                if(now_room_bottom >= connected_room_bottom && now_room_top <= connected_room_top){
+                    now_room_point = rnd.nextInt(connected_room_bottom - connected_room_top + 1) + connected_room_top;//通路を作る位置
+                    connected_room_point = rnd.nextInt(connected_room_bottom - connected_room_top + 1) + connected_room_top;
+                }
+                //nowが下
+                else if(now_room_bottom >= connected_room_bottom && now_room_top > connected_room_top){
+                    if((connected_room_bottom - now_room_top) < 5){
+                        break;
+                    }
+                    now_room_point = rnd.nextInt(connected_room_bottom - now_room_top + 1) + now_room_top;//通路を作る位置
+                    connected_room_point = rnd.nextInt(connected_room_bottom - now_room_top + 1) + now_room_top;
+                }
+                //nowが上
+                else if(now_room_top <= connected_room_top && now_room_bottom < connected_room_bottom){
+                    if((now_room_bottom - connected_room_top) < 5){
+                        break;
+                    }
+                    now_room_point = rnd.nextInt(now_room_bottom - connected_room_top + 1) + connected_room_top;//通路を作る位置
+                    connected_room_point = rnd.nextInt(now_room_bottom - connected_room_top + 1) + connected_room_top;
+                }
+                //nowの方が小さい
+                else if(now_room_top > connected_room_top && now_room_bottom < connected_room_bottom){
+                    now_room_point = rnd.nextInt(now_room_bottom - now_room_top + 1) + now_room_top;//通路を作る位置
+                    connected_room_point = rnd.nextInt(now_room_bottom - now_room_top + 1) + now_room_top;
+                }
+                else{
+                    now_room_point = 0;
+                    connected_room_point = 0;
+                }
+                makeHorizontalPath(connected_room_point, connected_section.room.getLeft(), now_room_point, now_section.room.getRight(), now_section.getRight(), map_data);
+                break;
             }
         }
     }
 
-    //部屋が繋がっているかどうか返す関数
-    private boolean isRoomConnected(){
-        boolean is_connected;
-        for(int i = 0;i <= now_leaves_number;i++){
-            is_leaves_checked[i] = false;
-        }
-        is_connected = is_leaves_connected[0];
-        checkRoomConnected(leaves[0]);
-        for(int i = 0;i <= now_leaves_number;i++){
-            is_connected = is_connected & is_leaves_connected[i];
-        }
-        return is_connected;
-    }
 
-    //部屋が繋がっているかどうか判定する関数
-    private void checkRoomConnected(Section m_section){
-        for (int i = 0; i < m_section.connected_upper_leaf_num.length; i++) {
-            if (m_section.connected_upper_leaf_num[i] != -1){
-                if(!is_leaves_checked[m_section.connected_upper_leaf_num[i]]) {
-                    is_leaves_connected[m_section.connected_upper_leaf_num[i]] = true;
-                    is_leaves_checked[m_section.connected_upper_leaf_num[i]] = true;
-                    checkRoomConnected(leaves[m_section.connected_upper_leaf_num[i]]);
-                    is_leaves_connected[m_section.section_number] = true;
-                }
-            }
-            if (m_section.connected_lower_leaf_num[i] != -1){
-                if(!is_leaves_checked[m_section.connected_lower_leaf_num[i]]) {
-                    is_leaves_connected[m_section.connected_lower_leaf_num[i]] = true;
-                    is_leaves_checked[m_section.connected_lower_leaf_num[i]] = true;
-                    checkRoomConnected(leaves[m_section.connected_lower_leaf_num[i]]);
-                    is_leaves_connected[m_section.section_number] = true;
-                }
-            }
-            if (m_section.connected_left_leaf_num[i] != -1){
-                if(!is_leaves_checked[m_section.connected_left_leaf_num[i]]) {
-                    is_leaves_connected[m_section.connected_left_leaf_num[i]] = true;
-                    is_leaves_checked[m_section.connected_left_leaf_num[i]] = true;
-                    checkRoomConnected(leaves[m_section.connected_left_leaf_num[i]]);
-                    is_leaves_connected[m_section.section_number] = true;
-                }
-            }
-            if (m_section.connected_right_leaf_num[i] != -1){
-                if(!is_leaves_checked[m_section.connected_right_leaf_num[i]]) {
-                    is_leaves_connected[m_section.connected_right_leaf_num[i]] = true;
-                    is_leaves_checked[m_section.connected_right_leaf_num[i]] = true;
-                    checkRoomConnected(leaves[m_section.connected_right_leaf_num[i]]);
-                    is_leaves_connected[m_section.section_number] = true;
-                }
-            }
-        }
-    }
-
-    //垂直な道を作る
     public void makeVerticalPath(int now_point, int now_top, int connected_point, int connected_bottom, int border, Chip[][] map_data){
         for(int i = connected_bottom;i <= border;i++){
             map_data[connected_point][i].setWallFlag(false);
         }
         for(int i = border;i <= now_top;i++){
-            map_data[now_point][i].setWallFlag(false);
+            map_data[now_point][i].setStairsFlag(true);
         }
         if(now_point <= connected_point){
             for(int i = now_point;i <= connected_point;i++){
@@ -500,8 +422,8 @@ public class SectionAdmin {
             }
         }
     }
-//デバッグ用
-    /*public void makeVerticalPath2(int now_point, int now_top, int connected_point, int connected_bottom, int border, Chip[][] map_data){
+/*デバッグ用
+    public void makeVerticalPath2(int now_point, int now_top, int connected_point, int connected_bottom, int border, Chip[][] map_data){
         for(int i = connected_bottom;i <= border;i++){
             map_data[connected_point][i].setStairsFlag(true);
         }
@@ -518,15 +440,14 @@ public class SectionAdmin {
                 map_data[i][border].setWallFlag(false);
             }
         }
-    }*/
-
-    //水平な道を作る
+    }
+*/
     public void makeHorizontalPath(int now_point, int now_left, int connected_point, int connected_right, int border, Chip[][] map_data){
         for(int i = connected_right;i <= border;i++){
             map_data[i][connected_point].setWallFlag(false);
         }
         for(int i = border;i <= now_left;i++){
-            map_data[i][now_point].setWallFlag(false);
+            map_data[i][now_point].setStairsFlag(true);
         }
         if(now_point <= connected_point){
             for(int i = now_point;i <= connected_point;i++){
@@ -558,27 +479,15 @@ public class SectionAdmin {
             }
         }
     }
-    */
-
-    //面積最大のsectionを返す関数
-    private Section searchAreaMaxSection(Section m_section){
-        Section now_area_max_section;
-        //引数のセクションが子を持っていた場合その子を探索
+*/
+    public void searchAreaMaxSection(Section m_section){
         if(m_section.hasChildren){
-            Section s1 = searchAreaMaxSection(m_section.getChildren1());
-            Section s2 = searchAreaMaxSection(m_section.getChildren2());
-            if(s1.getArea() > s2.getArea()){
-                now_area_max_section = s1;
-            }
-            else{
-                now_area_max_section = s2;
-            }
+            searchAreaMaxSection(m_section.getChildren1());
+            searchAreaMaxSection(m_section.getChildren2());
         }
-        //子を持っていない場合自身が最大
-        else{
-            now_area_max_section = m_section;
+        else if(m_section.area > area_max_section.area){
+            area_max_section = m_section;
         }
-        return now_area_max_section;
     }
 
     /*以下デバッグ用*/
@@ -613,27 +522,6 @@ public class SectionAdmin {
                 System.out.println("leaves[" + i + "].neighbor.lower_neighbor[" + j + "].area = " + leaves[i].lower_neighbor[j].area);
                 System.out.println("leaves[" + i + "].neighbor.left_neighbor[" + j + "].area = " + leaves[i].left_neighbor[j].area);
                 System.out.println("leaves[" + i + "].neighbor.right_neighbor[" + j + "].area = " + leaves[i].right_neighbor[j].area);
-            }
-        }
-    }
-    public void printNeighborLeafNum(){
-        for(int i = 0;i < section_max_num;i++){
-            System.out.println("leaves[" + leaves[i].section_number + "]");
-            for(int j = 0;j < section_max_num-1;j++) {
-                if(leaves[i].connected_upper_leaf_num[j] != -1)
-                System.out.println("upper_neighbor_num["+j+"] = " + leaves[i].connected_upper_leaf_num[j]);
-            }
-            for(int j = 0;j < section_max_num-1;j++) {
-                if(leaves[i].connected_lower_leaf_num[j] != -1)
-                    System.out.println("lower_neighbor_num["+j+"] = " + leaves[i].connected_lower_leaf_num[j]);
-            }
-            for(int j = 0;j < section_max_num-1;j++) {
-                if(leaves[i].connected_lower_leaf_num[j] != -1)
-                    System.out.println("left_neighbor_num["+j+"] = " + leaves[i].connected_left_leaf_num[j]);
-            }
-            for(int j = 0;j < section_max_num-1;j++) {
-                if(leaves[i].connected_right_leaf_num[j] != -1)
-                    System.out.println("right_neighbor_num["+j+"] = " + leaves[i].connected_right_leaf_num[j]);
             }
         }
     }

@@ -28,6 +28,8 @@ public class BattleDungeonUnitData {
 
     public void init(){}
 
+    public  String getName(){return  name;}
+
     public void setStatus(int[] _status){
         status = _status;
     }

@@ -64,4 +64,16 @@ public final class Constants {
             NUM_OF_BONUS_STATUS,
         }
     }
-}
+
+    public static class Draw {
+
+        public enum DRAW_TASK_KIND {
+            CIRCLE,
+            RECT,
+            BITMAP,
+            TEXT,
+        }
+    }
+
+
+    }

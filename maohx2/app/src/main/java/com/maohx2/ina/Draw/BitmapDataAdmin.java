@@ -24,64 +24,73 @@ public class BitmapDataAdmin {
     //メンバ変数
     private Context context;
     private final String FOLDER = "image.item";
-    private MyDatabase image_database;
     BitmapData bitmap_data[] = new BitmapData[BITMAP_DATA_INSTANCE];
+    int next_load_point;
 
 
     //コンストラクタ
     public BitmapDataAdmin() {}
 
-    public void init(Context _context, MyDatabase _image_database) {
+    public void init(Context _context) {
+        next_load_point = 0;
         context = _context;
-        image_database = _image_database;
         for (int i = 0; i < BITMAP_DATA_INSTANCE; i++) {
             bitmap_data[i] = new BitmapData();
         }
     }
 
 
-    //データベースを読み込んで画像をbitmap_dataに保存する
-    public void loadGlobalImages() {
+    //データベースを読み込んで画像をbitmap_dataに保存する。
+    //グローバルは、ゲーム起動時に一番初めだけ実行し、そこに書かれている画像ファイルを全部保存する。
+    //image/global/"テーブル名のフォルダ"/の中にあり、そのファイルを読み込んでいる。
+    public void loadGlobalImages(MyDatabase image_database) {
 
-        List<String> file_name = new ArrayList<String>();
-        List<String> image_name = new ArrayList<String>();
-
-        file_name = image_database.getString("item", "filename", null);
-        image_name = image_database.getString("item", "imagename", null);
+        List<String> ltable_names = image_database.getTables();
+        BufferedInputStream bis = null;
         final AssetManager assetManager = context.getAssets();
 
+        for (int i = 0; i < ltable_names.size(); i++) {
+            List<String> file_name = image_database.getString(ltable_names.get(i), "filename", null);
+            List<String> image_name = image_database.getString(ltable_names.get(i), "imagename", null);
 
-        BufferedInputStream bis = null;
-        for (int i = 0; i < file_name.size(); i++) {
-            try {
-                bis = new BufferedInputStream(assetManager.open("image/item/" + file_name.get(i)));
-                bitmap_data[i].setBitmap(BitmapFactory.decodeStream(bis));
-                bitmap_data[i].setImageName(image_name.get(i));
-            } catch (IOException e) {
-                System.out.println("failed load images");
+            for (int j = 0; j < file_name.size(); j++) {
+                try {
+                    bis = new BufferedInputStream(assetManager.open("image/global/" + ltable_names.get(i) + "/" + file_name.get(j)));
+                    bitmap_data[j].setBitmap(BitmapFactory.decodeStream(bis));
+                    bitmap_data[j].setImageName(image_name.get(j));
+                } catch (IOException e) {
+                    System.out.println("☆イナガキ：画像の取り込みに失敗しました");
+                }
             }
         }
     }
 
-    //データベースを読み込んで画像をbitmap_dataに保存する
-    public void loadLocalImages() {
+    //データベースを読み込んで画像をbitmap_dataに保存する。
+    //ローカルは、ダンジョン潜入時やワールド画面などの時に一番初めに使い、その場面でしか使わない、画像ファイルをメモリにあげておく。
+    //読み込むデータベースはアクティビティの種類やその内容(ダンジョンの種類)ごとに分け、一つのデータベースファイルが一つのダンジョンなどを示す。
+    //データベース内のファイルはすべて読み込む。
+    //画像データは、image/local/"読み込むファイル名"/の中に保存する。
+    public void loadLocalImages(MyDatabase image_database, String table_folder) {
 
-        List<String> file_name = new ArrayList<String>();
-        List<String> image_name = new ArrayList<String>();
-
-        file_name = image_database.getString("unit", "filename", null);
-        image_name = image_database.getString("unit", "imagename", null);
+        List<String> table_names = image_database.getTables();
         final AssetManager assetManager = context.getAssets();
-
-
         BufferedInputStream bis = null;
-        for (int i = 0; i < file_name.size(); i++) {
-            try {
-                bis = new BufferedInputStream(assetManager.open("image/unit/" + file_name.get(i)));
-                bitmap_data[i].setBitmap(BitmapFactory.decodeStream(bis));
-                bitmap_data[i].setImageName(image_name.get(i));
-            } catch (IOException e) {
-                System.out.println("failed load images");
+
+
+        for (int i = 0; i < table_names.size(); i++) {
+            List<String> file_name = image_database.getString(table_names.get(i), "filename", null);
+            List<String> image_name = image_database.getString(table_names.get(i), "imagename", null);
+
+
+            for (int j = 0; j < file_name.size(); j++) {
+                try {
+                    bis = new BufferedInputStream(assetManager.open("image/local/" + table_folder + "/" + table_names.get(i) + "/" + file_name.get(j)));
+                    bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis));
+                    bitmap_data[j].setImageName(image_name.get(next_load_point));
+                    next_load_point++;
+                } catch (IOException e) {
+                    System.out.println("☆イナガキ：画像の取り込みに失敗しました");
+                }
             }
         }
     }
@@ -99,13 +108,10 @@ public class BitmapDataAdmin {
     }
 
 
-    //bitmapを名前で検索して、返す
+    //bitmap番号をもらって返す
     public BitmapData getBitmapData(int bitmap_data_num) {
         return bitmap_data[bitmap_data_num];
     }
-
-
-    public void setDatabase(MyDatabase _image_database) {image_database = _image_database;}
 
 }
 

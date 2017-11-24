@@ -51,8 +51,8 @@ public class BattleGameSystem {
     Graphic graphic;
 
     public void init(SurfaceHolder _holder, Graphic _graphic, BattleUserInterface _battle_user_interface, Activity battle_activity) {
-        holder = _holder;
 
+        holder = _holder;
         graphic = _graphic;
 
         battle_user_interface = _battle_user_interface;
@@ -62,7 +62,7 @@ public class BattleGameSystem {
         canvas = null;
         battle_unit_admin.init(graphic, battle_user_interface, battle_activity);
         text_box_admin.init(battle_user_interface);
-        list_box_admin.init(battle_user_interface);
+        list_box_admin.init(battle_user_interface, graphic);
     }
 
 
@@ -76,26 +76,7 @@ public class BattleGameSystem {
 
 
     public void draw() {
-
-        battle_unit_admin.draw(canvas);
+        battle_unit_admin.draw();
         graphic.draw();
-
-/*
-        canvas = null;
-        canvas = holder.lockCanvas(null);
-        if(canvas !=null) {
-            canvas.drawColor(Color.WHITE);
-            paint.setAntiAlias(true);
-
-            //text_box_admin.draw(canvas);
-            //list_box_admin.draw(canvas);
-            battle_user_interface.drawBattlePalette(canvas);
-            battle_unit_admin.draw(canvas);
-
-            holder.unlockCanvasAndPost(canvas);
-        }
-*/
     }
 }
-
-

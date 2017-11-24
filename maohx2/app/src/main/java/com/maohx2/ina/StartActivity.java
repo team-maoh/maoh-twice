@@ -2,19 +2,13 @@ package com.maohx2.ina;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.SurfaceHolder;
-import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.ina.UI.DungeonUserInterface;
-import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
-import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
@@ -27,14 +21,9 @@ public class StartActivity extends Activity {
     StartSurfaceView start_surface_view;
     GlobalData global_data;
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        global_data = (GlobalData) this.getApplication();
-        global_data.init();
 
         start_surface_view = new StartSurfaceView(this);
         layout = new RelativeLayout(this);
@@ -46,7 +35,9 @@ public class StartActivity extends Activity {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if(!game_system_flag) {
-            start_surface_view.runGameSystem(start_surface_view.getWidth(), start_surface_view.getHeight());
+            global_data = (GlobalData) this.getApplication();
+            global_data.init(start_surface_view.getWidth(), start_surface_view.getHeight());
+            start_surface_view.runGameSystem();
             game_system_flag = true;
         }
     }
@@ -60,16 +51,7 @@ public class StartActivity extends Activity {
 }
 
 
-class StartSurfaceView extends BaseSurfaceView implements SurfaceHolder.Callback, Runnable {
-
-    Paint paint = new Paint();
-    private SurfaceHolder holder;
-    private Thread thread;
-
-    double touch_x = 0;
-    double touch_y = 0;
-
-    TouchState touch_state = TouchState.AWAY;
+class StartSurfaceView extends BaseSurfaceView {
 
     Activity start_activity;
     MyDatabaseAdmin my_database_admin;
@@ -78,91 +60,51 @@ class StartSurfaceView extends BaseSurfaceView implements SurfaceHolder.Callback
 
     public StartSurfaceView(Activity _start_activity) {
         super(_start_activity);
-        setZOrderOnTop(true);
         start_activity = _start_activity;
-        holder = getHolder();
-        holder.addCallback(this);
-        paint.setColor(Color.BLUE);
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {}
 
-    public void runGameSystem(int display_width,int display_height) {
-        graphic = new Graphic(display_width, display_height);
+    public void runGameSystem() {
+
+        graphic = new Graphic(start_activity, holder);
         my_database_admin = new MyDatabaseAdmin(start_activity);
-        my_database_admin.addMyDatabase("local_image_DB", "local_image.db", 1, "r");
-        graphic.init(start_activity, holder, my_database_admin.getMyDatabase("local_image_DB"));
+        my_database_admin.addMyDatabase("local_image_DB", "LocalImage.db", 1, "r");
+
+        //my_database_admin.addMyDatabase("StartDB", "Start.db", 1, "r");
+        //graphic.loadLocalImages(my_database_admin.getMyDatabase("StartDB"), "Start");
 
         thread = new Thread(this);
         thread.start();
+
+        paint.setColor(Color.rgb(100,100,0));
+        paint.setTextSize(30);
     }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-    }
+    public void gameLoop(){
+        graphic.bookingDrawBitmap("ゴキ",640,100);
+        graphic.bookingDrawBitmap("ゴキ太郎",300,590);
+        graphic.bookingDrawBitmap("ゴキ魅",1300,390);
+        graphic.bookingDrawBitmap("ゴキ",640,80);
+        graphic.bookingDrawBitmap("ゴキ",640,120);
+        graphic.bookingDrawBitmap("apple",800,450);
 
 
-    @Override
-    public void run() {
+        graphic.bookingDrawCircle(640,100,10,paint);
+        graphic.bookingDrawRect(300,590,310,600,paint);
+        graphic.bookingDrawText("ゴキ魅",1300,390,paint);
 
-        while (thread != null) {
-/*
-            Canvas canvas = null;
-            canvas = holder.lockCanvas(null);
-            if(canvas != null) {
+//        graphic.drawBooking("ゴキ",640,390);
 
-                canvas.drawColor(Color.WHITE);
+        graphic.draw();
 
-                Paint paint = new Paint();
-                paint.setColor(Color.BLUE);
-
-                canvas.drawCircle(640,400,50,paint);
-                holder.unlockCanvasAndPost(canvas);
-            }
-*/
-
-
-            graphic.drawBooking("ゴキ",640,390);
-            graphic.draw();
-
-            if(touch_state == TouchState.DOWN){
-                thread = null;
-                Intent intent = new Intent(start_activity, WorldActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                start_activity.startActivity(intent);
-            }
+        if(touch_state == TouchState.DOWN){
+            thread = null;
+            Intent intent = new Intent(start_activity, WorldActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            start_activity.startActivity(intent);
         }
-    }
-
-
-    //なぞられた点を記録するリスト
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                touch_state = TouchState.DOWN;
-                touch_x = event.getX();
-                touch_y = event.getY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                touch_state = TouchState.MOVE;
-                touch_x = event.getX();
-                touch_y = event.getY();
-                break;
-            case MotionEvent.ACTION_UP:
-                touch_state = TouchState.UP;
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                break;
-        }
-
-        return true;
     }
 }
-

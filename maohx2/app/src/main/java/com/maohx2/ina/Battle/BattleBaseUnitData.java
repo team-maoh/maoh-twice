@@ -65,6 +65,7 @@ public class BattleBaseUnitData {
     }
 
     public String getName(){return name;}
+    public  void setName(String _name){name = _name;}
 
     public int[] getStatus(int repeat_count) {
 

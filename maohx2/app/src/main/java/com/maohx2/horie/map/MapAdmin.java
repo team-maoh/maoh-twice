@@ -62,15 +62,10 @@ public class MapAdmin {
 
     /*デバッグ用変数*/
     Point map_size = new Point(map_data_int[0].length, map_data_int.length);
-    int magnification = 80;
+    int magnification = 45;
     /*自動生成用変数*/
     //Point map_size = new Point(50, 80);//x : 左右幅, y : 上下幅
-    //int magnification = 80;
-    //Point map_size = new Point(1080/30, 1700/30);//x : 左右幅, y : 上下幅
-    //int magnification = 30;
-
-    int offset_x = 0;
-    int offset_y = 0;
+    //int magnification = 20;
 
     Paint paint = new Paint();
     Point display_size = new Point(0, 0);
@@ -79,54 +74,54 @@ public class MapAdmin {
     Camera camera = new Camera();
 
 
-    public int getMap_size_x() {
+    public int getMap_size_x(){
         return map_size.x;
     }
 
-    public int getMap_size_y() {
+    public int getMap_size_y(){
         return map_size.y;
     }
 
-    public int getOffset_x() {
+    public int getOffset_x(){
         return camera.getCameraOffset().x;
     }
 
-    public int getOffset_y() {
+    public int getOffset_y(){
         return camera.getCameraOffset().y;
     }
 
-    public void setMap_data(int i, int j, boolean isWall) {
+    public void setMap_data(int i,int j,boolean isWall){
         map_data[i][j].setWallFlag(isWall);
     }
 
-    public MapAdmin(SurfaceHolder m_holder, Activity activity, Point m_display_size) {
+    public MapAdmin(SurfaceHolder m_holder, Activity activity, Point m_display_size){
         holder = m_holder;
         //ディスプレイサイズ取得
         display_size.x = m_display_size.x;
         display_size.y = m_display_size.y;
         camera.setDisplaySize(display_size);
-        camera.setMapMagnification(magnification);
         map_data = new Chip[map_size.x][map_size.y];
-        for (int i = 0; i < map_size.x; i++) {
+        for(int i = 0;i < map_size.x;i++) {
             for (int j = 0; j < map_size.y; j++) {
                 map_data[i][j] = new Chip();
             }
         }
         //System.out.println("size i = "+map_data_int.length+",j = "+map_data_int[0].length);
-        if (is_debug_mode) {
+        if(is_debug_mode) {
             transportMatrix();//デバッグ用
             intToChip(t_map_data_int);//デバッグ用
-        } else {
+        }
+        else{
             createMap();//自動生成
         }
         //intToChip(map_data_int);//デバッグ用x, yが反転する
     }
 
     //壁かどうかマップ座標で判定
-    private boolean isWall(int x, int y) {
+    private boolean isWall(int x,int y){
         try {
             return map_data[x][y].isWall();
-        } catch (ArrayIndexOutOfBoundsException e) {
+        }catch(ArrayIndexOutOfBoundsException e) {
             System.out.println("配列の要素数をこえています。");
             System.out.println(e + "クラスの例外が発生しました。");
             return false;
@@ -134,10 +129,10 @@ public class MapAdmin {
     }
 
     //階段かどうかマップ座標で判定
-    private boolean isStairs(int x, int y) {
+    private boolean isStairs(int x,int y){
         try {
             return map_data[x][y].isStairs();
-        } catch (ArrayIndexOutOfBoundsException e) {
+        }catch(ArrayIndexOutOfBoundsException e) {
             System.out.println("配列の要素数をこえています。");
             System.out.println(e + "クラスの例外が発生しました。");
             return false;
@@ -145,69 +140,71 @@ public class MapAdmin {
     }
 
     //壁かどうかワールドマップで判定
-    private boolean isWallWorld(int world_x, int world_y, int magnification_x, int magnification_y) {
+    private boolean isWallWorld(int world_x, int world_y, int magnification_x, int magnification_y){
         return map_data[worldToMap(world_x)][worldToMap(world_y)].isWall();
     }
 
     //マップの自動生成
-    public void createMap() {
+    public void createMap(){
         //map_dataの初期化
-        for (int i = 0; i < map_size.x; i++) {
+        for(int i = 0;i < map_size.x;i++) {
             for (int j = 0; j < map_size.y; j++) {
                 map_data[i][j].initializeChip();
             }
         }
-        SectionAdmin section_admin = new SectionAdmin(150, map_size);
+        SectionAdmin section_admin = new SectionAdmin(10, map_size);
         section_admin.startDivideSection();
         section_admin.startUpdateLeaves();
         section_admin.searchNeighbors();
+        //section_admin.printLeavesArea();
+        //section_admin.printSectionsArea();
+        //section_admin.printLeavesNeighbors();
         section_admin.updateMapData(map_data);
+        for(int i = 0;i < 6;i++)
         section_admin.connectRooms(map_data);
-        //section_admin.printNeighborLeafNum();
     }
 
-    //一歩先に壁があるかどうかと壁の方向を判定
-    public int detectWallDirection(double player_world_x_double, double player_world_y_double, double next_player_world_x_double, double next_player_world_y_double) {
-        int player_world_x = (int) player_world_x_double;
-        int player_world_y = (int) player_world_y_double;
-        int next_player_world_x = (int) next_player_world_x_double;
-        int next_player_world_y = (int) next_player_world_y_double;
+    public int detectWallDirection(double player_world_x_double, double player_world_y_double, double next_player_world_x_double, double next_player_world_y_double){
+        int player_world_x = (int)player_world_x_double;
+        int player_world_y = (int)player_world_y_double;
+        int next_player_world_x = (int)next_player_world_x_double;
+        int next_player_world_y = (int)next_player_world_y_double;
         int direction = 0;//0 : 壁なし, 1 : 水平, 2 : 垂直
         int player_map_x = worldToMap(player_world_x);//移動前のマップ座標x
         int player_map_y = worldToMap(player_world_y);//移動前のマップ座標y
         int next_player_map_x = worldToMap(next_player_world_x);//移動後のマップ座標x
         int next_player_map_y = worldToMap(next_player_world_y);//移動後のマップ座標y
         //プレイヤー座標と移動座標が同じマス
-        if (player_map_x == next_player_map_x && player_map_y == next_player_map_y) {
+        if(player_map_x == next_player_map_x && player_map_y == next_player_map_y){
             direction = 0;
         }
         //左右のマスに移動
-        else if (player_map_y == next_player_map_y) {
+        else if(player_map_y == next_player_map_y){
             //次の移動先のマスが壁である
-            if (map_data[next_player_map_x][next_player_map_y].isWall()) {
+            if(map_data[next_player_map_x][next_player_map_y].isWall()) {
                 direction = 2;
             }
             //移動先のマスが壁でない
-            else {
+            else{
                 direction = 0;
             }
         }
         //上下のマスに移動
-        else if (player_map_x == next_player_map_x) {
+        else if(player_map_x == next_player_map_x){
             //移動先のマスが壁である
-            if (map_data[next_player_map_x][next_player_map_y].isWall()) {
+            if(map_data[next_player_map_x][next_player_map_y].isWall()) {
                 direction = 1;
             }
             //移動先のマスが壁でない
-            else {
+            else{
                 direction = 0;
             }
         }
         //斜めのマスに移動
-        else {
+        else{
             double a, b, x_up, y_up, x_down, y_down, x_left, y_left, x_right, y_right, dst2_left, dst2_right, dst2_up, dst2_down;
             //1次関数y = ax + bを求める
-            a = (next_player_world_y - player_world_y) / (next_player_world_x - player_world_x);
+            a = (next_player_world_y - player_world_y)/(next_player_world_x - player_world_x);
             b = player_world_y - a * player_world_x;
             x_left = magnification * (player_map_x - 1);
             y_left = a * x_left + b;  //x = 100 * (player_map_x - 1)の時のy座標(左の垂直壁のy座標)
@@ -223,65 +220,77 @@ public class MapAdmin {
             dst2_up = Math.pow(x_up - player_world_x, 2) + Math.pow(y_up - player_world_y, 2);
             dst2_down = Math.pow(x_down - player_world_x, 2) + Math.pow(y_down - player_world_y, 2);
             //移動先が左上
-            if (next_player_map_x == player_map_x - 1 && next_player_map_y == player_map_y - 1) {
-                if (dst2_left >= dst2_up) {
-                    if (map_data[player_map_x][player_map_y - 1].isWall()) {
+            if(next_player_map_x == player_map_x - 1 && next_player_map_y == player_map_y - 1){
+                if(dst2_left >= dst2_up){
+                    if(map_data[player_map_x][player_map_y - 1].isWall()){
                         direction = 1;
-                    } else if (map_data[player_map_x - 1][player_map_y - 1].isWall()) {
+                    }
+                    else if(map_data[player_map_x - 1][player_map_y - 1].isWall()){
                         direction = 2;
                     }
-                } else if (dst2_left < dst2_up) {
-                    if (map_data[player_map_x - 1][player_map_y].isWall()) {
+                }
+                else if(dst2_left < dst2_up){
+                    if(map_data[player_map_x - 1][player_map_y].isWall()){
                         direction = 2;
-                    } else if (map_data[player_map_x - 1][player_map_y - 1].isWall()) {
+                    }
+                    else if(map_data[player_map_x - 1][player_map_y - 1].isWall()){
                         direction = 1;
                     }
                 }
             }
             //移動先が右上
-            if (next_player_map_x == player_map_x + 1 && next_player_map_y == player_map_y - 1) {
-                if (dst2_right >= dst2_up) {
-                    if (map_data[player_map_x][player_map_y - 1].isWall()) {
+            if(next_player_map_x == player_map_x + 1 && next_player_map_y == player_map_y - 1){
+                if(dst2_right >= dst2_up){
+                    if(map_data[player_map_x][player_map_y - 1].isWall()){
                         direction = 1;
-                    } else if (map_data[player_map_x + 1][player_map_y - 1].isWall()) {
+                    }
+                    else if(map_data[player_map_x + 1][player_map_y - 1].isWall()){
                         direction = 2;
                     }
-                } else if (dst2_right < dst2_up) {
-                    if (map_data[player_map_x + 1][player_map_y].isWall()) {
+                }
+                else if(dst2_right < dst2_up){
+                    if(map_data[player_map_x + 1][player_map_y].isWall()){
                         direction = 2;
-                    } else if (map_data[player_map_x + 1][player_map_y - 1].isWall()) {
+                    }
+                    else if(map_data[player_map_x + 1][player_map_y - 1].isWall()){
                         direction = 1;
                     }
                 }
             }
             //移動先が左下
-            if (next_player_map_x == player_map_x - 1 && next_player_map_y == player_map_y + 1) {
-                if (dst2_left >= dst2_down) {
-                    if (map_data[player_map_x][player_map_y + 1].isWall()) {
+            if(next_player_map_x == player_map_x - 1 && next_player_map_y == player_map_y + 1){
+                if(dst2_left >= dst2_down){
+                    if(map_data[player_map_x][player_map_y + 1].isWall()){
                         direction = 1;
-                    } else if (map_data[player_map_x - 1][player_map_y + 1].isWall()) {
+                    }
+                    else if(map_data[player_map_x - 1][player_map_y + 1].isWall()){
                         direction = 2;
                     }
-                } else if (dst2_left < dst2_down) {
-                    if (map_data[player_map_x - 1][player_map_y].isWall()) {
+                }
+                else if(dst2_left < dst2_down){
+                    if(map_data[player_map_x - 1][player_map_y].isWall()){
                         direction = 2;
-                    } else if (map_data[player_map_x - 1][player_map_y + 1].isWall()) {
+                    }
+                    else if(map_data[player_map_x - 1][player_map_y + 1].isWall()){
                         direction = 1;
                     }
                 }
             }
             //移動先が右下
-            if (next_player_map_x == player_map_x + 1 && next_player_map_y == player_map_y + 1) {
-                if (dst2_right >= dst2_down) {
-                    if (map_data[player_map_x][player_map_y + 1].isWall()) {
+            if(next_player_map_x == player_map_x + 1 && next_player_map_y == player_map_y + 1){
+                if(dst2_right >= dst2_down){
+                    if(map_data[player_map_x][player_map_y + 1].isWall()){
                         direction = 1;
-                    } else if (map_data[player_map_x + 1][player_map_y + 1].isWall()) {
+                    }
+                    else if(map_data[player_map_x + 1][player_map_y + 1].isWall()){
                         direction = 2;
                     }
-                } else if (dst2_right < dst2_down) {
-                    if (map_data[player_map_x + 1][player_map_y].isWall()) {
+                }
+                else if(dst2_right < dst2_down){
+                    if(map_data[player_map_x + 1][player_map_y].isWall()){
                         direction = 2;
-                    } else if (map_data[player_map_x + 1][player_map_y + 1].isWall()) {
+                    }
+                    else if(map_data[player_map_x + 1][player_map_y + 1].isWall()){
                         direction = 1;
                     }
                 }
@@ -292,64 +301,48 @@ public class MapAdmin {
 
     //マップ描画
     public void drawMap(Canvas canvas) {
-        //camera.setCameraOffset(400, 600);
-        //map_offset.set(camera.getCameraOffset().x, camera.getCameraOffset().y);
-        for (int i = 0; i < this.getMap_size_x(); i++) {
-            for (int j = 0; j < this.getMap_size_y(); j++) {
-                if (this.isWall(i, j) == false) {
-                    paint.setColor(Color.LTGRAY);//部屋は青
-                } else if (this.isStairs(i, j) == true) {
-                    paint.setColor(Color.GREEN);
-                } else {
-                    paint.setColor(Color.BLACK);//壁は
+        //paint.setColor(Color.GREEN);
+        //canvas.drawRect(0, 0, display_size.x, display_size.y, paint);
+        //int chip_height = 10;
+        //int chip_width  = 10;
+        camera.setCameraOffset(0, 0);
+        if(is_debug_mode) {
+            //map_offset.set(camera.getCameraOffset().x, camera.getCameraOffset().y);
+        }
+        for(int i = 0;i < this.getMap_size_x();i++){
+            for(int j = 0;j < this.getMap_size_y();j++){
+                if(this.isWall(i, j) == false){
+                    paint.setColor(Color.BLUE);//部屋は青
                 }
-                canvas.drawRect(magnification * i - map_offset.x, magnification * j - map_offset.y, magnification * (i + 1) - map_offset.x, magnification * (j + 1) - map_offset.y, paint);
+                else if(this.isStairs(i, j) == true){
+                    paint.setColor(Color.GREEN);
+                }
+                else {
+                    paint.setColor(Color.RED);//壁は
+                }
+                canvas.drawRect(magnification*i-map_offset.x,magnification*j-map_offset.y,magnification*(i+1)-map_offset.x,magnification*(j+1)-map_offset.y,paint);
             }
         }
-    }
-
-    public void drawMap2(Canvas canvas) {
-        offset_x++;
-        offset_y++;
-        camera.setCameraOffset(offset_x, offset_y);
-        //map_offset.set(camera.getCameraOffset().x, camera.getCameraOffset().y);
-        for (int i = 0; i < this.getMap_size_x(); i++) {
-            for (int j = 0; j < this.getMap_size_y(); j++) {
-                if (this.isWall(i, j) == false) {
-                    paint.setColor(Color.LTGRAY);//部屋は青
-                } else if (this.isStairs(i, j) == true) {
-                    paint.setColor(Color.GREEN);
-                } else {
-                    paint.setColor(Color.BLACK);//壁は
-                }
-                if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
-                    canvas.drawRect(camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), camera.convertToNormCoordinateXForMap((i + 1) * magnification), camera.convertToNormCoordinateYForMap((j + 1) * magnification), paint);
-                    //System.out.println(camera.convertToNormCoordinateXForMap(i * magnification) + "," + camera.convertToNormCoordinateYForMap(j * magnification) + "," + camera.convertToNormCoordinateXForMap((i + 1) * magnification) + "," + camera.convertToNormCoordinateYForMap((j + 1) * magnification));
-                }
-            }
-        }
-        paint.setColor(Color.RED);
-        canvas.drawLine(80, 0, 80, 1920, paint);
-        canvas.drawLine(0, 80, 1080, 80, paint);
-        canvas.drawLine(900, 0, 900, 1920, paint);
-        canvas.drawLine(0, 1600, 1080, 1600, paint);
-        canvas.drawLine(980, 0, 980, 1920, paint);
-        canvas.drawLine(0, 1680, 1080, 1680, paint);
-        canvas.drawCircle(camera.convertToNormCoordinateX(offset_x), camera.convertToNormCoordinateY(offset_y), 20, paint);
+        //デバッグ用
+        /*paint.setColor(Color.RED);
+        canvas.drawRect(0,0,1080,1794,paint);
+        paint.setColor(Color.GREEN);
+        canvas.drawRect(1,1,1079,1703,paint);*/
     }
 
     //ワールドマップ座標からマップ座標に変更
-    private int worldToMap(int world_coordinate) {
+    private int worldToMap(int world_coordinate){
         return world_coordinate / magnification;
     }
 
     //int配列をChip配列に変換
     public void intToChip(int[][] m_map_data) {
-        for (int i = 0; i < m_map_data.length; i++) {
+        for(int i = 0;i < m_map_data.length;i++) {
             for (int j = 0; j < m_map_data[i].length; j++) {
-                if (m_map_data[i][j] == 0) {
+                if(m_map_data[i][j] == 0){
                     map_data[i][j].setWallFlag(false);
-                } else {
+                }
+                else{
                     map_data[i][j].setWallFlag(true);
                 }
             }
@@ -357,9 +350,9 @@ public class MapAdmin {
     }
 
     //map_data_intを転置行列に変換
-    public void transportMatrix() {
-        for (int i = 0; i < map_data_int.length; i++) {
-            for (int j = 0; j < map_data_int[0].length; j++) {
+    public void transportMatrix(){
+        for(int i = 0;i < map_data_int.length;i++){
+            for(int j = 0;j < map_data_int[0].length;j++){
                 t_map_data_int[j][i] = map_data_int[i][j];
             }
         }

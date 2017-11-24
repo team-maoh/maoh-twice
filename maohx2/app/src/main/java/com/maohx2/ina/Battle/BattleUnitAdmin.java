@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.BattleUserInterface;
 
@@ -72,7 +73,7 @@ public class BattleUnitAdmin {
                 if (battle_units[i].isExist() == true) {
                     int id = battle_units[i].getUIID();
 
-                    if (battle_user_interface.checkUI(id) == true) {
+                    if (battle_user_interface.checkUI(id, Constants.Touch.TouchWay.DOWN_MOMENT) == true) {
                         battle_units[0].setAttackUnitNum(i);
                     }
                 }
@@ -117,24 +118,23 @@ public class BattleUnitAdmin {
         }
     }
 
-    public void draw(Canvas canvas) {
+    public void draw() {
 
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (battle_units[i].isExist() == true) {
                 //canvas.drawCircle(battle_units[i].getPositionX(), battle_units[i].getPositionY(), 50.0f, paint);
                 if(i%2 == 0) {
-                    graphic.drawBooking("ゴキ", battle_units[i].getPositionX(), battle_units[i].getPositionY());
+                    graphic.bookingDrawBitmap("ゴキ", battle_units[i].getPositionX(), battle_units[i].getPositionY());
                 }
 
                 if(i%2 == 1) {
-                    graphic.drawBooking("apple", battle_units[i].getPositionX(), battle_units[i].getPositionY());
+                    graphic.bookingDrawBitmap("apple", battle_units[i].getPositionX(), battle_units[i].getPositionY());
                 }
             }
         }
     }
 
 
-    public BattleUnitAdmin() {
-    }
+    public BattleUnitAdmin() {}
 
 }

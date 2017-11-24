@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.text.Layout;
 
 import com.maohx2.ina.Constants.Touch.*;
+import com.maohx2.ina.GlobalConstants;
 
 import static com.maohx2.ina.Constants.Math.*;
 import static com.maohx2.ina.Constants.Palette.*;
@@ -23,6 +24,9 @@ public class BattleUserInterface extends UserInterface {
     int select_circle_num;
     int selected_circle_num;
 
+    public BattleUserInterface(GlobalConstants global_constants){
+        super(global_constants);
+    }
 
     @Override
     public void init() {

@@ -11,33 +11,9 @@ import com.maohx2.ina.BaseSurfaceView;
  */
 
 
-public class TouchSV extends BaseSurfaceView implements SurfaceHolder.Callback {
+public class TouchSV{
 
 
-    public TouchSV(Context context){
-        super(context);
-
-        created = false;
-        System.out.println("BS Const");
-
-        holder = this.getHolder();
-        holder.addCallback(this);
-
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-    }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder arg0) {
-        created = true;
-    }
-
-    public void startThread() {
-    }
-
-    @Override
     public void surfaceDestroyed(SurfaceHolder arg0) {}
 
     public boolean onTouchEvent (MotionEvent event) {

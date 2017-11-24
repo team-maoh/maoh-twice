@@ -7,7 +7,6 @@ import android.view.SurfaceHolder;
 
 import android.view.SurfaceView;
 
-import com.maohx2.ina.Draw.BookingData;
 import com.maohx2.ina.Draw.Graphic;
 
 import static com.maohx2.ina.Constants.Bitmap.*;

@@ -14,15 +14,19 @@ public class GlobalData extends Application {
 
     BitmapDataAdmin g_bitmap_data_admin;
     MyDatabaseAdmin g_my_database_admin;
+    GlobalConstants g_constants;
 
-    public void init() {
+    public void init(int disp_x, int disp_y) {
         g_my_database_admin = new MyDatabaseAdmin(this);
-        g_my_database_admin.addMyDatabase("global_image_DB", "global_image1.db", 1, "r");
+        g_my_database_admin.addMyDatabase("GlobalImageDB", "GlobalImage.db", 1, "r");
         g_bitmap_data_admin = new BitmapDataAdmin();
-        g_bitmap_data_admin.init(this, g_my_database_admin.getMyDatabase("global_image_DB"));
-        g_bitmap_data_admin.loadGlobalImages();
+        g_bitmap_data_admin.init(this);
+        g_bitmap_data_admin.loadGlobalImages(g_my_database_admin.getMyDatabase("GlobalImageDB"));
+        g_constants = new GlobalConstants(disp_x, disp_y);
     }
 
     //ゲッターとか
     public BitmapDataAdmin getGlobalBitmapDataAdmin() { return g_bitmap_data_admin;}
+    public GlobalConstants getGlobalConstants() { return g_constants;}
+
 }
