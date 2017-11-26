@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.view.SurfaceHolder;
 
 import com.maohx2.horie.map.MapAdmin;
+import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.waste.MySprite;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 //import com.maohx2.ina.MySprite;
@@ -25,11 +26,8 @@ public class MapUnit extends MapObject {
     double REACH_FOR_WALL = 5.0;
     SoundAdmin sound_admin;
 
-    public void init(SurfaceHolder holder, Bitmap draw_object, MapObjectAdmin map_object_admin, MapAdmin _map_admin, SoundAdmin _sound_admin) {
-    }
-
-    public void init(SurfaceHolder _holder, Bitmap _draw_object, MapObjectAdmin _map_object_admin) {
-        super.init(_holder, _draw_object);
+    public MapUnit(Graphic _graphic, MapObjectAdmin _map_object_admin) {
+        super(_graphic, _map_object_admin);
 
         map_object_admin = _map_object_admin;
 
@@ -42,18 +40,25 @@ public class MapUnit extends MapObject {
         y_reach = 0.0;
     }
 
-    public void init(GL10 gl, MySprite draw_object, MapObjectAdmin _map_object_admin) {
-        super.init(gl, draw_object);
+//    public void init(SurfaceHolder holder, Bitmap draw_object, MapObjectAdmin map_object_admin, MapAdmin _map_admin, SoundAdmin _sound_admin) {
+//    }
 
-        map_object_admin = _map_object_admin;
-
-        dx = 0.0;//移動距離(differential x)
-        dy = 0.0;
-        dst_steps = 1;//今の目標地点までの歩数
-        now_steps = 0;//前の目標地点にたどり着いてから今までに歩いた歩数
-        moving = false;
-
+    public void init() {
+        super.init();
     }
+
+//    public void init(GL10 gl, MySprite draw_object, MapObjectAdmin _map_object_admin) {
+//        super.init(gl, draw_object);
+//
+//        map_object_admin = _map_object_admin;
+//
+//        dx = 0.0;//移動距離(differential x)
+//        dy = 0.0;
+//        dst_steps = 1;//今の目標地点までの歩数
+//        now_steps = 0;//前の目標地点にたどり着いてから今までに歩いた歩数
+//        moving = false;
+//
+//    }
 
 //    public void update(){}
 

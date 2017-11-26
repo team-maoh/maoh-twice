@@ -12,6 +12,7 @@ import static java.lang.Math.pow;
 
 import java.util.Random;
 
+import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.waste.MySprite;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -28,9 +29,9 @@ public class MapEnemy extends MapUnit {
     int PERIOD_FRAMES_OF_CHASE = 15;//[単位:フレーム]/Enemyはこの枚数ごとに目標座標を更新する
     double dst_x = 100, dst_y = 100;
 
-    @Override
-    public void init(SurfaceHolder holder, Bitmap draw_object, MapObjectAdmin map_object_admin) {
-        super.init(holder, draw_object, map_object_admin);
+    public MapEnemy(Graphic graphic, MapObjectAdmin map_object_admin){
+        super(graphic, map_object_admin);
+
         player = map_object_admin.getPlayer();
 
         Random random = new Random();
@@ -38,20 +39,35 @@ public class MapEnemy extends MapUnit {
         y = random.nextDouble() * 600;
 
         chase_count = 0;
+
+        draw_object = "slime";
+
     }
 
-    @Override
-    public void init(GL10 gl, MySprite draw_object, MapObjectAdmin map_object_admin) {
-        super.init(gl, draw_object, map_object_admin);
-        player = map_object_admin.getPlayer();
-
-        Random random = new Random();
-        x = random.nextDouble() * 1000;
-        y = random.nextDouble() * 600;
+//    @Override
+    public void init() {
+        super.init();
+//        player = map_object_admin.getPlayer();
+//
+//        Random random = new Random();
+//        x = random.nextDouble() * 1000;
+//        y = random.nextDouble() * 600;
+//
+//        chase_count = 0;
     }
 
+//    @Override
+//    public void init(GL10 gl, MySprite draw_object, MapObjectAdmin map_object_admin) {
+//        super.init(gl, draw_object, map_object_admin);
+//        player = map_object_admin.getPlayer();
+//
+//        Random random = new Random();
+//        x = random.nextDouble() * 1000;
+//        y = random.nextDouble() * 600;
+//    }
+
     @Override
-    public void update(double touch_x, double touch_y, TouchState touch_state) {
+    public void update() {
 
         /*
         if (myDistance(x, y, dst_x, dst_y) < PLAYER_STEP*CHASE_STEPS) {

@@ -5,6 +5,7 @@ import android.view.SurfaceHolder;
 
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.ina.waste.MySprite;
 import com.maohx2.kmhanko.sound.SoundAdmin;
@@ -33,10 +34,17 @@ public class MapPlayer extends MapUnit {
     double[] chase_y = new double[CHASE_STEPS];
     DungeonUserInterface dungeon_user_interface;
 
-    public void init(SurfaceHolder holder, Bitmap draw_object, MapObjectAdmin map_object_admin, MapAdmin _map_admin, DungeonUserInterface _duneon_user_interface, SoundAdmin _sound_admin) {
-        super.init(holder, draw_object, map_object_admin);
+    TouchState touch_state;
 
-        dungeon_user_interface = _duneon_user_interface;
+//    map_player = new MapPlayer(graphic, this, map_admin, dungeon_user_interface, _sound_admin);
+
+    public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, MapAdmin _map_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin) {
+        super(graphic, _map_object_admin);
+
+        dungeon_user_interface = _dungeon_user_interface;
+
+        touch_state = dungeon_user_interface.getTouchState();
+
         map_admin = _map_admin;
         sound_admin = _sound_admin;
 
@@ -50,28 +58,49 @@ public class MapPlayer extends MapUnit {
             chase_y[i] = y;
         }
         chase_num++;
+
+        draw_object = "neco";
     }
 
-    @Override
-    public void init(GL10 gl, MySprite draw_object, MapObjectAdmin map_object_admin) {
-        super.init(gl, draw_object, map_object_admin);
+    public void init() {
+        super.init();
 
-        steps_count = 0;//歩数
-        x = 10;
-        y = 10;
-
-        chase_num = 0;
-
-        for (int i = 0; i < 10; i++) {
-            chase_x[i] = x;
-            chase_y[i] = y;
-        }
-        chase_num++;
-
+//        dungeon_user_interface = _duneon_user_interface;
+//        map_admin = _map_admin;
+//        sound_admin = _sound_admin;
+//
+//        steps_count = 0;//歩数
+//        x = 50;
+//        y = 50;
+//        chase_num = 0;
+//
+//        for (int i = 0; i < 10; i++) {
+//            chase_x[i] = x;
+//            chase_y[i] = y;
+//        }
+//        chase_num++;
     }
 
+//    @Override
+//    public void init(GL10 gl, MySprite draw_object, MapObjectAdmin map_object_admin) {
+//        super.init(gl, draw_object, map_object_admin);
+//
+//        steps_count = 0;//歩数
+//        x = 10;
+//        y = 10;
+//
+//        chase_num = 0;
+//
+//        for (int i = 0; i < 10; i++) {
+//            chase_x[i] = x;
+//            chase_y[i] = y;
+//        }
+//        chase_num++;
+//
+//    }
+
     @Override
-    public void update(double _touch_x, double _touch_y, TouchState touch_state) {
+    public void update() {
 
         //TouchState touch_state = dungeon_user_interface.getTouchState();// nullが出る
         double touch_x = dungeon_user_interface.getTouchX();
@@ -90,75 +119,75 @@ public class MapPlayer extends MapUnit {
         }
         if (moving == true) {
 
-            /*
-            switch (detectWall(x, y, x + dx + x_reach, y + dy + y_reach)) {
-                case 0://壁なし
-                    x += dx;
-                    y += dy;
-                    break;
-                case 1://水平
-                    if (detectWall(x, y, x + dx + x_reach, y + dy) != 2) {
-                        x += dx;
-                    }
-                    break;
-                case 2://垂直
-                    if (detectWall(x, y, x + dx, y + dy + y_reach) != 1) {
-                        y += dy;
-                    }
-                    break;
-                default:
-                    break;
-            }
-            */
-
-                        /*
-            //自分と壁との距離を外積で求めようとした
-            double start_angle;
-            if (dy < 0) {
-                start_angle = atan(dy / dx);
-            } else {
-                start_angle = atan(dy / dx) + 180;
-            }
-            boolean isWall = false, pre_isWall;
-            double border_theta[] = new double[2];
-            int i = 0;
-            for (double theta = start_angle; theta < start_angle + 360; theta += 3) {
-                pre_isWall = isWall;
-                if (detectWall(x + dx, y + dy, x + dx + REACH_FOR_WALL * cos(theta), y + dy + REACH_FOR_WALL * sin(theta)) != 0) {
-                    isWall = true;
-                } else {
-                    isWall = false;
-                }
-                if (pre_isWall != isWall) {
-                    border_theta[i] = theta;
-                    i++;
-                }
-                if (i == 2) {
-                    break;
-                }
-            }
-            double sink = REACH_FOR_WALL - (pow(REACH_FOR_WALL, 2.0) * (cos(border_theta[0] * sin(border_theta[1]) - sin(border_theta[0] * cos(border_theta[1])))));
-            dx += sink*cos((border_theta[0]+border_theta[1])/2.0);
-            dy += sink*sin((border_theta[0]+border_theta[1])/2.0);
-            */
-
-                        /*
-            for (double theta = 0.0; theta < 360.0; theta += 3.0) {
-                if (hasUpdateDxDy(theta) == true) {
-                    break;
-                }
-            }*/
+//            /*
+//            switch (detectWall(x, y, x + dx + x_reach, y + dy + y_reach)) {
+//                case 0://壁なし
+//                    x += dx;
+//                    y += dy;
+//                    break;
+//                case 1://水平
+//                    if (detectWall(x, y, x + dx + x_reach, y + dy) != 2) {
+//                        x += dx;
+//                    }
+//                    break;
+//                case 2://垂直
+//                    if (detectWall(x, y, x + dx, y + dy + y_reach) != 1) {
+//                        y += dy;
+//                    }
+//                    break;
+//                default:
+//                    break;
+//            }
+//            */
+//
+//                        /*
+//            //自分と壁との距離を外積で求めようとした
+//            double start_angle;
+//            if (dy < 0) {
+//                start_angle = atan(dy / dx);
+//            } else {
+//                start_angle = atan(dy / dx) + 180;
+//            }
+//            boolean isWall = false, pre_isWall;
+//            double border_theta[] = new double[2];
+//            int i = 0;
+//            for (double theta = start_angle; theta < start_angle + 360; theta += 3) {
+//                pre_isWall = isWall;
+//                if (detectWall(x + dx, y + dy, x + dx + REACH_FOR_WALL * cos(theta), y + dy + REACH_FOR_WALL * sin(theta)) != 0) {
+//                    isWall = true;
+//                } else {
+//                    isWall = false;
+//                }
+//                if (pre_isWall != isWall) {
+//                    border_theta[i] = theta;
+//                    i++;
+//                }
+//                if (i == 2) {
+//                    break;
+//                }
+//            }
+//            double sink = REACH_FOR_WALL - (pow(REACH_FOR_WALL, 2.0) * (cos(border_theta[0] * sin(border_theta[1]) - sin(border_theta[0] * cos(border_theta[1])))));
+//            dx += sink*cos((border_theta[0]+border_theta[1])/2.0);
+//            dy += sink*sin((border_theta[0]+border_theta[1])/2.0);
+//            */
+//
+//                        /*
+//            for (double theta = 0.0; theta < 360.0; theta += 3.0) {
+//                if (hasUpdateDxDy(theta) == true) {
+//                    break;
+//                }
+//            }*/
             x += dx;
             y += dy;
 
-            //(x, y)を格納
-            /*
-            chase_x[chase_num] = x;
-            chase_y[chase_num] = y;
-            chase_num++;
-            if (chase_num >= CHASE_STEPS) {
-                chase_num = 0;
-            }*/
+//            //(x, y)を格納
+//            /*
+//            chase_x[chase_num] = x;
+//            chase_y[chase_num] = y;
+//            chase_num++;
+//            if (chase_num >= CHASE_STEPS) {
+//                chase_num = 0;
+//            }*/
 
             //自分と目標点の距離がPLAYER_STEP未満になる or 次ステップで自分のx(またはy)座標が目標点のそれを通り過ぎる
             if (PLAYER_STEP > myDistance(touch_x, touch_y, x, y) || 0 > (touch_x - (x + dx)) * dx || 0 > (touch_y - (y + dy)) * dy) {
