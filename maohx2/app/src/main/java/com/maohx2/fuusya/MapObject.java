@@ -4,13 +4,12 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
-import static com.maohx2.ina.Constants.Touch.TouchState;
 
+import static com.maohx2.ina.Constants.Touch.TouchState;
 
 
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.ina.waste.MySprite;
 //import com.maohx2.ina.MySprite;
 
 import java.util.Map;
@@ -24,10 +23,10 @@ import javax.microedition.khronos.opengles.GL10;
 abstract public class MapObject {
 
     double x, y;
-//    SurfaceHolder holder;
+    //    SurfaceHolder holder;
     String draw_object;
     int icon_width, icon_height;
-//    Paint paint = new Paint();
+    //    Paint paint = new Paint();
     boolean exists;//自身がマップ上に存在しているかどうか
     int id;
     Graphic graphic;
@@ -35,7 +34,7 @@ abstract public class MapObject {
 //    MySprite sprite_object;
 //    GL10 gl;
 
-    public MapObject(Graphic _graphic, MapObjectAdmin _map_object_admin){
+    public MapObject(Graphic _graphic, MapObjectAdmin _map_object_admin) {
 
         graphic = _graphic;
 
@@ -43,22 +42,14 @@ abstract public class MapObject {
 //        icon_height = draw_object.getHeight();
         exists = true;
         id = -1;
+
+        x = 800;
+        y = 450;
     }
 
     public void init() {
 
     }
-
-//    public void init(GL10 _gl, MySprite draw_object) {
-//        //icon_width = draw_object.getWidth();
-//        //icon_height = draw_object.getHeight();
-//
-//        gl = _gl;
-//        sprite_object = draw_object;
-//
-//        exists = true;
-//        id = -1;
-//    }
 
     public void update() {
     }
@@ -68,7 +59,9 @@ abstract public class MapObject {
         MapAdmin map_admin = _map_admin;
 
         if (exists == true) {
-            graphic.bookingDrawBitmap(draw_object, (int) x - icon_width / 2 - map_admin.getMap_size_x() , (int) y - icon_height / 2 - map_admin.getMap_size_y());
+//            graphic.bookingDrawBitmap(draw_object, (int) x, (int) y);
+            graphic.bookingDrawBitmap(draw_object, (int) x, (int) y);
+//            graphic.bookingDrawBitmap("ゴキ魅",800,450);
         }
 
 //        synchronized (holder) {
@@ -95,13 +88,17 @@ abstract public class MapObject {
         return y;
     }
 
-    public boolean exists() { return exists; }
+    public boolean exists() {
+        return exists;
+    }
 
-    public void setExists(boolean _exists){
+    public void setExists(boolean _exists) {
         exists = _exists;
     }
 
-    public int getId(){return id;}
+    public int getId() {
+        return id;
+    }
 
 //    public void setId(int _id){
 //        id = _id;

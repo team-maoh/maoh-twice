@@ -29,11 +29,11 @@ public class DungeonGameSystem {
 
         //map_admin = new MapAdmin(graphic);
         map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin);
-        //map_object_admin.init();//MapObjectAdmin.javaのinitを実行
+        map_object_admin.init();//MapObjectAdmin.javaのinitを実行
     }
 
     public void update() {
-//        map_object_admin.update();
+        map_object_admin.update();
     }
 
     public void draw() {
@@ -47,9 +47,11 @@ public class DungeonGameSystem {
         }
         */
 
-        //map_admin.drawMap();
-//        map_object_admin.draw();
-//        graphic.draw();
+//        map_admin.drawMap();
+        map_object_admin.draw();
+        //        graphic.bookingDrawBitmap("ゴキ魅",800,450);
+
+        graphic.draw();
 
     }
 

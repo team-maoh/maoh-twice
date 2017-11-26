@@ -10,7 +10,6 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 //import com.maohx2.ina.MySprite;
 
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.ina.waste.MySprite;
 
 import java.util.Random;
 
@@ -22,14 +21,15 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class MapItem extends MapObject {
 
-    MapUnit player;
     MapObjectAdmin map_object_admin;
-    String draw_object;
+//    String draw_object;
 
     public MapItem(Graphic graphic, MapObjectAdmin _map_object_admin) {
         super(graphic, _map_object_admin);
 
         map_object_admin = _map_object_admin;
+
+        draw_object = "apple";
 
 //        switch (id){
 //            case 1:
@@ -76,16 +76,16 @@ public class MapItem extends MapObject {
     public void setId(int _id){
 
         id = _id;
-
-        switch (id){
-            case 1:
-                draw_object = "apple";
-            case 2:
-                draw_object = "grape";
-            case 3:
-                draw_object = "banana";
-            case 4:
-                draw_object = "watermelon";
-        }
+//
+//        switch (id){
+//            case 1:
+//                draw_object = "apple";
+//            case 2:
+//                draw_object = "grape";
+//            case 3:
+//                draw_object = "banana";
+//            case 4:
+//                draw_object = "watermelon";
+//        }
     }
 }

@@ -102,6 +102,10 @@ public class MapObjectAdmin {
         bag_item_admin.init();
     }
 
+    public void init(){
+
+    }
+
     public void update() {//    /*
 //    public void init(Context context, SurfaceHolder _holder, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Bitmap draw_player, Bitmap draw_apple, Bitmap draw_banana, Bitmap draw_grape, Bitmap draw_watermelon, Bitmap draw_enemy, MapAdmin _map_admin) {
 //        //↑draw_player = neco, draw_item = apple, draw_enemy = slime (GameSystem.java参照)

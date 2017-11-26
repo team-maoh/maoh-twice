@@ -7,7 +7,6 @@ import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.DungeonUserInterface;
-import com.maohx2.ina.waste.MySprite;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 //import com.maohx2.ina.MySprite;
 import static com.maohx2.ina.Constants.Touch.TouchState;
@@ -59,7 +58,7 @@ public class MapPlayer extends MapUnit {
         }
         chase_num++;
 
-        draw_object = "neco";
+        draw_object = "ゴキ魅";
     }
 
     public void init() {

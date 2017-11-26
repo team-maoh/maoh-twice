@@ -13,7 +13,6 @@ import static java.lang.Math.pow;
 import java.util.Random;
 
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.ina.waste.MySprite;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -40,8 +39,7 @@ public class MapEnemy extends MapUnit {
 
         chase_count = 0;
 
-        draw_object = "slime";
-
+        draw_object = "ゴキ太郎";
     }
 
 //    @Override

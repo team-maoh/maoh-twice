@@ -18,7 +18,6 @@ import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.ina.UI.MapUserInterface;
 import com.maohx2.ina.UI.UserInterface;
-import com.maohx2.ina.waste.ImageAdmin;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import javax.microedition.khronos.opengles.GL10;

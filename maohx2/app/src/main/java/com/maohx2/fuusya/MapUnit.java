@@ -5,7 +5,6 @@ import android.view.SurfaceHolder;
 
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.ina.waste.MySprite;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 //import com.maohx2.ina.MySprite;
 
@@ -30,6 +29,8 @@ public class MapUnit extends MapObject {
         super(_graphic, _map_object_admin);
 
         map_object_admin = _map_object_admin;
+
+        draw_object = "ゴキ魅";
 
         dx = 0.0;//移動距離(differential x)
         dy = 0.0;
