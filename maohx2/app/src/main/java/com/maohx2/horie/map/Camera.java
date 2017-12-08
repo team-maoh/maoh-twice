@@ -25,7 +25,7 @@ public class Camera {
         if(norm_y < 0){
             throw new Error("%☆ホリエ:y座標が負 norm_y = "+norm_y+"(Camera:convertToWorldCoordinateY)");
         }
-        int world_y = norm_y - camera_offset.y;
+        int world_y = norm_y + camera_offset.y;
         return world_y;
     }
 
@@ -37,7 +37,7 @@ public class Camera {
             throw new Error("%☆ホリエ:x座標がワールド座標外 world_x = "+world_x+"(Camera:convertToNormCoordinateX)");
         }
         int norm_x = world_x - camera_offset.x;
-        if(norm_x < 0 || norm_x > 900){
+        if(norm_x < 0 || norm_x > normalize_size.x){
             norm_x = -1000;
         }
         return norm_x;
@@ -51,7 +51,7 @@ public class Camera {
             throw new Error("%☆ホリエ:y座標がワールド座標外 world_y = "+world_y+"(Camera:convertToNormCoordinateY)");
         }
         int norm_y = world_y - camera_offset.y;
-        if(norm_y < 0 || norm_y > 1600){
+        if(norm_y < 0 || norm_y > normalize_size.y){
             norm_y = -1000;
         }
         return norm_y;

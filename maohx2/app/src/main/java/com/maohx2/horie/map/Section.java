@@ -198,6 +198,10 @@ public class Section {
         return section_number;
     }
 
+    public Room getRoom(){
+        return room;
+    }
+
     //setter
     public void setAll(int m_left, int m_top, int m_right, int m_bottom) {
         top = m_top;

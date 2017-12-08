@@ -1,5 +1,9 @@
 package com.maohx2.horie.map;
 
+import android.graphics.Paint;
+
+import com.maohx2.ina.Draw.Graphic;
+
 /**
  * Created by horie on 2017/10/13.
  */
@@ -12,8 +16,9 @@ public class Room {
     int height;
     int width;
     int area;
+    boolean isDisp;
 
-    public void Room(){}
+    public Room(){}
 
     public int getTop(){
         return top;
@@ -31,6 +36,14 @@ public class Room {
         return right;
     }
 
+    public boolean isDisp(){
+        return isDisp;
+    }
+
+    public void setDispflag(boolean m_isDisp){
+        isDisp = m_isDisp;
+    }
+
     public void setAll(int m_left, int m_top, int m_right, int m_bottom){
         top = m_top;
         bottom = m_bottom;
@@ -39,5 +52,11 @@ public class Room {
         height = m_bottom - m_top;
         width = m_right - m_left;
         area = height * width;
+    }
+
+    public void drawRoom(Graphic graphic, Paint paint, int magnification){
+        if(isDisp) {
+            graphic.bookingDrawRect(left*magnification, top*magnification, (right+1)*magnification, (bottom+1)*magnification, paint);
+        }
     }
 }

@@ -1,6 +1,9 @@
 package com.maohx2.horie.map;
 
+import android.graphics.Paint;
 import android.graphics.Point;
+
+import com.maohx2.ina.Draw.Graphic;
 
 import java.util.Random;
 
@@ -20,6 +23,24 @@ public class SectionAdmin {
 
     public void setSection_max_num(int num) {
         section_max_num = num;
+    }
+
+    //マップ座標(x, y)がどのroomに属するか判定
+    public Room getNowRoom(int x, int y){
+        Section now_section = new Section();
+        for(int i = 0;i <= now_leaves_number;i++){
+            if(y >= leaves[i].getTop() && y <= leaves[i].getBottom() && x >= leaves[i].getLeft() && x <= leaves[i].getRight()){
+                now_section = leaves[i];
+                break;
+            }
+        }
+        if(now_section == null){
+            throw new Error("%☆セクションがない,x = "+x+", y = "+y);
+        }
+        if(now_section.getRoom() == null){
+            throw new Error("%☆roomがない,x = "+x+", y = "+y);
+        }
+        return now_section.getRoom();
     }
 
     public SectionAdmin(int m_section_max_num, Point m_map_size) {
@@ -480,6 +501,8 @@ public class SectionAdmin {
 
     //垂直な道を作る
     public void makeVerticalPath(int now_point, int now_top, int connected_point, int connected_bottom, int border, Chip[][] map_data) {
+        map_data[now_point][now_top-1].setEntranceFlag(true);
+        map_data[connected_point][connected_bottom+1].setEntranceFlag(true);
         for (int i = connected_bottom; i <= border; i++) {
             map_data[connected_point][i].setWallFlag(false);
         }
@@ -496,28 +519,11 @@ public class SectionAdmin {
             }
         }
     }
-//デバッグ用
-    /*public void makeVerticalPath2(int now_point, int now_top, int connected_point, int connected_bottom, int border, Chip[][] map_data){
-        for(int i = connected_bottom;i <= border;i++){
-            map_data[connected_point][i].setStairsFlag(true);
-        }
-        for(int i = border;i <= now_top;i++){
-            map_data[now_point][i].setWallFlag(false);
-        }
-        if(now_point <= connected_point){
-            for(int i = now_point;i <= connected_point;i++){
-                map_data[i][border].setWallFlag(false);
-            }
-        }
-        else{
-            for(int i = connected_point;i <= now_point;i++){
-                map_data[i][border].setWallFlag(false);
-            }
-        }
-    }*/
 
     //水平な道を作る
     public void makeHorizontalPath(int now_point, int now_left, int connected_point, int connected_right, int border, Chip[][] map_data) {
+        map_data[now_left-1][now_point].setEntranceFlag(true);
+        map_data[connected_right+1][connected_point].setEntranceFlag(true);
         for (int i = connected_right; i <= border; i++) {
             map_data[i][connected_point].setWallFlag(false);
         }
@@ -534,26 +540,6 @@ public class SectionAdmin {
             }
         }
     }
-/*
-    public void makeHorizontalPath2(int now_point, int now_left, int connected_point, int connected_right, int border, Chip[][] map_data){
-        for(int i = connected_right;i <= border;i++){
-            map_data[i][connected_point].setStairsFlag(true);
-        }
-        for(int i = border;i <= now_left;i++){
-            map_data[i][now_point].setWallFlag(false);
-        }
-        if(now_point <= connected_point){
-            for(int i = now_point;i <= connected_point;i++){
-                map_data[border][i].setWallFlag(false);
-            }
-        }
-        else {
-            for (int i = connected_point; i <= now_point; i++) {
-                map_data[border][i].setWallFlag(false);
-            }
-        }
-    }
-    */
 
     //面積最大のsectionを返す関数
     private Section searchAreaMaxSection(Section m_section) {
@@ -606,6 +592,13 @@ public class SectionAdmin {
             return 1;
         } else {
             return 0;
+        }
+    }
+
+    //部屋の描画(ミニマップ用)
+    public void drawAllRoom(Graphic graphic, Paint paint, int small_map_mag){
+        for(int i = 0;i <= now_leaves_number;i++){
+            leaves[i].getRoom().drawRoom(graphic, paint, small_map_mag);
         }
     }
 
