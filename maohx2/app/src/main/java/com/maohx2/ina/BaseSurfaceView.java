@@ -1,18 +1,11 @@
 package com.maohx2.ina;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
-import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.ina.UI.UserInterface;
-import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
 /**
  * Created by ina on 2017/09/20.
@@ -29,6 +22,12 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     Constants.Touch.TouchState touch_state = Constants.Touch.TouchState.AWAY;
     GlobalData global_data;
+
+    long error = 0;
+    int fps = 30;
+    long idealSleep = (1000 << 16) / fps;
+    long oldTime;
+    long newTime = System.currentTimeMillis() << 16;
 
     public BaseSurfaceView(Activity activity) {
         super(activity);
@@ -56,8 +55,29 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     @Override
     public void run() {
 
+        long old_frame = System.currentTimeMillis();
+
         while (thread != null) {
-        gameLoop();
+            oldTime = newTime;
+            gameLoop();
+            newTime = System.currentTimeMillis() << 16;
+            long sleepTime = idealSleep - (newTime - oldTime) - error; // 休止できる時間
+            if (sleepTime < 0x20000) sleepTime = 0x20000; // 最低でも2msは休止
+            oldTime = newTime;
+            try {
+                thread.sleep(sleepTime >> 16); // 休止
+            }catch (InterruptedException e){
+                System.out.println("%☆イナガキ：fps固定処理で例外が渡されました(スリープが負の数など)");
+            }
+
+            newTime = System.currentTimeMillis() << 16;
+            error = newTime - oldTime - sleepTime; // 休止時間の誤差
+
+            final long now_frame = System.currentTimeMillis();
+            final double fps = 1000.0 / (now_frame - old_frame);
+            old_frame = now_frame;
+            System.out.println(fps);
+
         }
     }
 

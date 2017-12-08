@@ -9,8 +9,6 @@ import android.graphics.Paint;
 
 public class BookingCircleData extends BookingTaskData{
 
-//canvas.drawCircle(1000 + (int) (120 * COS[i]), 600 - (int) (120 * SIN[i]), 10.0f, paint);
-
     int draw_x;
     int draw_y;
     int radius;
@@ -26,7 +24,7 @@ public class BookingCircleData extends BookingTaskData{
         draw_x = _draw_x;
         draw_y = _draw_y;
         radius = _radius;
-        paint = _paint;
+        paint.set(_paint);
     }
 
     @Override

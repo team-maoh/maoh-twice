@@ -1,21 +1,11 @@
 package com.maohx2.ina.Draw;
 
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.graphics.BitmapFactory;
-import com.maohx2.kmhanko.database.MyDatabase;
-
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.maohx2.ina.Constants.Bitmap.*;
-
 /**
- * Created by ina on 2017/10/08.
+ * Created by ina on 2017/12/01.
  */
-public class BitmapDataAdmin {
+
+public class AnimetionBitmapDataAdmin {
+/*
 
     //メンバ変数
     private Context context;
@@ -25,7 +15,7 @@ public class BitmapDataAdmin {
 
 
     //コンストラクタ
-    public BitmapDataAdmin() {}
+    public AnimetionBitmapDataAdmin() {}
 
     public void init(Context _context) {
         next_load_point = 0;
@@ -112,5 +102,6 @@ public class BitmapDataAdmin {
         return bitmap_data[bitmap_data_num];
     }
 
-}
+*/
 
+}

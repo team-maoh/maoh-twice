@@ -10,9 +10,6 @@ import android.graphics.Rect;
 
 public class BookingRectData extends BookingTaskData{
 
-//Rect rect = new Rect(up_left.x, up_left.y + content_height * i, down_right.x, up_left.y + content_height * (i + 1));
-//canvas.drawRect(rect, paint);
-
     Rect rect;
 
     BookingRectData(){
@@ -21,8 +18,8 @@ public class BookingRectData extends BookingTaskData{
     }
 
     public void update(int _draw_left, int _draw_up,int _draw_right, int _draw_down, Paint _paint){
-        rect = new Rect(_draw_left, _draw_up, _draw_right, _draw_down);
-        paint = _paint;
+        rect.set(_draw_left, _draw_up, _draw_right, _draw_down);
+        paint.set(_paint);
     }
 
     @Override

@@ -50,7 +50,7 @@ public class Arrangement {
 
     public void draw(Canvas canvas){
 
-        bag_list.draw(canvas);
+        bag_list.draw();
 
     }
 

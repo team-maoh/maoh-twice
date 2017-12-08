@@ -44,12 +44,15 @@ class BattleSurfaceView extends BaseSurfaceView{
     public BattleSurfaceView(Activity battle_activity) {
         super(battle_activity);
 
-
-        my_database_admin = new MyDatabaseAdmin(battle_activity);
-        my_database_admin.addMyDatabase("unit_data_DB", "unit_data.db", 1, "r");
-
-
         graphic = new Graphic(battle_activity, holder);
+        my_database_admin = new MyDatabaseAdmin(battle_activity);
+
+
+        my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
+        graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"),"Goki");
+
+        my_database_admin.addMyDatabase("DungeonDB", "LocalDungeonImage.db", 1, "r");
+        graphic.loadLocalImages(my_database_admin.getMyDatabase("DungeonDB"),"Dungeon");
 
         battle_user_interface = new BattleUserInterface(global_data.getGlobalConstants());
         battle_user_interface.init();

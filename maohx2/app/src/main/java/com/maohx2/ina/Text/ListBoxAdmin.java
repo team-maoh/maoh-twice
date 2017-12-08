@@ -32,5 +32,5 @@ public class ListBoxAdmin {
 
     public void update() {list_box[0].update();}
 
-    public void draw(Canvas canvas) {list_box[0].draw(canvas);}
+    public void draw() {list_box[0].draw();}
 }

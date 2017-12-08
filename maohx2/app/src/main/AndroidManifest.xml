@@ -4,7 +4,7 @@
 
     android:name = “GlobalData”
 
-    <application
+    <application android:largeHeap="true"
         android:name="GlobalData"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

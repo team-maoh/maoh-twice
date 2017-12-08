@@ -2,33 +2,16 @@ package com.maohx2.ina;
 
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Point;
 import android.view.SurfaceHolder;
 
-import com.maohx2.fuusya.MapObjectAdmin;
-import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.ina.Map.GeoSlotAdmin;
 import com.maohx2.ina.Text.ListBoxAdmin;
 import com.maohx2.ina.Text.TextBoxAdmin;
 import com.maohx2.ina.UI.BattleUserInterface;
-import com.maohx2.ina.UI.DungeonUserInterface;
-import com.maohx2.ina.UI.MapUserInterface;
-import com.maohx2.ina.UI.UserInterface;
-import com.maohx2.kmhanko.sound.SoundAdmin;
-
-import javax.microedition.khronos.opengles.GL10;
-
-
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.view.SurfaceHolder;
 
-import static com.maohx2.ina.Constants.Touch.TouchState;
 
 
 /**

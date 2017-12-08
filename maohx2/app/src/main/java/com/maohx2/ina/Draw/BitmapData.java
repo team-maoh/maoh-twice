@@ -17,9 +17,6 @@ class BitmapData{
         image_name = "";
     }
 
-
-
-
     Bitmap getBitmap(){
         return bitmap;
     }

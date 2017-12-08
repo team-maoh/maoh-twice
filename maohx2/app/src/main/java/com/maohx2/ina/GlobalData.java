@@ -18,10 +18,10 @@ public class GlobalData extends Application {
 
     public void init(int disp_x, int disp_y) {
         g_my_database_admin = new MyDatabaseAdmin(this);
-        g_my_database_admin.addMyDatabase("GlobalImageDB", "GlobalImage.db", 1, "r");
+        //g_my_database_admin.addMyDatabase("globalImageDB", "globalImage.db", 1, "r");
         g_bitmap_data_admin = new BitmapDataAdmin();
         g_bitmap_data_admin.init(this);
-        g_bitmap_data_admin.loadGlobalImages(g_my_database_admin.getMyDatabase("GlobalImageDB"));
+        //g_bitmap_data_admin.loadGlobalImages(g_my_database_admin.getMyDatabase("GlobalImageDB"));
         g_constants = new GlobalConstants(disp_x, disp_y);
     }
 

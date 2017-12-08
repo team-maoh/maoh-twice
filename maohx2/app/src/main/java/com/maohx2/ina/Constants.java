@@ -38,8 +38,8 @@ public final class Constants {
     }
 
     public static class Bitmap {
-        public static final int BITMAP_DATA_INSTANCE = 100;
-        public static final int BOOKING_DATA_INSTANCE = 100;
+        public static final int BITMAP_DATA_INSTANCE = 1000;
+        public static final int BOOKING_DATA_INSTANCE = 1000;
     }
 
     public static class BattleUnit {
@@ -74,6 +74,4 @@ public final class Constants {
             TEXT,
         }
     }
-
-
-    }
+}

@@ -9,8 +9,6 @@ import android.graphics.Paint;
 
 public class BookingTextData extends BookingTaskData {
 
-//canvas.drawText(content[i], up_left.x, up_left.y + content_height * (i + 1) - content_height/4, paint);
-
     String draw_string;
     int draw_left;
     int draw_up;
@@ -26,12 +24,10 @@ public class BookingTextData extends BookingTaskData {
         draw_string = _draw_string;
         draw_left = _draw_left;
         draw_up = _draw_up;
-        paint = _paint;
+        paint.set(_paint);
     }
 
     @Override
-    public void draw(Canvas canvas){
-        canvas.drawText(draw_string, draw_left, draw_up, paint);
-    }
+    public void draw(Canvas canvas){canvas.drawText(draw_string, draw_left, draw_up, paint);}
 
 }

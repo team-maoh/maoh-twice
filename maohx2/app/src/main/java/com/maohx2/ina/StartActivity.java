@@ -70,10 +70,10 @@ class StartSurfaceView extends BaseSurfaceView {
 
         graphic = new Graphic(start_activity, holder);
         my_database_admin = new MyDatabaseAdmin(start_activity);
-        my_database_admin.addMyDatabase("local_image_DB", "LocalImage.db", 1, "r");
+        //my_database_admin.addMyDatabase("local_image_DB", "LocalImage.db", 1, "r");
 
-        //my_database_admin.addMyDatabase("StartDB", "Start.db", 1, "r");
-        //graphic.loadLocalImages(my_database_admin.getMyDatabase("StartDB"), "Start");
+        my_database_admin.addMyDatabase("StartDB", "LocalStartImage.db", 1, "r");
+        graphic.loadLocalImages(my_database_admin.getMyDatabase("StartDB"), "Start");
 
         thread = new Thread(this);
         thread.start();
@@ -84,17 +84,17 @@ class StartSurfaceView extends BaseSurfaceView {
 
     @Override
     public void gameLoop(){
-        graphic.bookingDrawBitmap("ゴキ",640,100);
-        graphic.bookingDrawBitmap("ゴキ太郎",300,590);
-        graphic.bookingDrawBitmap("ゴキ魅",1300,390);
-        graphic.bookingDrawBitmap("ゴキ",640,80);
-        graphic.bookingDrawBitmap("ゴキ",640,120);
-        graphic.bookingDrawBitmap("apple",800,450);
+        graphic.bookingDrawBitmap("スライム",300,590);
+        graphic.bookingDrawBitmap("スライム",640,100);
+        graphic.bookingDrawBitmap("スライム",1300,390);
+        graphic.bookingDrawBitmap("スライム",640,80);
+        graphic.bookingDrawBitmap("スライム",640,120);
+        graphic.bookingDrawBitmap("スライム",800,450);
 
 
         graphic.bookingDrawCircle(640,100,10,paint);
         graphic.bookingDrawRect(300,590,310,600,paint);
-        graphic.bookingDrawText("ゴキ魅",1300,390,paint);
+        graphic.bookingDrawText("スライム",1300,390,paint);
 
 //        graphic.drawBooking("ゴキ",640,390);
 
