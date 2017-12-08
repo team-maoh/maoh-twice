@@ -3,6 +3,7 @@ package com.maohx2.ina;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
 import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.widget.RelativeLayout;
@@ -84,6 +85,7 @@ class StartSurfaceView extends BaseSurfaceView {
 
     @Override
     public void gameLoop(){
+        paint.setColor(Color.BLUE);
         graphic.bookingDrawBitmap("スライム",300,590);
         graphic.bookingDrawText("(300,590)",300,590,paint);
         graphic.bookingDrawBitmap("スライム",640,100);

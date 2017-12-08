@@ -253,6 +253,7 @@ public class Graphic {
         setting_point1.set(draw_left, draw_down);
         transrateNormalizedPositionToDispPosition(setting_point1);
 
+        draw_paint.set(paint);
         draw_paint.setTextSize(DENSITY*paint.getTextSize());
 
         if(booking_rect_num >= booking_rect_datas.size()){
@@ -260,7 +261,7 @@ public class Graphic {
             System.out.println("add" +booking_rect_num);
         }
 
-        ((BookingTextData)booking_text_datas.get(booking_text_num)).update(draw_string, setting_point1.x, setting_point1.y, paint);
+        ((BookingTextData)booking_text_datas.get(booking_text_num)).update(draw_string, setting_point1.x, setting_point1.y, draw_paint);
         booking_task_datas.set(booking_num, booking_text_datas.get(booking_text_num));
         booking_num++;
         booking_text_num++;
