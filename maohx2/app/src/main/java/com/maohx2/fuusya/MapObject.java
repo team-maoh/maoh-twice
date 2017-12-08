@@ -25,21 +25,14 @@ abstract public class MapObject {
     double x, y;
     //    SurfaceHolder holder;
     String draw_object;
-    int icon_width, icon_height;
-    //    Paint paint = new Paint();
     boolean exists;//自身がマップ上に存在しているかどうか
     int id;
     Graphic graphic;
-
-//    MySprite sprite_object;
-//    GL10 gl;
 
     public MapObject(Graphic _graphic, MapObjectAdmin _map_object_admin) {
 
         graphic = _graphic;
 
-//        icon_width = draw_object.getWidth();
-//        icon_height = draw_object.getHeight();
         exists = true;
         id = -1;
 
@@ -64,21 +57,7 @@ abstract public class MapObject {
 //            graphic.bookingDrawBitmap("ゴキ魅",800,450);
         }
 
-//        synchronized (holder) {
-//            if (exists == true) {
-//                canvas.drawBitmap(draw_object, (int) x - icon_width / 2 - map_admin.getMap_size_x() , (int) y - icon_height / 2 - map_admin.getMap_size_y(), paint);
-////                canvas.drawBitmap(draw_object, (int) x - icon_width / 2 , (int) y - icon_height / 2, paint);
-//            }
-//        }
     }
-
-//    public void draw(GL10 _gl) {
-//
-//            if (exists == true) {
-//                sprite_object.draw(_gl,(float) x,(float) y);
-//            }
-//
-//    }
 
     public double getMapX() {
         return x;

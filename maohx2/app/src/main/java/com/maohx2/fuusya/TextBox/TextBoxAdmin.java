@@ -1,10 +1,11 @@
-package com.maohx2.ina.Text;
+package com.maohx2.fuusya.TextBox;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
 
@@ -26,15 +27,19 @@ public class TextBoxAdmin {
 
     TextBox text_box[] = new TextBox[100];
     UserInterface user_interface;
+    Graphic graphic;
+
+    public TextBoxAdmin(Graphic _graphic){
+        graphic = _graphic;
+    }
 
     public void init(UserInterface _user_interface) {
         user_interface = _user_interface;
-        text_box[0] = new TextBox();
+        text_box[0] = new TextBox(graphic);
 
         text_box[0].init(user_interface.setBoxTouchUI(100.0, 550.0, 800.0, 750.0), COLUMN_OF_BOX, ROW_OF_BOX);
 
         frame_count = 0;
-
     }
 
     public void update() {
@@ -98,8 +103,8 @@ public class TextBoxAdmin {
 
     }
 
-    public void draw(Canvas canvas) {
-        text_box[0].draw(canvas);
+    public void draw() {
+        text_box[0].draw();
     }
 
 }

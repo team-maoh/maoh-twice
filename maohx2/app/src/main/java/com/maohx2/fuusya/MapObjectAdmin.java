@@ -68,17 +68,19 @@ public class MapObjectAdmin {
 //                map_item[i] = new MapItem(graphic, this, 4);
 //            }
 
-            map_item[i] = new MapItem(graphic, this);
+            map_item[i] = new MapItem(graphic, this, i%4);
 
-            if (i < 2) {
-                map_item[i].setId(1);
-            } else if (i < 5) {
-                map_item[i].setId(2);
-            } else if (i < 8) {
-                map_item[i].setId(3);
-            } else {
-                map_item[i].setId(4);
-            }
+//            map_item[i].setId(i%4);
+
+//            if (i < 2) {
+//                map_item[i].setId(1);
+//            } else if (i < 5) {
+//                map_item[i].setId(2);
+//            } else if (i < 8) {
+//                map_item[i].setId(3);
+//            } else {
+//                map_item[i].setId(4);
+//            }
 
             map_item[i].init();
         }

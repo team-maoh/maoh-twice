@@ -5,10 +5,11 @@ import android.app.Activity;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
+import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.ListBoxAdmin;
-import com.maohx2.ina.Text.TextBoxAdmin;
+
 import com.maohx2.ina.UI.BattleUserInterface;
 import android.graphics.Paint;
 
@@ -39,7 +40,7 @@ public class BattleGameSystem {
 
         battle_user_interface = _battle_user_interface;
         battle_unit_admin = new BattleUnitAdmin();
-        text_box_admin = new TextBoxAdmin();
+        text_box_admin = new TextBoxAdmin(graphic);
         list_box_admin = new ListBoxAdmin();
         canvas = null;
         battle_unit_admin.init(graphic, battle_user_interface, battle_activity);

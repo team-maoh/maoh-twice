@@ -1,4 +1,4 @@
-package com.maohx2.ina.Text;
+package com.maohx2.fuusya.TextBox;
 
 import android.graphics.Color;
 import android.graphics.Paint;

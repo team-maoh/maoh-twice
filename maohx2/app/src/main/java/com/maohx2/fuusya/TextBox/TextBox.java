@@ -1,10 +1,12 @@
-package com.maohx2.ina.Text;
+package com.maohx2.fuusya.TextBox;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+
+import com.maohx2.ina.Draw.Graphic;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,6 +63,12 @@ public class TextBox {
 
     //デバッグ用
     int tmp_first;
+
+    Graphic graphic;
+
+    public TextBox(Graphic _graphic) {
+        graphic = _graphic;
+    }
 
     public void init(int _touch_id, int _column_of_box, int _row_of_box) {
 
@@ -129,17 +137,17 @@ public class TextBox {
         }
     }
 
-    public void draw(Canvas canvas) {
+    public void draw() {
 
         //上のupdateで設定したpaintを使って箱を描画
-        Rect rect = new Rect(box_up_left_x, box_up_left_y, box_down_right_x, box_down_right_y);
-        canvas.drawRect(rect, box_paint);
+//        Rect rect = new Rect(box_up_left_x, box_up_left_y, box_down_right_x, box_down_right_y);
+        graphic.bookingDrawRect(box_up_left_x, box_up_left_y, box_down_right_x, box_down_right_y, box_paint);
 
         if (queue[first].getSentence().equals("null")) {
             System.out.println("◆文queueが空です");
 
         } else {
-            displayText(canvas);//文章を描画する
+            displayText();//文章を描画する
         }
     }
 
@@ -225,9 +233,9 @@ public class TextBox {
 
         //行数が多すぎる
         if (num_of_lines > row_of_box) {
-            System.out.println("%☆フジワラ:TextBoxの縦幅に対して文章の行数が多すぎる");
+            System.out.println("%☆◆フジワラ:TextBoxの縦幅に対して文章の行数が多すぎる");
             for (int i = 0; i < tmp_text_count; i++) {
-                System.out.println("%☆フジワラ>>" + tmp_sentence[i]);
+                System.out.println("%☆◆フジワラ>>" + tmp_sentence[i]);
             }
 
             will_shutdown_app = true;
@@ -236,8 +244,8 @@ public class TextBox {
         //長すぎる文がある
         for (int i = 0; i < num_of_lines; i++) {
             if (is_too_long[i] == true) {
-                System.out.println("%☆フジワラ:TextBoxの横幅に対して" + i + "行目の文が長すぎる");
-                System.out.print("%☆フジワラ>>");
+                System.out.println("%☆◆フジワラ:TextBoxの横幅に対して" + i + "行目の文が長すぎる");
+                System.out.print("%☆◆フジワラ>>");
                 for (int j = 0; j < tmp_text_count; j++) {
                     if (tmp_num_of_lines[j] == i) {
                         System.out.print(tmp_sentence[j]);
@@ -254,13 +262,13 @@ public class TextBox {
     }
 
     //箱１個分の文章を描画する関数
-    private void displayText(Canvas canvas) {
+    private void displayText() {
 
         for (int i = first; queue[i].isMOP() == false; i = (i + 1) % MAX_QUEUE_TEXT) {
-            canvas.drawText(queue[i].getSentence(), 105 + queue[i].getBeginColumn(), 595 + 40 * queue[i].getNumOfLines(), queue[i].getPaint());
+            graphic.bookingDrawText(queue[i].getSentence(), 105 + queue[i].getBeginColumn(), 595 + 40 * queue[i].getNumOfLines(), queue[i].getPaint());
             System.out.println("first");
         }
-        
+
         if (tmp_first != first) {
             for (int i = 0; i < MAX_QUEUE_TEXT; i++) {
                 System.out.println(queue[i].getSentence());
@@ -323,9 +331,6 @@ public class TextBox {
     }
 
     public void resetContent() {
-    }
-
-    public TextBox() {
     }
 
 }

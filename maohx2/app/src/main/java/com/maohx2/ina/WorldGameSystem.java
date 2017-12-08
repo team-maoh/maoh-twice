@@ -3,9 +3,9 @@ package com.maohx2.ina;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
+import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.ListBoxAdmin;
-import com.maohx2.ina.Text.TextBoxAdmin;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlotAdmin;
@@ -34,7 +34,7 @@ public class WorldGameSystem {
         my_data_base_admin = _my_data_base_admin;
 
 
-        text_box_admin = new TextBoxAdmin();
+        text_box_admin = new TextBoxAdmin(graphic);
         list_box_admin = new ListBoxAdmin();
         geo_slot_admin_manager = new GeoSlotAdminManager();
         //geo_slot_admin = new GeoSlotAdmin();
@@ -62,7 +62,7 @@ public class WorldGameSystem {
 
     public void draw() {
 
-        //text_box_admin.draw();
+        text_box_admin.draw();
         list_box_admin.draw();
 //        geo_slot_admin_manager.draw();
 
