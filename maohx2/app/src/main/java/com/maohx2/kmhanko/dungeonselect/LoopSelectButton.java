@@ -1,11 +1,9 @@
 package com.maohx2.kmhanko.dungeonselect;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.UI.UserInterface;
+
+import com.maohx2.ina.Draw.Graphic;
 
 /**
  * Created by user on 2017/10/13.
@@ -23,6 +21,8 @@ public class LoopSelectButton {
 
     int touch_id;
 
+    Graphic graphic;
+
     //グラフィック実装とともに消える予定
     int color_r;
     int color_g;
@@ -31,9 +31,11 @@ public class LoopSelectButton {
     static UserInterface map_user_interface;
     //static GameSystem game_system;
 
-    Paint paint = new Paint();
-
     public LoopSelectButton() {
+    }
+
+    public void init(Graphic _graphic) {
+        graphic = _graphic;
     }
 
     public void loadTouchID() {
@@ -49,14 +51,16 @@ public class LoopSelectButton {
     }
     //static public void setGameSystem(GameSystem _game_system) { game_system = _game_system; }
 
-    public void draw(Canvas canvas) {
+    public void draw() {
         //消える予定
+        /*
         paint.setColor(Color.argb(128, color_r, color_g, color_b));
         canvas.drawRect((float) x, (float) y, (float)(x + size_x), (float)(y + size_y), paint);
 
         paint.setColor(Color.argb(128, 0, 0, 0));
         paint.setTextSize(60);
         canvas.drawText(name,(float)x, (float)y + 60, paint);
+        */
     }
 
     public void update() {

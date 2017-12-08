@@ -60,10 +60,10 @@ public class AnimationAdmin {
         }
     }
 
-    public void drawBooking() {
+    public void draw() {
         for(int i = 0; i < animation.size(); i++) {
             if (animation.get(i).isExist()) {
-                animation.get(i).drawBooking();
+                animation.get(i).draw();
             }
         }
     }
@@ -147,13 +147,15 @@ public class AnimationAdmin {
     AnimationDataを指定する文字列
     を引数とする。帰り値として、Animationを指定するためのIDが帰ってくる
      */
-    public int readyAnimation(AnimationBitmapData animation_bitmap_data, String animation_name) {
+
+    public Animation readyAnimation(String animationBitmapDataName, String animation_name) {
         int index = addAnimation();//この時点で、AnimationはようやくExistする。
-        animation.get(index).setAnimationBitmapData(animation_bitmap_data);
+        animation.get(index).setAnimationBitmapDataName(animationBitmapDataName);
         animation.get(index).setAnimationData(this.getAnimationData(animation_name));
-        return index;
+        return animation.get(index);
     }
 
+    /*
     //Animationをstartする。現在の仕様では、すでにアニメーションを開始している状態で呼ぶと最初から開始される(はず)。
     public boolean startAnimation(int index) {
         Animation buf_animation = animation.get(index);
@@ -199,7 +201,7 @@ public class AnimationAdmin {
         buf_animation.setIsPause(false);
         return true;
     }
-
+    */
     //Animationの消滅
     public boolean removeAnimation(int index) {
         Animation buf_animation = animation.get(index);
@@ -209,6 +211,7 @@ public class AnimationAdmin {
         buf_animation.clear();
         return true;
     }
+
 }
 
 //AnimationBitMapDataを引数にとる。

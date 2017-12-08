@@ -344,6 +344,7 @@ public class MyDatabase {
     public String getDbAsset() { return db_asset; }
     public int getDbVersion() { return db_version; }
 
+    public boolean isDatabaseNotNull() { return db != null; }
 
     public void close() {
         db.close();

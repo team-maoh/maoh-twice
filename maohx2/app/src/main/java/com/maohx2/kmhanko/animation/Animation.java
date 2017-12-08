@@ -16,7 +16,7 @@ import android.graphics.Point;
  */
 
 public class Animation {
-    AnimationBitmapData animation_bitmap_data;
+    //AnimationBitmapData animation_bitmap_data;
 
     AnimationData animation_data;
 
@@ -34,8 +34,8 @@ public class Animation {
     int id;
     int x;
     int y;
-    double extend_x;
-    double extend_y;
+    float extend_x;
+    float extend_y;
     int angle;
     int alpha;
 
@@ -67,8 +67,8 @@ public class Animation {
         id = 0;
         x = 0;
         y = 0;
-        extend_x = 1.0;
-        extend_y = 1.0;
+        extend_x = 1.0f;
+        extend_y = 1.0f;
         angle = 0;
         alpha = 0;
         is_start = false;
@@ -76,11 +76,10 @@ public class Animation {
         is_loop = false;
     }
 
-    public void setAnimationBitmapData(AnimationBitmapData _animation_bitmap_data) {
+    public void setAnimationBitmapDataName(String _animationBitmapDataName) {
         exist = true;
-        animation_bitmap_data = _animation_bitmap_data;
-        name = animation_bitmap_data.getImageName();
-        size = animation_bitmap_data.getBitmapDatas().size();
+        name = _animationBitmapDataName;
+        //name = animation_bitmap_data.getImageName();
     }
 
     static public void setGraphic(Graphic _graphic) {
@@ -97,12 +96,25 @@ public class Animation {
         is_start = true;
         setParam();
         is_loop = (animation_data.getTime(size - 1) == 0);
+        size = animation_data.getSteps();
     }
 
     public void setPosition(int _original_x, int _original_y) {
         //基本座標の更新
         original_x = _original_x;
         original_y = _original_y;
+    }
+
+    public void setTime(int animationTime) {
+        for(int i = 0; i < animation_data.getSteps(); i++) {
+            if (animationTime < animation_data.getTime(i)) {
+                time = animationTime;
+                step = i;
+                break;
+            }
+            animationTime -= animation_data.getTime(i);
+        }
+        setStepAndTime();
     }
 
     public void update() {
@@ -128,8 +140,8 @@ public class Animation {
 
             x = calcGraduallyInt(animation_data.getX(step), animation_data.getX(nextstep), time, step);
             y = calcGraduallyInt(animation_data.getY(step), animation_data.getY(nextstep), time, step);
-            extend_x = calcGraduallyDouble(animation_data.getExtendX(step), animation_data.getExtendX(nextstep), time, step);
-            extend_y = calcGraduallyDouble(animation_data.getExtendY(step), animation_data.getExtendY(nextstep), time, step);
+            extend_x = calcGraduallyFloat(animation_data.getExtendX(step), animation_data.getExtendX(nextstep), time, step);
+            extend_y = calcGraduallyFloat(animation_data.getExtendY(step), animation_data.getExtendY(nextstep), time, step);
             angle = calcGraduallyInt(animation_data.getAngle(step), animation_data.getAngle(nextstep), time, step);
             alpha= calcGraduallyInt(animation_data.getAlpha(step), animation_data.getAlpha(nextstep), time, step);
         }
@@ -143,24 +155,25 @@ public class Animation {
         }
     }
 
-    public void drawBooking() {
+    public void draw() {
         //Graphicに描画を頼む
-        //graphic.drawBooking(name, new Point(original_x + x, original_y + y), id, extend_x, extend_y, angle, alpha);
+        graphic.bookingDrawBitmap(name, new Point(original_x + x, original_y + y), extend_x, extend_y, angle, alpha, false);
     }
 
     private void toNextStep() {
         step++;
         time = 0;
+        setStepAndTime();
+    }
 
+    private void setStepAndTime() {
         if (step >= size) {
             step = 0;
         }
-
         if (!animation_data.isSwitchGr(step)) {
             //Immediately
             setParam();
         }
-
         //Immediately,Graduallyに関わらず実行する。
         id = animation_data.getID(step);
     }
@@ -179,9 +192,9 @@ public class Animation {
         return (int)((double)(param - pre_param)*(double)time/(double)time_max) + pre_param;
     }
 
-    private double calcGraduallyDouble(double param, double pre_param, int time, int step) {
+    private float calcGraduallyFloat(float param, float pre_param, int time, int step) {
         int time_max = animation_data.getTime(step);
-        return (param - pre_param)*(double)time/(double)time_max + pre_param;
+        return (param - pre_param)*(float)time/(float)time_max + pre_param;
     }
 
     public boolean isExist() {
@@ -191,8 +204,16 @@ public class Animation {
     public boolean isPause() {
         return is_pause;
     }
-    public void setIsPause(boolean _is_pause) {
+    public void setPause(boolean _is_pause) {
         is_pause = _is_pause;
+    }
+
+    public void pause() {
+        is_pause = true;
+    }
+
+    public void restart() {
+        is_pause = false;
     }
 
 }

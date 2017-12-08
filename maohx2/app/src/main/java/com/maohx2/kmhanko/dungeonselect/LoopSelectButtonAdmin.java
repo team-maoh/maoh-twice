@@ -3,10 +3,11 @@ package com.maohx2.kmhanko.dungeonselect;
 import java.util.List;
 import java.util.ArrayList;
 
-import android.graphics.Canvas;
-
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.database.MyDatabase;
+
+import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
 /**
  * Created by user on 2017/10/08.
@@ -15,10 +16,14 @@ import com.maohx2.kmhanko.database.MyDatabase;
 //将来的には大幅に書き換えるか消えるかする
 
 public class LoopSelectButtonAdmin {
+    static final String DB_NAME = "loopselectDB";
+    static final String DB_ASSET = "loopselectDB.db";
 
     String table_name = "loop_select_button";
 
     MyDatabase database;
+
+    Graphic graphic;
 
     List<LoopSelectButton> loop_select_button = new ArrayList<LoopSelectButton>();
 
@@ -28,12 +33,16 @@ public class LoopSelectButtonAdmin {
     public LoopSelectButtonAdmin() {
     }
 
-    public void init(UserInterface _map_user_interface, MyDatabase _database) {
-        //game_system = _game_system;
+    public void init(Graphic _graphic, UserInterface _map_user_interface, MyDatabaseAdmin databaseAdmin) {
         map_user_interface = _map_user_interface;
-        database = _database;
-
+        graphic = _graphic;
+        setDatabase(databaseAdmin);
         loadLoopSelectButton();
+    }
+
+    public void setDatabase(MyDatabaseAdmin databaseAdmin) {
+        databaseAdmin.addMyDatabase(DB_NAME, DB_ASSET, 1, "r");
+        database = databaseAdmin.getMyDatabase(DB_NAME);
     }
 
     public void loadLoopSelectButton(){
@@ -70,9 +79,9 @@ public class LoopSelectButtonAdmin {
         }
     }
 
-    public void draw(Canvas canvas) {
+    public void draw() {
         for (int i = 0; i<loop_select_button.size(); i++) {
-            loop_select_button.get(i).draw(canvas);
+            loop_select_button.get(i).draw();
         }
     }
 

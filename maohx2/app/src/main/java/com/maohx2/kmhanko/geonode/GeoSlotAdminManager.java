@@ -8,29 +8,33 @@ import android.graphics.Canvas;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.maohx2.ina.Map.GeoSlot;
-import com.maohx2.ina.Map.GeoSlotAdmin;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.database.MyDatabase;
+import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
 //GeoSlotAdminの実体を持つクラス
 public class GeoSlotAdminManager {
+    static final String DB_NAME = "GeoSlotMapDB";
+    static final String DB_ASSET = "GeoSlotMapDB.db";
+
     public final int GEO_SLOT_ADMIN_MAX = 16;
     List<GeoSlotAdmin> geo_slot_admins = new ArrayList<GeoSlotAdmin>(GEO_SLOT_ADMIN_MAX);
     GeoSlotAdmin active_geo_slot_admin;
     GeoCalcSaverAdmin geo_calc_saver_admin;
 
     MyDatabase database;
+    Graphic graphic;
 
     boolean is_load_database;
 
     public GeoSlotAdminManager() {
     }
 
-    public void init(UserInterface userInterface, MyDatabase _database) {
-        database = _database;
+    public void init(Graphic _graphic, UserInterface userInterface, MyDatabaseAdmin databaseAdmin) {
+        graphic = _graphic;
+        this.setDatabase(databaseAdmin);
         this.loadDatabase(userInterface);
-
     }
 
     public void update() {
@@ -46,9 +50,9 @@ public class GeoSlotAdminManager {
         */
     }
 
-    public void draw(Canvas canvas) {
+    public void draw() {
         if (active_geo_slot_admin != null) {
-            active_geo_slot_admin.draw(canvas);
+            active_geo_slot_admin.draw();
         }
         /*
         for(int i = 0; i < geo_slot_admins.size(); i++) {
@@ -58,7 +62,7 @@ public class GeoSlotAdminManager {
         }
         */
 
-        active_geo_slot_admin.drawParam(canvas);
+        //active_geo_slot_admin.drawParam(canvas);
 
     }
 
@@ -78,6 +82,11 @@ public class GeoSlotAdminManager {
         throw new Error("GeoSlotAdminManager#setActiveGeoSlotAdmin : There is no GeoSlotAdmin you request by name : "+name);
     }
 
+    public void setDatabase(MyDatabaseAdmin databaseAdmin) {
+        databaseAdmin.addMyDatabase(DB_NAME, DB_ASSET, 1, "r");
+        database = databaseAdmin.getMyDatabase(DB_NAME);
+    }
+
     public void loadDatabase(UserInterface user_inter_face) {
         if (is_load_database) {
             return;
@@ -89,7 +98,7 @@ public class GeoSlotAdminManager {
 
         for(int i = 0; i < t_names.size(); i++) {
             GeoSlotAdmin new_geo_slot_admin = new GeoSlotAdmin();
-            new_geo_slot_admin.init(user_inter_face);
+            new_geo_slot_admin.init(graphic, user_inter_face);
             new_geo_slot_admin.loadDatabase(t_names.get(i));
             geo_slot_admins.add(new_geo_slot_admin);
         }

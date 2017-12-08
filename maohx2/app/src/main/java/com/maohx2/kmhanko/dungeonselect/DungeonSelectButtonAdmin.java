@@ -8,15 +8,24 @@ import android.graphics.Canvas;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.database.MyDatabase;
 
+import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+
+
 /**
  * Created by user on 2017/10/08.
  */
 
 public class DungeonSelectButtonAdmin {
+    static final String DB_NAME = "dungeonselectDB";
+    static final String DB_ASSET = "dungeonselectDB.db";
 
     String table_name = "dungeon_select_button";
 
     MyDatabase database;
+    Graphic graphic;
+
+    static DungeonSelectManager dungeonSelectManager;
 
     //GameSystem game_system;
 
@@ -27,47 +36,54 @@ public class DungeonSelectButtonAdmin {
     public DungeonSelectButtonAdmin() {
     }
 
-    public void init(UserInterface _map_user_interface, MyDatabase _database) {
+    public static void staticInit(DungeonSelectManager _dungeonSelectManager) {
+        dungeonSelectManager = _dungeonSelectManager;
+    }
+
+    public void init(Graphic _graphic, UserInterface _map_user_interface, MyDatabaseAdmin databaseAdmin) {
         //game_system = _game_system;
         map_user_interface = _map_user_interface;
-        database = _database;
-
+        graphic = _graphic;
+        setDatabase(databaseAdmin);
         loadDungeonSelectButton();
     }
 
-    public void loadDungeonSelectButton(){
+    private void setDatabase(MyDatabaseAdmin databaseAdmin) {
+        databaseAdmin.addMyDatabase(DB_NAME, DB_ASSET, 1, "r");
+        database = databaseAdmin.getMyDatabase(DB_NAME);
+    }
+
+    private void loadDungeonSelectButton(){
 
         int size = database.getSize(table_name);
 
         List<String> name = database.getString(table_name, "name");
+        List<String> image_name = database.getString(table_name, "image_name");
         List<Integer> x = database.getInt(table_name, "x");
         List<Integer> y = database.getInt(table_name, "y");
-        List<Integer> color_r = database.getInt(table_name, "color_r");
-        List<Integer> color_g = database.getInt(table_name, "color_g");
-        List<Integer> color_b = database.getInt(table_name, "color_b");
 
         //staticなものを代入
-        DungeonSelectButton.setMapUserInterface(map_user_interface);
+        DungeonSelectButton.staticInit(this, map_user_interface);
         //DungeonSelectButton.setGameSystem(game_system);
 
         //インスタンス化
- for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             dungeon_select_button.add(new DungeonSelectButton());
 
             //初期化
+            dungeon_select_button.get(i).init(graphic);
             dungeon_select_button.get(i).setName(name.get(i));
+            dungeon_select_button.get(i).setImageName(image_name.get(i));
             dungeon_select_button.get(i).setX(x.get(i));
             dungeon_select_button.get(i).setY(y.get(i));
-            dungeon_select_button.get(i).setColorR(color_r.get(i));
-            dungeon_select_button.get(i).setColorG(color_g.get(i));
-            dungeon_select_button.get(i).setColorB(color_b.get(i));
             dungeon_select_button.get(i).loadTouchID();
+
         }
     }
 
-    public void draw(Canvas canvas) {
+    public void draw() {
         for (int i = 0; i<dungeon_select_button.size(); i++) {
-            dungeon_select_button.get(i).draw(canvas);
+            dungeon_select_button.get(i).draw();
         }
     }
 
@@ -75,6 +91,10 @@ public class DungeonSelectButtonAdmin {
         for (int i = 0; i<dungeon_select_button.size(); i++) {
             dungeon_select_button.get(i).update();
         }
+    }
+
+    public DungeonSelectManager getDungeonSelectManager() {
+        return dungeonSelectManager;
     }
 
 

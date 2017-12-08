@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.maohx2.kmhanko.database.MyDatabase;
+import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
 
 /**
@@ -29,8 +30,9 @@ import com.maohx2.kmhanko.database.MyDatabase;
 //TODO:再生の度に、DBから読み出しをしているが、よくないかもしれないので、直した方がいいかもしれない。
 
 public class SoundAdmin {
-
     //メンバ変数
+    static final String DB_NAME = "soundDB";
+    static final String DB_ASSET = "soundDB.db";
     private final Context mContext;
     private final int SOUND_ACTIVE_NUM = 10;
     private final int SOUND_LOAD_NUM = 256;
@@ -43,10 +45,8 @@ public class SoundAdmin {
     //TODO:Builder
 
     private List<Integer> sound_ID = new ArrayList<Integer>(SOUND_LOAD_NUM);
-
     private List<Integer> stream_ID = new ArrayList<Integer>(SOUND_LOAD_NUM);
 
-    //private MyDatabaseAdmin database_admin;
     private MyDatabase database;
 
     private boolean isLoaded;
@@ -73,11 +73,10 @@ public class SoundAdmin {
         isLoaded = false;
     }
 
-    /*
-    public void init(MyDatabaseAdmin _database_admin) {
-        database_admin = _database_admin;
-        database = database_admin.getMyDatabase(DB_NAME);
-    }*/
+
+    public void init(MyDatabaseAdmin databaseAdmin) {
+        setDatabase(databaseAdmin);
+    }
 
     private int getSoundID(String name) {
         int buf = database.getOneRowIDForArray(soundpack_name, "name=" + database.s_quo(name));
@@ -92,6 +91,11 @@ public class SoundAdmin {
     //****ユーザーが普段使用するメソッド****
     public void setDatabase(MyDatabase _database) {
         database = _database;
+    }
+
+    public void setDatabase(MyDatabaseAdmin databaseAdmin) {
+        databaseAdmin.addMyDatabase(DB_NAME, DB_ASSET, 1, "r");
+        database = databaseAdmin.getMyDatabase(DB_NAME);
     }
 
     public boolean play(String name) {
