@@ -461,8 +461,6 @@ public class MapAdmin {
                 }
             }
         }
-
-
         //paint.setColor(Color.YELLOW);
         Paint test_paint = new Paint();
         test_paint.setColor(Color.YELLOW);
