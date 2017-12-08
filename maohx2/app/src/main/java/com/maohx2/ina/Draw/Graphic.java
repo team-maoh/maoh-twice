@@ -1,7 +1,6 @@
 package com.maohx2.ina.Draw;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,8 +8,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.view.SurfaceHolder;
-
-import com.maohx2.ina.Constants;
 import com.maohx2.ina.GlobalConstants;
 import com.maohx2.ina.GlobalData;
 import com.maohx2.kmhanko.database.MyDatabase;
@@ -190,7 +187,7 @@ public class Graphic {
 
         setting_matrix.postScale(DENSITY*scale_x, DENSITY*scale_y);
         setting_matrix.postRotate(degree);
-        setting_matrix.postTranslate(position.x, position.y);
+        setting_matrix.postTranslate(setting_point1.x, setting_point1.y);
 
 
         //行列とビットマップデータの保存
@@ -263,7 +260,7 @@ public class Graphic {
             System.out.println("add" +booking_rect_num);
         }
 
-        ((BookingTextData)booking_text_datas.get(booking_text_num)).update(draw_string, setting_point1.x, setting_point2.y, paint);
+        ((BookingTextData)booking_text_datas.get(booking_text_num)).update(draw_string, setting_point1.x, setting_point1.y, paint);
         booking_task_datas.set(booking_num, booking_text_datas.get(booking_text_num));
         booking_num++;
         booking_text_num++;
