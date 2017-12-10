@@ -3,6 +3,7 @@ package com.maohx2.fuusya;
 import android.graphics.Bitmap;
 
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 
 import static java.lang.Math.PI;
@@ -17,18 +18,25 @@ public class MapObjectBitmap {
 
     int bitmap_dir;//画像が1方位なのか、4方位なのか、8方位なのか
     Graphic graphic;
+    String object_name;
+
+    BitmapData bitmap_data;
 
     int MAX_NUM_OF_BITMAP = 8;//最大で8方位
     Bitmap[] object_bitmap = new Bitmap[MAX_NUM_OF_BITMAP];//各方位に対応する画像
 
-    public MapObjectBitmap(int _bitmap_dir, Graphic _graphic) {
+    public MapObjectBitmap(int _bitmap_dir, Graphic _graphic, String _object_name) {
         graphic = _graphic;
+
+        bitmap_data = graphic.searchBitmap(_object_name);
 
         if (_bitmap_dir == 1 || _bitmap_dir == 4 || _bitmap_dir == 8) {
             bitmap_dir = _bitmap_dir;
         } else {
             throw new Error("◆%☆フジワラ：MapObjectBitmap()に渡す[画像方位]がおかしい");
         }
+
+
 
     }
 

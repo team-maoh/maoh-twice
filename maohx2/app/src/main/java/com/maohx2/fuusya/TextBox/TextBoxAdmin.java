@@ -85,7 +85,6 @@ public class TextBoxAdmin {
 //            text_box[0].inputText("冷", blue_paint);
 //            text_box[0].inputText("えきった朝だった", text_paint);
 //            text_box[0].inputText("MOP", blue_paint);
-
             bookingDrawText(0, "え、死んでまんの。ほら、また。", text_paint);
             bookingDrawText(0, "\n", text_paint);
             bookingDrawText(0, "見たとこ、", text_paint);
@@ -98,7 +97,6 @@ public class TextBoxAdmin {
 
             bookingDrawText(0, frame_count + "ダメージを受けた!!", text_paint);
             bookingDrawText(0, "MOP", text_paint);
-
 
 //            bookingDrawText(1, "test", text_paint);
 //            bookingDrawText(1, "\n", text_paint);
@@ -120,9 +118,7 @@ public class TextBoxAdmin {
 //            text_box[0].inputText("\n", text_paint);
 //            text_box[0].inputText("行数が多すぎる文章の例5", text_paint);
 //            text_box[0].inputText("MOP", text_paint);
-
         }
-
         //テスト用ここまで
 
         for (int i = 0; i < box_count; i++) {

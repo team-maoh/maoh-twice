@@ -36,8 +36,8 @@ public class MapItem extends MapObject {
                 draw_object = "grape";
             case 1:
                 draw_object = "grape";
-//            case 2:
-//                draw_object = "banana";
+            case 2:
+                draw_object = "banana";
 //            case 3:
 //                draw_object = "watermelon";
             default:

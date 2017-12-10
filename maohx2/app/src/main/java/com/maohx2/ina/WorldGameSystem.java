@@ -11,6 +11,7 @@ import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
 import com.maohx2.kmhanko.geonode.GeoSlotAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlotAdminManager;
+
 import android.graphics.Paint;
 
 /**
@@ -31,6 +32,9 @@ public class WorldGameSystem {
 
     DungeonSelectManager dungeonSelectManager;
 
+    //fuusya,テスト用
+    int count;
+
 
     public void init(UserInterface map_user_interface, Graphic _graphic, MyDatabaseAdmin _my_data_base_admin) {
         graphic = _graphic;
@@ -46,7 +50,7 @@ public class WorldGameSystem {
 
         text_box_admin.init(map_user_interface);
         list_box_admin.init(map_user_interface, graphic);
-        geo_slot_admin_manager.init(graphic, map_user_interface,my_data_base_admin);
+        geo_slot_admin_manager.init(graphic, map_user_interface, my_data_base_admin);
         //geo_slot_admin.init(map_user_interface, map_activity);
         dungeonSelectManager.init(graphic, map_user_interface, my_data_base_admin);
 
@@ -54,21 +58,26 @@ public class WorldGameSystem {
         geo_slot_admin_manager.setActiveGeoSlotAdmin("Test");
 
         canvas = null;
+
+        count = 0;
     }
 
 
     public void updata() {
-        //text_box_admin.update();
+        text_box_admin.update();
         list_box_admin.update();
 //        geo_slot_admin_manager.update();
 //        map_user_interface.update();
         dungeonSelectManager.update();
+
+
+
     }
 
 
     public void draw() {
 
-        //text_box_admin.draw();
+        text_box_admin.draw();
         list_box_admin.draw();
 //        geo_slot_admin_manager.draw();
 

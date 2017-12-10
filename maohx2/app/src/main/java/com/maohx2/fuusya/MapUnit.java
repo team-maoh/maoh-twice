@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.view.SurfaceHolder;
 
 import com.maohx2.horie.map.MapAdmin;
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 //import com.maohx2.ina.MySprite;
@@ -24,9 +25,11 @@ public class MapUnit extends MapObject {
     boolean moving;
     MapObjectAdmin map_object_admin;
     int PLAYER_STEP = 20;
-    int CHASE_STEPS = 10;//名前は仮/EnemyはPlayerの{現在座標ではなく}CHASE_STESP歩前の座標を追いかける
+    int CHASE_STEPS = 10;//名前は仮/EnemyはPlayerの{現在座標ではなく}CHASE_STEPS歩前の座標を追いかける
     double REACH_FOR_WALL = 5.0;
     SoundAdmin sound_admin;
+
+    BitmapData bitmap_data;//
 
     public MapUnit(Graphic _graphic, MapObjectAdmin _map_object_admin) {
         super(_graphic, _map_object_admin);
