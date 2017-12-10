@@ -55,13 +55,13 @@ public class BattleUserInterface extends UserInterface {
         touch_state = TouchState.AWAY;
 
         for (int i = 0; i < 100; i++) {
-            circle_center_list_x[i] = 0;
-            circle_center_list_y[i] = 0;
-            circle_radius_list[i] = 0;
-            box_left_list[i] = 0;
-            box_top_list[i] = 0;
-            box_right_list[i] = 0;
-            box_down_list[i] = 0;
+            circle_center_list_x.set(i, 0.0);
+            circle_center_list_y.set(i, 0.0);
+            circle_radius_list.set(i, 0.0);
+            box_left_list.set(i, 0.0);
+            box_top_list.set(i, 0.0);
+            box_right_list.set(i, 0.0);
+            box_down_list.set(i, 0.0);
         }
 
         circle_touch_index_num = 0;
