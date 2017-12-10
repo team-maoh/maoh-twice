@@ -8,6 +8,7 @@ import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.ListBoxAdmin;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
 import com.maohx2.kmhanko.geonode.GeoSlotAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlotAdminManager;
 import android.graphics.Paint;
@@ -28,6 +29,8 @@ public class WorldGameSystem {
     MyDatabaseAdmin my_data_base_admin;
     Graphic graphic;
 
+    DungeonSelectManager dungeonSelectManager;
+
 
     public void init(UserInterface map_user_interface, Graphic _graphic, MyDatabaseAdmin _my_data_base_admin) {
         graphic = _graphic;
@@ -38,12 +41,14 @@ public class WorldGameSystem {
         list_box_admin = new ListBoxAdmin();
         geo_slot_admin_manager = new GeoSlotAdminManager();
         //geo_slot_admin = new GeoSlotAdmin();
+        dungeonSelectManager = new DungeonSelectManager();
 
 
         text_box_admin.init(map_user_interface);
         list_box_admin.init(map_user_interface, graphic);
         geo_slot_admin_manager.init(graphic, map_user_interface,my_data_base_admin);
         //geo_slot_admin.init(map_user_interface, map_activity);
+        dungeonSelectManager.init(graphic, map_user_interface, my_data_base_admin);
 
 
         geo_slot_admin_manager.setActiveGeoSlotAdmin("Test");
@@ -57,6 +62,7 @@ public class WorldGameSystem {
         list_box_admin.update();
 //        geo_slot_admin_manager.update();
 //        map_user_interface.update();
+        dungeonSelectManager.update();
     }
 
 
@@ -65,6 +71,8 @@ public class WorldGameSystem {
         text_box_admin.draw();
         list_box_admin.draw();
 //        geo_slot_admin_manager.draw();
+
+        dungeonSelectManager.draw();
 
         graphic.draw();
     }
