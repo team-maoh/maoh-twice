@@ -17,20 +17,24 @@ public class BitmapData{
         image_name = "";
     }
 
-    Bitmap getBitmap(){
+    private Bitmap getBitmap(){
         return bitmap;
     }
 
-    void setBitmap(Bitmap _bitmap){
+    private void setBitmap(Bitmap _bitmap){
         bitmap = _bitmap;
     }
 
-    String getImageName(){
+    private String getImageName(){
         return image_name;
     }
 
-    void setImageName(String _image_name){
+    private void setImageName(String _image_name){
         image_name = _image_name;
     }
+
+    public int getWidth(){return bitmap.getWidth();}
+
+    public int getHeight(){return bitmap.getHeight();}
 
 }
