@@ -60,7 +60,8 @@ public class DungeonSelectManager {
     public void makeEnterListBox(DungeonSelectButton _button) {
 
         enterListBoxActive = true;
-        //enterListBox = new
+        enterListBox = new ListBox();
+       // enterListBox.init(userInterface, graphic, Constants.Touch.TouchWay.UP_MOMENT, 2, );
 
     }
 
