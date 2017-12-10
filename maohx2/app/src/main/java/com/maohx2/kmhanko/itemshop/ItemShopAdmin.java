@@ -3,7 +3,7 @@ package com.maohx2.kmhanko.itemshop;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
-import com.maohx2.kmhanko.itemdata.ItemDataAdminManager;
+import com.maohx2.ina.ItemData.ItemDataAdminManager;
 
 /**
  * Created by user on 2017/11/19.

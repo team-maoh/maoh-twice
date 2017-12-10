@@ -58,7 +58,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
         dungeon_activity = _dungeon_activity;
 
 
-        dungeon_user_interface = new DungeonUserInterface(((GlobalData) dungeon_activity.getApplication()).getGlobalConstants());
+        dungeon_user_interface = new DungeonUserInterface(((GlobalData) dungeon_activity.getApplication()).getGlobalConstants(), graphic);
         graphic = new Graphic(dungeon_activity, holder);
         my_database_admin = new MyDatabaseAdmin(dungeon_activity);
         game_system = new DungeonGameSystem();

@@ -2,6 +2,7 @@ package com.maohx2.ina.UI;
 
 import android.graphics.PointF;
 
+import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.GlobalConstants;
 
 import static com.maohx2.ina.Constants.Touch.*;
@@ -12,6 +13,7 @@ import static com.maohx2.ina.Constants.Touch.*;
 
 public class UserInterface {
 
+    Graphic graphic;
 
     double touch_x;
     double touch_y;
@@ -33,12 +35,17 @@ public class UserInterface {
     final PointF NORMARIZED_DISP_RATE;
     final PointF DISP_NORMARIZED_RATE;
 
+    final float DENSITY;
 
-    public UserInterface(GlobalConstants global_constants){
+
+    public UserInterface(GlobalConstants global_constants, Graphic _graphic){
         DISP_X = global_constants.DISP_X;
         DISP_Y = global_constants.DISP_Y;
         NORMARIZED_DISP_RATE = global_constants.NORMARIZED_DISP_RATE;
         DISP_NORMARIZED_RATE = global_constants.DISP_NORMARIZED_RATE;
+        DENSITY = global_constants.DENSITY;
+
+        graphic = _graphic;
     }
 
 
@@ -81,30 +88,28 @@ public class UserInterface {
 
     }
 
-    public double getTouchX() {
-        return DISP_NORMARIZED_RATE.x*touch_x;
-    }
+    public double getTouchX() {return graphic.transrateDispPositionToNormalizedPositionX((int)touch_x);}
 
-    public double getTouchY() { return DISP_NORMARIZED_RATE.y*touch_y; }
+    public double getTouchY() { return graphic.transrateDispPositionToNormalizedPositionY((int)touch_y); }
 
     public TouchState getTouchState() {
         return touch_state;
     }
 
     public int setCircleTouchUI(double center_x, double center_y, double ciclre_radius) {
-        circle_center_list_x[circle_touch_index_num] = NORMARIZED_DISP_RATE.x*center_x;
-        circle_center_list_y[circle_touch_index_num] = NORMARIZED_DISP_RATE.y*center_y;
-        circle_radius_list[circle_touch_index_num] = ciclre_radius;//todo:ここヤバイ(倍率設定をのちにしなければならない)
+        circle_center_list_x[circle_touch_index_num] = graphic.transrateNormalizedPositionToDispPositionX((int)center_x);
+        circle_center_list_y[circle_touch_index_num] = graphic.transrateNormalizedPositionToDispPositionY((int)center_y);
+        circle_radius_list[circle_touch_index_num] = DENSITY*ciclre_radius;
         int id = 314000 + circle_touch_index_num;
         circle_touch_index_num++;
         return id;
     }
 
     public int setBoxTouchUI(double left, double top, double right, double down) {
-        box_left_list[box_touch_index_num] = NORMARIZED_DISP_RATE.x*left;
-        box_top_list[box_touch_index_num] = NORMARIZED_DISP_RATE.y*top;
-        box_right_list[box_touch_index_num] = NORMARIZED_DISP_RATE.x*right;
-        box_down_list[box_touch_index_num] = NORMARIZED_DISP_RATE.y*down;
+        box_left_list[box_touch_index_num] = graphic.transrateNormalizedPositionToDispPositionX((int)left);
+        box_top_list[box_touch_index_num] = graphic.transrateNormalizedPositionToDispPositionY((int)top);
+        box_right_list[box_touch_index_num] = graphic.transrateNormalizedPositionToDispPositionX((int)right);
+        box_down_list[box_touch_index_num] = graphic.transrateNormalizedPositionToDispPositionY((int)down);
 
         int id = 8010000 + box_touch_index_num;
         box_touch_index_num++;

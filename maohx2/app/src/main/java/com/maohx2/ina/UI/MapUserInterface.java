@@ -1,5 +1,6 @@
 package com.maohx2.ina.UI;
 
+import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.GlobalConstants;
 
 /**
@@ -8,8 +9,8 @@ import com.maohx2.ina.GlobalConstants;
 
 public class MapUserInterface extends UserInterface{
 
-    public MapUserInterface(GlobalConstants global_constants){
-        super(global_constants);
+    public MapUserInterface(GlobalConstants global_constants, Graphic _graphic){
+        super(global_constants, _graphic);
     }
 
     @Override

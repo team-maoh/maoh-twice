@@ -45,8 +45,8 @@ class WorldSurfaceView extends BaseSurfaceView {
         super(_map_activity);
         map_activity = _map_activity;
 
-        map_user_interface = new UserInterface(global_data.getGlobalConstants());
         graphic = new Graphic(map_activity, holder);
+        map_user_interface = new UserInterface(global_data.getGlobalConstants(), graphic);
         my_database_admin = new MyDatabaseAdmin(map_activity);
         world_game_system = new WorldGameSystem();
 
@@ -65,7 +65,7 @@ class WorldSurfaceView extends BaseSurfaceView {
         world_game_system.updata();
         graphic.bookingDrawBitmapName("キノコの森",300,590);
         world_game_system.draw();
-
+/*
         if (touch_state == TouchState.DOWN) {
             /* by kmhanko
             thread = null;
@@ -74,5 +74,6 @@ class WorldSurfaceView extends BaseSurfaceView {
             map_activity.startActivity(intent);
             */
         }
+        */
     }
 }

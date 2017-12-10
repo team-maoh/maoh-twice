@@ -1,14 +1,12 @@
 package com.maohx2.kmhanko.geonode;
 
 // Added by kmhanko
-import com.maohx2.kmhanko.itemdata.GeoObjectData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.kmhanko.myavail.MyAvail;
-import java.lang.Math;
+import com.maohx2.kmhanko.itemdata.GeoObjectData;
 
 /**
  * Created by ina on 2017/10/08.
