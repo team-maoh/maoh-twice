@@ -50,13 +50,13 @@ public abstract class ItemShop {
         try {
             itemShopData.loadShopData(table_name);
         } catch(NullPointerException e) {
-            throw new Error("タカノ:ItemShop#loadShopData :" + e);
+            throw new Error("︎タカノ:ItemShop#loadShopData :" + e);
         }
     }
 
     public void setList() {
         int size = itemShopData.getItemDataSize();
-        listBox_Item.init(userInterface, graphic, Constants.Touch.TouchWay.DOWN_MOMENT, size , 0, 0, 400, 0 + 100 * size);
+        listBox_Item.init(userInterface, graphic, Constants.Touch.TouchWay.DOWN_MOMENT, size , 50, 50, 50 + 600, 50 + 80 * size);
 
         for (int i = 0; i < size; i++) {
             listBox_Item.setContent(i, itemShopData.getItemData(i).getName());
@@ -66,7 +66,7 @@ public abstract class ItemShop {
         }
 
 
-        listBox_Select.init(userInterface, graphic, Constants.Touch.TouchWay.DOWN_MOMENT, 3 , 0, 200, 200, 200 + 100 * 2);
+        listBox_Select.init(userInterface, graphic, Constants.Touch.TouchWay.DOWN_MOMENT, 3 , 1200, 50, 1500, 50 + 100 * 2);
         listBox_Select.setContent(0, "購入する");
         listBox_Select.setContent(1, "詳細");
         listBox_Select.setContent(2, "キャンセル");
@@ -122,10 +122,9 @@ public abstract class ItemShop {
     }
 
     public void draw() {
-        //TODO:ListBoxをGraphicに対応させる
-        //listBox_Item.draw();
+        listBox_Item.draw();
         if (isListBoxSelectActive) {
-            //listBox_Select.draw();
+            listBox_Select.draw();
         }
     }
 

@@ -43,7 +43,7 @@ public class DungeonSelectManager {
         dungeonSelectButtonAdmin.init(graphic,userInterface,databaseAdmin);
         dungeonSelectButtonAdmin.staticInit(this);
 
-        enterListBox.init(userInterface,graphic, Constants.Touch.TouchWay.DOWN_MOMENT,2,600,600,1000,800);
+        enterListBox.init(userInterface, graphic, Constants.Touch.TouchWay.UP_MOMENT, 2, 1300, 400, 1600, 600);
         enterListBoxActive = false;
 
         //TODO :loopselect
@@ -69,7 +69,6 @@ public class DungeonSelectManager {
         dungeonSelectButton = _button;
 
         enterListBoxActive = true;
-        enterListBox.init(userInterface, graphic, Constants.Touch.TouchWay.UP_MOMENT, 2, 1300, 400, 1600, 600);
         enterListBox.setContent(0, "侵入する");
         enterListBox.setContent(1, "やめる");
     }

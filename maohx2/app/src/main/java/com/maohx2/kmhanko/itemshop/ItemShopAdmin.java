@@ -45,7 +45,7 @@ public class ItemShopAdmin {
         ITEM_KIND_NUM
     }
 
-    public void init(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin myDatabaseAdmin, ItemDataAdminManager itemDataAdminManager) {
+    public void init(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin myDatabaseAdmin, ItemDataAdminManager itemDataAdminManager) {
         userInterface = _userInterface;
         graphic = _graphic;
 
