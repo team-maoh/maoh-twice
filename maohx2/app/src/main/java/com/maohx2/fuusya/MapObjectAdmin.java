@@ -25,6 +25,9 @@ public class MapObjectAdmin {
     int NUM_OF_ENEMY = 5;
     int NUM_OF_ITEM = 10;// > 2
 
+    int PLAYER_DIR = 4;
+    int ENEMY_DIR = 8;
+
     MapPlayer map_player;
     MapObjectBitmap map_player_bitmap;
     double player_x, player_y;
@@ -52,7 +55,7 @@ public class MapObjectAdmin {
 
         map_player = new MapPlayer(graphic, this, map_admin, dungeon_user_interface, _sound_admin);
         map_player.init();
-        map_player_bitmap = new MapObjectBitmap();
+        map_player_bitmap = new MapObjectBitmap(PLAYER_DIR, graphic);
         map_player_bitmap.init();
 
         player_x = map_player.getMapX();
@@ -61,14 +64,14 @@ public class MapObjectAdmin {
         for (int i = 0; i < NUM_OF_ITEM; i++) {
             map_item[i] = new MapItem(graphic, this, i%4);
             map_item[i].init();
-            map_item_bitmap[i] = new MapObjectBitmap();
+            map_item_bitmap[i] = new MapObjectBitmap(1, graphic);
             map_item_bitmap[i].init();
         }
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
             map_enemy[i] = new MapEnemy(graphic, this);
             map_enemy[i].init();
-            map_enemy_bitmap[i] = new MapObjectBitmap();
+            map_enemy_bitmap[i] = new MapObjectBitmap(ENEMY_DIR, graphic);
             map_enemy_bitmap[i].init();
         }
 
