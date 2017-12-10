@@ -1,6 +1,7 @@
 package com.maohx2.kmhanko.itemdata;
 
 
+import com.maohx2.ina.ItemData.ItemDataAdmin;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import java.util.List;
 
@@ -46,4 +47,5 @@ public class GeoObjectDataAdmin extends ItemDataAdmin<GeoObjectData> {
         //呼び忘れないように注意
         super.loadItemData(table_name);
     }
+
 }

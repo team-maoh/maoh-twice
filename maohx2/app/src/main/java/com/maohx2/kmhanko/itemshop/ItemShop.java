@@ -4,9 +4,9 @@ import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.ListBox;
 import com.maohx2.ina.UI.UserInterface;
-import com.maohx2.kmhanko.itemdata.ItemData;
+import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.kmhanko.database.NamedDataAdmin;
-import com.maohx2.kmhanko.itemdata.ItemDataAdmin;
+import com.maohx2.ina.ItemData.ItemDataAdmin;
 
 import android.graphics.Canvas;
 

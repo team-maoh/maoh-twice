@@ -1,6 +1,6 @@
 package com.maohx2.kmhanko.itemshop;
 
-import com.maohx2.kmhanko.itemdata.ItemData;
+import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.kmhanko.itemdata.ExpendItemData;
 
 /**

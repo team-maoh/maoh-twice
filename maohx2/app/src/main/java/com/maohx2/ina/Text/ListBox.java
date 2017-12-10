@@ -97,30 +97,20 @@ public class ListBox {
 
         for(int i = 0; i < content_num; i++) {
             paint.setColor(Color.argb(alpha[i], 100 * ((i + 0) % 3), 100 * ((i + 1) % 3), 100 * ((i + 2) % 3)));
-//            Point up_left = graphic.transrateNormalizedPositionToDispPosition(new Point(box_up_left_x, box_up_left_y));
-//            Point down_right = graphic.transrateNormalizedPositionToDispPosition(new Point(box_down_right_x, box_down_right_y));
 
             Point up_left = new Point(box_up_left_x, box_up_left_y);
             Point down_right = new Point(box_down_right_x, box_down_right_y);
 
-            graphic.transrateNormalizedPositionToDispPosition(up_left);
-            graphic.transrateNormalizedPositionToDispPosition(down_right);
-            //Point down_right = graphic.transrateNormalizedPositionToDispPosition(new Point(box_down_right_x, box_down_right_y));
-
             System.out.println("(" + up_left.x +  "," + up_left.y + ")" + "(" + down_right.x  + "," + down_right.y + ")");
 
-            //Rect rect = new Rect(up_left.x, up_left.y + content_height * i, down_right.x, up_left.y + content_height * (i + 1));
             graphic.bookingDrawRect(up_left.x, up_left.y + content_height * i, down_right.x, up_left.y + content_height * (i + 1), paint);
-            //canvas.drawRect(rect, paint);
             paint.setColor(Color.argb(255, 0, 0, 0));
-            //canvas.drawText(content[i], up_left.x, up_left.y + content_height * (i + 1) - content_height/4, paint);
             graphic.bookingDrawText(content[i], up_left.x, up_left.y + content_height * (i + 1) - content_height/4, paint);
 
         }
 
         if(selected_content_num != -1) {
             paint.setColor(Color.argb(100, 100 * ((selected_content_num + 0) % 3), 100 * ((selected_content_num + 1) % 3), 100 * ((selected_content_num + 2) % 3)));
-            //canvas.drawCircle(1000, 700, 50.0f, paint);
             graphic.bookingDrawCircle(1000, 700, 50, paint);
         }
     }

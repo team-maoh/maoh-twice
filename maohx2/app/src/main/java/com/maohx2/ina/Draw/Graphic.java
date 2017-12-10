@@ -165,8 +165,27 @@ public class Graphic {
         _normalize_position.set((int)(_normalize_position.x*NORMARIZED_DRAW_RATE.x + DRAW_LEFT_END), (int)(_normalize_position.y*NORMARIZED_DRAW_RATE.y + DRAW_UP_END));
     }
 
-    public  Point transrateDispPositionToNormalizedPosition(Point _disp_position){
-        return  new Point((int)(_disp_position.x * DISP_NORMARIZED_RATE.x), (int)(_disp_position.y * DISP_NORMARIZED_RATE.y));
+    public int transrateNormalizedPositionToDispPositionX(int normalized_x){
+        return (int)(normalized_x*NORMARIZED_DRAW_RATE.x + DRAW_LEFT_END);
+    }
+
+    public int transrateNormalizedPositionToDispPositionY(int normalized_y){
+        return (int)(normalized_y*NORMARIZED_DRAW_RATE.y + DRAW_UP_END);
+    }
+
+
+
+
+    public Point transrateDispPositionToNormalizedPosition(Point _disp_position){
+        return  new Point((int)((_disp_position.x + DRAW_LEFT_END)* DISP_NORMARIZED_RATE.x), (int)((_disp_position.y + DRAW_UP_END) * DISP_NORMARIZED_RATE.y));
+    }
+
+    public int transrateDispPositionToNormalizedPositionX(int disp_x){
+        return (int)((disp_x + DRAW_LEFT_END)* DISP_NORMARIZED_RATE.x);
+    }
+
+    public int transrateDispPositionToNormalizedPositionY(int disp_y){
+        return  (int)((disp_y + DRAW_UP_END) * DISP_NORMARIZED_RATE.y);
     }
 
 

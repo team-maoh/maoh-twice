@@ -54,7 +54,7 @@ class BattleSurfaceView extends BaseSurfaceView{
         my_database_admin.addMyDatabase("DungeonDB", "LocalDungeonImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("DungeonDB"),"Dungeon");
 
-        battle_user_interface = new BattleUserInterface(global_data.getGlobalConstants());
+        battle_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
         battle_user_interface.init();
 
         game_system = new BattleGameSystem();
