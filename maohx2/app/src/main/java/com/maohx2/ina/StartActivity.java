@@ -80,7 +80,7 @@ class StartSurfaceView extends BaseSurfaceView {
         paint.setColor(Color.rgb(100,100,0));
         paint.setTextSize(30);
         srime = graphic.searchBitmap("スライム");
-        bit_srime = graphic.procesTrimmingBitmapData(srime,0,0,46,46);
+        bit_srime = graphic.processTrimmingBitmapData(srime,0,0,46,46);
 
         thread = new Thread(this);
         thread.start();
@@ -122,7 +122,6 @@ class StartSurfaceView extends BaseSurfaceView {
         graphic.bookingDrawText("1400",1400,100,paint);
         graphic.bookingDrawText("1500",1500,100,paint);
         graphic.bookingDrawText("1600",1600,100,paint);
-
 
         graphic.draw();
 
