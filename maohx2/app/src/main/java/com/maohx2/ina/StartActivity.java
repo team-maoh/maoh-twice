@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.widget.RelativeLayout;
 
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
@@ -56,7 +57,8 @@ class StartSurfaceView extends BaseSurfaceView {
     Activity start_activity;
     MyDatabaseAdmin my_database_admin;
     Graphic graphic;
-
+    BitmapData srime;
+    BitmapData bit_srime;
 
     public StartSurfaceView(Activity _start_activity) {
         super(_start_activity);
@@ -75,26 +77,30 @@ class StartSurfaceView extends BaseSurfaceView {
         my_database_admin.addMyDatabase("StartDB", "LocalStartImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("StartDB"), "Start");
 
-        thread = new Thread(this);
-        thread.start();
-
         paint.setColor(Color.rgb(100,100,0));
         paint.setTextSize(30);
+        srime = graphic.searchBitmap("スライム");
+        bit_srime = graphic.createBitmapData(srime,0,0,46,46);
+
+        thread = new Thread(this);
+        thread.start();
     }
 
     @Override
     public void gameLoop(){
-        graphic.bookingDrawBitmap("スライム",300,590);
+        paint.setColor(Color.BLUE);
+
+        graphic.bookingDrawBitmapData(bit_srime,300,590);
         graphic.bookingDrawText("(300,590)",300,590,paint);
-        graphic.bookingDrawBitmap("スライム",640,100);
+        graphic.bookingDrawBitmapData(bit_srime,640,100);
         graphic.bookingDrawText("(640,100)",640,100,paint);
-        graphic.bookingDrawBitmap("スライム",1300,390);
+        graphic.bookingDrawBitmapData(bit_srime,1300,390);
         graphic.bookingDrawText("(1300,390)",1300,390,paint);
-        graphic.bookingDrawBitmap("スライム",640,80);
+        graphic.bookingDrawBitmapData(bit_srime,640,80);
         graphic.bookingDrawText("(640,80)",640,80,paint);
-        graphic.bookingDrawBitmap("スライム",640,120);
+        graphic.bookingDrawBitmapData(bit_srime,640,120);
         graphic.bookingDrawText("(640,120)",640,120,paint);
-        graphic.bookingDrawBitmap("スライム",800,450);
+        graphic.bookingDrawBitmapData(srime,800,450);
         graphic.bookingDrawText("(800,450)",800,450,paint);
 
         graphic.bookingDrawCircle(640,100,10,paint);
@@ -117,7 +123,6 @@ class StartSurfaceView extends BaseSurfaceView {
         graphic.bookingDrawText("1500",1500,100,paint);
         graphic.bookingDrawText("1600",1600,100,paint);
 
-//        graphic.drawBooking("ゴキ",640,390);
 
         graphic.draw();
 

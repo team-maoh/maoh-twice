@@ -65,7 +65,7 @@ public class DungeonSelectButton {
         if (is_scale_big) {
             scale = SCALE_BIG;
         }
-        graphic.bookingDrawBitmap(image_name, x, y, scale, scale, 0, 255, false);
+        graphic.bookingDrawBitmapName(image_name, x, y, scale, scale, 0, 255, false);
     }
 
     public void update() {
