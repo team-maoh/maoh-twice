@@ -238,15 +238,15 @@ public class GeoSlot {
     }
 
     public void draw() {
-        graphic.bookingDrawBitmap("apple", position_x, position_y, SCALE, SCALE, 0, 255, true);
+        graphic.bookingDrawBitmapName("apple", position_x, position_y, SCALE, SCALE, 0, 255, true);
 
         if (is_in_geoObjectData && geoObjectData != null) {
             //TODO: geoObjectDataの画像名を獲得する
-            graphic.bookingDrawBitmap("neco", position_x, position_y, SCALE, SCALE, 0, 255, true);
+            graphic.bookingDrawBitmapName("neco", position_x, position_y, SCALE, SCALE, 0, 255, true);
         }
 
         if (!isEventClear()) {
-            graphic.bookingDrawBitmap("banana", position_x, position_y, SCALE, SCALE, 0, 255, true);
+            graphic.bookingDrawBitmapName("banana", position_x, position_y, SCALE, SCALE, 0, 255, true);
         }
 
     }

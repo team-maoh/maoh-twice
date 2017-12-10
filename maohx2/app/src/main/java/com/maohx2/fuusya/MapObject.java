@@ -53,7 +53,7 @@ abstract public class MapObject {
 
         if (exists == true) {
 //            graphic.bookingDrawBitmap(draw_object, (int) x, (int) y);
-            graphic.bookingDrawBitmap(draw_object, (int) x, (int) y);
+//            graphic.bookingDrawBitmap(draw_object, (int) x, (int) y);
 //            graphic.bookingDrawBitmap("ゴキ魅",800,450);
         }
 
