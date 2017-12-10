@@ -165,12 +165,12 @@ public class Graphic {
         _normalize_position.set((int)(_normalize_position.x*NORMARIZED_DRAW_RATE.x + DRAW_LEFT_END), (int)(_normalize_position.y*NORMARIZED_DRAW_RATE.y + DRAW_UP_END));
     }
 
-    public int transrateNormalizedPositionToDispPositionX(int normalized_x){
-        return (int)(normalized_x*NORMARIZED_DRAW_RATE.x + DRAW_LEFT_END);
+    public double transrateNormalizedPositionToDispPositionX(int normalized_x){
+        return normalized_x*NORMARIZED_DRAW_RATE.x + DRAW_LEFT_END;
     }
 
-    public int transrateNormalizedPositionToDispPositionY(int normalized_y){
-        return (int)(normalized_y*NORMARIZED_DRAW_RATE.y + DRAW_UP_END);
+    public double transrateNormalizedPositionToDispPositionY(int normalized_y){
+        return normalized_y*NORMARIZED_DRAW_RATE.y + DRAW_UP_END;
     }
 
 
