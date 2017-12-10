@@ -52,8 +52,8 @@ abstract public class MapObject {
         MapAdmin map_admin = _map_admin;
 
         if (exists == true) {
-//            graphic.bookingDrawBitmap(draw_object, (int) x, (int) y);
-//            graphic.bookingDrawBitmap(draw_object, (int) x, (int) y);
+            graphic.bookingDrawBitmapName(draw_object, (int) x, (int) y);
+
 //            graphic.bookingDrawBitmap("ゴキ魅",800,450);
         }
 

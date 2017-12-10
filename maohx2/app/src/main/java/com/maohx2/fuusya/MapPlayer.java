@@ -35,8 +35,6 @@ public class MapPlayer extends MapUnit {
 
     TouchState touch_state;
 
-//    map_player = new MapPlayer(graphic, this, map_admin, dungeon_user_interface, _sound_admin);
-
     public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, MapAdmin _map_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin) {
         super(graphic, _map_object_admin);
 
@@ -64,39 +62,7 @@ public class MapPlayer extends MapUnit {
     public void init() {
         super.init();
 
-//        dungeon_user_interface = _duneon_user_interface;
-//        map_admin = _map_admin;
-//        sound_admin = _sound_admin;
-//
-//        steps_count = 0;//歩数
-//        x = 50;
-//        y = 50;
-//        chase_num = 0;
-//
-//        for (int i = 0; i < 10; i++) {
-//            chase_x[i] = x;
-//            chase_y[i] = y;
-//        }
-//        chase_num++;
     }
-
-//    @Override
-//    public void init(GL10 gl, MySprite draw_object, MapObjectAdmin map_object_admin) {
-//        super.init(gl, draw_object, map_object_admin);
-//
-//        steps_count = 0;//歩数
-//        x = 10;
-//        y = 10;
-//
-//        chase_num = 0;
-//
-//        for (int i = 0; i < 10; i++) {
-//            chase_x[i] = x;
-//            chase_y[i] = y;
-//        }
-//        chase_num++;
-//
-//    }
 
     @Override
     public void update() {
@@ -180,13 +146,12 @@ public class MapPlayer extends MapUnit {
             y += dy;
 
 //            //(x, y)を格納
-//            /*
 //            chase_x[chase_num] = x;
 //            chase_y[chase_num] = y;
 //            chase_num++;
 //            if (chase_num >= CHASE_STEPS) {
 //                chase_num = 0;
-//            }*/
+//        }
 
             //自分と目標点の距離がPLAYER_STEP未満になる or 次ステップで自分のx(またはy)座標が目標点のそれを通り過ぎる
             if (PLAYER_STEP > myDistance(touch_x, touch_y, x, y) || 0 > (touch_x - (x + dx)) * dx || 0 > (touch_y - (y + dy)) * dy) {
@@ -205,19 +170,17 @@ public class MapPlayer extends MapUnit {
         }
     }
 
-/*
-    void defineDxDy(int now_x, int now_y, int dst_x, int dst_y) {
-
-        dst_steps = myDistance(dst_x, dst_y, now_x, now_y) / STEP;
-        dst_steps++;//dst_steps = 0 のときゼロ除算が発生するので
-        dx = ((dst_x - now_x) / dst_steps);
-        dy = ((dst_y - now_y) / dst_steps);
-
-    }
-    */
+//    void defineDxDy(int now_x, int now_y, int dst_x, int dst_y) {
+//
+//        dst_steps = myDistance(dst_x, dst_y, now_x, now_y) / STEP;
+//        dst_steps++;//dst_steps = 0 のときゼロ除算が発生するので
+//        dx = ((dst_x - now_x) / dst_steps);
+//        dy = ((dst_y - now_y) / dst_steps);
+//
+//    }
 
     //(x1, y1)と(x2, y2)の距離を返す
-    public double myDistance(double x1, double y1, double x2, double y2) {
+    private double myDistance(double x1, double y1, double x2, double y2) {
         return pow(pow(x1 - x2, 2.0) + pow(y1 - y2, 2.0), 0.5);
     }
 
@@ -258,14 +221,12 @@ public class MapPlayer extends MapUnit {
         return y;
     }
 
-    /*
-    public double getChaseWorldX() {
-        return chase_x[chase_num];
-    }
-
-    public double getChaseWorldY() {
-        return chase_y[chase_num];
-    }
-    */
+//    public double getChaseWorldX() {
+//        return chase_x[chase_num];
+//    }
+//
+//    public double getChaseWorldY() {
+//        return chase_y[chase_num];
+//    }
 
 }
