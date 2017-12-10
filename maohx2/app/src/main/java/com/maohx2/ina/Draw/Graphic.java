@@ -305,7 +305,7 @@ public class Graphic {
         return hit_bitmap_data;
     }
 
-    public BitmapData procesTrimmingBitmapData(BitmapData src_bitmap_data, int x, int y, int width, int height){
+    public BitmapData processTrimmingBitmapData(BitmapData src_bitmap_data, int x, int y, int width, int height){
 
         BitmapData dst_bitmap_data;
         dst_bitmap_data = new BitmapData();
