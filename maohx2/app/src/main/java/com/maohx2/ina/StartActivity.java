@@ -90,7 +90,7 @@ class StartSurfaceView extends BaseSurfaceView {
     public void gameLoop(){
         paint.setColor(Color.BLUE);
 
-        graphic.bookingDrawBitmapData(bit_srime,300,590);
+        graphic.bookingDrawBitmapName("スライム",300,590);
         graphic.bookingDrawText("(300,590)",300,590,paint);
         graphic.bookingDrawBitmapData(bit_srime,640,100);
         graphic.bookingDrawText("(640,100)",640,100,paint);
@@ -98,9 +98,9 @@ class StartSurfaceView extends BaseSurfaceView {
         graphic.bookingDrawText("(1300,390)",1300,390,paint);
         graphic.bookingDrawBitmapData(bit_srime,640,80);
         graphic.bookingDrawText("(640,80)",640,80,paint);
-        graphic.bookingDrawBitmapData(bit_srime,640,120);
+        graphic.bookingDrawBitmapName("スライム",640,120);
         graphic.bookingDrawText("(640,120)",640,120,paint);
-        graphic.bookingDrawBitmapData(srime,800,450);
+        graphic.bookingDrawBitmapName("スライム",800,450);
         graphic.bookingDrawText("(800,450)",800,450,paint);
 
         graphic.bookingDrawCircle(640,100,10,paint);
