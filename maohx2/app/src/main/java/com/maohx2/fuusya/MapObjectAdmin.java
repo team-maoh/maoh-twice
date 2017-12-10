@@ -26,7 +26,7 @@ public class MapObjectAdmin {
     int NUM_OF_ITEM = 10;// > 2
 
     MapPlayer map_player;
-    MapObjectBitmap map_player_bitmap = new MapObjectBitmap();
+    MapObjectBitmap map_player_bitmap;
     double player_x, player_y;
     double chase_x, chase_y;
 
@@ -92,11 +92,13 @@ public class MapObjectAdmin {
 //        chase_x = map_player.getChaseWorldX();
 //        chase_y = map_player.getChaseWorldY();
 
-        for (int i = 0; i < NUM_OF_ITEM; i++)
+        for (int i = 0; i < NUM_OF_ITEM; i++) {
             map_item[i].update();
+        }
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
             map_enemy[i].update();
+            map_enemy_bitmap[i].setDirection(map_enemy[i].getDirection());
         }
 
         //アイテム獲得

@@ -14,6 +14,7 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.pow;
 import static java.lang.Math.sin;
@@ -144,6 +145,8 @@ public class MapPlayer extends MapUnit {
 //            }*/
             x += dx;
             y += dy;
+
+            updateDirection();
 
 //            //(x, y)を格納
 //            chase_x[chase_num] = x;

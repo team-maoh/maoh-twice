@@ -27,6 +27,8 @@ abstract public class MapObject {
     String draw_object;
     boolean exists;//自身がマップ上に存在しているかどうか
     int id;
+    double direction;//マップ上での自分自身の向き( 0 ~ 2*PI )
+
     Graphic graphic;
 
     public MapObject(Graphic _graphic, MapObjectAdmin _map_object_admin) {
@@ -38,6 +40,8 @@ abstract public class MapObject {
 
         x = 800;
         y = 450;
+        direction = 0;
+
     }
 
     public void init() {

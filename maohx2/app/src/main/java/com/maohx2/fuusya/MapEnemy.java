@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.view.SurfaceHolder;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
+import static java.lang.Math.atan2;
 import static java.lang.Math.pow;
 
 
@@ -42,27 +43,9 @@ public class MapEnemy extends MapUnit {
         draw_object = "ゴキ太郎";
     }
 
-//    @Override
     public void init() {
         super.init();
-//        player = map_object_admin.getPlayer();
-//
-//        Random random = new Random();
-//        x = random.nextDouble() * 1000;
-//        y = random.nextDouble() * 600;
-//
-//        chase_count = 0;
     }
-
-//    @Override
-//    public void init(GL10 gl, MySprite draw_object, MapObjectAdmin map_object_admin) {
-//        super.init(gl, draw_object, map_object_admin);
-//        player = map_object_admin.getPlayer();
-//
-//        Random random = new Random();
-//        x = random.nextDouble() * 1000;
-//        y = random.nextDouble() * 600;
-//    }
 
     @Override
     public void update() {
@@ -91,6 +74,8 @@ public class MapEnemy extends MapUnit {
         dy = (int) ((dst_y - y) / dst_steps);
         x += dx;
         y += dy;
+
+        updateDirection();
     }
 
     private double myDistance(double x1, double y1, double x2, double y2) {

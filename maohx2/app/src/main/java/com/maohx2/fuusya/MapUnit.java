@@ -10,6 +10,9 @@ import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import static java.lang.Math.PI;
+import static java.lang.Math.atan2;
+
 /**
  * Created by Fuusya on 2017/09/11.
  */
@@ -62,5 +65,14 @@ public class MapUnit extends MapObject {
 //    }
 
 //    public void update(){}
+
+    public double getDirection() {
+        return direction;
+    }
+
+    public void updateDirection() {
+
+        direction = atan2(dx, dy) + PI;
+    }
 
 }
