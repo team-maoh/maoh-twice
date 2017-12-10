@@ -58,7 +58,10 @@ public class DungeonSelectManager {
     }
 
     public void makeEnterListBox(DungeonSelectButton _button) {
+
         enterListBoxActive = true;
+        //enterListBox = new
+
     }
 
 
