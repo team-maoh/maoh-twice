@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
  * Created by ina on 2017/10/08.
  */
 
-class BitmapData{
+public class BitmapData{
 
     Bitmap bitmap;
     String image_name;

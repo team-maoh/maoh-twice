@@ -157,7 +157,7 @@ public class Animation {
 
     public void draw() {
         //Graphicに描画を頼む
-        graphic.bookingDrawBitmap(name, new Point(original_x + x, original_y + y), extend_x, extend_y, angle, alpha, false);
+        //graphic.bookingDrawBitmapName(name, new Point(original_x + x, original_y + y), extend_x, extend_y, angle, alpha, false);
     }
 
     private void toNextStep() {

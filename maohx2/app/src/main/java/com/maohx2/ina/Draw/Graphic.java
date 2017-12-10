@@ -170,11 +170,7 @@ public class Graphic {
     }
 
 
-    public void bookingDrawBitmap(String bitmap_name, Point position, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
-
-        BitmapData draw_bitmap_data = null;
-
-        draw_bitmap_data = searchBitmap(bitmap_name);
+    public void bookingDrawBitmapData(BitmapData draw_bitmap_data, Point position, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
 
         setting_point1.set(position.x, position.y);
         transrateNormalizedPositionToDispPosition(setting_point1);
@@ -200,17 +196,31 @@ public class Graphic {
     }
 
 
-    public void bookingDrawBitmap(String bitmap_name, int position_x, int position_y, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
+
+    public void bookingDrawBitmapData(BitmapData bitmap_data, int position_x, int position_y, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
         Point position = new Point(position_x, position_y);
-        bookingDrawBitmap(bitmap_name,position,scale_x,scale_y,degree,alpha,is_upleft);
+        bookingDrawBitmapData(bitmap_data,position,scale_x,scale_y,degree,alpha,is_upleft);
     }
 
-    public void bookingDrawBitmap(String bitmap_name, Point position){
-        bookingDrawBitmap(bitmap_name,position,1,1,0,255,false);
+    public void bookingDrawBitmapData(BitmapData bitmap_data, Point position){
+        bookingDrawBitmapData(bitmap_data,position,1,1,0,255,false);
     }
 
-    public void bookingDrawBitmap(String bitmap_name, int position_x, int position_y){
-        bookingDrawBitmap(bitmap_name, position_x, position_y,1,1,0,255,false);
+    public void bookingDrawBitmapData(BitmapData bitmap_data, int position_x, int position_y){
+        bookingDrawBitmapData(bitmap_data, position_x, position_y,1,1,0,255,false);
+    }
+
+    public void bookingDrawBitmapName(String bitmap_name, int position_x, int position_y, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
+        Point position = new Point(position_x, position_y);
+        bookingDrawBitmapData(searchBitmap(bitmap_name),position,scale_x,scale_y,degree,alpha,is_upleft);
+    }
+
+    public void bookingDrawBitmapName(String bitmap_name, Point position){
+        bookingDrawBitmapData(searchBitmap(bitmap_name),position,1,1,0,255,false);
+    }
+
+    public void bookingDrawBitmapName(String bitmap_name, int position_x, int position_y){
+        bookingDrawBitmapData(searchBitmap(bitmap_name), position_x, position_y,1,1,0,255,false);
     }
 
     public void bookingDrawCircle(int draw_x, int draw_y, int draw_radius, Paint paint){
