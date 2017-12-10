@@ -13,6 +13,7 @@ public abstract class NamedDataAdmin<T extends NamedData> {
     public List<T> datas = new ArrayList<>();
     public MyDatabase database;
 
+
     public void loadData(String table_name) {
         int size = database.getSize(table_name);
         List<String> name = database.getString(table_name, "name");
@@ -20,6 +21,7 @@ public abstract class NamedDataAdmin<T extends NamedData> {
             datas.get(i).setName(name.get(i));
         }
     }
+
 
     public T getOneDataByName(String _name) {
         for(int i = 0; i < datas.size(); i++) {
@@ -52,8 +54,10 @@ public abstract class NamedDataAdmin<T extends NamedData> {
         return buf_data;
     }
 
+
     public List<T> getDatasBySQL(String table_name, String w_script) {
-        List<Integer> rowid = database.getRowID(table_name, w_script);
+        List<Integer> rowid
+                = database.getRowID(table_name, w_script);
         List<T> buf_itemdata = new ArrayList<>(rowid.size());
         for(int i = 0; i < rowid.size(); i++) {
             buf_itemdata.add((T)datas.get(rowid.get(i)));

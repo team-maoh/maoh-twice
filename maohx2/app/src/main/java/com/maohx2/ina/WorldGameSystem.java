@@ -58,7 +58,7 @@ public class WorldGameSystem {
 
 
     public void updata() {
-        text_box_admin.update();
+        //text_box_admin.update();
         list_box_admin.update();
 //        geo_slot_admin_manager.update();
 //        map_user_interface.update();
@@ -68,7 +68,7 @@ public class WorldGameSystem {
 
     public void draw() {
 
-        text_box_admin.draw();
+        //text_box_admin.draw();
         list_box_admin.draw();
 //        geo_slot_admin_manager.draw();
 
