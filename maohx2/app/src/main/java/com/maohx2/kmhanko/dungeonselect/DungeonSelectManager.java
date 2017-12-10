@@ -2,7 +2,6 @@ package com.maohx2.kmhanko.dungeonselect;
 
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.UI.UserInterface;
-import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
 /**
@@ -12,6 +11,8 @@ import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.Text.ListBox;
+
+import android.content.Intent;
 
 public class DungeonSelectManager {
     DungeonSelectButtonAdmin dungeonSelectButtonAdmin;
@@ -23,6 +24,10 @@ public class DungeonSelectManager {
 
     ListBox enterListBox;
     boolean enterListBoxActive;
+
+    //TODO ここに直書きはよくないかもの部分で使ってるメンバ
+    //Buttonの状態で保持するんじゃなくて、ダンジョンデータ的なもので保持したい
+    DungeonSelectButton dungeonSelectButton;
 
     public DungeonSelectManager() {
         dungeonSelectButtonAdmin = new DungeonSelectButtonAdmin();
@@ -41,13 +46,15 @@ public class DungeonSelectManager {
         enterListBox.init(userInterface,graphic, Constants.Touch.TouchWay.DOWN_MOMENT,2,600,600,1000,800);
         enterListBoxActive = false;
 
-        //TODO :loop
+        //TODO :loopselect
     }
 
 
     public void draw() {
         dungeonSelectButtonAdmin.draw();
-        //enterListBox.draw();
+        if (enterListBoxActive) {
+            enterListBox.draw();
+        }
     }
 
     public void update() {
@@ -55,14 +62,34 @@ public class DungeonSelectManager {
         if (enterListBoxActive) {
             enterListBox.update();
         }
+        dungeonSelectListUpdate();
     }
 
     public void makeEnterListBox(DungeonSelectButton _button) {
+        dungeonSelectButton = _button;
 
         enterListBoxActive = true;
-        enterListBox = new ListBox();
-       // enterListBox.init(userInterface, graphic, Constants.Touch.TouchWay.UP_MOMENT, 2, );
+        enterListBox.init(userInterface, graphic, Constants.Touch.TouchWay.UP_MOMENT, 2, 1300, 400, 1600, 600);
+        enterListBox.setContent(0, "侵入する");
+        enterListBox.setContent(1, "やめる");
+    }
 
+
+    //TODO ここに直書きはよくない気がする
+    public void dungeonSelectListUpdate() {
+        if (enterListBoxActive) {
+            switch (enterListBox.checkTouchContent()) {
+                case (0):
+                    //TODO 先輩にデータを渡す
+
+                    //TODO Act遷移
+
+                    break;
+                case (1):
+                    enterListBoxActive = false;
+                    break;
+            }
+        }
     }
 
 
