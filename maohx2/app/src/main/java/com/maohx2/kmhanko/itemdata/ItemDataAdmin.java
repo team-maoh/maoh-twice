@@ -16,6 +16,7 @@ public abstract class ItemDataAdmin<T extends ItemData> extends NamedDataAdmin<T
     String dbName;
     String dbAsset;
     String tableName;
+    MyDatabase database;
 
     //TODO tableNameが定数なのをなんとかして、NamedDataAdminにまで落とし込む作業
     public void init(MyDatabaseAdmin databaseAdmin) {
