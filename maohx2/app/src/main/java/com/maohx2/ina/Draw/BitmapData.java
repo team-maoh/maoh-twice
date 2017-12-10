@@ -17,19 +17,19 @@ public class BitmapData{
         image_name = "";
     }
 
-    private Bitmap getBitmap(){
+    Bitmap getBitmap(){
         return bitmap;
     }
 
-    private void setBitmap(Bitmap _bitmap){
+    void setBitmap(Bitmap _bitmap){
         bitmap = _bitmap;
     }
 
-    private String getImageName(){
+    String getImageName(){
         return image_name;
     }
 
-    private void setImageName(String _image_name){
+    void setImageName(String _image_name){
         image_name = _image_name;
     }
 
