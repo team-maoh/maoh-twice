@@ -67,10 +67,12 @@ class WorldSurfaceView extends BaseSurfaceView {
         world_game_system.draw();
 
         if (touch_state == TouchState.DOWN) {
+            /* by kmhanko
             thread = null;
             Intent intent = new Intent(map_activity, DungeonActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             map_activity.startActivity(intent);
+            */
         }
     }
 }
