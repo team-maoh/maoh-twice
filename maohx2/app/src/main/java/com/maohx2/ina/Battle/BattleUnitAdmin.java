@@ -124,11 +124,11 @@ public class BattleUnitAdmin {
             if (battle_units[i].isExist() == true) {
                 //canvas.drawCircle(battle_units[i].getPositionX(), battle_units[i].getPositionY(), 50.0f, paint);
                 if(i%2 == 0) {
-                    graphic.bookingDrawBitmap("ゴキ", battle_units[i].getPositionX(), battle_units[i].getPositionY());
+                    graphic.bookingDrawBitmapName("ゴキ", battle_units[i].getPositionX(), battle_units[i].getPositionY());
                 }
 
                 if(i%2 == 1) {
-                    graphic.bookingDrawBitmap("apple", battle_units[i].getPositionX(), battle_units[i].getPositionY());
+                    graphic.bookingDrawBitmapName("apple", battle_units[i].getPositionX(), battle_units[i].getPositionY());
                 }
             }
         }

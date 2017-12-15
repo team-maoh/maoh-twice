@@ -3,8 +3,8 @@ package com.maohx2.kmhanko.itemshop;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.database.NamedDataAdmin;
-import com.maohx2.kmhanko.itemdata.ItemData;
-import com.maohx2.kmhanko.itemdata.ItemDataAdmin;
+import com.maohx2.ina.ItemData.ItemData;
+import com.maohx2.ina.ItemData.ItemDataAdmin;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * Created by user on 2017/11/05.
  */
 
-public abstract class ItemShopData<T extends ItemData> extends NamedDataAdmin<T> {
+public abstract class ItemShopData<T extends ItemData> extends ItemDataAdmin<T> {
     String dbName;
     String dbAsset;
 

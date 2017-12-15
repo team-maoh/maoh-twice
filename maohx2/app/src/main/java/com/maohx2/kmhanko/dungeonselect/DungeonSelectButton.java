@@ -1,8 +1,5 @@
 package com.maohx2.kmhanko.dungeonselect;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 
 import com.maohx2.ina.UI.UserInterface;
 
@@ -36,8 +33,6 @@ public class DungeonSelectButton {
     static DungeonSelectButtonAdmin dungeonSelectButtonAdmin;
     //static MapGameSystem game_system;
 
-    Paint paint = new Paint();
-
     public DungeonSelectButton() {
     }
 
@@ -65,7 +60,7 @@ public class DungeonSelectButton {
         if (is_scale_big) {
             scale = SCALE_BIG;
         }
-        graphic.bookingDrawBitmap(image_name, x, y, scale, scale, 0, 255, false);
+        graphic.bookingDrawBitmapName(image_name, x, y, scale, scale, 0, 255, false);
     }
 
     public void update() {
@@ -103,6 +98,5 @@ public class DungeonSelectButton {
     public void setY(int _y) {
         y = _y;
     }
-
 
 }

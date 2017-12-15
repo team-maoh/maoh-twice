@@ -1,5 +1,7 @@
 package com.maohx2.kmhanko.itemdata;
 
+import com.maohx2.ina.ItemData.ItemData;
+
 /**
  * Created by user on 2017/11/05.
  */

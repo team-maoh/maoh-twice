@@ -1,7 +1,6 @@
 package com.maohx2.ina.Draw;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,8 +8,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.view.SurfaceHolder;
-
-import com.maohx2.ina.Constants;
 import com.maohx2.ina.GlobalConstants;
 import com.maohx2.ina.GlobalData;
 import com.maohx2.kmhanko.database.MyDatabase;
@@ -168,16 +165,31 @@ public class Graphic {
         _normalize_position.set((int)(_normalize_position.x*NORMARIZED_DRAW_RATE.x + DRAW_LEFT_END), (int)(_normalize_position.y*NORMARIZED_DRAW_RATE.y + DRAW_UP_END));
     }
 
-    public  Point transrateDispPositionToNormalizedPosition(Point _disp_position){
-        return  new Point((int)(_disp_position.x * DISP_NORMARIZED_RATE.x), (int)(_disp_position.y * DISP_NORMARIZED_RATE.y));
+    public double transrateNormalizedPositionToDispPositionX(int normalized_x){
+        return normalized_x*NORMARIZED_DRAW_RATE.x + DRAW_LEFT_END;
+    }
+
+    public double transrateNormalizedPositionToDispPositionY(int normalized_y){
+        return normalized_y*NORMARIZED_DRAW_RATE.y + DRAW_UP_END;
     }
 
 
-    public void bookingDrawBitmap(String bitmap_name, Point position, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
 
-        BitmapData draw_bitmap_data = null;
 
-        draw_bitmap_data = searchBitmap(bitmap_name);
+    public Point transrateDispPositionToNormalizedPosition(Point _disp_position){
+        return  new Point((int)((_disp_position.x + DRAW_LEFT_END)* DISP_NORMARIZED_RATE.x), (int)((_disp_position.y + DRAW_UP_END) * DISP_NORMARIZED_RATE.y));
+    }
+
+    public int transrateDispPositionToNormalizedPositionX(int disp_x){
+        return (int)((disp_x + DRAW_LEFT_END)* DISP_NORMARIZED_RATE.x);
+    }
+
+    public int transrateDispPositionToNormalizedPositionY(int disp_y){
+        return  (int)((disp_y + DRAW_UP_END) * DISP_NORMARIZED_RATE.y);
+    }
+
+
+    public void bookingDrawBitmapData(BitmapData draw_bitmap_data, Point position, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
 
         setting_point1.set(position.x, position.y);
         transrateNormalizedPositionToDispPosition(setting_point1);
@@ -190,7 +202,7 @@ public class Graphic {
 
         setting_matrix.postScale(DENSITY*scale_x, DENSITY*scale_y);
         setting_matrix.postRotate(degree);
-        setting_matrix.postTranslate(position.x, position.y);
+        setting_matrix.postTranslate(setting_point1.x, setting_point1.y);
 
 
         //行列とビットマップデータの保存
@@ -203,17 +215,31 @@ public class Graphic {
     }
 
 
-    public void bookingDrawBitmap(String bitmap_name, int position_x, int position_y, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
+
+    public void bookingDrawBitmapData(BitmapData bitmap_data, int position_x, int position_y, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
         Point position = new Point(position_x, position_y);
-        bookingDrawBitmap(bitmap_name,position,scale_x,scale_y,degree,alpha,is_upleft);
+        bookingDrawBitmapData(bitmap_data,position,scale_x,scale_y,degree,alpha,is_upleft);
     }
 
-    public void bookingDrawBitmap(String bitmap_name, Point position){
-        bookingDrawBitmap(bitmap_name,position,1,1,0,255,false);
+    public void bookingDrawBitmapData(BitmapData bitmap_data, Point position){
+        bookingDrawBitmapData(bitmap_data,position,1,1,0,255,false);
     }
 
-    public void bookingDrawBitmap(String bitmap_name, int position_x, int position_y){
-        bookingDrawBitmap(bitmap_name, position_x, position_y,1,1,0,255,false);
+    public void bookingDrawBitmapData(BitmapData bitmap_data, int position_x, int position_y){
+        bookingDrawBitmapData(bitmap_data, position_x, position_y,1,1,0,255,false);
+    }
+
+    public void bookingDrawBitmapName(String bitmap_name, int position_x, int position_y, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
+        Point position = new Point(position_x, position_y);
+        bookingDrawBitmapData(searchBitmap(bitmap_name),position,scale_x,scale_y,degree,alpha,is_upleft);
+    }
+
+    public void bookingDrawBitmapName(String bitmap_name, Point position){
+        bookingDrawBitmapData(searchBitmap(bitmap_name),position,1,1,0,255,false);
+    }
+
+    public void bookingDrawBitmapName(String bitmap_name, int position_x, int position_y){
+        bookingDrawBitmapData(searchBitmap(bitmap_name), position_x, position_y,1,1,0,255,false);
     }
 
     public void bookingDrawCircle(int draw_x, int draw_y, int draw_radius, Paint paint){
@@ -256,6 +282,7 @@ public class Graphic {
         setting_point1.set(draw_left, draw_down);
         transrateNormalizedPositionToDispPosition(setting_point1);
 
+        draw_paint.set(paint);
         draw_paint.setTextSize(DENSITY*paint.getTextSize());
 
         if(booking_rect_num >= booking_rect_datas.size()){
@@ -263,7 +290,7 @@ public class Graphic {
             System.out.println("add" +booking_rect_num);
         }
 
-        ((BookingTextData)booking_text_datas.get(booking_text_num)).update(draw_string, setting_point1.x, setting_point2.y, paint);
+        ((BookingTextData)booking_text_datas.get(booking_text_num)).update(draw_string, setting_point1.x, setting_point1.y, draw_paint);
         booking_task_datas.set(booking_num, booking_text_datas.get(booking_text_num));
         booking_num++;
         booking_text_num++;
@@ -297,7 +324,7 @@ public class Graphic {
         return hit_bitmap_data;
     }
 
-    public BitmapData createBitmapData(BitmapData src_bitmap_data, int x, int y, int width, int height){
+    public BitmapData processTrimmingBitmapData(BitmapData src_bitmap_data, int x, int y, int width, int height){
 
         BitmapData dst_bitmap_data;
         dst_bitmap_data = new BitmapData();
@@ -312,6 +339,7 @@ public class Graphic {
     }
 
     public SurfaceHolder getHolder(){return holder;}
+
 
 }
 

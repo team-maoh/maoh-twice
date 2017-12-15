@@ -1,14 +1,12 @@
 package com.maohx2.kmhanko.geonode;
 
 // Added by kmhanko
-import com.maohx2.kmhanko.itemdata.GeoObjectData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.kmhanko.myavail.MyAvail;
-import java.lang.Math;
+import com.maohx2.kmhanko.itemdata.GeoObjectData;
 
 /**
  * Created by ina on 2017/10/08.
@@ -238,15 +236,15 @@ public class GeoSlot {
     }
 
     public void draw() {
-        graphic.bookingDrawBitmap("apple", position_x, position_y, SCALE, SCALE, 0, 255, true);
+        graphic.bookingDrawBitmapName("apple", position_x, position_y, SCALE, SCALE, 0, 255, true);
 
         if (is_in_geoObjectData && geoObjectData != null) {
             //TODO: geoObjectDataの画像名を獲得する
-            graphic.bookingDrawBitmap("neco", position_x, position_y, SCALE, SCALE, 0, 255, true);
+            graphic.bookingDrawBitmapName("neco", position_x, position_y, SCALE, SCALE, 0, 255, true);
         }
 
         if (!isEventClear()) {
-            graphic.bookingDrawBitmap("banana", position_x, position_y, SCALE, SCALE, 0, 255, true);
+            graphic.bookingDrawBitmapName("banana", position_x, position_y, SCALE, SCALE, 0, 255, true);
         }
 
     }

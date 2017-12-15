@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.widget.RelativeLayout;
 
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
@@ -56,7 +57,8 @@ class StartSurfaceView extends BaseSurfaceView {
     Activity start_activity;
     MyDatabaseAdmin my_database_admin;
     Graphic graphic;
-
+    BitmapData srime;
+    BitmapData bit_srime;
 
     public StartSurfaceView(Activity _start_activity) {
         super(_start_activity);
@@ -75,28 +77,51 @@ class StartSurfaceView extends BaseSurfaceView {
         my_database_admin.addMyDatabase("StartDB", "LocalStartImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("StartDB"), "Start");
 
-        thread = new Thread(this);
-        thread.start();
-
         paint.setColor(Color.rgb(100,100,0));
         paint.setTextSize(30);
+        srime = graphic.searchBitmap("スライム");
+        bit_srime = graphic.processTrimmingBitmapData(srime,0,0,46,46);
+
+        thread = new Thread(this);
+        thread.start();
     }
 
     @Override
     public void gameLoop(){
-        graphic.bookingDrawBitmap("スライム",300,590);
-        graphic.bookingDrawBitmap("スライム",640,100);
-        graphic.bookingDrawBitmap("スライム",1300,390);
-        graphic.bookingDrawBitmap("スライム",640,80);
-        graphic.bookingDrawBitmap("スライム",640,120);
-        graphic.bookingDrawBitmap("スライム",800,450);
+        paint.setColor(Color.BLUE);
 
+        graphic.bookingDrawBitmapName("スライム",300,590);
+        graphic.bookingDrawText("(300,590)",300,590,paint);
+        graphic.bookingDrawBitmapData(bit_srime,640,100);
+        graphic.bookingDrawText("(640,100)",640,100,paint);
+        graphic.bookingDrawBitmapData(bit_srime,1300,390);
+        graphic.bookingDrawText("(1300,390)",1300,390,paint);
+        graphic.bookingDrawBitmapData(bit_srime,640,80);
+        graphic.bookingDrawText("(640,80)",640,80,paint);
+        graphic.bookingDrawBitmapName("スライム",640,120);
+        graphic.bookingDrawText("(640,120)",640,120,paint);
+        graphic.bookingDrawBitmapName("スライム",800,450);
+        graphic.bookingDrawText("(800,450)",800,450,paint);
 
         graphic.bookingDrawCircle(640,100,10,paint);
         graphic.bookingDrawRect(300,590,310,600,paint);
-        graphic.bookingDrawText("スライム",1300,390,paint);
-
-//        graphic.drawBooking("ゴキ",640,390);
+        graphic.bookingDrawText("0",0,100,paint);
+        graphic.bookingDrawText("100",100,100,paint);
+        graphic.bookingDrawText("200",200,100,paint);
+        graphic.bookingDrawText("300",300,100,paint);
+        graphic.bookingDrawText("400",400,100,paint);
+        graphic.bookingDrawText("500",500,100,paint);
+        graphic.bookingDrawText("600",600,100,paint);
+        graphic.bookingDrawText("700",700,100,paint);
+        graphic.bookingDrawText("800",800,100,paint);
+        graphic.bookingDrawText("900",900,100,paint);
+        graphic.bookingDrawText("1000",1000,100,paint);
+        graphic.bookingDrawText("1100",1100,100,paint);
+        graphic.bookingDrawText("1200",1200,100,paint);
+        graphic.bookingDrawText("1300",1300,100,paint);
+        graphic.bookingDrawText("1400",1400,100,paint);
+        graphic.bookingDrawText("1500",1500,100,paint);
+        graphic.bookingDrawText("1600",1600,100,paint);
 
         graphic.draw();
 

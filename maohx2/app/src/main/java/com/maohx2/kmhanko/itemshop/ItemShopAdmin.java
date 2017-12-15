@@ -3,7 +3,7 @@ package com.maohx2.kmhanko.itemshop;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
-import com.maohx2.kmhanko.itemdata.ItemDataAdminManager;
+import com.maohx2.ina.ItemData.ItemDataAdminManager;
 
 /**
  * Created by user on 2017/11/19.
@@ -45,7 +45,7 @@ public class ItemShopAdmin {
         ITEM_KIND_NUM
     }
 
-    public void init(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin myDatabaseAdmin, ItemDataAdminManager itemDataAdminManager) {
+    public void init(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin myDatabaseAdmin, ItemDataAdminManager itemDataAdminManager) {
         userInterface = _userInterface;
         graphic = _graphic;
 
