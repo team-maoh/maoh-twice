@@ -147,6 +147,16 @@ public class TextBoxAdmin {
         box_count++;
 
         return (box_count - 1);
+    }
+
+    //TextBoxを非表示にする関数
+    public void hideTextBox(int _box_id){
+
+        text_box[_box_id].setExists(false);
+    }
+
+    //TextBoxを削除する関数
+    public void deleteTextBox(int _box_id){
 
     }
 
@@ -173,7 +183,6 @@ public class TextBoxAdmin {
         default_paint.setColor(Color.GREEN);
 
         text_box[_box_id].inputText(_text, default_paint);
-
     }
 
 }

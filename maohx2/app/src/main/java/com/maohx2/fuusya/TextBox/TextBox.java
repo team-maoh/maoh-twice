@@ -68,14 +68,16 @@ public class TextBox {
 
     Graphic graphic;
 
+    boolean exists;//自分自身が画面に表示されているかどうか
+
     public TextBox(Graphic _graphic, int _touch_id, int _box_id, double _box_left, double _box_top, double _box_right, double _box_down, int _row_of_box) {
         graphic = _graphic;
         box_id = _box_id;
 
-        box_left = (int)_box_left;
-        box_top = (int)_box_top;
-        box_right = (int)_box_right;
-        box_down = (int)_box_down;
+        box_left = (int) _box_left;
+        box_top = (int) _box_top;
+        box_right = (int) _box_right;
+        box_down = (int) _box_down;
 
         column_of_box = box_right - box_left;
         row_of_box = _row_of_box;
@@ -108,6 +110,8 @@ public class TextBox {
         begin_column = 0;
 
         tmp_first = 0;
+
+        exists = true;
     }
 
     public void init() {
@@ -144,15 +148,18 @@ public class TextBox {
 
     public void draw() {
 
-        //上のupdateで設定したpaintを使って箱を描画
+        if (exists == true) {
+
+            //上のupdateで設定したpaintを使って箱を描画
 //        Rect rect = new Rect(box_left, box_top, box_right, box_down);
-        graphic.bookingDrawRect(box_left, box_top, box_right, box_down, box_paint);
+            graphic.bookingDrawRect(box_left, box_top, box_right, box_down, box_paint);
 
-        if (queue[first].getSentence().equals("null")) {
-            System.out.println("◆文queueが空です");
+            if (queue[first].getSentence().equals("null")) {
+                System.out.println("◆文queueが空です");
 
-        } else {
-            displayText();//文章を描画する
+            } else {
+                displayText();//文章を描画する
+            }
         }
     }
 
@@ -292,6 +299,10 @@ public class TextBox {
     public void setTouch_id(int _touch_id) {
 
         touch_id = _touch_id;
+    }
+
+    public void setExists(boolean _exists) {
+        exists = _exists;
     }
 
     public int getBoxId() {
