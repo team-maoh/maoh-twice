@@ -3,8 +3,8 @@ package com.maohx2.kmhanko.GeoPresent;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.UserInterface;
-import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+import com.maohx2.kmhanko.database.MyDatabase;
 
 /**
  * Created by user on 2017/12/10.
@@ -18,12 +18,18 @@ PLUSの値をたくさん貯める
 
  */
 
+/*
+連続して呼ぶような内容ではないので、
+DBファイルから直接取得する処理にしている。
+ */
+
 public class GeoPresentManager {
 
     UserInterface userInterface;
     Graphic graphic;
     MyDatabaseAdmin databaseAdmin;
     TextBoxAdmin textBoxAdmin;
+    MyDatabase database;
 
     public GeoPresentManager() {
     }
@@ -33,6 +39,13 @@ public class GeoPresentManager {
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
         textBoxAdmin = _textBoxAdmin;
+    }
+
+    public void checkPresent() {
+
+
+
+
     }
 
 

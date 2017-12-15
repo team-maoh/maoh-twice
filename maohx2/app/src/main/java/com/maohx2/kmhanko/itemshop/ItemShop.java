@@ -8,6 +8,8 @@ import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.kmhanko.database.NamedDataAdmin;
 import com.maohx2.ina.ItemData.ItemDataAdmin;
 
+import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+
 import android.graphics.Canvas;
 
 import java.util.LinkedHashSet;
@@ -29,17 +31,20 @@ public abstract class ItemShop {
     ItemShopData itemShopData;
     Graphic graphic;
     UserInterface userInterface;
+    TextBoxAdmin textBoxAdmin;
 
 
     public ItemShop() {
     }
 
-    public void init(UserInterface _userInterface, Graphic _graphic) {
+    public void init(UserInterface _userInterface, Graphic _graphic, TextBoxAdmin _textBoxAdmin) {
         listBox_Item = new ListBox();
         listBox_Select = new ListBox();
 
         userInterface = _userInterface;
         graphic = _graphic;
+
+        textBoxAdmin = _textBoxAdmin;
     }
 
     public void setItemShopData(ItemShopData _itemShopData) {
@@ -99,7 +104,7 @@ public abstract class ItemShop {
                     break;
                 case(1) ://詳細を表示
                     itemData = (ItemData)itemShopData.getOneDataByName(buyItemName);
-                    buyItem(itemData);
+                    explainItem(itemData);
                     break;
                 case(2) ://キャンセル
                     isListBoxItemActive = true;
