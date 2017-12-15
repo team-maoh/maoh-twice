@@ -20,11 +20,13 @@ import static java.security.AccessController.getContext;
 
 public class TextBox {
 
-    int box_up_left_x;//箱の左上の頂点のx座標
-    int box_up_left_y;//　　　　　　　　y座標
-    int box_down_right_x;//箱の右下の頂点のx座標
-    int box_down_right_y;//　　　　　　　　y座標
+    int box_left;//箱の左上の頂点のx座標
+    int box_top;//　　　　　　　　y座標
+    int box_right;//箱の右下の頂点のx座標
+    int box_down;//　　　　　　　　y座標
     int touch_id;
+    int box_id;//箱の通し番号（外からテキストを投げ込むとき、この番号で箱を指定する）
+
     Paint box_paint;
 
     int column_of_box;//箱の横幅
@@ -66,22 +68,21 @@ public class TextBox {
 
     Graphic graphic;
 
-    public TextBox(Graphic _graphic) {
+    public TextBox(Graphic _graphic, int _touch_id, int _box_id, double _box_left, double _box_top, double _box_right, double _box_down, int _row_of_box) {
         graphic = _graphic;
-    }
+        box_id = _box_id;
 
-    public void init(int _touch_id, int _column_of_box, int _row_of_box) {
+        box_left = (int)_box_left;
+        box_top = (int)_box_top;
+        box_right = (int)_box_right;
+        box_down = (int)_box_down;
 
-        column_of_box = _column_of_box;
+        column_of_box = box_right - box_left;
         row_of_box = _row_of_box;
 
         box_paint = new Paint();
         box_paint.setColor(Color.argb(100, 0, 0, 0));
 
-        box_up_left_x = 100;
-        box_up_left_y = 550;
-        box_down_right_x = 800;
-        box_down_right_y = 750;
 
         touch_id = _touch_id;
         has_updated_text = false;
@@ -107,6 +108,10 @@ public class TextBox {
         begin_column = 0;
 
         tmp_first = 0;
+    }
+
+    public void init() {
+
     }
 
     public void update(boolean touch_state) {
@@ -140,8 +145,8 @@ public class TextBox {
     public void draw() {
 
         //上のupdateで設定したpaintを使って箱を描画
-//        Rect rect = new Rect(box_up_left_x, box_up_left_y, box_down_right_x, box_down_right_y);
-        graphic.bookingDrawRect(box_up_left_x, box_up_left_y, box_down_right_x, box_down_right_y, box_paint);
+//        Rect rect = new Rect(box_left, box_top, box_right, box_down);
+        graphic.bookingDrawRect(box_left, box_top, box_right, box_down, box_paint);
 
         if (queue[first].getSentence().equals("null")) {
             System.out.println("◆文queueが空です");
@@ -265,7 +270,8 @@ public class TextBox {
     private void displayText() {
 
         for (int i = first; queue[i].isMOP() == false; i = (i + 1) % MAX_QUEUE_TEXT) {
-            graphic.bookingDrawText(queue[i].getSentence(), 105 + queue[i].getBeginColumn(), 595 + 40 * queue[i].getNumOfLines(), queue[i].getPaint());
+            graphic.bookingDrawText(queue[i].getSentence(), box_left + 5 + queue[i].getBeginColumn(), box_top + 45 + 40 * queue[i].getNumOfLines(), queue[i].getPaint());
+//            graphic.bookingDrawText(queue[i].getSentence(), box_left + 5 + queue[i].getBeginColumn(), box_top + 45 + (int)(box_paint.getTextSize()) * queue[i].getNumOfLines(), queue[i].getPaint());
             System.out.println("first");
         }
 
@@ -288,36 +294,40 @@ public class TextBox {
         touch_id = _touch_id;
     }
 
-    public int getBoxUpLeftX() {
-        return box_up_left_x;
+    public int getBoxId() {
+        return box_id;
     }
 
-    public void setBoxUpLeftX(int _box_up_left_x) {
-        box_up_left_x = _box_up_left_x;
+    public int getBoxUpLeftX() {
+        return box_left;
+    }
+
+    public void setBoxUpLeftX(int _box_left) {
+        box_left = _box_left;
     }
 
     public int getBoxUpLeftY() {
-        return box_up_left_y;
+        return box_top;
     }
 
-    public void setBoxUpLeftY(int _box_up_left_y) {
-        box_up_left_y = _box_up_left_y;
+    public void setBoxUpLeftY(int _box_top) {
+        box_top = _box_top;
     }
 
     public int getBoxDownRightX() {
-        return box_down_right_x;
+        return box_right;
     }
 
-    public void setBoxDownRightX(int _box_down_right_x) {
-        box_down_right_x = _box_down_right_x;
+    public void setBoxDownRightX(int _box_right) {
+        box_right = _box_right;
     }
 
     public int getBoxDownRightY() {
-        return box_down_right_y;
+        return box_down;
     }
 
-    public void setBoxDownRightY(int _box_down_right_y) {
-        box_down_right_y = _box_down_right_y;
+    public void setBoxDownRightY(int _box_down) {
+        box_down = _box_down;
     }
 
     public void resetCursor() {
