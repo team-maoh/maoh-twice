@@ -58,35 +58,34 @@ public class WorldGameSystem {
 
         itemDataAdminManager.init(databaseAdmin);
 
-        itemShopAdmin.init(graphic, map_user_interface, databaseAdmin, itemDataAdminManager);
-        itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "debug");
+        itemShopAdmin.init(graphic, map_user_interface, databaseAdmin, text_box_admin, itemDataAdminManager);
+        itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.GEO_OBJECT, "debug");
 
 
 
         geo_slot_admin_manager.setActiveGeoSlotAdmin("Test");
 
         canvas = null;
+
     }
 
 
     public void updata() {
-        //text_box_admin.update();
-        //list_box_admin.update();
         //geo_slot_admin_manager.update();
         //map_user_interface.update();
         //dungeonSelectManager.update();
         itemShopAdmin.update();
+        text_box_admin.update();
     }
 
 
     public void draw() {
 
-        //text_box_admin.draw();
-        //list_box_admin.draw();
         //geo_slot_admin_manager.draw();
 
         //dungeonSelectManager.draw();
         itemShopAdmin.draw();
+        text_box_admin.draw();
 
         graphic.draw();
     }
