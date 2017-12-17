@@ -15,6 +15,9 @@ import android.content.ContentValues;
 
 /**
  * Created by user on 2017/09/03.
+ * version : 1.02
+ * getOne~~,getOne~~ByRowID追加
+ *
  * version : 1.01
  * getStringするとき、読み込み順序がおかしくなるバグを修正
  * データベースを読み込みするとき発生するエラーを修正
@@ -40,7 +43,7 @@ public class MyDatabase {
 
     public boolean init(String _db_name, String _db_asset, int _db_version, String load_mode) {
         if (load_mode != "r" && load_mode != "w") {
-            System.out.println("dg_mes:" + "MyDatabase : please set r or w");
+            System.out.println("☆タカノ:" + "MyDatabase : please set r or w");
             return false;
         }
         db_name = _db_name;
@@ -74,7 +77,7 @@ public class MyDatabase {
         } catch (IOException e) {
             //TODO : エラー処理
             e.printStackTrace();
-            throw new Error("タカノ : "+ e);
+            throw new Error("☆タカノ: ¥n"+ e);
         }
 
         return true;
@@ -124,7 +127,7 @@ public class MyDatabase {
         if (buf.size() == 1) {
             return buf.get(0);
         } else {
-            System.out.println("dg_mes:" + "MyDatabase.getOneRowID : Found rowids are not only one.");
+            System.out.println("☆タカノ:" + "MyDatabase.getOneRowID : Found rowids are not only one.¥n");
             return buf.get(0);
         }
     }
@@ -152,6 +155,13 @@ public class MyDatabase {
         c.close();
         return buf;
     }
+    public int getOneInt(String t_name, String c_name, String w_script) {
+        List<Integer> buf = getInt(t_name, c_name, w_script);
+        return buf.get(0);
+    }
+    public int getIntByRowID(String t_name, String c_name, int rowid) {
+        return getOneInt(t_name, c_name, "rowid = " + rowid);
+    }
 
     public List<String> getString(String t_name, String c_name) {
         return getString(t_name, c_name, null);
@@ -171,6 +181,13 @@ public class MyDatabase {
         }
         c.close();
         return buf;
+    }
+    public String getOneString(String t_name, String c_name, String w_script) {
+        List<String> buf = getString(t_name, c_name, w_script);
+        return buf.get(0);
+    }
+    public String getStringByRowID(String t_name, String c_name, int rowid) {
+        return getOneString(t_name, c_name, "rowid = " + rowid);
     }
 
     public List<Boolean> getBoolean(String t_name, String c_name) {
@@ -197,6 +214,13 @@ public class MyDatabase {
         c.close();
         return buf;
     }
+    public boolean getOneBoolean(String t_name, String c_name, String w_script) {
+        List<Boolean> buf = getBoolean(t_name, c_name, w_script);
+        return buf.get(0);
+    }
+    public boolean getBooleanByRowID(String t_name, String c_name, int rowid) {
+        return getOneBoolean(t_name, c_name, "rowid = " + rowid);
+    }
 
     public List<Double> getDouble(String t_name, String c_name) {
         return getDouble(t_name, c_name, null);
@@ -215,6 +239,13 @@ public class MyDatabase {
         }
         c.close();
         return buf;
+    }
+    public double getOneDouble(String t_name, String c_name, String w_script) {
+        List<Double> buf = getDouble(t_name, c_name, w_script);
+        return buf.get(0);
+    }
+    public double getDoubleByRowID(String t_name, String c_name, int rowid) {
+        return getOneDouble(t_name, c_name, "rowid = " + rowid);
     }
 
     public List<Float> getFloat(String t_name, String c_name) {
@@ -235,6 +266,14 @@ public class MyDatabase {
         c.close();
         return buf;
     }
+    public float getOneFloat(String t_name, String c_name, String w_script) {
+        List<Float> buf = getFloat(t_name, c_name, w_script);
+        return buf.get(0);
+    }
+    public float getFloatByRowID(String t_name, String c_name, int rowid) {
+        return getOneFloat(t_name, c_name, "rowid = " + rowid);
+    }
+
     public List<String> getOneLine(String t_name, int rowid) {
         return getOneLine(t_name,"rowid = "+rowid);
     }
