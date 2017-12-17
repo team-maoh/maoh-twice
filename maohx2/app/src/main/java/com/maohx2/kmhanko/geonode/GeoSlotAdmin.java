@@ -41,7 +41,7 @@ public class GeoSlotAdmin {
     Graphic graphic;
 
     //Rewrite by kmhanko
-    public void init(Graphic _graphic, UserInterface _user_interface) {
+    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface) {
         graphic = _graphic;
         user_interface = _user_interface;
         GeoSlot.setGeoSlotAdmin(this);
@@ -69,11 +69,14 @@ public class GeoSlotAdmin {
         geo_slots = grand_geo_slot.getGeoSlots();
 
         //各GeoSlotの初期化
-        List<Double> xs = database.getDouble(t_name, "x");
-        List<Double> ys = database.getDouble(t_name, "y");
+        List<Integer> xs = database.getInt(t_name, "x");
+        List<Integer> ys = database.getInt(t_name, "y");
         List<String> release_events = database.getString(t_name, "release_event");
         List<String> restrictions = database.getString(t_name, "restriction");
         int r;
+
+        GeoSlot.staticInit(graphic);
+
         for(int i = 0; i < geo_slots.size(); i++) {
             //TODO:根の表示も適当
             if (i == 0) {
@@ -81,10 +84,8 @@ public class GeoSlotAdmin {
             } else {
                 r = 40;
             }
-            geo_slots.get(i).init(graphic);
-            //TODO:とりあえずの適当変換にしているので、カメラ系かなんかが出来上がり次第直す
-            geo_slots.get(i).setParam((int) (xs.get(i) * 1600), (int) (ys.get(i) * 900), r);
-            geo_slots.get(i).setTouchID(user_interface.setCircleTouchUI((int) (xs.get(i) * 1600), (int) (ys.get(i) * 900), r+10));
+            geo_slots.get(i).setParam(xs.get(i),ys.get(i), r);
+            geo_slots.get(i).setTouchID(user_interface.setCircleTouchUI(xs.get(i), ys.get(i), r+10));
 
             geo_slots.get(i).setReleaseEvent(release_events.get(i));
             geo_slots.get(i).setRestriction(restrictions.get(i));

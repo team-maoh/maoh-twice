@@ -71,6 +71,7 @@ public class ItemShopAdmin {
         }
         itemShop.loadShopData(_tableName);
         itemShop.setList();
+        itemShop.setTextBox();
     }
 
     public void makeAndOpenItemShop(ITEM_KIND _itemKind, String _tableName) {

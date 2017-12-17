@@ -23,6 +23,8 @@ public abstract class ItemShop {
     ListBox listBox_Item;
     ListBox listBox_Select;
 
+    int textBoxID;
+
     boolean isListBoxItemActive = true;
     boolean isListBoxSelectActive = false;
 
@@ -70,12 +72,15 @@ public abstract class ItemShop {
             //listBox_Item.setItemContent(i, itemShopData.getItemData(i).getName());
         }
 
-
         listBox_Select.init(userInterface, graphic, Constants.Touch.TouchWay.DOWN_MOMENT, 3 , 1200, 50, 1500, 50 + 100 * 2);
         listBox_Select.setContent(0, "購入する");
         listBox_Select.setContent(1, "詳細");
         listBox_Select.setContent(2, "キャンセル");
 
+    }
+
+    public void setTextBox() {
+        textBoxID = textBoxAdmin.createTextBox(100.0, 300.0, 500.0, 500, 5);
     }
 
     public void update() {

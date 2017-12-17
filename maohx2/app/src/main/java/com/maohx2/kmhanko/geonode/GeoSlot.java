@@ -29,16 +29,16 @@ public class GeoSlot {
     String release_event;
     String restriction;
 
-    Graphic graphic;
+    static Graphic graphic;
 
     GeoObjectData geoObjectData;
 
     public GeoSlot() {
+        item_id = -1;
         is_exist = true;
     }
 
-    public void init(Graphic _graphic) {
-        item_id = -1;
+    static public void staticInit(Graphic _graphic) {
         graphic = _graphic;
     }
 
