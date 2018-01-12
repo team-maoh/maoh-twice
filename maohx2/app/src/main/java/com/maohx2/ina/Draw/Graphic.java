@@ -285,9 +285,9 @@ public class Graphic {
         draw_paint.set(paint);
         draw_paint.setTextSize(DENSITY*paint.getTextSize());
 
-        if(booking_rect_num >= booking_rect_datas.size()){
-            booking_rect_datas.add(new BookingRectData());
-            System.out.println("add" +booking_rect_num);
+        if(booking_text_num >= booking_text_datas.size()){
+            booking_text_datas.add(new BookingTextData());
+            //System.out.println("add" +booking_rect_num);
         }
 
         ((BookingTextData)booking_text_datas.get(booking_text_num)).update(draw_string, setting_point1.x, setting_point1.y, draw_paint);
@@ -318,7 +318,7 @@ public class Graphic {
         }
 
         if(draw_bitmap_num < 0) {
-            throw new Error("%☆イナガキ：drawBooking:その名前の画像はありません     " + "global: " + global_bitmap_data_admin + "local:" + local_bitmap_data_admin);
+            throw new Error("%☆イナガキ：drawBooking:画像名「" + bitmap_name + "」がありません     " + "global: " + global_bitmap_data_admin + "local:" + local_bitmap_data_admin);
         }
 
         return hit_bitmap_data;
@@ -330,6 +330,67 @@ public class Graphic {
         dst_bitmap_data = new BitmapData();
 
         dst_bitmap_data.setBitmap(Bitmap.createBitmap(src_bitmap_data.getBitmap(),x,y,width,height));
+
+        return dst_bitmap_data;
+    }
+
+    public BitmapData processConbineBitmapData(BitmapData[] src_bitmap_datas, boolean yoko){
+
+        BitmapData dst_bitmap_data;
+        dst_bitmap_data = new BitmapData();
+        int total_length = 0;
+        int variable_length[] = new int[src_bitmap_datas.length];
+        int constant_length = 0;
+        int[] conbine_pixels = new int[src_bitmap_datas[0].getHeight()*total_length];
+        int[][] source_pixels = new int[src_bitmap_datas.length][];
+
+        for(int i = 0; i < src_bitmap_datas.length; i++){
+
+            if(yoko == true) {
+                variable_length[i] = src_bitmap_datas[i].getWidth();
+                total_length += src_bitmap_datas[i].getWidth();
+                constant_length = src_bitmap_datas[i].getHeight();
+                source_pixels[i] = new int[variable_length[i]*constant_length];
+                src_bitmap_datas[i].getBitmap().getPixels(source_pixels[i], 0, variable_length[i], 0, 0, variable_length[i], constant_length);
+            } else {
+                variable_length[i] = src_bitmap_datas[i].getHeight();
+                total_length += src_bitmap_datas[i].getHeight();
+                constant_length = src_bitmap_datas[i].getWidth();
+                source_pixels[i] = new int[variable_length[i]*constant_length];
+                src_bitmap_datas[i].getBitmap().getPixels(source_pixels[i], 0, constant_length, 0, 0, constant_length, variable_length[i]);
+            }
+        }
+
+        int init_copy_index = 0;
+
+        for(int i = 0; i < src_bitmap_datas.length; i++){
+            if(yoko == true) {
+                for(int y = 0; y < constant_length; y++) {
+                    for(int x = 0; x < variable_length[i]; x++) {
+                        conbine_pixels[(x + y * variable_length[i]) + (init_copy_index * y)] = source_pixels[i][x + y * variable_length[i]];
+                    }
+                }
+            } else {
+                for(int y = 0; y < variable_length[i]; y++) {
+                    for(int x = 0; x < constant_length; x++) {
+                        conbine_pixels[(x + y * variable_length[i]) + (init_copy_index * constant_length)] = source_pixels[i][x + y * variable_length[i]];
+                    }
+                }
+            }
+            init_copy_index += variable_length[i];
+        }
+
+        Bitmap conbine_bitmap;
+
+        if(yoko == true) {
+            conbine_bitmap = Bitmap.createBitmap(total_length, constant_length, Bitmap.Config.ARGB_8888);
+            conbine_bitmap.setPixels(conbine_pixels, 0, total_length, 0, 0, total_length, constant_length);
+        }else {
+            conbine_bitmap = Bitmap.createBitmap(constant_length, total_length, Bitmap.Config.ARGB_8888);
+            conbine_bitmap.setPixels(conbine_pixels, 0, constant_length, 0, 0, constant_length, total_length);
+        }
+
+        dst_bitmap_data.setBitmap(conbine_bitmap);
 
         return dst_bitmap_data;
     }

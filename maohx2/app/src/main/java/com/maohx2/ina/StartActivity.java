@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
@@ -59,6 +60,8 @@ class StartSurfaceView extends BaseSurfaceView {
     Graphic graphic;
     BitmapData srime;
     BitmapData bit_srime;
+    StartGameSystem start_game_system;
+    UserInterface start_user_interface;
 
     public StartSurfaceView(Activity _start_activity) {
         super(_start_activity);
@@ -72,7 +75,6 @@ class StartSurfaceView extends BaseSurfaceView {
 
         graphic = new Graphic(start_activity, holder);
         my_database_admin = new MyDatabaseAdmin(start_activity);
-        //my_database_admin.addMyDatabase("local_image_DB", "LocalImage.db", 1, "r");
 
         my_database_admin.addMyDatabase("StartDB", "LocalStartImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("StartDB"), "Start");
@@ -82,6 +84,20 @@ class StartSurfaceView extends BaseSurfaceView {
         srime = graphic.searchBitmap("スライム");
         bit_srime = graphic.processTrimmingBitmapData(srime,0,0,46,46);
 
+        start_user_interface = new UserInterface(global_data.getGlobalConstants(), graphic);
+        start_user_interface.init();
+
+        start_game_system = new StartGameSystem();
+        start_game_system.init(holder, graphic,  start_user_interface, start_activity, my_database_admin);
+
+
+
+
+
+
+
+
+        //todo:こいつは一番下
         thread = new Thread(this);
         thread.start();
     }
@@ -123,13 +139,18 @@ class StartSurfaceView extends BaseSurfaceView {
         graphic.bookingDrawText("1500",1500,100,paint);
         graphic.bookingDrawText("1600",1600,100,paint);
 
-        graphic.draw();
+        start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
 
+        start_game_system.updata();
+        start_game_system.draw();
+
+/*
         if(touch_state == TouchState.DOWN){
             thread = null;
             Intent intent = new Intent(start_activity, WorldActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             start_activity.startActivity(intent);
         }
+*/
     }
 }

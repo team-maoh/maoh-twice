@@ -39,19 +39,19 @@ public class WorldGameSystem {
 
         text_box_admin = new TextBoxAdmin(graphic);
         list_box_admin = new ListBoxAdmin();
-        geo_slot_admin_manager = new GeoSlotAdminManager();
+        //geo_slot_admin_manager = new GeoSlotAdminManager();
         //geo_slot_admin = new GeoSlotAdmin();
-        dungeonSelectManager = new DungeonSelectManager();
+        //dungeonSelectManager = new DungeonSelectManager();
 
 
         text_box_admin.init(map_user_interface);
         list_box_admin.init(map_user_interface, graphic);
-        geo_slot_admin_manager.init(graphic, map_user_interface,my_data_base_admin);
+        //geo_slot_admin_manager.init(graphic, map_user_interface,my_data_base_admin);
         //geo_slot_admin.init(map_user_interface, map_activity);
-        dungeonSelectManager.init(graphic, map_user_interface, my_data_base_admin);
+        //dungeonSelectManager.init(graphic, map_user_interface, my_data_base_admin);
 
 
-        geo_slot_admin_manager.setActiveGeoSlotAdmin("Test");
+        //geo_slot_admin_manager.setActiveGeoSlotAdmin("Test");
 
         canvas = null;
     }
@@ -62,7 +62,7 @@ public class WorldGameSystem {
         list_box_admin.update();
 //        geo_slot_admin_manager.update();
 //        map_user_interface.update();
-        dungeonSelectManager.update();
+//        dungeonSelectManager.update();
     }
 
 
@@ -72,7 +72,7 @@ public class WorldGameSystem {
         list_box_admin.draw();
 //        geo_slot_admin_manager.draw();
 
-        dungeonSelectManager.draw();
+//        dungeonSelectManager.draw();
 
         graphic.draw();
     }

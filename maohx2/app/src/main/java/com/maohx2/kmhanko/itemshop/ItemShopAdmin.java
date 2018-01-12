@@ -45,14 +45,14 @@ public class ItemShopAdmin {
         ITEM_KIND_NUM
     }
 
-    public void init(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin myDatabaseAdmin, ItemDataAdminManager itemDataAdminManager) {
+    public void init(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin myDatabaseAdmin, ItemDataAdminManager itemDataAdminManager, MyDatabaseAdmin my_database_admin) {
         userInterface = _userInterface;
         graphic = _graphic;
 
-        expendItemShopData = new ExpendItemShopData();
+        expendItemShopData = new ExpendItemShopData(graphic, my_database_admin);
         expendItemShopData.init(itemDataAdminManager.getExpendItemDataAdmin(), myDatabaseAdmin);
 
-        geoObjectShopData = new GeoObjectShopData();
+        geoObjectShopData = new GeoObjectShopData(graphic, my_database_admin);
         geoObjectShopData.init(itemDataAdminManager.getGeoObjectDataAdmin(), myDatabaseAdmin);
     }
 
