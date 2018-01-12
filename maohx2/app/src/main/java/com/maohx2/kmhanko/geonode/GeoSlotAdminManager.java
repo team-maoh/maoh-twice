@@ -88,3 +88,13 @@ public class GeoSlotAdminManager {
 
     }
 }
+
+/*
+1/12
+どうしたい？
+→条件
+
+
+
+
+ */
