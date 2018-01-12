@@ -5,4 +5,8 @@ package com.maohx2.ina.Arrange;
  */
 
 public class PaletteAdmin {
+
+
+
+
 }

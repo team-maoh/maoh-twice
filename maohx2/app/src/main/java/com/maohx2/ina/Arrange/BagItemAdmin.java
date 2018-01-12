@@ -2,14 +2,14 @@ package com.maohx2.ina.Arrange;
 
 import com.maohx2.ina.Arrange.BagItem;
 
-/**
- * Created by ina on 2017/11/10.
- */
+    /**
+     * Created by ina on 2017/11/10.
+     */
 
 
 public class BagItemAdmin {
 
-    //    int NUM_OF_POCKETS = 5;
+        //int NUM_OF_POCKETS = 5;
     int SIZE_OF_POCKET = 100;
     int display_type;//1…入手順 / 2…id順
     BagItem[] bag_item = new BagItem[SIZE_OF_POCKET];
@@ -42,7 +42,7 @@ public class BagItemAdmin {
         }
 
 
-        quick_sort(bag_item, 0, num_of_kinds-1);
+        quick_sort(bag_item, 0, num_of_kinds - 1);
         //コメントアウトするとアイテムが入手順で表示される
 
         for (int i = 0; i < num_of_kinds; i++) {
@@ -53,9 +53,11 @@ public class BagItemAdmin {
     }
 
     static void quick_sort(BagItem[] d, int left, int right) {
+
         if (left >= right) {
             return;
         }
+
         int p = d[(left + right) / 2].getUniqueId();
         int l = left, r = right, tmp;
         while (l <= r) {
@@ -78,4 +80,7 @@ public class BagItemAdmin {
     }
 
     public void idSort(int num_of_kinds, BagItem bag_item[]) {}
+
+    public void init(int a) {}
+
 }
