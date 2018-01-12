@@ -20,7 +20,7 @@ import com.maohx2.ina.UI.UserInterface;
 
 public class ListBox {
 
-//todo:何番目が押されているか、〇番目は押されているか、押されているもの名前、押されているもののアイテム
+    //todo:何番目が押されているか、〇番目は押されているか、押されているもの名前、押されているもののアイテム
 
     int box_up_left_x;
     int box_up_left_y;
