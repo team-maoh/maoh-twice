@@ -7,8 +7,8 @@ package com.maohx2.ina.Arrange;
 public class BagItem {
 
     int unique_id;//アイテム固有の番号
-    //    int display_id;//バッグ内での並び順
-//    int pocket_kind;//この番号のポケットに格納する
+    //int display_id;//バッグ内での並び順
+    //int pocket_kind;//この番号のポケットに格納する
     int num;//所持数
 
     public void init() {

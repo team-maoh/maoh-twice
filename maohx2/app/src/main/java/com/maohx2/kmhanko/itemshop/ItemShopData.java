@@ -1,5 +1,6 @@
 package com.maohx2.kmhanko.itemshop;
 
+import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.database.NamedDataAdmin;
@@ -15,6 +16,10 @@ import java.util.List;
 public abstract class ItemShopData<T extends ItemData> extends ItemDataAdmin<T> {
     String dbName;
     String dbAsset;
+
+    ItemShopData(Graphic _graphic, MyDatabaseAdmin my_database_admin){
+        super(_graphic, my_database_admin);
+    }
 
     public void setDatabase(MyDatabaseAdmin databaseAdmin) {
         databaseAdmin.addMyDatabase(dbName, dbAsset, 1, "r");

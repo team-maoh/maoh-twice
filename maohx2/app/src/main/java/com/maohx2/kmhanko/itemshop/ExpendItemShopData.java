@@ -1,5 +1,6 @@
 package com.maohx2.kmhanko.itemshop;
 
+import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.*;
 import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 import com.maohx2.kmhanko.database.NamedDataAdmin;
@@ -22,8 +23,8 @@ import java.util.List;
 public class ExpendItemShopData extends ItemShopData<ExpendItemData> {
     ExpendItemDataAdmin expendItemDataAdmin;
 
-    public ExpendItemShopData() {
-        super();
+    public ExpendItemShopData(Graphic _graphic, MyDatabaseAdmin my_database_admin) {
+        super(_graphic, my_database_admin);
         dbName = "ExpendItemShopDataDB";
         dbAsset = "ExpendItemShopDataDB.db";
     }
@@ -42,4 +43,7 @@ public class ExpendItemShopData extends ItemShopData<ExpendItemData> {
         List<String> names = database.getString(table_name, "item_name");
         datas = expendItemDataAdmin.getDatasByNames(names);
     }
+
+    @Override
+    public void loadItemData(String tableName) {}
 }

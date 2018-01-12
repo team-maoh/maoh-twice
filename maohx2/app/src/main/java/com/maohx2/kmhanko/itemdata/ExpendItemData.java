@@ -8,6 +8,7 @@ import com.maohx2.ina.ItemData.ItemData;
 
 public class ExpendItemData extends ItemData {
     int hp;
+    String expline;
 
     public ExpendItemData() {
         super();
@@ -17,8 +18,15 @@ public class ExpendItemData extends ItemData {
         return hp;
     }
 
+    public String getExpline() {
+        return expline;
+    }
+
     public void setHp(int _hp) {
         hp = _hp;
+    }
+    public void setExpline(String _expline) {
+        expline = _expline;
     }
 }
 
