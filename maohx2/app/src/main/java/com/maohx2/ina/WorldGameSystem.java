@@ -56,7 +56,7 @@ public class WorldGameSystem {
         //geo_slot_admin.init(map_user_interface, map_activity);
         dungeonSelectManager.init(graphic, map_user_interface, databaseAdmin);
 
-        itemDataAdminManager.init(databaseAdmin);
+        itemDataAdminManager.init(databaseAdmin,graphic);
 
         itemShopAdmin.init(graphic, map_user_interface, databaseAdmin, text_box_admin, itemDataAdminManager);
         itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.GEO_OBJECT, "debug");
