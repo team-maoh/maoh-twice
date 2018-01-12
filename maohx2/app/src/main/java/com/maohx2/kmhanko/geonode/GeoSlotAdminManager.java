@@ -81,7 +81,7 @@ public class GeoSlotAdminManager {
         GeoSlotAdmin.setDatabase(database);
 
         for(int i = 0; i < t_names.size(); i++) {
-            GeoSlotAdmin new_geo_slot_admin = new GeoSlotAdmin(graphic, userInterface);
+            GeoSlotAdmin new_geo_slot_admin = new GeoSlotAdmin(graphic, userInterface, null);//TODO: TextBoxAdminを入れる
             new_geo_slot_admin.loadDatabase(t_names.get(i));
             geoSlotAdmins.add(new_geo_slot_admin);
         }
@@ -92,7 +92,12 @@ public class GeoSlotAdminManager {
 /*
 1/12
 どうしたい？
-→条件
+→置けない判定
+→一定の条件を満たした場合に置けるようになるもの
+
+→スロットの女神ガードの解放条件
+・お金を支払う
+・一定条件を満たすジオスロットを捧げる
 
 
 

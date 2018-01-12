@@ -5,7 +5,9 @@ package com.maohx2.kmhanko.geonode;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 
 /**
@@ -18,7 +20,8 @@ public class GeoSlot {
 
     static final int GEO_SLOT_CHILDREN_MAX = 8;
     static final int SCALE = 10;
-    static GeoSlotAdmin geo_slot_admin;
+    static GeoSlotAdmin geoSlotAdmin;
+    static UserInterface userInterface;
 
     List<GeoSlot> children_slot = new ArrayList<GeoSlot>(GEO_SLOT_CHILDREN_MAX);
     GeoSlot parent_slot;
@@ -87,11 +90,19 @@ public class GeoSlot {
     public boolean isEventClear() {
         if (release_event == null) {
             return true;
+        } else {
+            //何かしらrelease_eventが設定されている
+
+            //セーブデータにアクセスし、その条件を満たしているかを確認する
+
+            //満たしているなら
+            //return true;
+            //満たしていないなら
+            return false;
         }
-        return false;
     }
 
-    //親を含めて、イベントがクリアされているかを再帰風に返す関数。
+    //親を含めて、イベントがクリアされているかを再帰風に返す関数。(つまり、このスロットよりも根元に、置いてはいけないマークがあるかどうか)
     public boolean isEventClearAll() {
         if (isEventClear()) {
             if (parent_slot != null) {
@@ -249,6 +260,32 @@ public class GeoSlot {
 
     }
 
+    public void touchEvent() {
+        if (userInterface.checkUI(getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
+            //System.out.println(userInterface.getItemID());
+            //TODO:isPushThisObject引数
+
+            //ジオオブジェクトをホールドしている時
+            if (geoSlotAdmin.isHoldGeoObject()) {
+                if (isEventClearAll() && isPushThisObject(null)) {
+                    //GeoSlotを設置する
+                    setItemID(userInterface.getItemID());
+                    setGeoObjectByItemID();
+                    geoSlotAdmin.calcGeoSlot();
+                }
+            } else {
+                //ジオオブジェクトをホールドしていない時
+                if (!isEventClear()) {
+                    //イベントがあって、イベントがクリアされていない場合
+                }
+                //スロット解放イベント
+
+
+
+            }
+        }
+    }
+
     public boolean isInGeoObject() {
         return is_in_geoObjectData;
     }
@@ -259,7 +296,8 @@ public class GeoSlot {
         return (is_in_geoObjectData && is_exist);
     }
 
-    static public void setGeoSlotAdmin(GeoSlotAdmin _geo_slot_admin) { geo_slot_admin = _geo_slot_admin; }
+    static public void setGeoSlotAdmin(GeoSlotAdmin _geoSlotAdmin) { geoSlotAdmin = _geoSlotAdmin; }
+    static public void setUserInterface(UserInterface _userInterface) { userInterface = _userInterface; }
     public void setIsExist(boolean _is_exist) {
         is_exist = _is_exist;
     }

@@ -63,7 +63,6 @@ public class WorldGameSystem {
         geoSlotAdminManager.setActiveGeoSlotAdmin("森");
 
         canvas = null;
-
     }
 
 
@@ -87,4 +86,20 @@ public class WorldGameSystem {
         graphic.draw();
     }
 }
+
+/*
+memo作業内容
+
+WorldGameSystemの中身を整理した
+いなに画面切り替えオーダー
+いなにボタンオーダー(ListBoxがButtonの配列をもち、それぞれの位置が決められる。それが画像だったりテキストだったりできて、
+ListBox<T extends Button>としてButtonを継承したButtonを作れるようにする)
+Shop,Present,GeoSlotあたりはいなのItemBag待ち
+いなのボタンができたらメニューを並べる
+いなの画面遷移ができたらメニューから遷移できるようにし、GeoWorldMapからGeoSlotMapに遷移できるようにする。
+GeoSlotMapのここに置けないとか、一定の条件を満たした場合に解放されるやつ。
+いなのセーブ機能
+
+ */
+
 

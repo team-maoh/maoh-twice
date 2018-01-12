@@ -1,5 +1,6 @@
 package com.maohx2.kmhanko.geonode;
 
+import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.UI.UserInterface;
 
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+
+import com.maohx2.kmhanko.itemdata.GeoObjectData;
 
 /**
  * Created by ina on 2017/10/08.
@@ -38,13 +41,19 @@ public class GeoSlotAdmin {
     GeoSlot grand_geo_slot; //ツリーの中心であるGeoSlot
     GeoCalcSaverAdmin geo_calc_saver_admin; //GeoSlotの計算を行い、計算結果を格納する
 
+    //TODO:ここでのGeoObjectDataは、書き換えを行うという点で少しおかしいので、変えた方がいいかもしれない
+    GeoObjectData holdGeoObject; //現在選択中のジオオブジェクトを格納する。
+
     Graphic graphic;
+    TextBoxAdmin textBoxAdmin;
 
     //Rewrite by kmhanko
-    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface) {
+    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, TextBoxAdmin _textBoxAdmin) {
         graphic = _graphic;
         user_interface = _user_interface;
+        textBoxAdmin = _textBoxAdmin;
         GeoSlot.setGeoSlotAdmin(this);
+        GeoSlot.setUserInterface(user_interface);
     }
 
     public static void setDatabase(MyDatabase _database) {
@@ -85,6 +94,7 @@ public class GeoSlotAdmin {
                 r = 40;
             }
             geo_slots.get(i).setParam(xs.get(i),ys.get(i), r);
+            //TouchIDセット
             geo_slots.get(i).setTouchID(user_interface.setCircleTouchUI(xs.get(i), ys.get(i), r+10));
 
             geo_slots.get(i).setReleaseEvent(release_events.get(i));
@@ -127,15 +137,7 @@ public class GeoSlotAdmin {
     public void update(){
         for(int i = 0; i < geo_slots.size(); i++) {
             if (geo_slots.get(i) != null) {
-                if (user_interface.checkUI(geo_slots.get(i).getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
-                    System.out.println(user_interface.getItemID());
-                    //TODO:isPushThisObject引数
-                    if (geo_slots.get(i).isEventClearAll() && geo_slots.get(i).isPushThisObject(null)) {
-                        geo_slots.get(i).setItemID(user_interface.getItemID());
-                        geo_slots.get(i).setGeoObjectByItemID();
-                        this.calcGeoSlot();
-                    }
-                }
+                geo_slots.get(i).touchEvent();
             }
         }
     }
@@ -155,7 +157,15 @@ public class GeoSlotAdmin {
     }
 
     public String getName() { return t_name; }
-
+    public GeoObjectData getHoldGeoObject() {
+        return holdGeoObject;
+    }
+    public void setHoldGeoObject(GeoObjectData geoObjectData) {
+        holdGeoObject = geoObjectData;
+    }
+    public boolean isHoldGeoObject() {
+        return holdGeoObject != null;
+    }
 
     //** Created by ina **//
 
