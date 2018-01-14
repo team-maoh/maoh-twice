@@ -15,6 +15,9 @@ import android.content.ContentValues;
 
 /**
  * Created by user on 2017/09/03.
+ * version : 1.03
+ * getOneRowID修正
+ *
  * version : 1.02
  * getOne~~,getOne~~ByRowID追加
  *
@@ -106,6 +109,7 @@ public class MyDatabase {
         return db.rawQuery(sql_script , null);
     }
     private Cursor getCursor(String t_name, String c_name) {
+        System.out.println("DatabaseDebug : "+getTables());
         return db.rawQuery("SELECT "+c_name+" FROM "+t_name+" ORDER BY rowid ASC", null);
     }
     private Cursor getCursor(String t_name, String c_name, String w_script) {
@@ -127,8 +131,13 @@ public class MyDatabase {
         if (buf.size() == 1) {
             return buf.get(0);
         } else {
-            System.out.println("☆タカノ:" + "MyDatabase.getOneRowID : Found rowids are not only one.¥n");
-            return buf.get(0);
+            if (buf.size() == 0) {
+                System.out.println("☆タカノ:" + "MyDatabase.getOneRowID : Found rowids are zero.¥n");
+                return 0;
+            } else {
+                System.out.println("☆タカノ:" + "MyDatabase.getOneRowID : Found rowids are not only one.¥n");
+                return buf.get(0);
+            }
         }
     }
 

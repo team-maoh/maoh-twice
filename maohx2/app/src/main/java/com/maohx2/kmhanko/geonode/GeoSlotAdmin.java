@@ -2,6 +2,7 @@ package com.maohx2.kmhanko.geonode;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Text.ListBox;
 import com.maohx2.ina.UI.UserInterface;
 
 // Added by kmhanko
@@ -12,6 +13,8 @@ import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
+
+import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 
 /**
  * Created by ina on 2017/10/08.
@@ -31,7 +34,8 @@ public class GeoSlotAdmin {
 
     //** Created by kmhanko **//
 
-    static MyDatabase database;
+    static MyDatabase geoSlotMapDB;
+    static MyDatabase geoSlotEventDB;
 
     public final int GEO_SLOT_MAX = 64;
     String t_name; //このGeoSlotAdmin = ジオマップの名称 = Table名
@@ -56,8 +60,11 @@ public class GeoSlotAdmin {
         GeoSlot.setUserInterface(user_interface);
     }
 
-    public static void setDatabase(MyDatabase _database) {
-        database = _database;
+    public static void setGeoSlotMapDB(MyDatabase _geoSlotMapDB) {
+        geoSlotMapDB = _geoSlotMapDB;
+    }
+    public static void setGeoSlotEventDB(MyDatabase _geoSlotEventDB) {
+        geoSlotEventDB = _geoSlotEventDB;
     }
 
     //ジオスロットの並びを表すツリーコードを用いて、GeoSlotのインスタンス化を行う。
@@ -78,13 +85,13 @@ public class GeoSlotAdmin {
         geo_slots = grand_geo_slot.getGeoSlots();
 
         //各GeoSlotの初期化
-        List<Integer> xs = database.getInt(t_name, "x");
-        List<Integer> ys = database.getInt(t_name, "y");
-        List<String> release_events = database.getString(t_name, "release_event");
-        List<String> restrictions = database.getString(t_name, "restriction");
+        List<Integer> xs = geoSlotMapDB.getInt(t_name, "x");
+        List<Integer> ys = geoSlotMapDB.getInt(t_name, "y");
+        List<String> release_events = geoSlotMapDB.getString(t_name, "release_event");
+        List<String> restrictions = geoSlotMapDB.getString(t_name, "restriction");
         int r;
 
-        GeoSlot.staticInit(graphic);
+        GeoSlot.staticInit(graphic, user_interface, this, textBoxAdmin, geoSlotEventDB);
 
         for(int i = 0; i < geo_slots.size(); i++) {
             //TODO:根の表示も適当
@@ -137,7 +144,7 @@ public class GeoSlotAdmin {
     public void update(){
         for(int i = 0; i < geo_slots.size(); i++) {
             if (geo_slots.get(i) != null) {
-                geo_slots.get(i).touchEvent();
+                geo_slots.get(i).update();
             }
         }
     }
@@ -152,8 +159,11 @@ public class GeoSlotAdmin {
         }
     }
 
+
+
+
     private List<Integer> getTreeCode() {
-        return database.getInt(t_name, "children_num");
+        return geoSlotMapDB.getInt(t_name, "children_num");
     }
 
     public String getName() { return t_name; }

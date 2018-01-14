@@ -5,9 +5,12 @@ package com.maohx2.kmhanko.geonode;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.Text.ListBox;
 import com.maohx2.ina.UI.UserInterface;
+import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 
 /**
@@ -22,6 +25,8 @@ public class GeoSlot {
     static final int SCALE = 10;
     static GeoSlotAdmin geoSlotAdmin;
     static UserInterface userInterface;
+    static TextBoxAdmin textBoxAdmin;
+    static MyDatabase geoSlotEventDB;
 
     List<GeoSlot> children_slot = new ArrayList<GeoSlot>(GEO_SLOT_CHILDREN_MAX);
     GeoSlot parent_slot;
@@ -36,13 +41,24 @@ public class GeoSlot {
 
     GeoObjectData geoObjectData;
 
+    //TODO:デバッグ用。セーブデータの用意が必要
+    boolean isReleased = false;
+
+    int textBoxID;
+    boolean isReleaseListActive = false;
+    ListBox releaseList;//解放する/やめる　の選択
+
     public GeoSlot() {
         item_id = -1;
         is_exist = true;
     }
 
-    static public void staticInit(Graphic _graphic) {
+    static public void staticInit(Graphic _graphic, UserInterface _userInterface, GeoSlotAdmin _geoSlotAdmin, TextBoxAdmin _textBoxAdmin, MyDatabase _geoSlotEventDB) {
         graphic = _graphic;
+        userInterface = _userInterface;
+        geoSlotAdmin = _geoSlotAdmin;
+        textBoxAdmin = _textBoxAdmin;
+        geoSlotEventDB = _geoSlotEventDB;
     }
 
     //GeoSlotのツリーコードを元に、GeoSlotのインスタンス化を行う。再帰ライクに生成する。
@@ -98,7 +114,14 @@ public class GeoSlot {
             //満たしているなら
             //return true;
             //満たしていないなら
-            return false;
+            //return false;
+
+            //TODO:デバッグ用　とりあえずSlot自身が一時的にイベントがクリアされたかの変数を持つことにする
+            if (isReleased == true) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -260,6 +283,79 @@ public class GeoSlot {
 
     }
 
+    public void update() {
+        touchEvent();
+
+        if (isReleaseListActive) {
+            releaseList.update();
+            int content = releaseList.checkTouchContent();
+            switch (content) {
+                case (0)://解放する
+                    //解放するための色々な処理
+                    geoSlotRelease();
+                    break;
+                case (1)://やめる
+                    isReleaseListActive = false;
+                    break;
+            }
+        }
+    }
+
+    //GeoSlotを解放しますか？的なもの
+    public void geoSlotReleaseChoice() {
+        if (!isEventClear()) {
+            //TextBox表示「ここを解放するためには　？？？　が必要」
+            textBoxID = textBoxAdmin.createTextBox(50,600,550,800,2);
+            textBoxAdmin.bookingDrawText(textBoxID, "このスロットを解放するには");
+            textBoxAdmin.bookingDrawText(textBoxID, "\n");
+            textBoxAdmin.bookingDrawText(textBoxID, release_event);//TODO:イベント名そのままになっているが、これは仮
+            textBoxAdmin.bookingDrawText(textBoxID, "が必要です。");
+
+            //「解放する」「解放しない」ボタン表示　→　ListBox<Button>の完成待ち
+            releaseList = new ListBox();
+            releaseList.init(userInterface,graphic, Constants.Touch.TouchWay.DOWN_MOMENT, 2 , 1200, 50, 1500, 50 + 100 * 2);
+            releaseList.setContent(0, "解放する");
+            releaseList.setContent(1, "やめる");
+            isReleaseListActive = true;
+        }
+    }
+
+    //GeoSlot解放のデータ的処理
+    public void geoSlotRelease() {
+        if (!isEventClear()) {
+            //GeoSlotEvent.DBを参照し、release_eventと一致するものを探し、そのTable名で分岐して処理
+            List<String> tableName = geoSlotEventDB.getTables();
+
+            int rowid;
+            String eventGroupName = null;
+            for(int i = 0; i < tableName.size(); i++) {
+                rowid = geoSlotEventDB.getOneRowID(tableName.get(i), "'name' = " + release_event);
+                if (rowid > 0) {
+                    //該当イベントが存在した
+                    eventGroupName = tableName.get(i);
+                    break;
+                }
+            }
+            if (eventGroupName == null) {
+                throw new Error("☆タカノ : GeoSlot#geoSlotRelease 該当する解放イベント名がDB上に存在しない : " + release_event);
+            }
+
+            if (eventGroupName == "Money") {
+                //プレイヤーの所持金をチェック、必要金額以上あれば減らす。
+                System.out.println("GeoSlot#geoSlotRelease　金を支払う　" + release_event);
+            }
+            if (eventGroupName == "GeoObject") {
+                //プレイヤーの所持GeoObjectを表示、選択させるイベントを発生させる。
+                System.out.println("GeoSlot#geoSlotRelease　ジオオブジェクトを支払う　" + release_event);
+            }
+
+            //色々あって解決した場合
+            isReleased = true;
+        }
+    }
+
+
+
     public void touchEvent() {
         if (userInterface.checkUI(getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
             //System.out.println(userInterface.getItemID());
@@ -275,13 +371,7 @@ public class GeoSlot {
                 }
             } else {
                 //ジオオブジェクトをホールドしていない時
-                if (!isEventClear()) {
-                    //イベントがあって、イベントがクリアされていない場合
-                }
-                //スロット解放イベント
-
-
-
+                geoSlotReleaseChoice();
             }
         }
     }
@@ -298,6 +388,7 @@ public class GeoSlot {
 
     static public void setGeoSlotAdmin(GeoSlotAdmin _geoSlotAdmin) { geoSlotAdmin = _geoSlotAdmin; }
     static public void setUserInterface(UserInterface _userInterface) { userInterface = _userInterface; }
+    static public void setTextBoxAdmin(TextBoxAdmin _textBoxAdmin) { textBoxAdmin = _textBoxAdmin; }
     public void setIsExist(boolean _is_exist) {
         is_exist = _is_exist;
     }

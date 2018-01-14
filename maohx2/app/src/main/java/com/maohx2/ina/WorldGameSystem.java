@@ -42,7 +42,7 @@ public class WorldGameSystem {
 
         text_box_admin = new TextBoxAdmin(graphic);
         //list_box_admin = new ListBoxAdmin();
-        geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, databaseAdmin);
+        geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, databaseAdmin, text_box_admin);
         //geo_slot_admin = new GeoSlotAdmin();
         dungeonSelectManager = new DungeonSelectManager();
 
@@ -67,21 +67,21 @@ public class WorldGameSystem {
 
 
     public void updata() {
-        geoSlotAdminManager.update();
+        //geoSlotAdminManager.update();
         //map_user_interface.update();
         //dungeonSelectManager.update();
         //itemShopAdmin.update();
-        //text_box_admin.update();
+        text_box_admin.update();
     }
 
 
     public void draw() {
 
-        geoSlotAdminManager.draw();
+        //geoSlotAdminManager.draw();
 
         //dungeonSelectManager.draw();
         //itemShopAdmin.draw();
-        //text_box_admin.draw();
+        text_box_admin.draw();
 
         graphic.draw();
     }

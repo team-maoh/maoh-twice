@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.ina.Draw.Graphic;
@@ -19,6 +20,9 @@ public class GeoSlotAdminManager {
     static final String DB_NAME_GEOSLOTMAP = "GeoSlotMapDB";
     static final String DB_ASSET_GEOSLOTMAP = "GeoSlotMapDB.db";
 
+    static final String DB_NAME_GEOSLOTEVENT = "GeoSlotEventDB";
+    static final String DB_ASSET_GEOSLOTEVENT = "GeoSlotEvent.db";
+
     public final int GEO_SLOT_ADMIN_MAX = 16;
     List<GeoSlotAdmin> geoSlotAdmins = new ArrayList<GeoSlotAdmin>(GEO_SLOT_ADMIN_MAX);
     GeoSlotAdmin activeGeoSlotAdmin;
@@ -26,13 +30,15 @@ public class GeoSlotAdminManager {
     MyDatabaseAdmin databaseAdmin;
     Graphic graphic;
     UserInterface userInterface;
+    TextBoxAdmin textBoxAdmin;
 
     boolean is_load_database;
 
-    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin _databaseAdmin) {
+    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin) {
         graphic = _graphic;
         userInterface = _userInterface;
         databaseAdmin = _databaseAdmin;
+        textBoxAdmin = _textBoxAdmin;
         addDatabase();
 
         this.loadGeoSlotDatabase();
@@ -68,6 +74,7 @@ public class GeoSlotAdminManager {
 
     public void addDatabase() {
         databaseAdmin.addMyDatabase(DB_NAME_GEOSLOTMAP, DB_ASSET_GEOSLOTMAP, 1, "r");
+        databaseAdmin.addMyDatabase(DB_NAME_GEOSLOTEVENT, DB_ASSET_GEOSLOTEVENT, 1, "r");
     }
 
     public void loadGeoSlotDatabase() {
@@ -76,12 +83,16 @@ public class GeoSlotAdminManager {
         }
         is_load_database = true;
 
-        MyDatabase database = databaseAdmin.getMyDatabase(DB_NAME_GEOSLOTMAP);
-        List<String> t_names = database.getTables();
-        GeoSlotAdmin.setDatabase(database);
+        MyDatabase geoSlotMapDB = databaseAdmin.getMyDatabase(DB_NAME_GEOSLOTMAP);
+        MyDatabase geoSlotEventDB = databaseAdmin.getMyDatabase(DB_NAME_GEOSLOTEVENT);
+
+        List<String> t_names = geoSlotMapDB.getTables();
+
+        GeoSlotAdmin.setGeoSlotMapDB(geoSlotMapDB);
+        GeoSlotAdmin.setGeoSlotEventDB(geoSlotEventDB);
 
         for(int i = 0; i < t_names.size(); i++) {
-            GeoSlotAdmin new_geo_slot_admin = new GeoSlotAdmin(graphic, userInterface, null);//TODO: TextBoxAdminを入れる
+            GeoSlotAdmin new_geo_slot_admin = new GeoSlotAdmin(graphic, userInterface, textBoxAdmin);
             new_geo_slot_admin.loadDatabase(t_names.get(i));
             geoSlotAdmins.add(new_geo_slot_admin);
         }
