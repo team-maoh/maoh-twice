@@ -52,22 +52,29 @@ public class ItemShopAdmin {
         textBoxAdmin = _textBoxAdmin;
 
         expendItemShopData = new ExpendItemShopData(graphic, myDatabaseAdmin);
-        expendItemShopData.init(itemDataAdminManager.getExpendItemDataAdmin(), myDatabaseAdmin);
+        expendItemShopData.setExpendItemDataAdmin(itemDataAdminManager.getExpendItemDataAdmin());
 
         geoObjectShopData = new GeoObjectShopData(graphic, myDatabaseAdmin);
-        geoObjectShopData.init(itemDataAdminManager.getGeoObjectDataAdmin(), myDatabaseAdmin);
+        geoObjectShopData.setGeoObjectDataAdmin(itemDataAdminManager.getGeoObjectDataAdmin());
     }
 
     public void makeItemShop(ITEM_KIND _itemKind, String _tableName) {
+        boolean itemKindFlag = false;
+
         if (_itemKind == ITEM_KIND.EXPEND) {
             itemShop = new ExpendItemShop();
             itemShop.init(userInterface, graphic, textBoxAdmin);
             itemShop.setItemShopData(expendItemShopData);
+            itemKindFlag = true;
         }
         if (_itemKind == ITEM_KIND.GEO_OBJECT) {
             itemShop = new GeoObjectShop();
             itemShop.init(userInterface, graphic, textBoxAdmin);
             itemShop.setItemShopData(geoObjectShopData);
+            itemKindFlag = true;
+        }
+        if (!itemKindFlag) {
+            throw new Error("ItemShopAdmin#makeItemShop : ☆タカノ itemKindが不適切 : " + _itemKind);
         }
         itemShop.loadShopData(_tableName);
         itemShop.setList();

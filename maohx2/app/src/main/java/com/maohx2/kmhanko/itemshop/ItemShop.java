@@ -57,7 +57,7 @@ public abstract class ItemShop {
         try {
             itemShopData.loadShopData(table_name);
         } catch(NullPointerException e) {
-            throw new Error("︎タカノ:ItemShop#loadShopData :" + e);
+            throw new Error(e);
         }
     }
 

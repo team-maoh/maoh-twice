@@ -23,19 +23,15 @@ import java.util.List;
 public class ExpendItemShopData extends ItemShopData<ExpendItemData> {
     ExpendItemDataAdmin expendItemDataAdmin;
 
-    public ExpendItemShopData(Graphic _graphic, MyDatabaseAdmin my_database_admin) {
-        super(_graphic, my_database_admin);
+    public ExpendItemShopData(Graphic _graphic, MyDatabaseAdmin _databaseAdmin) {
+        super(_graphic, _databaseAdmin);
         dbName = "ExpendItemShopDataDB";
         dbAsset = "ExpendItemShopDataDB.db";
+        setDatabase();
     }
 
-    public void init(ExpendItemDataAdmin _expendItemDataAdmin) {
+    public void setExpendItemDataAdmin(ExpendItemDataAdmin _expendItemDataAdmin) {
         expendItemDataAdmin = _expendItemDataAdmin;
-    }
-
-    public void init(ExpendItemDataAdmin _expendItemDataAdmin, MyDatabaseAdmin database_admin) {
-        setDatabase(database_admin);
-        this.init(_expendItemDataAdmin);
     }
 
     @Override
@@ -43,7 +39,4 @@ public class ExpendItemShopData extends ItemShopData<ExpendItemData> {
         List<String> names = database.getString(table_name, "item_name");
         datas = expendItemDataAdmin.getDatasByNames(names);
     }
-
-    @Override
-    public void loadItemData(String tableName) {}
 }

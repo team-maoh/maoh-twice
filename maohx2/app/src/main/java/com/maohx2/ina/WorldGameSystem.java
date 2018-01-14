@@ -67,7 +67,7 @@ public class WorldGameSystem {
 
 
     public void updata() {
-        //geoSlotAdminManager.update();
+        geoSlotAdminManager.update();
         //map_user_interface.update();
         //dungeonSelectManager.update();
         //itemShopAdmin.update();
@@ -77,7 +77,7 @@ public class WorldGameSystem {
 
     public void draw() {
 
-        //geoSlotAdminManager.draw();
+        geoSlotAdminManager.draw();
 
         //dungeonSelectManager.draw();
         //itemShopAdmin.draw();
