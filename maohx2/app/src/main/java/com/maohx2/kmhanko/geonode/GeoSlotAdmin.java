@@ -66,7 +66,9 @@ public class GeoSlotAdmin {
         GeoSlot.setUserInterface(userInterface);
 
         //TextBoxなどの初期化
-        releaseTextBoxID = textBoxAdmin.createTextBox(950,600,1450,800,2);
+        releaseTextBoxID = textBoxAdmin.createTextBox(650,600,1450,800,2);
+        textBoxAdmin.setTextBoxUpdateTextByTouching(releaseTextBoxID, false);
+        textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
         //textBoxAdmin.hideTextBox(releaseTextBoxID);
     }
 
@@ -152,14 +154,21 @@ public class GeoSlotAdmin {
 
     //GeoSlotを解放しますか？的なもの
     public void geoSlotReleaseChoice() {
+        isReleaseListActive = false;
+        textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
+
         if (!focusGeoSlot.isEventClear()) {
             //TextBox表示「ここを解放するためには　？？？　が必要」
 
-            //textBoxAdminHide解消
+            textBoxAdmin.setTextBoxExists(releaseTextBoxID, true);
+
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "このスロットを解放するには");
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "\n");
             textBoxAdmin.bookingDrawText(releaseTextBoxID, focusGeoSlot.getReleaseEvent());//TODO:イベント名そのままになっているが、これは仮
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "が必要です。");
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, "MOP");
+
+            textBoxAdmin.updateText(releaseTextBoxID);
 
             //「解放する」「解放しない」ボタン表示　→　ListBox<Button>の完成待ち
             releaseList = new ListBox();
@@ -186,10 +195,12 @@ public class GeoSlotAdmin {
                 case (0)://解放する
                     //解放するための色々な処理
                     focusGeoSlot.geoSlotRelease();
+                    isReleaseListActive = false;
+                    textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
                     break;
                 case (1)://やめる
                     isReleaseListActive = false;
-                    //textBoxAdmin.hideTextBox(releaseTextBoxID);
+                    textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
                     break;
             }
         }

@@ -43,6 +43,9 @@ public class WorldGameSystem {
         text_box_admin = new TextBoxAdmin(graphic);
         text_box_admin.init(map_user_interface);
 
+        text_box_admin.setTextBoxExists(0,false);
+        text_box_admin.setTextBoxExists(1,false);
+
         //list_box_admin = new ListBoxAdmin();
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, databaseAdmin, text_box_admin);
         //geo_slot_admin = new GeoSlotAdmin();
@@ -58,9 +61,7 @@ public class WorldGameSystem {
         itemDataAdminManager.init(databaseAdmin,graphic);
 
         itemShopAdmin.init(graphic, map_user_interface, databaseAdmin, text_box_admin, itemDataAdminManager);
-        itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.GEO_OBJECT, "debug");
-
-
+        //itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.GEO_OBJECT, "debug");
 
         geoSlotAdminManager.setActiveGeoSlotAdmin("森");
 
