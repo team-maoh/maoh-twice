@@ -10,6 +10,7 @@ import com.maohx2.ina.Constants;
 import com.maohx2.ina.Constants.Touch.TouchState;
 import com.maohx2.ina.Constants.Touch.TouchWay;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
 
@@ -19,7 +20,7 @@ import com.maohx2.ina.UI.UserInterface;
 
 public class ListBox {
 
-//todo:何番目が押されているか、〇番目は押されているか、押されているもの名前、押されているもののアイテム
+    //todo:何番目が押されているか、〇番目は押されているか、押されているもの名前、押されているもののアイテム
 
     int box_up_left_x;
     int box_up_left_y;
@@ -33,7 +34,7 @@ public class ListBox {
     int select_content_num;
     int selected_content_num;
     String content[];
-    String item_content[];//todo:itemdataクラスにする
+    ItemData item_content[];//todo:itemdataクラスにする
     Paint paint;
     UserInterface user_interface;
     Graphic graphic;
@@ -72,23 +73,24 @@ public class ListBox {
         for(int i = 0; i < content_num; i++){
             content[i] = "初期化してなくね？";
         }
+
+        item_content = new ItemData[content_num];
     }
 
-    public String getContent(int content_index){
-        return content[content_index];
-    }
+    public String getContent(int content_index){return content[content_index];}
 
     public void setContent(int content_index, String _content){
         content[content_index] = _content;
     }
 
-    public String getItemContent(int content_index){
-        return item_content[content_index];//todo:item_data型にする
+    public ItemData getItemContent(int content_index){
+        return item_content[content_index];
     }
 
-    public void setItemContent(int content_index, String _item_content){
-        item_content[content_index] = _item_content;//todo:item_data型にする
-        content[content_index] = _item_content;//todo:item_data型にしてnameだけを取り出す
+    public void setItemContent(int content_index,ItemData add_item_data){
+
+        item_content[content_index] = add_item_data;
+        content[content_index] = add_item_data.getName();
     }
 
 
@@ -106,7 +108,6 @@ public class ListBox {
             graphic.bookingDrawRect(up_left.x, up_left.y + content_height * i, down_right.x, up_left.y + content_height * (i + 1), paint);
             paint.setColor(Color.argb(255, 0, 0, 0));
             graphic.bookingDrawText(content[i], up_left.x, up_left.y + content_height * (i + 1) - content_height/4, paint);
-
         }
 
         if(selected_content_num != -1) {

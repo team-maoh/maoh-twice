@@ -51,10 +51,10 @@ public class ItemShopAdmin {
         graphic = _graphic;
         textBoxAdmin = _textBoxAdmin;
 
-        expendItemShopData = new ExpendItemShopData();
+        expendItemShopData = new ExpendItemShopData(graphic, myDatabaseAdmin);
         expendItemShopData.init(itemDataAdminManager.getExpendItemDataAdmin(), myDatabaseAdmin);
 
-        geoObjectShopData = new GeoObjectShopData();
+        geoObjectShopData = new GeoObjectShopData(graphic, myDatabaseAdmin);
         geoObjectShopData.init(itemDataAdminManager.getGeoObjectDataAdmin(), myDatabaseAdmin);
     }
 

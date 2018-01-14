@@ -1,6 +1,7 @@
 package com.maohx2.kmhanko.itemdata;
 
 
+import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.ItemDataAdmin;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import java.util.List;
@@ -11,8 +12,8 @@ import java.util.List;
 
 public class GeoObjectDataAdmin extends ItemDataAdmin<GeoObjectData> {
 
-    public GeoObjectDataAdmin() {
-        super();
+    public GeoObjectDataAdmin(Graphic _graphic, MyDatabaseAdmin databaseAdmin) {
+        super(_graphic, databaseAdmin);
         dbName = "GeoObjectDataDB";
         dbAsset = "GeoObjectDataDB.db";
         tableName = "debug";
@@ -45,7 +46,7 @@ public class GeoObjectDataAdmin extends ItemDataAdmin<GeoObjectData> {
         }
 
         //呼び忘れないように注意
-        super.loadItemData(table_name);
+        //super.loadItemData(table_name);
     }
 
 }
