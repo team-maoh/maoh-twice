@@ -64,7 +64,7 @@ public class TextBox {
     boolean has_updated_text;//一度のタッチで文章が何度も切り替わらないようにするための変数
 
     //デバッグ用
-    int tmp_first;
+//    int tmp_first;
 
     Graphic graphic;
 
@@ -109,9 +109,10 @@ public class TextBox {
         num_of_lines = 0;
         begin_column = 0;
 
-        tmp_first = 0;
+//        tmp_first = 0;
 
         exists = true;
+
     }
 
     public void init() {
@@ -126,6 +127,8 @@ public class TextBox {
             if (has_updated_text == false) {
                 if (first != last) {//文章キューが空でなかったら、
 
+                    int tmp_first = first;
+
                     //次に表示する文章の冒頭まで first をずらす
                     while (!(queue[first].isMOP() == true && queue[(first - 1 + MAX_QUEUE_TEXT) % MAX_QUEUE_TEXT].isMOP() == false)) {
                         first = (first + 1) % MAX_QUEUE_TEXT;//firstを１個進める
@@ -134,15 +137,21 @@ public class TextBox {
                         first = (first + 1) % MAX_QUEUE_TEXT;//firstを１個進める
                     }
 
+                    for (; tmp_first != first; tmp_first = (tmp_first + 1) % MAX_QUEUE_TEXT) {
+                        queue[tmp_first].initSentence();
+                    }
+
                 }
 
                 has_updated_text = true;
-//                System.out.println("first = " + first);
 
             }
         } else {//タッチしている
             box_paint.setColor(Color.argb(100, 100, 0, 0));
             has_updated_text = false;
+
+//            System.out.println("ヲヲヲ"+box_id);
+
         }
     }
 
@@ -282,13 +291,14 @@ public class TextBox {
             System.out.println("first");
         }
 
-        if (tmp_first != first) {
-            for (int i = 0; i < MAX_QUEUE_TEXT; i++) {
-                System.out.println(queue[i].getSentence());
-            }
-            System.out.println("■");
-            tmp_first = first;
-        }
+        //デバッグ用
+//        if (tmp_first != first) {
+//            for (int i = 0; i < MAX_QUEUE_TEXT; i++) {
+//                System.out.println(queue[i].getSentence());
+//            }
+//            System.out.println("■");
+//            tmp_first = first;
+//        }
     }
 
     public int getTouchID() {

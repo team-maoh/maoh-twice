@@ -40,7 +40,7 @@ public class TextBoxAdmin {
 
         createTextBox(100.0, 550.0, 800.0, 750.0, ROW_OF_BOX);
 
-//        createTextBox(80.0, 150.0, 400.0, 350.0, 2);
+        createTextBox(80.0, 150.0, 400.0, 350.0, 2);
 
         frame_count = 0;
     }
@@ -56,7 +56,9 @@ public class TextBoxAdmin {
         blue_paint.setTextSize(40);
         blue_paint.setColor(Color.BLUE);
 
-        frame_count = (frame_count + 1) % 300;
+//        frame_count = (frame_count + 1) % 300;
+
+        frame_count++;
 
         if (frame_count % 50 == 0) {
 
@@ -98,6 +100,7 @@ public class TextBoxAdmin {
             bookingDrawText(0, frame_count + "ダメージを受けた!!", text_paint);
             bookingDrawText(0, "MOP", text_paint);
 
+
 //            bookingDrawText(1, "test", text_paint);
 //            bookingDrawText(1, "\n", text_paint);
 //            bookingDrawText(1, "desu", text_paint);
@@ -107,6 +110,7 @@ public class TextBoxAdmin {
 //            bookingDrawText(1, "\n", text_paint);
 //            bookingDrawText(1, "です", text_paint);
 //            bookingDrawText(1, "MOP", text_paint);
+
 
 //            text_box[0].inputText("行数が多すぎる文章の例1", text_paint);
 //            text_box[0].inputText("\n", text_paint);
