@@ -17,6 +17,7 @@ import android.content.ContentValues;
  * Created by user on 2017/09/03.
  * version : 1.03
  * getOneRowID修正
+ * getIntバグ修正
  *
  * version : 1.02
  * getOne~~,getOne~~ByRowID追加
@@ -87,7 +88,7 @@ public class MyDatabase {
     }
 
     //'をつけた文字列を返す関数
-    public String s_quo (String str) {
+    public static String s_quo (String str) {
         return "'"+str+"'";
     }
 
@@ -154,7 +155,7 @@ public class MyDatabase {
         List<Integer> buf = new ArrayList<Integer>();
         //該当要素が存在しない場合
         if (c.getCount() == 0) {
-            return null;
+            return buf;
         }
         boolean isEof = c.moveToFirst();
         while (isEof) {

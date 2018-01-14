@@ -41,6 +41,8 @@ public class WorldGameSystem {
 
 
         text_box_admin = new TextBoxAdmin(graphic);
+        text_box_admin.init(map_user_interface);
+
         //list_box_admin = new ListBoxAdmin();
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, databaseAdmin, text_box_admin);
         //geo_slot_admin = new GeoSlotAdmin();
@@ -50,7 +52,7 @@ public class WorldGameSystem {
         itemShopAdmin = new ItemShopAdmin();
 
 
-        text_box_admin.init(map_user_interface);
+
         dungeonSelectManager.init(graphic, map_user_interface, databaseAdmin);
 
         itemDataAdminManager.init(databaseAdmin,graphic);

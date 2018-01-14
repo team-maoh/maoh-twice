@@ -23,7 +23,7 @@ public class GeoSlot {
 
     static final int GEO_SLOT_CHILDREN_MAX = 8;
     static final int SCALE = 10;
-    static GeoSlotAdmin geoSlotAdmin;
+    GeoSlotAdmin geoSlotAdmin;//staticにしてはならない。いくつかのGeoSlotAdminがあるため。
     static UserInterface userInterface;
     static TextBoxAdmin textBoxAdmin;
     static MyDatabase geoSlotEventDB;
@@ -44,19 +44,15 @@ public class GeoSlot {
     //TODO:デバッグ用。セーブデータの用意が必要
     boolean isReleased = false;
 
-    int textBoxID;
-    boolean isReleaseListActive = false;
-    ListBox releaseList;//解放する/やめる　の選択
-
-    public GeoSlot() {
+    public GeoSlot(GeoSlotAdmin _geoSlotAdmin) {
         item_id = -1;
         is_exist = true;
+        geoSlotAdmin = _geoSlotAdmin;
     }
 
-    static public void staticInit(Graphic _graphic, UserInterface _userInterface, GeoSlotAdmin _geoSlotAdmin, TextBoxAdmin _textBoxAdmin, MyDatabase _geoSlotEventDB) {
+    static public void staticInit(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, MyDatabase _geoSlotEventDB) {
         graphic = _graphic;
         userInterface = _userInterface;
-        geoSlotAdmin = _geoSlotAdmin;
         textBoxAdmin = _textBoxAdmin;
         geoSlotEventDB = _geoSlotEventDB;
     }
@@ -72,7 +68,7 @@ public class GeoSlot {
         tree_code.remove(0);
 
         for (int i = 0; i < size; i++) {
-            children_slot.add(new GeoSlot());
+            children_slot.add(new GeoSlot(geoSlotAdmin));
             tree_code = children_slot.get(children_slot.size() - 1).makeGeoSlotInstance(tree_code, this);
         }
         return tree_code;
@@ -269,55 +265,25 @@ public class GeoSlot {
         */
     }
 
-    public void draw() {
-        graphic.bookingDrawBitmapName("apple", position_x, position_y, SCALE, SCALE, 0, 255, true);
+    public void draw(boolean isFocused) {
+        if (isFocused) {
+            graphic.bookingDrawBitmapName("apple", position_x, position_y, SCALE*1.5f, SCALE*1.5f, 0, 255, false);
+        } else {
+            graphic.bookingDrawBitmapName("apple", position_x, position_y, SCALE, SCALE, 0, 255, false);
+        }
 
         if (is_in_geoObjectData && geoObjectData != null) {
             //TODO: geoObjectDataの画像名を獲得する
-            graphic.bookingDrawBitmapName("neco", position_x, position_y, SCALE, SCALE, 0, 255, true);
+            graphic.bookingDrawBitmapName("neco", position_x, position_y, SCALE, SCALE, 0, 255, false);
         }
 
         if (!isEventClear()) {
-            graphic.bookingDrawBitmapName("banana", position_x, position_y, SCALE, SCALE, 0, 255, true);
+            graphic.bookingDrawBitmapName("banana", position_x, position_y, SCALE, SCALE, 0, 255, false);
         }
-
     }
 
     public void update() {
         touchEvent();
-
-        if (isReleaseListActive) {
-            releaseList.update();
-            int content = releaseList.checkTouchContent();
-            switch (content) {
-                case (0)://解放する
-                    //解放するための色々な処理
-                    geoSlotRelease();
-                    break;
-                case (1)://やめる
-                    isReleaseListActive = false;
-                    break;
-            }
-        }
-    }
-
-    //GeoSlotを解放しますか？的なもの
-    public void geoSlotReleaseChoice() {
-        if (!isEventClear()) {
-            //TextBox表示「ここを解放するためには　？？？　が必要」
-            textBoxID = textBoxAdmin.createTextBox(50,600,550,800,2);
-            textBoxAdmin.bookingDrawText(textBoxID, "このスロットを解放するには");
-            textBoxAdmin.bookingDrawText(textBoxID, "\n");
-            textBoxAdmin.bookingDrawText(textBoxID, release_event);//TODO:イベント名そのままになっているが、これは仮
-            textBoxAdmin.bookingDrawText(textBoxID, "が必要です。");
-
-            //「解放する」「解放しない」ボタン表示　→　ListBox<Button>の完成待ち
-            releaseList = new ListBox();
-            releaseList.init(userInterface,graphic, Constants.Touch.TouchWay.DOWN_MOMENT, 2 , 1200, 50, 1500, 50 + 100 * 2);
-            releaseList.setContent(0, "解放する");
-            releaseList.setContent(1, "やめる");
-            isReleaseListActive = true;
-        }
     }
 
     //GeoSlot解放のデータ的処理
@@ -329,7 +295,7 @@ public class GeoSlot {
             int rowid;
             String eventGroupName = null;
             for(int i = 0; i < tableName.size(); i++) {
-                rowid = geoSlotEventDB.getOneRowID(tableName.get(i), "'name' = " + release_event);
+                rowid = geoSlotEventDB.getOneRowID(tableName.get(i), "name = " + MyDatabase.s_quo(release_event));
                 if (rowid > 0) {
                     //該当イベントが存在した
                     eventGroupName = tableName.get(i);
@@ -361,6 +327,8 @@ public class GeoSlot {
             //System.out.println(userInterface.getItemID());
             //TODO:isPushThisObject引数
 
+            geoSlotAdmin.setFocusGeoSlot(this);
+
             //ジオオブジェクトをホールドしている時
             if (geoSlotAdmin.isHoldGeoObject()) {
                 if (isEventClearAll() && isPushThisObject(null)) {
@@ -371,7 +339,7 @@ public class GeoSlot {
                 }
             } else {
                 //ジオオブジェクトをホールドしていない時
-                geoSlotReleaseChoice();
+                geoSlotAdmin.geoSlotReleaseChoice();
             }
         }
     }
@@ -386,7 +354,7 @@ public class GeoSlot {
         return (is_in_geoObjectData && is_exist);
     }
 
-    static public void setGeoSlotAdmin(GeoSlotAdmin _geoSlotAdmin) { geoSlotAdmin = _geoSlotAdmin; }
+    public void setGeoSlotAdmin(GeoSlotAdmin _geoSlotAdmin) { geoSlotAdmin = _geoSlotAdmin; }
     static public void setUserInterface(UserInterface _userInterface) { userInterface = _userInterface; }
     static public void setTextBoxAdmin(TextBoxAdmin _textBoxAdmin) { textBoxAdmin = _textBoxAdmin; }
     public void setIsExist(boolean _is_exist) {
