@@ -1,6 +1,7 @@
 package com.maohx2.fuusya;
 
 import android.graphics.Bitmap;
+import android.icu.text.SymbolTable;
 import android.view.SurfaceHolder;
 
 import com.maohx2.horie.map.Camera;
@@ -15,6 +16,7 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import static java.lang.Math.PI;
 import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.pow;
@@ -175,6 +177,8 @@ public class MapPlayer extends MapUnit {
             //壁との衝突を考慮した上で、１歩進む
             walkOneStep();
 
+            updateDirOnMap(touch_w_x, touch_w_y);
+
             //(x, y)を格納
             chase_x[chase_num] = w_x;
             chase_y[chase_num] = w_y;
@@ -304,12 +308,6 @@ public class MapPlayer extends MapUnit {
         return w_y;
     }
 
-//    public double getChaseWorldX() {
-//        return chase_x[chase_num];
-//    }
-//
-//    public double getChaseWorldY() {
-//        return chase_y[chase_num];
-//    }
+
 
 }

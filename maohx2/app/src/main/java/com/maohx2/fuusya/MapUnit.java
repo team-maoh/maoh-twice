@@ -55,14 +55,11 @@ public class MapUnit extends MapObject {
     public void update() {
     }
 
-    public void updateDirOnMap() {
+    public void updateDirOnMap(double next_w_x, double next_w_y) {
 
-        dir_on_map = (dir_on_map + PI / 10);
-        if (dir_on_map >=  PI) {
-            dir_on_map = 0;
+        if(next_w_x != w_x || next_w_y != w_y) {
+            //dir_on_map = [0, 2*PI)
+            dir_on_map = (2 * PI - atan2(next_w_y - w_y, next_w_x - w_x)) % (2 * PI);
         }
-
-//        dir_on_map = atan2(dy, dx) + PI;
-
     }
 }

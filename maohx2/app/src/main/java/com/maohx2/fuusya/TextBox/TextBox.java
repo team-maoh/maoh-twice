@@ -62,6 +62,7 @@ public class TextBox {
     int begin_column;//　　　 〃 　　　開始位置を保持
 
     boolean has_updated_text;//一度のタッチで文章が何度も切り替わらないようにするための変数
+    boolean update_text_by_touching;
 
     //デバッグ用
 //    int tmp_first;
@@ -70,9 +71,10 @@ public class TextBox {
 
     boolean exists;//自分自身が画面に表示されているかどうか
 
-    public TextBox(Graphic _graphic, int _touch_id, int _box_id, double _box_left, double _box_top, double _box_right, double _box_down, int _row_of_box) {
+    public TextBox(Graphic _graphic, int _touch_id, int _box_id, boolean _update_text_by_touching, double _box_left, double _box_top, double _box_right, double _box_down, int _row_of_box) {
         graphic = _graphic;
         box_id = _box_id;
+        update_text_by_touching = _update_text_by_touching;
 
         box_left = (int) _box_left;
         box_top = (int) _box_top;
@@ -116,7 +118,6 @@ public class TextBox {
     }
 
     public void init() {
-
     }
 
     public void update(boolean touch_state) {
@@ -125,24 +126,25 @@ public class TextBox {
             box_paint.setColor(Color.argb(100, 0, 0, 0));
 
             if (has_updated_text == false) {
-                if (first != last) {//文章キューが空でなかったら、
 
-                    int tmp_first = first;
-
-                    //次に表示する文章の冒頭まで first をずらす
-                    while (!(queue[first].isMOP() == true && queue[(first - 1 + MAX_QUEUE_TEXT) % MAX_QUEUE_TEXT].isMOP() == false)) {
-                        first = (first + 1) % MAX_QUEUE_TEXT;//firstを１個進める
-                    }
-                    while (!(queue[first].isMOP() == false && queue[(first - 1 + MAX_QUEUE_TEXT) % MAX_QUEUE_TEXT].isMOP() == true)) {
-                        first = (first + 1) % MAX_QUEUE_TEXT;//firstを１個進める
-                    }
-
-                    for (; tmp_first != first; tmp_first = (tmp_first + 1) % MAX_QUEUE_TEXT) {
-                        queue[tmp_first].initSentence();
-                    }
-
-                }
-
+                updateText();
+//                if (first != last) {//文章キューが空でなかったら、
+//
+//                    int tmp_first = first;
+//
+//                    //次に表示する文章の冒頭まで first をずらす
+//                    while (!(queue[first].isMOP() == true && queue[(first - 1 + MAX_QUEUE_TEXT) % MAX_QUEUE_TEXT].isMOP() == false)) {
+//                        first = (first + 1) % MAX_QUEUE_TEXT;//firstを１個進める
+//                    }
+//                    while (!(queue[first].isMOP() == false && queue[(first - 1 + MAX_QUEUE_TEXT) % MAX_QUEUE_TEXT].isMOP() == true)) {
+//                        first = (first + 1) % MAX_QUEUE_TEXT;//firstを１個進める
+//                    }
+//
+//                    for (; tmp_first != first; tmp_first = (tmp_first + 1) % MAX_QUEUE_TEXT) {
+//                        queue[tmp_first].initSentence();
+//                    }
+//
+//                }
                 has_updated_text = true;
 
             }
@@ -311,8 +313,32 @@ public class TextBox {
         touch_id = _touch_id;
     }
 
+    public void updateText() {
+        if (first != last) {//文章キューが空でなかったら、
+
+            int tmp_first = first;
+
+            //次に表示する文章の冒頭まで first をずらす
+            while (!(queue[first].isMOP() == true && queue[(first - 1 + MAX_QUEUE_TEXT) % MAX_QUEUE_TEXT].isMOP() == false)) {
+                first = (first + 1) % MAX_QUEUE_TEXT;//firstを１個進める
+            }
+            while (!(queue[first].isMOP() == false && queue[(first - 1 + MAX_QUEUE_TEXT) % MAX_QUEUE_TEXT].isMOP() == true)) {
+                first = (first + 1) % MAX_QUEUE_TEXT;//firstを１個進める
+            }
+
+            for (; tmp_first != first; tmp_first = (tmp_first + 1) % MAX_QUEUE_TEXT) {
+                queue[tmp_first].initSentence();
+            }
+
+        }
+    }
+
     public void setExists(boolean _exists) {
         exists = _exists;
+    }
+
+    public void setUpdateTextByTouching(boolean _update_text_by_touching) {
+        update_text_by_touching = _update_text_by_touching;
     }
 
     public int getBoxId() {

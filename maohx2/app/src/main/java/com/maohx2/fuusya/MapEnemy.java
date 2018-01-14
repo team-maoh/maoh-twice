@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.view.SurfaceHolder;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
+import static java.lang.Math.PI;
 import static java.lang.Math.atan2;
 import static java.lang.Math.pow;
 
@@ -63,7 +64,6 @@ public class MapEnemy extends MapUnit {
         if(chase_count > PERIOD_FRAMES_OF_CHASE){
             dst_x = player.getPlayerWorldX();
             dst_y = player.getPlayerWorldY();
-            chase_count = 0;
         }
 
         dst_steps = (int) (myDistance(w_x, w_y, dst_x, dst_y) / (double) STEP);
@@ -74,10 +74,11 @@ public class MapEnemy extends MapUnit {
         w_x += dx;
         w_y += dy;
 
-        updateDirOnMap();
+        updateDirOnMap(w_x + dx, w_y + dy);
     }
 
     private double myDistance(double x1, double y1, double x2, double y2) {
         return (pow(pow(x1 - x2, 2.0) + pow(y1 - y2, 2.0), 0.5));
     }
+
 }

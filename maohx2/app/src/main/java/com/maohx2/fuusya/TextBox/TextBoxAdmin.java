@@ -38,9 +38,9 @@ public class TextBoxAdmin {
     public void init(UserInterface _user_interface) {
         user_interface = _user_interface;
 
-        createTextBox(100.0, 550.0, 800.0, 750.0, ROW_OF_BOX);
+        createTextBox(100.0, 550.0, 800.0, 750.0, ROW_OF_BOX, true);
 
-        createTextBox(80.0, 150.0, 400.0, 350.0, 2);
+        createTextBox(80.0, 150.0, 400.0, 350.0, 2, true);
 
         frame_count = 0;
     }
@@ -56,9 +56,9 @@ public class TextBoxAdmin {
         blue_paint.setTextSize(40);
         blue_paint.setColor(Color.BLUE);
 
-//        frame_count = (frame_count + 1) % 300;
+        frame_count = (frame_count + 1) % 300;
 
-        frame_count++;
+//        frame_count++;
 
         if (frame_count % 50 == 0) {
 
@@ -123,6 +123,10 @@ public class TextBoxAdmin {
 //            text_box[0].inputText("行数が多すぎる文章の例5", text_paint);
 //            text_box[0].inputText("MOP", text_paint);
         }
+
+//        if (frame_count == 100) {
+//            text_box[0].updateText();
+//        }
         //テスト用ここまで
 
         for (int i = 0; i < box_count; i++) {
@@ -138,13 +142,13 @@ public class TextBoxAdmin {
     }
 
     //TextBoxを生成する関数
-    //　引数：Boxの上下左右の座標, Boxに表示する文章の行数
+    //　引数：Boxの上下左右の座標, Boxに表示する文章の行数, 文章をタッチで切り替えるか否か
     //　戻り値：Boxの通し番号（= box_id）
-    public int createTextBox(double _box_left, double _box_top, double _box_right, double _box_down, int _row_of_box) {
+    public int createTextBox(double _box_left, double _box_top, double _box_right, double _box_down, int _row_of_box, boolean _update_text_by_touching) {
 
         int touch_id = user_interface.setBoxTouchUI(_box_left, _box_top, _box_right, _box_down);
 
-        text_box[box_count] = new TextBox(graphic, touch_id, box_count, _box_left, _box_top, _box_right, _box_down, _row_of_box);
+        text_box[box_count] = new TextBox(graphic, touch_id, box_count, _update_text_by_touching, _box_left, _box_top, _box_right, _box_down, _row_of_box);
 //        text_box[box_count] = new TextBox(graphic, touch_id, (int) (_box_right - _box_left), _row_of_box, box_count);
         text_box[box_count].init();
 
@@ -153,14 +157,27 @@ public class TextBoxAdmin {
         return (box_count - 1);
     }
 
-    //TextBoxを非表示にする関数
-    public void hideTextBox(int _box_id){
+    public int createTextBox(double _box_left, double _box_top, double _box_right, double _box_down, int _row_of_box) {
+        return createTextBox(_box_left, _box_top, _box_right, _box_down, _row_of_box, true);
+    }
 
-        text_box[_box_id].setExists(false);
+    //TextBoxの表示・非表示を切り替える関数
+    public void setTextBoxExists(int _box_id, boolean _exists) {
+        text_box[_box_id].setExists(_exists);
+    }
+
+    //Textをタッチで切り替えるかどうか
+    public void setTextBoxUpdateTextByTouching(int _box_id, boolean _update_text_by_touching){
+        text_box[_box_id].setUpdateTextByTouching(_update_text_by_touching);
+    }
+
+    //TextBoxのTextを更新する関数
+    public void updateText(int _box_id){
+        text_box[_box_id].updateText();
     }
 
     //TextBoxを削除する関数
-    public void deleteTextBox(int _box_id){
+    public void deleteTextBox(int _box_id) {
 
     }
 

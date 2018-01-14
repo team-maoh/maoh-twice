@@ -26,7 +26,6 @@ public class MapObjectAdmin {
     int NUM_OF_ENEMY = 5;
     int NUM_OF_ITEM = 10;// > 2
 
-
     int PLAYER_DIR = 8;
     int ENEMY_DIR = 8;
 
