@@ -18,7 +18,7 @@ public abstract class ItemDataAdmin<T extends ItemData>  {
     public List<T> datas = new ArrayList<>();
     public MyDatabase database;
 
-    Graphic graphic;
+    public Graphic graphic;
 
     public ItemDataAdmin(Graphic _graphic, MyDatabaseAdmin database_admin){
         graphic = _graphic;

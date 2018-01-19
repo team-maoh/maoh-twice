@@ -63,6 +63,7 @@ class StartSurfaceView extends BaseSurfaceView {
     StartGameSystem start_game_system;
     UserInterface start_user_interface;
 
+
     public StartSurfaceView(Activity _start_activity) {
         super(_start_activity);
         start_activity = _start_activity;
@@ -100,13 +101,18 @@ class StartSurfaceView extends BaseSurfaceView {
         //todo:こいつは一番下
         thread = new Thread(this);
         thread.start();
+
     }
 
     @Override
     public void gameLoop(){
         paint.setColor(Color.BLUE);
 
+        //graphic.bookingDrawBitmapData(graphic.processBitmapData(test_bitmap_data,1,4,255),100,100);
+
+
         graphic.bookingDrawBitmapName("スライム",300,590);
+        /*
         graphic.bookingDrawText("(300,590)",300,590,paint);
         graphic.bookingDrawBitmapData(bit_srime,640,100);
         graphic.bookingDrawText("(640,100)",640,100,paint);
@@ -138,7 +144,7 @@ class StartSurfaceView extends BaseSurfaceView {
         graphic.bookingDrawText("1400",1400,100,paint);
         graphic.bookingDrawText("1500",1500,100,paint);
         graphic.bookingDrawText("1600",1600,100,paint);
-
+*/
         start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
 
         start_game_system.updata();

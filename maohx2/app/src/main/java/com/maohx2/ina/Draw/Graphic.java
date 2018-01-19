@@ -8,6 +8,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.view.SurfaceHolder;
+
+import com.maohx2.ina.Constants;
 import com.maohx2.ina.GlobalConstants;
 import com.maohx2.ina.GlobalData;
 import com.maohx2.kmhanko.database.MyDatabase;
@@ -204,9 +206,13 @@ public class Graphic {
         setting_matrix.postRotate(degree);
         setting_matrix.postTranslate(setting_point1.x, setting_point1.y);
 
-
         //行列とビットマップデータの保存
         draw_paint.setAlpha(alpha);
+
+        if(booking_bitmap_num >= booking_bitmap_datas.size()){
+            booking_bitmap_datas.add(new BookingRectData());
+        }
+
         ((BookingBitmapData)booking_bitmap_datas.get(booking_bitmap_num)).update(draw_bitmap_data, setting_matrix, draw_paint);
         booking_task_datas.set(booking_num, booking_bitmap_datas.get(booking_bitmap_num));
         booking_num++;
@@ -321,9 +327,39 @@ public class Graphic {
             throw new Error("%☆イナガキ：drawBooking:画像名「" + bitmap_name + "」がありません     " + "global: " + global_bitmap_data_admin + "local:" + local_bitmap_data_admin);
         }
 
+        //todo:やばい
+        //setting_matrix.reset();
+        //setting_matrix.postScale(DENSITY, DENSITY);
+
         return hit_bitmap_data;
     }
 
+    /*
+    public BitmapData processBitmapData(BitmapData src_bitmap_data, float scale_x, float scale_y, int alpha){
+
+        setting_matrix.reset();
+        //setting_matrix.postTranslate(-src_bitmap_data.getBitmap().getWidth() / 2, -src_bitmap_data.getBitmap().getHeight() / 2);
+        setting_matrix.postScale(scale_x, scale_y);
+        //setting_matrix.postTranslate((int)(src_bitmap_data.getBitmap().getWidth() * scale_x / 2), (int)(src_bitmap_data.getBitmap().getHeight() * scale_y / 2));
+
+        //行列とビットマップデータの保存
+        draw_paint.setAlpha(alpha);
+        Bitmap dst_bitmap;
+
+        //dst_bitmap = Bitmap.createBitmap((int) (src_bitmap_data.getWidth() * scale_x * 1.5), (int) (src_bitmap_data.getHeight() * scale_y * 1.5), Bitmap.Config.ARGB_8888);
+
+        dst_bitmap = Bitmap.createBitmap((int) (src_bitmap_data.getWidth() * scale_x), (int) (src_bitmap_data.getHeight() * scale_y), Bitmap.Config.ARGB_8888);
+
+        Canvas process_canvas = new Canvas(dst_bitmap);
+        process_canvas.drawBitmap(src_bitmap_data.getBitmap(), setting_matrix, draw_paint);
+
+        BitmapData dst_bitmap_data = new BitmapData();
+        dst_bitmap_data.setBitmap(dst_bitmap);
+
+        return dst_bitmap_data;
+
+    }
+*/
     public BitmapData processTrimmingBitmapData(BitmapData src_bitmap_data, int x, int y, int width, int height){
 
         BitmapData dst_bitmap_data;
@@ -334,14 +370,13 @@ public class Graphic {
         return dst_bitmap_data;
     }
 
-    public BitmapData processConbineBitmapData(BitmapData[] src_bitmap_datas, boolean yoko){
+    public BitmapData processCombineBitmapData(BitmapData[] src_bitmap_datas, boolean yoko){
 
         BitmapData dst_bitmap_data;
         dst_bitmap_data = new BitmapData();
         int total_length = 0;
         int variable_length[] = new int[src_bitmap_datas.length];
         int constant_length = 0;
-        int[] conbine_pixels = new int[src_bitmap_datas[0].getHeight()*total_length];
         int[][] source_pixels = new int[src_bitmap_datas.length][];
 
         for(int i = 0; i < src_bitmap_datas.length; i++){
@@ -361,19 +396,29 @@ public class Graphic {
             }
         }
 
+        int[] conbine_pixels;
+
+        if(yoko == true) {
+            conbine_pixels = new int[src_bitmap_datas[0].getHeight()*total_length];
+        }else {
+            conbine_pixels = new int[src_bitmap_datas[0].getWidth()*total_length];
+        }
+
         int init_copy_index = 0;
 
         for(int i = 0; i < src_bitmap_datas.length; i++){
             if(yoko == true) {
                 for(int y = 0; y < constant_length; y++) {
                     for(int x = 0; x < variable_length[i]; x++) {
-                        conbine_pixels[(x + y * variable_length[i]) + (init_copy_index * y)] = source_pixels[i][x + y * variable_length[i]];
+                        int index = ((x + y * variable_length[i]) + (total_length*y));
+                        System.out.println("index = " + index);
+                        conbine_pixels[x + (total_length*y + init_copy_index)] = source_pixels[i][x + y * variable_length[i]];
                     }
                 }
             } else {
                 for(int y = 0; y < variable_length[i]; y++) {
                     for(int x = 0; x < constant_length; x++) {
-                        conbine_pixels[(x + y * variable_length[i]) + (init_copy_index * constant_length)] = source_pixels[i][x + y * variable_length[i]];
+                        conbine_pixels[(x + y * constant_length) + (init_copy_index * constant_length)] = source_pixels[i][x + y * constant_length];
                     }
                 }
             }
@@ -400,7 +445,4 @@ public class Graphic {
     }
 
     public SurfaceHolder getHolder(){return holder;}
-
-
 }
-
