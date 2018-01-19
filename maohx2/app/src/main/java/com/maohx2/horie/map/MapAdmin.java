@@ -73,7 +73,7 @@ public class MapAdmin {
     //int magnification = 30;
     //drawMap2用
     Point map_size = new Point(80, 50);//x : 左右幅, y : 上下幅
-    int magnification = 10;
+    int magnification = 32;
 
     Point offset = new Point(0, 0);
     Point start_point = new Point(0, 0);
@@ -86,8 +86,11 @@ public class MapAdmin {
     SurfaceHolder holder;
 
     //auto_tile用
-    AutoTile auto_tile = new AutoTile();
-    AutoTileAdmin auto_tile_admin = new AutoTileAdmin(graphic);
+    AutoTile auto_tile_wall = new AutoTile();
+    AutoTile Auto_tile_side_wall = new AutoTile();
+    AutoTileAdmin auto_tile_admin;
+
+    BitmapData floor_tile;
 
 
     public int getMap_size_x() {
@@ -123,11 +126,15 @@ public class MapAdmin {
             }
         }
         //オートタイル生成
-        BitmapData auto_tile_block = graphic.searchBitmap("cave_wall_w_01");//auto_tile元データ
+        BitmapData auto_tile_block_wall = graphic.searchBitmap("cave_wall_w_01");//auto_tile元データ
+        BitmapData auto_tile_block_side_wall = graphic.searchBitmap("cave_wall_f_01");
+        floor_tile = graphic.searchBitmap("cave_floor_01");
+        auto_tile_admin = new AutoTileAdmin(graphic);
         for(int i = 0;i < 5;i++){
-            auto_tile.setAuto_tile(graphic.processTrimmingBitmapData(auto_tile_block, 0, 32*i, 32, 32), i);
+            auto_tile_wall.setAuto_tile(graphic.processTrimmingBitmapData(auto_tile_block_wall, 0, 32*i, 32, 32), i);
         }
-        auto_tile_admin.createAutoTile(auto_tile);
+        auto_tile_admin.combine4Test(auto_tile_wall);
+        auto_tile_admin.createAutoTile(auto_tile_wall);
 
 
         //マップ生成
@@ -576,7 +583,7 @@ public class MapAdmin {
         if(map_data[worldToMap(offset.x)][worldToMap(offset.y)].isStairs()){
             goNextFloor();
         }
-        offset.set(0,0);
+        offset.set(500, 300);
         //右手法で動く点の表示
 //        if(map_data[worldToMap(offset.x)][worldToMap(offset.y)].isWall()){
 //            offset.x = offset.x+step;
@@ -714,7 +721,64 @@ public class MapAdmin {
 //        Point position = new Point(0,0);
 //        BitmapData test_bitmap = graphic.searchBitmap("cave_wall_w_01");
 //        graphic.bookingDrawBitmapData(test_bitmap, position.x, position.y, 10, 10, 0, 255, true);
-        auto_tile_admin.printAutoTileParts();
+//        auto_tile_admin.printAutoTileTest(auto_tile);
+    }
+
+    public void drawMap_for_autotile() {
+        Paint l_gray_paint = new Paint();
+        Paint d_gray_paint = new Paint();
+        Paint green_paint = new Paint();
+        Paint yellow_paint = new Paint();
+        Room now_point_room = new Room();
+        int step = 30;
+        boolean go_stair_flag = false;
+        if(map_data[worldToMap(offset.x)][worldToMap(offset.y)].isStairs()){
+            goNextFloor();
+        }
+        offset.set(1500, 1000);
+
+        camera.setCameraOffset(offset.x, offset.y);
+        //map_offset.set(camera.getCameraOffset().x, camera.getCameraOffset().y);
+        for (int i = 0; i < this.getMap_size_x(); i++) {
+            for (int j = 0; j < this.getMap_size_y(); j++) {
+                //床
+                if (!isWall(i, j) && !isStairs(i, j)) {
+                    l_gray_paint.setColor(Color.LTGRAY);
+                    if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
+                        graphic.bookingDrawRect(camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), camera.convertToNormCoordinateXForMap((i + 1) * magnification), camera.convertToNormCoordinateYForMap((j + 1) * magnification), l_gray_paint);
+                        //graphic.bookingDrawBitmapData(floor_tile,camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), 1, 1, 0, 255, true);
+                    }
+                    //階段
+                } else if (isStairs(i, j)) {
+                    green_paint.setColor(Color.GREEN);
+                    if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
+                        graphic.bookingDrawRect(camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), camera.convertToNormCoordinateXForMap((i + 1) * magnification), camera.convertToNormCoordinateYForMap((j + 1) * magnification), green_paint);
+                    }
+                } else {
+                    if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
+                        drawWall(i, j, camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), 1);
+                    }
+                }
+            }
+        }
+//        System.out.println("countDrawRect = "+countDrawRect);
+        paint.setColor(Color.RED);
+        //canvas.drawLine(80, 0, 80, 1920, paint);
+        //canvas.drawLine(0, 80, 1080, 80, paint);
+        /*
+        canvas.drawLine(900, 0, 900, 1920, paint);
+        canvas.drawLine(0, 1600, 1080, 1600, paint);
+        canvas.drawLine(980, 0, 980, 1920, paint);
+        canvas.drawLine(0, 1680, 1080, 1680, paint);
+        */
+        graphic.bookingDrawCircle(camera.convertToNormCoordinateX(offset.x), camera.convertToNormCoordinateY(offset.y), 20, paint);
+        drawSmallMap2(offset.x, offset.y);
+
+        //bitmapdataテスト
+//        Point position = new Point(0,0);
+//        BitmapData test_bitmap = graphic.searchBitmap("cave_wall_w_01");
+//        graphic.bookingDrawBitmapData(test_bitmap, position.x, position.y, 10, 10, 0, 255, true);
+//        auto_tile_admin.printAutoTileTest(auto_tile);
     }
 
     //画像表示実装予定
@@ -727,11 +791,11 @@ public class MapAdmin {
                 if (!isWall(i, j) && !isStairs(i, j)) {
                     l_gray_paint.setColor(Color.LTGRAY);//部屋は青
                     if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
-                        drawFloor(i, j);
+                        //drawFloor(i, j);
                         //graphic.bookingDrawRect(camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), camera.convertToNormCoordinateXForMap((i + 1) * magnification), camera.convertToNormCoordinateYForMap((j + 1) * magnification), l_gray_paint);
                         //System.out.println(camera.convertToNormCoordinateXForMap(i * magnification) + "," + camera.convertToNormCoordinateYForMap(j * magnification) + "," + camera.convertToNormCoordinateXForMap((i + 1) * magnification) + "," + camera.convertToNormCoordinateYForMap((j + 1) * magnification));
                     }
-                } else if (isStairs(i, j) == true) {
+                } else if (isStairs(i, j)) {
                     green_paint.setColor(Color.GREEN);
                     if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
                         graphic.bookingDrawRect(camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), camera.convertToNormCoordinateXForMap((i + 1) * magnification), camera.convertToNormCoordinateYForMap((j + 1) * magnification), green_paint);
@@ -750,80 +814,27 @@ public class MapAdmin {
         drawSmallMap();
     }
 
-    //床の表示
-    private void drawFloor(int x, int y){
-        //マスの左上
-        if(map_data[x-1][y].isWall() && map_data[x][y-1].isWall()){
-            //凹角を表示
+    //壁の表示
+    private void drawWall(int array_x, int array_y, int draw_point_x, int draw_point_y, float magnification){
+        int before_array_x = array_x - 1;
+        int after_array_x = array_x + 1;
+        int before_array_y = array_y - 1;
+        int after_array_y = array_y + 1;
+        if (before_array_x < 0){
+            before_array_x = 0;
         }
-        else if(!map_data[x-1][y].isWall() && map_data[x][y-1].isWall()){
-            //上端を表示
+        if (after_array_x > map_size.x-1){
+            after_array_x = map_size.x-1;
         }
-        else if(map_data[x-1][y].isWall() && !map_data[x][y-1].isWall()){
-            //左端を表示
+        if (before_array_y < 0){
+            before_array_y = 0;
         }
-        else{
-            if(map_data[x-1][y-1].isWall()){
-                //凸角を表示
-            }
-            else{
-                //端なしを表示
-            }
+        if (after_array_y > map_size.y-1){
+            after_array_y = map_size.y-1;
         }
-        //マスの右上
-        if(map_data[x+1][y].isWall() && map_data[x][y-1].isWall()){
-            //凹角を表示
-        }
-        else if(!map_data[x+1][y].isWall() && map_data[x][y-1].isWall()){
-            //上端を表示
-        }
-        else if(map_data[x+1][y].isWall() && !map_data[x][y-1].isWall()){
-            //右端を表示
-        }
-        else{
-            if(map_data[x+1][y-1].isWall()){
-                //凸角を表示
-            }
-            else{
-                //端なしを表示
-            }
-        }
-        //マスの左下
-        if(map_data[x-1][y].isWall() && map_data[x][y+1].isWall()){
-            //凹角を表示
-        }
-        else if(!map_data[x-1][y].isWall() && map_data[x][y+1].isWall()){
-            //下端を表示
-        }
-        else if(map_data[x-1][y].isWall() && !map_data[x][y+1].isWall()){
-            //左端を表示
-        }
-        else{
-            if(map_data[x-1][y+1].isWall()){
-                //凸角を表示
-            }
-            else{
-                //端なしを表示
-            }
-        }
-        //マスの右下
-        if(map_data[x+1][y].isWall() && map_data[x][y+1].isWall()){
-            //凹角を表示
-        }
-        else if(!map_data[x+1][y].isWall() && map_data[x][y+1].isWall()){
-            //下端を表示
-        }
-        else if(map_data[x+1][y].isWall() && !map_data[x][y+1].isWall()){
-            //右端を表示
-        }
-        else{
-            if(map_data[x+1][y+1].isWall()){
-                //凸角を表示
-            }
-            else{
-                //端なしを表示
-            }
-        }
+        auto_tile_admin.drawAutoTile(map_data[before_array_x][before_array_y].isWall(), map_data[array_x][before_array_y].isWall(), map_data[after_array_x][before_array_y].isWall(), map_data[before_array_x][array_y].isWall(), map_data[after_array_x][array_y].isWall(), map_data[before_array_x][after_array_y].isWall(), map_data[array_x][after_array_y].isWall(), map_data[after_array_x][after_array_y].isWall(),
+                auto_tile_wall, draw_point_x, draw_point_y, magnification);
+
     }
 
     //ミニマップ表示

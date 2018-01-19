@@ -138,7 +138,7 @@ public class Graphic {
         Canvas canvas = null;
         canvas = holder.lockCanvas();
         if(canvas != null) {
-            canvas.drawColor(Color.WHITE);
+            canvas.drawColor(Color.RED);
 
             for (int i = 0; i < booking_num; i++) {
                 booking_task_datas.get(i).draw(canvas);
@@ -334,14 +334,13 @@ public class Graphic {
         return dst_bitmap_data;
     }
 
-    public BitmapData processConbineBitmapData(BitmapData[] src_bitmap_datas, boolean yoko){
+    public BitmapData processCombineBitmapData(BitmapData[] src_bitmap_datas, boolean yoko){
 
         BitmapData dst_bitmap_data;
         dst_bitmap_data = new BitmapData();
         int total_length = 0;
         int variable_length[] = new int[src_bitmap_datas.length];
         int constant_length = 0;
-        int[] conbine_pixels = new int[src_bitmap_datas[0].getHeight()*total_length];
         int[][] source_pixels = new int[src_bitmap_datas.length][];
 
         for(int i = 0; i < src_bitmap_datas.length; i++){
@@ -361,19 +360,29 @@ public class Graphic {
             }
         }
 
+        int[] combine_pixels;
+
+        if(yoko == true) {
+            combine_pixels = new int[src_bitmap_datas[0].getHeight()*total_length];
+        }else {
+            combine_pixels = new int[src_bitmap_datas[0].getWidth()*total_length];
+        }
+
         int init_copy_index = 0;
 
         for(int i = 0; i < src_bitmap_datas.length; i++){
             if(yoko == true) {
                 for(int y = 0; y < constant_length; y++) {
                     for(int x = 0; x < variable_length[i]; x++) {
-                        conbine_pixels[(x + y * variable_length[i]) + (init_copy_index * y)] = source_pixels[i][x + y * variable_length[i]];
+                        int index = ((x + y * variable_length[i]) + (total_length*y));
+                        //System.out.println("index = " + index);
+                        combine_pixels[x + (total_length*y + init_copy_index)] = source_pixels[i][x + y * variable_length[i]];
                     }
                 }
             } else {
                 for(int y = 0; y < variable_length[i]; y++) {
                     for(int x = 0; x < constant_length; x++) {
-                        conbine_pixels[(x + y * variable_length[i]) + (init_copy_index * constant_length)] = source_pixels[i][x + y * variable_length[i]];
+                        combine_pixels[(x + y * constant_length) + (init_copy_index * constant_length)] = source_pixels[i][x + y * constant_length];
                     }
                 }
             }
@@ -384,10 +393,10 @@ public class Graphic {
 
         if(yoko == true) {
             conbine_bitmap = Bitmap.createBitmap(total_length, constant_length, Bitmap.Config.ARGB_8888);
-            conbine_bitmap.setPixels(conbine_pixels, 0, total_length, 0, 0, total_length, constant_length);
+            conbine_bitmap.setPixels(combine_pixels, 0, total_length, 0, 0, total_length, constant_length);
         }else {
             conbine_bitmap = Bitmap.createBitmap(constant_length, total_length, Bitmap.Config.ARGB_8888);
-            conbine_bitmap.setPixels(conbine_pixels, 0, constant_length, 0, 0, constant_length, total_length);
+            conbine_bitmap.setPixels(combine_pixels, 0, constant_length, 0, 0, constant_length, total_length);
         }
 
         dst_bitmap_data.setBitmap(conbine_bitmap);

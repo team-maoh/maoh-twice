@@ -44,9 +44,9 @@ public class DungeonGameSystem {
     }
 
     public void draw() {
-        map_admin.drawMap3();
+        map_admin.drawMap_for_autotile();
         //map_object_admin.draw();
-        graphic.bookingDrawCircle(0,0,10,paint);
+        //graphic.bookingDrawCircle(0,0,10,paint);
         graphic.draw();
     }
 
