@@ -15,12 +15,10 @@ import android.content.ContentValues;
 
 /**
  * Created by user on 2017/09/03.
- * version : 1.03
- * getOneRowID修正
- * getIntバグ修正
- *
  * version : 1.02
- * getOne~~,getOne~~ByRowID追加
+ * s_quoをStaticに
+ * getOne~~系列実装
+ * getStringByRowID実装
  *
  * version : 1.01
  * getStringするとき、読み込み順序がおかしくなるバグを修正
@@ -47,7 +45,7 @@ public class MyDatabase {
 
     public boolean init(String _db_name, String _db_asset, int _db_version, String load_mode) {
         if (load_mode != "r" && load_mode != "w") {
-            System.out.println("☆タカノ:" + "MyDatabase : please set r or w");
+            System.out.println("dg_mes:" + "MyDatabase : please set r or w");
             return false;
         }
         db_name = _db_name;
@@ -81,7 +79,7 @@ public class MyDatabase {
         } catch (IOException e) {
             //TODO : エラー処理
             e.printStackTrace();
-            throw new Error("☆タカノ: ¥n"+ e);
+            throw new Error("タカノ : "+ e);
         }
 
         return true;
@@ -110,7 +108,6 @@ public class MyDatabase {
         return db.rawQuery(sql_script , null);
     }
     private Cursor getCursor(String t_name, String c_name) {
-        System.out.println("DatabaseDebug : "+getTables());
         return db.rawQuery("SELECT "+c_name+" FROM "+t_name+" ORDER BY rowid ASC", null);
     }
     private Cursor getCursor(String t_name, String c_name, String w_script) {
@@ -132,13 +129,8 @@ public class MyDatabase {
         if (buf.size() == 1) {
             return buf.get(0);
         } else {
-            if (buf.size() == 0) {
-                System.out.println("☆タカノ:" + "MyDatabase.getOneRowID : Found rowids are zero.¥n");
-                return 0;
-            } else {
-                System.out.println("☆タカノ:" + "MyDatabase.getOneRowID : Found rowids are not only one.¥n");
-                return buf.get(0);
-            }
+            System.out.println("dg_mes:" + "MyDatabase.getOneRowID : Found rowids are not only one.");
+            return buf.get(0);
         }
     }
 
@@ -166,11 +158,12 @@ public class MyDatabase {
         return buf;
     }
     public int getOneInt(String t_name, String c_name, String w_script) {
-        List<Integer> buf = getInt(t_name, c_name, w_script);
-        return buf.get(0);
-    }
-    public int getIntByRowID(String t_name, String c_name, int rowid) {
-        return getOneInt(t_name, c_name, "rowid = " + rowid);
+        Cursor c = getCursor(t_name, c_name, w_script);
+        //該当要素が存在しない場合
+        if (c.getCount() == 0) {
+            throw new Error("☆タカノ: MyDatabase#GetOneInt 該当データが存在しない");
+        }
+        return c.getInt(0);
     }
 
     public List<String> getString(String t_name, String c_name) {
@@ -193,9 +186,14 @@ public class MyDatabase {
         return buf;
     }
     public String getOneString(String t_name, String c_name, String w_script) {
-        List<String> buf = getString(t_name, c_name, w_script);
-        return buf.get(0);
+        Cursor c = getCursor(t_name, c_name, w_script);
+        //該当要素が存在しない場合
+        if (c.getCount() == 0) {
+            throw new Error("☆タカノ: MyDatabase#GetOneString 該当データが存在しない");
+        }
+        return c.getString(0);
     }
+
     public String getStringByRowID(String t_name, String c_name, int rowid) {
         return getOneString(t_name, c_name, "rowid = " + rowid);
     }
@@ -224,14 +222,6 @@ public class MyDatabase {
         c.close();
         return buf;
     }
-    public boolean getOneBoolean(String t_name, String c_name, String w_script) {
-        List<Boolean> buf = getBoolean(t_name, c_name, w_script);
-        return buf.get(0);
-    }
-    public boolean getBooleanByRowID(String t_name, String c_name, int rowid) {
-        return getOneBoolean(t_name, c_name, "rowid = " + rowid);
-    }
-
     public List<Double> getDouble(String t_name, String c_name) {
         return getDouble(t_name, c_name, null);
     }
@@ -250,12 +240,14 @@ public class MyDatabase {
         c.close();
         return buf;
     }
+
     public double getOneDouble(String t_name, String c_name, String w_script) {
-        List<Double> buf = getDouble(t_name, c_name, w_script);
-        return buf.get(0);
-    }
-    public double getDoubleByRowID(String t_name, String c_name, int rowid) {
-        return getOneDouble(t_name, c_name, "rowid = " + rowid);
+        Cursor c = getCursor(t_name, c_name, w_script);
+        //該当要素が存在しない場合
+        if (c.getCount() == 0) {
+            throw new Error("☆タカノ: MyDatabase#GetOneDouble 該当データが存在しない");
+        }
+        return c.getDouble(0);
     }
 
     public List<Float> getFloat(String t_name, String c_name) {
@@ -277,11 +269,12 @@ public class MyDatabase {
         return buf;
     }
     public float getOneFloat(String t_name, String c_name, String w_script) {
-        List<Float> buf = getFloat(t_name, c_name, w_script);
-        return buf.get(0);
-    }
-    public float getFloatByRowID(String t_name, String c_name, int rowid) {
-        return getOneFloat(t_name, c_name, "rowid = " + rowid);
+        Cursor c = getCursor(t_name, c_name, w_script);
+        //該当要素が存在しない場合
+        if (c.getCount() == 0) {
+            throw new Error("☆タカノ: MyDatabase#GetOneFloat 該当データが存在しない");
+        }
+        return c.getFloat(0);
     }
 
     public List<String> getOneLine(String t_name, int rowid) {
