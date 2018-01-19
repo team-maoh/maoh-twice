@@ -53,28 +53,27 @@ public class MyDatabase {
         db_version = _db_version;
 
         //データベース関係の処理
-        mDbHelper = new MySQLiteOpenHelper(mContext, db_name, db_asset, db_version);//ヘルパーのインスタンス
+
+        //db_nameとして、/data/data/パッケージ名/database/ファイル名 が生成される。
+        mDbHelper = new MySQLiteOpenHelper(mContext, db_name, db_asset, db_version);
 
         try {
             if (load_mode == "r") {
-
-                //TODO:PATHがおかしい。
+                //内部DBファイルを生成する
                 mDbHelper.getReadableDatabase();
 
-                //DBファイルがあろうがなかろうが、Assetsからコピー
+                //assets内のDBファイルを、内部DBのファイルにコピーする
                 mDbHelper.copyDataBaseFromAssets();
 
-                //TODO:コピーが成功したファイルがちゃんとあるかどうかチェック
-
-                //DBファイルをdbに格納する。
-                db = mDbHelper.openDataBase("r");
+                //dbを取得する
+                db = mDbHelper.getReadableDatabase();
             }
             if (load_mode == "w") {
-                //DBファイルが無い場合はAssetsからコピーし、DBファイルがある場合は特に何もしない関数
-                mDbHelper.createEmptyDataBase_w();
-
-                //DBファイルをdbに格納する。
-                db = mDbHelper.openDataBase("w");
+                //内部DBに既にDBファイルが存在するかどうかを確認する。
+                //存在するならばDBを獲得して終了
+                //存在しないならば新規作成する
+                mDbHelper.createEmptyDataBaseW();
+                db = mDbHelper.getWritableDatabase();
             }
         } catch (IOException e) {
             //TODO : エラー処理
