@@ -8,6 +8,7 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 
 //import com.maohx2.ina.MySprite;
 
+import com.maohx2.horie.map.Camera;
 import com.maohx2.ina.Draw.Graphic;
 
 import java.util.Random;
@@ -22,8 +23,8 @@ public class MapItem extends MapObject {
 
     MapObjectAdmin map_object_admin;
 
-    public MapItem(Graphic graphic, MapObjectAdmin _map_object_admin, int _id) {
-        super(graphic, _map_object_admin);
+    public MapItem(Graphic graphic, MapObjectAdmin _map_object_admin, int _id, Camera _camera) {
+        super(graphic, _map_object_admin, _camera);
 
         id = _id;
 
@@ -45,8 +46,8 @@ public class MapItem extends MapObject {
         }
 
         Random random = new Random();
-        x = random.nextDouble() * 1000;//アイテムが発生する座標
-        y = random.nextDouble() * 1300;
+        w_x = random.nextDouble() * 1000;//アイテムが発生する座標
+        w_y = random.nextDouble() * 1300;
     }
 
     public void init() {
@@ -54,35 +55,13 @@ public class MapItem extends MapObject {
 
     }
 
-//    public void init(GL10 gl, MySprite draw_object, MapObjectAdmin _map_object_admin) {
-//        super.init(gl, draw_object);
-//
-//        map_object_admin = _map_object_admin;
-//
-//        Random random = new Random();
-//        x = random.nextDouble() * 1000;//アイテムが発生する座標
-//        y = random.nextDouble() * 1300;
-//    }
-
     @Override
     public void update() {
         super.update();
     }
 
-    //setIdという名前なのにset以上のことをしているのはおかしいので後で何とかする
     public void setId(int _id) {
 
         id = _id;
-//
-//        switch (id){
-//            case 1:
-//                draw_object = "apple";
-//            case 2:
-//                draw_object = "grape";
-//            case 3:
-//                draw_object = "banana";
-//            case 4:
-//                draw_object = "watermelon";
-//        }
     }
 }

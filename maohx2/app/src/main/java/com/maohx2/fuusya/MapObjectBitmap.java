@@ -14,54 +14,122 @@ import static java.lang.Math.PI;
 
 public class MapObjectBitmap {
 
-    double direction;//マップ上で自身がどちらを向いているか（0 ~ 2*PI）
-
-    int bitmap_dir;//画像が1方位なのか、4方位なのか、8方位なのか
+    int total_dirs;//画像が1方位なのか、4方位なのか、8方位なのか
     Graphic graphic;
     String object_name;
 
-    BitmapData bitmap_data;
+    int unit_width, unit_height;
 
-    int MAX_NUM_OF_BITMAP = 8;//最大で8方位
-    Bitmap[] object_bitmap = new Bitmap[MAX_NUM_OF_BITMAP];//各方位に対応する画像
+    int MAX_BITMAP_DIR = 8;//最大で8方位
+    int MAX_FRAME = 3;//3枚の画像をループ表示する
+    BitmapData bitmap_data[][] = new BitmapData[MAX_BITMAP_DIR][MAX_FRAME];
+    int FRAME_PERIODS = 18;//画像の更新周期
 
-    public MapObjectBitmap(int _bitmap_dir, Graphic _graphic, String _object_name) {
-        graphic = _graphic;
+    int time_count;//画像の更新周期を数える
+    boolean is_increasing_frame;
+    int frame;//いま表示しているフレームの番号（０～２）
 
-        bitmap_data = graphic.searchBitmap(_object_name);
+    public MapObjectBitmap(int _total_dirs, Graphic _graphic, String _object_name) {
 
-        if (_bitmap_dir == 1 || _bitmap_dir == 4 || _bitmap_dir == 8) {
-            bitmap_dir = _bitmap_dir;
-        } else {
+        if (!(_total_dirs == 1 || _total_dirs == 4 || _total_dirs == 8)) {
             throw new Error("◆%☆フジワラ：MapObjectBitmap()に渡す[画像方位]がおかしい");
         }
+        total_dirs = _total_dirs;
+        graphic = _graphic;
+        object_name = _object_name;
 
+        BitmapData raw_bitmap_data = graphic.searchBitmap(object_name);
+        unit_width = raw_bitmap_data.getWidth() / 6;
+        unit_height = raw_bitmap_data.getHeight() / 4;
 
+        time_count = 0;
+        is_increasing_frame = true;
+        frame = 0;
 
+        if (total_dirs == 8) {
+            storeEightBD(raw_bitmap_data);
+        }
     }
 
     public void init() {
 
     }
 
-    public void draw() {
+    public void update() {
 
-        if (bitmap_dir == 1) {
+        //フレームの番号
+        time_count = (time_count + 1) % FRAME_PERIODS;
+        if (time_count == 0) {
 
+            if (is_increasing_frame == true) {
+                frame++;
+            } else {
+                frame--;
+            }
+
+            switch (frame) {
+                case 0:
+                    is_increasing_frame = true;
+                    break;
+                case 2:
+                    is_increasing_frame = false;
+                    break;
+                default:
+                    break;
+            }
         }
+    }
 
-//        object_bitmap[((int) ((direction + PI / bitmap_dir) / (2 * PI / bitmap_dir)))]
+    //_dir_on_map : 0 ~ 2*PI
+    public void draw(double _dir_on_map, double x, double y) {
 
+        //マップ上でのオブジェクトの向き
+        //[0 ~ 2*PI]を[0 ~ 7]に変換する
+        int num_dir_on_map = ((int) ((_dir_on_map + PI / total_dirs) / (2 * PI / total_dirs)))%total_dirs;
+
+        graphic.bookingDrawBitmapData(bitmap_data[num_dir_on_map][frame], (int) x, (int) y);
 
     }
 
-    public void setDirection(double _direction) {
+    private void storeEightBD(BitmapData _raw_bitmap_data) {
 
-        if (0 <= _direction && _direction <= 2 * PI) {
-            direction = _direction;
+        for (int i = 0; i < 8; i++) {
+            switch (i) {
+                case 0:
+                    storeBD(2, 0, _raw_bitmap_data, i);//2行0列の画像をobject_bitmapに格納
+                    break;
+                case 1:
+                    storeBD(3, 1, _raw_bitmap_data, i);
+                    break;
+                case 2:
+                    storeBD(3, 0, _raw_bitmap_data, i);
+                    break;
+                case 3:
+                    storeBD(2, 1, _raw_bitmap_data, i);
+                    break;
+                case 4:
+                    storeBD(1, 0, _raw_bitmap_data, i);
+                    break;
+                case 5:
+                    storeBD(0, 1, _raw_bitmap_data, i);
+                    break;
+                case 6:
+                    storeBD(0, 0, _raw_bitmap_data, i);
+                    break;
+                case 7:
+                    storeBD(1, 1, _raw_bitmap_data, i);
+                    break;
+            }
         }
-
 
     }
 
+    private void storeBD(int row, int col, BitmapData _raw_bitmap_data, int _object_dir) {
+
+        for (int i = 0; i < 3; i++) {
+//            public BitmapData processTrimmingBitmapData(BitmapData src_bitmap_data, int x, int y, int width, int height){
+            bitmap_data[_object_dir][i] = graphic.processTrimmingBitmapData(_raw_bitmap_data, col * (unit_width * 3) + i * unit_width, row * unit_height, unit_width, unit_height);
+
+        }
+    }
 }

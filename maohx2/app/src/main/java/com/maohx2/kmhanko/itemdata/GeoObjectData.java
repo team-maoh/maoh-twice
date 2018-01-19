@@ -17,6 +17,13 @@ public class GeoObjectData extends ItemData {
     double defence_rate;
     double luck_rate;
 
+    public GeoObjectData() {
+    }
+
+    public GeoObjectData(int _hp, int _attack, int _defence, int _luck, double _hp_rate, double _attack_rate, double _defence_rate, double _luck_rate) {
+        setStatus(_hp, _attack, _defence, _luck, _hp_rate, _attack_rate, _defence_rate, _luck_rate);
+    }
+
     public void setStatus(int _hp, int _attack, int _defence, int _luck, double _hp_rate, double _attack_rate, double _defence_rate, double _luck_rate) {
         hp = _hp;
         attack = _attack;

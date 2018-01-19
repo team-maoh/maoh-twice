@@ -5,7 +5,12 @@ package com.maohx2.kmhanko.geonode;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.Text.ListBox;
+import com.maohx2.ina.UI.UserInterface;
+import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 
 /**
@@ -18,7 +23,10 @@ public class GeoSlot {
 
     static final int GEO_SLOT_CHILDREN_MAX = 8;
     static final int SCALE = 10;
-    static GeoSlotAdmin geo_slot_admin;
+    GeoSlotAdmin geoSlotAdmin;//staticにしてはならない。いくつかのGeoSlotAdminがあるため。
+    static UserInterface userInterface;
+    static TextBoxAdmin textBoxAdmin;
+    static MyDatabase geoSlotEventDB;
 
     List<GeoSlot> children_slot = new ArrayList<GeoSlot>(GEO_SLOT_CHILDREN_MAX);
     GeoSlot parent_slot;
@@ -29,17 +37,24 @@ public class GeoSlot {
     String release_event;
     String restriction;
 
-    Graphic graphic;
+    static Graphic graphic;
 
     GeoObjectData geoObjectData;
 
-    public GeoSlot() {
+    //TODO:デバッグ用。セーブデータの用意が必要
+    boolean isReleased = false;
+
+    public GeoSlot(GeoSlotAdmin _geoSlotAdmin) {
+        item_id = -1;
         is_exist = true;
+        geoSlotAdmin = _geoSlotAdmin;
     }
 
-    public void init(Graphic _graphic) {
-        item_id = -1;
+    static public void staticInit(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, MyDatabase _geoSlotEventDB) {
         graphic = _graphic;
+        userInterface = _userInterface;
+        textBoxAdmin = _textBoxAdmin;
+        geoSlotEventDB = _geoSlotEventDB;
     }
 
     //GeoSlotのツリーコードを元に、GeoSlotのインスタンス化を行う。再帰ライクに生成する。
@@ -53,7 +68,7 @@ public class GeoSlot {
         tree_code.remove(0);
 
         for (int i = 0; i < size; i++) {
-            children_slot.add(new GeoSlot());
+            children_slot.add(new GeoSlot(geoSlotAdmin));
             tree_code = children_slot.get(children_slot.size() - 1).makeGeoSlotInstance(tree_code, this);
         }
         return tree_code;
@@ -87,11 +102,26 @@ public class GeoSlot {
     public boolean isEventClear() {
         if (release_event == null) {
             return true;
+        } else {
+            //何かしらrelease_eventが設定されている
+
+            //セーブデータにアクセスし、その条件を満たしているかを確認する
+
+            //満たしているなら
+            //return true;
+            //満たしていないなら
+            //return false;
+
+            //TODO:デバッグ用　とりあえずSlot自身が一時的にイベントがクリアされたかの変数を持つことにする
+            if (isReleased == true) {
+                return true;
+            } else {
+                return false;
+            }
         }
-        return false;
     }
 
-    //親を含めて、イベントがクリアされているかを再帰風に返す関数。
+    //親を含めて、イベントがクリアされているかを再帰風に返す関数。(つまり、このスロットよりも根元に、置いてはいけないマークがあるかどうか)
     public boolean isEventClearAll() {
         if (isEventClear()) {
             if (parent_slot != null) {
@@ -235,18 +265,83 @@ public class GeoSlot {
         */
     }
 
-    public void draw() {
-        graphic.bookingDrawBitmapName("apple", position_x, position_y, SCALE, SCALE, 0, 255, true);
+    public void draw(boolean isFocused) {
+        if (isFocused) {
+            graphic.bookingDrawBitmapName("apple", position_x, position_y, SCALE*1.5f, SCALE*1.5f, 0, 255, false);
+        } else {
+            graphic.bookingDrawBitmapName("apple", position_x, position_y, SCALE, SCALE, 0, 255, false);
+        }
 
         if (is_in_geoObjectData && geoObjectData != null) {
             //TODO: geoObjectDataの画像名を獲得する
-            graphic.bookingDrawBitmapName("neco", position_x, position_y, SCALE, SCALE, 0, 255, true);
+            graphic.bookingDrawBitmapName("neco", position_x, position_y, SCALE, SCALE, 0, 255, false);
         }
 
         if (!isEventClear()) {
-            graphic.bookingDrawBitmapName("banana", position_x, position_y, SCALE, SCALE, 0, 255, true);
+            graphic.bookingDrawBitmapName("banana", position_x, position_y, SCALE, SCALE, 0, 255, false);
         }
+    }
 
+    public void update() {
+        touchEvent();
+    }
+
+    //GeoSlot解放のデータ的処理
+    public void geoSlotRelease() {
+        if (!isEventClear()) {
+            //GeoSlotEvent.DBを参照し、release_eventと一致するものを探し、そのTable名で分岐して処理
+            List<String> tableName = geoSlotEventDB.getTables();
+
+            int rowid;
+            String eventGroupName = null;
+            for(int i = 0; i < tableName.size(); i++) {
+                rowid = geoSlotEventDB.getOneRowID(tableName.get(i), "name = " + MyDatabase.s_quo(release_event));
+                if (rowid > 0) {
+                    //該当イベントが存在した
+                    eventGroupName = tableName.get(i);
+                    break;
+                }
+            }
+            if (eventGroupName == null) {
+                throw new Error("☆タカノ : GeoSlot#geoSlotRelease 該当する解放イベント名がDB上に存在しない : " + release_event);
+            }
+
+            if (eventGroupName == "Money") {
+                //プレイヤーの所持金をチェック、必要金額以上あれば減らす。
+                System.out.println("GeoSlot#geoSlotRelease　金を支払う　" + release_event);
+            }
+            if (eventGroupName == "GeoObject") {
+                //プレイヤーの所持GeoObjectを表示、選択させるイベントを発生させる。
+                System.out.println("GeoSlot#geoSlotRelease　ジオオブジェクトを支払う　" + release_event);
+            }
+
+            //色々あって解決した場合
+            isReleased = true;
+        }
+    }
+
+
+
+    public void touchEvent() {
+        if (userInterface.checkUI(getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
+            //System.out.println(userInterface.getItemID());
+            //TODO:isPushThisObject引数
+
+            geoSlotAdmin.setFocusGeoSlot(this);
+
+            //ジオオブジェクトをホールドしている時
+            if (geoSlotAdmin.isHoldGeoObject()) {
+                if (isEventClearAll() && isPushThisObject(null)) {
+                    //GeoSlotを設置する
+                    setItemID(userInterface.getItemID());
+                    setGeoObjectByItemID();
+                    geoSlotAdmin.calcGeoSlot();
+                }
+            } else {
+                //ジオオブジェクトをホールドしていない時
+                geoSlotAdmin.geoSlotReleaseChoice();
+            }
+        }
     }
 
     public boolean isInGeoObject() {
@@ -259,7 +354,9 @@ public class GeoSlot {
         return (is_in_geoObjectData && is_exist);
     }
 
-    static public void setGeoSlotAdmin(GeoSlotAdmin _geo_slot_admin) { geo_slot_admin = _geo_slot_admin; }
+    public void setGeoSlotAdmin(GeoSlotAdmin _geoSlotAdmin) { geoSlotAdmin = _geoSlotAdmin; }
+    static public void setUserInterface(UserInterface _userInterface) { userInterface = _userInterface; }
+    static public void setTextBoxAdmin(TextBoxAdmin _textBoxAdmin) { textBoxAdmin = _textBoxAdmin; }
     public void setIsExist(boolean _is_exist) {
         is_exist = _is_exist;
     }
