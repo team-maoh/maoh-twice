@@ -26,11 +26,7 @@ public class Text {
         column_of_box = _column_of_box;
         row_of_box = _row_of_box;
 
-        isMOP = true;
-
-        begin_column = 0;
-        num_of_lines = 0;
-        sentence = "null";
+        initSentence();
 
     }
 
@@ -64,6 +60,15 @@ public class Text {
         } else {
             System.out.println("◆num_of_linesが異常 from Text.java");
         }
+    }
+
+    public void initSentence() {
+
+        isMOP = true;
+        begin_column = 0;
+        num_of_lines = 0;
+        sentence = "null";
+
     }
 
     public int getNumOfLines() {

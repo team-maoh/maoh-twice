@@ -150,13 +150,13 @@ class StartSurfaceView extends BaseSurfaceView {
         start_game_system.updata();
         start_game_system.draw();
 
-/*
+
         if(touch_state == TouchState.DOWN){
             thread = null;
             Intent intent = new Intent(start_activity, WorldActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             start_activity.startActivity(intent);
         }
-*/
+
     }
 }

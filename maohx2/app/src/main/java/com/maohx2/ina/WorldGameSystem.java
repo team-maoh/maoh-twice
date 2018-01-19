@@ -27,7 +27,7 @@ public class WorldGameSystem {
     TextBoxAdmin text_box_admin;
     //ListBoxAdmin list_box_admin;
     GeoSlotAdmin geo_slot_admin;
-    GeoSlotAdminManager geo_slot_admin_manager;
+    GeoSlotAdminManager geoSlotAdminManager;
     MyDatabaseAdmin databaseAdmin;
     Graphic graphic;
 
@@ -41,8 +41,13 @@ public class WorldGameSystem {
 
 
         text_box_admin = new TextBoxAdmin(graphic);
+        text_box_admin.init(map_user_interface);
+
+        text_box_admin.setTextBoxExists(0,false);
+        text_box_admin.setTextBoxExists(1,false);
+
         //list_box_admin = new ListBoxAdmin();
-        geo_slot_admin_manager = new GeoSlotAdminManager();
+        geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, databaseAdmin, text_box_admin);
         //geo_slot_admin = new GeoSlotAdmin();
         dungeonSelectManager = new DungeonSelectManager();
 
@@ -50,44 +55,54 @@ public class WorldGameSystem {
         itemShopAdmin = new ItemShopAdmin();
 
 
-        text_box_admin.init(map_user_interface);
-        //list_box_admin.init(map_user_interface, graphic);
-        geo_slot_admin_manager.init(graphic, map_user_interface, databaseAdmin);
-        //geo_slot_admin.init(map_user_interface, map_activity);
+
         dungeonSelectManager.init(graphic, map_user_interface, databaseAdmin);
 
         itemDataAdminManager.init(databaseAdmin,graphic);
 
         itemShopAdmin.init(graphic, map_user_interface, databaseAdmin, text_box_admin, itemDataAdminManager);
-        itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.GEO_OBJECT, "debug");
+        //itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.GEO_OBJECT, "debug");
 
-
-
-        geo_slot_admin_manager.setActiveGeoSlotAdmin("Test");
+        geoSlotAdminManager.setActiveGeoSlotAdmin("森");
 
         canvas = null;
-
     }
 
 
     public void updata() {
-        //geo_slot_admin_manager.update();
+        geoSlotAdminManager.update();
         //map_user_interface.update();
         //dungeonSelectManager.update();
-        itemShopAdmin.update();
+        //itemShopAdmin.update();
         text_box_admin.update();
     }
 
 
     public void draw() {
 
-        //geo_slot_admin_manager.draw();
+        geoSlotAdminManager.draw();
 
         //dungeonSelectManager.draw();
-        itemShopAdmin.draw();
+        //itemShopAdmin.draw();
         text_box_admin.draw();
 
         graphic.draw();
     }
 }
+
+/*
+memo作業内容
+
+WorldGameSystemの中身を整理した
+いなに画面切り替えオーダー
+いなにボタンオーダー(ListBoxがButtonの配列をもち、それぞれの位置が決められる。それが画像だったりテキストだったりできて、
+ListBox<T extends Button>としてButtonを継承したButtonを作れるようにする)
+Shop,Present,GeoSlotあたりはいなのItemBag待ち
+いなのボタンができたらメニューを並べる
+いなの画面遷移ができたらメニューから遷移できるようにし、GeoWorldMapからGeoSlotMapに遷移できるようにする。
+GeoSlotMapのここに置けないとか、一定の条件を満たした場合に解放されるやつ。
+いなのセーブ機能
+
+ */
+
 

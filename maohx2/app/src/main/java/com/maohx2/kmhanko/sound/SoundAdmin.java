@@ -79,7 +79,7 @@ public class SoundAdmin {
     }
 
     private int getSoundID(String name) {
-        int buf = database.getOneRowIDForArray(soundpack_name, "name=" + database.s_quo(name));
+        int buf = database.getOneRowIDForArray(soundpack_name, "name=" + MyDatabase.s_quo(name));
         try {
             return sound_ID.get(buf);
         } catch (ArrayIndexOutOfBoundsException e) {

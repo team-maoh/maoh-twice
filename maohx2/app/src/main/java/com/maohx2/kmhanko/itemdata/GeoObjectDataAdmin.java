@@ -14,14 +14,15 @@ public class GeoObjectDataAdmin extends ItemDataAdmin<GeoObjectData> {
 
     public GeoObjectDataAdmin(Graphic _graphic, MyDatabaseAdmin databaseAdmin) {
         super(_graphic, databaseAdmin);
-        dbName = "GeoObjectDataDB";
-        dbAsset = "GeoObjectDataDB.db";
-        tableName = "debug";
+        loadItemData("DefaultGeoObjectData");
     }
 
     @Override
     public void loadItemData(String table_name) {
         int size = database.getSize(table_name);
+        List<String> name = database.getString(table_name, "name");
+        List<String> imageName = database.getString(table_name, "image_name");
+        List<Integer> price = database.getInt(table_name, "price");
         List<Integer> hp = database.getInt(table_name, "hp");
         List<Integer> attack = database.getInt(table_name, "attack");
         List<Integer> defence = database.getInt(table_name, "defence");
@@ -31,22 +32,22 @@ public class GeoObjectDataAdmin extends ItemDataAdmin<GeoObjectData> {
         List<Integer> defenceRate = database.getInt(table_name, "defence_rate");
         List<Integer> luckRate = database.getInt(table_name, "luck_rate");
 
-        int cnt;
         for (int i = 0; i < size; i++) {
             datas.add(new GeoObjectData());
-            cnt = datas.size() - 1;
-            datas.get(cnt).setHp(hp.get(i));
-            datas.get(cnt).setAttack(attack.get(i));
-            datas.get(cnt).setDefence(defence.get(i));
-            datas.get(cnt).setLuck(luck.get(i));
-            datas.get(cnt).setHpRate(hpRate.get(i));
-            datas.get(cnt).setAttackRate(attackRate.get(i));
-            datas.get(cnt).setDefenceRate(defenceRate.get(i));
-            datas.get(cnt).setLuckRate(luckRate.get(i));
-        }
+            datas.get(i).setName(name.get(i));
+            datas.get(i).setImageName(imageName.get(i));
+            datas.get(i).setPrice(price.get(i));
+            datas.get(i).setHp(hp.get(i));
+            datas.get(i).setAttack(attack.get(i));
+            datas.get(i).setDefence(defence.get(i));
+            datas.get(i).setLuck(luck.get(i));
+            datas.get(i).setHpRate(hpRate.get(i));
+            datas.get(i).setAttackRate(attackRate.get(i));
+            datas.get(i).setDefenceRate(defenceRate.get(i));
+            datas.get(i).setLuckRate(luckRate.get(i));
 
-        //呼び忘れないように注意
-        //super.loadItemData(table_name);
+            datas.get(i).setItemImage(graphic.searchBitmap(imageName.get(i)));
+        }
     }
 
 }

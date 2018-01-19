@@ -8,6 +8,7 @@ import android.view.SurfaceHolder;
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
 
+import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Draw.Graphic;
 //import com.maohx2.ina.MySprite;
@@ -22,25 +23,25 @@ import javax.microedition.khronos.opengles.GL10;
 
 abstract public class MapObject {
 
-    double x, y;
-    //    SurfaceHolder holder;
+    double w_x, w_y;
     String draw_object;
     boolean exists;//自身がマップ上に存在しているかどうか
     int id;
-    double direction;//マップ上での自分自身の向き( 0 ~ 2*PI )
-
     Graphic graphic;
+    Camera camera;
+    double dir_on_map;//マップ上での自分自身の向き( 0 ~ 2*PI )
 
-    public MapObject(Graphic _graphic, MapObjectAdmin _map_object_admin) {
+    public MapObject(Graphic _graphic, MapObjectAdmin _map_object_admin, Camera _camera) {
 
         graphic = _graphic;
+        camera = _camera;
 
         exists = true;
         id = -1;
 
-        x = 800;
-        y = 450;
-        direction = 0;
+        w_x = 800;
+        w_y = 450;
+        dir_on_map = 0.0;
 
     }
 
@@ -51,24 +52,20 @@ abstract public class MapObject {
     public void update() {
     }
 
-    public void draw(MapAdmin _map_admin) {
-
-        MapAdmin map_admin = _map_admin;
-
-        if (exists == true) {
-            graphic.bookingDrawBitmapName(draw_object, (int) x, (int) y);
-
-//            graphic.bookingDrawBitmap("ゴキ魅",800,450);
-        }
-
-    }
-
     public double getMapX() {
-        return x;
+        return w_x;
     }
 
     public double getMapY() {
-        return y;
+        return w_y;
+    }
+
+    public double getNormX(){
+        return camera.convertToNormCoordinateX((int) w_x);
+    }
+
+    public double getNormY(){
+        return camera.convertToNormCoordinateY((int) w_y);
     }
 
     public boolean exists() {
@@ -81,6 +78,10 @@ abstract public class MapObject {
 
     public int getId() {
         return id;
+    }
+
+    public double getDirOnMap(){
+        return dir_on_map;
     }
 
 //    public void setId(int _id){
