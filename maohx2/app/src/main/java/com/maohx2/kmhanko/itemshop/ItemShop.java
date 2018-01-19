@@ -147,11 +147,3 @@ public abstract class ItemShop {
     }
     */
 }
-
-/*
-DB関係
-ファイル名前のDB自動入力
-拡張子を除いた値
-
-
- */
