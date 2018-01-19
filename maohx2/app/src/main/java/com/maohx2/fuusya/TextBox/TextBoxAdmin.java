@@ -176,6 +176,8 @@ public class TextBoxAdmin {
         text_box[_box_id].updateText();
     }
 
+
+
     //TextBoxを削除する関数
     public void deleteTextBox(int _box_id) {
 
