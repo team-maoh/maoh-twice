@@ -25,9 +25,8 @@ public abstract class Plate {
     Graphic graphic;
     Paint button_paint;
 
-    Plate(){}
 
-    Plate(Graphic _graphic, UserInterface _user_interface, Paint _paint, Constants.Touch.TouchWay _judge_way, Constants.Touch.TouchWay _feedback_way){
+    Plate(Graphic _graphic, UserInterface _user_interface, Paint _paint, Constants.Touch.TouchWay _judge_way, Constants.Touch.TouchWay _feedback_way) {
         graphic = _graphic;
         user_interface = _user_interface;
         button_paint = new Paint();
@@ -40,26 +39,32 @@ public abstract class Plate {
 
     abstract public void draw();
 
-    public boolean checkTouchContent(){
+    public boolean checkTouchContent() {
 
-        if(user_interface.checkUI(touch_id, judge_way) == true) {
+        if (user_interface.checkUI(touch_id, judge_way) == true) {
             return true;
         }
         return false;
     }
 
+    public void update() {
 
-    public void update(){
-
-            if (user_interface.checkUI(touch_id, feedback_way) == true) {
-                alpha = 255;
-            } else {
-                alpha = 100;
-            }
+        if (user_interface.checkUI(touch_id, judge_way) == true) {
+            alpha = 100;
+            callBackEvent();
+        } else if (user_interface.checkUI(touch_id, feedback_way) == true) {
+            alpha = 255;
+        } else {
+            alpha = 100;
+        }
 
         button_paint.setAlpha(alpha);
     }
 
-    public void setPaint(Paint _paint){button_paint.set(_paint);}
+    public void setPaint(Paint _paint) {
+        button_paint.set(_paint);
+    }
+
+    public void callBackEvent() {}
 
 }

@@ -188,6 +188,24 @@ public class Graphic {
         return  (int)((disp_y + DRAW_UP_END) * DISP_NORMARIZED_RATE.y);
     }
 
+    public void bookingDrawBitmapData(ImageContext _image_context){
+
+        if(booking_bitmap_num >= booking_bitmap_datas.size()){
+            booking_bitmap_datas.add(new BookingBitmapData());
+        }
+
+        ((BookingBitmapData)booking_bitmap_datas.get(booking_bitmap_num)).update(_image_context.getBitmapData(), _image_context.getMatrix(), _image_context.getPaint());
+
+        if(booking_num >= booking_task_datas.size()) {
+            booking_task_datas.add(new BookingBitmapData());
+        }
+
+        booking_task_datas.set(booking_num, booking_bitmap_datas.get(booking_bitmap_num));
+        booking_num++;
+        booking_bitmap_num++;
+
+    }
+
 
     public void bookingDrawBitmapData(BitmapData draw_bitmap_data, Point position, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
 
@@ -352,33 +370,46 @@ public class Graphic {
 
         return hit_bitmap_data;
     }
-/*
-    public ImageProperty makeImageProperty(Point position, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
+
+
+    public ImageContext makeImageContext(BitmapData draw_bitmap_data, Point position, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft) {
 
         setting_point1.set(position.x, position.y);
         transrateNormalizedPositionToDispPosition(setting_point1);
 
         setting_matrix.reset();
 
-        if(is_upleft == false) {
+        if (is_upleft == false) {
             setting_matrix.postTranslate(-draw_bitmap_data.getBitmap().getWidth() / 2, -draw_bitmap_data.getBitmap().getHeight() / 2);
         }
 
-        setting_matrix.postScale(DENSITY*scale_x, DENSITY*scale_y);
+        setting_matrix.postScale(DENSITY * scale_x, DENSITY * scale_y);
         setting_matrix.postRotate(degree);
         setting_matrix.postTranslate(setting_point1.x, setting_point1.y);
 
         //行列とビットマップデータの保存
         draw_paint.setAlpha(alpha);
+
+        ImageContext image_context = new ImageContext(draw_bitmap_data, setting_matrix, draw_paint);
+
+        return image_context;
     }
 
-    public ImageProperty makeImageProperty(int position_x, int position_y , float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
+    public ImageContext makeImageContext(BitmapData draw_bitmap_data, int position_x, int position_y , float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
 
-
-
-
+        Point position = new Point(position_x, position_y);
+        return makeImageContext(draw_bitmap_data, position, scale_x, scale_y, degree, alpha, is_upleft);
     }
-*/
+
+    public ImageContext makeImageContext(BitmapData draw_bitmap_data, int position_x, int position_y){
+
+        return makeImageContext(draw_bitmap_data, position_x, position_y, 1, 1, 0, 255, false);
+    }
+
+    public ImageContext makeImageContext(BitmapData draw_bitmap_data, int position_x, int position_y, boolean is_upleft){
+
+        return makeImageContext(draw_bitmap_data, position_x, position_y, 1, 1, 0, 255, is_upleft);
+    }
 
     /*
     public BitmapData processBitmapData(BitmapData src_bitmap_data, float scale_x, float scale_y, int alpha){
