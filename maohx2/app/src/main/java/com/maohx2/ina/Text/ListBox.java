@@ -40,9 +40,9 @@ public class ListBox {
     Graphic graphic;
 
     public void init(UserInterface _user_interface, Graphic _graphic, TouchWay _judge_way, int _content_num, int _box_up_left_x, int _box_up_left_y, int _box_down_right_x, int _box_down_right_y) {
+
         user_interface = _user_interface;
         graphic = _graphic;
-
 
         judge_way = _judge_way;
         content_num = _content_num;

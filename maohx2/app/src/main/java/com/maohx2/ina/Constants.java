@@ -34,6 +34,7 @@ public final class Constants {
             DOWN_MOMENT,
             MOVE,
             UP_MOMENT,
+            NOTHING,
         }
     }
 
