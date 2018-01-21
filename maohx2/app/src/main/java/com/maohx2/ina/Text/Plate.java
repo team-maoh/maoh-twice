@@ -15,7 +15,7 @@ import com.maohx2.ina.Constants.Touch.TouchWay;
  * Created by ina on 2018/01/12.
  */
 
-public abstract class Button {
+public abstract class Plate {
 
     Constants.Touch.TouchWay judge_way;
     Constants.Touch.TouchWay feedback_way;
@@ -25,8 +25,11 @@ public abstract class Button {
     Graphic graphic;
     Paint button_paint;
 
-    Button(Graphic _graphic, Paint _paint, Constants.Touch.TouchWay _judge_way, Constants.Touch.TouchWay _feedback_way){
+    Plate(){}
+
+    Plate(Graphic _graphic, UserInterface _user_interface, Paint _paint, Constants.Touch.TouchWay _judge_way, Constants.Touch.TouchWay _feedback_way){
         graphic = _graphic;
+        user_interface = _user_interface;
         button_paint = new Paint();
         button_paint.set(_paint);
         judge_way = _judge_way;

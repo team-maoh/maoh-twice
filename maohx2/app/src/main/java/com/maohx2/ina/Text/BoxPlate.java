@@ -4,17 +4,18 @@ import android.graphics.Paint;
 
 import com.maohx2.ina.Constants.Touch.TouchWay;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.UI.UserInterface;
 
 /**
  * Created by ina on 2018/01/14.
  */
 
-public class BoxButton extends Button{
+public class BoxPlate extends Plate {
 
     int left, up, right, down;
 
-    BoxButton(Graphic _graphic, Paint _paint, TouchWay _judge_way, TouchWay _feedback_way, int _left, int _up, int _right, int _down){
-        super(_graphic, _paint, _judge_way, _feedback_way);
+    BoxPlate(Graphic _graphic, UserInterface _user_interface, Paint _paint, TouchWay _judge_way, TouchWay _feedback_way, int _left, int _up, int _right, int _down){
+        super(_graphic, _user_interface, _paint, _judge_way, _feedback_way);
         left = _left;
         up = _up;
         right = _right;

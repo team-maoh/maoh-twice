@@ -4,17 +4,18 @@ import android.graphics.Paint;
 
 import com.maohx2.ina.Constants.Touch.TouchWay;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.UI.UserInterface;
 
 /**
  * Created by ina on 2018/01/14.
  */
 
-public class CircleButton extends Button{
+public class CirclePlate extends Plate {
 
     int x,y,radius;
 
-    CircleButton(Graphic _graphic, Paint _paint, TouchWay _judge_way, TouchWay _feedback_way, int _x, int _y, int _radius){
-        super(_graphic, _paint, _judge_way, _feedback_way);
+    CirclePlate(Graphic _graphic, UserInterface _user_interface, Paint _paint, TouchWay _judge_way, TouchWay _feedback_way, int _x, int _y, int _radius){
+        super(_graphic, _user_interface, _paint, _judge_way, _feedback_way);
         x = _x;
         y = _y;
         radius = _radius;

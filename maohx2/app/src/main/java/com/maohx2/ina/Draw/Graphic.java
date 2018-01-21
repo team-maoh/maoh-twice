@@ -176,8 +176,6 @@ public class Graphic {
     }
 
 
-
-
     public Point transrateDispPositionToNormalizedPosition(Point _disp_position){
         return  new Point((int)((_disp_position.x + DRAW_LEFT_END)* DISP_NORMARIZED_RATE.x), (int)((_disp_position.y + DRAW_UP_END) * DISP_NORMARIZED_RATE.y));
     }
@@ -210,10 +208,15 @@ public class Graphic {
         draw_paint.setAlpha(alpha);
 
         if(booking_bitmap_num >= booking_bitmap_datas.size()){
-            booking_bitmap_datas.add(new BookingRectData());
+            booking_bitmap_datas.add(new BookingBitmapData());
         }
 
         ((BookingBitmapData)booking_bitmap_datas.get(booking_bitmap_num)).update(draw_bitmap_data, setting_matrix, draw_paint);
+
+        if(booking_num >= booking_task_datas.size()) {
+            booking_task_datas.add(new BookingBitmapData());
+        }
+
         booking_task_datas.set(booking_num, booking_bitmap_datas.get(booking_bitmap_num));
         booking_num++;
         booking_bitmap_num++;
@@ -260,6 +263,11 @@ public class Graphic {
         }
 
         ((BookingCircleData)booking_circle_datas.get(booking_circle_num)).update(setting_point1.x, setting_point1.y, disp_radius, paint);
+
+        if(booking_num >= booking_task_datas.size()) {
+            booking_task_datas.add(new BookingBitmapData());
+        }
+
         booking_task_datas.set(booking_num, booking_circle_datas.get(booking_circle_num));
         booking_num++;
         booking_circle_num++;
@@ -278,6 +286,12 @@ public class Graphic {
         }
 
         ((BookingRectData)booking_rect_datas.get(booking_rect_num)).update(setting_point1.x, setting_point1.y, setting_point2.x, setting_point2.y, paint);
+
+
+        if(booking_num >= booking_task_datas.size()) {
+            booking_task_datas.add(new BookingBitmapData());
+        }
+
         booking_task_datas.set(booking_num, booking_rect_datas.get(booking_rect_num));
         booking_num++;
         booking_rect_num++;
@@ -297,6 +311,11 @@ public class Graphic {
         }
 
         ((BookingTextData)booking_text_datas.get(booking_text_num)).update(draw_string, setting_point1.x, setting_point1.y, draw_paint);
+
+        if(booking_num >= booking_task_datas.size()) {
+            booking_task_datas.add(new BookingBitmapData());
+        }
+
         booking_task_datas.set(booking_num, booking_text_datas.get(booking_text_num));
         booking_num++;
         booking_text_num++;
@@ -333,6 +352,33 @@ public class Graphic {
 
         return hit_bitmap_data;
     }
+/*
+    public ImageProperty makeImageProperty(Point position, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
+
+        setting_point1.set(position.x, position.y);
+        transrateNormalizedPositionToDispPosition(setting_point1);
+
+        setting_matrix.reset();
+
+        if(is_upleft == false) {
+            setting_matrix.postTranslate(-draw_bitmap_data.getBitmap().getWidth() / 2, -draw_bitmap_data.getBitmap().getHeight() / 2);
+        }
+
+        setting_matrix.postScale(DENSITY*scale_x, DENSITY*scale_y);
+        setting_matrix.postRotate(degree);
+        setting_matrix.postTranslate(setting_point1.x, setting_point1.y);
+
+        //行列とビットマップデータの保存
+        draw_paint.setAlpha(alpha);
+    }
+
+    public ImageProperty makeImageProperty(int position_x, int position_y , float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
+
+
+
+
+    }
+*/
 
     /*
     public BitmapData processBitmapData(BitmapData src_bitmap_data, float scale_x, float scale_y, int alpha){

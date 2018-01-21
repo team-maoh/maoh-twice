@@ -75,4 +75,12 @@ public final class Constants {
             TEXT,
         }
     }
+
+    public static class PlateGroup {
+
+        public enum GROUP_KIND {
+            BOX_
+        }
+    }
+
 }
