@@ -15,18 +15,14 @@
 ###################
 
 #!/bin/bash
-#一時ファイルの削除(~~Tempの削除)
-for tempFile in `find . -maxdepth 1 -type f -name "*Temp"`; do
-  rm $tempFile
-done
 
 #globalの場合
-sh loadDirAndFile.sh ./image/global
+sh loadDirAndFile.sh ../image/global
 
 #localの場合
-for dirPath in `find ./image/local -mindepth 1 -maxdepth 1 -type d`; do
+for dirPath in `find ../image/local -mindepth 1 -maxdepth 1 -type d`; do
   dirName=`basename $dirPath`
-  sh loadDirAndFile.sh ./image/local/${dirName} Local
+  sh loadDirAndFile.sh ../image/local/${dirName} Local
 done
 
 #sqlite3に投げる

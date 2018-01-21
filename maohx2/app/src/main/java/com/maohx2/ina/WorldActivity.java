@@ -13,6 +13,8 @@ import android.widget.RelativeLayout;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+import com.maohx2.kmhanko.sound.SoundAdmin;
+
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
 
@@ -40,6 +42,7 @@ class WorldSurfaceView extends BaseSurfaceView {
     Activity map_activity;
     MyDatabaseAdmin my_database_admin;
     Graphic graphic;
+    SoundAdmin soundAdmin;
 
     public WorldSurfaceView(Activity _map_activity) {
         super(_map_activity);
@@ -53,8 +56,10 @@ class WorldSurfaceView extends BaseSurfaceView {
         my_database_admin.addMyDatabase("WorldDB", "LocalWorldImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("WorldDB"), "World");
 
+        soundAdmin = new SoundAdmin(map_activity, my_database_admin);
+
         map_user_interface.init();
-        world_game_system.init(map_user_interface, graphic, my_database_admin);
+        world_game_system.init(map_user_interface, graphic, my_database_admin, soundAdmin);
     }
 
     @Override

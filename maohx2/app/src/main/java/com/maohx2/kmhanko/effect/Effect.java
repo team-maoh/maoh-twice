@@ -1,5 +1,8 @@
 package com.maohx2.kmhanko.effect;
 
+import android.util.Base64InputStream;
+
+import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.sound.SoundAdmin;
@@ -11,36 +14,36 @@ import java.util.List;
  */
 
 public class Effect {
-    EffectData effectData;
+    private EffectData effectData;
 
     static private Graphic graphic;
     static private SoundAdmin soundAdmin;
 
-    List<String> soundName = new ArrayList<String>();
-    List<BitmapData> bitmapData = new ArrayList<BitmapData>();
+    private List<String> soundName = new ArrayList<String>();
+    private List<BitmapData> bitmapData = new ArrayList<BitmapData>();
 
-    int steps;
+    private int steps;
 
-    int time;
-    int step;
+    private int time;
+    private int step;
 
-    int original_x;
-    int original_y;
+    private int original_x;
+    private int original_y;
 
-    int imageID;
-    int soundID;
-    int x;
-    int y;
-    float extend_x;
-    float extend_y;
-    float angle;
-    int alpha;
-    boolean isUpLeft;
+    private int imageID;
+    private int soundID;
+    private int x;
+    private int y;
+    private float extend_x;
+    private float extend_y;
+    private float angle;
+    private int alpha;
+    private boolean isUpLeft;
 
-    boolean is_start;
-    boolean is_pause;
+    private boolean is_start;
+    private boolean is_pause;
 
-    boolean exist;
+    private boolean exist;
 
 
     public Effect() {
@@ -91,13 +94,16 @@ public class Effect {
     */
 
     public void update() {
+        if (!exist) {
+            return;
+        }
         if (!is_start) {
             return;
         }
         if (is_pause) {
             return;
         }
-        if (step == steps - 1 && effectData.getNextID(step) == -1) {
+        if (step == steps && effectData.getNextID(step - 1) == -1) {
             //ループせず、アニメーションの末端なら更新しない
             return;
         }
@@ -128,9 +134,10 @@ public class Effect {
 
         if (effectData.getTime(step) < time) {
             //そのステップのラストに到達した
-            if (effectData.getNextID(step, step) > steps) {
+            if (effectData.getNextID(step, step) >= steps) {
                 //ループしない場合
-                //特に何もしない。以降、updateを読んでも即座にreturnされる
+                //Effectを終了する
+                clear();
             } else {
                 //指定IDのステップへ遷移する。ループする場合もここで自動的に処理される。
                 toStep(effectData.getNextID(step, step));
@@ -142,8 +149,11 @@ public class Effect {
     }
 
     public void draw() {
-        //Graphicに描画を頼む
-        //graphic.bookingDrawBitmapName(, new Point(original_x + x, original_y + y), extend_x, extend_y, angle, alpha, isUpLeft);
+        if (!exist) {
+            return;
+        }
+        //Graphicに描画を依頼
+        graphic.bookingDrawBitmapData(bitmapData.get(imageID), original_x + x, original_y + y, extend_x, extend_y, angle, alpha, isUpLeft);
     }
 
     //ステップ遷移するメソッド
@@ -176,7 +186,7 @@ public class Effect {
     //効果音を鳴らすメソッド
     private void sound() {
         if (soundID != -1) {
-            soundAdmin.play(soundName(soundID));
+            soundAdmin.play(soundName.get(soundID));
         }
     }
 
@@ -189,6 +199,45 @@ public class Effect {
         int time_max = effectData.getTime(step);
         return (param - pre_param)*(float)time/(float)time_max + pre_param;
     }
+
+    public boolean setSoundName(int i, String _soundName) {
+        if (i > 0 && i < soundName.size()) {
+            soundName.set(i, _soundName);
+            return true;
+        }
+        return false;
+    }
+    public boolean addSoundName(String _soundName) {
+        return soundName.add(_soundName);
+    }
+    public boolean setSoundName(List<String> _soundName) {
+        soundName = _soundName;
+        return true;
+    }
+    public boolean setBitmapData(int i, BitmapData _bitmapData) {
+        bitmapData.set(i, _bitmapData);
+        if (i > 0 && i < bitmapData.size()) {
+            bitmapData.set(i, _bitmapData);
+            return true;
+        }
+        return false;
+    }
+    public boolean addBitmapData(BitmapData _bitmapData) {
+        return bitmapData.add(_bitmapData);
+    }
+    public boolean setBitmapData(List<BitmapData> _bitmapData) {
+        bitmapData = _bitmapData;
+        return true;
+    }
+
+    public List<String> getSoundName() {
+        return soundName;
+    }
+
+    public List<BitmapData> getBitmapData() {
+        return bitmapData;
+    }
+
 
     public boolean isExist() {
         return exist;

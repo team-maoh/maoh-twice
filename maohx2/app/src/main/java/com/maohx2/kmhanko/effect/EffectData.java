@@ -42,9 +42,9 @@ public class EffectData {
         angle = database.getFloat(t_name, "angle");
         alpha = database.getInt(t_name, "alpha");
         time = database.getInt(t_name, "time");
-        switch_gr = database.getBoolean(t_name, "switch_option");
+        switch_gr = database.getBoolean(t_name, "switch_gr");
         upLeft = database.getBoolean(t_name, "is_up_left");
-        soundID = database.getInt(t_name, "sound");
+        soundID = database.getInt(t_name, "soundID");
         steps = database.getSize(t_name);
     }
 
