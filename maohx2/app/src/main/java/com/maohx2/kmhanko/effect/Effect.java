@@ -190,12 +190,12 @@ public class Effect {
         }
     }
 
-    private int calcGraduallyInt(int param, int pre_param, int time, int step) {
+    private int calcGraduallyInt(int pre_param, int param, int time, int step) {
         int time_max = effectData.getTime(step);
         return (int)((double)(param - pre_param)*(double)time/(double)time_max) + pre_param;
     }
 
-    private float calcGraduallyFloat(float param, float pre_param, int time, int step) {
+    private float calcGraduallyFloat(float pre_param, float param, int time, int step) {
         int time_max = effectData.getTime(step);
         return (param - pre_param)*(float)time/(float)time_max + pre_param;
     }

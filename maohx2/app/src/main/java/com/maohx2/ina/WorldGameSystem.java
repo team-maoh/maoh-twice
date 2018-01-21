@@ -93,6 +93,7 @@ public class WorldGameSystem {
             BitmapData _bitmapData = graphic.searchBitmap("打撃01");
             for (int i = 0; i < 9; i ++ ) {
                 testBitmapData.add(graphic.processTrimmingBitmapData(_bitmapData, 120 * i, 0, 120, 120));
+                //testBitmapData.add(_bitmapData);
             }
             List<String> testSoundName = new ArrayList<String>();
             testSoundName.add("bosu");
@@ -101,9 +102,8 @@ public class WorldGameSystem {
             effectAdmin.getEffect(testID).start();
         }
 
-        geoSlotAdminManager.update();
-        //map_user_interface.update();
-        //dungeonSelectManager.update();
+        //geoSlotAdminManager.update();
+        dungeonSelectManager.update();
         //itemShopAdmin.update();
         text_box_admin.update();
         effectAdmin.update();
@@ -112,9 +112,9 @@ public class WorldGameSystem {
 
     public void draw() {
 
-        geoSlotAdminManager.draw();
+        //geoSlotAdminManager.draw();
 
-        //dungeonSelectManager.draw();
+        dungeonSelectManager.draw();
         //itemShopAdmin.draw();
         text_box_admin.draw();
         effectAdmin.draw();

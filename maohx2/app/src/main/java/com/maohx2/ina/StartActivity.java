@@ -159,14 +159,14 @@ class StartSurfaceView extends BaseSurfaceView {
 
         //graphic.bookingDrawBitmapData(graphic.processBitmapData(test_bitmap_data,1,4,255),100,100);
 
-        /*
+
         if(touch_state == TouchState.DOWN){
             thread = null;
             Intent intent = new Intent(start_activity, WorldActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             start_activity.startActivity(intent);
         }
-*/
+
 
         start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         start_game_system.updata();
