@@ -24,13 +24,13 @@ public class PlateGroup<T extends Plate> {
         }
     }
 
-    public void updaate() {
+    public void update() {
         for (int i = 0; i < plates.length; i++) {
             plates[i].update();
         }
     }
 
-    public int getTouchContenttNum() {
+    public int getTouchContentNum() {
 
         for (int i = 0; i < plates.length; i++) {
             if (plates[i].checkTouchContent() == true) {
