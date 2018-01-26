@@ -78,16 +78,17 @@ public class DungeonSelectManager {
 
         List<CircleImagePlate> dungeonSelectButtonList = new ArrayList<CircleImagePlate>();
 
+
         //インスタンス化
         for (int i = 0; i < size; i++) {
             dungeonSelectButtonList.add(new CircleImagePlate(
                     graphic, userInterface,
-                    new Paint(),
                     Constants.Touch.TouchWay.UP_MOMENT,
                     Constants.Touch.TouchWay.MOVE,
                     new int[] { x.get(i), y.get(i), 100 },
-                    graphic.searchBitmap(imageName.get(i))
-                    ));
+                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), 3.0f, 3.0f, 0.0f, 255, false),
+                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), 5.0f, 5.0f, 0.0f, 255, false)
+            ));
         }
         CircleImagePlate[] dungeonSelectButton = new CircleImagePlate[dungeonSelectButtonList.size()];
         dungeonSelectButtonGroup = new PlateGroup<CircleImagePlate>(dungeonSelectButtonList.toArray(dungeonSelectButton));
