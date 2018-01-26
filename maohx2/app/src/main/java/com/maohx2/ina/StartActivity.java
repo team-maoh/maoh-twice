@@ -174,6 +174,7 @@ class StartSurfaceView extends BaseSurfaceView {
         image_list.update();
 
 
+        
         graphic.bookingDrawBitmapName("スライム",300,590);
         item_list.draw();
         image_list.draw();

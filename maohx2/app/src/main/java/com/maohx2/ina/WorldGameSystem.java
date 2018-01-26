@@ -81,6 +81,7 @@ public class WorldGameSystem {
         geoSlotAdminManager.setActiveGeoSlotAdmin("森");
 
         canvas = null;
+
     }
 
 
@@ -112,6 +113,7 @@ public class WorldGameSystem {
 
     public void draw() {
 
+        //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
         //geoSlotAdminManager.draw();
 
         dungeonSelectManager.draw();
