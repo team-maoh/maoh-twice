@@ -15,10 +15,13 @@ public class CircleTextPlate extends CirclePlate {
 
     String text;
     Paint text_paint;
+    Paint button_paint;
 
     CircleTextPlate(Graphic _graphic, UserInterface _user_interface, Paint _button_paint, Constants.Touch.TouchWay _judge_way, Constants.Touch.TouchWay _feedback_way, int[] position, String _text, Paint _text_paint){
-        super(_graphic, _user_interface, _button_paint, _judge_way, _feedback_way, position[0], position[1], position[2]);
+        super(_graphic, _user_interface, _judge_way, _feedback_way, position[0], position[1], position[2]);
 
+        button_paint = new Paint();
+        button_paint.set(_button_paint);
         text = _text;
         text_paint = new Paint();
         text_paint.set(_text_paint);
@@ -26,8 +29,14 @@ public class CircleTextPlate extends CirclePlate {
     }
 
     @Override
+    public void update(){
+        super.update();
+        button_paint.setAlpha(alpha);
+    }
+
+    @Override
     public void draw() {
-        super.draw();
+        graphic.bookingDrawCircle(x, y, radius, button_paint);
         button_paint.setColor(Color.argb(255, 0, 0, 0));
         //TODO:テキスト中央ぞろえ
         //graphic.bookingDrawText(content, left, up + (down - up)*3/4, paint);

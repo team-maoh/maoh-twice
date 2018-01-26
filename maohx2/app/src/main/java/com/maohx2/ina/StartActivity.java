@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.Draw.ImageContext;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.CircleImagePlate;
 import com.maohx2.ina.Text.PlateGroup;
@@ -71,6 +72,11 @@ class StartSurfaceView extends BaseSurfaceView {
 
     CircleImagePlate[] circle_image_plate = new CircleImagePlate[1];
     PlateGroup<CircleImagePlate> image_list;
+
+    int degree = 0;
+
+    ImageContext a;
+    ImageContext b;
 
     public StartSurfaceView(Activity _start_activity) {
         super(_start_activity);
@@ -135,10 +141,13 @@ class StartSurfaceView extends BaseSurfaceView {
         int[] circle_position = new int[3];
 
         circle_position[0] = 800;
-        circle_position[1] = 450;
+        circle_position[1] = 590;
         circle_position[2] = 100;
 
-        circle_image_plate[0] = new CircleImagePlate(graphic, start_user_interface, paint, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE, circle_position, graphic.searchBitmap("スライム"));
+        //a = graphic.makeImageContext(graphic.searchBitmap("スライム"),800,590);
+        a=graphic.makeImageContext(graphic.searchBitmap("スライム"),800,590);
+        b = graphic.makeImageContext(graphic.searchBitmap("スライム"),800,590,2,2,0,255,false);
+        circle_image_plate[0] = new CircleImagePlate(graphic, start_user_interface, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE, circle_position,a,b);
 
         image_list = new PlateGroup<CircleImagePlate>(circle_image_plate);
 
@@ -170,12 +179,14 @@ class StartSurfaceView extends BaseSurfaceView {
 
         start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         start_game_system.updata();
-        item_list.updaate();
-        image_list.updaate();
+        //item_list.update();
+        image_list.update();
 
 
-        graphic.bookingDrawBitmapName("スライム",300,590);
-        item_list.draw();
+        //graphic.bookingDrawBitmapName("スライム",300,590);
+        degree++;
+        //graphic.bookingDrawBitmapData(graphic.makeImageContext(graphic.searchBitmap("スライム"),300,590,2,6,degree,255,false));
+        //item_list.draw();
         image_list.draw();
         start_game_system.draw();
 

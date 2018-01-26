@@ -23,14 +23,13 @@ public abstract class Plate {
     int alpha;
     UserInterface user_interface;
     Graphic graphic;
-    Paint button_paint;
 
 
-    Plate(Graphic _graphic, UserInterface _user_interface, Paint _paint, Constants.Touch.TouchWay _judge_way, Constants.Touch.TouchWay _feedback_way) {
+    Plate(Graphic _graphic, UserInterface _user_interface, Constants.Touch.TouchWay _judge_way, Constants.Touch.TouchWay _feedback_way) {
         graphic = _graphic;
         user_interface = _user_interface;
-        button_paint = new Paint();
-        button_paint.set(_paint);
+        //button_paint = new Paint();
+        //button_paint.set(_paint);
         judge_way = _judge_way;
         feedback_way = _feedback_way;
 
@@ -57,12 +56,10 @@ public abstract class Plate {
         } else {
             alpha = 100;
         }
-
-        button_paint.setAlpha(alpha);
     }
 
     public void setPaint(Paint _paint) {
-        button_paint.set(_paint);
+        //button_paint.set(_paint);
     }
 
     public void callBackEvent() {}
