@@ -85,9 +85,9 @@ public class MapObjectBitmap {
 
         //マップ上でのオブジェクトの向き
         //[0 ~ 2*PI]を[0 ~ 7]に変換する
-        int num_dir_on_map = ((int) ((_dir_on_map + PI / total_dirs) / (2 * PI / total_dirs)))%total_dirs;
+        int int_dir_on_map = ((int) ((_dir_on_map + PI / total_dirs) / (2 * PI / total_dirs)))%total_dirs;
 
-        graphic.bookingDrawBitmapData(bitmap_data[num_dir_on_map][frame], (int) x, (int) y);
+        graphic.bookingDrawBitmapData(bitmap_data[int_dir_on_map][frame], (int) x, (int) y);
 
     }
 

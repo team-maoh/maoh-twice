@@ -23,8 +23,8 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 
 public class MapObjectAdmin {
 
-    int NUM_OF_ENEMY = 5;
-    int NUM_OF_ITEM = 10;// > 2
+    int NUM_OF_ENEMY = 10;
+    int NUM_OF_ITEM = 1;// > 2
 
     int PLAYER_DIR = 8;
     int ENEMY_DIR = 8;
@@ -62,8 +62,8 @@ public class MapObjectAdmin {
         map_player_bitmap = new MapObjectBitmap(PLAYER_DIR, graphic, "ドラゴン");
         map_player_bitmap.init();
 
-        player_x = map_player.getMapX();
-        player_y = map_player.getMapY();
+        player_x = map_player.getWorldX();
+        player_y = map_player.getWorldY();
 
         for (int i = 0; i < NUM_OF_ITEM; i++) {
             map_item[i] = new MapItem(graphic, this, i % 4, camera);
@@ -87,7 +87,7 @@ public class MapObjectAdmin {
         }
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
-            map_enemy[i] = new MapEnemy(graphic, this, camera);
+            map_enemy[i] = new MapEnemy(graphic, this, map_admin, camera);
             map_enemy[i].init();
             map_enemy_bitmap[i] = new MapObjectBitmap(ENEMY_DIR, graphic, "ハーピー");
             map_enemy_bitmap[i].init();
@@ -108,8 +108,8 @@ public class MapObjectAdmin {
 
         map_player.update();
         map_player_bitmap.update();
-        player_x = map_player.getMapX();
-        player_y = map_player.getMapY();
+        player_x = map_player.getWorldX();
+        player_y = map_player.getWorldY();
 
         for (int i = 0; i < NUM_OF_ITEM; i++) {
             map_item[i].update();
@@ -157,7 +157,7 @@ public class MapObjectAdmin {
     private void checkGettingItem(){
         //アイテム獲得
         for (int i = 0; i < NUM_OF_ITEM; i++) {
-            item_distance = myDistance(player_x, player_y, map_item[i].getMapX(), map_item[i].getMapY());
+            item_distance = myDistance(player_x, player_y, map_item[i].getWorldX(), map_item[i].getWorldY());
 
             if (item_distance < REACH_OF_PLAYER && map_item[i].exists() == true) {
                 System.out.println("アイテム獲得");
@@ -170,7 +170,7 @@ public class MapObjectAdmin {
 
     private void checkTouchingEnemy(){
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
-            enemy_distance = myDistance(player_x, player_y, map_enemy[i].getMapX(), map_enemy[i].getMapY());
+            enemy_distance = myDistance(player_x, player_y, map_enemy[i].getWorldX(), map_enemy[i].getWorldY());
 
             if (enemy_distance < REACH_OF_PLAYER && map_enemy[i].exists() == true) {
                 System.out.println("敵と接触");

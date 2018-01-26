@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
+import static java.lang.Math.PI;
 
 
 import com.maohx2.horie.map.Camera;
@@ -52,19 +53,19 @@ abstract public class MapObject {
     public void update() {
     }
 
-    public double getMapX() {
+    public double getWorldX() {
         return w_x;
     }
 
-    public double getMapY() {
+    public double getWorldY() {
         return w_y;
     }
 
-    public double getNormX(){
+    public double getNormX() {
         return camera.convertToNormCoordinateX((int) w_x);
     }
 
-    public double getNormY(){
+    public double getNormY() {
         return camera.convertToNormCoordinateY((int) w_y);
     }
 
@@ -80,8 +81,12 @@ abstract public class MapObject {
         return id;
     }
 
-    public double getDirOnMap(){
+    public double getDirOnMap() {
         return dir_on_map;
+    }
+
+    public int convertDirToIntDir(int total_dirs, double _dir_on_map) {
+        return ((int) ((_dir_on_map + PI / total_dirs) / (2 * PI / total_dirs))) % total_dirs;
     }
 
 //    public void setId(int _id){

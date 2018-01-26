@@ -32,7 +32,7 @@ public class TextBox {
     int column_of_box;//箱の横幅
     int row_of_box;//箱の縦幅
 
-    int MAX_QUEUE_TEXT = 25;//下のキューの容量
+    int MAX_QUEUE_TEXT = 500;//下のキューの容量
     Text queue[] = new Text[MAX_QUEUE_TEXT];//もらった文章を格納するキュー
     int last, first;//text_queueの末尾と先頭（末尾にテキストを追加する/先頭のテキストを表示する）
     //0■
@@ -49,8 +49,10 @@ public class TextBox {
     //
     //first[sentence_count]という名前の配列にする？
     //firstの個数 = sentence_count = (MOPをsetするたびに１つ増える)
-    int sentence_firsts[] = new int[MAX_QUEUE_TEXT];//queue[sentence_firsts[]] : firstの位置を記憶する
-    int sentence_count;
+    int sentence_firsts[] = new int[MAX_QUEUE_TEXT];//first = sentence_firsts[sentence_id] : firstの位置を記憶する
+    int sentence_count;//次に入ってきたsentenceに割り当てるid
+//    int pre_first;//次にMOPを受け取ったときにsentence_firsts[]に格納するべきfirst
+    //現在tmp_sentence[]に格納されつつあるsentenceの開始位置をこの変数で憶えておく
 
     //受け取った文はこの配列に一時的に格納する
     //MOPを受け取った時点で文queueの空きを確認して、十分な空きがあるなら格納する / ないなら破棄する
@@ -77,10 +79,15 @@ public class TextBox {
     boolean exists;//自分自身が画面に表示されているかどうか
     boolean sentence_exists;//textが画面に表示されているかどうか
 
-    public TextBox(Graphic _graphic, int _touch_id, int _box_id, boolean _update_text_by_touching, double _box_left, double _box_top, double _box_right, double _box_down, int _row_of_box) {
+    boolean assign_sentence_id;//sentenceをupdateした後で「今まで表示していたsentence」をqueueから抹消するかどうか
+    //trueだとqueueが代謝するので次から次へと新しいsentenceを受け取れる（キャラの台詞などに向いている）
+    //falseだと同じsentenceを二度も三度も表示することができる（アイテムの詳細表示などに向いている）
+
+    public TextBox(Graphic _graphic, int _touch_id, int _box_id, boolean _update_text_by_touching, boolean _assign_sentence_id, double _box_left, double _box_top, double _box_right, double _box_down, int _row_of_box) {
         graphic = _graphic;
         box_id = _box_id;
         update_text_by_touching = _update_text_by_touching;
+        assign_sentence_id = _assign_sentence_id;
 
         box_left = (int) _box_left;
         box_top = (int) _box_top;
@@ -117,12 +124,13 @@ public class TextBox {
         num_of_lines = 0;
         begin_column = 0;
 
-//        tmp_first = 0;
-
         exists = true;
         sentence_exists = true;
 
         sentence_count = 0;
+        for (int i = 0; i < MAX_QUEUE_TEXT; i++) {
+            sentence_firsts[i] = 0;
+        }
 
     }
 
@@ -189,7 +197,13 @@ public class TextBox {
     //外から文章を受け取り、文章キューの末尾に追加する
     public int inputText(String _sentence, Paint _paint) {
 
-        int return_sentence_id = sentence_count;
+        //この関数の返り値（貰ったsentenceのid）をここで定める
+        int return_sentence_id;
+        if (assign_sentence_id == true) {
+            return_sentence_id = sentence_count;
+        } else {
+            return_sentence_id = -1;
+        }
 
         if ((last + tmp_text_count + 1) % MAX_QUEUE_TEXT == first) {//文queueが満杯だったら、
 
@@ -217,15 +231,20 @@ public class TextBox {
                 //箱の横幅に対して長過ぎる文がある or 行数が多すぎる場合、エラーを吐いてアプリを落とす
                 judgeSentence();
 
-                sentence_firsts[sentence_count] = last;
+                if (assign_sentence_id == true) {
+                    sentence_firsts[sentence_count] = last;
+                }
 
                 for (int i = 0; i < tmp_text_count; i++) {//tmp_*[]に保持しておいた文、paint、開始位置、行数をqueueに格納する
                     queue[last].setSentence(tmp_sentence[i]);
                     queue[last].setPaint(tmp_paint[i]);
                     queue[last].setNumOfLines(tmp_num_of_lines[i]);
                     queue[last].setBeginColumn(tmp_begin_column[i]);
-
                     queue[last].setMOP(false);
+
+                    if (assign_sentence_id == true) {
+                        queue[last].setSentenceId(sentence_count);
+                    }
 
                     last = (last + 1) % MAX_QUEUE_TEXT;
                 }
@@ -237,7 +256,15 @@ public class TextBox {
                 num_of_lines = 0;
                 begin_column = 0;
 
-                sentence_count++;
+                if (assign_sentence_id == true) {
+                    sentence_count++;
+//                    sentence_count = (sentence_count + 1) % MAX_QUEUE_TEXT;
+                    if (sentence_count > MAX_QUEUE_TEXT) {
+//                        throw new Error("%☆◆フジワラ:sentence_countがデカくなりすぎた");//アプリを落とす
+                        System.out.println("%☆◆フジワラ:sentence_id指定モードのTextBoxが受け取れるsentenceの総数には限度がある");
+                        throw new Error("%☆◆フジワラ:その限度を超える量のsentenceが入力されそうになった");//アプリを落とす
+                    }
+                }
 
             } else if (_sentence.equals("\n")) {//改行記号だったら、
 
@@ -260,11 +287,8 @@ public class TextBox {
             }
         }
 
-        System.out.println("◆p " + return_sentence_id);
-
         return return_sentence_id;
     }
-
 
     private void flagSentenceLength() {
         if (begin_column >= column_of_box) {
@@ -315,7 +339,6 @@ public class TextBox {
 //            graphic.bookingDrawText(queue[i].getSentence(), box_left + 5 + queue[i].getBeginColumn(), box_top + 45 + (int)(box_paint.getTextSize()) * queue[i].getNumOfLines(), queue[i].getPaint());
             System.out.println("first");
         }
-
         //デバッグ用
 //        if (tmp_first != first) {
 //            for (int i = 0; i < MAX_QUEUE_TEXT; i++) {
@@ -349,17 +372,39 @@ public class TextBox {
                 first = (first + 1) % MAX_QUEUE_TEXT;//firstを１個進める
             }
 
-            for (; pre_first != first; pre_first = (pre_first + 1) % MAX_QUEUE_TEXT) {
-                queue[pre_first].initSentence();
+            if (assign_sentence_id == true) {
+                erasePreQueue(pre_first);
             }
+        }
+    }
 
+    //さっきまで表示されていたsentenceをqueueから抹消する
+    private void erasePreQueue(int pre_first) {
+        for (; pre_first != first; pre_first = (pre_first + 1) % MAX_QUEUE_TEXT) {
+            queue[pre_first].initSentence();
         }
     }
 
     public void changeText(int _sentence_id) {
 
-        if (_sentence_id < sentence_count) {
-            first = sentence_firsts[_sentence_id];
+        if (assign_sentence_id == false) {
+            System.out.println("%☆◆フジワラ:sentence_idを指定しない設定で作ったTextBoxに対して、[sentence_idを指定してsentenceを表示する関数]を使った from TextBox.java");
+            updateText();
+
+        } else {
+            sentence_exists = true;
+
+            System.out.println("uunchi changeText()");
+
+            if (_sentence_id < sentence_count) {
+                System.out.println("uunchi");
+
+                if (sentence_firsts[_sentence_id] > 0) {
+                    first = sentence_firsts[_sentence_id];
+                } else {
+                    System.out.println("◆負数のsentence_firsts[]をfirstに代入しようとした from TextBox.java");
+                }
+            }
         }
     }
 
@@ -373,6 +418,10 @@ public class TextBox {
 
     public void setUpdateTextByTouching(boolean _update_text_by_touching) {
         update_text_by_touching = _update_text_by_touching;
+    }
+
+    public void setAssignSentenceId(boolean _assign_sentence_id) {
+        assign_sentence_id = _assign_sentence_id;
     }
 
     public int getBoxId() {
