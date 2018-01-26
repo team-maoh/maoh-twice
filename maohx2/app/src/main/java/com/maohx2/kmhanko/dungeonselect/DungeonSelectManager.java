@@ -161,8 +161,8 @@ public class DungeonSelectManager {
         dungeonSelectButtonCheck();
         dungeonEnterSelectButtonCheck();
 
-        dungeonSelectButtonGroup.updaate();
-        dungeonEnterSelectButtonGroup.updaate();
+        dungeonSelectButtonGroup.update();
+        dungeonEnterSelectButtonGroup.update();
         //dungeonSelectButtonAdmin.update();
         //if (enterListBoxActive) {
         //    enterListBox.update();
@@ -179,14 +179,14 @@ public class DungeonSelectManager {
     //}
 
     public void dungeonSelectButtonCheck() {
-        int buttonID = dungeonSelectButtonGroup.getTouchContenttNum();
+        int buttonID = dungeonSelectButtonGroup.getTouchContentNum();
         if (buttonID != -1 ) {
             enterSelectFlag = true;
         }
     }
 
     public void dungeonEnterSelectButtonCheck() {
-        int buttonID = dungeonEnterSelectButtonGroup.getTouchContenttNum();
+        int buttonID = dungeonEnterSelectButtonGroup.getTouchContentNum();
         if (buttonID == 1 ) { //侵入する
             //侵入処理
 

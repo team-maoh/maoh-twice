@@ -170,8 +170,8 @@ class StartSurfaceView extends BaseSurfaceView {
 
         start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         start_game_system.updata();
-        item_list.updaate();
-        image_list.updaate();
+        item_list.update();
+        image_list.update();
 
 
         graphic.bookingDrawBitmapName("スライム",300,590);
