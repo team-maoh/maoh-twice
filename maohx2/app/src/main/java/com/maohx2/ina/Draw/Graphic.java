@@ -269,6 +269,11 @@ public class Graphic {
         bookingDrawBitmapData(searchBitmap(bitmap_name), position_x, position_y,1,1,0,255,false);
     }
 
+    public void bookingDrawCircle(int draw_x, int draw_y, int draw_radius){
+        draw_paint.setARGB(100,255,0,0);
+        bookingDrawCircle(draw_x, draw_y, draw_radius, draw_paint);
+    }
+
     public void bookingDrawCircle(int draw_x, int draw_y, int draw_radius, Paint paint){
 
         setting_point1.set(draw_x, draw_y);
@@ -290,6 +295,12 @@ public class Graphic {
         booking_num++;
         booking_circle_num++;
     }
+
+    public void bookingDrawRect(int draw_left, int draw_up, int draw_right, int draw_down){
+        draw_paint.setARGB(100,255,0,0);
+        bookingDrawRect(draw_left, draw_up, draw_right, draw_down, draw_paint);
+    }
+
 
     public void bookingDrawRect(int draw_left, int draw_up, int draw_right, int draw_down, Paint paint){
 
@@ -313,6 +324,13 @@ public class Graphic {
         booking_task_datas.set(booking_num, booking_rect_datas.get(booking_rect_num));
         booking_num++;
         booking_rect_num++;
+    }
+
+    public void bookingDrawText(String draw_string, int draw_left, int draw_down){
+
+        draw_paint.setARGB(255,100,0,0);
+        draw_paint.setTextSize(30);
+        bookingDrawText(draw_string, draw_left, draw_down, draw_paint);
     }
 
     public void bookingDrawText(String draw_string, int draw_left, int draw_down, Paint paint){

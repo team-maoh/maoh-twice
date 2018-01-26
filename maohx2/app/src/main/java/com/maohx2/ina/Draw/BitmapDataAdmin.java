@@ -52,8 +52,9 @@ public class BitmapDataAdmin {
                 for (int j = 0; j < file_name.size(); j++) {
                     try {
                         bis = new BufferedInputStream(assetManager.open("image/global/" + ltable_names.get(i) + "/" + file_name.get(j)));
-                        bitmap_data[j].setBitmap(BitmapFactory.decodeStream(bis));
-                        bitmap_data[j].setImageName(image_name.get(j));
+                        bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis));
+                        bitmap_data[next_load_point].setImageName(image_name.get(j));
+                        next_load_point++;
                     } catch (IOException e) {
                         System.out.println("%☆イナガキ：画像の取り込みに失敗しました"+image_name.get(j));
                     }
@@ -84,7 +85,7 @@ public class BitmapDataAdmin {
                     bis = new BufferedInputStream(assetManager.open("image/local/" + table_folder + "/" + table_names.get(i) + "/" + file_name.get(j)));
                     bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis));
                     bitmap_data[next_load_point].setImageName(image_name.get(j));
-                    System.out.println(next_load_point+","+j);
+                    //System.out.println(next_load_point+","+j);
                     next_load_point++;
                 } catch (IOException e) {
                     System.out.println("%☆イナガキ：画像の取り込みに失敗しました"+image_name.get(j));
