@@ -4,7 +4,7 @@ import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
-
+import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 /**
  * Created by user on 2017/11/19.
  */
@@ -38,6 +38,7 @@ public class ItemShopAdmin {
     //基本事項
     UserInterface userInterface;
     Graphic graphic;
+    TextBoxAdmin textBoxAdmin;
 
     public enum ITEM_KIND {
         EXPEND,
@@ -45,30 +46,39 @@ public class ItemShopAdmin {
         ITEM_KIND_NUM
     }
 
-    public void init(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin myDatabaseAdmin, ItemDataAdminManager itemDataAdminManager) {
+    public void init(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin myDatabaseAdmin, TextBoxAdmin _textBoxAdmin, ItemDataAdminManager itemDataAdminManager) {
         userInterface = _userInterface;
         graphic = _graphic;
+        textBoxAdmin = _textBoxAdmin;
 
-        expendItemShopData = new ExpendItemShopData();
-        expendItemShopData.init(itemDataAdminManager.getExpendItemDataAdmin(), myDatabaseAdmin);
+        expendItemShopData = new ExpendItemShopData(graphic, myDatabaseAdmin);
+        expendItemShopData.setExpendItemDataAdmin(itemDataAdminManager.getExpendItemDataAdmin());
 
-        geoObjectShopData = new GeoObjectShopData();
-        geoObjectShopData.init(itemDataAdminManager.getGeoObjectDataAdmin(), myDatabaseAdmin);
+        geoObjectShopData = new GeoObjectShopData(graphic, myDatabaseAdmin);
+        geoObjectShopData.setGeoObjectDataAdmin(itemDataAdminManager.getGeoObjectDataAdmin());
     }
 
     public void makeItemShop(ITEM_KIND _itemKind, String _tableName) {
+        boolean itemKindFlag = false;
+
         if (_itemKind == ITEM_KIND.EXPEND) {
             itemShop = new ExpendItemShop();
-            itemShop.init(userInterface, graphic);
+            itemShop.init(userInterface, graphic, textBoxAdmin);
             itemShop.setItemShopData(expendItemShopData);
+            itemKindFlag = true;
         }
-        if (_itemKind == ITEM_KIND.ITEM_KIND_NUM) {
+        if (_itemKind == ITEM_KIND.GEO_OBJECT) {
             itemShop = new GeoObjectShop();
-            itemShop.init(userInterface, graphic);
+            itemShop.init(userInterface, graphic, textBoxAdmin);
             itemShop.setItemShopData(geoObjectShopData);
+            itemKindFlag = true;
+        }
+        if (!itemKindFlag) {
+            throw new Error("ItemShopAdmin#makeItemShop : ☆タカノ itemKindが不適切 : " + _itemKind);
         }
         itemShop.loadShopData(_tableName);
         itemShop.setList();
+        itemShop.setTextBox();
     }
 
     public void makeAndOpenItemShop(ITEM_KIND _itemKind, String _tableName) {
@@ -119,8 +129,5 @@ ItemShopAdmin {
 ItemShopData
 └ExpendItemShopData ←1店データのみをメモリに保持
 └GeoObjectShopData　←同上
-
-
-
 
 */

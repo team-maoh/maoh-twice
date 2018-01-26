@@ -1,3 +1,4 @@
+/*
 package com.maohx2.kmhanko.dungeonselect;
 
 
@@ -6,13 +7,15 @@ import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.Constants.Touch.*;
 import com.maohx2.ina.Draw.Graphic;
 
+*/
+
 /**
  * Created by user on 2017/10/08.
  */
 
 /*
-color関係とrはグラフィックの導入により消滅する予定なので
-*/
+
+//稲垣が作ったclass 名称未定を継承する予定。
 
 public class DungeonSelectButton {
     String name;
@@ -47,7 +50,7 @@ public class DungeonSelectButton {
 
     public void loadTouchID() {
         if (userInterface == null) {
-            throw new Error("タカノ : DungeonSelectButton#constarcter : map_user_interface is null");
+            throw new Error("タカノ : DungeonSelectButton#constarcter : map_user_interface is null¥n");
         }
         r = 100;
         touch_id = userInterface.setCircleTouchUI((double) x, (double) y, (double) r);
@@ -100,3 +103,5 @@ public class DungeonSelectButton {
     }
 
 }
+
+*/

@@ -7,31 +7,27 @@ package com.maohx2.ina.ItemData;
 import java.util.List;
 import java.util.ArrayList;
 
+import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
-import com.maohx2.kmhanko.database.NamedDataAdmin;
 
 public abstract class ItemDataAdmin<T extends ItemData>  {
     public String dbName;
     public String dbAsset;
     public String tableName;
-
-
-    //TODO tableNameが定数なのをなんとかして、NamedDataAdminにまで落とし込む作業
-    public void init(MyDatabaseAdmin databaseAdmin) {
-        loadDatabase(databaseAdmin);
-    }
-
     public List<T> datas = new ArrayList<>();
     public MyDatabase database;
 
-    public void loadData(String table_name) {
-        int size = database.getSize(table_name);
-        List<String> name = database.getString(table_name, "name");
-        for (int i = 0; i < size; i++) {
-            datas.get(i).setName(name.get(i));
-        }
+    public Graphic graphic;
+
+    public ItemDataAdmin(Graphic _graphic, MyDatabaseAdmin database_admin){
+        graphic = _graphic;
+        database_admin.addMyDatabase("ItemData", "ItemData.db", 1, "r");
+        database = database_admin.getMyDatabase("ItemData");
     }
+
+    //TODO tableNameが定数なのをなんとかして、NamedDataAdminにまで落とし込む作業
+    //public void init(MyDatabaseAdmin databaseAdmin) {}
 
     public ItemData getOneDataByName(String _name) {
         for(int i = 0; i < datas.size(); i++) {
@@ -63,27 +59,31 @@ public abstract class ItemDataAdmin<T extends ItemData>  {
         }
         return buf_data;
     }
-
+/*
     public void loadDatabase(MyDatabaseAdmin database_admin) {
         database_admin.addMyDatabase(dbName, dbAsset, 1, "r");
         database = database_admin.getMyDatabase(dbName);
         loadItemData(tableName);
     }
+*/
 
-    public void loadItemData(String tableName) {
-        int size = database.getSize(tableName);
+    abstract public void loadItemData(String tableName);
+/*        int size = database.getSize(tableName);
 
         List<String> name = database.getString(tableName, "name");
         List<String> image_name = database.getString(tableName, "image_name");
+        List<Integer> item_kind = database.getInt(tableName, "item_kind");
         List<Integer> price = database.getInt(tableName, "price");
 
         for (int i = 0; i < size; i++) {
             datas.get(i).setName(name.get(i));
             datas.get(i).setImageName(image_name.get(i));
             datas.get(i).setPrice(price.get(i));
+            datas.get(i).setItemKind(item_kind.get(i));
+            datas.get(i).setItemImage(graphic.searchBitmap(image_name.get(i)));
         }
     }
-
+*/
     public List<T> getItemDatas() {return datas;}
 
 }

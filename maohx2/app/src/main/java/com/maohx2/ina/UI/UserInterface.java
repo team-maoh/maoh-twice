@@ -158,31 +158,6 @@ public class UserInterface {
                     break;
             }
         }
-
-        /*
-        if(touch_way == TouchWay.DOWN_MOMENT) {
-            if (touch_state == TouchState.UP && (id - index_num) / 1000 == 314) {
-                if (Math.pow(circle_center_list_x[index_num] - touch_x, 2) + Math.pow(circle_center_list_y[index_num] - touch_y, 2) <= Math.pow(circle_radius_list[index_num], 2)) {
-                    return true;
-                }
-            }
-        }
-
-
-        else if ((id - index_num) / 1000 == 314) {
-            if (Math.pow(circle_center_list_x[index_num] - touch_x, 2) + Math.pow(circle_center_list_y[index_num] - touch_y, 2) <= Math.pow(circle_radius_list[index_num], 2)) {
-                return true;
-            }
-        }
-
-
-        if ((id - index_num) / 1000 == 8010) {
-            if((touch_state == TouchState.DOWN || touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE) && (touch_x >= box_left_list[index_num] && touch_x <= box_right_list[index_num]) && (touch_y >= box_top_list[index_num] && touch_y < box_down_list[index_num])) {
-                return true;
-            }
-        }
-        */
-
         return false;
     }
 

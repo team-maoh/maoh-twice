@@ -7,7 +7,7 @@ import com.maohx2.ina.GlobalConstants;
  * Created by ina on 2017/10/01.
  */
 
-public class MapUserInterface extends UserInterface{
+public class MapUserInterface extends UserInterface {
 
     public MapUserInterface(GlobalConstants global_constants, Graphic _graphic){
         super(global_constants, _graphic);

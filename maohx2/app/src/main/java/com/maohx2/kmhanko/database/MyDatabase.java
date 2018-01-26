@@ -15,6 +15,11 @@ import android.content.ContentValues;
 
 /**
  * Created by user on 2017/09/03.
+ * version : 1.02
+ * s_quoをStaticに
+ * getOne~~系列実装
+ * getStringByRowID実装
+ *
  * version : 1.01
  * getStringするとき、読み込み順序がおかしくなるバグを修正
  * データベースを読み込みするとき発生するエラーを修正
@@ -48,28 +53,27 @@ public class MyDatabase {
         db_version = _db_version;
 
         //データベース関係の処理
-        mDbHelper = new MySQLiteOpenHelper(mContext, db_name, db_asset, db_version);//ヘルパーのインスタンス
+
+        //db_nameとして、/data/data/パッケージ名/database/ファイル名 が生成される。
+        mDbHelper = new MySQLiteOpenHelper(mContext, db_name, db_asset, db_version);
 
         try {
             if (load_mode == "r") {
-
-                //TODO:PATHがおかしい。
+                //内部DBファイルを生成する
                 mDbHelper.getReadableDatabase();
 
-                //DBファイルがあろうがなかろうが、Assetsからコピー
+                //assets内のDBファイルを、内部DBのファイルにコピーする
                 mDbHelper.copyDataBaseFromAssets();
 
-                //TODO:コピーが成功したファイルがちゃんとあるかどうかチェック
-
-                //DBファイルをdbに格納する。
-                db = mDbHelper.openDataBase("r");
+                //dbを取得する
+                db = mDbHelper.getReadableDatabase();
             }
             if (load_mode == "w") {
-                //DBファイルが無い場合はAssetsからコピーし、DBファイルがある場合は特に何もしない関数
-                mDbHelper.createEmptyDataBase_w();
-
-                //DBファイルをdbに格納する。
-                db = mDbHelper.openDataBase("w");
+                //内部DBに既にDBファイルが存在するかどうかを確認する。
+                //存在するならばDBを獲得して終了
+                //存在しないならば新規作成する
+                mDbHelper.createEmptyDataBaseW();
+                db = mDbHelper.getWritableDatabase();
             }
         } catch (IOException e) {
             //TODO : エラー処理
@@ -81,7 +85,7 @@ public class MyDatabase {
     }
 
     //'をつけた文字列を返す関数
-    public String s_quo (String str) {
+    public static String s_quo (String str) {
         return "'"+str+"'";
     }
 
@@ -124,8 +128,8 @@ public class MyDatabase {
         if (buf.size() == 1) {
             return buf.get(0);
         } else {
-            System.out.println("dg_mes:" + "MyDatabase.getOneRowID : Found rowids are not only one.");
-            return buf.get(0);
+            System.out.println("☆タカノ: MyDatabase#getOneRowID 該当データがちょうど1つではない : 個数 " + buf.size() + " DB " + db_name + " table " + t_name + " w_script " + w_script);
+            return -1;
         }
     }
 
@@ -142,7 +146,7 @@ public class MyDatabase {
         List<Integer> buf = new ArrayList<Integer>();
         //該当要素が存在しない場合
         if (c.getCount() == 0) {
-            return null;
+            return buf;
         }
         boolean isEof = c.moveToFirst();
         while (isEof) {
@@ -151,6 +155,14 @@ public class MyDatabase {
         }
         c.close();
         return buf;
+    }
+    public int getOneInt(String t_name, String c_name, String w_script) {
+        Cursor c = getCursor(t_name, c_name, w_script);
+        //該当要素が存在しない場合
+        if (c.getCount() == 0) {
+            throw new Error("☆タカノ: MyDatabase#getOneInt 該当データが存在しない");
+        }
+        return c.getInt(0);
     }
 
     public List<String> getString(String t_name, String c_name) {
@@ -171,6 +183,18 @@ public class MyDatabase {
         }
         c.close();
         return buf;
+    }
+    public String getOneString(String t_name, String c_name, String w_script) {
+        Cursor c = getCursor(t_name, c_name, w_script);
+        //該当要素が存在しない場合
+        if (c.getCount() == 0) {
+            throw new Error("☆タカノ: MyDatabase#getOneString 該当データが存在しない");
+        }
+        return c.getString(0);
+    }
+
+    public String getStringByRowID(String t_name, String c_name, int rowid) {
+        return getOneString(t_name, c_name, "rowid = " + rowid);
     }
 
     public List<Boolean> getBoolean(String t_name, String c_name) {
@@ -197,7 +221,6 @@ public class MyDatabase {
         c.close();
         return buf;
     }
-
     public List<Double> getDouble(String t_name, String c_name) {
         return getDouble(t_name, c_name, null);
     }
@@ -215,6 +238,15 @@ public class MyDatabase {
         }
         c.close();
         return buf;
+    }
+
+    public double getOneDouble(String t_name, String c_name, String w_script) {
+        Cursor c = getCursor(t_name, c_name, w_script);
+        //該当要素が存在しない場合
+        if (c.getCount() == 0) {
+            throw new Error("☆タカノ: MyDatabase#GetOneDouble 該当データが存在しない");
+        }
+        return c.getDouble(0);
     }
 
     public List<Float> getFloat(String t_name, String c_name) {
@@ -235,6 +267,15 @@ public class MyDatabase {
         c.close();
         return buf;
     }
+    public float getOneFloat(String t_name, String c_name, String w_script) {
+        Cursor c = getCursor(t_name, c_name, w_script);
+        //該当要素が存在しない場合
+        if (c.getCount() == 0) {
+            throw new Error("☆タカノ: MyDatabase#getOneFloat 該当データが存在しない");
+        }
+        return c.getFloat(0);
+    }
+
     public List<String> getOneLine(String t_name, int rowid) {
         return getOneLine(t_name,"rowid = "+rowid);
     }
