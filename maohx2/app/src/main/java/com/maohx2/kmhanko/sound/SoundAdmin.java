@@ -53,6 +53,8 @@ public class SoundAdmin {
 
     private boolean isLoaded;
 
+    //TODO:ボリューム設定　activityと
+
     //コンストラクタ
     public SoundAdmin(Context _context) {
         mContext = _context;

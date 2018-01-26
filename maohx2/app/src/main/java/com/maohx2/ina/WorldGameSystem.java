@@ -65,15 +65,13 @@ public class WorldGameSystem {
         //list_box_admin = new ListBoxAdmin();
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, databaseAdmin, text_box_admin);
         //geo_slot_admin = new GeoSlotAdmin();
-        dungeonSelectManager = new DungeonSelectManager();
+        dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, databaseAdmin);
 
         itemDataAdminManager = new ItemDataAdminManager();
         itemShopAdmin = new ItemShopAdmin();
 
         effectAdmin = new EffectAdmin(graphic, databaseAdmin, soundAdmin);
 
-
-        dungeonSelectManager.init(graphic, map_user_interface, databaseAdmin);
 
         itemDataAdminManager.init(databaseAdmin,graphic);
 
@@ -88,6 +86,7 @@ public class WorldGameSystem {
 
     public void updata() {
 
+        /*
         if (map_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN) {
             List<BitmapData> testBitmapData = new ArrayList<BitmapData>();
             BitmapData _bitmapData = graphic.searchBitmap("打撃01");
@@ -101,6 +100,7 @@ public class WorldGameSystem {
             effectAdmin.getEffect(testID).setPosition((int)map_user_interface.getTouchX(),(int)map_user_interface.getTouchY());
             effectAdmin.getEffect(testID).start();
         }
+        */
 
         //geoSlotAdminManager.update();
         dungeonSelectManager.update();
