@@ -76,7 +76,7 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
             final long now_frame = System.currentTimeMillis();
             final double fps = 1000.0 / (now_frame - old_frame);
             old_frame = now_frame;
-            //System.out.println(fps);
+            //System.out.println("fps:"+fps);
 
         }
     }

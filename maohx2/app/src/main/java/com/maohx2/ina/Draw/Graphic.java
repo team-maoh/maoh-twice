@@ -1,6 +1,7 @@
 package com.maohx2.ina.Draw;
 
 import android.app.Activity;
+import android.app.admin.SystemUpdateInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -139,6 +140,9 @@ public class Graphic {
     public void draw() {
         Canvas canvas = null;
         canvas = holder.lockCanvas();
+
+        System.out.println("booking_num:"+booking_num);
+
         if(canvas != null) {
             canvas.drawColor(Color.WHITE);
 
@@ -210,7 +214,7 @@ public class Graphic {
         draw_paint.setAlpha(alpha);
 
         if(booking_bitmap_num >= booking_bitmap_datas.size()){
-            booking_bitmap_datas.add(new BookingRectData());
+            booking_bitmap_datas.add(new BookingBitmapData());
         }
 
         ((BookingBitmapData)booking_bitmap_datas.get(booking_bitmap_num)).update(draw_bitmap_data, setting_matrix, draw_paint);
@@ -411,7 +415,7 @@ public class Graphic {
                 for(int y = 0; y < constant_length; y++) {
                     for(int x = 0; x < variable_length[i]; x++) {
                         int index = ((x + y * variable_length[i]) + (total_length*y));
-                        System.out.println("index = " + index);
+                        //System.out.println("index = " + index);
                         conbine_pixels[x + (total_length*y + init_copy_index)] = source_pixels[i][x + y * variable_length[i]];
                     }
                 }

@@ -19,7 +19,7 @@ public class AutoTileAdmin {
         graphic = m_graphic;
     }
 
-    private BitmapData combineFourAutoTile(BitmapData left_up, BitmapData right_up, BitmapData left_down, BitmapData right_down){
+    public BitmapData combineFourAutoTile(BitmapData left_up, BitmapData right_up, BitmapData left_down, BitmapData right_down){
         BitmapData up_data[], down_data[], up_down_data[];
         up_data = new BitmapData[2];
         down_data = new BitmapData[2];
@@ -253,9 +253,7 @@ public class AutoTileAdmin {
         else if(!u && !l && !r && !d){
             graphic.bookingDrawBitmapData(m_auto_tile.auto_tile[46], x, y, magnification, magnification, 0, 255, true);
         }
-        else{
-            System.out.println("lu="+lu+",u="+u+",ru="+ru+",l="+l+",r="+r+",ld="+ld+",d="+d+",rd="+rd);
-        }
+
     }
 
     //以下デバッグ用
