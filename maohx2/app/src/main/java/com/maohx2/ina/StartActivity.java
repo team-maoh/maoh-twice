@@ -212,6 +212,22 @@ class StartSurfaceView extends BaseSurfaceView {
         graphic.bookingDrawText("1500",1500,100,paint);
         graphic.bookingDrawText("1600",1600,100,paint);
 */
+<<<<<<< HEAD
+=======
+        start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
+
+        start_game_system.updata();
+        start_game_system.draw();
+
+
+
+        if(touch_state == TouchState.DOWN){
+            thread = null;
+            Intent intent = new Intent(start_activity, DungeonActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            start_activity.startActivity(intent);
+        }
+>>>>>>> origin/horie
 
     }
 }
