@@ -1,3 +1,4 @@
+/*
 package com.maohx2.kmhanko.dungeonselect;
 
 import java.util.List;
@@ -10,12 +11,12 @@ import com.maohx2.kmhanko.database.MyDatabase;
 
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
-
+*/
 
 /**
  * Created by user on 2017/10/08.
  */
-
+/*
 public class DungeonSelectButtonAdmin {
     static final String DB_NAME = "dungeonselectDB";
     static final String DB_ASSET = "dungeonselectDB.db";
@@ -99,7 +100,7 @@ public class DungeonSelectButtonAdmin {
 
 
 }
-
+*/
 
 //UserInterface使い方
 //setCircleTouchUI,setBoxTouchUIでIDをもらう。checkUIで判定

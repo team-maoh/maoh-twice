@@ -128,8 +128,8 @@ public class MyDatabase {
         if (buf.size() == 1) {
             return buf.get(0);
         } else {
-            System.out.println("dg_mes:" + "MyDatabase.getOneRowID : Found rowids are not only one.");
-            return buf.get(0);
+            System.out.println("☆タカノ: MyDatabase#getOneRowID 該当データがちょうど1つではない : 個数 " + buf.size() + " DB " + db_name + " table " + t_name + " w_script " + w_script);
+            return -1;
         }
     }
 
@@ -160,7 +160,7 @@ public class MyDatabase {
         Cursor c = getCursor(t_name, c_name, w_script);
         //該当要素が存在しない場合
         if (c.getCount() == 0) {
-            throw new Error("☆タカノ: MyDatabase#GetOneInt 該当データが存在しない");
+            throw new Error("☆タカノ: MyDatabase#getOneInt 該当データが存在しない");
         }
         return c.getInt(0);
     }
@@ -188,7 +188,7 @@ public class MyDatabase {
         Cursor c = getCursor(t_name, c_name, w_script);
         //該当要素が存在しない場合
         if (c.getCount() == 0) {
-            throw new Error("☆タカノ: MyDatabase#GetOneString 該当データが存在しない");
+            throw new Error("☆タカノ: MyDatabase#getOneString 該当データが存在しない");
         }
         return c.getString(0);
     }
@@ -271,7 +271,7 @@ public class MyDatabase {
         Cursor c = getCursor(t_name, c_name, w_script);
         //該当要素が存在しない場合
         if (c.getCount() == 0) {
-            throw new Error("☆タカノ: MyDatabase#GetOneFloat 該当データが存在しない");
+            throw new Error("☆タカノ: MyDatabase#getOneFloat 該当データが存在しない");
         }
         return c.getFloat(0);
     }

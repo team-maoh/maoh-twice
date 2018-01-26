@@ -130,7 +130,4 @@ ItemShopData
 └ExpendItemShopData ←1店データのみをメモリに保持
 └GeoObjectShopData　←同上
 
-
-
-
 */
