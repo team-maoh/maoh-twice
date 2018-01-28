@@ -12,7 +12,7 @@ import com.maohx2.ina.UI.UserInterface;
 
 abstract public class CirclePlate extends Plate {
 
-    int x,y,radius;
+    protected int x,y,radius;
 
     CirclePlate(Graphic _graphic, UserInterface _user_interface, TouchWay _judge_way, TouchWay _feedback_way, int _x, int _y, int _radius){
         super(_graphic, _user_interface, _judge_way, _feedback_way);

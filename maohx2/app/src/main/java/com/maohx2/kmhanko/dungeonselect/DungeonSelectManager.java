@@ -80,7 +80,7 @@ public class DungeonSelectManager {
 
 
         //インスタンス化
-        for (int i = 0; i < size; i++) {
+   /*     for (int i = 0; i < size; i++) {
             dungeonSelectButtonList.add(new CircleImagePlate(
                     graphic, userInterface,
                     Constants.Touch.TouchWay.UP_MOMENT,
@@ -90,6 +90,7 @@ public class DungeonSelectManager {
                     graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_FEEDBACK, DUNGEON_SELECT_BUTTON_RATE_FEEDBACK, 0.0f, 255, false)
             ));
         }
+        */
         CircleImagePlate[] dungeonSelectButton = new CircleImagePlate[dungeonSelectButtonList.size()];
         dungeonSelectButtonGroup = new PlateGroup<CircleImagePlate>(dungeonSelectButtonList.toArray(dungeonSelectButton));
     }

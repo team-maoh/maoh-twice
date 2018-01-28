@@ -3,6 +3,7 @@ package com.maohx2.ina.Text;
 import android.widget.Button;
 
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.ItemData.ItemData;
 
 /**
  * Created by ina on 2018/01/19.
@@ -49,6 +50,17 @@ public class PlateGroup<T extends Plate> {
 
         return false;
     }
+
+
+    public ItemData getContentItem(int content_index) {
+        return plates[content_index].getContentItem();
+    }
+
+    public void setContentItem(ItemData add_item, int content_index) {
+        plates[content_index].setContentItem(add_item);
+    }
+
+
 }
 
 

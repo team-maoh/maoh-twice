@@ -13,9 +13,9 @@ import com.maohx2.ina.UI.UserInterface;
 
 public class CircleTextPlate extends CirclePlate {
 
-    String text;
-    Paint text_paint;
-    Paint button_paint;
+    protected String text;
+    protected Paint text_paint;
+    protected Paint button_paint;
 
     CircleTextPlate(Graphic _graphic, UserInterface _user_interface, Paint _button_paint, Constants.Touch.TouchWay _judge_way, Constants.Touch.TouchWay _feedback_way, int[] position, String _text, Paint _text_paint){
         super(_graphic, _user_interface, _judge_way, _feedback_way, position[0], position[1], position[2]);

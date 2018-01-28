@@ -17,12 +17,12 @@ import com.maohx2.ina.Constants.Touch.TouchWay;
 
 public abstract class Plate {
 
-    Constants.Touch.TouchWay judge_way;
-    Constants.Touch.TouchWay feedback_way;
-    int touch_id;
-    int alpha;
-    UserInterface user_interface;
-    Graphic graphic;
+    protected Constants.Touch.TouchWay judge_way;
+    protected Constants.Touch.TouchWay feedback_way;
+    protected int touch_id;
+    protected int alpha;
+    protected UserInterface user_interface;
+    protected Graphic graphic;
 
 
     Plate(Graphic _graphic, UserInterface _user_interface, Constants.Touch.TouchWay _judge_way, Constants.Touch.TouchWay _feedback_way) {
@@ -63,5 +63,13 @@ public abstract class Plate {
     }
 
     public void callBackEvent() {}
+
+    public ItemData getContentItem(){
+        throw new Error("%☆イナガキ：getContentItem()はアイテム関係のボタンでしか使えません");
+    }
+
+    public void setContentItem(ItemData _content_item){
+        throw new Error("%☆イナガキ：setContentItem()はアイテム関係のボタンでしか使えません");
+    }
 
 }

@@ -12,7 +12,7 @@ import com.maohx2.ina.UI.UserInterface;
 
 abstract public class BoxPlate extends Plate {
 
-    int left, up, right, down;
+    protected int left, up, right, down;
 
     BoxPlate(Graphic _graphic, UserInterface _user_interface, TouchWay _judge_way, TouchWay _feedback_way, int _left, int _up, int _right, int _down){
         super(_graphic, _user_interface, _judge_way, _feedback_way);
