@@ -57,16 +57,16 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         // /data/data/パッケージ名/database/ファイル名のパスを取得する
         mDatabasePath = mContext.getDatabasePath(db_name);
         if (!mDatabasePath.exists()) {
-            System.out.println("dg_mes:"+ db_name +" is not found.");
+            System.out.println("☆タカノ:"+ db_name +" is not found.");
         } else {
-            System.out.println("dg_mes:"+ db_name +" is in " + mDatabasePath);
+            System.out.println("☆タカノ:"+ db_name +" is in " + mDatabasePath);
         }
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         //初めてファイルを作った時。
-        System.out.println("dg_mes:"+db_name+" onCreate.");
+        System.out.println("☆タカノ:"+db_name+" onCreate.");
     }
 
     //assetsフォルダ内のDBファイルをdatabasesフォルダ内のDBファイルにコピーするメソッド。同名のファイルでなければならない。
@@ -96,11 +96,11 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
     //内部DBファイルが無い場合はAssetsからコピーし、内部DBファイルがある場合は特に何もしないメソッド
-    public void createEmptyDataBaseW() throws IOException {
+    public void createEmptyDataBase(String readMode) throws IOException {
         File mDatabasePath = mContext.getDatabasePath(db_name);
         if (!mDatabasePath.exists()) {
             //内部DBを生成する
-            getWritableDatabase();
+            getDatabase(readMode);
             try {
                 //内部DBにassets内のDBをコピーする
                 copyDataBaseFromAssets();
@@ -108,7 +108,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
                 //生成されたと思われる内部DBを取得してみる
                 SQLiteDatabase checkDb = null;
                 try {
-                    checkDb = getWritableDatabase();
+                    checkDb = getDatabase(readMode);
                 } catch (SQLiteException e) {
                     e.printStackTrace();
                 }
@@ -123,6 +123,28 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
                 e.printStackTrace();
             }
         } else {
+            //"r"の場合はコピーしておく必要がある
+            try {
+                //内部DBにassets内のDBをコピーする
+                copyDataBaseFromAssets();
+
+                //生成されたと思われる内部DBを取得してみる
+                SQLiteDatabase checkDb = null;
+                try {
+                    checkDb = getDatabase(readMode);
+                } catch (SQLiteException e) {
+                    e.printStackTrace();
+                }
+
+                //ちゃんと生成されていたならバージョンをセットして終了
+                if (checkDb != null) {
+                    checkDb.setVersion(db_version);
+                    checkDb.close();
+                }
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return;
         }
     }
@@ -137,9 +159,19 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         return mDatabase = super.getReadableDatabase();
     }
 
+    public SQLiteDatabase getDatabase(String readMode) {
+        if (readMode.equals("w")) {
+            return getWritableDatabase();
+        }
+        if (readMode.equals("r")) {
+            return getReadableDatabase();
+        }
+        throw new Error("☆タカノ : MySQLiteOpenHelper#getDatabase please set w or r");
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        System.out.println("dg_mes:"+db_name+" onUpgrade.");
+        System.out.println("☆タカノ:"+db_name+" onUpgrade.");
     }
 
     @Override

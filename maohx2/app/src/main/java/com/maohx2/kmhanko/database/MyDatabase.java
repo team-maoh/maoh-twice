@@ -43,9 +43,9 @@ public class MyDatabase {
         mContext = context;
     }
 
-    public boolean init(String _db_name, String _db_asset, int _db_version, String load_mode) {
-        if (load_mode != "r" && load_mode != "w") {
-            System.out.println("dg_mes:" + "MyDatabase : please set r or w");
+    public boolean init(String _db_name, String _db_asset, int _db_version, String loadMode) {
+        if (loadMode != "r" && loadMode != "w") {
+            System.out.println("☆タカノ:" + "MyDatabase : please set r or w");
             return false;
         }
         db_name = _db_name;
@@ -58,27 +58,28 @@ public class MyDatabase {
         mDbHelper = new MySQLiteOpenHelper(mContext, db_name, db_asset, db_version);
 
         try {
-            if (load_mode == "r") {
+            if (loadMode == "r") {
                 //内部DBファイルを生成する
-                mDbHelper.getReadableDatabase();
+                //mDbHelper.getReadableDatabase();
 
                 //assets内のDBファイルを、内部DBのファイルにコピーする
-                mDbHelper.copyDataBaseFromAssets();
+                //mDbHelper.copyDataBaseFromAssets();
 
+                mDbHelper.createEmptyDataBase(loadMode);
                 //dbを取得する
                 db = mDbHelper.getReadableDatabase();
             }
-            if (load_mode == "w") {
+            if (loadMode == "w") {
                 //内部DBに既にDBファイルが存在するかどうかを確認する。
                 //存在するならばDBを獲得して終了
                 //存在しないならば新規作成する
-                mDbHelper.createEmptyDataBaseW();
+                mDbHelper.createEmptyDataBase(loadMode);
                 db = mDbHelper.getWritableDatabase();
             }
         } catch (IOException e) {
             //TODO : エラー処理
             e.printStackTrace();
-            throw new Error("タカノ : "+ e);
+            throw new Error("☆タカノ : "+ e);
         }
 
         return true;
