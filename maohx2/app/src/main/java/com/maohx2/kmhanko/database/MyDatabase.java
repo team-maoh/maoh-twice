@@ -314,7 +314,9 @@ public class MyDatabase {
         boolean isEof = c.moveToFirst();
         while (isEof) {
             String str = c.getString(0);
-            buf.add(c.getString(0));
+            if (!str.equals("android_metadata")) {
+                buf.add(c.getString(0));
+            }
             isEof = c.moveToNext();
         }
         c.close();

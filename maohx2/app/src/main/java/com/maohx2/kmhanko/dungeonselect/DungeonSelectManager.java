@@ -28,6 +28,10 @@ public class DungeonSelectManager {
     //DungeonSelectButtonAdmin dungeonSelectButtonAdmin;
     //LoopSelectButtonAdmin loopSelectButtonAdmin;
 
+    static final float DUNGEON_SELECT_BUTTON_RATE_DEFAULT = 6.0f;
+    static final float DUNGEON_SELECT_BUTTON_RATE_FEEDBACK = 8.0f;
+    static final int DUNGEON_SELECT_BUTTON_RATE_TOURH_R = 120;
+
     Graphic graphic;
     UserInterface userInterface;
     MyDatabaseAdmin databaseAdmin;
@@ -56,10 +60,6 @@ public class DungeonSelectManager {
         loadDungeonSelectButton();
         loadDungeonEnterSelectButton();
 
-        //dungeonSelectButtonAdmin = new DungeonSelectButtonAdmin();
-        //loopSelectButtonAdmin = new LoopSelectButtonAdmin();
-        //enterListBox = new ListBox();
-
         //TODO : Loopselect
     }
 
@@ -85,9 +85,9 @@ public class DungeonSelectManager {
                     graphic, userInterface,
                     Constants.Touch.TouchWay.UP_MOMENT,
                     Constants.Touch.TouchWay.MOVE,
-                    new int[] { x.get(i), y.get(i), 100 },
-                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), 3.0f, 3.0f, 0.0f, 255, false),
-                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), 5.0f, 5.0f, 0.0f, 255, false)
+                    new int[] { x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_TOURH_R },
+                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_DEFAULT, DUNGEON_SELECT_BUTTON_RATE_DEFAULT, 0.0f, 255, false),
+                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_FEEDBACK, DUNGEON_SELECT_BUTTON_RATE_FEEDBACK, 0.0f, 255, false)
             ));
         }
         CircleImagePlate[] dungeonSelectButton = new CircleImagePlate[dungeonSelectButtonList.size()];
@@ -138,24 +138,11 @@ public class DungeonSelectManager {
         dungeonEnterSelectButtonGroup = new PlateGroup<BoxTextPlate>(dungeonEnterSelectButtonList.toArray(dungeonEnterSelectButton));
     }
 
-    //ListBox enterListBox;
-    //boolean enterListBoxActive;
-
-    //TODO ここに直書きはよくないかもの部分で使ってるメンバ
-    //Buttonの状態で保持するんじゃなくて、ダンジョンデータ的なもので保持したい
-    //DungeonSelectButton dungeonSelectButton;
-
-
     public void draw() {
         dungeonSelectButtonGroup.draw();
         if (enterSelectFlag) {
             dungeonEnterSelectButtonGroup.draw();
         }
-
-        //dungeonSelectButtonAdmin.draw();
-        //if (enterListBoxActive) {
-        //    enterListBox.draw();
-        //}
     }
 
     public void update() {
@@ -164,20 +151,7 @@ public class DungeonSelectManager {
 
         dungeonSelectButtonGroup.update();
         dungeonEnterSelectButtonGroup.update();
-        //dungeonSelectButtonAdmin.update();
-        //if (enterListBoxActive) {
-        //    enterListBox.update();
-        //}
-        //dungeonSelectListUpdate();
     }
-
-    //public void makeEnterListBox(DungeonSelectButton _button) {
-        //dungeonSelectButton = _button;
-
-        //enterListBoxActive = true;
-        //enterListBox.setContent(0, "侵入する");
-        //enterListBox.setContent(1, "やめる");
-    //}
 
     public void dungeonSelectButtonCheck() {
         int buttonID = dungeonSelectButtonGroup.getTouchContentNum();

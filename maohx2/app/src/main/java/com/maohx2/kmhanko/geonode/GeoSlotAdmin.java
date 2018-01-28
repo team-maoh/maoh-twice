@@ -63,7 +63,6 @@ public class GeoSlotAdmin {
         graphic = _graphic;
         userInterface = _user_interface;
         textBoxAdmin = _textBoxAdmin;
-        GeoSlot.setUserInterface(userInterface);
 
         //TextBoxなどの初期化
         releaseTextBoxID = textBoxAdmin.createTextBox(650,600,1450,800,2);
@@ -86,8 +85,20 @@ public class GeoSlotAdmin {
         //DBからツリーコードを取得する関数
         tree_code = this.getTreeCode();
 
+        //各GeoSlotのパラメータをDBから取得
+        List<Integer> xs = geoSlotMapDB.getInt(t_name, "x");
+        List<Integer> ys = geoSlotMapDB.getInt(t_name, "y");
+        List<String> release_events = geoSlotMapDB.getString(t_name, "release_event");
+        List<String> restrictions = geoSlotMapDB.getString(t_name, "restriction");
+
         //根スロットのインスタンス化
-        grand_geo_slot = new GeoSlot(this);
+        /*
+        grand_geo_slot = new GeoSlot(this, graphic, userInterface,
+                Constants.Touch.TouchWay.UP_MOMENT,
+                Constants.Touch.TouchWay.MOVE,
+                new int[] { 0, 0, 100 },
+
+        );*/
 
         //このメソッドを呼ぶと、全てのGeoSlotのインスタンス化が完了する。実体は各GeoSlotが子GeoSlotとして持つ。
         grand_geo_slot.makeGeoSlotInstance(tree_code, null);
@@ -96,14 +107,10 @@ public class GeoSlotAdmin {
         //geo_slots = (GeoSlot[])grand_geo_slot.getGeoSlots().toArray(new GeoSlot[0]);
         geo_slots = grand_geo_slot.getGeoSlots();
 
-        //各GeoSlotの初期化
-        List<Integer> xs = geoSlotMapDB.getInt(t_name, "x");
-        List<Integer> ys = geoSlotMapDB.getInt(t_name, "y");
-        List<String> release_events = geoSlotMapDB.getString(t_name, "release_event");
-        List<String> restrictions = geoSlotMapDB.getString(t_name, "restriction");
+
         int r;
 
-        GeoSlot.staticInit(graphic, userInterface, textBoxAdmin, geoSlotEventDB);
+        //GeoSlot.staticInit(graphic, userInterface, textBoxAdmin, geoSlotEventDB);
 
         for(int i = 0; i < geo_slots.size(); i++) {
             //TODO:根の表示も適当
@@ -214,7 +221,7 @@ public class GeoSlotAdmin {
         }
         for(int i = 0; i < geo_slots.size(); i++) {
             boolean f = geo_slots.get(i).equals(focusGeoSlot);
-            geo_slots.get(i).draw(f);
+            //geo_slots.get(i).draw(f);
         }
         //ListBox
         if (isReleaseListActive) {
