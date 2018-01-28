@@ -63,7 +63,7 @@ public class WorldGameSystem {
         text_box_admin.setTextBoxExists(1,false);
 
         //list_box_admin = new ListBoxAdmin();
-        geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, databaseAdmin, text_box_admin);
+        //geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, databaseAdmin, text_box_admin);
         //geo_slot_admin = new GeoSlotAdmin();
         dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, databaseAdmin);
 
@@ -78,9 +78,10 @@ public class WorldGameSystem {
         itemShopAdmin.init(graphic, map_user_interface, databaseAdmin, text_box_admin, itemDataAdminManager);
         //itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.GEO_OBJECT, "debug");
 
-        geoSlotAdminManager.setActiveGeoSlotAdmin("森");
+        //geoSlotAdminManager.setActiveGeoSlotAdmin("森");
 
         canvas = null;
+
     }
 
 
@@ -112,6 +113,7 @@ public class WorldGameSystem {
 
     public void draw() {
 
+        //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
         //geoSlotAdminManager.draw();
 
         dungeonSelectManager.draw();
