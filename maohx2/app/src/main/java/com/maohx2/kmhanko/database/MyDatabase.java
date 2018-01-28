@@ -39,7 +39,7 @@ public class MyDatabase {
     private int db_version;
 
     public MyDatabase(Context context) {
-        super();
+        //super();
         mContext = context;
     }
 
@@ -60,12 +60,43 @@ public class MyDatabase {
         try {
             if (loadMode == "r") {
                 //内部DBファイルを生成する
-                //mDbHelper.getReadableDatabase();
+                mDbHelper.getReadableDatabase();
 
                 //assets内のDBファイルを、内部DBのファイルにコピーする
-                //mDbHelper.copyDataBaseFromAssets();
+                mDbHelper.copyDataBaseFromAssets();
+                mDbHelper.close();//TODO:close入れるとうまくいく。よくわからんけど
 
+                mDbHelper.getReadableDatabase();
+                mDbHelper.copyDataBaseFromAssets();
+
+                //mDbHelper.createEmptyDataBase(loadMode);
+                //dbを取得する
+                db = mDbHelper.getReadableDatabase();
+            }
+            if (loadMode == "w") {
+                //内部DBに既にDBファイルが存在するかどうかを確認する。
+                //存在するならばDBを獲得して終了
+                //存在しないならば新規作成する
                 mDbHelper.createEmptyDataBase(loadMode);
+                db = mDbHelper.getWritableDatabase();
+            }
+        } catch (IOException e) {
+            //TODO : エラー処理
+            e.printStackTrace();
+            throw new Error("☆タカノ : "+ e);
+        }
+
+        close();
+
+        try {
+            if (loadMode == "r") {
+                //内部DBファイルを生成する
+                mDbHelper.getReadableDatabase();
+
+                //assets内のDBファイルを、内部DBのファイルにコピーする
+                mDbHelper.copyDataBaseFromAssets();
+
+                //mDbHelper.createEmptyDataBase(loadMode);
                 //dbを取得する
                 db = mDbHelper.getReadableDatabase();
             }
