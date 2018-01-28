@@ -14,9 +14,9 @@ import com.maohx2.ina.UI.UserInterface;
 
 public class CircleImagePlate extends CirclePlate {
 
-    ImageContext draw_image_context;
-    ImageContext default_image_context;
-    ImageContext feedback_image_context;
+    protected ImageContext draw_image_context;
+    protected ImageContext default_image_context;
+    protected ImageContext feedback_image_context;
 
 
     public CircleImagePlate(Graphic _graphic, UserInterface _user_interface, TouchWay _judge_way, TouchWay _feedback_way, int[] position, ImageContext _default_image_context, ImageContext _feedback_image_context) {

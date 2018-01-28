@@ -61,6 +61,33 @@ public class MyDatabase {
             if (load_mode == "r") {
                 //内部DBファイルを生成する
                 mDbHelper.getReadableDatabase();
+                //assets内のDBファイルを、内部DBのファイルにコピーする
+                mDbHelper.copyDataBaseFromAssets();
+                mDbHelper.copyDataBaseFromAssets();
+                //assets内のDBファイルを、内部DBのファイルにコピーする
+                //dbを取得する
+                db = mDbHelper.getReadableDatabase();
+            }
+            if (load_mode == "w") {
+                //内部DBに既にDBファイルが存在するかどうかを確認する。
+                //存在するならばDBを獲得して終了
+                //存在しないならば新規作成する
+                mDbHelper.createEmptyDataBaseW();
+                db = mDbHelper.getWritableDatabase();
+            }
+        } catch (IOException e) {
+            //TODO : エラー処理
+            e.printStackTrace();
+            throw new Error("タカノ : "+ e);
+        }
+
+/*
+        close();
+
+        try {
+            if (load_mode == "r") {
+                //内部DBファイルを生成する
+                mDbHelper.getReadableDatabase();
 
                 //assets内のDBファイルを、内部DBのファイルにコピーする
                 mDbHelper.copyDataBaseFromAssets();
@@ -80,7 +107,7 @@ public class MyDatabase {
             e.printStackTrace();
             throw new Error("タカノ : "+ e);
         }
-
+*/
         return true;
     }
 

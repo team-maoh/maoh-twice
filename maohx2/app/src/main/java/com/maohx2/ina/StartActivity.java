@@ -13,6 +13,7 @@ import com.maohx2.ina.Draw.ImageContext;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.CircleImagePlate;
 import com.maohx2.ina.Text.PlateGroup;
+import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
@@ -65,7 +66,7 @@ class StartSurfaceView extends BaseSurfaceView {
     BitmapData srime;
     BitmapData bit_srime;
     StartGameSystem start_game_system;
-    UserInterface start_user_interface;
+    BattleUserInterface start_user_interface;
 
     BoxTextPlate[] box_text_plates = new BoxTextPlate[3];
     PlateGroup<BoxTextPlate> item_list;
@@ -99,7 +100,7 @@ class StartSurfaceView extends BaseSurfaceView {
         srime = graphic.searchBitmap("スライム");
         bit_srime = graphic.processTrimmingBitmapData(srime, 0, 0, 46, 46);
 
-        start_user_interface = new UserInterface(global_data.getGlobalConstants(), graphic);
+        start_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
         start_user_interface.init();
 
         start_game_system = new StartGameSystem();
@@ -180,7 +181,7 @@ class StartSurfaceView extends BaseSurfaceView {
         start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         start_game_system.updata();
         //item_list.update();
-        image_list.update();
+        //image_list.update();
 
 
         //graphic.bookingDrawBitmapName("スライム",300,590);

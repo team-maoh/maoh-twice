@@ -79,7 +79,7 @@ public class DungeonSelectManager {
         List<CircleImagePlate> dungeonSelectButtonList = new ArrayList<CircleImagePlate>();
 
         //インスタンス化
-        for (int i = 0; i < size; i++) {
+   /*     for (int i = 0; i < size; i++) {
             dungeonSelectButtonList.add(new CircleImagePlate(
                     graphic, userInterface,
                     new Paint(),
@@ -89,6 +89,7 @@ public class DungeonSelectManager {
                     graphic.searchBitmap(imageName.get(i))
                     ));
         }
+        */
         CircleImagePlate[] dungeonSelectButton = new CircleImagePlate[dungeonSelectButtonList.size()];
         dungeonSelectButtonGroup = new PlateGroup<CircleImagePlate>(dungeonSelectButtonList.toArray(dungeonSelectButton));
     }

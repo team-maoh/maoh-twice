@@ -146,7 +146,6 @@ public class Graphic {
                 booking_task_datas.get(i).draw(canvas);
             }
 
-
             draw_paint.setColor(Color.GREEN);
             canvas.drawRect(0,0,DRAW_RIGHT_END,DRAW_UP_END,draw_paint);
             canvas.drawRect(DISP_X,0,DRAW_RIGHT_END,DRAW_DOWN_END,draw_paint);

@@ -37,7 +37,7 @@ public class EquipmentItemDataAdmin extends ItemDataAdmin<EquipmentItemData> {
             datas.get(i).setAttack(attack.get(i));
             datas.get(i).setPrice(price.get(i));
             datas.get(i).setItemKind(0);
-            datas.get(i).setItemImage(graphic.searchBitmap(name.get(i)));
+            datas.get(i).setItemImage(graphic.searchBitmap(image_name.get(i)));
         }
     }
 }
