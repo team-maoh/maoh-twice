@@ -129,8 +129,6 @@ public class Graphic {
 
     public void init(){}
 
-
-
     public void loadLocalImages(MyDatabase image_database, String table_folder){
         local_bitmap_data_admin.loadLocalImages(image_database, table_folder);
     }
