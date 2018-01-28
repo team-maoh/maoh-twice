@@ -180,11 +180,13 @@ public class Graphic {
     }
 
     public int transrateDispPositionToNormalizedPositionX(int disp_x){
-        return (int)((disp_x + DRAW_LEFT_END)* DISP_NORMARIZED_RATE.x);
+        return (int)((disp_x - DRAW_LEFT_END)/NORMARIZED_DRAW_RATE.x);
+        //return (int)((disp_x + DRAW_LEFT_END)* DISP_NORMARIZED_RATE.x);
     }
 
     public int transrateDispPositionToNormalizedPositionY(int disp_y){
-        return  (int)((disp_y + DRAW_UP_END) * DISP_NORMARIZED_RATE.y);
+        return (int)((disp_y - DRAW_UP_END)/NORMARIZED_DRAW_RATE.y);
+        //return  (int)((disp_y + DRAW_UP_END) * DISP_NORMARIZED_RATE.y);
     }
 
     public void bookingDrawBitmapData(ImageContext _image_context){
@@ -505,7 +507,7 @@ public class Graphic {
                 for(int y = 0; y < constant_length; y++) {
                     for(int x = 0; x < variable_length[i]; x++) {
                         int index = ((x + y * variable_length[i]) + (total_length*y));
-                        System.out.println("index = " + index);
+                        //System.out.println("index = " + index);
                         conbine_pixels[x + (total_length*y + init_copy_index)] = source_pixels[i][x + y * variable_length[i]];
                     }
                 }

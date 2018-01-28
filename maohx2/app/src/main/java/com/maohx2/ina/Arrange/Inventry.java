@@ -36,7 +36,7 @@ public class Inventry {
     public Inventry(UserInterface user_interface, Graphic graphic, EquipmentItemDataAdmin _equipment_item_data_admin){
         equipment_item_data_admin = _equipment_item_data_admin;
 
-        test_item = (ItemData) equipment_item_data_admin.getOneDataByName("剣");
+        test_item = (ItemData) equipment_item_data_admin.getOneDataByName("破壊の剣");
 
         for(int i = 0; i < 10; i++) {
             position[i][0] = 1000;

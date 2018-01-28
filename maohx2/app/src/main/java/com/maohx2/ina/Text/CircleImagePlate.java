@@ -41,10 +41,7 @@ public class CircleImagePlate extends CirclePlate {
     }
 
     public void drawCollisionRange(){
-        System.out.println(default_image_context.getBitmapData().getHeight());
-        System.out.println(feedback_image_context.getBitmapData().getWidth());
-        //graphic.bookingDrawBitmapData(draw_image_context);
-        //graphic.bookingDrawCircle(x,y,radius);
+        graphic.bookingDrawCircle(x,y,radius);
     }
 
     @Override
