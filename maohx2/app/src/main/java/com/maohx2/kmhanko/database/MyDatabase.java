@@ -63,16 +63,18 @@ public class MyDatabase {
                 mDbHelper.getReadableDatabase();
                 //assets内のDBファイルを、内部DBのファイルにコピーする
                 mDbHelper.copyDataBaseFromAssets();
+                mDbHelper.close();
+                mDbHelper.getReadableDatabase();
                 mDbHelper.copyDataBaseFromAssets();
                 //assets内のDBファイルを、内部DBのファイルにコピーする
                 //dbを取得する
                 db = mDbHelper.getReadableDatabase();
             }
-            if (load_mode == "w") {
+            if (loadMode == "w") {
                 //内部DBに既にDBファイルが存在するかどうかを確認する。
                 //存在するならばDBを獲得して終了
                 //存在しないならば新規作成する
-                mDbHelper.createEmptyDataBaseW();
+                mDbHelper.createEmptyDataBase("w");
                 db = mDbHelper.getWritableDatabase();
             }
         } catch (IOException e) {
