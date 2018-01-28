@@ -15,7 +15,6 @@ import java.util.Random;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
-
 import javax.microedition.khronos.opengles.GL10;
 
 import static java.lang.Math.PI;
@@ -44,13 +43,15 @@ public class MapPlayer extends MapUnit {
     SoundAdmin sound_admin;
     DungeonUserInterface dungeon_user_interface;
 
-    int PLAYER_STEP = 20;//プレイヤーの歩幅
-    double touch_w_x, touch_w_y, touch_n_x, touch_n_y, touch_x, touch_y;
+    int PLAYER_STEP = 30;//プレイヤーの歩幅
+//    double touch_w_x, touch_w_y, touch_n_x, touch_n_y, touch_x, touch_y;
+    double touch_w_x, touch_w_y, touch_n_x, touch_n_y;
     boolean is_moving;
 
     int touching_frame_count;
 
     TouchState touch_state;
+//    Random random;
 
     public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, MapAdmin _map_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera) {
         super(graphic, _map_object_admin, _map_admin, _camera);
@@ -68,12 +69,16 @@ public class MapPlayer extends MapUnit {
         encount_steps = 0;
         sound_steps = 0;
 
-        w_x = 550;
-        w_y = 550;
+//        w_x = 550;
+//        w_y = 550;
+        w_x = map_admin.getRoomPoint().x * 64 + 32;
+        w_y = map_admin.getRoomPoint().y * 64 + 32;
 
         touching_frame_count = 0;
 
         is_moving = false;
+
+//        random = new Random();
     }
 
     public void init() {
@@ -94,8 +99,8 @@ public class MapPlayer extends MapUnit {
             touch_w_y = camera.convertToWorldCoordinateY((int) touch_n_y);
 
             //デバッグ用
-            touch_x = touch_w_x;
-            touch_y = touch_w_y;
+//            touch_x = touch_w_x;
+//            touch_y = touch_w_y;
 
             touching_frame_count++;
 
@@ -116,7 +121,7 @@ public class MapPlayer extends MapUnit {
             dy = (touch_w_y - w_y) / dst_steps;
 
             //壁との衝突を考慮した上で、１歩進む
-            walkOneStep(dx, dy);
+            walkOneStep(dx, dy, false);
 
             updateDirOnMap(touch_w_x, touch_w_y);
 
@@ -153,8 +158,8 @@ public class MapPlayer extends MapUnit {
         }
 
         //デバッグ用
-        touch_x = camera.convertToNormCoordinateX((int) touch_w_x);
-        touch_y = camera.convertToNormCoordinateY((int) touch_w_y);
+//        touch_x = camera.convertToNormCoordinateX((int) touch_w_x);
+//        touch_y = camera.convertToNormCoordinateY((int) touch_w_y);
 
         camera.setCameraOffset(w_x, w_y);
     }
@@ -169,60 +174,27 @@ public class MapPlayer extends MapUnit {
 
     private int makeThresholdEncountSteps() {
 
-        Random random = new Random();
-        double seed1 = random.nextDouble();
-        double seed2 = random.nextDouble();
-
-        //平均0, 分散1の標準正規分布 : N(0, 1)
-        double normal_dist = sqrt(-2 * log(seed1)) * cos(2 * PI * seed2);
+        double normal_dist = makeNormalDist();
 
         return (int) (var_encount_steps * normal_dist + mean_encount_steps);
 
     }
 
-//    void defineDxDy(int now_x, int now_y, int dst_x, int dst_y) {
-//
-//        dst_steps = myDistance(dst_x, dst_y, now_x, now_y) / STEP;
-//        dst_steps++;//dst_steps = 0 のときゼロ除算が発生するので
-//        dx = ((dst_x - now_x) / dst_steps);
-//        dy = ((dst_y - now_y) / dst_steps);
-//
-//    }
-
-
-    //    boolean hasUpdateDxDy(double theta) {
-//
-//        double wx = 0.0, wy = 0.0;//壁ベクトル(wx, wy) ...
-//
-////        if (detectWall(x + _dx, y + _dy, x + _dx + REACH_FOR_WALL * cos(theta), y + _dy + REACH_FOR_WALL * sin(theta)) != 0) {
-//        if (detectWall(x + REACH_FOR_WALL * cos(theta), y + REACH_FOR_WALL * sin(theta), x + dx + REACH_FOR_WALL * cos(theta), y + dy + REACH_FOR_WALL * sin(theta)) != 0) {
-//            System.out.println("hasUpdate");
-//
-//            //速度ベクトルとの内積が正になるような壁ベクトルを選ぶ
-//            wx = cos(theta + 90.0);
-//            wy = sin(theta + 90.0);
-//            if (wx * dx + wy * dy < 0) {
-//                wx = -wx;
-//                wy = -wy;
-//            }
-//
-//            dx = (dx * wx + dy * wy) * wx;
-//            dy = (dx * wx + dy * wy) * wy;
-//
-//            return true;
-//        }
-//
-//        return false;
-//    }
     //(x1, y1)と(x2, y2)の距離を返す
     private double myDistance(double x1, double y1, double x2, double y2) {
         return pow(pow(x1 - x2, 2.0) + pow(y1 - y2, 2.0), 0.5);
     }
 
-    public double getTouchWouldX(){ return touch_w_x;}
+    public double getTouchWouldX() {
+        return touch_w_x;
+    }
 
-    public double getTouchWouldY(){ return touch_w_y;}
+    public double getTouchWouldY() {
+        return touch_w_y;
+    }
 
-    public boolean getIsMoving(){return is_moving;}
+    public boolean getIsMoving() {
+        return is_moving;
+    }
 
 }

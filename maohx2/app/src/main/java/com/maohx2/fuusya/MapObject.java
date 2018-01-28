@@ -7,7 +7,9 @@ import android.view.SurfaceHolder;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
 import static java.lang.Math.PI;
-
+import static java.lang.Math.cos;
+import static java.lang.Math.log;
+import static java.lang.Math.sqrt;
 
 import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.MapAdmin;
@@ -15,6 +17,7 @@ import com.maohx2.ina.Draw.Graphic;
 //import com.maohx2.ina.MySprite;
 
 import java.util.Map;
+import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -31,6 +34,7 @@ abstract public class MapObject {
     Graphic graphic;
     Camera camera;
     double dir_on_map;//マップ上での自分自身の向き( 0 ~ 2*PI )
+    Random random;
 
     public MapObject(Graphic _graphic, MapObjectAdmin _map_object_admin, Camera _camera) {
 
@@ -44,10 +48,10 @@ abstract public class MapObject {
         w_y = 450;
         dir_on_map = 0.0;
 
+        random = new Random();
     }
 
     public void init() {
-
     }
 
     public void update() {
@@ -89,9 +93,13 @@ abstract public class MapObject {
         return ((int) ((_dir_on_map + PI / total_dirs) / (2 * PI / total_dirs))) % total_dirs;
     }
 
-//    public void setId(int _id){
-//        id = _id;
-//    }
+    //平均0, 分散1の標準正規分布 N(0, 1)
+    public double makeNormalDist() {
+        double seed1 = random.nextDouble();
+        double seed2 = random.nextDouble();
+
+        return sqrt(-2 * log(seed1)) * cos(2 * PI * seed2);
+    }
 
 }
 

@@ -23,7 +23,7 @@ public class MapObjectBitmap {
     int MAX_BITMAP_DIR = 8;//最大で8方位
     int MAX_FRAME = 3;//3枚の画像をループ表示する
     BitmapData bitmap_data[][] = new BitmapData[MAX_BITMAP_DIR][MAX_FRAME];
-    int FRAME_PERIODS = 18;//画像の更新周期
+    int FRAME_PERIODS = 5;//画像の更新周期(値が小さいほどfpsが上がる)
 
     int time_count;//画像の更新周期を数える
     boolean is_increasing_frame;

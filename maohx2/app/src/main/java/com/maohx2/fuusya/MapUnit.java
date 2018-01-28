@@ -35,7 +35,6 @@ public class MapUnit extends MapObject {
     int time_count;
 
     public MapUnit(Graphic _graphic, MapObjectAdmin _map_object_admin, MapAdmin _map_admin, Camera _camera) {
-
         super(_graphic, _map_object_admin, _camera);
 
         map_object_admin = _map_object_admin;
@@ -60,7 +59,7 @@ public class MapUnit extends MapObject {
 
     public void updateDirOnMap(double next_w_x, double next_w_y) {
 
-        if(next_w_x != w_x || next_w_y != w_y) {
+        if (next_w_x != w_x || next_w_y != w_y) {
             //dir_on_map = [0, 2*PI)
             dir_on_map = calcDirOnMap(next_w_x, next_w_y);
         }
@@ -68,13 +67,13 @@ public class MapUnit extends MapObject {
 
     //[0, 2*PI) のdoubleを返す
     //自分の座標[w_x, w_y]を原点として、引数[]がどちらの方角にあるか
-    public double calcDirOnMap(double next_w_x, double next_w_y){
+    public double calcDirOnMap(double next_w_x, double next_w_y) {
         return (2 * PI - atan2(next_w_y - w_y, next_w_x - w_x)) % (2 * PI);
     }
 
     //dx, dyを正して(壁に近すぎたらdx, dyをゼロにして)から、
     //xとyを更新する(一歩進む)
-    public void walkOneStep(double dx, double dy) {
+    public void walkOneStep(double dx, double dy, boolean hit_against_entrance) {
 
         boolean is_touching_x_wall = false;
         boolean is_touching_y_wall = false;
@@ -87,6 +86,16 @@ public class MapUnit extends MapObject {
             //壁との衝突を判定する座標(プレイヤー座標(w_x, w_y)の周囲に円状に張り巡らされる)
             hand_x = w_x + REACH_FOR_WALL * cos(i);
             hand_y = w_y - REACH_FOR_WALL * sin(i);
+
+            if (hit_against_entrance == true) {
+                //isEntrance()を勝手にpublicに書き換えて使ってみた
+                if (map_admin.isEntrance(map_admin.worldToMap((int) (w_x + dx)), map_admin.worldToMap((int) w_y))) {
+                    is_touching_x_wall = true;
+                }
+                if (map_admin.isEntrance(map_admin.worldToMap((int) w_x), map_admin.worldToMap((int) (w_y + dy)))) {
+                    is_touching_y_wall = true;
+                }
+            }
 
             //縦方向の壁と接触する場合
             if (detectWall(hand_x, hand_y, hand_x + dx, hand_y) != 0) {
@@ -107,8 +116,9 @@ public class MapUnit extends MapObject {
         }
 
     }
-    //0:壁なし, 1:水平, 2:垂直
-    private int detectWall(double x1, double y1, double x2, double y2) {
+
+    //0:壁なし, 1: －, 2: |
+    protected int detectWall(double x1, double y1, double x2, double y2) {
         return map_admin.detectWallDirection(x1, y1, x2, y2);
     }
 
