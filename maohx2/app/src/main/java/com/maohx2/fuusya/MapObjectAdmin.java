@@ -87,7 +87,7 @@ public class MapObjectAdmin {
         }
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
-            map_enemy[i] = new MapEnemy(graphic, this, map_admin, camera);
+            map_enemy[i] = new MapEnemy(graphic, this, map_admin, camera, ENEMY_DIR);
             map_enemy[i].init();
             map_enemy_bitmap[i] = new MapObjectBitmap(ENEMY_DIR, graphic, "ハーピー");
             map_enemy_bitmap[i].init();
@@ -174,7 +174,8 @@ public class MapObjectAdmin {
 
             if (enemy_distance < REACH_OF_PLAYER && map_enemy[i].exists() == true) {
                 System.out.println("敵と接触");
-                map_enemy[i].setExists(false);//接触すると敵が消える(戦闘に突入する)
+                //デバッグのためにコメントアウト
+//                map_enemy[i].setExists(false);//接触すると敵が消える(戦闘に突入する)
             }
         }
     }

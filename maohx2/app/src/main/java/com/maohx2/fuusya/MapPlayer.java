@@ -43,15 +43,13 @@ public class MapPlayer extends MapUnit {
     SoundAdmin sound_admin;
     DungeonUserInterface dungeon_user_interface;
 
-    int PLAYER_STEP = 30;//プレイヤーの歩幅
-//    double touch_w_x, touch_w_y, touch_n_x, touch_n_y, touch_x, touch_y;
+    int PLAYER_STEP = 40;//プレイヤーの歩幅
     double touch_w_x, touch_w_y, touch_n_x, touch_n_y;
     boolean is_moving;
 
     int touching_frame_count;
 
     TouchState touch_state;
-//    Random random;
 
     public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, MapAdmin _map_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera) {
         super(graphic, _map_object_admin, _map_admin, _camera);
