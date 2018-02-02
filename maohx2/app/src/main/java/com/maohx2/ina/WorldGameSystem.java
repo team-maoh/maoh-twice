@@ -103,8 +103,8 @@ public class WorldGameSystem {
         }
         */
 
-        geoSlotAdminManager.update();
-        //dungeonSelectManager.update();
+        //geoSlotAdminManager.update();
+        dungeonSelectManager.update();
         //itemShopAdmin.update();
         text_box_admin.update();
         effectAdmin.update();
@@ -114,9 +114,9 @@ public class WorldGameSystem {
     public void draw() {
 
         //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
-        geoSlotAdminManager.draw();
+        //geoSlotAdminManager.draw();
 
-        //dungeonSelectManager.draw();
+        dungeonSelectManager.draw();
         //itemShopAdmin.draw();
         text_box_admin.draw();
         effectAdmin.draw();

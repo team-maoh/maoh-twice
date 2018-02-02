@@ -3,22 +3,26 @@ package com.maohx2.kmhanko.geonode;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Text.BoxTextPlate;
-import com.maohx2.ina.Text.ListBox;
 import com.maohx2.ina.UI.UserInterface;
 
 // Added by kmhanko
-import com.maohx2.kmhanko.database.MyDatabase;
-import java.util.ArrayList;
-import java.util.List;
-import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
-
-import com.maohx2.kmhanko.itemdata.GeoObjectData;
+import com.maohx2.kmhanko.database.MyDatabase;
+import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.PlateGroup;
+import com.maohx2.kmhanko.itemdata.GeoObjectData;
 
+// *** Graphic関係 ***
 import android.graphics.Color;
 import android.graphics.Paint;
+
+// *** List関係 ***
+import java.util.ArrayList;
+import java.util.List;
+
+
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.ina.Text.ListBox;
 
 /**
  * Created by ina on 2017/10/08.
@@ -42,10 +46,12 @@ public class GeoSlotAdmin {
     static MyDatabase geoSlotEventDB;
 
     public final int GEO_SLOT_MAX = 64;
+    public final int TOUCH_R = 90;
+
     String t_name; //このGeoSlotAdmin = ジオマップの名称 = Table名
 
-    List<GeoSlot> geo_slots = new ArrayList<GeoSlot>(GEO_SLOT_MAX);
     List<Integer> tree_code = new ArrayList<Integer>(); //GeoSlotのツリー上構造を表す数値列
+    List<GeoSlot> geo_slots = new ArrayList<GeoSlot>(GEO_SLOT_MAX);
     GeoSlot grand_geo_slot; //ツリーの中心であるGeoSlot
     GeoCalcSaverAdmin geo_calc_saver_admin; //GeoSlotの計算を行い、計算結果を格納する
 
@@ -100,9 +106,9 @@ public class GeoSlotAdmin {
                 graphic.makeImageContext(graphic.searchBitmap("neco"), 0, 0, 6.0f, 6.0f, 0.0f, 128, false)
         );
         //TODO 配列の位置はタッチ座標用、COntextの位置は表示用
-        //拡大縮小を動的に行う場合は毎回このmakeImageContextを呼ぶと言うことになるわけだが。
-        //そもそも画像の表示位置はContextに入っているから毎回呼ぶと言うことになるわけだが。
-        //Contextをベースとして、bookingの時の値をオフセットにするとか？
+        //TODO 拡大縮小を動的に行う場合は毎回このmakeImageContextを呼ぶと言うことになるわけだが。
+        //TODO そもそも画像の表示位置はContextに入っているから毎回呼ぶと言うことになるわけだが。
+        //TODO Contextをベースとして、bookingの時の値をオフセットにするとか？
 
         //このメソッドを呼ぶと、全てのGeoSlotのインスタンス化が完了する。実体は各GeoSlotが子GeoSlotとして持つ。
         grand_geo_slot.makeGeoSlotInstance(tree_code, null);
@@ -114,7 +120,7 @@ public class GeoSlotAdmin {
         GeoSlot.staticInit(textBoxAdmin, geoSlotEventDB);
 
         for(int i = 0; i < geo_slots.size(); i++) {
-            geo_slots.get(i).setParam(xs.get(i), ys.get(i), 100);
+            geo_slots.get(i).setParam(xs.get(i), ys.get(i), TOUCH_R);
             //TouchIDセット
             //geo_slots.get(i).setTouchID(userInterface.setCircleTouchUI(xs.get(i), ys.get(i), 100));
             geo_slots.get(i).setReleaseEvent(release_events.get(i));
@@ -178,9 +184,9 @@ public class GeoSlotAdmin {
 
             textBoxAdmin.updateText(releaseTextBoxID);
 
-            Paint paint = new Paint();
-            paint.setTextSize(80f);
-            paint.setColor(Color.WHITE);
+            Paint textPaint = new Paint();
+            textPaint.setTextSize(80f);
+            textPaint.setARGB(255,255,255,255);
 
             //「解放する」「解放しない」ボタン表示　→　ListBox<Button>の完成待ち
             releasePlateGroup = new PlateGroup<BoxTextPlate>(
@@ -191,7 +197,7 @@ public class GeoSlotAdmin {
                                     Constants.Touch.TouchWay.MOVE,
                                     new int[]{1100, 50, 1550, 200},
                                     "解放する",
-                                    paint
+                                    textPaint
                             ),
                             new BoxTextPlate(
                                     graphic, userInterface, new Paint(),
@@ -199,7 +205,7 @@ public class GeoSlotAdmin {
                                     Constants.Touch.TouchWay.MOVE,
                                     new int[]{1100, 250, 1550, 400},
                                     "やめる",
-                                    paint
+                                    textPaint
                             )
                     }
             );

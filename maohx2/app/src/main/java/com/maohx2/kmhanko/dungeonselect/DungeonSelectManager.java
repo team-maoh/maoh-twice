@@ -24,6 +24,7 @@ import android.content.Intent;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO 指を離すと元に戻ってしまうので、どこを選択したのかわかりにくい。説明プレートを出せばわかるけど
 public class DungeonSelectManager {
     //DungeonSelectButtonAdmin dungeonSelectButtonAdmin;
     //LoopSelectButtonAdmin loopSelectButtonAdmin;
@@ -80,7 +81,7 @@ public class DungeonSelectManager {
 
 
         //インスタンス化
-   /*     for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             dungeonSelectButtonList.add(new CircleImagePlate(
                     graphic, userInterface,
                     Constants.Touch.TouchWay.UP_MOMENT,
@@ -90,12 +91,41 @@ public class DungeonSelectManager {
                     graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_FEEDBACK, DUNGEON_SELECT_BUTTON_RATE_FEEDBACK, 0.0f, 255, false)
             ));
         }
-        */
+
         CircleImagePlate[] dungeonSelectButton = new CircleImagePlate[dungeonSelectButtonList.size()];
         dungeonSelectButtonGroup = new PlateGroup<CircleImagePlate>(dungeonSelectButtonList.toArray(dungeonSelectButton));
     }
 
     private void loadDungeonEnterSelectButton(){
+
+        Paint textPaint = new Paint();
+        textPaint.setTextSize(80f);
+        textPaint.setARGB(255,255,255,255);
+
+        dungeonEnterSelectButtonGroup = new PlateGroup<BoxTextPlate>(
+                new BoxTextPlate[]{
+                        new BoxTextPlate(
+                                graphic, userInterface, new Paint(),
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{1100, 50, 1550, 200},
+                                "侵入する",
+                                textPaint
+                        ),
+                        new BoxTextPlate(
+                                graphic, userInterface, new Paint(),
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{1100, 250, 1550, 400},
+                                "やめる",
+                                textPaint
+                        )
+                }
+        );
+
+        enterSelectFlag = false;
+
+        /*
         int size = 2;
 
         List<BoxTextPlate> dungeonEnterSelectButtonList = new ArrayList<BoxTextPlate>();
@@ -137,6 +167,7 @@ public class DungeonSelectManager {
         }
         BoxTextPlate[] dungeonEnterSelectButton = new BoxTextPlate[dungeonEnterSelectButtonList.size()];
         dungeonEnterSelectButtonGroup = new PlateGroup<BoxTextPlate>(dungeonEnterSelectButtonList.toArray(dungeonEnterSelectButton));
+        */
     }
 
     public void draw() {
@@ -165,7 +196,6 @@ public class DungeonSelectManager {
         int buttonID = dungeonEnterSelectButtonGroup.getTouchContentNum();
         if (buttonID == 1 ) { //侵入する
             //侵入処理
-
             enterSelectFlag = false;
         }
         if (buttonID == 2 ) { //やめる
