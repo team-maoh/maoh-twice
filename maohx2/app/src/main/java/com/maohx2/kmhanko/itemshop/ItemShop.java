@@ -27,7 +27,7 @@ public abstract class ItemShop {
 
     //ListBox listBox_Item;
     //ListBox listBox_Select;
-    PlateGroup<BoxItemPlate> productPlateGroup;
+    PlateGroup<BoxProductPlate> productPlateGroup;
     PlateGroup<BoxTextPlate> buySelectPlateGroup;
 
     int textBoxID;
@@ -92,17 +92,18 @@ public abstract class ItemShop {
         Paint productPlatePaint = new Paint();
         productPlatePaint.setARGB(255,64,64,64);
 
-        BoxItemPlate[] boxItemPlates = new BoxItemPlate[size];
+        //TODO このPlateは価格表示ができないので、オーバーライドするかしてBoxProductPlatesでも作る
+        BoxProductPlate[] boxProductPlates = new BoxProductPlate[size];
         for (int i = 0; i < size; i++) {
-            boxItemPlates[i] = new BoxItemPlate(
+            boxProductPlates[i] = new BoxProductPlate(
                     graphic, userInterface, productPlatePaint,
                     Constants.Touch.TouchWay.UP_MOMENT,
                     Constants.Touch.TouchWay.MOVE,
-                    new int[] { 50, 50 + 60 * i, 550, 110 + 50 * i },
+                    new int[] { 50, 50 + 100 * i, 900, 150 + 100 * i },
                     itemShopData.getItemData(i)
             );
         }
-        productPlateGroup = new PlateGroup<BoxItemPlate>(boxItemPlates);
+        productPlateGroup = new PlateGroup<BoxProductPlate>(boxProductPlates);
 
 
         Paint textPaint = new Paint();
