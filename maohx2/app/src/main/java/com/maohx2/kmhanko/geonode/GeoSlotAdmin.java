@@ -13,6 +13,7 @@ import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
+import com.maohx2.ina.Text.PlateGroup;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 
@@ -51,6 +52,8 @@ public class GeoSlotAdmin {
     Graphic graphic;
     TextBoxAdmin textBoxAdmin;
     UserInterface userInterface;
+
+    PlateGroup<GeoSlot> geoSlotGroup;
 
     GeoSlot focusGeoSlot; //今操作している(条件の解放のため選択している)GeoSlot
 
@@ -92,40 +95,37 @@ public class GeoSlotAdmin {
         List<String> restrictions = geoSlotMapDB.getString(t_name, "restriction");
 
         //根スロットのインスタンス化
-        /*
         grand_geo_slot = new GeoSlot(this, graphic, userInterface,
                 Constants.Touch.TouchWay.UP_MOMENT,
                 Constants.Touch.TouchWay.MOVE,
                 new int[] { 0, 0, 100 },
-
-        );*/
+                graphic.makeImageContext(graphic.searchBitmap("neco"), 0, 0, 5.0f, 5.0f, 0.0f, 128, false),
+                graphic.makeImageContext(graphic.searchBitmap("neco"), 0, 0, 6.0f, 6.0f, 0.0f, 128, false)
+        );
+        //TODO 配列の位置はタッチ座標用、COntextの位置は表示用
+        //拡大縮小を動的に行う場合は毎回このmakeImageContextを呼ぶと言うことになるわけだが。
+        //そもそも画像の表示位置はContextに入っているから毎回呼ぶと言うことになるわけだが。
+        //Contextをベースとして、bookingの時の値をオフセットにするとか？
 
         //このメソッドを呼ぶと、全てのGeoSlotのインスタンス化が完了する。実体は各GeoSlotが子GeoSlotとして持つ。
         grand_geo_slot.makeGeoSlotInstance(tree_code, null);
 
+
         //GeoSlotの管理のため、GeoSlotのインスタンスをコピーしてくるメソッド。
-        //geo_slots = (GeoSlot[])grand_geo_slot.getGeoSlots().toArray(new GeoSlot[0]);
         geo_slots = grand_geo_slot.getGeoSlots();
 
-
-        int r;
-
-        //GeoSlot.staticInit(graphic, userInterface, textBoxAdmin, geoSlotEventDB);
+        GeoSlot.staticInit(textBoxAdmin, geoSlotEventDB);
 
         for(int i = 0; i < geo_slots.size(); i++) {
-            //TODO:根の表示も適当
-            if (i == 0) {
-                r = 70;
-            } else {
-                r = 70;
-            }
-            geo_slots.get(i).setParam(xs.get(i),ys.get(i), r);
+            geo_slots.get(i).setParam(xs.get(i), ys.get(i), 100);
             //TouchIDセット
-            geo_slots.get(i).setTouchID(userInterface.setCircleTouchUI(xs.get(i), ys.get(i), r+10));
-
+            //geo_slots.get(i).setTouchID(userInterface.setCircleTouchUI(xs.get(i), ys.get(i), 100));
             geo_slots.get(i).setReleaseEvent(release_events.get(i));
             geo_slots.get(i).setRestriction(restrictions.get(i));
         }
+
+        //plateGroupインスタンス化
+        geoSlotGroup = new PlateGroup<GeoSlot>((GeoSlot[])grand_geo_slot.getGeoSlots().toArray(new GeoSlot[0]));
 
     }
 
@@ -189,11 +189,15 @@ public class GeoSlotAdmin {
 
     public void update(){
         //GeoSlot
+        /*
         for(int i = 0; i < geo_slots.size(); i++) {
             if (geo_slots.get(i) != null) {
                 geo_slots.get(i).update();
             }
         }
+        */
+        geoSlotGroup.update();
+
         //ListBox
         if (isReleaseListActive) {
             releaseList.update();
@@ -220,8 +224,9 @@ public class GeoSlotAdmin {
             geo_slots.get(i).drawLine();
         }
         for(int i = 0; i < geo_slots.size(); i++) {
-            boolean f = geo_slots.get(i).equals(focusGeoSlot);
+            //boolean f = geo_slots.get(i).equals(focusGeoSlot);
             //geo_slots.get(i).draw(f);
+            geoSlotGroup.draw();
         }
         //ListBox
         if (isReleaseListActive) {
