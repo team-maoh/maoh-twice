@@ -62,14 +62,12 @@ public class ItemShopAdmin {
         boolean itemKindFlag = false;
 
         if (_itemKind == ITEM_KIND.EXPEND) {
-            itemShop = new ExpendItemShop();
-            itemShop.init(userInterface, graphic, textBoxAdmin);
+            itemShop = new ExpendItemShop(userInterface, graphic, textBoxAdmin);
             itemShop.setItemShopData(expendItemShopData);
             itemKindFlag = true;
         }
         if (_itemKind == ITEM_KIND.GEO_OBJECT) {
-            itemShop = new GeoObjectShop();
-            itemShop.init(userInterface, graphic, textBoxAdmin);
+            itemShop = new GeoObjectShop(userInterface, graphic, textBoxAdmin);
             itemShop.setItemShopData(geoObjectShopData);
             itemKindFlag = true;
         }
@@ -77,7 +75,7 @@ public class ItemShopAdmin {
             throw new Error("ItemShopAdmin#makeItemShop : ☆タカノ itemKindが不適切 : " + _itemKind);
         }
         itemShop.loadShopData(_tableName);
-        itemShop.setList();
+        itemShop.initPlateGroup();
         itemShop.setTextBox();
     }
 

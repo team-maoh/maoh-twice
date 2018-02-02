@@ -76,7 +76,7 @@ public class WorldGameSystem {
         itemDataAdminManager.init(databaseAdmin,graphic);
 
         itemShopAdmin.init(graphic, map_user_interface, databaseAdmin, text_box_admin, itemDataAdminManager);
-        //itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.GEO_OBJECT, "debug");
+        itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "debug");
 
         geoSlotAdminManager.setActiveGeoSlotAdmin("森");
 
@@ -104,8 +104,8 @@ public class WorldGameSystem {
         */
 
         //geoSlotAdminManager.update();
-        dungeonSelectManager.update();
-        //itemShopAdmin.update();
+        //dungeonSelectManager.update();
+        itemShopAdmin.update();
         text_box_admin.update();
         effectAdmin.update();
     }
@@ -116,8 +116,8 @@ public class WorldGameSystem {
         //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
         //geoSlotAdminManager.draw();
 
-        dungeonSelectManager.draw();
-        //itemShopAdmin.draw();
+        //dungeonSelectManager.draw();
+        itemShopAdmin.draw();
         text_box_admin.draw();
         effectAdmin.draw();
 
