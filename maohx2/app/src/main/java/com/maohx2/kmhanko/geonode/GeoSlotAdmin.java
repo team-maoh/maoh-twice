@@ -2,6 +2,7 @@ package com.maohx2.kmhanko.geonode;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.ListBox;
 import com.maohx2.ina.UI.UserInterface;
 
@@ -15,6 +16,8 @@ import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.ina.Text.PlateGroup;
 
+import android.graphics.Color;
+import android.graphics.Paint;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 
 /**
@@ -54,12 +57,13 @@ public class GeoSlotAdmin {
     UserInterface userInterface;
 
     PlateGroup<GeoSlot> geoSlotGroup;
+    PlateGroup<BoxTextPlate> releasePlateGroup;//解放する/やめる　の選択
 
     GeoSlot focusGeoSlot; //今操作している(条件の解放のため選択している)GeoSlot
 
     int releaseTextBoxID; //スロット条件解放の説明文を表示するためのTextBoxID
-    boolean isReleaseListActive = false;
-    ListBox releaseList;//解放する/やめる　の選択
+    boolean isReleasePlateActive = false;
+    //ListBox releaseList;//解放する/やめる　の選択
 
     //Rewrite by kmhanko
     public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, TextBoxAdmin _textBoxAdmin) {
@@ -72,13 +76,6 @@ public class GeoSlotAdmin {
         textBoxAdmin.setTextBoxUpdateTextByTouching(releaseTextBoxID, false);
         textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
         //textBoxAdmin.hideTextBox(releaseTextBoxID);
-    }
-
-    public static void setGeoSlotMapDB(MyDatabase _geoSlotMapDB) {
-        geoSlotMapDB = _geoSlotMapDB;
-    }
-    public static void setGeoSlotEventDB(MyDatabase _geoSlotEventDB) {
-        geoSlotEventDB = _geoSlotEventDB;
     }
 
     //ジオスロットの並びを表すツリーコードを用いて、GeoSlotのインスタンス化を行う。
@@ -129,6 +126,8 @@ public class GeoSlotAdmin {
 
     }
 
+    //***** GeoObjectステータス計算関係 *****
+
     //GeoSlotによるステータスへの加算量を計算する
     public boolean calcGeoSlot() {
         geo_calc_saver_admin = grand_geo_slot.calcPass();
@@ -159,9 +158,11 @@ public class GeoSlotAdmin {
     }
     */
 
+    // ***** GeoObject計算関係ここまで　*****
+
     //GeoSlotを解放しますか？的なもの
     public void geoSlotReleaseChoice() {
-        isReleaseListActive = false;
+        isReleasePlateActive = false;
         textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
 
         if (!focusGeoSlot.isEventClear()) {
@@ -177,12 +178,42 @@ public class GeoSlotAdmin {
 
             textBoxAdmin.updateText(releaseTextBoxID);
 
+            Paint paint = new Paint();
+            paint.setTextSize(80f);
+            paint.setColor(Color.WHITE);
+
             //「解放する」「解放しない」ボタン表示　→　ListBox<Button>の完成待ち
+            releasePlateGroup = new PlateGroup<BoxTextPlate>(
+                    new BoxTextPlate[]{
+                            new BoxTextPlate(
+                                    graphic, userInterface, new Paint(),
+                                    Constants.Touch.TouchWay.UP_MOMENT,
+                                    Constants.Touch.TouchWay.MOVE,
+                                    new int[]{1100, 50, 1550, 200},
+                                    "解放する",
+                                    paint
+                            ),
+                            new BoxTextPlate(
+                                    graphic, userInterface, new Paint(),
+                                    Constants.Touch.TouchWay.UP_MOMENT,
+                                    Constants.Touch.TouchWay.MOVE,
+                                    new int[]{1100, 250, 1550, 400},
+                                    "やめる",
+                                    paint
+                            )
+                    }
+            );
+            isReleasePlateActive = true;
+
+            //TODO: PlateGroupのアクティブ切り替えと表示切り替え　いな
+
+            /*
             releaseList = new ListBox();
             releaseList.init(userInterface, graphic, Constants.Touch.TouchWay.DOWN_MOMENT, 2 , 1200, 50, 1500, 50 + 100 * 2);
             releaseList.setContent(0, "解放する");
             releaseList.setContent(1, "やめる");
             isReleaseListActive = true;
+            */
         }
     }
 
@@ -199,18 +230,18 @@ public class GeoSlotAdmin {
         geoSlotGroup.update();
 
         //ListBox
-        if (isReleaseListActive) {
-            releaseList.update();
-            int content = releaseList.checkTouchContent();
+        if (isReleasePlateActive) {
+            releasePlateGroup.update();
+            int content = releasePlateGroup.getTouchContentNum();
             switch (content) {
                 case (0)://解放する
                     //解放するための色々な処理
                     focusGeoSlot.geoSlotRelease();
-                    isReleaseListActive = false;
+                    isReleasePlateActive = false;
                     textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
                     break;
                 case (1)://やめる
-                    isReleaseListActive = false;
+                    isReleasePlateActive = false;
                     textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
                     break;
             }
@@ -219,45 +250,49 @@ public class GeoSlotAdmin {
 
     public void draw() {
         //GeoSlot
-        //2つのfor文に分けなければならない(描画順の問題)
+        //線とスロットの描画は2つのfor文に分けなければならない(描画順の問題)
         for(int i = 0; i < geo_slots.size(); i++) {
             geo_slots.get(i).drawLine();
         }
+        /*
         for(int i = 0; i < geo_slots.size(); i++) {
-            //boolean f = geo_slots.get(i).equals(focusGeoSlot);
-            //geo_slots.get(i).draw(f);
-            geoSlotGroup.draw();
+            /oolean f = geo_slots.get(i).equals(focusGeoSlot);
+            geo_slots.get(i).draw(f);
         }
+        */
+        geoSlotGroup.draw();
+
         //ListBox
-        if (isReleaseListActive) {
-            if (releaseList != null) {
-                releaseList.draw();
+        if (isReleasePlateActive) {
+            if (releasePlateGroup != null) {
+                releasePlateGroup.draw();
             }
         }
     }
 
-
-
-
+    // ***** Getter *****
     private List<Integer> getTreeCode() {
         return geoSlotMapDB.getInt(t_name, "children_num");
-    }
-
-    public String getName() { return t_name; }
-    public GeoObjectData getHoldGeoObject() {
-        return holdGeoObject;
-    }
-    public void setHoldGeoObject(GeoObjectData geoObjectData) {
-        holdGeoObject = geoObjectData;
     }
     public boolean isHoldGeoObject() {
         return holdGeoObject != null;
     }
+    public String getName() { return t_name; }
+    public GeoObjectData getHoldGeoObject() {
+        return holdGeoObject;
+    }
+
+    // ***** Settet *****
+    public void setHoldGeoObject(GeoObjectData geoObjectData) {
+        holdGeoObject = geoObjectData;
+    }
     public void setFocusGeoSlot(GeoSlot _focusGeoSlot) {
         focusGeoSlot = _focusGeoSlot;
     }
+    public static void setGeoSlotMapDB(MyDatabase _geoSlotMapDB) { geoSlotMapDB = _geoSlotMapDB; }
+    public static void setGeoSlotEventDB(MyDatabase _geoSlotEventDB) { geoSlotEventDB = _geoSlotEventDB; }
 
-    //** Created by ina **//
+    //** Created by ina **
 
     //rewrire by kmhanko
     //GeoSlot geo_slots[] = new GeoSlot[10];
