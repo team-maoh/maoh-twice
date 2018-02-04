@@ -2,6 +2,7 @@ package com.maohx2.kmhanko.dungeonselect;
 
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.UI.UserInterface;
+import com.maohx2.ina.WorldModeAdmin;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
@@ -42,6 +43,7 @@ public class DungeonSelectManager {
     UserInterface userInterface;
     MyDatabaseAdmin databaseAdmin;
     GeoSlotAdminManager geoSlotAdminManager;
+    WorldModeAdmin worldModeAdmin;
 
     MyDatabase database;
     List<String> dungeonName;
@@ -67,11 +69,12 @@ public class DungeonSelectManager {
     //いなの実装までの仮置き
     boolean enterSelectFlag = false;
 
-    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager) {
+    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager) {
         graphic = _graphic;
         userInterface = _userInterface;
         databaseAdmin = _databaseAdmin;
         geoSlotAdminManager = _geoSlotAdminManager;
+        worldModeAdmin = _worldModeAdmin;
 
         setDatabase(databaseAdmin);
         loadDungeonSelectButton();
@@ -199,8 +202,6 @@ public class DungeonSelectManager {
 
     //***** draw関係 *****
     public void draw() {
-        if (!isDungeonSelectActive) { return; };
-
         // ** GeoMap / DungeonSelectの表示 **
         if (selectMode == SELECT_MODE.DUNGEON_SELECT) {
             paint.setARGB(255, 255, 255, 255);
@@ -221,8 +222,6 @@ public class DungeonSelectManager {
 
     //***** update関係 *****
     public void update() {
-        if (!isDungeonSelectActive) { return; };
-
         if (selectMode == SELECT_MODE.GEOMAP_SELECT) {
             GeoMapSelectButtonCheck();
         }
@@ -253,9 +252,12 @@ public class DungeonSelectManager {
     public void GeoMapSelectButtonCheck() {
         int buttonID = dungeonSelectButtonGroup.getTouchContentNum();
         if (buttonID != -1 ) {
+            //GeoSlotMapへの移動処理
             geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
+            worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
+            worldModeAdmin.setGeoSlotMap(Constants.Mode.ACTIVATE.ACTIVE);
+
             enterSelectFlag = false;
-            setActive(false);
         }
     }
 
@@ -272,23 +274,12 @@ public class DungeonSelectManager {
         if (buttonID == 0 ) { //侵入する
             //侵入処理
 
-            setActive(false);
+            //worldModeAdmin.setDungeon(Constants.Mode.ACTIVATE.ACTIVE);
             enterSelectFlag = false;
         }
         if (buttonID == 1 ) { //やめる
             enterSelectFlag = false;
         }
-    }
-
-
-    //***** Setter *****
-    public void setActive(boolean f) {
-        isDungeonSelectActive = f;
-    }
-
-    //***** Getter *****
-    public boolean IsActive() {
-        return isDungeonSelectActive;
     }
 
 }

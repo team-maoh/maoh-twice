@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.UI.UserInterface;
+import com.maohx2.ina.WorldModeAdmin;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
@@ -31,14 +32,16 @@ public class GeoSlotAdminManager {
     Graphic graphic;
     UserInterface userInterface;
     TextBoxAdmin textBoxAdmin;
+    WorldModeAdmin worldModeAdmin;
 
     boolean is_load_database;
 
-    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin) {
+    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin) {
         graphic = _graphic;
         userInterface = _userInterface;
         databaseAdmin = _databaseAdmin;
         textBoxAdmin = _textBoxAdmin;
+        worldModeAdmin = _worldModeAdmin;
         addDatabase();
 
         this.loadGeoSlotDatabase();
@@ -95,7 +98,7 @@ public class GeoSlotAdminManager {
         GeoSlotAdmin.setGeoSlotEventDB(geoSlotEventDB);
 
         for(int i = 0; i < t_names.size(); i++) {
-            GeoSlotAdmin new_geo_slot_admin = new GeoSlotAdmin(graphic, userInterface, textBoxAdmin);
+            GeoSlotAdmin new_geo_slot_admin = new GeoSlotAdmin(graphic, userInterface, worldModeAdmin, textBoxAdmin);
             new_geo_slot_admin.loadDatabase(t_names.get(i));
             geoSlotAdmins.add(new_geo_slot_admin);
         }

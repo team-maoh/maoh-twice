@@ -6,11 +6,13 @@ import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.UI.UserInterface;
 
 // Added by kmhanko
+import com.maohx2.ina.WorldModeAdmin;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
+import com.maohx2.kmhanko.plate.BackPlate;
 
 // *** Graphic関係 ***
 import android.graphics.Color;
@@ -61,9 +63,11 @@ public class GeoSlotAdmin {
     Graphic graphic;
     TextBoxAdmin textBoxAdmin;
     UserInterface userInterface;
+    WorldModeAdmin worldModeAdmin;
 
     PlateGroup<GeoSlot> geoSlotGroup;
     PlateGroup<BoxTextPlate> releasePlateGroup;//解放する/やめる　の選択
+    PlateGroup<BackPlate> backPlateGroup;
 
     GeoSlot focusGeoSlot; //今操作している(条件の解放のため選択している)GeoSlot
 
@@ -72,16 +76,19 @@ public class GeoSlotAdmin {
     //ListBox releaseList;//解放する/やめる　の選択
 
     //Rewrite by kmhanko
-    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, TextBoxAdmin _textBoxAdmin) {
+    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, TextBoxAdmin _textBoxAdmin) {
         graphic = _graphic;
         userInterface = _user_interface;
         textBoxAdmin = _textBoxAdmin;
+        worldModeAdmin = _worldModeAdmin;
 
         //TextBoxなどの初期化
         releaseTextBoxID = textBoxAdmin.createTextBox(650,600,1450,800,2);
         textBoxAdmin.setTextBoxUpdateTextByTouching(releaseTextBoxID, false);
         textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
         //textBoxAdmin.hideTextBox(releaseTextBoxID);
+
+        loadBackPlate();
     }
 
     //ジオスロットの並びを表すツリーコードを用いて、GeoSlotのインスタンス化を行う。
@@ -130,6 +137,42 @@ public class GeoSlotAdmin {
         //plateGroupインスタンス化
         geoSlotGroup = new PlateGroup<GeoSlot>((GeoSlot[])grand_geo_slot.getGeoSlots().toArray(new GeoSlot[0]));
 
+    }
+
+
+    private void loadBackPlate() {
+        /*
+        Paint textPaint = new Paint();
+        textPaint.setTextSize(80f);
+        textPaint.setARGB(255,255,255,255);
+
+        backPlateGroup = new PlateGroup<BoxTextPlate>(
+                new BoxTextPlate[] {
+                        new BoxTextPlate(
+                                graphic, userInterface, new Paint(),
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                Constants.BUTTON.BACK_BUTTON_POS,
+                                "戻る",
+                                textPaint
+                        )
+                }
+        );
+        */
+        backPlateGroup = new PlateGroup<BackPlate>(
+                new BackPlate[] {
+                        new BackPlate(
+                                graphic, userInterface, worldModeAdmin
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //戻るボタンが押された時の処理
+                                worldModeAdmin.setGeoSlotMap(Constants.Mode.ACTIVATE.STOP);
+                                worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
+                            }
+                        }
+                }
+        );
     }
 
     //***** GeoObjectステータス計算関係 *****
@@ -235,7 +278,6 @@ public class GeoSlotAdmin {
         */
         geoSlotGroup.update();
 
-        //ListBox
         if (isReleasePlateActive) {
             releasePlateGroup.update();
             int content = releasePlateGroup.getTouchContentNum();
@@ -252,6 +294,7 @@ public class GeoSlotAdmin {
                     break;
             }
         }
+        backPlateGroup.update();
     }
 
     public void draw() {
@@ -274,6 +317,7 @@ public class GeoSlotAdmin {
                 releasePlateGroup.draw();
             }
         }
+        backPlateGroup.draw();
     }
 
     // ***** Getter *****

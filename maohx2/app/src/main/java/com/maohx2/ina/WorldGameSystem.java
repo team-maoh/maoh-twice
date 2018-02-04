@@ -48,11 +48,16 @@ public class WorldGameSystem {
 
     UserInterface map_user_interface;
 
+    WorldModeAdmin worldModeAdmin;
+
     public void init(UserInterface _map_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin) {
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
         soundAdmin = _soundAdmin;
         map_user_interface = _map_user_interface;
+
+        worldModeAdmin = new WorldModeAdmin();
+        worldModeAdmin.initWorld();
 
         soundAdmin.loadSoundPack("basic");
 
@@ -63,9 +68,9 @@ public class WorldGameSystem {
         text_box_admin.setTextBoxExists(1,false);
 
         //list_box_admin = new ListBoxAdmin();
-        geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, databaseAdmin, text_box_admin);
+        geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin);
         //geo_slot_admin = new GeoSlotAdmin();
-        dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, databaseAdmin, geoSlotAdminManager);
+        dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, geoSlotAdminManager);
 
         itemDataAdminManager = new ItemDataAdminManager();
         itemShopAdmin = new ItemShopAdmin();
@@ -75,12 +80,8 @@ public class WorldGameSystem {
 
         itemDataAdminManager.init(databaseAdmin,graphic);
 
-        itemShopAdmin.init(graphic, map_user_interface, databaseAdmin, text_box_admin, itemDataAdminManager);
+        itemShopAdmin.init(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager);
         itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "debug");
-
-        //geoSlotAdminManager.setActiveGeoSlotAdmin("森");
-
-        dungeonSelectManager.setActive(true);
 
         canvas = null;
 
@@ -105,8 +106,18 @@ public class WorldGameSystem {
         }
         */
 
-        geoSlotAdminManager.update();
-        dungeonSelectManager.update();
+        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getGetSlotMap())) {
+            geoSlotAdminManager.update();
+        }
+        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getWorldMap())) {
+            dungeonSelectManager.update();
+        }
+        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getShop())) {
+            itemShopAdmin.update();
+        }
+        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getPresent())) {
+        }
+
         //itemShopAdmin.update();
         text_box_admin.update();
         effectAdmin.update();
@@ -118,8 +129,18 @@ public class WorldGameSystem {
         //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
         geoSlotAdminManager.draw();
 
-        dungeonSelectManager.draw();
-        //itemShopAdmin.draw();
+        if (worldModeAdmin.getIsDraw(worldModeAdmin.getGetSlotMap())) {
+            geoSlotAdminManager.draw();
+        }
+        if (worldModeAdmin.getIsDraw(worldModeAdmin.getWorldMap())) {
+            dungeonSelectManager.draw();
+        }
+        if (worldModeAdmin.getIsDraw(worldModeAdmin.getShop())) {
+            itemShopAdmin.draw();
+        }
+        if (worldModeAdmin.getIsDraw(worldModeAdmin.getPresent())) {
+        }
+
         text_box_admin.draw();
         effectAdmin.draw();
 
