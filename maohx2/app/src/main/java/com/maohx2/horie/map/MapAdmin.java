@@ -132,7 +132,7 @@ public class MapAdmin {
         BitmapData auto_tile_block_wall = graphic.searchBitmap("cave_wall_w_01");//auto_tile元データ
         BitmapData auto_tile_block_side_wall = graphic.searchBitmap("cave_wall_f_01");
         floor_tile = graphic.searchBitmap("cave_floor_01");
-        stair_tile = graphic.searchBitmap("cave_step_01");
+        stair_tile = graphic.searchBitmap("step");
         auto_tile_admin = new AutoTileAdmin(graphic);
         for(int i = 0;i < 5;i++){
             auto_tile_wall.setAuto_tile(graphic.processTrimmingBitmapData(auto_tile_block_wall, 0, 32*i, 32, 32), i);

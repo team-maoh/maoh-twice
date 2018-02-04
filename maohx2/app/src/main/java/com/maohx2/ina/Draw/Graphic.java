@@ -510,11 +510,8 @@ public class Graphic {
                 for(int y = 0; y < constant_length; y++) {
                     for(int x = 0; x < variable_length[i]; x++) {
                         int index = ((x + y * variable_length[i]) + (total_length*y));
-<<<<<<< HEAD
 //                        System.out.println("index = " + index);
-=======
                         //System.out.println("index = " + index);
->>>>>>> 1ef8eac7221c94bba60a0c73d342bb6aafddcef3
                         conbine_pixels[x + (total_length*y + init_copy_index)] = source_pixels[i][x + y * variable_length[i]];
                     }
                 }
