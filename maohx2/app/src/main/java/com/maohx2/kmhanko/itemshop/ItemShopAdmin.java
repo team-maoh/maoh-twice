@@ -102,7 +102,6 @@ public class ItemShopAdmin {
         }
     }
 
-    //TODO:Graphicに変更
     public void draw() {
         if (itemShopActive) {
             itemShop.draw();

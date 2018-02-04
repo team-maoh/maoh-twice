@@ -25,7 +25,7 @@ public class GeoSlotAdminManager {
 
     public final int GEO_SLOT_ADMIN_MAX = 16;
     List<GeoSlotAdmin> geoSlotAdmins = new ArrayList<GeoSlotAdmin>(GEO_SLOT_ADMIN_MAX);
-    GeoSlotAdmin activeGeoSlotAdmin;
+    GeoSlotAdmin activeGeoSlotAdmin = null;
 
     MyDatabaseAdmin databaseAdmin;
     Graphic graphic;
@@ -69,6 +69,9 @@ public class GeoSlotAdminManager {
     }
 
     public void setNullToActiveGeoSlotAdmin() {
+        activeGeoSlotAdmin = null;
+    }
+    public void closeGeoSlotAdmin() {
         activeGeoSlotAdmin = null;
     }
 

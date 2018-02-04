@@ -18,6 +18,7 @@ import android.graphics.Paint;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.Text.ListBox;
+import com.maohx2.kmhanko.geonode.GeoSlotAdminManager;
 
 import android.content.Intent;
 
@@ -33,11 +34,15 @@ public class DungeonSelectManager {
     static final float DUNGEON_SELECT_BUTTON_RATE_FEEDBACK = 8.0f;
     static final int DUNGEON_SELECT_BUTTON_RATE_TOURH_R = 120;
 
+    boolean isDungeonSelectActive = false;
+
     Graphic graphic;
     UserInterface userInterface;
     MyDatabaseAdmin databaseAdmin;
+    GeoSlotAdminManager geoSlotAdminManager;
 
     MyDatabase database;
+    List<String> dungeonName;
 
     PlateGroup<CircleImagePlate> dungeonSelectButtonGroup;
 
@@ -49,13 +54,16 @@ public class DungeonSelectManager {
 
     String tableName = "dungeon_select_button";
 
+    int focusDungeonButtonID;
+
     //いなの実装までの仮置き
     boolean enterSelectFlag = false;
 
-    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin _databaseAdmin) {
+    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager) {
         graphic = _graphic;
         userInterface = _userInterface;
         databaseAdmin = _databaseAdmin;
+        geoSlotAdminManager = _geoSlotAdminManager;
 
         setDatabase(databaseAdmin);
         loadDungeonSelectButton();
@@ -72,7 +80,7 @@ public class DungeonSelectManager {
     private void loadDungeonSelectButton(){
         int size = database.getSize(tableName);
 
-        List<String> name = database.getString(tableName, "name");
+        dungeonName = database.getString(tableName, "name");
         List<String> imageName = database.getString(tableName, "image_name");
         List<Integer> x = database.getInt(tableName, "x");
         List<Integer> y = database.getInt(tableName, "y");
@@ -99,7 +107,7 @@ public class DungeonSelectManager {
     private void loadDungeonEnterSelectButton(){
 
         Paint textPaint = new Paint();
-        textPaint.setTextSize(80f);
+        textPaint.setTextSize(60f);
         textPaint.setARGB(255,255,255,255);
 
         dungeonEnterSelectButtonGroup = new PlateGroup<BoxTextPlate>(
@@ -117,6 +125,14 @@ public class DungeonSelectManager {
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{1100, 250, 1550, 400},
+                                "ジオマップを開く(仮)",
+                                textPaint
+                        ),
+                        new BoxTextPlate(
+                                graphic, userInterface, new Paint(),
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{1100, 450, 1550, 600},
                                 "やめる",
                                 textPaint
                         )
@@ -171,6 +187,8 @@ public class DungeonSelectManager {
     }
 
     public void draw() {
+        if (!isDungeonSelectActive) { return; };
+
         dungeonSelectButtonGroup.draw();
         if (enterSelectFlag) {
             dungeonEnterSelectButtonGroup.draw();
@@ -178,6 +196,8 @@ public class DungeonSelectManager {
     }
 
     public void update() {
+        if (!isDungeonSelectActive) { return; };
+
         dungeonSelectButtonCheck();
         dungeonEnterSelectButtonCheck();
 
@@ -188,19 +208,35 @@ public class DungeonSelectManager {
     public void dungeonSelectButtonCheck() {
         int buttonID = dungeonSelectButtonGroup.getTouchContentNum();
         if (buttonID != -1 ) {
+            focusDungeonButtonID = buttonID;
             enterSelectFlag = true;
         }
     }
 
     public void dungeonEnterSelectButtonCheck() {
         int buttonID = dungeonEnterSelectButtonGroup.getTouchContentNum();
-        if (buttonID == 1 ) { //侵入する
+
+        if (buttonID == 0 ) { //侵入する
             //侵入処理
+            enterSelectFlag = false;
+        }
+        if (buttonID == 1 ) { //ジオマップ
+            //TODO 少し怪しい実装
+            geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(focusDungeonButtonID));
+            setActive(false);
+
             enterSelectFlag = false;
         }
         if (buttonID == 2 ) { //やめる
             enterSelectFlag = false;
         }
+    }
+
+    public void setActive(boolean f) {
+        isDungeonSelectActive = f;
+    }
+    public boolean IsActive() {
+        return isDungeonSelectActive;
     }
 
 }

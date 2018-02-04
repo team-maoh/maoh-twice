@@ -65,7 +65,7 @@ public class WorldGameSystem {
         //list_box_admin = new ListBoxAdmin();
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, databaseAdmin, text_box_admin);
         //geo_slot_admin = new GeoSlotAdmin();
-        dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, databaseAdmin);
+        dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, databaseAdmin, geoSlotAdminManager);
 
         itemDataAdminManager = new ItemDataAdminManager();
         itemShopAdmin = new ItemShopAdmin();
@@ -78,7 +78,9 @@ public class WorldGameSystem {
         itemShopAdmin.init(graphic, map_user_interface, databaseAdmin, text_box_admin, itemDataAdminManager);
         itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "debug");
 
-        geoSlotAdminManager.setActiveGeoSlotAdmin("森");
+        //geoSlotAdminManager.setActiveGeoSlotAdmin("森");
+
+        dungeonSelectManager.setActive(true);
 
         canvas = null;
 
@@ -103,9 +105,9 @@ public class WorldGameSystem {
         }
         */
 
-        //geoSlotAdminManager.update();
-        //dungeonSelectManager.update();
-        itemShopAdmin.update();
+        geoSlotAdminManager.update();
+        dungeonSelectManager.update();
+        //itemShopAdmin.update();
         text_box_admin.update();
         effectAdmin.update();
     }
@@ -114,10 +116,10 @@ public class WorldGameSystem {
     public void draw() {
 
         //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
-        //geoSlotAdminManager.draw();
+        geoSlotAdminManager.draw();
 
-        //dungeonSelectManager.draw();
-        itemShopAdmin.draw();
+        dungeonSelectManager.draw();
+        //itemShopAdmin.draw();
         text_box_admin.draw();
         effectAdmin.draw();
 
