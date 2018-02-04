@@ -945,7 +945,7 @@ public class MapAdmin {
         Paint l_gray_paint = new Paint();
         Paint green_paint = new Paint();
         Room now_point_room = new Room();
-        boolean is_debug_mode = false;
+        boolean is_debug_mode = true;
         int step = 10;
         boolean go_stair_flag = false;
         if(map_data[worldToMap(offset.x)][worldToMap(offset.y)].isStairs()){
@@ -1068,7 +1068,7 @@ public class MapAdmin {
 //        }
 
         //1つの画像で表示
-        graphic.bookingDrawBitmapData(map_image, -1*camera.camera_offset.x, -1*camera.camera_offset.y, 1, 1, 0, 255, true);
+        graphic.bookingDrawBitmapData(map_image, -1*camera.camera_offset.x-64, -1*camera.camera_offset.y, 1, 1, 0, 255, true);
 
 
         paint.setColor(Color.RED);
@@ -1611,7 +1611,7 @@ public class MapAdmin {
     }
 
     //ワールドマップ座標からマップ座標に変更
-    private int worldToMap(int world_coordinate) {
+    public int worldToMap(int world_coordinate) {
         return world_coordinate / magnification;
     }
 
