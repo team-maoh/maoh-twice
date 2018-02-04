@@ -46,9 +46,12 @@ public class DungeonSelectManager {
     WorldModeAdmin worldModeAdmin;
 
     MyDatabase database;
-    List<String> dungeonName;
 
-    PlateGroup<CircleImagePlate> dungeonSelectButtonGroup;
+    //TODO いなの関数待ち
+    List<String> dungeonName;
+    List<String> event;
+
+    PlateGroup<MapIconPlate> mapIconPlateGroup;
 
     PlateGroup<BoxTextPlate> dungeonInformationPlate;
     PlateGroup<BoxTextPlate> dungeonEnterSelectButtonGroup;
@@ -77,7 +80,7 @@ public class DungeonSelectManager {
         worldModeAdmin = _worldModeAdmin;
 
         setDatabase(databaseAdmin);
-        loadDungeonSelectButton();
+        loadMapIconPlate();
         loadDungeonEnterSelectButton();
         loadModeSelectButton();
 
@@ -106,31 +109,34 @@ public class DungeonSelectManager {
 
 
     //***** ButtonのLoad関係 *****
-    private void loadDungeonSelectButton(){
+    private void loadMapIconPlate(){
         int size = database.getSize(tableName);
 
         dungeonName = database.getString(tableName, "name");
         List<String> imageName = database.getString(tableName, "image_name");
         List<Integer> x = database.getInt(tableName, "x");
         List<Integer> y = database.getInt(tableName, "y");
+        event = database.getString(tableName, "event");
 
-        List<CircleImagePlate> dungeonSelectButtonList = new ArrayList<CircleImagePlate>();
-
+        List<MapIconPlate> mapIconPlateList = new ArrayList<MapIconPlate>();
 
         //インスタンス化
         for (int i = 0; i < size; i++) {
-            dungeonSelectButtonList.add(new CircleImagePlate(
+            mapIconPlateList.add(new MapIconPlate(
                     graphic, userInterface,
                     Constants.Touch.TouchWay.UP_MOMENT,
                     Constants.Touch.TouchWay.MOVE,
                     new int[] { x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_TOURH_R },
                     graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_DEFAULT, DUNGEON_SELECT_BUTTON_RATE_DEFAULT, 0.0f, 255, false),
-                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_FEEDBACK, DUNGEON_SELECT_BUTTON_RATE_FEEDBACK, 0.0f, 255, false)
+                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_FEEDBACK, DUNGEON_SELECT_BUTTON_RATE_FEEDBACK, 0.0f, 255, false),
+                    dungeonName.get(i),
+                    event.get(i)
+
             ));
         }
 
-        CircleImagePlate[] dungeonSelectButton = new CircleImagePlate[dungeonSelectButtonList.size()];
-        dungeonSelectButtonGroup = new PlateGroup<CircleImagePlate>(dungeonSelectButtonList.toArray(dungeonSelectButton));
+        MapIconPlate[] mapIconPlates = new MapIconPlate[mapIconPlateList.size()];
+        mapIconPlateGroup = new PlateGroup<MapIconPlate>(mapIconPlateList.toArray(mapIconPlates));
     }
 
     private void loadDungeonEnterSelectButton(){
@@ -149,15 +155,6 @@ public class DungeonSelectManager {
                                 "侵入する",
                                 textPaint
                         ),
-                        /*
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
-                                Constants.Touch.TouchWay.UP_MOMENT,
-                                Constants.Touch.TouchWay.MOVE,
-                                new int[]{1100, 250, 1550, 400},
-                                "ジオマップを開く(仮)",
-                                textPaint
-                        ),*/
                         new BoxTextPlate(
                                 graphic, userInterface, new Paint(),
                                 Constants.Touch.TouchWay.UP_MOMENT,
@@ -213,7 +210,7 @@ public class DungeonSelectManager {
 
 
         // ** Buttonの表示
-        dungeonSelectButtonGroup.draw();
+        mapIconPlateGroup.draw();
         if (enterSelectFlag) {
             dungeonEnterSelectButtonGroup.draw();
         }
@@ -222,18 +219,25 @@ public class DungeonSelectManager {
 
     //***** update関係 *****
     public void update() {
+        /*
         if (selectMode == SELECT_MODE.GEOMAP_SELECT) {
-            GeoMapSelectButtonCheck();
+            mapIconPlateCheckGeo();
         }
         if (selectMode == SELECT_MODE.DUNGEON_SELECT) {
-            dungeonSelectButtonCheck();
+            mapIconPlateCheck();
             if (enterSelectFlag) {
                 dungeonEnterSelectButtonCheck();
             }
         }
+        */
+        mapIconPlateCheck();
+        if (enterSelectFlag && selectMode == SELECT_MODE.DUNGEON_SELECT) {
+            dungeonEnterSelectButtonCheck();
+        }
+
         modeSelectButtonCheck();
 
-        dungeonSelectButtonGroup.update();
+        mapIconPlateGroup.update();
         if (enterSelectFlag) {
             dungeonEnterSelectButtonGroup.update();
         }
@@ -241,25 +245,48 @@ public class DungeonSelectManager {
     }
 
     //注 : 紛らわしいが、DungeonSelectButtonはGeoMapSelectとDungeonSelectとで共通になっている
-    public void dungeonSelectButtonCheck() {
-        int buttonID = dungeonSelectButtonGroup.getTouchContentNum();
+    public void mapIconPlateCheck() {
+        int buttonID = mapIconPlateGroup.getTouchContentNum();
         if (buttonID != -1 ) {
             focusDungeonButtonID = buttonID;
-            enterSelectFlag = true;
+            //TODO plateGroupの内部のT型配列を返す関数が欲しい。eventの確認のため
+            //if mapIconPlateGroup.
+            if (event.get(focusDungeonButtonID).equals("dungeon")) {
+                if (selectMode == SELECT_MODE.DUNGEON_SELECT) {
+                    enterSelectFlag = true;
+                }
+                if (selectMode == SELECT_MODE.GEOMAP_SELECT) {
+                    geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
+                    worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
+                    worldModeAdmin.setGeoSlotMap(Constants.Mode.ACTIVATE.ACTIVE);
+                }
+            }
+
+            if (event.get(focusDungeonButtonID).equals("shop")) {
+                worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
+                worldModeAdmin.setShop(Constants.Mode.ACTIVATE.ACTIVE);
+            }
+            if (event.get(focusDungeonButtonID).equals("present")) {
+                worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
+                worldModeAdmin.setPresent(Constants.Mode.ACTIVATE.ACTIVE);
+            }
         }
     }
 
-    public void GeoMapSelectButtonCheck() {
-        int buttonID = dungeonSelectButtonGroup.getTouchContentNum();
+    /*
+    public void mapIconPlateCheckGeo() {
+        int buttonID = mapIconPlateGroup.getTouchContentNum();
         if (buttonID != -1 ) {
             //GeoSlotMapへの移動処理
-            geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
-            worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
-            worldModeAdmin.setGeoSlotMap(Constants.Mode.ACTIVATE.ACTIVE);
+            if (event.get(buttonID).equals("dungeon")) {
+                geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
+                worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
+                worldModeAdmin.setGeoSlotMap(Constants.Mode.ACTIVATE.ACTIVE);
+            }
 
             enterSelectFlag = false;
         }
-    }
+    }*/
 
     public void modeSelectButtonCheck() {
         int buttonID = modeSelectButtonGroup.getTouchContentNum();

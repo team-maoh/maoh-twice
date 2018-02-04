@@ -127,7 +127,6 @@ public class WorldGameSystem {
     public void draw() {
 
         //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
-        geoSlotAdminManager.draw();
 
         if (worldModeAdmin.getIsDraw(worldModeAdmin.getGetSlotMap())) {
             geoSlotAdminManager.draw();

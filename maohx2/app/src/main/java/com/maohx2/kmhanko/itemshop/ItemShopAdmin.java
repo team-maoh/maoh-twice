@@ -65,12 +65,12 @@ public class ItemShopAdmin {
         boolean itemKindFlag = false;
 
         if (_itemKind == ITEM_KIND.EXPEND) {
-            itemShop = new ExpendItemShop(userInterface, graphic, textBoxAdmin);
+            itemShop = new ExpendItemShop(userInterface, graphic, textBoxAdmin, worldModeAdmin);
             itemShop.setItemShopData(expendItemShopData);
             itemKindFlag = true;
         }
         if (_itemKind == ITEM_KIND.GEO_OBJECT) {
-            itemShop = new GeoObjectShop(userInterface, graphic, textBoxAdmin);
+            itemShop = new GeoObjectShop(userInterface, graphic, textBoxAdmin, worldModeAdmin);
             itemShop.setItemShopData(geoObjectShopData);
             itemKindFlag = true;
         }

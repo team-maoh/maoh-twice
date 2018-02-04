@@ -4,6 +4,7 @@ import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.UI.UserInterface;
+import com.maohx2.ina.WorldModeAdmin;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 
 /**
@@ -12,8 +13,8 @@ import com.maohx2.kmhanko.itemdata.GeoObjectData;
 
 public class GeoObjectShop extends ItemShop {
 
-    public GeoObjectShop(UserInterface _userInterface, Graphic _graphic, TextBoxAdmin _textBoxAdmin) {
-        super(_userInterface, _graphic, _textBoxAdmin);
+    public GeoObjectShop(UserInterface _userInterface, Graphic _graphic, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin) {
+        super(_userInterface, _graphic, _textBoxAdmin, _worldModeAdmin);
     }
 
     @Override

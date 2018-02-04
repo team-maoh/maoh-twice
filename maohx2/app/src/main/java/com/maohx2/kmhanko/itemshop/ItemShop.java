@@ -6,6 +6,7 @@ import com.maohx2.ina.Text.BoxItemPlate;
 import com.maohx2.ina.Text.ListBox;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemData;
+import com.maohx2.ina.WorldModeAdmin;
 import com.maohx2.kmhanko.database.NamedDataAdmin;
 import com.maohx2.ina.ItemData.ItemDataAdmin;
 
@@ -13,6 +14,7 @@ import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.PlateGroup;
+import com.maohx2.kmhanko.plate.BackPlate;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -29,6 +31,7 @@ public abstract class ItemShop {
     //ListBox listBox_Select;
     PlateGroup<BoxProductPlate> productPlateGroup;
     PlateGroup<BoxTextPlate> buySelectPlateGroup;
+    PlateGroup<BackPlate> backPlateGroup;
 
     int textBoxID;
 
@@ -44,14 +47,16 @@ public abstract class ItemShop {
     Graphic graphic;
     UserInterface userInterface;
     TextBoxAdmin textBoxAdmin;
+    WorldModeAdmin worldModeAdmin;
 
     ItemData focusItemData;//現在選択しているItem
 
 
-    public ItemShop(UserInterface _userInterface, Graphic _graphic, TextBoxAdmin _textBoxAdmin) {
+    public ItemShop(UserInterface _userInterface, Graphic _graphic, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin) {
         userInterface = _userInterface;
         graphic = _graphic;
         textBoxAdmin = _textBoxAdmin;
+        worldModeAdmin = _worldModeAdmin;
     }
 
     /*
@@ -91,7 +96,6 @@ public abstract class ItemShop {
 
         Paint productPlatePaint = new Paint();
         productPlatePaint.setARGB(255,64,64,64);
-
         //TODO このPlateは価格表示ができないので、オーバーライドするかしてBoxProductPlatesでも作る
         BoxProductPlate[] boxProductPlates = new BoxProductPlate[size];
         for (int i = 0; i < size; i++) {
@@ -109,7 +113,6 @@ public abstract class ItemShop {
         Paint textPaint = new Paint();
         textPaint.setTextSize(80f);
         textPaint.setARGB(255,255,255,255);
-
         buySelectPlateGroup = new PlateGroup<BoxTextPlate>(
                 new BoxTextPlate[]{
                         new BoxTextPlate(
@@ -131,13 +134,24 @@ public abstract class ItemShop {
                 }
         );
 
-        /*
-        listBox_Select.init(userInterface, graphic, Constants.Touch.TouchWay.DOWN_MOMENT, 3 , 1200, 50, 1500, 50 + 100 * 2);
-        listBox_Select.setContent(0, "購入する");
-        listBox_Select.setContent(1, "詳細");
-        listBox_Select.setContent(2, "キャンセル");
-        */
+        loadBackPlate();
+    }
 
+    private void loadBackPlate() {
+        backPlateGroup = new PlateGroup<BackPlate>(
+                new BackPlate[] {
+                        new BackPlate(
+                                graphic, userInterface, worldModeAdmin
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //戻るボタンが押された時の処理
+                                worldModeAdmin.setShop(Constants.Mode.ACTIVATE.STOP);
+                                worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
+                            }
+                        }
+                }
+        );
     }
 
     public void setTextBox() {
@@ -147,6 +161,7 @@ public abstract class ItemShop {
     public void update() {
         productUpdate();
         buySelectUpdate();
+        backPlateGroup.update();
 
         /*
         if (isListBoxItemActive) {
@@ -247,6 +262,8 @@ public abstract class ItemShop {
         //if (isProductPlateGroupActive) {
             productPlateGroup.draw();
         //}
+
+        backPlateGroup.draw();
     }
 
     /*
