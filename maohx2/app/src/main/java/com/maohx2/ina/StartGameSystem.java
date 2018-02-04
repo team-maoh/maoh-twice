@@ -46,22 +46,22 @@ public class StartGameSystem {
 
         equipment_item_data_admin = new EquipmentItemDataAdmin(graphic, my_database_admin);
 
-        inventry = new Inventry(start_user_interface, graphic, equipment_item_data_admin);
-        palette_admin = new PaletteAdmin(_start_user_interface);
+        //inventry = new Inventry(start_user_interface, graphic, equipment_item_data_admin);
+        //palette_admin = new PaletteAdmin(_start_user_interface, graphic);
         //inventry.test_add_item(0,(ItemData)(equipment_item_data_admin.getOneDataByName("剣")));
 
     }
 
 
     public void updata() {
-        inventry.updata();
-        palette_admin.update();
+        //inventry.updata();
+        //palette_admin.update();
     }
 
 
     public void draw() {
-        inventry.draw();
-        palette_admin.draw();
+        //inventry.draw();
+        //palette_admin.draw();
         graphic.draw();
     }
 }

@@ -7,6 +7,8 @@ import com.maohx2.kmhanko.database.NamedData;
  * Created by user on 2017/11/05.
  */
 
+//test
+
 public abstract class ItemData {
     String image_name;
     int price;
