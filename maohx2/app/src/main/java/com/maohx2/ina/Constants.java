@@ -83,4 +83,13 @@ public final class Constants {
         }
     }
 
+    public static class WorldMap {
+
+        public enum SELECT_MODE {
+            DUNGEON_SELECT,
+            GEOMAP_SELECT,
+            SELECT_MODE_NUM
+        }
+    }
+
 }
