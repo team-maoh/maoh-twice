@@ -1043,8 +1043,8 @@ public class MapAdmin {
             map_offset.set(camera.getCameraOffset().x, camera.getCameraOffset().y);
         }
         else {
-            offset.set(800, 1300);
-            camera.setCameraOffset(offset.x, offset.y);
+//            offset.set(800, 1300);
+//            camera.setCameraOffset(offset.x, offset.y);
         }
 
         //4分割のままで表示
