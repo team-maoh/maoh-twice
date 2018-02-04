@@ -262,15 +262,6 @@ public class MapAdmin {
 
     //スタート地点を探す
     public void searchStartPoint(){
-//        for(;;) {
-//            Random rnd = new Random();
-//            int x = rnd.nextInt(map_size.x);
-//            int y = rnd.nextInt(map_size.y);
-//            if(map_data[x][y].isRoom()){
-//                start_point.set(x * magnification, y * magnification);
-//                break;
-//            }
-//        }
         Point point = getRoomPoint();
         start_point.set(point.x, point.y);
     }
@@ -1047,35 +1038,73 @@ public class MapAdmin {
 //            camera.setCameraOffset(offset.x, offset.y);
         }
 
+        graphic.bookingDrawBitmapData(auto_tile_wall.raw_auto_tile[4], 0, 0, 1600/32, 900/32, 0, 255, true);
+
+        int draw_mode = 2;
         //4分割のままで表示
-//        for (int i = 0; i < map_size.x; i++) {
-//            for (int j = 0; j < map_size.y; j++) {
-//                if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
-//                    graphic.bookingDrawBitmapData(map_tile_set[2*i][2*j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float)magnification / 64, (float)magnification / 64, 0, 255, true);
-//                    graphic.bookingDrawBitmapData(map_tile_set[2*i+1][2*j], camera.convertToNormCoordinateXForMap(i * magnification+magnification/2), camera.convertToNormCoordinateYForMap(j * magnification), (float)magnification / 64, (float)magnification / 64, 0, 255, true);
-//                    graphic.bookingDrawBitmapData(map_tile_set[2*i][2*j+1], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification+magnification/2), (float)magnification / 64, (float)magnification / 64, 0, 255, true);
-//                    graphic.bookingDrawBitmapData(map_tile_set[2*i+1][2*j+1], camera.convertToNormCoordinateXForMap(i * magnification+magnification/2), camera.convertToNormCoordinateYForMap(j * magnification+magnification/2), (float)magnification / 64, (float)magnification / 64, 0, 255, true);
-//                }
-//            }
-//        }
+        if(draw_mode == 1) {
+            for (int i = 0; i < map_size.x; i++) {
+                for (int j = 0; j < map_size.y; j++) {
+                    if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
+                        graphic.bookingDrawBitmapData(map_tile_set[2 * i][2 * j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+                        graphic.bookingDrawBitmapData(map_tile_set[2 * i + 1][2 * j], camera.convertToNormCoordinateXForMap(i * magnification + magnification / 2), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+                        graphic.bookingDrawBitmapData(map_tile_set[2 * i][2 * j + 1], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification + magnification / 2), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+                        graphic.bookingDrawBitmapData(map_tile_set[2 * i + 1][2 * j + 1], camera.convertToNormCoordinateXForMap(i * magnification + magnification / 2), camera.convertToNormCoordinateYForMap(j * magnification + magnification / 2), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+                    }
+                }
+            }
+        }
 
         //4つを1つに纏めて表示
-        for (int i = 0; i < map_size.x; i++) {
-            for (int j = 0; j < map_size.y; j++) {
-                if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
-                    graphic.bookingDrawBitmapData(map_tile[i][j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float)magnification / 64, (float)magnification / 64, 0, 255, true);
+        else if(draw_mode == 2) {
+            for (int i = 0; i < map_size.x; i++) {
+                for (int j = 0; j < map_size.y; j++) {
+                    if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
+                        graphic.bookingDrawBitmapData(map_tile[i][j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+                    }
                 }
             }
         }
 
         //1つの画像で表示
-//        graphic.bookingDrawBitmapData(map_image, -1*camera.camera_offset.x-magnification, -1*camera.camera_offset.y, 1, 1, 0, 255, true);
+        else if(draw_mode == 3) {
+            graphic.bookingDrawBitmapData(map_image, -1 * camera.camera_offset.x - magnification, -1 * camera.camera_offset.y, 1, 1, 0, 255, true);
+        }
 
         //1つの画像を切り取って表示
+        else if(draw_mode == 4) {
+            BitmapData trim_map_data;
+            int l_x = map_size.x;
+            int r_x = -1;
+            int u_y = map_size.y;
+            int d_y = -1;
+            for (int i = 0; i < map_size.x; i++) {
+                for (int j = 0; j < map_size.y; j++) {
+                    if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
+                        if (i < l_x) {
+                            l_x = i;
+                        }
+                        if (r_x < i) {
+                            r_x = i;
+                        }
+                        if (j < u_y) {
+                            u_y = j;
+                        }
+                        if (d_y < j) {
+                            d_y = j;
+                        }
+                    }
+                }
+            }
+            trim_map_data = graphic.processTrimmingBitmapData(map_image, l_x * 64, u_y * 64, r_x * 64 - l_x * 64, d_y * 64 - u_y * 64);
+            graphic.bookingDrawBitmapData(trim_map_data, -64, -64, 1, 1, 0, 255, true);
+        }
 
-
-        paint.setColor(Color.RED);
-        graphic.bookingDrawCircle(camera.convertToNormCoordinateX(offset.x), camera.convertToNormCoordinateY(offset.y), 20, paint);
+        //中心点の表示
+        if(is_debug_mode) {
+            paint.setColor(Color.RED);
+            graphic.bookingDrawCircle(camera.convertToNormCoordinateX(offset.x), camera.convertToNormCoordinateY(offset.y), 20, paint);
+        }
         drawSmallMap2(offset.x, offset.y);
     }
 
