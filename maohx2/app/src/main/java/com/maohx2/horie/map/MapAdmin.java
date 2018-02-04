@@ -190,10 +190,11 @@ public class MapAdmin {
             wide_map_image[i] = graphic.processCombineBitmapData(map_tile[i], false);
         }
         map_image = graphic.processCombineBitmapData(wide_map_image, true);
+        getHolder();
     }
 
     //壁かどうかマップ座標で判定
-    private boolean isWall(int x, int y) {
+    public boolean isWall(int x, int y) {
         try {
             return map_data[x][y].isWall();
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -204,7 +205,7 @@ public class MapAdmin {
     }
 
     //階段かどうかマップ座標で判定
-    private boolean isStairs(int x, int y) {
+    public boolean isStairs(int x, int y) {
         try {
             return map_data[x][y].isStairs();
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -215,7 +216,7 @@ public class MapAdmin {
     }
 
     //玄関かどうかマップ座標で判定
-    private boolean isEntrance(int x, int y){
+    public boolean isEntrance(int x, int y){
         try {
             return map_data[x][y].isEntrance();
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -225,16 +226,16 @@ public class MapAdmin {
         }
     }
 
-    private boolean isRoom(int i, int j){
+    public boolean isRoom(int i, int j){
         return map_data[i][j].isRoom();
     }
 
-    private boolean isDisp(int i, int j){
+    public boolean isDisp(int i, int j){
         return map_data[i][j].isDisp();
     }
 
     //壁かどうかワールドマップで判定
-    private boolean isWallWorld(int world_x, int world_y, int magnification_x, int magnification_y) {
+    public boolean isWallWorld(int world_x, int world_y, int magnification_x, int magnification_y) {
         return map_data[worldToMap(world_x)][worldToMap(world_y)].isWall();
     }
 
@@ -270,7 +271,7 @@ public class MapAdmin {
 //            }
 //        }
         Point point = getRoomPoint();
-        start_point.set(point.x * magnification, point.y * magnification);
+        start_point.set(point.x, point.y);
     }
 
     //部屋のある一点を返す
@@ -281,7 +282,7 @@ public class MapAdmin {
             int x = rnd.nextInt(map_size.x);
             int y = rnd.nextInt(map_size.y);
             if(map_data[x][y].isRoom()){
-                point.set(x, y);
+                point.set(x * magnification, y * magnification);
                 break;
             }
         }
@@ -732,7 +733,7 @@ public class MapAdmin {
 //        }
         camera.setCameraOffset(offset.x, offset.y);
 //        int countDrawRect = 0;
-        //map_offset.set(camera.getCameraOffset().x, camera.getCameraOffset().y);
+//        map_offset.set(camera.getCameraOffset().x, camera.getCameraOffset().y);
         for (int i = 0; i < this.getMap_size_x(); i++) {
             for (int j = 0; j < this.getMap_size_y(); j++) {
                 if (!isWall(i, j) && !isStairs(i, j) && !isEntrance(i, j)) {
@@ -944,100 +945,106 @@ public class MapAdmin {
         Paint l_gray_paint = new Paint();
         Paint green_paint = new Paint();
         Room now_point_room = new Room();
+        boolean is_debug_mode = false;
         int step = 10;
         boolean go_stair_flag = false;
         if(map_data[worldToMap(offset.x)][worldToMap(offset.y)].isStairs()){
             goNextFloor();
         }
-        //offset.set(800, 300);
 
         //右手法で動く点の表示
-        if(map_data[worldToMap(offset.x)][worldToMap(offset.y)].isWall()){
-            offset.x = offset.x+step;
-            offset.y = offset.y+step;
-            //System.out.println("wall");
-        }
-        //階段へ向かう
-        else {
-            if (map_data[worldToMap(offset.x)][worldToMap(offset.y)].isRoom()) {
-                now_point_room = section_admin.getNowRoom(worldToMap(offset.x), worldToMap(offset.y));
-                if(now_point_room == null){
-                    System.out.println("%☆roomがない");
-                }
-                if(now_point_room != null) {
-                    for (int i = now_point_room.getLeft(); i <= now_point_room.getRight(); i++) {
-                        for (int j = now_point_room.getTop(); j <= now_point_room.getBottom(); j++) {
-                            if (map_data[i][j].isStairs()) {
-                                go_stair_flag = true;
-                                int dst_x = i * magnification + magnification / 2;
-                                int dst_y = j * magnification + magnification / 2;
-                                if (abs(dst_x - offset.x) <= step) {
-                                    offset.x = dst_x;
-                                } else if (abs(dst_y - offset.y) <= step) {
-                                    offset.y = dst_y;
-                                }
-                                if (dst_x != offset.x && dst_x > offset.x) {
-                                    offset.x = offset.x + step;
-                                    break;
-                                } else if (dst_x != offset.x && dst_x < offset.x) {
-                                    offset.x = offset.x - step;
-                                    break;
-                                } else if (dst_y != offset.y && dst_y > offset.y) {
-                                    offset.y = offset.y + step;
-                                    break;
-                                } else {
-                                    offset.y = offset.y - step;
-                                    break;
+        if(is_debug_mode) {
+            if (map_data[worldToMap(offset.x)][worldToMap(offset.y)].isWall()) {
+                offset.x = offset.x + step;
+                offset.y = offset.y + step;
+                //System.out.println("wall");
+            }
+            //階段へ向かう
+            else {
+                if (map_data[worldToMap(offset.x)][worldToMap(offset.y)].isRoom()) {
+                    now_point_room = section_admin.getNowRoom(worldToMap(offset.x), worldToMap(offset.y));
+                    if (now_point_room == null) {
+                        System.out.println("%☆roomがない");
+                    }
+                    if (now_point_room != null) {
+                        for (int i = now_point_room.getLeft(); i <= now_point_room.getRight(); i++) {
+                            for (int j = now_point_room.getTop(); j <= now_point_room.getBottom(); j++) {
+                                if (map_data[i][j].isStairs()) {
+                                    go_stair_flag = true;
+                                    int dst_x = i * magnification + magnification / 2;
+                                    int dst_y = j * magnification + magnification / 2;
+                                    if (abs(dst_x - offset.x) <= step) {
+                                        offset.x = dst_x;
+                                    } else if (abs(dst_y - offset.y) <= step) {
+                                        offset.y = dst_y;
+                                    }
+                                    if (dst_x != offset.x && dst_x > offset.x) {
+                                        offset.x = offset.x + step;
+                                        break;
+                                    } else if (dst_x != offset.x && dst_x < offset.x) {
+                                        offset.x = offset.x - step;
+                                        break;
+                                    } else if (dst_y != offset.y && dst_y > offset.y) {
+                                        offset.y = offset.y + step;
+                                        break;
+                                    } else {
+                                        offset.y = offset.y - step;
+                                        break;
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-            if (!go_stair_flag) {
-                boolean up = !map_data[worldToMap(offset.x)][worldToMap(offset.y - step)].isWall();
-                boolean down = !map_data[worldToMap(offset.x)][worldToMap(offset.y + step)].isWall();
-                boolean left = !map_data[worldToMap(offset.x - step)][worldToMap(offset.y)].isWall();
-                boolean right = !map_data[worldToMap(offset.x + step)][worldToMap(offset.y)].isWall();
-                if (up & down & left & right) {
-                    boolean ul = !map_data[worldToMap(offset.x - step)][worldToMap(offset.y - step)].isWall();
-                    boolean ur = !map_data[worldToMap(offset.x + step)][worldToMap(offset.y - step)].isWall();
-                    boolean dl = !map_data[worldToMap(offset.x - step)][worldToMap(offset.y + step)].isWall();
-                    boolean dr = !map_data[worldToMap(offset.x + step)][worldToMap(offset.y + step)].isWall();
-                    if (!ul & ur & dl & dr) {
+                if (!go_stair_flag) {
+                    boolean up = !map_data[worldToMap(offset.x)][worldToMap(offset.y - step)].isWall();
+                    boolean down = !map_data[worldToMap(offset.x)][worldToMap(offset.y + step)].isWall();
+                    boolean left = !map_data[worldToMap(offset.x - step)][worldToMap(offset.y)].isWall();
+                    boolean right = !map_data[worldToMap(offset.x + step)][worldToMap(offset.y)].isWall();
+                    if (up & down & left & right) {
+                        boolean ul = !map_data[worldToMap(offset.x - step)][worldToMap(offset.y - step)].isWall();
+                        boolean ur = !map_data[worldToMap(offset.x + step)][worldToMap(offset.y - step)].isWall();
+                        boolean dl = !map_data[worldToMap(offset.x - step)][worldToMap(offset.y + step)].isWall();
+                        boolean dr = !map_data[worldToMap(offset.x + step)][worldToMap(offset.y + step)].isWall();
+                        if (!ul & ur & dl & dr) {
+                            offset.x = offset.x - step;
+                            updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+                        } else if (ul & !ur & dl & dr) {
+                            offset.y = offset.y - step;
+                            updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+                        } else if (ul & ur & !dl & dr) {
+                            offset.y = offset.y + step;
+                            updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+                        } else {
+                            offset.x = offset.x + step;
+                            updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+                        }
+                    } else if (!up & down & left & right || !up & down & left & !right) {
                         offset.x = offset.x - step;
                         updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
-                    } else if (ul & !ur & dl & dr) {
-                        offset.y = offset.y - step;
-                        updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
-                    } else if (ul & ur & !dl & dr) {
+                        //System.out.println("1");
+                    } else if (up & down & right || down & right) {
                         offset.y = offset.y + step;
                         updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
-                    } else {
+                        //System.out.println("2");
+                    } else if (up & left & right || up & right) {
                         offset.x = offset.x + step;
                         updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+                        //System.out.println("3");
+                    } else {
+                        offset.y = offset.y - step;
+                        updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+                        //System.out.println("4");
                     }
-                } else if (!up & down & left & right || !up & down & left & !right) {
-                    offset.x = offset.x - step;
-                    updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
-                    //System.out.println("1");
-                } else if (up & down & right || down & right) {
-                    offset.y = offset.y + step;
-                    updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
-                    //System.out.println("2");
-                } else if (up & left & right || up & right) {
-                    offset.x = offset.x + step;
-                    updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
-                    //System.out.println("3");
-                } else {
-                    offset.y = offset.y - step;
-                    updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
-                    //System.out.println("4");
                 }
             }
+            camera.setCameraOffset(offset.x, offset.y);
+            map_offset.set(camera.getCameraOffset().x, camera.getCameraOffset().y);
         }
-        camera.setCameraOffset(offset.x, offset.y);
-        map_offset.set(camera.getCameraOffset().x, camera.getCameraOffset().y);
+        else {
+            offset.set(800, 1300);
+            camera.setCameraOffset(offset.x, offset.y);
+        }
 
         //4分割のままで表示
 //        for (int i = 0; i < map_size.x; i++) {
@@ -1063,9 +1070,143 @@ public class MapAdmin {
         //1つの画像で表示
         graphic.bookingDrawBitmapData(map_image, -1*camera.camera_offset.x, -1*camera.camera_offset.y, 1, 1, 0, 255, true);
 
+
         paint.setColor(Color.RED);
         graphic.bookingDrawCircle(camera.convertToNormCoordinateX(offset.x), camera.convertToNormCoordinateY(offset.y), 20, paint);
         drawSmallMap2(offset.x, offset.y);
+    }
+
+    public void drawMap_for_autotile_4div_combine_canvas() {
+        canvas = holder.lockCanvas();
+        Paint l_gray_paint = new Paint();
+        Paint green_paint = new Paint();
+        Room now_point_room = new Room();
+        int step = 10;
+        boolean go_stair_flag = false;
+        if(map_data[worldToMap(offset.x)][worldToMap(offset.y)].isStairs()){
+            goNextFloor();
+        }
+        offset.set(800, 300);
+
+        //右手法で動く点の表示
+//        if(map_data[worldToMap(offset.x)][worldToMap(offset.y)].isWall()){
+//            offset.x = offset.x+step;
+//            offset.y = offset.y+step;
+//            //System.out.println("wall");
+//        }
+//        //階段へ向かう
+//        else {
+//            if (map_data[worldToMap(offset.x)][worldToMap(offset.y)].isRoom()) {
+//                now_point_room = section_admin.getNowRoom(worldToMap(offset.x), worldToMap(offset.y));
+//                if(now_point_room == null){
+//                    System.out.println("%☆roomがない");
+//                }
+//                if(now_point_room != null) {
+//                    for (int i = now_point_room.getLeft(); i <= now_point_room.getRight(); i++) {
+//                        for (int j = now_point_room.getTop(); j <= now_point_room.getBottom(); j++) {
+//                            if (map_data[i][j].isStairs()) {
+//                                go_stair_flag = true;
+//                                int dst_x = i * magnification + magnification / 2;
+//                                int dst_y = j * magnification + magnification / 2;
+//                                if (abs(dst_x - offset.x) <= step) {
+//                                    offset.x = dst_x;
+//                                } else if (abs(dst_y - offset.y) <= step) {
+//                                    offset.y = dst_y;
+//                                }
+//                                if (dst_x != offset.x && dst_x > offset.x) {
+//                                    offset.x = offset.x + step;
+//                                    break;
+//                                } else if (dst_x != offset.x && dst_x < offset.x) {
+//                                    offset.x = offset.x - step;
+//                                    break;
+//                                } else if (dst_y != offset.y && dst_y > offset.y) {
+//                                    offset.y = offset.y + step;
+//                                    break;
+//                                } else {
+//                                    offset.y = offset.y - step;
+//                                    break;
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            if (!go_stair_flag) {
+//                boolean up = !map_data[worldToMap(offset.x)][worldToMap(offset.y - step)].isWall();
+//                boolean down = !map_data[worldToMap(offset.x)][worldToMap(offset.y + step)].isWall();
+//                boolean left = !map_data[worldToMap(offset.x - step)][worldToMap(offset.y)].isWall();
+//                boolean right = !map_data[worldToMap(offset.x + step)][worldToMap(offset.y)].isWall();
+//                if (up & down & left & right) {
+//                    boolean ul = !map_data[worldToMap(offset.x - step)][worldToMap(offset.y - step)].isWall();
+//                    boolean ur = !map_data[worldToMap(offset.x + step)][worldToMap(offset.y - step)].isWall();
+//                    boolean dl = !map_data[worldToMap(offset.x - step)][worldToMap(offset.y + step)].isWall();
+//                    boolean dr = !map_data[worldToMap(offset.x + step)][worldToMap(offset.y + step)].isWall();
+//                    if (!ul & ur & dl & dr) {
+//                        offset.x = offset.x - step;
+//                        updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+//                    } else if (ul & !ur & dl & dr) {
+//                        offset.y = offset.y - step;
+//                        updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+//                    } else if (ul & ur & !dl & dr) {
+//                        offset.y = offset.y + step;
+//                        updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+//                    } else {
+//                        offset.x = offset.x + step;
+//                        updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+//                    }
+//                } else if (!up & down & left & right || !up & down & left & !right) {
+//                    offset.x = offset.x - step;
+//                    updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+//                    //System.out.println("1");
+//                } else if (up & down & right || down & right) {
+//                    offset.y = offset.y + step;
+//                    updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+//                    //System.out.println("2");
+//                } else if (up & left & right || up & right) {
+//                    offset.x = offset.x + step;
+//                    updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+//                    //System.out.println("3");
+//                } else {
+//                    offset.y = offset.y - step;
+//                    updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+//                    //System.out.println("4");
+//                }
+//            }
+//        }
+        camera.setCameraOffset(offset.x, offset.y);
+//        map_offset.set(camera.getCameraOffset().x, camera.getCameraOffset().y);
+
+        //4分割のままで表示
+//        for (int i = 0; i < map_size.x; i++) {
+//            for (int j = 0; j < map_size.y; j++) {
+//                if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
+//                    graphic.bookingDrawBitmapData(map_tile_set[2*i][2*j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float)magnification / 64, (float)magnification / 64, 0, 255, true);
+//                    graphic.bookingDrawBitmapData(map_tile_set[2*i+1][2*j], camera.convertToNormCoordinateXForMap(i * magnification+magnification/2), camera.convertToNormCoordinateYForMap(j * magnification), (float)magnification / 64, (float)magnification / 64, 0, 255, true);
+//                    graphic.bookingDrawBitmapData(map_tile_set[2*i][2*j+1], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification+magnification/2), (float)magnification / 64, (float)magnification / 64, 0, 255, true);
+//                    graphic.bookingDrawBitmapData(map_tile_set[2*i+1][2*j+1], camera.convertToNormCoordinateXForMap(i * magnification+magnification/2), camera.convertToNormCoordinateYForMap(j * magnification+magnification/2), (float)magnification / 64, (float)magnification / 64, 0, 255, true);
+//                }
+//            }
+//        }
+
+        //4つを1つに纏めて表示
+//        for (int i = 0; i < map_size.x; i++) {
+//            for (int j = 0; j < map_size.y; j++) {
+//                if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
+//                    graphic.bookingDrawBitmapData(map_tile[i][j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float)magnification / 64, (float)magnification / 64, 0, 255, true);
+//                }
+//            }
+//        }
+
+        //1つの画像で表示
+//        graphic.bookingDrawBitmapData(map_image, -1*camera.camera_offset.x, -1*camera.camera_offset.y, 1, 1, 0, 255, true);
+
+        canvas.drawBitmap(map_image.getBitmap(), -1*camera.camera_offset.x, -1*camera.camera_offset.y, paint);
+
+
+        paint.setColor(Color.RED);
+        graphic.bookingDrawCircle(camera.convertToNormCoordinateX(offset.x), camera.convertToNormCoordinateY(offset.y), 20, paint);
+        drawSmallMap2(offset.x, offset.y);
+        holder.unlockCanvasAndPost(canvas);
     }
 
     private void createMapTileSet(boolean lu, boolean u, boolean ru, boolean l, boolean r, boolean ld, boolean d, boolean rd, AutoTile m_auto_tile, int i, int j){
