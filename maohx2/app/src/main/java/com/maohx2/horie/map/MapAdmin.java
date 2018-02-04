@@ -72,7 +72,8 @@ public class MapAdmin {
     //Point map_size = new Point(1080/30, 1700/30);//x : 左右幅, y : 上下幅
     //int magnification = 30;
     //drawMap2用
-    Point map_size = new Point(80, 50);//x : 左右幅, y : 上下幅
+//    Point map_size = new Point(80, 50);//x : 左右幅, y : 上下幅
+    Point map_size = new Point(60, 40);
     int magnification = 64;
 
     Point offset = new Point(0, 0);
@@ -945,7 +946,7 @@ public class MapAdmin {
         Paint l_gray_paint = new Paint();
         Paint green_paint = new Paint();
         Room now_point_room = new Room();
-        boolean is_debug_mode = false;
+        boolean is_debug_mode = true;
         int step = 10;
         boolean go_stair_flag = false;
         if(map_data[worldToMap(offset.x)][worldToMap(offset.y)].isStairs()){
@@ -1042,8 +1043,8 @@ public class MapAdmin {
             map_offset.set(camera.getCameraOffset().x, camera.getCameraOffset().y);
         }
         else {
-            offset.set(800, 1300);
-            camera.setCameraOffset(offset.x, offset.y);
+//            offset.set(800, 1300);
+//            camera.setCameraOffset(offset.x, offset.y);
         }
 
         //4分割のままで表示
@@ -1059,16 +1060,18 @@ public class MapAdmin {
 //        }
 
         //4つを1つに纏めて表示
-//        for (int i = 0; i < map_size.x; i++) {
-//            for (int j = 0; j < map_size.y; j++) {
-//                if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
-//                    graphic.bookingDrawBitmapData(map_tile[i][j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float)magnification / 64, (float)magnification / 64, 0, 255, true);
-//                }
-//            }
-//        }
+        for (int i = 0; i < map_size.x; i++) {
+            for (int j = 0; j < map_size.y; j++) {
+                if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
+                    graphic.bookingDrawBitmapData(map_tile[i][j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float)magnification / 64, (float)magnification / 64, 0, 255, true);
+                }
+            }
+        }
 
         //1つの画像で表示
-        graphic.bookingDrawBitmapData(map_image, -1*camera.camera_offset.x, -1*camera.camera_offset.y, 1, 1, 0, 255, true);
+//        graphic.bookingDrawBitmapData(map_image, -1*camera.camera_offset.x-magnification, -1*camera.camera_offset.y, 1, 1, 0, 255, true);
+
+        //1つの画像を切り取って表示
 
 
         paint.setColor(Color.RED);
@@ -1611,7 +1614,7 @@ public class MapAdmin {
     }
 
     //ワールドマップ座標からマップ座標に変更
-    private int worldToMap(int world_coordinate) {
+    public int worldToMap(int world_coordinate) {
         return world_coordinate / magnification;
     }
 
