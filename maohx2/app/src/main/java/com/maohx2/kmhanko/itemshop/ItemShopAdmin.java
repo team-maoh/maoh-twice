@@ -2,6 +2,7 @@ package com.maohx2.kmhanko.itemshop;
 
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.UserInterface;
+import com.maohx2.ina.WorldModeAdmin;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
@@ -39,6 +40,7 @@ public class ItemShopAdmin {
     UserInterface userInterface;
     Graphic graphic;
     TextBoxAdmin textBoxAdmin;
+    WorldModeAdmin worldModeAdmin;
 
     public enum ITEM_KIND {
         EXPEND,
@@ -46,10 +48,11 @@ public class ItemShopAdmin {
         ITEM_KIND_NUM
     }
 
-    public void init(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin myDatabaseAdmin, TextBoxAdmin _textBoxAdmin, ItemDataAdminManager itemDataAdminManager) {
+    public void init(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin myDatabaseAdmin, TextBoxAdmin _textBoxAdmin, ItemDataAdminManager itemDataAdminManager) {
         userInterface = _userInterface;
         graphic = _graphic;
         textBoxAdmin = _textBoxAdmin;
+        worldModeAdmin = _worldModeAdmin;
 
         expendItemShopData = new ExpendItemShopData(graphic, myDatabaseAdmin);
         expendItemShopData.setExpendItemDataAdmin(itemDataAdminManager.getExpendItemDataAdmin());
@@ -62,14 +65,12 @@ public class ItemShopAdmin {
         boolean itemKindFlag = false;
 
         if (_itemKind == ITEM_KIND.EXPEND) {
-            itemShop = new ExpendItemShop();
-            itemShop.init(userInterface, graphic, textBoxAdmin);
+            itemShop = new ExpendItemShop(userInterface, graphic, textBoxAdmin);
             itemShop.setItemShopData(expendItemShopData);
             itemKindFlag = true;
         }
         if (_itemKind == ITEM_KIND.GEO_OBJECT) {
-            itemShop = new GeoObjectShop();
-            itemShop.init(userInterface, graphic, textBoxAdmin);
+            itemShop = new GeoObjectShop(userInterface, graphic, textBoxAdmin);
             itemShop.setItemShopData(geoObjectShopData);
             itemKindFlag = true;
         }
@@ -77,7 +78,7 @@ public class ItemShopAdmin {
             throw new Error("ItemShopAdmin#makeItemShop : ☆タカノ itemKindが不適切 : " + _itemKind);
         }
         itemShop.loadShopData(_tableName);
-        itemShop.setList();
+        itemShop.initPlateGroup();
         itemShop.setTextBox();
     }
 
@@ -104,7 +105,6 @@ public class ItemShopAdmin {
         }
     }
 
-    //TODO:Graphicに変更
     public void draw() {
         if (itemShopActive) {
             itemShop.draw();
@@ -129,8 +129,5 @@ ItemShopAdmin {
 ItemShopData
 └ExpendItemShopData ←1店データのみをメモリに保持
 └GeoObjectShopData　←同上
-
-
-
 
 */

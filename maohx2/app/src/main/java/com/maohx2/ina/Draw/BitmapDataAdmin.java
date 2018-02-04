@@ -49,12 +49,13 @@ public class BitmapDataAdmin {
             for (int i = 0; i < ltable_names.size(); i++) {
                 List<String> file_name = image_database.getString(ltable_names.get(i), "filename", null);
                 List<String> image_name = image_database.getString(ltable_names.get(i), "imagename", null);
-
+                System.out.println("takanoa : " + image_name);
                 for (int j = 0; j < file_name.size(); j++) {
                     try {
                         bis = new BufferedInputStream(assetManager.open("image/global/" + ltable_names.get(i) + "/" + file_name.get(j)));
-                        bitmap_data[j].setBitmap(BitmapFactory.decodeStream(bis));
-                        bitmap_data[j].setImageName(image_name.get(j));
+                        bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis));
+                        bitmap_data[next_load_point].setImageName(image_name.get(j));
+                        next_load_point++;
                     } catch (IOException e) {
                         System.out.println("%☆イナガキ：画像の取り込みに失敗しました"+image_name.get(j));
                     }
@@ -78,14 +79,14 @@ public class BitmapDataAdmin {
         for (int i = 0; i < table_names.size(); i++) {
             List<String> file_name = image_database.getString(table_names.get(i), "filename", null);
             List<String> image_name = image_database.getString(table_names.get(i), "imagename", null);
-
+            System.out.println("takanob : " + image_name);
 
             for (int j = 0; j < file_name.size(); j++) {
                 try {
                     bis = new BufferedInputStream(assetManager.open("image/local/" + table_folder + "/" + table_names.get(i) + "/" + file_name.get(j)));
                     bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis));
                     bitmap_data[next_load_point].setImageName(image_name.get(j));
-                    System.out.println(next_load_point+","+j);
+                    //System.out.println(next_load_point+","+j);
                     next_load_point++;
                 } catch (IOException e) {
                     System.out.println("%☆イナガキ：画像の取り込みに失敗しました"+image_name.get(j));

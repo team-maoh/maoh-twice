@@ -130,8 +130,6 @@ public class Graphic {
 
     public void init(){}
 
-
-
     public void loadLocalImages(MyDatabase image_database, String table_folder){
         local_bitmap_data_admin.loadLocalImages(image_database, table_folder);
     }
@@ -149,7 +147,6 @@ public class Graphic {
             for (int i = 0; i < booking_num; i++) {
                booking_task_datas.get(i).draw(canvas);
             }
-
 
             draw_paint.setColor(Color.GREEN);
             canvas.drawRect(0,0,DRAW_RIGHT_END,DRAW_UP_END,draw_paint);
@@ -181,18 +178,36 @@ public class Graphic {
     }
 
 
-
-
     public Point transrateDispPositionToNormalizedPosition(Point _disp_position){
         return  new Point((int)((_disp_position.x + DRAW_LEFT_END)* DISP_NORMARIZED_RATE.x), (int)((_disp_position.y + DRAW_UP_END) * DISP_NORMARIZED_RATE.y));
     }
 
     public int transrateDispPositionToNormalizedPositionX(int disp_x){
-        return (int)((disp_x + DRAW_LEFT_END)* DISP_NORMARIZED_RATE.x);
+        return (int)((disp_x - DRAW_LEFT_END)/NORMARIZED_DRAW_RATE.x);
+        //return (int)((disp_x + DRAW_LEFT_END)* DISP_NORMARIZED_RATE.x);
     }
 
     public int transrateDispPositionToNormalizedPositionY(int disp_y){
-        return  (int)((disp_y + DRAW_UP_END) * DISP_NORMARIZED_RATE.y);
+        return (int)((disp_y - DRAW_UP_END)/NORMARIZED_DRAW_RATE.y);
+        //return  (int)((disp_y + DRAW_UP_END) * DISP_NORMARIZED_RATE.y);
+    }
+
+    public void bookingDrawBitmapData(ImageContext _image_context){
+
+        if(booking_bitmap_num >= booking_bitmap_datas.size()){
+            booking_bitmap_datas.add(new BookingBitmapData());
+        }
+
+        ((BookingBitmapData)booking_bitmap_datas.get(booking_bitmap_num)).update(_image_context.getBitmapData(), _image_context.getMatrix(), _image_context.getPaint());
+
+        if(booking_num >= booking_task_datas.size()) {
+            booking_task_datas.add(new BookingBitmapData());
+        }
+
+        booking_task_datas.set(booking_num, booking_bitmap_datas.get(booking_bitmap_num));
+        booking_num++;
+        booking_bitmap_num++;
+
     }
 
 
@@ -219,6 +234,11 @@ public class Graphic {
         }
 
         ((BookingBitmapData)booking_bitmap_datas.get(booking_bitmap_num)).update(draw_bitmap_data, setting_matrix, draw_paint);
+
+        if(booking_num >= booking_task_datas.size()) {
+            booking_task_datas.add(new BookingBitmapData());
+        }
+
         booking_task_datas.set(booking_num, booking_bitmap_datas.get(booking_bitmap_num));
         booking_num++;
         booking_bitmap_num++;
@@ -253,6 +273,11 @@ public class Graphic {
         bookingDrawBitmapData(searchBitmap(bitmap_name), position_x, position_y,1,1,0,255,false);
     }
 
+    public void bookingDrawCircle(int draw_x, int draw_y, int draw_radius){
+        draw_paint.setARGB(100,255,0,0);
+        bookingDrawCircle(draw_x, draw_y, draw_radius, draw_paint);
+    }
+
     public void bookingDrawCircle(int draw_x, int draw_y, int draw_radius, Paint paint){
 
         setting_point1.set(draw_x, draw_y);
@@ -265,10 +290,21 @@ public class Graphic {
         }
 
         ((BookingCircleData)booking_circle_datas.get(booking_circle_num)).update(setting_point1.x, setting_point1.y, disp_radius, paint);
+
+        if(booking_num >= booking_task_datas.size()) {
+            booking_task_datas.add(new BookingBitmapData());
+        }
+
         booking_task_datas.set(booking_num, booking_circle_datas.get(booking_circle_num));
         booking_num++;
         booking_circle_num++;
     }
+
+    public void bookingDrawRect(int draw_left, int draw_up, int draw_right, int draw_down){
+        draw_paint.setARGB(100,255,0,0);
+        bookingDrawRect(draw_left, draw_up, draw_right, draw_down, draw_paint);
+    }
+
 
     public void bookingDrawRect(int draw_left, int draw_up, int draw_right, int draw_down, Paint paint){
 
@@ -283,9 +319,22 @@ public class Graphic {
         }
 
         ((BookingRectData)booking_rect_datas.get(booking_rect_num)).update(setting_point1.x, setting_point1.y, setting_point2.x, setting_point2.y, paint);
+
+
+        if(booking_num >= booking_task_datas.size()) {
+            booking_task_datas.add(new BookingBitmapData());
+        }
+
         booking_task_datas.set(booking_num, booking_rect_datas.get(booking_rect_num));
         booking_num++;
         booking_rect_num++;
+    }
+
+    public void bookingDrawText(String draw_string, int draw_left, int draw_down){
+
+        draw_paint.setARGB(255,100,0,0);
+        draw_paint.setTextSize(30);
+        bookingDrawText(draw_string, draw_left, draw_down, draw_paint);
     }
 
     public void bookingDrawText(String draw_string, int draw_left, int draw_down, Paint paint){
@@ -302,6 +351,11 @@ public class Graphic {
         }
 
         ((BookingTextData)booking_text_datas.get(booking_text_num)).update(draw_string, setting_point1.x, setting_point1.y, draw_paint);
+
+        if(booking_num >= booking_task_datas.size()) {
+            booking_task_datas.add(new BookingBitmapData());
+        }
+
         booking_task_datas.set(booking_num, booking_text_datas.get(booking_text_num));
         booking_num++;
         booking_text_num++;
@@ -337,6 +391,46 @@ public class Graphic {
         //setting_matrix.postScale(DENSITY, DENSITY);
 
         return hit_bitmap_data;
+    }
+
+
+    public ImageContext makeImageContext(BitmapData draw_bitmap_data, Point position, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft) {
+
+        setting_point1.set(position.x, position.y);
+        transrateNormalizedPositionToDispPosition(setting_point1);
+
+        setting_matrix.reset();
+
+        if (is_upleft == false) {
+            setting_matrix.postTranslate(-draw_bitmap_data.getBitmap().getWidth() / 2, -draw_bitmap_data.getBitmap().getHeight() / 2);
+        }
+
+        setting_matrix.postScale(DENSITY * scale_x, DENSITY * scale_y);
+        setting_matrix.postRotate(degree);
+        setting_matrix.postTranslate(setting_point1.x, setting_point1.y);
+
+        //行列とビットマップデータの保存
+        draw_paint.setAlpha(alpha);
+
+        ImageContext image_context = new ImageContext(draw_bitmap_data, setting_matrix, draw_paint);
+
+        return image_context;
+    }
+
+    public ImageContext makeImageContext(BitmapData draw_bitmap_data, int position_x, int position_y , float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
+
+        Point position = new Point(position_x, position_y);
+        return makeImageContext(draw_bitmap_data, position, scale_x, scale_y, degree, alpha, is_upleft);
+    }
+
+    public ImageContext makeImageContext(BitmapData draw_bitmap_data, int position_x, int position_y){
+
+        return makeImageContext(draw_bitmap_data, position_x, position_y, 1, 1, 0, 255, false);
+    }
+
+    public ImageContext makeImageContext(BitmapData draw_bitmap_data, int position_x, int position_y, boolean is_upleft){
+
+        return makeImageContext(draw_bitmap_data, position_x, position_y, 1, 1, 0, 255, is_upleft);
     }
 
     /*
@@ -416,7 +510,11 @@ public class Graphic {
                 for(int y = 0; y < constant_length; y++) {
                     for(int x = 0; x < variable_length[i]; x++) {
                         int index = ((x + y * variable_length[i]) + (total_length*y));
+<<<<<<< HEAD
 //                        System.out.println("index = " + index);
+=======
+                        //System.out.println("index = " + index);
+>>>>>>> 1ef8eac7221c94bba60a0c73d342bb6aafddcef3
                         conbine_pixels[x + (total_length*y + init_copy_index)] = source_pixels[i][x + y * variable_length[i]];
                     }
                 }

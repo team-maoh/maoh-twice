@@ -27,6 +27,8 @@ import com.maohx2.kmhanko.database.MyDatabaseAdmin;
  * 文字列がMonitorに
  */
 
+//globalにおくと、全ての効果音を読み出すことになるからlocalにおく
+
 //TODO:再生の度に、DBから読み出しをしているが、よくないかもしれないので、直した方がいいかもしれない。
 
 public class SoundAdmin {
@@ -51,8 +53,14 @@ public class SoundAdmin {
 
     private boolean isLoaded;
 
+    //TODO:ボリューム設定　activityと
+
     //コンストラクタ
     public SoundAdmin(Context _context) {
+        mContext = _context;
+        isLoaded = false;
+    }
+    public SoundAdmin(Context _context, MyDatabaseAdmin databaseAdmin) {
         //TODO:Builder
         /*
         audioAttributes = new AudioAttributes.Builder()
@@ -71,10 +79,7 @@ public class SoundAdmin {
         */
         mContext = _context;
         isLoaded = false;
-    }
 
-
-    public void init(MyDatabaseAdmin databaseAdmin) {
         setDatabase(databaseAdmin);
     }
 
@@ -83,7 +88,6 @@ public class SoundAdmin {
         try {
             return sound_ID.get(buf);
         } catch (ArrayIndexOutOfBoundsException e) {
-            //TODO:エラー
             throw new Error("SoundAdmin#getSoundID : Cannot get SoundID " + buf + " " + e);
         }
     }

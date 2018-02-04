@@ -11,17 +11,17 @@ import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.myavail.MyAvail;
 
 public class AnimationData {
-    String name;
-    int steps;
-    List<Integer> id = new ArrayList<Integer>();
-    List<Integer> x = new ArrayList<Integer>();
-    List<Integer> y = new ArrayList<Integer>();
-    List<Float> extend_x = new ArrayList<Float>();
-    List<Float> extend_y = new ArrayList<Float>();
-    List<Integer> angle = new ArrayList<Integer>();
-    List<Integer> alpha = new ArrayList<Integer>();
-    List<Integer> time = new ArrayList<Integer>();
-    List<Boolean> switch_gr = new ArrayList<Boolean>();
+    String name; //アニメの名前。tableの名前と一致する
+    int steps; //ステップの回数
+    List<Integer> id = new ArrayList<Integer>(); //ステップ番号。rowIDと同じ
+    List<Integer> x = new ArrayList<Integer>(); //x座標。これは基準位置からのx座標で有ることに注意
+    List<Integer> y = new ArrayList<Integer>(); //y座標。同上
+    List<Float> extend_x = new ArrayList<Float>(); //拡大率x
+    List<Float> extend_y = new ArrayList<Float>(); //拡大率y
+    List<Integer> angle = new ArrayList<Integer>(); //回転角度
+    List<Integer> alpha = new ArrayList<Integer>(); //透明度
+    List<Integer> time = new ArrayList<Integer>(); //そのステップの状態でどの程度待機するか
+    List<Boolean> switch_gr = new ArrayList<Boolean>(); //ステップが次のステップに変化する時、徐々に変化する場合はTRUE
 
     public AnimationData(MyDatabase database, String t_name) {
         loadDatabase(database, t_name);

@@ -39,13 +39,13 @@ public class MyDatabase {
     private int db_version;
 
     public MyDatabase(Context context) {
-        super();
+        //super();
         mContext = context;
     }
 
-    public boolean init(String _db_name, String _db_asset, int _db_version, String load_mode) {
-        if (load_mode != "r" && load_mode != "w") {
-            System.out.println("dg_mes:" + "MyDatabase : please set r or w");
+    public boolean init(String _db_name, String _db_asset, int _db_version, String loadMode) {
+        if (loadMode != "r" && loadMode != "w") {
+            System.out.println("☆タカノ:" + "MyDatabase : please set r or w");
             return false;
         }
         db_name = _db_name;
@@ -58,29 +58,87 @@ public class MyDatabase {
         mDbHelper = new MySQLiteOpenHelper(mContext, db_name, db_asset, db_version);
 
         try {
+            if (loadMode == "r") {
+                //内部DBファイルを生成する
+                mDbHelper.getReadableDatabase();
+                //assets内のDBファイルを、内部DBのファイルにコピーする
+                mDbHelper.copyDataBaseFromAssets();
+                mDbHelper.close();//TODO 初回起動時に落ちるバグの対症療法
+                mDbHelper.getReadableDatabase();
+                mDbHelper.copyDataBaseFromAssets();
+                //assets内のDBファイルを、内部DBのファイルにコピーする
+                //dbを取得する
+                db = mDbHelper.getReadableDatabase();
+            }
+            if (loadMode == "w") {
+                //内部DBに既にDBファイルが存在するかどうかを確認する。
+                //存在するならばDBを獲得して終了
+                //存在しないならば新規作成する
+                mDbHelper.createEmptyDataBase("w");
+                db = mDbHelper.getWritableDatabase();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new Error("☆タカノ : MyDatabase#init"+ e);
+        }
+
+/*
+        close();
+
+        try {
             if (load_mode == "r") {
                 //内部DBファイルを生成する
                 mDbHelper.getReadableDatabase();
 
                 //assets内のDBファイルを、内部DBのファイルにコピーする
                 mDbHelper.copyDataBaseFromAssets();
+                mDbHelper.close();
 
+                mDbHelper.getReadableDatabase();
+                mDbHelper.copyDataBaseFromAssets();
+
+                //mDbHelper.createEmptyDataBase(loadMode);
                 //dbを取得する
                 db = mDbHelper.getReadableDatabase();
             }
-            if (load_mode == "w") {
+            if (loadMode == "w") {
                 //内部DBに既にDBファイルが存在するかどうかを確認する。
                 //存在するならばDBを獲得して終了
                 //存在しないならば新規作成する
-                mDbHelper.createEmptyDataBaseW();
+                mDbHelper.createEmptyDataBase(loadMode);
                 db = mDbHelper.getWritableDatabase();
             }
         } catch (IOException e) {
-            //TODO : エラー処理
             e.printStackTrace();
-            throw new Error("タカノ : "+ e);
+            throw new Error("☆タカノ : "+ e);
         }
 
+        close();
+
+        try {
+            if (loadMode == "r") {
+                //内部DBファイルを生成する
+                mDbHelper.getReadableDatabase();
+
+                //assets内のDBファイルを、内部DBのファイルにコピーする
+                mDbHelper.copyDataBaseFromAssets();
+
+                //mDbHelper.createEmptyDataBase(loadMode);
+                //dbを取得する
+                db = mDbHelper.getReadableDatabase();
+            }
+            if (loadMode == "w") {
+                //内部DBに既にDBファイルが存在するかどうかを確認する。
+                //存在するならばDBを獲得して終了
+                //存在しないならば新規作成する
+                mDbHelper.createEmptyDataBase(loadMode);
+                db = mDbHelper.getWritableDatabase();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new Error("☆タカノ : "+ e);
+        }
+*/
         return true;
     }
 
@@ -128,8 +186,8 @@ public class MyDatabase {
         if (buf.size() == 1) {
             return buf.get(0);
         } else {
-            System.out.println("dg_mes:" + "MyDatabase.getOneRowID : Found rowids are not only one.");
-            return buf.get(0);
+            System.out.println("☆タカノ: MyDatabase#getOneRowID 該当データがちょうど1つではない : 個数 " + buf.size() + " DB " + db_name + " table " + t_name + " w_script " + w_script);
+            return -1;
         }
     }
 
@@ -160,7 +218,7 @@ public class MyDatabase {
         Cursor c = getCursor(t_name, c_name, w_script);
         //該当要素が存在しない場合
         if (c.getCount() == 0) {
-            throw new Error("☆タカノ: MyDatabase#GetOneInt 該当データが存在しない");
+            throw new Error("☆タカノ: MyDatabase#getOneInt 該当データが存在しない");
         }
         return c.getInt(0);
     }
@@ -188,7 +246,7 @@ public class MyDatabase {
         Cursor c = getCursor(t_name, c_name, w_script);
         //該当要素が存在しない場合
         if (c.getCount() == 0) {
-            throw new Error("☆タカノ: MyDatabase#GetOneString 該当データが存在しない");
+            throw new Error("☆タカノ: MyDatabase#getOneString 該当データが存在しない");
         }
         return c.getString(0);
     }
@@ -271,7 +329,7 @@ public class MyDatabase {
         Cursor c = getCursor(t_name, c_name, w_script);
         //該当要素が存在しない場合
         if (c.getCount() == 0) {
-            throw new Error("☆タカノ: MyDatabase#GetOneFloat 該当データが存在しない");
+            throw new Error("☆タカノ: MyDatabase#getOneFloat 該当データが存在しない");
         }
         return c.getFloat(0);
     }
@@ -314,7 +372,9 @@ public class MyDatabase {
         boolean isEof = c.moveToFirst();
         while (isEof) {
             String str = c.getString(0);
-            buf.add(c.getString(0));
+            if (!str.equals("android_metadata")) {
+                buf.add(c.getString(0));
+            }
             isEof = c.moveToNext();
         }
         c.close();
@@ -517,7 +577,6 @@ public class MyDatabase {
         if (buf.size() == 1) {
             return buf.get(0);
         } else {
-            //TODO:わかりやすい値
             return -999999;
         }
     }

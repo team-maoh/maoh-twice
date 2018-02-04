@@ -11,8 +11,8 @@ import android.graphics.Point;
 
 public class BookingBitmapData extends BookingTaskData {
 
-    BitmapData draw_bitmap_data;
-    Matrix draw_matrix;
+    private BitmapData draw_bitmap_data;
+    private Matrix draw_matrix;
 
     BookingBitmapData(){
         super();

@@ -1,3 +1,4 @@
+/*
 package com.maohx2.kmhanko.dungeonselect;
 
 
@@ -6,9 +7,13 @@ import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.Constants.Touch.*;
 import com.maohx2.ina.Draw.Graphic;
 
+*/
+
 /**
  * Created by user on 2017/10/08.
  */
+
+/*
 
 //稲垣が作ったclass 名称未定を継承する予定。
 
@@ -98,3 +103,5 @@ public class DungeonSelectButton {
     }
 
 }
+
+*/

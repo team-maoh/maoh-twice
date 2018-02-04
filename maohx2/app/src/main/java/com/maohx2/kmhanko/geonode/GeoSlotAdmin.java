@@ -2,19 +2,29 @@ package com.maohx2.kmhanko.geonode;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Constants;
-import com.maohx2.ina.Text.ListBox;
+import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.UI.UserInterface;
 
 // Added by kmhanko
+import com.maohx2.ina.WorldModeAdmin;
+import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.database.MyDatabase;
+import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.Text.PlateGroup;
+import com.maohx2.kmhanko.itemdata.GeoObjectData;
+import com.maohx2.kmhanko.plate.BackPlate;
+
+// *** Graphic関係 ***
+import android.graphics.Color;
+import android.graphics.Paint;
+
+// *** List関係 ***
 import java.util.ArrayList;
 import java.util.List;
-import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
-import com.maohx2.kmhanko.itemdata.GeoObjectData;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.ina.Text.ListBox;
 
 /**
  * Created by ina on 2017/10/08.
@@ -38,10 +48,12 @@ public class GeoSlotAdmin {
     static MyDatabase geoSlotEventDB;
 
     public final int GEO_SLOT_MAX = 64;
+    public final int TOUCH_R = 90;
+
     String t_name; //このGeoSlotAdmin = ジオマップの名称 = Table名
 
-    List<GeoSlot> geo_slots = new ArrayList<GeoSlot>(GEO_SLOT_MAX);
     List<Integer> tree_code = new ArrayList<Integer>(); //GeoSlotのツリー上構造を表す数値列
+    List<GeoSlot> geo_slots = new ArrayList<GeoSlot>(GEO_SLOT_MAX);
     GeoSlot grand_geo_slot; //ツリーの中心であるGeoSlot
     GeoCalcSaverAdmin geo_calc_saver_admin; //GeoSlotの計算を行い、計算結果を格納する
 
@@ -51,32 +63,32 @@ public class GeoSlotAdmin {
     Graphic graphic;
     TextBoxAdmin textBoxAdmin;
     UserInterface userInterface;
+    WorldModeAdmin worldModeAdmin;
+
+    PlateGroup<GeoSlot> geoSlotGroup;
+    PlateGroup<BoxTextPlate> releasePlateGroup;//解放する/やめる　の選択
+    PlateGroup<BackPlate> backPlateGroup;
 
     GeoSlot focusGeoSlot; //今操作している(条件の解放のため選択している)GeoSlot
 
     int releaseTextBoxID; //スロット条件解放の説明文を表示するためのTextBoxID
-    boolean isReleaseListActive = false;
-    ListBox releaseList;//解放する/やめる　の選択
+    boolean isReleasePlateActive = false;
+    //ListBox releaseList;//解放する/やめる　の選択
 
     //Rewrite by kmhanko
-    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, TextBoxAdmin _textBoxAdmin) {
+    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, TextBoxAdmin _textBoxAdmin) {
         graphic = _graphic;
         userInterface = _user_interface;
         textBoxAdmin = _textBoxAdmin;
-        GeoSlot.setUserInterface(userInterface);
+        worldModeAdmin = _worldModeAdmin;
 
         //TextBoxなどの初期化
         releaseTextBoxID = textBoxAdmin.createTextBox(650,600,1450,800,2);
         textBoxAdmin.setTextBoxUpdateTextByTouching(releaseTextBoxID, false);
         textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
         //textBoxAdmin.hideTextBox(releaseTextBoxID);
-    }
 
-    public static void setGeoSlotMapDB(MyDatabase _geoSlotMapDB) {
-        geoSlotMapDB = _geoSlotMapDB;
-    }
-    public static void setGeoSlotEventDB(MyDatabase _geoSlotEventDB) {
-        geoSlotEventDB = _geoSlotEventDB;
+        loadBackPlate();
     }
 
     //ジオスロットの並びを表すツリーコードを用いて、GeoSlotのインスタンス化を行う。
@@ -86,41 +98,84 @@ public class GeoSlotAdmin {
         //DBからツリーコードを取得する関数
         tree_code = this.getTreeCode();
 
-        //根スロットのインスタンス化
-        grand_geo_slot = new GeoSlot(this);
-
-        //このメソッドを呼ぶと、全てのGeoSlotのインスタンス化が完了する。実体は各GeoSlotが子GeoSlotとして持つ。
-        grand_geo_slot.makeGeoSlotInstance(tree_code, null);
-
-        //GeoSlotの管理のため、GeoSlotのインスタンスをコピーしてくるメソッド。
-        //geo_slots = (GeoSlot[])grand_geo_slot.getGeoSlots().toArray(new GeoSlot[0]);
-        geo_slots = grand_geo_slot.getGeoSlots();
-
-        //各GeoSlotの初期化
+        //各GeoSlotのパラメータをDBから取得
         List<Integer> xs = geoSlotMapDB.getInt(t_name, "x");
         List<Integer> ys = geoSlotMapDB.getInt(t_name, "y");
         List<String> release_events = geoSlotMapDB.getString(t_name, "release_event");
         List<String> restrictions = geoSlotMapDB.getString(t_name, "restriction");
-        int r;
 
-        GeoSlot.staticInit(graphic, userInterface, textBoxAdmin, geoSlotEventDB);
+        //根スロットのインスタンス化
+        grand_geo_slot = new GeoSlot(this, graphic, userInterface,
+                Constants.Touch.TouchWay.UP_MOMENT,
+                Constants.Touch.TouchWay.MOVE,
+                new int[] { 0, 0, 100 },
+                graphic.makeImageContext(graphic.searchBitmap("neco"), 0, 0, 5.0f, 5.0f, 0.0f, 128, false),
+                graphic.makeImageContext(graphic.searchBitmap("neco"), 0, 0, 6.0f, 6.0f, 0.0f, 128, false)
+        );
+        //TODO 配列の位置はタッチ座標用、COntextの位置は表示用
+        //TODO 拡大縮小を動的に行う場合は毎回このmakeImageContextを呼ぶと言うことになるわけだが。
+        //TODO そもそも画像の表示位置はContextに入っているから毎回呼ぶと言うことになるわけだが。
+        //TODO Contextをベースとして、bookingの時の値をオフセットにするとか？
+
+        //このメソッドを呼ぶと、全てのGeoSlotのインスタンス化が完了する。実体は各GeoSlotが子GeoSlotとして持つ。
+        grand_geo_slot.makeGeoSlotInstance(tree_code, null);
+
+
+        //GeoSlotの管理のため、GeoSlotのインスタンスをコピーしてくるメソッド。
+        geo_slots = grand_geo_slot.getGeoSlots();
+
+        GeoSlot.staticInit(textBoxAdmin, geoSlotEventDB);
 
         for(int i = 0; i < geo_slots.size(); i++) {
-            //TODO:根の表示も適当
-            if (i == 0) {
-                r = 70;
-            } else {
-                r = 70;
-            }
-            geo_slots.get(i).setParam(xs.get(i),ys.get(i), r);
+            geo_slots.get(i).setParam(xs.get(i), ys.get(i), TOUCH_R);
             //TouchIDセット
-            geo_slots.get(i).setTouchID(userInterface.setCircleTouchUI(xs.get(i), ys.get(i), r+10));
-
+            //geo_slots.get(i).setTouchID(userInterface.setCircleTouchUI(xs.get(i), ys.get(i), 100));
             geo_slots.get(i).setReleaseEvent(release_events.get(i));
             geo_slots.get(i).setRestriction(restrictions.get(i));
         }
 
+        //plateGroupインスタンス化
+        geoSlotGroup = new PlateGroup<GeoSlot>((GeoSlot[])grand_geo_slot.getGeoSlots().toArray(new GeoSlot[0]));
+
     }
+
+
+    private void loadBackPlate() {
+        /*
+        Paint textPaint = new Paint();
+        textPaint.setTextSize(80f);
+        textPaint.setARGB(255,255,255,255);
+
+        backPlateGroup = new PlateGroup<BoxTextPlate>(
+                new BoxTextPlate[] {
+                        new BoxTextPlate(
+                                graphic, userInterface, new Paint(),
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                Constants.BUTTON.BACK_BUTTON_POS,
+                                "戻る",
+                                textPaint
+                        )
+                }
+        );
+        */
+        backPlateGroup = new PlateGroup<BackPlate>(
+                new BackPlate[] {
+                        new BackPlate(
+                                graphic, userInterface, worldModeAdmin
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //戻るボタンが押された時の処理
+                                worldModeAdmin.setGeoSlotMap(Constants.Mode.ACTIVATE.STOP);
+                                worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
+                            }
+                        }
+                }
+        );
+    }
+
+    //***** GeoObjectステータス計算関係 *****
 
     //GeoSlotによるステータスへの加算量を計算する
     public boolean calcGeoSlot() {
@@ -152,9 +207,11 @@ public class GeoSlotAdmin {
     }
     */
 
+    // ***** GeoObject計算関係ここまで　*****
+
     //GeoSlotを解放しますか？的なもの
     public void geoSlotReleaseChoice() {
-        isReleaseListActive = false;
+        isReleasePlateActive = false;
         textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
 
         if (!focusGeoSlot.isEventClear()) {
@@ -170,82 +227,122 @@ public class GeoSlotAdmin {
 
             textBoxAdmin.updateText(releaseTextBoxID);
 
+            Paint textPaint = new Paint();
+            textPaint.setTextSize(80f);
+            textPaint.setARGB(255,255,255,255);
+
             //「解放する」「解放しない」ボタン表示　→　ListBox<Button>の完成待ち
+            releasePlateGroup = new PlateGroup<BoxTextPlate>(
+                    new BoxTextPlate[]{
+                            new BoxTextPlate(
+                                    graphic, userInterface, new Paint(),
+                                    Constants.Touch.TouchWay.UP_MOMENT,
+                                    Constants.Touch.TouchWay.MOVE,
+                                    new int[]{1100, 50, 1550, 200},
+                                    "解放する",
+                                    textPaint
+                            ),
+                            new BoxTextPlate(
+                                    graphic, userInterface, new Paint(),
+                                    Constants.Touch.TouchWay.UP_MOMENT,
+                                    Constants.Touch.TouchWay.MOVE,
+                                    new int[]{1100, 250, 1550, 400},
+                                    "やめる",
+                                    textPaint
+                            )
+                    }
+            );
+            isReleasePlateActive = true;
+
+            //TODO: PlateGroupのアクティブ切り替えと表示切り替え　いな
+
+            /*
             releaseList = new ListBox();
             releaseList.init(userInterface, graphic, Constants.Touch.TouchWay.DOWN_MOMENT, 2 , 1200, 50, 1500, 50 + 100 * 2);
             releaseList.setContent(0, "解放する");
             releaseList.setContent(1, "やめる");
             isReleaseListActive = true;
+            */
         }
     }
 
 
     public void update(){
         //GeoSlot
+        /*
         for(int i = 0; i < geo_slots.size(); i++) {
             if (geo_slots.get(i) != null) {
                 geo_slots.get(i).update();
             }
         }
-        //ListBox
-        if (isReleaseListActive) {
-            releaseList.update();
-            int content = releaseList.checkTouchContent();
+        */
+        geoSlotGroup.update();
+
+        if (isReleasePlateActive) {
+            releasePlateGroup.update();
+            int content = releasePlateGroup.getTouchContentNum();
             switch (content) {
                 case (0)://解放する
                     //解放するための色々な処理
                     focusGeoSlot.geoSlotRelease();
-                    isReleaseListActive = false;
+                    isReleasePlateActive = false;
                     textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
                     break;
                 case (1)://やめる
-                    isReleaseListActive = false;
+                    isReleasePlateActive = false;
                     textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
                     break;
             }
         }
+        backPlateGroup.update();
     }
 
     public void draw() {
         //GeoSlot
-        //2つのfor文に分けなければならない(描画順の問題)
+        //線とスロットの描画は2つのfor文に分けなければならない(描画順の問題)
         for(int i = 0; i < geo_slots.size(); i++) {
             geo_slots.get(i).drawLine();
         }
+        /*
         for(int i = 0; i < geo_slots.size(); i++) {
-            boolean f = geo_slots.get(i).equals(focusGeoSlot);
+            /oolean f = geo_slots.get(i).equals(focusGeoSlot);
             geo_slots.get(i).draw(f);
         }
+        */
+        geoSlotGroup.draw();
+
         //ListBox
-        if (isReleaseListActive) {
-            if (releaseList != null) {
-                releaseList.draw();
+        if (isReleasePlateActive) {
+            if (releasePlateGroup != null) {
+                releasePlateGroup.draw();
             }
         }
+        backPlateGroup.draw();
     }
 
-
-
-
+    // ***** Getter *****
     private List<Integer> getTreeCode() {
         return geoSlotMapDB.getInt(t_name, "children_num");
-    }
-
-    public String getName() { return t_name; }
-    public GeoObjectData getHoldGeoObject() {
-        return holdGeoObject;
-    }
-    public void setHoldGeoObject(GeoObjectData geoObjectData) {
-        holdGeoObject = geoObjectData;
     }
     public boolean isHoldGeoObject() {
         return holdGeoObject != null;
     }
+    public String getName() { return t_name; }
+    public GeoObjectData getHoldGeoObject() {
+        return holdGeoObject;
+    }
+
+    // ***** Settet *****
+    public void setHoldGeoObject(GeoObjectData geoObjectData) {
+        holdGeoObject = geoObjectData;
+    }
     public void setFocusGeoSlot(GeoSlot _focusGeoSlot) {
         focusGeoSlot = _focusGeoSlot;
     }
+    public static void setGeoSlotMapDB(MyDatabase _geoSlotMapDB) { geoSlotMapDB = _geoSlotMapDB; }
+    public static void setGeoSlotEventDB(MyDatabase _geoSlotEventDB) { geoSlotEventDB = _geoSlotEventDB; }
 
-    //** Created by ina **//
+    //** Created by ina **
 
     //rewrire by kmhanko
     //GeoSlot geo_slots[] = new GeoSlot[10];

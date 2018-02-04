@@ -7,7 +7,10 @@ import java.util.List;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.Draw.ImageContext;
+import com.maohx2.ina.Text.CircleImagePlate;
 import com.maohx2.ina.Text.ListBox;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.database.MyDatabase;
@@ -17,14 +20,23 @@ import com.maohx2.kmhanko.itemdata.GeoObjectData;
  * Created by ina on 2017/10/08.
  */
 
-public class GeoSlot {
+/*
+初回起動時エラーを直した。android_metadataをテーブル名取得しないことによって。これを確認する作業
+GeoSlotとGeoSlotADmin, 動かすためにいくつかコメントアウトされているので注意
+いなのtextにprotectedをつける作業
+MakeGeoSlot的なやつ、MyDBをパスしてsql文章で一行づつ消滅させる形を取ることによりtree_codeをgeoSlotCodeに変更する。
+無理だったらクラスにして渡す。
+これによって検証によるコンストラクタの変更に対応する
+
+ */
+
+public class GeoSlot extends CircleImagePlate {
 
     //** Created by kmhanko **//
 
     static final int GEO_SLOT_CHILDREN_MAX = 8;
-    static final int SCALE = 10;
-    GeoSlotAdmin geoSlotAdmin;//staticにしてはならない。いくつかのGeoSlotAdminがあるため。
-    static UserInterface userInterface;
+
+    GeoSlotAdmin geoSlotAdmin; //staticにしてはならない。いくつかのGeoSlotAdminがあるため。
     static TextBoxAdmin textBoxAdmin;
     static MyDatabase geoSlotEventDB;
 
@@ -37,22 +49,39 @@ public class GeoSlot {
     String release_event;
     String restriction;
 
-    static Graphic graphic;
+    //static Graphic graphic;
+    //Graphic graphic;
 
     GeoObjectData geoObjectData;
+
+    ImageContext notEventCrearImageContext;
 
     //TODO:デバッグ用。セーブデータの用意が必要
     boolean isReleased = false;
 
+    /*
     public GeoSlot(GeoSlotAdmin _geoSlotAdmin) {
         item_id = -1;
         is_exist = true;
         geoSlotAdmin = _geoSlotAdmin;
     }
+    */
 
-    static public void staticInit(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, MyDatabase _geoSlotEventDB) {
-        graphic = _graphic;
-        userInterface = _userInterface;
+    public GeoSlot(GeoSlotAdmin _geoSlotAdmin, Graphic _graphic, UserInterface _user_interface,
+                   Constants.Touch.TouchWay _judge_way, Constants.Touch.TouchWay _feedback_way,
+                   int[] position,
+                   ImageContext _default_image_context, ImageContext _feedback_image_context
+    ){
+        super(_graphic, _user_interface, _judge_way, _feedback_way, position, _default_image_context, _feedback_image_context);
+
+        item_id = -1;
+        is_exist = true;
+        geoSlotAdmin = _geoSlotAdmin;
+    }
+
+
+
+    static public void staticInit(TextBoxAdmin _textBoxAdmin, MyDatabase _geoSlotEventDB) {
         textBoxAdmin = _textBoxAdmin;
         geoSlotEventDB = _geoSlotEventDB;
     }
@@ -68,9 +97,12 @@ public class GeoSlot {
         tree_code.remove(0);
 
         for (int i = 0; i < size; i++) {
-            children_slot.add(new GeoSlot(geoSlotAdmin));
+            children_slot.add(new GeoSlot(
+                    geoSlotAdmin, graphic, user_interface,
+                    judge_way, feedback_way, new int[] {0,0,0}, default_image_context, feedback_image_context));
             tree_code = children_slot.get(children_slot.size() - 1).makeGeoSlotInstance(tree_code, this);
         }
+
         return tree_code;
     }
 
@@ -143,7 +175,6 @@ public class GeoSlot {
                 buf_geo_slot.addAll(children_slot.get(i).getGeoSlots());
             }
         }
-
         return buf_geo_slot;
     }
 
@@ -265,6 +296,15 @@ public class GeoSlot {
         */
     }
 
+
+    @Override
+    public void draw() {
+        super.draw();
+        if (!isEventClear()) {
+            graphic.bookingDrawBitmapData(notEventCrearImageContext);
+        }
+    }
+    /*
     public void draw(boolean isFocused) {
         if (isFocused) {
             graphic.bookingDrawBitmapName("apple", position_x, position_y, SCALE*1.5f, SCALE*1.5f, 0, 255, false);
@@ -281,9 +321,32 @@ public class GeoSlot {
             graphic.bookingDrawBitmapName("banana", position_x, position_y, SCALE, SCALE, 0, 255, false);
         }
     }
+    */
 
+    /*
     public void update() {
-        touchEvent();
+        super.update();
+        //touchEvent();
+    }
+    */
+
+    @Override
+    public void callBackEvent() {
+        //TODO:isPushThisObject引数
+
+        geoSlotAdmin.setFocusGeoSlot(this);
+        //ジオオブジェクトをホールドしている時
+        if (geoSlotAdmin.isHoldGeoObject()) {
+            if (isEventClearAll() && isPushThisObject(null)) {
+                //GeoSlotを設置する
+                setItemID(user_interface.getItemID());
+                setGeoObjectByItemID();
+                geoSlotAdmin.calcGeoSlot();
+            }
+        } else {
+            //ジオオブジェクトをホールドしていない時
+            geoSlotAdmin.geoSlotReleaseChoice();
+        }
     }
 
     //GeoSlot解放のデータ的処理
@@ -321,7 +384,7 @@ public class GeoSlot {
     }
 
 
-
+/*
     public void touchEvent() {
         if (userInterface.checkUI(getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
             //System.out.println(userInterface.getItemID());
@@ -343,7 +406,7 @@ public class GeoSlot {
             }
         }
     }
-
+*/
     public boolean isInGeoObject() {
         return is_in_geoObjectData;
     }
@@ -355,18 +418,14 @@ public class GeoSlot {
     }
 
     public void setGeoSlotAdmin(GeoSlotAdmin _geoSlotAdmin) { geoSlotAdmin = _geoSlotAdmin; }
-    static public void setUserInterface(UserInterface _userInterface) { userInterface = _userInterface; }
+    //static public void setUserInterface(UserInterface _userInterface) { userInterface = _userInterface; }
     static public void setTextBoxAdmin(TextBoxAdmin _textBoxAdmin) { textBoxAdmin = _textBoxAdmin; }
     public void setIsExist(boolean _is_exist) {
         is_exist = _is_exist;
     }
 
-    public int getPositionX() {
-        return position_x;
-    }
-    public int getPositionY() {
-        return position_y;
-    }
+    //public int getPositionX() { return position_x; }
+    //public int getPositionY() { eturn position_y; }
 
 
     public String getReleaseEvent() { return release_event; }
@@ -374,15 +433,31 @@ public class GeoSlot {
     public void setReleaseEvent(String _release_event) { release_event = _release_event; }
     public void setRestriction(String _restriction) { restriction = _restriction; }
 
+    //TODO: inaの関数ができたら消す
+    public void setParam(int _x, int _y, int _r) {
+        x = _x;
+        y = _y;
+        radius = _r;
+        touch_id = user_interface.setCircleTouchUI(x, y, radius);
+        //TODO: 前の奴を消せないので格納上の問題あり
+
+        notEventCrearImageContext = graphic.makeImageContext(graphic.searchBitmap("e51-0"), x , y, 1.0f, 1.0f, 0.0f, 255, false);
+
+        default_image_context = graphic.makeImageContext(graphic.searchBitmap("neco"), x, y, 5.0f, 5.0f, 0.0f, 255, false);
+        draw_image_context = graphic.makeImageContext(graphic.searchBitmap("neco"), x, y, 5.0f, 5.0f, 0.0f, 255, false);
+        feedback_image_context = graphic.makeImageContext(graphic.searchBitmap("neco"), x, y, 6.0f, 6.0f, 0.0f, 255, false);
+    }
+
     //** Created by ina **//
 
     //delete by kmhanko
     //Paint paint;
 
-    int position_x;
-    int position_y;
-    int radius;
-    int touch_id;
+    //delete by kmhanko
+    //int position_x;
+    //int position_y;
+    //int radius;
+    //int touch_id;
 
     int item_id;
 
@@ -419,11 +494,14 @@ public class GeoSlot {
     }
 
 
+    //delete by kmhanko
+    /*
     public void setParam(int _position_x,int _position_y,int _radius){
         position_x = _position_x;
         position_y = _position_y;
         radius = _radius;
     }
+    */
 
     public int getTouchID(){
 

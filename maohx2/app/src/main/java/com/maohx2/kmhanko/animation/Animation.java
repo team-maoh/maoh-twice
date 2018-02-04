@@ -95,7 +95,7 @@ public class Animation {
         step = 0;
         is_start = true;
         setParam();
-        is_loop = (animation_data.getTime(size - 1) == 0);
+        is_loop = (animation_data.getTime(size - 1) == 0); //AnimationDataのラストが0ならループすることになる
         size = animation_data.getSteps();
     }
 
