@@ -32,6 +32,7 @@ public class BookingBitmapData extends BookingTaskData {
     @Override
     public void draw(Canvas canvas){
         canvas.drawBitmap(draw_bitmap_data.getBitmap(), draw_matrix, paint);
+        //canvas.drawBitmap(draw_bitmap_data.getBitmap(),0,0,paint);
     }
 
 }
