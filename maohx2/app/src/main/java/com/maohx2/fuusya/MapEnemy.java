@@ -1,6 +1,7 @@
 package com.maohx2.fuusya;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.view.SurfaceHolder;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
@@ -21,8 +22,6 @@ import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Draw.Graphic;
 
-import javax.microedition.khronos.opengles.GL10;
-
 /**
  * Created by Fuusya on 2017/09/11.
  */
@@ -30,17 +29,10 @@ import javax.microedition.khronos.opengles.GL10;
 public class MapEnemy extends MapUnit {
 
     MapPlayer player;
-    int DEFAULT_STEP = 10;//プレイヤー未発見時の歩幅
-    int step;
+    double DEFAULT_STEP = 8;//プレイヤー未発見時の歩幅
     int chase_count;
     double dst_x, dst_y;
     int total_dirs;//画像が1方位なのか、4方位なのか、8方位なのか(Playerの視界に入っているかどうかの判定に使う)
-
-//    int DWELLING_STEPS = 30;
-//    int dwell_count;
-//    double[] pre_w_x = new double[DWELLING_STEPS];
-//    double[] pre_w_y = new double[DWELLING_STEPS];
-//    boolean is_dwelling;
 
     int CHASE_STEPS = 6;//名前は仮 / EnemyはPlayerの{現在座標ではなく}CHASE_STEPS歩前の座標を追いかける
     double[] chase_w_x = new double[CHASE_STEPS];
@@ -48,27 +40,23 @@ public class MapEnemy extends MapUnit {
 
     double clock_rad;
     double pre_random_rad;
-    boolean has_found_player;//プレイヤーを発見しているかどうか
+    int FOUND_DWELL_FRAMES = 15;
+    int found_dwell_count;
 
-    public MapEnemy(Graphic graphic, MapObjectAdmin map_object_admin, MapAdmin _map_admin, Camera _camera, int _total_dirs) {
+    boolean has_found_player;//プレイヤーを発見しているかどうか
+    boolean detect_player, has_blind_spot;//Playerを発見するか否か / 全方位が見えているか否か
+    double incremental_step;
+
+    public MapEnemy(Graphic graphic, MapObjectAdmin map_object_admin, MapAdmin _map_admin, Camera _camera, int _total_dirs, boolean _detect_player, boolean _has_blind_spot) {
         super(graphic, map_object_admin, _map_admin, _camera);
 
         total_dirs = _total_dirs;
 
         player = map_object_admin.getPlayer();
 
-        w_x = map_admin.getRoomPoint().x * 64 + 32;
-        w_y = map_admin.getRoomPoint().y * 64 + 32;
-//        よく考えたら意味ない
-//        double tmp_x_1 = w_x + step;
-//        double tmp_x_2 = w_x - step;
-//        double tmp_y_1 = w_y + step;
-//        double tmp_y_2 = w_y - step;
-//        int cond = detectWall(w_x, w_y, tmp_x_1, tmp_y_1) * detectWall(w_x, w_y, tmp_x_2, tmp_y_1) * detectWall(w_x, w_y, tmp_x_1, tmp_y_2) * detectWall(w_x, w_y, tmp_x_2, tmp_y_2);
-//        if (cond != 0) {
-//            w_x = map_admin.getRoomPoint().x * 64 + 32;
-//            w_y = map_admin.getRoomPoint().y * 64 + 32;
-//        }
+        Point room_point = map_admin.getRoomPoint();
+        w_x = room_point.x;
+        w_y = room_point.y;
 
         dst_x = w_x;
         dst_y = w_y;
@@ -78,22 +66,23 @@ public class MapEnemy extends MapUnit {
             chase_w_x[i] = 0.0;
             chase_w_y[i] = 0.0;
         }
-//        for (int i = 0; i < DWELLING_STEPS; i++) {
-//            pre_w_x[i] = w_x;
-//            pre_w_y[i] = w_y;
-//        }
-//        dwell_count = 0;
-//        is_dwelling = false;
 
         draw_object = "ゴキ太郎";
 
-        has_found_player = false;
 
         clock_rad = 0.0;
 
         pre_random_rad = random.nextDouble() * 2 * PI;
 
         step = DEFAULT_STEP;
+
+        found_dwell_count = FOUND_DWELL_FRAMES;
+
+        has_found_player = false;
+
+        detect_player = _detect_player;
+        has_blind_spot = _has_blind_spot;
+        incremental_step = 0;
     }
 
     public void init() {
@@ -105,37 +94,57 @@ public class MapEnemy extends MapUnit {
 
         if (exists == true) {
 
-            //[Playerを発見しているか否か]を更新
-//            has_found_player = InViewOfThePlayer();
-//            has_found_player = (inViewOfThePlayer() && playerWithinEyesight());
+            if (detect_player == true) {
 
-            if (has_found_player == false) {//未発見→発見（見つける）
-                has_found_player = playerWithinEyesight() && hidFromPlayer();
-            } else {//発見→未発見（見失う）
-                has_found_player = hidFromPlayer();
+                //[Playerを発見しているか否か]を更新
+                if (has_found_player == false && exposedToPlayer() == true) {//未発見→発見（見つける）
+                    if (playerWithinEyesight() == true || has_blind_spot == false) {
+                        has_found_player = true;//Playerと自身の間に壁(or玄関マス)が無い && Playerが視野角内に居る
+                    }
+
+                    //found motion(「！」を出すとか)
+                    found_dwell_count = FOUND_DWELL_FRAMES;
+
+                }
+                if (has_found_player == true && exposedToPlayer() == false) {//発見→未発見（見失う）
+                    has_found_player = false;//Playerと自身の間に壁(or玄関マス)がある
+                    incremental_step = 0;
+                }
             }
 
-
-            double dx, dy;
+            //Player座標をchase[]に格納
+            chase_w_x[chase_count] = player.getWorldX();
+            chase_w_y[chase_count] = player.getWorldY();
+            chase_count = (chase_count + 1) % CHASE_STEPS;
 
             if (has_found_player == false) {//プレイヤーを発見していない
                 step = DEFAULT_STEP;
 
-                //あてどもなく徘徊する(dx, dyを設定)
+                //あてどもなく徘徊する(dst_x, dst_yを設定)
                 wander_about();
 
             } else {//プレイヤーを発見している
-                step = 3 * DEFAULT_STEP;
 
-                //●CHASE_STEPS歩前のプレイヤー座標を目標座標とする
-                chase_w_x[chase_count] = player.getWorldX();
-                chase_w_y[chase_count] = player.getWorldY();
-                chase_count = (chase_count + 1) % CHASE_STEPS;
-                dst_x = chase_w_x[chase_count];
-                dst_y = chase_w_y[chase_count];
+                if (found_dwell_count > 0) {
+                    found_dwell_count--;//FOUND_DWELL_FRAMESフレームだけ歩行を停止する
 
-                //●プレイヤーがタッチしている間だけ移動する
-                //プレイヤーのタッチ座標をそのまま目標座標とする
+                } else {
+
+                    step = 3 * DEFAULT_STEP + incremental_step;
+
+                    incremental_step += DEFAULT_STEP / 100;
+
+                    if(step >= player.getStep()){
+                        dst_x = player.getWorldX();
+                        dst_y = player.getWorldY();
+                    }else {
+                        //●CHASE_STEPS歩前のプレイヤー座標を目標座標とする
+                        dst_x = chase_w_x[chase_count];
+                        dst_y = chase_w_y[chase_count];
+                    }
+
+                    //●プレイヤーがタッチしている間だけ移動する
+                    //プレイヤーのタッチ座標をそのまま目標座標とする
 //                if (player.getIsMoving() == true) {
 //                    dst_x = player.getTouchWouldX();
 //                    dst_y = player.getTouchWouldY();
@@ -144,68 +153,43 @@ public class MapEnemy extends MapUnit {
 //                    dst_y = w_y;
 //                }
 
-                //くるくる回る
+                    //独楽のようにくるくる回る
 //        clock_rad = (clock_rad + PI / 30.0) % (2 * PI);
 //        System.out.println(clock_rad);
 //        double clock_w_x = w_x + 10 * cos(clock_rad);
 //        double clock_w_y = w_y + 10 * sin(clock_rad);
 //        updateDirOnMap(clock_w_x, clock_w_y);
-                //自身の視界（角度cos(PI/6.0)の範囲）にプレイヤーが入るとprintする
+                    //自身の視界（角度cos(PI/6.0)の範囲）にプレイヤーが入るとprintする
 //        double length = myDistance(player.getWorldX(), player.getWorldY(), w_x, w_y);
 //        double inner_prod = cos(dir_on_map) * (player.getWorldX() - w_x) / length + sin(dir_on_map) * (player.getWorldY() - w_y) / length;
 //        System.out.println("uncchi" + inner_prod);
 //        if (inner_prod > cos(PI / 6.0)) {
 //            System.out.println("●uncchi" + inner_prod);
 //        }
-                //
-                //[0, 7]の8方位で[自分の向き]と[自分から見てプレイヤーの居る方角]が一致した場合、プレイヤーを追いかける
+                    //
+                    //[0, 7]の8方位で[自分の向き]と[自分から見てプレイヤーの居る方角]が一致した場合、プレイヤーを追いかける
 //        if (convertDirToIntDir(8, dir_on_map) == convertDirToIntDir(8, calcDirOnMap(player.getWorldX(), player.getWorldY()))) {
 //            dst_x = player.getWorldX();
 //            dst_y = player.getWorldY();
 //        }
+
+
+                }
+
             }
 
-            // dst_x, dst_yの方向に一歩進む
-            dst_steps = (int) (myDistance(w_x, w_y, dst_x, dst_y) / (double) step);
-            dst_steps++;//dst_steps = 0 のときゼロ除算が発生するので
+            walkOneStep(dst_x, dst_y, step, true);//一歩進む
             //
-            dx = (dst_x - w_x) / dst_steps;
-            dy = (dst_y - w_y) / dst_steps;
-            walkOneStep(dx, dy, true);//一歩進む
-            //
-            updateDirOnMap(w_x + dx, w_y + dy);
-
-
-//            boolean test = false;
-//            dwell_count = (dwell_count + 1) % DWELLING_STEPS;
-//            pre_w_x[dwell_count] = w_x;
-//            pre_w_y[dwell_count] = w_y;
-//            for (int i = 0; i < DWELLING_STEPS; i++) {
-//                if (pre_w_x[i] == w_x && pre_w_y[i] == w_y) {
-//                    test = true;
-//                }
-//            }
-//            if (test == true) {
-//                System.out.println("dwellしている");
-//                is_dwelling = true;
-//            } else {
-//                is_dwelling = false;
-//            }
+            updateDirOnMap(dst_x, dst_y);
 
         }
 
     }
 
-    private double myDistance(double x1, double y1, double x2, double y2) {
-        return (pow(pow(x1 - x2, 2.0) + pow(y1 - y2, 2.0), 0.5));
-    }
+    //Playerから見える場所にいるorいない（Playerと自身の中間に壁(or玄関マス)が無いor有る）
+    private boolean exposedToPlayer() {
 
-    //Playerから見える場所にいるorいない（Playerと自身の間に壁が無いor有る）
-    private boolean hidFromPlayer() {
-
-        boolean tmp_has_found_player = true;
-
-        int num_of_units = (int) (myDistance(w_x, w_y, player.getWorldX(), player.getWorldY()) / (double) step);
+        int num_of_units = (int) (myDistance(w_x, w_y, player.getWorldX(), player.getWorldY()) / step);
         num_of_units++;
         double unit_x = (player.getWorldX() - w_x) / num_of_units;
         double unit_y = (player.getWorldY() - w_y) / num_of_units;
@@ -215,11 +199,13 @@ public class MapEnemy extends MapUnit {
         double x_1 = w_x + unit_x;
         double y_1 = w_y + unit_y;
 
-//        has_found_player = false;//デバッグのため
+        if (map_admin.isEntrance(map_admin.worldToMap((int) x_0), map_admin.worldToMap((int) y_0)) == true) {
+            return false;
+        }
+
         for (int i = 0; i < num_of_units; i++) {
-            if (detectWall(x_0, y_0, x_1, y_1) != 0) {
-                tmp_has_found_player = false;
-                break;
+            if (detectWall(x_0, y_0, x_1, y_1) != 0 || map_admin.isEntrance(map_admin.worldToMap((int) x_1), map_admin.worldToMap((int) y_1)) == true) {
+                return false;
             }
             x_0 += unit_x;
             y_0 += unit_y;
@@ -227,7 +213,7 @@ public class MapEnemy extends MapUnit {
             y_1 += unit_y;
         }
 
-        return tmp_has_found_player;
+        return true;
 
     }
 
@@ -239,13 +225,6 @@ public class MapEnemy extends MapUnit {
         } else {
             return false;
         }
-
-//        if(abs(calcDirOnMap(player.getWorldX(),player.getWorldY())-dir_on_map) < PI/4){
-//            return true;
-//        }else{
-//            return false;
-//        }
-
     }
 
     private void wander_about() {

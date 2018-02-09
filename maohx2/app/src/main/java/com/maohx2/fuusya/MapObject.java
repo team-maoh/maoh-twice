@@ -27,7 +27,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 abstract public class MapObject {
 
-    double w_x, w_y;
+    double w_x, w_y, pre_w_x, pre_w_y;
     String draw_object;
     boolean exists;//自身がマップ上に存在しているかどうか
     int id;
@@ -35,10 +35,12 @@ abstract public class MapObject {
     Camera camera;
     double dir_on_map;//マップ上での自分自身の向き( 0 ~ 2*PI )
     Random random;
+    MapObjectAdmin map_object_admin;
 
     public MapObject(Graphic _graphic, MapObjectAdmin _map_object_admin, Camera _camera) {
 
         graphic = _graphic;
+        map_object_admin = _map_object_admin;
         camera = _camera;
 
         exists = true;

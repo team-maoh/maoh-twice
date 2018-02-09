@@ -15,6 +15,7 @@ import javax.microedition.khronos.opengles.GL10;
 import static java.lang.Math.PI;
 import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
+import static java.lang.Math.pow;
 import static java.lang.Math.sin;
 
 /**
@@ -30,6 +31,7 @@ public class MapUnit extends MapObject {
     int dst_steps, now_steps;
     MapObjectAdmin map_object_admin;
     MapAdmin map_admin;
+    double step;
 
     //デバッグ用
     int time_count;
@@ -73,7 +75,14 @@ public class MapUnit extends MapObject {
 
     //dx, dyを正して(壁に近すぎたらdx, dyをゼロにして)から、
     //xとyを更新する(一歩進む)
-    public void walkOneStep(double dx, double dy, boolean hit_against_entrance) {
+//    public void walkOneStep(double dx, double dy, boolean hit_against_entrance) {
+
+    public void walkOneStep(double dst_x, double dst_y, double step, boolean hit_against_entrance) {
+
+        int dst_steps = (int) myDistance(dst_x, dst_y, w_x, w_y) / (int) step;
+        dst_steps++;//ゼロ除算対策
+        double dx = (dst_x - w_x) / dst_steps;
+        double dy = (dst_y - w_y) / dst_steps;
 
         boolean is_touching_x_wall = false;
         boolean is_touching_y_wall = false;
@@ -88,7 +97,6 @@ public class MapUnit extends MapObject {
             hand_y = w_y - REACH_FOR_WALL * sin(i);
 
             if (hit_against_entrance == true) {
-                //isEntrance()を勝手にpublicに書き換えて使ってみた
                 if (map_admin.isEntrance(map_admin.worldToMap((int) (w_x + dx)), map_admin.worldToMap((int) w_y))) {
                     is_touching_x_wall = true;
                 }
@@ -121,5 +129,12 @@ public class MapUnit extends MapObject {
     protected int detectWall(double x1, double y1, double x2, double y2) {
         return map_admin.detectWallDirection(x1, y1, x2, y2);
     }
+
+    protected double myDistance(double x1, double y1, double x2, double y2) {
+        return (pow(pow(x1 - x2, 2.0) + pow(y1 - y2, 2.0), 0.5));
+    }
+
+    public double getStep(){return step;}
+
 
 }

@@ -1,6 +1,7 @@
 package com.maohx2.fuusya;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.icu.text.SymbolTable;
 import android.view.SurfaceHolder;
 
@@ -36,6 +37,7 @@ public class MapPlayer extends MapUnit {
     int th_encount_steps;
     int mean_encount_steps, var_encount_steps;
     int SOUND_STEPS_PERIOD = 20;//この歩数ごとに足音SEが鳴る
+    int TOUCHING_FRAME_NUM = 10;
     //
     int encount_steps;
     int sound_steps;
@@ -43,7 +45,7 @@ public class MapPlayer extends MapUnit {
     SoundAdmin sound_admin;
     DungeonUserInterface dungeon_user_interface;
 
-    int PLAYER_STEP = 40;//プレイヤーの歩幅
+    int PLAYER_STEP = 26;//プレイヤーの歩幅
     double touch_w_x, touch_w_y, touch_n_x, touch_n_y;
     boolean is_moving;
 
@@ -67,16 +69,14 @@ public class MapPlayer extends MapUnit {
         encount_steps = 0;
         sound_steps = 0;
 
-//        w_x = 550;
-//        w_y = 550;
-        w_x = map_admin.getRoomPoint().x * 64 + 32;
-        w_y = map_admin.getRoomPoint().y * 64 + 32;
+        Point room_point = map_admin.getRoomPoint();
+        w_x = room_point.x;
+        w_y = room_point.y;
 
         touching_frame_count = 0;
+        step = PLAYER_STEP;
 
         is_moving = false;
-
-//        random = new Random();
     }
 
     public void init() {
@@ -87,7 +87,6 @@ public class MapPlayer extends MapUnit {
     public void update() {
 
         touch_state = dungeon_user_interface.getTouchState();
-        double dx, dy;
 
         if (touch_state == TouchState.DOWN || touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE) {
 
@@ -103,7 +102,7 @@ public class MapPlayer extends MapUnit {
             touching_frame_count++;
 
             is_moving = true;
-        } else if (touching_frame_count > 10) {//画面を10frames以上タッチした場合、
+        } else if (touching_frame_count > TOUCHING_FRAME_NUM) {//画面を10frames以上タッチした場合、
 
             touching_frame_count = 0;
 
@@ -112,44 +111,33 @@ public class MapPlayer extends MapUnit {
 
         if (is_moving == true) {
 
-            dst_steps = (int) myDistance(touch_w_x, touch_w_y, w_x, w_y) / PLAYER_STEP;
-            dst_steps++;//dst_steps = 0 のときゼロ除算が発生するので
-            //一歩あたりの距離
-            dx = (touch_w_x - w_x) / dst_steps;
-            dy = (touch_w_y - w_y) / dst_steps;
-
-            //壁との衝突を考慮した上で、１歩進む
-            walkOneStep(dx, dy, false);
-
+            //壁との衝突を考慮した上で、タッチ座標に向かって１歩進む
+            walkOneStep(touch_w_x, touch_w_y, step, false);
+            //
             updateDirOnMap(touch_w_x, touch_w_y);
 
             encount_steps++;
             if (encount_steps >= th_encount_steps) {
                 System.out.println("◆一定歩数 歩いたので敵と遭遇");
                 encount_steps = 0;
-//                System.out.println("nowawa" + th_encount_steps);
                 th_encount_steps = makeThresholdEncountSteps();
             }
 
-//            encount_steps = (encount_steps + 1) % (ENCOUNT_STEPS_PERIOD + 1);
-//            if (encount_steps == ENCOUNT_STEPS_PERIOD) {
-//                System.out.println("◆一定歩数 歩いたので敵と遭遇");
-//            }
-            sound_steps = (sound_steps + 1) % (SOUND_STEPS_PERIOD + 1);
-            if (sound_steps % SOUND_STEPS_PERIOD == 0) {
+            sound_steps = (sound_steps + 1) % SOUND_STEPS_PERIOD;
+            if (sound_steps == 0) {
                 sound_admin.play("walk");//足音SE
             }
 
-            //タッチ座標との距離が一定未満になる ときに歩み止まる
-            if (3 > myDistance(touch_w_x, touch_w_y, w_x, w_y)) {
-                is_moving = false;
-                System.out.println("●タッチ座標との距離が一定未満 1");
-            }
-            //タッチ座標を通過してしまう ときに歩み止まる
-            if (0 > (touch_w_x - (w_x + dx)) * dx || 0 > (touch_w_y - (w_y + dy)) * dy) {
-                is_moving = false;
-                System.out.println("●タッチ座標との距離が一定未満 2");
-            }
+//            //タッチ座標との距離が一定未満になる ときに歩み止まる
+//            if (3 > myDistance(touch_w_x, touch_w_y, w_x, w_y)) {
+//                is_moving = false;
+//                System.out.println("●タッチ座標との距離が一定未満 1");
+//            }
+//            //タッチ座標を通過してしまう ときに歩み止まる
+//            if (0 > (touch_w_x - (w_x + dx)) * dx || 0 > (touch_w_y - (w_y + dy)) * dy) {
+//                is_moving = false;
+//                System.out.println("●タッチ座標との距離が一定未満 2");
+//            }
 
         } else {//moving == false のとき
             touching_frame_count = 0;
@@ -160,6 +148,14 @@ public class MapPlayer extends MapUnit {
 //        touch_y = camera.convertToNormCoordinateY((int) touch_w_y);
 
         camera.setCameraOffset(w_x, w_y);
+
+        //walkOneStep()でタッチ座標にたどり着くと自然に立ち止まる
+        //立ち止まっている場合にはis_movingをfalseにする（さもなくば足音SEが鳴り続ける）
+        if(pre_w_x == w_x && pre_w_y == w_y){
+            is_moving = false;
+        }
+        pre_w_x = w_x;
+        pre_w_y = w_y;
     }
 
     public void setMeanEncountSteps(int _mean) {
@@ -176,11 +172,6 @@ public class MapPlayer extends MapUnit {
 
         return (int) (var_encount_steps * normal_dist + mean_encount_steps);
 
-    }
-
-    //(x1, y1)と(x2, y2)の距離を返す
-    private double myDistance(double x1, double y1, double x2, double y2) {
-        return pow(pow(x1 - x2, 2.0) + pow(y1 - y2, 2.0), 0.5);
     }
 
     public double getTouchWouldX() {

@@ -87,7 +87,7 @@ public class MapObjectAdmin {
         }
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
-            map_enemy[i] = new MapEnemy(graphic, this, map_admin, camera, ENEMY_DIR);
+            map_enemy[i] = new MapEnemy(graphic, this, map_admin, camera, ENEMY_DIR, true, true);
             map_enemy[i].init();
             map_enemy_bitmap[i] = new MapObjectBitmap(ENEMY_DIR, graphic, "ハーピー");
             map_enemy_bitmap[i].init();
