@@ -57,35 +57,41 @@ public class MapObjectBitmap {
 
     public void update() {
 
-        //フレームの番号
-        time_count = (time_count + 1) % FRAME_PERIODS;
-        if (time_count == 0) {
+        if (total_dirs == 1) {
 
-            if (is_increasing_frame == true) {
-                frame++;
-            } else {
-                frame--;
-            }
 
-            switch (frame) {
-                case 0:
-                    is_increasing_frame = true;
-                    break;
-                case 2:
-                    is_increasing_frame = false;
-                    break;
-                default:
-                    break;
+        } else {
+            //フレームの番号
+            time_count = (time_count + 1) % FRAME_PERIODS;
+            if (time_count == 0) {
+
+                if (is_increasing_frame == true) {
+                    frame++;
+                } else {
+                    frame--;
+                }
+
+                switch (frame) {
+                    case 0:
+                        is_increasing_frame = true;
+                        break;
+                    case 2:
+                        is_increasing_frame = false;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
 
     //_dir_on_map : 0 ~ 2*PI
+
     public void draw(double _dir_on_map, double x, double y) {
 
         //マップ上でのオブジェクトの向き
         //[0 ~ 2*PI]を[0 ~ 7]に変換する
-        int int_dir_on_map = ((int) ((_dir_on_map + PI / total_dirs) / (2 * PI / total_dirs)))%total_dirs;
+        int int_dir_on_map = ((int) ((_dir_on_map + PI / total_dirs) / (2 * PI / total_dirs))) % total_dirs;
 
         graphic.bookingDrawBitmapData(bitmap_data[int_dir_on_map][frame], (int) x, (int) y);
 

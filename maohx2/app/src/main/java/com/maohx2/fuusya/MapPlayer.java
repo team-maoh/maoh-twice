@@ -33,7 +33,6 @@ import static java.lang.StrictMath.signum;
 
 public class MapPlayer extends MapUnit {
 
-    //    int ENCOUNT_STEPS_PERIOD = 500;//この歩数ごとに敵とエンカウントする
     int th_encount_steps;
     int mean_encount_steps, var_encount_steps;
     int SOUND_STEPS_PERIOD = 20;//この歩数ごとに足音SEが鳴る
@@ -48,13 +47,14 @@ public class MapPlayer extends MapUnit {
     int PLAYER_STEP = 26;//プレイヤーの歩幅
     double touch_w_x, touch_w_y, touch_n_x, touch_n_y;
     boolean is_moving;
+    double pre_w_x, pre_w_y;
 
     int touching_frame_count;
 
     TouchState touch_state;
 
     public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, MapAdmin _map_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera) {
-        super(graphic, _map_object_admin, _map_admin, _camera);
+        super(graphic, _map_object_admin, _camera);
 
         dungeon_user_interface = _dungeon_user_interface;
 
@@ -95,6 +95,9 @@ public class MapPlayer extends MapUnit {
             touch_w_x = camera.convertToWorldCoordinateX((int) touch_n_x);
             touch_w_y = camera.convertToWorldCoordinateY((int) touch_n_y);
 
+            dst_w_x = touch_w_x;
+            dst_w_y = touch_w_y;
+
             //デバッグ用
 //            touch_x = touch_w_x;
 //            touch_y = touch_w_y;
@@ -111,10 +114,22 @@ public class MapPlayer extends MapUnit {
 
         if (is_moving == true) {
 
+
+
+//            double residual_x = dst_w_x - w_x;
+//            double residual_y = dst_w_y - w_y;
+//
+//            residual_x = -residual_x;
+//            residual_y = -residual_y;
+//
+//            dst_w_x = w_x + residual_x;
+//            dst_w_y = w_y + residual_y;
+            step = checkBadState(PLAYER_STEP);
+
             //壁との衝突を考慮した上で、タッチ座標に向かって１歩進む
-            walkOneStep(touch_w_x, touch_w_y, step, false);
+            walkOneStep(dst_w_x, dst_w_y, step, false);
             //
-            updateDirOnMap(touch_w_x, touch_w_y);
+            updateDirOnMap(dst_w_x, dst_w_y);
 
             encount_steps++;
             if (encount_steps >= th_encount_steps) {
@@ -150,8 +165,8 @@ public class MapPlayer extends MapUnit {
         camera.setCameraOffset(w_x, w_y);
 
         //walkOneStep()でタッチ座標にたどり着くと自然に立ち止まる
-        //立ち止まっている場合にはis_movingをfalseにする（さもなくば足音SEが鳴り続ける）
-        if(pre_w_x == w_x && pre_w_y == w_y){
+        //立ち止まっている場合にはis_movingをfalseにする（さもなくば足音SEが出続ける）
+        if (pre_w_x == w_x && pre_w_y == w_y) {
             is_moving = false;
         }
         pre_w_x = w_x;
@@ -185,5 +200,6 @@ public class MapPlayer extends MapUnit {
     public boolean getIsMoving() {
         return is_moving;
     }
+
 
 }

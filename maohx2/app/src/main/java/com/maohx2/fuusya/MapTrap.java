@@ -20,12 +20,20 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by Fuusya on 2017/09/11.
  */
 
-public class MapItem extends MapInanimate {
+public class MapTrap extends MapInanimate {
 
     double REACH_FOR_PLAYER = 25;
+    int FRAMES_ACTIVATING = 100;
+    int frames_activating;
+    boolean is_activating;
+    MapPlayer player;
 
-    public MapItem(Graphic graphic, MapObjectAdmin _map_object_admin, int _id, Camera _camera) {
+    public MapTrap(Graphic graphic, MapObjectAdmin _map_object_admin, int _id, Camera _camera) {
         super(graphic, _map_object_admin, _id, _camera);
+
+        frames_activating = FRAMES_ACTIVATING;
+        is_activating = false;
+        player = map_object_admin.getPlayer();
 
     }
 
@@ -39,12 +47,22 @@ public class MapItem extends MapInanimate {
 
         if (exists == true) {
             if (collidePlayer(REACH_FOR_PLAYER) == true) {
-                System.out.println("アイテム獲得");
+                System.out.println("トラップを踏んだ");
+                is_activating = true;
+
+                player.setFramesBeingDrunk(FRAMES_ACTIVATING);
 //                sound_admin.play("getItem");
-                exists = false;
-//            bag_Item_admin.setItemIdToBagItem(map_Item[i].getId());//アイテムidを引き渡す
-//            map_Item[i].setExists(false);
+//                exists = false;
             }
+        }
+
+        if (is_activating == true) {
+            frames_activating--;
+        }
+
+        if(frames_activating <= 0){
+            is_activating = false;
+            exists = false;
         }
 
     }
