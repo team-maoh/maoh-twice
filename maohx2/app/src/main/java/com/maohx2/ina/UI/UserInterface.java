@@ -2,6 +2,8 @@ package com.maohx2.ina.UI;
 
 import android.graphics.PointF;
 
+import com.maohx2.ina.Arrange.InventryData;
+import com.maohx2.ina.Arrange.PaletteElement;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.GlobalConstants;
 
@@ -36,7 +38,9 @@ public class UserInterface {
     final PointF DISP_NORMARIZED_RATE;
 
     final float DENSITY;
-
+    InventryData inventry_data;
+    PaletteElement palette_element;
+    boolean ui_palette_draw_falag = true;
 
     public UserInterface(GlobalConstants global_constants, Graphic _graphic){
         DISP_X = global_constants.DISP_X;
@@ -44,6 +48,7 @@ public class UserInterface {
         NORMARIZED_DISP_RATE = global_constants.NORMARIZED_DISP_RATE;
         DISP_NORMARIZED_RATE = global_constants.DISP_NORMARIZED_RATE;
         DENSITY = global_constants.DENSITY;
+        ui_palette_draw_falag = false;
 
         graphic = _graphic;
     }
@@ -87,6 +92,27 @@ public class UserInterface {
         }
 
     }
+
+    public void draw(){
+
+        ui_palette_draw_falag = false;
+        if(palette_element != null && touch_state != TouchState.DOWN){
+            if(palette_element != null){
+                if(palette_element.getItemData() != null) {
+                    ui_palette_draw_falag = true;
+                    graphic.bookingDrawBitmapData(palette_element.getItemData().getItemImage(), (int) getTouchX(), (int) getTouchY());
+                }
+            }
+
+/*            if(inventry_data != null){
+                graphic.bookingDrawBitmapData(inventry_data.getItemData().getItemImage(),(int)touch_x,(int)touch_y);
+            }
+*/
+
+        }
+
+    }
+
 
     public double getTouchX() {return graphic.transrateDispPositionToNormalizedPositionX((int)touch_x);}
 
@@ -209,4 +235,16 @@ public class UserInterface {
     public void setItemID(int _item_id) {
         item_id = _item_id;
     }
+
+
+    public PaletteElement getPaletteElement(){return palette_element;}
+    public void setPaletteElement(PaletteElement _palette_element){palette_element = _palette_element;}
+
+    public InventryData getInventryData(){return inventry_data;}
+    public void setInventryData(InventryData _inventry_data){inventry_data = _inventry_data;}
+
+    public boolean isUIPaletteDraw(){
+        return ui_palette_draw_falag;
+    }
+
 }

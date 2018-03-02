@@ -3,6 +3,7 @@ package com.maohx2.ina.Arrange;
 import android.graphics.Paint;
 
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.ItemData.ItemData;
 
 import static com.maohx2.ina.Constants.Palette.CIRCLE_COLOR;
 import static com.maohx2.ina.Constants.Palette.PALETTE_CENTER_RADIUS_BIG;
@@ -12,21 +13,14 @@ import static com.maohx2.ina.Constants.Palette.PALETTE_CENTER_RADIUS_SMALL;
  * Created by ina on 2018/02/04.
  */
 
-public class PaletteCenter {
+public class PaletteCenter extends PaletteElement{
 
 
-    Paint paint;
-    int x,y;
-    int element_num;
     static Graphic graphic;
 
-    public PaletteCenter(int _x, int _y){
-        x = _x;
-        y = _y;
+    public PaletteCenter(int _x, int _y, int _element_num, int _touch_id){
+        super( _x, _y, _element_num, _touch_id);
 
-        element_num = 0;
-        paint = new Paint();
-        paint.setColor(CIRCLE_COLOR[element_num]);
     }
 
     public void changeElement(int _element_num){
@@ -39,11 +33,35 @@ public class PaletteCenter {
         graphic = _graphic;
     }
 
-    public void drawSmall(){
-        graphic.bookingDrawCircle(x,y,PALETTE_CENTER_RADIUS_SMALL ,paint);
+    @Override
+    public void drawSmall() {
+
+        graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_SMALL, paint);
     }
 
-    public void drawBig(){
-        graphic.bookingDrawCircle(x,y,PALETTE_CENTER_RADIUS_BIG, paint);
+    @Override
+    public void drawSmallAndItem() {
+
+        graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_SMALL, paint);
+        if(item_data != null) {
+            graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y);
+        }
     }
+
+
+    @Override
+    public void drawBig(){
+        graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_BIG, paint);
+    }
+
+
+    @Override
+    public void drawBigAndItem(){
+        graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_BIG, paint);
+        if(item_data != null) {
+            //graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y);
+            graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y,2,2,0,255,false);
+        }
+    }
+
 }

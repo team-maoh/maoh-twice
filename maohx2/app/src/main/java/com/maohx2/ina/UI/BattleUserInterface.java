@@ -5,6 +5,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.Layout;
 
+import com.maohx2.ina.Arrange.Inventry;
+import com.maohx2.ina.Arrange.InventryData;
+import com.maohx2.ina.Arrange.PaletteElement;
 import com.maohx2.ina.Constants.Touch.*;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.GlobalConstants;
@@ -24,6 +27,8 @@ public class BattleUserInterface extends UserInterface {
     double direction_check;
     int select_circle_num;
     int selected_circle_num;
+
+
 
     public BattleUserInterface(GlobalConstants global_constants, Graphic _graphic){
         super(global_constants, _graphic);
@@ -150,6 +155,8 @@ public class BattleUserInterface extends UserInterface {
             }
         }
     }
+
+
 
 
 }

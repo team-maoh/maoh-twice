@@ -26,6 +26,12 @@ public final class Constants {
 
     }
 
+    public static class Inventry {
+        public static final int INVENTRY_CONTENT_MAX = 10;
+        public static final int INVENTRY_DATA_MAX = 1000;
+
+    }
+
     public static class Touch {
         public enum TouchState {
             DOWN,

@@ -11,16 +11,14 @@ public class PaletteAdmin {
 
     Palette palettes[] = new Palette[2];
 
-    public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic){
-        palettes[0] = new Palette(_battle_user_interface, _graphic,1000,600);
-        palettes[1] = new Palette(_battle_user_interface, _graphic,200,600);
+    public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic, Inventry _inventry){
+        palettes[0] = new Palette(_battle_user_interface, _graphic, _inventry,1000,600);
+        palettes[1] = new Palette(_battle_user_interface, _graphic, _inventry, 200,600);
     }
 
     public void update(){
         palettes[0].updateSetting();
         palettes[1].updateSetting();
-        //palettes[0].update();
-        //palettes[1].update();
     }
 
     public void draw(){
