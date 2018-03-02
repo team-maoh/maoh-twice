@@ -9,7 +9,7 @@ import android.widget.RelativeLayout;
 
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.ina.UI.UserInterface;
+import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
@@ -61,7 +61,7 @@ class StartSurfaceView extends BaseSurfaceView {
     BitmapData srime;
     BitmapData bit_srime;
     StartGameSystem start_game_system;
-    UserInterface start_user_interface;
+    BattleUserInterface start_user_interface;
 
 
     public StartSurfaceView(Activity _start_activity) {
@@ -85,7 +85,7 @@ class StartSurfaceView extends BaseSurfaceView {
         srime = graphic.searchBitmap("スライム");
         bit_srime = graphic.processTrimmingBitmapData(srime,0,0,46,46);
 
-        start_user_interface = new UserInterface(global_data.getGlobalConstants(), graphic);
+        start_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
         start_user_interface.init();
 
         start_game_system = new StartGameSystem();

@@ -54,7 +54,7 @@ class WorldSurfaceView extends BaseSurfaceView {
         graphic.loadLocalImages(my_database_admin.getMyDatabase("WorldDB"), "World");
 
         map_user_interface.init();
-        world_game_system.init(map_user_interface, graphic, my_database_admin);
+        //world_game_system.init(map_user_interface, graphic, my_database_admin);
     }
 
     @Override
