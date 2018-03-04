@@ -29,7 +29,9 @@ public class CircleImagePlate extends CirclePlate {
 
     @Override
     public void update() {
-
+        if (update_flag == false){
+            return;
+        }
         if (user_interface.checkUI(touch_id, judge_way) == true) {
             draw_image_context = feedback_image_context;
             callBackEvent();
@@ -46,6 +48,9 @@ public class CircleImagePlate extends CirclePlate {
 
     @Override
     public void draw() {
+        if (draw_flag == false){
+            return;
+        }
         drawCollisionRange();
         graphic.bookingDrawBitmapData(draw_image_context);
     }

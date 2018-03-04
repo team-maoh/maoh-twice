@@ -13,6 +13,8 @@ import com.maohx2.ina.ItemData.ItemData;
 public class PlateGroup<T extends Plate> {
 
     T[] plates;
+    boolean update_flag = true;
+    boolean draw_flag = true;
 
     public PlateGroup(T[] _plates) {
 
@@ -21,14 +23,19 @@ public class PlateGroup<T extends Plate> {
 
     public void draw() {
 
-        for (int i = 0; i < plates.length; i++) {
-            plates[i].draw();
+        if(draw_flag == true) {
+            for (int i = 0; i < plates.length; i++) {
+                plates[i].draw();
+            }
         }
     }
 
     public void update() {
-        for (int i = 0; i < plates.length; i++) {
-            plates[i].update();
+
+        if(update_flag == true) {
+            for (int i = 0; i < plates.length; i++) {
+                plates[i].update();
+            }
         }
     }
 
@@ -41,6 +48,14 @@ public class PlateGroup<T extends Plate> {
         }
 
         return -1;
+    }
+
+    public Plate getPlate(int plate_num){
+
+        if(plate_num < plates.length) {
+            return plates[plate_num];
+        }
+        return null;
     }
 
     public boolean isTouchContentNum(int check_content_num) {
@@ -63,7 +78,7 @@ public class PlateGroup<T extends Plate> {
 
     public InventryData getInventryData(int content_index) {
 
-        if(content_index >= 0) {
+        if (content_index >= 0) {
             return plates[content_index].getInventryData();
         }
 
@@ -72,8 +87,22 @@ public class PlateGroup<T extends Plate> {
 
     public void setInventryData(InventryData _inventry_data, int content_index) {
         plates[content_index].setInventryData(_inventry_data);
+    }
+
+    public boolean getDrawFlag(){
+        return draw_flag;
+    }
+
+    public void setDrawFlag(boolean _draw_flag){
+        draw_flag = _draw_flag;
+    }
+
+    public boolean getUpdateFlag(){
+        return update_flag;
+    }
+
+    public void setUpdateFlag(boolean _update_flag){
+        update_flag = _update_flag;
+    }
+
 }
-}
-
-
-

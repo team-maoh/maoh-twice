@@ -24,6 +24,8 @@ public abstract class Plate {
     protected int alpha;
     protected UserInterface user_interface;
     protected Graphic graphic;
+    protected boolean update_flag;
+    protected boolean draw_flag;
 
 
     Plate(Graphic _graphic, UserInterface _user_interface, Constants.Touch.TouchWay _judge_way, Constants.Touch.TouchWay _feedback_way) {
@@ -35,6 +37,8 @@ public abstract class Plate {
         feedback_way = _feedback_way;
 
         alpha = 255;
+        update_flag = true;
+        draw_flag = true;
     }
 
     abstract public void draw();
@@ -49,6 +53,9 @@ public abstract class Plate {
 
     public void update() {
 
+        if (draw_flag == false){
+            return;
+        }
         if (user_interface.checkUI(touch_id, judge_way) == true) {
             alpha = 100;
             callBackEvent();
@@ -80,5 +87,26 @@ public abstract class Plate {
     public void setInventryData(InventryData _inventry_data){
         throw new Error("%☆イナガキ：setContentItem()はアイテム関係のボタンでしか使えません");
     }
+
+    public void changeInventryData(){
+        throw new Error("%☆イナガキ：setContentItem()はアイテム関係のボタンでしか使えません");
+    }
+
+    public boolean getDrawFlag(){
+        return draw_flag;
+    }
+
+    public void setDrawFlag(boolean _draw_flag){
+        draw_flag = _draw_flag;
+    }
+
+    public boolean getUpdateFlag(){
+        return update_flag;
+    }
+
+    public void setUpdateFlag(boolean _update_flag){
+        update_flag = _update_flag;
+    }
+
 
 }

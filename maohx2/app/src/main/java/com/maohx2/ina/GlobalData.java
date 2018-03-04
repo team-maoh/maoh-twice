@@ -6,6 +6,7 @@ package com.maohx2.ina;
 
 import android.app.Application;
 
+import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Draw.BitmapDataAdmin;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
