@@ -306,7 +306,7 @@ public class DungeonSelectManager {
             //侵入処理
 
             //TODO 仮
-            worldActivity.goToBattleActivity();
+            //worldActivity.goToBattleActivity();
 
             //worldModeAdmin.setDungeon(Constants.Mode.ACTIVATE.ACTIVE);
             enterSelectFlag = false;
