@@ -9,6 +9,7 @@ import static com.maohx2.ina.Constants.UnitStatus.Status;
 
 //そのダンジョン（周回回数やダンジョンレベルを考慮した）でのユニットの強さを保存したもので、これをユニットが持つ
 //takano : 敵キャラクターの能力値の上昇を計算した結果のステータスを保存したもの。
+//計算上、プレイヤーのデータもここに格納して使う
 public class BattleDungeonUnitData {
 
     String name;

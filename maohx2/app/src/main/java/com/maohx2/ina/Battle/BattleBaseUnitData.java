@@ -21,7 +21,7 @@ BattleDungeonUnitData : 敵キャラクターのステータス計算を行っ�
 BattleUnitAdmin : BattleUnitらを管理するクラス
 └管理 BattleUnit : ステータスや状態異常などを一括管理するための基底クラス。'現在の'HPなどを保持 (記載順序入れ替え by kmhanko)
      └継承 BattleEnemy : 敵に関するUnitデータ。位置情報を持つ。BattleDungeonUnitDataを保持する
-     └継承 BattleUnit : 自分に関するUnitデータ。位置情報を持たない。
+     └継承 BattlePlayer : 自分に関するUnitデータ。位置情報を持たない。
 
 CalcUnitStatus : 戦闘におけるステータス計算を行う関数を保持するクラス
 

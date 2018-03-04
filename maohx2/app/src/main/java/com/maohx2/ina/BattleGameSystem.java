@@ -14,6 +14,7 @@ import android.graphics.Paint;
 
 //by kmhanko
 import com.maohx2.ina.Battle.*;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
 
@@ -52,9 +53,11 @@ public class BattleGameSystem {
         text_box_admin.init(battle_user_interface);
         list_box_admin.init(battle_user_interface, graphic);
 
-        // by kmhanko
+        //by kmhanko
+        GlobalData globalData = (GlobalData) battle_activity.getApplication();
+        PlayerStatus playerStatus = globalData.getPlayerStatus();
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
-        battle_unit_admin.init(graphic, battle_user_interface, battle_activity, battleUnitDataAdmin);
+        battle_unit_admin.init(graphic, battle_user_interface, battle_activity, battleUnitDataAdmin, playerStatus);
     }
 
     //by kmhanko

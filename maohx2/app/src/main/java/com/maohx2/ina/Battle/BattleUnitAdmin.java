@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.BattleUserInterface;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 
 import static com.maohx2.ina.Constants.BattleUnit.BATTLE_UNIT_MAX;
 import static com.maohx2.ina.Constants.Touch.TouchState;
@@ -33,7 +34,7 @@ public class BattleUnitAdmin {
     Graphic graphic;
 
     //by kmhanko BattleUnitDataAdmin追加
-    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin) {
+    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus) {
 
         //引数の代入
         graphic = _graphic;
@@ -69,6 +70,9 @@ public class BattleUnitAdmin {
         }
         */
 
+        //TODO 仮。プレイヤーデータのコンバート
+        setPlayer(_playerStatus);
+
         //TODO 仮。敵の生成。本当はここじゃなくて戦闘画面に移動する画面エフェクト的な奴を処理した後とかに呼ぶとかする
         spawnEnemy();
     }
@@ -78,30 +82,20 @@ public class BattleUnitAdmin {
     public int setBattleUnitData(String enemyName, int repeatCount) {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (!battle_units[i].isExist()) {
-                //初期化処理 (データに寄らない)
-                battle_units[i].init();
-
-                //TODO : 敵の出現位置決定
-                battle_units[i].setPositionX(200 + 400 * (i - 1));
-                battle_units[i].setPositionY(300);
-
-                //TODO : 敵のタッチ半径 これは敵のデータベースか画像サイズ依存にするべきかも
-                battle_units[i].setRadius(50);
-
                 BattleBaseUnitData tempBattleBaseUnitData = battleUnitDataAdmin.getBattleUnitDataNum(enemyName);
-
-                BattleDungeonUnitData battleDungeonUnitData = new BattleDungeonUnitData();
-                battleDungeonUnitData.setName(enemyName);
-                battleDungeonUnitData.setStatus(tempBattleBaseUnitData.getStatus(repeatCount));
-                battleDungeonUnitData.setBonusStatus(tempBattleBaseUnitData.getBonusStatus(repeatCount));
-
-                //BattleDungeonUnitDataの格納やこのデータから読み出せるデータによる初期化
-                battle_units[i].initStatus(battleDungeonUnitData);
+                battle_units[i].setBattleUnitData(tempBattleBaseUnitData, repeatCount, i);//TODO: iはそのうち消す
                 return i;
             }
         }
         return -1;
     }
+
+    public void setPlayer(PlayerStatus playerStatus) {
+        //TODO
+        playerStatus.calcStatus();
+        battle_units[0].setBattleUnitData(playerStatus.makeBattleDungeonUnitData());
+    }
+
     public void spawnEnemy() {
         //TODO 仮。本当はダンジョンのデータなどを引数にして出現する敵をランダムなどで決定する
         setBattleUnitData("m014", 1);
@@ -133,7 +127,7 @@ public class BattleUnitAdmin {
 
         for (int i = 0; i < BATTLE_UNIT_MAX; i++) {
             if (battle_units[i].isExist() == true) {
-             //   battle_units[i].update();
+                //   battle_units[i].update();
             }
         }
 
@@ -160,11 +154,11 @@ public class BattleUnitAdmin {
 
         boolean result_flag = true;
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
-                result_flag = result_flag & !battle_units[i].isExist();
+            result_flag = result_flag & !battle_units[i].isExist();
         }
 
         //リザルト演出
-        if(result_flag == true){
+        if (result_flag == true) {
             battle_activity.finish();
         }
     }
@@ -191,7 +185,23 @@ public class BattleUnitAdmin {
             }
 
         }
+
+        //デバッグ用 プレイヤーのステータスを表示
+        debugPlayerStatusDraw();
+
     }
+
+    //by kmhanko
+    Paint playerStatusPaint = new Paint();
+    public void debugPlayerStatusDraw() {
+        playerStatusPaint.setTextSize(50);
+        graphic.bookingDrawText(battle_units[0].getName(), 0, 50, playerStatusPaint);
+        graphic.bookingDrawText(battle_units[0].getHitPoint() + " / " + battle_units[0].getMaxHitPoint(), 0, 100, playerStatusPaint);
+        graphic.bookingDrawText(""+ battle_units[0].getAttack(), 0, 150, playerStatusPaint);
+        graphic.bookingDrawText(""+battle_units[0].getDefence(), 0, 200, playerStatusPaint);
+        graphic.bookingDrawText(""+battle_units[0].getLuck(), 0, 250, playerStatusPaint);
+    }
+
 
     public BattleUnitAdmin() {}
 

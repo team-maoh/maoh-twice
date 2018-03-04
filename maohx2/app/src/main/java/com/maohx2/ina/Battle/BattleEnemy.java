@@ -28,13 +28,24 @@ public class BattleEnemy extends BattleUnit {
         radius = 0;
     }
 
-    @Override
+    /*
     public void initStatus(BattleDungeonUnitData _battleDungeonUnitData) {
         super.initStatus(_battleDungeonUnitData);
         Random rnd = new Random();
         wait_frame = rnd.nextInt(80);
         //by kmhanko
         attack_frame = _battleDungeonUnitData.getStatus(ATTACK_FRAME);
+        //attack_frame = 100;//データベースからの読み込み、レベルによる補正などもあり
+    }
+    */
+
+    @Override
+    protected void statusInit() {
+        super.statusInit();
+        Random rnd = new Random();
+        wait_frame = rnd.nextInt(80);
+        //by kmhanko
+        attack_frame = battleDungeonUnitData.getStatus(ATTACK_FRAME);
         //attack_frame = 100;//データベースからの読み込み、レベルによる補正などもあり
     }
 

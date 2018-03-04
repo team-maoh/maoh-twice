@@ -13,42 +13,82 @@ abstract public class BattleUnit {
     protected int hit_point;
     protected int attack;
     protected int attack_unit_num;
+    protected int defence;
+    protected int luck;
     protected boolean exist;
 
     //by kmhanko
     protected String name;
 
     //by kmhanko
-    private BattleDungeonUnitData battleDungeonUnitData;
+    protected BattleDungeonUnitData battleDungeonUnitData;
 
     //by kmhanko
     public void init() {
         exist = false;
     }
 
+    /* by kmhanko
     public void initStatus(BattleDungeonUnitData _battleDungeonUnitData){
-        /* by kmhanko
         max_hit_point = 10;
         hit_point = max_hit_point;
         attack = 1;
         attack_unit_num = -1;
-        */
-        exist = true;
-        setBattleDunogenUnitData(_battleDungeonUnitData);
-        statusInit();
     }
+    */
 
     //by kmhanko
-    private void setBattleDunogenUnitData(BattleDungeonUnitData _battleDungeonUnitData) {
+    protected void setBattleDunogenUnitData(BattleDungeonUnitData _battleDungeonUnitData) {
         battleDungeonUnitData = _battleDungeonUnitData;
     }
-    private void statusInit() {
+
+    protected void statusInit() {
+        exist = true;
         name = battleDungeonUnitData.getName();
         max_hit_point = battleDungeonUnitData.getStatus(HP);
         hit_point = max_hit_point;
         attack = battleDungeonUnitData.getStatus(ATTACK);
+        defence = battleDungeonUnitData.getStatus(DEFENSE);
+        luck = battleDungeonUnitData.getStatus(LUCK);
         attack_unit_num = -1; //TODO 不明
     }
+
+    //player用
+    public void setBattleUnitData(BattleDungeonUnitData _battleDungeonUnitData) {
+        //初期化処理 (データに寄らない)
+        init();
+
+        //格納
+        battleDungeonUnitData = _battleDungeonUnitData;
+
+        //BattleDungeonUnitDataをもとに初期化
+        statusInit();
+        return;
+    }
+
+    //enemy 用
+    public void setBattleUnitData(BattleBaseUnitData _battleBaseUnitData, int repeatCount, int i) {
+        //初期化処理 (データに寄らない)
+        init();
+
+        //TODO : 敵の出現位置決定
+        setPositionX(350 + 400 * (i - 1));
+        setPositionY(300);
+
+        //TODO : 敵のタッチ半径 これは敵のデータベースか画像サイズ依存にするべきかも
+        setRadius(50);
+
+        battleDungeonUnitData = new BattleDungeonUnitData();
+        battleDungeonUnitData.setName(_battleBaseUnitData.getName());
+        battleDungeonUnitData.setStatus(_battleBaseUnitData.getStatus(repeatCount));
+        battleDungeonUnitData.setBonusStatus(_battleBaseUnitData.getBonusStatus(repeatCount));
+
+        //BattleDungeonUnitDataをもとに初期化
+        statusInit();
+        return;
+    }
+
+
 
     //のちに技について保存したクラスを返すことになるかも
     //技の対象、ダメージ、技の名前、などなどを保存している
@@ -65,6 +105,8 @@ abstract public class BattleUnit {
     public int getMaxHitPoint() { return max_hit_point; }
     public int getHitPoint() { return hit_point; }
     public int getAttack(){ return attack; }
+    public int getDefence(){ return defence; }
+    public int getLuck(){ return luck; }
     public String getName() { return name; }
 
     // *** setter ***

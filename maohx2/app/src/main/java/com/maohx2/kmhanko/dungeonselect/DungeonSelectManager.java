@@ -1,5 +1,6 @@
 package com.maohx2.kmhanko.dungeonselect;
 
+import com.maohx2.ina.WorldActivity;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.WorldModeAdmin;
@@ -69,15 +70,18 @@ public class DungeonSelectManager {
 
     Paint paint = new Paint(); //TODO GeoMapとDungeonSelectの切り替え表示用。いつか消える
 
+    WorldActivity worldActivity;
+
     //いなの実装までの仮置き
     boolean enterSelectFlag = false;
 
-    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager) {
+    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, WorldActivity _worldActivity) {
         graphic = _graphic;
         userInterface = _userInterface;
         databaseAdmin = _databaseAdmin;
         geoSlotAdminManager = _geoSlotAdminManager;
         worldModeAdmin = _worldModeAdmin;
+        worldActivity = _worldActivity;
 
         setDatabase(databaseAdmin);
         loadMapIconPlate();
@@ -300,6 +304,9 @@ public class DungeonSelectManager {
 
         if (buttonID == 0 ) { //侵入する
             //侵入処理
+
+            //TODO 仮
+            worldActivity.goToBattleActivity();
 
             //worldModeAdmin.setDungeon(Constants.Mode.ACTIVATE.ACTIVE);
             enterSelectFlag = false;

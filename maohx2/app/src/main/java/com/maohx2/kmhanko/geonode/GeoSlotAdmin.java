@@ -7,6 +7,7 @@ import com.maohx2.ina.UI.UserInterface;
 
 // Added by kmhanko
 import com.maohx2.ina.WorldModeAdmin;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.ina.Draw.Graphic;
@@ -64,6 +65,7 @@ public class GeoSlotAdmin {
     TextBoxAdmin textBoxAdmin;
     UserInterface userInterface;
     WorldModeAdmin worldModeAdmin;
+    GeoSlotAdminManager geoSlotAdminManager;
 
     PlateGroup<GeoSlot> geoSlotGroup;
     PlateGroup<BoxTextPlate> releasePlateGroup;//解放する/やめる　の選択
@@ -75,12 +77,15 @@ public class GeoSlotAdmin {
     boolean isReleasePlateActive = false;
     //ListBox releaseList;//解放する/やめる　の選択
 
+    PlayerStatus playerStatus;
+
     //Rewrite by kmhanko
-    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, TextBoxAdmin _textBoxAdmin) {
+    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, TextBoxAdmin _textBoxAdmin, GeoSlotAdminManager _geoSlotAdminManager) {
         graphic = _graphic;
         userInterface = _user_interface;
         textBoxAdmin = _textBoxAdmin;
         worldModeAdmin = _worldModeAdmin;
+        geoSlotAdminManager = _geoSlotAdminManager;
 
         //TextBoxなどの初期化
         releaseTextBoxID = textBoxAdmin.createTextBox(650,600,1450,800,2);
@@ -167,6 +172,14 @@ public class GeoSlotAdmin {
                             @Override
                             public void callBackEvent() {
                                 //戻るボタンが押された時の処理
+
+                                //TODO DEBUG;
+                                geo_slots.get(0).setGeoObjectByItemID(4);
+                                geo_slots.get(1).setGeoObjectByItemID(1);
+                                geo_slots.get(2).setGeoObjectByItemID(2);
+                                geo_slots.get(3).setGeoObjectByItemID(3);
+                                geoSlotAdminManager.calcPlayerStatus();
+
                                 worldModeAdmin.setGeoSlotMap(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
                             }
