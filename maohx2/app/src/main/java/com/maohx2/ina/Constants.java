@@ -20,6 +20,17 @@ public final class Constants {
 
     public static class Palette {
         public static final int CIRCLE_COLOR[] = {Color.argb(100, 255, 0, 0), Color.argb(100, 255, 165, 0), Color.argb(100, 255, 255, 0), Color.argb(100, 0, 128, 0), Color.argb(100, 0, 255, 255), Color.argb(255, 0, 0, 255), Color.argb(255, 128, 0, 128), Color.argb(255, 255, 0, 128)};
+        public static final int PALETTE_ELEMENT_RADIUS_BIG = 30;
+        public static final int PALETTE_ELEMENT_RADIUS_SMALL = 10;
+        public static final int PALETTE_CENTER_RADIUS_BIG = 70;
+        public static final int PALETTE_CENTER_RADIUS_SMALL = 30;
+        public static final int PALETTE_ARRANGE_RADIUS = 120;
+
+    }
+
+    public static class Inventry {
+        public static final int INVENTRY_CONTENT_MAX = 10;
+        public static final int INVENTRY_DATA_MAX = 1000;
 
     }
 

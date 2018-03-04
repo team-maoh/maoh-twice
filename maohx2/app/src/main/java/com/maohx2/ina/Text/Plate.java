@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 
+import com.maohx2.ina.Arrange.InventryData;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.ItemData;
@@ -69,6 +70,14 @@ public abstract class Plate {
     }
 
     public void setContentItem(ItemData _content_item){
+        throw new Error("%☆イナガキ：setContentItem()はアイテム関係のボタンでしか使えません");
+    }
+
+    public InventryData getInventryData(){
+        throw new Error("%☆イナガキ：getContentItem()はアイテム関係のボタンでしか使えません");
+    }
+
+    public void setInventryData(InventryData _inventry_data){
         throw new Error("%☆イナガキ：setContentItem()はアイテム関係のボタンでしか使えません");
     }
 

@@ -9,17 +9,20 @@ package com.maohx2.ina.Arrange;
 
 public class PaletteAdmin {
 
-    Palette palette;
+    Palette palettes[] = new Palette[2];
 
-    public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic){
-        palette = new Palette(_graphic,_battle_user_interface);
+    public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic, Inventry _inventry){
+        palettes[0] = new Palette(_battle_user_interface, _graphic, _inventry,1000,600);
+        palettes[1] = new Palette(_battle_user_interface, _graphic, _inventry, 200,600);
     }
 
     public void update(){
-        palette.update();
+        palettes[0].updateSetting();
+        palettes[1].updateSetting();
     }
 
     public void draw(){
-        palette.draw();
+        palettes[0].draw();
+        palettes[1].draw();
     }
 }

@@ -2,6 +2,7 @@ package com.maohx2.ina.Text;
 
 import android.widget.Button;
 
+import com.maohx2.ina.Arrange.InventryData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.ItemData;
 
@@ -60,7 +61,18 @@ public class PlateGroup<T extends Plate> {
         plates[content_index].setContentItem(add_item);
     }
 
+    public InventryData getInventryData(int content_index) {
 
+        if(content_index >= 0) {
+            return plates[content_index].getInventryData();
+        }
+
+        return null;
+    }
+
+    public void setInventryData(InventryData _inventry_data, int content_index) {
+        plates[content_index].setInventryData(_inventry_data);
+}
 }
 
 
