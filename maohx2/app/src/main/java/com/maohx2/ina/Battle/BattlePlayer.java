@@ -4,7 +4,7 @@ package com.maohx2.ina.Battle;
  * Created by ina on 2017/09/21.
  */
 
-public class BattlePlayer extends BattleUnit{
+public class BattlePlayer extends BattleUnit {
 
     @Override
     public int getPositionX() {

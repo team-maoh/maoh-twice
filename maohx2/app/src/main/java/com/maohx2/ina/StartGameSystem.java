@@ -11,7 +11,6 @@ import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.InventryItem;
 import com.maohx2.ina.Arrange.Palette;
 import com.maohx2.ina.Arrange.PaletteAdmin;
-import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.EquipmentItemDataAdmin;
 import com.maohx2.ina.ItemData.ItemData;
@@ -20,6 +19,8 @@ import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
+//by kmhanko
+import com.maohx2.kmhanko.Battle.BattleUnitAdmin;
 
 /**
  * Created by ina on 2017/10/15.
