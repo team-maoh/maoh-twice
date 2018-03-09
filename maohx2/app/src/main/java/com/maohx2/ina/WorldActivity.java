@@ -13,6 +13,8 @@ import android.widget.RelativeLayout;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+import com.maohx2.kmhanko.sound.SoundAdmin;
+
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
 
@@ -21,15 +23,22 @@ public class WorldActivity extends Activity {
 
     RelativeLayout layout;
 
+    //by kmhanko
+    WorldSurfaceView worldSurfaceView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         layout = new RelativeLayout(this);
         layout.setBackgroundColor(Color.WHITE);
-        layout.addView(new WorldSurfaceView(this));
+        //by kmhanko
+        worldSurfaceView = new WorldSurfaceView(this);
+        layout.addView(worldSurfaceView);
+
         setContentView(layout);
     }
+
 }
 
 
@@ -37,11 +46,12 @@ class WorldSurfaceView extends BaseSurfaceView {
 
     UserInterface map_user_interface;
     WorldGameSystem world_game_system;
-    Activity map_activity;
+    WorldActivity map_activity;
     MyDatabaseAdmin my_database_admin;
     Graphic graphic;
+    SoundAdmin soundAdmin;
 
-    public WorldSurfaceView(Activity _map_activity) {
+    public WorldSurfaceView(WorldActivity _map_activity) {
         super(_map_activity);
         map_activity = _map_activity;
 
@@ -53,8 +63,10 @@ class WorldSurfaceView extends BaseSurfaceView {
         my_database_admin.addMyDatabase("WorldDB", "LocalWorldImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("WorldDB"), "World");
 
+        soundAdmin = new SoundAdmin(map_activity, my_database_admin);
+
         map_user_interface.init();
-        //world_game_system.init(map_user_interface, graphic, my_database_admin);
+        world_game_system.init(map_user_interface, graphic, my_database_admin, soundAdmin, _map_activity);
     }
 
     @Override
@@ -64,14 +76,14 @@ class WorldSurfaceView extends BaseSurfaceView {
         //graphic.bookingDrawBitmapName("キノコの森",300,590);
         world_game_system.draw();
 
-
+/*
         if (touch_state == TouchState.DOWN) {
             thread = null;
             Intent intent = new Intent(map_activity, DungeonActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             map_activity.startActivity(intent);
-
         }
-
+*/
     }
+
 }

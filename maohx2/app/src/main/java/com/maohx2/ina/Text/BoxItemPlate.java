@@ -32,6 +32,9 @@ public class BoxItemPlate extends BoxPlate {
 
     @Override
     public void update() {
+        if (update_flag == false){
+            return;
+        }
 
         if (user_interface.checkUI(touch_id, judge_way) == true) {
             button_paint.setAlpha(255);
@@ -44,7 +47,9 @@ public class BoxItemPlate extends BoxPlate {
 
     @Override
     public void draw() {
-
+        if (draw_flag == false){
+            return;
+        }
         graphic.bookingDrawRect(left, up, right, down, button_paint);
         graphic.bookingDrawText(content_item.getName(), left+(int)(content_item.getItemImage().getWidth()*1.7+(int)((down-up)*(1.0/5))), (int)(down-(down-up)*(1.0/5)), text_paint);
         //graphic.bookingDrawText(content_item.getName(), left+(int)(content_item.getItemImage().getWidth()*1.7), 100, text_paint);

@@ -232,40 +232,40 @@ public class GeoSlot extends CircleImagePlate {
     }
 
     //itemIDを元に、GeoObjectの数値を代入する。デバッグ用
-    public void setGeoObjectByItemID() {
+    public void setGeoObjectByItemID(int id) {
         //TODO: 正式にはGeoObjectのDatabaseなどが完成してから書き直す。itemID→GeoObjectDatabaseROWIDへの変換も必要だろう。
-        /*
+
         GeoObjectData geoObjectData = null;
-        switch(item_id) {
+        switch(id) {
             case 0:
                 geoObjectData = new GeoObjectData(50,0,0,0,1.0,1.0,1.0,1.0);
                 this.pushGeoObject(geoObjectData);
                 break;
             case 1:
-                geoObjectData = new GeoObjectData(0,20,0,0,1.0,1.0,1.0,1.0);
+                geoObjectData = new GeoObjectData(5,20,0,0,1.0,1.0,1.0,1.0);
                 this.pushGeoObject(geoObjectData);
                 break;
             case 2:
-                geoObjectData = new GeoObject(0,10,0,0,1.0,1.0,1.0,1.0);
+                geoObjectData = new GeoObjectData(5,10,0,0,1.0,1.0,1.0,1.0);
                 this.pushGeoObject(geoObjectData);
                 break;
             case 3:
-                geoObjectData = new GeoObject(0,0,0,0,1.5,1.0,1.0,1.0);
+                geoObjectData = new GeoObjectData(5,0,0,0,1.5,1.0,1.0,1.0);
                 this.pushGeoObject(geoObjectData);
                 break;
             case 4:
-                geoObjectData = new GeoObject(20,10,0,0,1.0,1.0,1.0,1.0);
+                geoObjectData = new GeoObjectData(20,10,0,0,1.0,1.0,1.0,1.0);
                 this.pushGeoObject(geoObjectData);
                 break;
             case 5:
-                geoObjectData = new GeoObject(0,0,0,0,1.2,1.2,1.0,1.0);
+                geoObjectData = new GeoObjectData(0,0,0,0,1.2,1.2,1.0,1.0);
                 this.pushGeoObject(geoObjectData);
                 break;
             default:
                 this.popGeoObject();
                 break;
         }
-        */
+
 
     }
 
@@ -340,7 +340,8 @@ public class GeoSlot extends CircleImagePlate {
             if (isEventClearAll() && isPushThisObject(null)) {
                 //GeoSlotを設置する
                 setItemID(user_interface.getItemID());
-                setGeoObjectByItemID();
+                //TODO geoをセットする関数
+                //setGeoObjectByItemID();
                 geoSlotAdmin.calcGeoSlot();
             }
         } else {

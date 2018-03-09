@@ -29,7 +29,9 @@ public class BoxImagePlate extends BoxPlate {
 
     @Override
     public void update() {
-
+        if (update_flag == false){
+            return;
+        }
         if (user_interface.checkUI(touch_id, judge_way) == true) {
             draw_image_context = feedback_image_context;
             callBackEvent();
@@ -41,12 +43,17 @@ public class BoxImagePlate extends BoxPlate {
     }
 
     public void drawCollisionRange(){
-
+        if (draw_flag == false){
+            return;
+        }
         graphic.bookingDrawRect(left, up, right, down);
     }
 
     @Override
     public void draw() {
+        if (draw_flag == false){
+            return;
+        }
         graphic.bookingDrawBitmapData(draw_image_context);
     }
 }

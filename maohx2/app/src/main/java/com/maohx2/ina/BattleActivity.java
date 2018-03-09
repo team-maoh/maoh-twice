@@ -58,7 +58,8 @@ class BattleSurfaceView extends BaseSurfaceView{
         battle_user_interface.init();
 
         game_system = new BattleGameSystem();
-        game_system.init(holder, graphic,  battle_user_interface, battle_activity);
+        // by kmhanko
+        game_system.init(holder, graphic, my_database_admin,  battle_user_interface, battle_activity);
 
     }
 
