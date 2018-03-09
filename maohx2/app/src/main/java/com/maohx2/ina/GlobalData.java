@@ -22,6 +22,7 @@ public class GlobalData extends Application {
 
     //by kmhanko
     PlayerStatus playerStatus;
+    Inventry geoInventry;
 
     public void init(int disp_x, int disp_y) {
         g_my_database_admin = new MyDatabaseAdmin(this);
@@ -33,6 +34,7 @@ public class GlobalData extends Application {
 
         //by kmhanko
         playerStatus = new PlayerStatus(g_my_database_admin);
+        //geoInventry = new Inventry();
     }
 
     //ゲッターとか
@@ -40,5 +42,5 @@ public class GlobalData extends Application {
     public GlobalConstants getGlobalConstants() { return g_constants;}
     // by kmhanko
     public PlayerStatus getPlayerStatus() { return playerStatus; }
-
+    public Inventry getGeoInventry() { return geoInventry; }
 }

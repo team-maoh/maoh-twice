@@ -61,6 +61,7 @@ public class StartGameSystem {
 
 
 
+
         palette_admin.update();
     }
 

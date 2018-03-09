@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.ListBoxAdmin;
@@ -54,6 +55,9 @@ public class WorldGameSystem {
 
     WorldActivity worldActivity;
 
+    //引数にUI,Graphicが入って居るためGlobalDataに設置できない
+    Inventry geoInventry;
+
     public void init(UserInterface _map_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity) {
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
@@ -63,6 +67,9 @@ public class WorldGameSystem {
         worldActivity = _worldActivity;
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
         PlayerStatus playerStatus = globalData.getPlayerStatus();
+        //GeoInventry = globalData.getGeoInventry();
+
+        geoInventry = new Inventry(map_user_interface, graphic);
 
         worldModeAdmin = new WorldModeAdmin();
         worldModeAdmin.initWorld();
