@@ -1,5 +1,6 @@
 package com.maohx2.ina;
 
+import android.app.Activity;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
@@ -9,6 +10,7 @@ import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.ListBoxAdmin;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
 import com.maohx2.kmhanko.effect.EffectAdmin;
@@ -48,11 +50,22 @@ public class WorldGameSystem {
 
     UserInterface map_user_interface;
 
-    public void init(UserInterface _map_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin) {
+    WorldModeAdmin worldModeAdmin;
+
+    WorldActivity worldActivity;
+
+    public void init(UserInterface _map_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity) {
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
         soundAdmin = _soundAdmin;
         map_user_interface = _map_user_interface;
+
+        worldActivity = _worldActivity;
+        GlobalData globalData = (GlobalData) worldActivity.getApplication();
+        PlayerStatus playerStatus = globalData.getPlayerStatus();
+
+        worldModeAdmin = new WorldModeAdmin();
+        worldModeAdmin.initWorld();
 
         soundAdmin.loadSoundPack("basic");
 
@@ -63,9 +76,9 @@ public class WorldGameSystem {
         text_box_admin.setTextBoxExists(1,false);
 
         //list_box_admin = new ListBoxAdmin();
-        //geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, databaseAdmin, text_box_admin);
+        geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus);
         //geo_slot_admin = new GeoSlotAdmin();
-        dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, databaseAdmin);
+        dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, geoSlotAdminManager, worldActivity);
 
         itemDataAdminManager = new ItemDataAdminManager();
         itemShopAdmin = new ItemShopAdmin();
@@ -75,10 +88,8 @@ public class WorldGameSystem {
 
         itemDataAdminManager.init(databaseAdmin,graphic);
 
-        itemShopAdmin.init(graphic, map_user_interface, databaseAdmin, text_box_admin, itemDataAdminManager);
-        //itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.GEO_OBJECT, "debug");
-
-        //geoSlotAdminManager.setActiveGeoSlotAdmin("森");
+        itemShopAdmin.init(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager);
+        itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "debug");
 
         canvas = null;
 
@@ -103,8 +114,18 @@ public class WorldGameSystem {
         }
         */
 
-        //geoSlotAdminManager.update();
-        dungeonSelectManager.update();
+        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getGetSlotMap())) {
+            geoSlotAdminManager.update();
+        }
+        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getWorldMap())) {
+            dungeonSelectManager.update();
+        }
+        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getShop())) {
+            itemShopAdmin.update();
+        }
+        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getPresent())) {
+        }
+
         //itemShopAdmin.update();
         text_box_admin.update();
         effectAdmin.update();
@@ -114,10 +135,19 @@ public class WorldGameSystem {
     public void draw() {
 
         //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
-        //geoSlotAdminManager.draw();
 
-        dungeonSelectManager.draw();
-        //itemShopAdmin.draw();
+        if (worldModeAdmin.getIsDraw(worldModeAdmin.getGetSlotMap())) {
+            geoSlotAdminManager.draw();
+        }
+        if (worldModeAdmin.getIsDraw(worldModeAdmin.getWorldMap())) {
+            dungeonSelectManager.draw();
+        }
+        if (worldModeAdmin.getIsDraw(worldModeAdmin.getShop())) {
+            itemShopAdmin.draw();
+        }
+        if (worldModeAdmin.getIsDraw(worldModeAdmin.getPresent())) {
+        }
+
         text_box_admin.draw();
         effectAdmin.draw();
 

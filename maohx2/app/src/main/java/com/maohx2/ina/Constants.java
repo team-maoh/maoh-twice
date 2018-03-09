@@ -1,6 +1,8 @@
 package com.maohx2.ina;
 
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.Paint;
 
 /**
  * Created by ina on 2017/09/21.
@@ -93,4 +95,25 @@ public final class Constants {
             BOX_
         }
     }
+
+
+    // *** takano ***
+    public static class WorldMap {
+        public enum SELECT_MODE {
+            DUNGEON_SELECT,
+            GEOMAP_SELECT,
+            SELECT_MODE_NUM
+        }
+    }
+
+    public static class Mode {
+        public enum ACTIVATE {
+            STOP,
+            DRAW_ONLY,
+            ACTIVE,
+        }
+    }
+
+    // *** takanoここまで ***
+
 }

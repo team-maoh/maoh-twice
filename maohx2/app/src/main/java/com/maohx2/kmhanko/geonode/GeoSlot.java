@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Draw.ImageContext;
 import com.maohx2.ina.Text.CircleImagePlate;
@@ -34,10 +35,8 @@ public class GeoSlot extends CircleImagePlate {
     //** Created by kmhanko **//
 
     static final int GEO_SLOT_CHILDREN_MAX = 8;
-    static final int SCALE = 10;
-    GeoSlotAdmin geoSlotAdmin;//staticにしてはならない。いくつかのGeoSlotAdminがあるため。
-    //static UserInterface userInterface;
-    UserInterface userInterface;
+
+    GeoSlotAdmin geoSlotAdmin; //staticにしてはならない。いくつかのGeoSlotAdminがあるため。
     static TextBoxAdmin textBoxAdmin;
     static MyDatabase geoSlotEventDB;
 
@@ -51,9 +50,11 @@ public class GeoSlot extends CircleImagePlate {
     String restriction;
 
     //static Graphic graphic;
-    Graphic graphic;
+    //Graphic graphic;
 
     GeoObjectData geoObjectData;
+
+    ImageContext notEventCrearImageContext;
 
     //TODO:デバッグ用。セーブデータの用意が必要
     boolean isReleased = false;
@@ -95,14 +96,13 @@ public class GeoSlot extends CircleImagePlate {
         int size = tree_code.get(0);
         tree_code.remove(0);
 
-        /*
         for (int i = 0; i < size; i++) {
             children_slot.add(new GeoSlot(
                     geoSlotAdmin, graphic, user_interface,
-                    judge_way, feedback_way, position, default_image_context, feedback_image_context));
+                    judge_way, feedback_way, new int[] {0,0,0}, default_image_context, feedback_image_context));
             tree_code = children_slot.get(children_slot.size() - 1).makeGeoSlotInstance(tree_code, this);
         }
-        */
+
         return tree_code;
     }
 
@@ -175,7 +175,6 @@ public class GeoSlot extends CircleImagePlate {
                 buf_geo_slot.addAll(children_slot.get(i).getGeoSlots());
             }
         }
-
         return buf_geo_slot;
     }
 
@@ -233,40 +232,40 @@ public class GeoSlot extends CircleImagePlate {
     }
 
     //itemIDを元に、GeoObjectの数値を代入する。デバッグ用
-    public void setGeoObjectByItemID() {
+    public void setGeoObjectByItemID(int id) {
         //TODO: 正式にはGeoObjectのDatabaseなどが完成してから書き直す。itemID→GeoObjectDatabaseROWIDへの変換も必要だろう。
-        /*
+
         GeoObjectData geoObjectData = null;
-        switch(item_id) {
+        switch(id) {
             case 0:
                 geoObjectData = new GeoObjectData(50,0,0,0,1.0,1.0,1.0,1.0);
                 this.pushGeoObject(geoObjectData);
                 break;
             case 1:
-                geoObjectData = new GeoObjectData(0,20,0,0,1.0,1.0,1.0,1.0);
+                geoObjectData = new GeoObjectData(5,20,0,0,1.0,1.0,1.0,1.0);
                 this.pushGeoObject(geoObjectData);
                 break;
             case 2:
-                geoObjectData = new GeoObject(0,10,0,0,1.0,1.0,1.0,1.0);
+                geoObjectData = new GeoObjectData(5,10,0,0,1.0,1.0,1.0,1.0);
                 this.pushGeoObject(geoObjectData);
                 break;
             case 3:
-                geoObjectData = new GeoObject(0,0,0,0,1.5,1.0,1.0,1.0);
+                geoObjectData = new GeoObjectData(5,0,0,0,1.5,1.0,1.0,1.0);
                 this.pushGeoObject(geoObjectData);
                 break;
             case 4:
-                geoObjectData = new GeoObject(20,10,0,0,1.0,1.0,1.0,1.0);
+                geoObjectData = new GeoObjectData(20,10,0,0,1.0,1.0,1.0,1.0);
                 this.pushGeoObject(geoObjectData);
                 break;
             case 5:
-                geoObjectData = new GeoObject(0,0,0,0,1.2,1.2,1.0,1.0);
+                geoObjectData = new GeoObjectData(0,0,0,0,1.2,1.2,1.0,1.0);
                 this.pushGeoObject(geoObjectData);
                 break;
             default:
                 this.popGeoObject();
                 break;
         }
-        */
+
 
     }
 
@@ -297,6 +296,14 @@ public class GeoSlot extends CircleImagePlate {
         */
     }
 
+
+    @Override
+    public void draw() {
+        super.draw();
+        if (!isEventClear()) {
+            graphic.bookingDrawBitmapData(notEventCrearImageContext);
+        }
+    }
     /*
     public void draw(boolean isFocused) {
         if (isFocused) {
@@ -316,10 +323,12 @@ public class GeoSlot extends CircleImagePlate {
     }
     */
 
+    /*
     public void update() {
         super.update();
         //touchEvent();
     }
+    */
 
     @Override
     public void callBackEvent() {
@@ -330,8 +339,9 @@ public class GeoSlot extends CircleImagePlate {
         if (geoSlotAdmin.isHoldGeoObject()) {
             if (isEventClearAll() && isPushThisObject(null)) {
                 //GeoSlotを設置する
-                setItemID(userInterface.getItemID());
-                setGeoObjectByItemID();
+                setItemID(user_interface.getItemID());
+                //TODO geoをセットする関数
+                //setGeoObjectByItemID();
                 geoSlotAdmin.calcGeoSlot();
             }
         } else {
@@ -415,12 +425,8 @@ public class GeoSlot extends CircleImagePlate {
         is_exist = _is_exist;
     }
 
-    public int getPositionX() {
-        return position_x;
-    }
-    public int getPositionY() {
-        return position_y;
-    }
+    //public int getPositionX() { return position_x; }
+    //public int getPositionY() { eturn position_y; }
 
 
     public String getReleaseEvent() { return release_event; }
@@ -428,15 +434,31 @@ public class GeoSlot extends CircleImagePlate {
     public void setReleaseEvent(String _release_event) { release_event = _release_event; }
     public void setRestriction(String _restriction) { restriction = _restriction; }
 
+    //TODO: inaの関数ができたら消す
+    public void setParam(int _x, int _y, int _r) {
+        x = _x;
+        y = _y;
+        radius = _r;
+        touch_id = user_interface.setCircleTouchUI(x, y, radius);
+        //TODO: 前の奴を消せないので格納上の問題あり
+
+        notEventCrearImageContext = graphic.makeImageContext(graphic.searchBitmap("e51-0"), x , y, 1.0f, 1.0f, 0.0f, 255, false);
+
+        default_image_context = graphic.makeImageContext(graphic.searchBitmap("neco"), x, y, 5.0f, 5.0f, 0.0f, 255, false);
+        draw_image_context = graphic.makeImageContext(graphic.searchBitmap("neco"), x, y, 5.0f, 5.0f, 0.0f, 255, false);
+        feedback_image_context = graphic.makeImageContext(graphic.searchBitmap("neco"), x, y, 6.0f, 6.0f, 0.0f, 255, false);
+    }
+
     //** Created by ina **//
 
     //delete by kmhanko
     //Paint paint;
 
-    int position_x;
-    int position_y;
-    int radius;
-    int touch_id;
+    //delete by kmhanko
+    //int position_x;
+    //int position_y;
+    //int radius;
+    //int touch_id;
 
     int item_id;
 
@@ -473,11 +495,14 @@ public class GeoSlot extends CircleImagePlate {
     }
 
 
+    //delete by kmhanko
+    /*
     public void setParam(int _position_x,int _position_y,int _radius){
         position_x = _position_x;
         position_y = _position_y;
         radius = _radius;
     }
+    */
 
     public int getTouchID(){
 

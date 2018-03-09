@@ -63,7 +63,7 @@ public class MyDatabase {
                 mDbHelper.getReadableDatabase();
                 //assets内のDBファイルを、内部DBのファイルにコピーする
                 mDbHelper.copyDataBaseFromAssets();
-                mDbHelper.close();
+                mDbHelper.close();//TODO 初回起動時に落ちるバグの対症療法
                 mDbHelper.getReadableDatabase();
                 mDbHelper.copyDataBaseFromAssets();
                 //assets内のDBファイルを、内部DBのファイルにコピーする
@@ -78,9 +78,8 @@ public class MyDatabase {
                 db = mDbHelper.getWritableDatabase();
             }
         } catch (IOException e) {
-            //TODO : エラー処理
             e.printStackTrace();
-            throw new Error("タカノ : "+ e);
+            throw new Error("☆タカノ : MyDatabase#init"+ e);
         }
 
 /*
@@ -93,7 +92,7 @@ public class MyDatabase {
 
                 //assets内のDBファイルを、内部DBのファイルにコピーする
                 mDbHelper.copyDataBaseFromAssets();
-                mDbHelper.close();//TODO:close入れるとうまくいく。よくわからんけど
+                mDbHelper.close();
 
                 mDbHelper.getReadableDatabase();
                 mDbHelper.copyDataBaseFromAssets();
@@ -110,7 +109,6 @@ public class MyDatabase {
                 db = mDbHelper.getWritableDatabase();
             }
         } catch (IOException e) {
-            //TODO : エラー処理
             e.printStackTrace();
             throw new Error("☆タカノ : "+ e);
         }
@@ -137,7 +135,6 @@ public class MyDatabase {
                 db = mDbHelper.getWritableDatabase();
             }
         } catch (IOException e) {
-            //TODO : エラー処理
             e.printStackTrace();
             throw new Error("☆タカノ : "+ e);
         }
@@ -580,7 +577,6 @@ public class MyDatabase {
         if (buf.size() == 1) {
             return buf.get(0);
         } else {
-            //TODO:わかりやすい値
             return -999999;
         }
     }
