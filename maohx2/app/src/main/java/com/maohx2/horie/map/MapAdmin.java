@@ -75,7 +75,7 @@ public class MapAdmin {
     //drawMap2用
 //    Point map_size = new Point(80, 50);//x : 左右幅, y : 上下幅
     Point map_size = new Point(60, 40);
-    int magnification = 256;
+    int magnification = 64;
     int time = 0;//アニメーションタイミング用
 
     Point offset = new Point(0, 0);
@@ -140,6 +140,7 @@ public class MapAdmin {
         BitmapData auto_tile_block_side_wall = graphic.searchBitmap("cave_wall_f_01");//側壁のauto_tileの元データ
         floor_tile = graphic.searchBitmap("cave_floor_01");
         BitmapData cave_hole_raw = graphic.searchBitmap("cave_hole_01");//穴（アニメーション）
+        BitmapData lava_hole_raw = graphic.searchBitmap("lava_hole_f_01");//穴（アニメーション）
         //階段画像4分割
         stair_tile = graphic.searchBitmap("step");
         stair_tile_div[0] = graphic.processTrimmingBitmapData(stair_tile, 0, 0, 32, 32);
@@ -149,9 +150,9 @@ public class MapAdmin {
         auto_tile_admin = new AutoTileAdmin(graphic);
         //アニメーション用、横3分割
         //BitmapData cave_hole_div[] = new BitmapData[3];
-        cave_hole_div[0] = graphic.processTrimmingBitmapData(cave_hole_raw, 0, 0, 32, 32*5);
-        cave_hole_div[1] = graphic.processTrimmingBitmapData(cave_hole_raw, 32, 0, 32, 32*5);
-        cave_hole_div[2] = graphic.processTrimmingBitmapData(cave_hole_raw, 64, 0, 32, 32*5);
+        cave_hole_div[0] = graphic.processTrimmingBitmapData(lava_hole_raw, 0, 0, 32, 32*5);
+        cave_hole_div[1] = graphic.processTrimmingBitmapData(lava_hole_raw, 32, 0, 32, 32*5);
+        cave_hole_div[2] = graphic.processTrimmingBitmapData(lava_hole_raw, 64, 0, 32, 32*5);
 
         for(int j = 0;j < 3; j++) {
             auto_tile_cave_hole[j] = new AutoTile();
@@ -1021,10 +1022,12 @@ public class MapAdmin {
         Paint l_gray_paint = new Paint();
         Paint green_paint = new Paint();
         Room now_point_room = new Room();
-        boolean is_debug_mode = true;
+        boolean is_debug_mode = false;
         int step = 10;
         boolean go_stair_flag = false;
-        if(map_data[worldToMap(offset.x)][worldToMap(offset.y)].isStairs()){
+        int mx = worldToMap(camera.getCameraOffset().x+800);
+        int my = worldToMap(camera.getCameraOffset().y+450);
+        if(map_data[mx][my].isStairs()){
             goNextFloor();
         }
 
@@ -1115,7 +1118,7 @@ public class MapAdmin {
                 }
             }
             camera.setCameraOffset(offset.x, offset.y);
-            map_offset.set(camera.getCameraOffset().x, camera.getCameraOffset().y);
+            map_offset.set(getOffset_x()+800, getOffset_y()+450);
         }
         else {
 //            offset.set(800, 1300);
@@ -1190,7 +1193,8 @@ public class MapAdmin {
             paint.setColor(Color.RED);
             graphic.bookingDrawCircle(camera.convertToNormCoordinateX(offset.x), camera.convertToNormCoordinateY(offset.y), 20, paint);
         }
-        drawSmallMap2(offset.x, offset.y);
+        updateMiniMapDispState(worldToMap(camera.getCameraOffset().x+800), worldToMap(camera.getCameraOffset().y+450));
+        drawSmallMap3(camera.getCameraOffset().x+800, camera.getCameraOffset().y+450);
         //画像表示デバッグ用
         //graphic.bookingDrawBitmapData(auto_tile_cave_hole[1].raw_auto_tile[1], 0, 0, 5, 5, 0, 255, true);
     }
@@ -1914,6 +1918,40 @@ public class MapAdmin {
         graphic.bookingDrawCircle(small_map_offset_x + offset.x*small_map_mag/magnification, small_map_offset_y + offset.y*small_map_mag/magnification, 10, yellow_paint);
     }
 
+    public void drawSmallMap3(int x, int y){
+        Paint blue_paint = new Paint();
+        Paint red_paint = new Paint();
+        Paint green_paint = new Paint();
+        Paint yellow_paint = new Paint();
+        int small_map_mag = 8;
+        int small_map_offset_x = 0;
+        int small_map_offset_y = 0;
+//        int countMiniDrawRect = 0;
+        if (map_data[worldToMap(x)][worldToMap(y)].isRoom()) {
+            section_admin.getNowRoom(worldToMap(x), worldToMap(y)).setDispflag(true);
+        }
+        blue_paint.setARGB(200, 0, 0, 255);
+        section_admin.drawAllRoom(graphic, blue_paint, small_map_mag);
+        for (int i = 0; i < this.getMap_size_x(); i++) {
+            for (int j = 0; j < this.getMap_size_y(); j++) {
+                //通路
+                if(!isWall(i, j) && !isStairs(i, j) && !isRoom(i, j) && isDisp(i, j)){
+                    red_paint.setARGB(100,255,0,0);
+                    graphic.bookingDrawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, red_paint);
+//                    countMiniDrawRect++;
+                }
+                //階段
+                else if (isStairs(i, j) && isDisp(i, j)) {
+                    green_paint.setColor(Color.GREEN);
+                    graphic.bookingDrawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, green_paint);
+//                    countMiniDrawRect++;
+                }
+            }
+        }
+//        System.out.println("countMiniDrawRect = "+countMiniDrawRect);
+        yellow_paint.setColor(Color.YELLOW);
+        graphic.bookingDrawCircle(small_map_offset_x + x*small_map_mag/magnification, small_map_offset_y + y*small_map_mag/magnification, 10, yellow_paint);
+    }
 
     //ミニマップの表示を状態を更新
     public void updateMiniMapDispState(int x, int y){

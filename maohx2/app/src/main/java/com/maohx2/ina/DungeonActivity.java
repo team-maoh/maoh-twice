@@ -99,11 +99,11 @@ class DungeonSurfaceView extends BaseSurfaceView{
         game_system.update();
         game_system.draw();
 
-        if(touch_state == TouchState.DOWN) {
-            thread = null;
-            Intent intent = new Intent(dungeon_activity, BattleActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            dungeon_activity.startActivity(intent);
-        }
+//        if(touch_state == TouchState.DOWN) {
+//            thread = null;
+//            Intent intent = new Intent(dungeon_activity, BattleActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//            dungeon_activity.startActivity(intent);
+//        }
     }
 }

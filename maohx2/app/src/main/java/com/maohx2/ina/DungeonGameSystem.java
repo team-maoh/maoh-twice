@@ -40,12 +40,12 @@ public class DungeonGameSystem {
 
 
     public void update() {
-        //map_object_admin.update();
+        map_object_admin.update();
     }
 
     public void draw() {
         map_admin.drawMap_for_autotile_4div_combine_animation();
-        //map_object_admin.draw();
+        map_object_admin.draw();
         //graphic.bookingDrawCircle(0,0,10,paint);
         graphic.draw();
     }
