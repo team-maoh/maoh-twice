@@ -13,7 +13,7 @@ public class InventryData {
 
     public InventryData(ItemData _item_data, int _item_num){
         item_data = _item_data;
-        int item_num = _item_num;
+        item_num = _item_num;
     }
 
     public int getItemNum(){return item_num;}

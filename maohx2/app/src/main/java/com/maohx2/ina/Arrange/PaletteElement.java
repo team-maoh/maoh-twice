@@ -47,7 +47,7 @@ public class PaletteElement {
     public void drawSmallAndItem() {
         graphic.bookingDrawCircle(x, y, PALETTE_ELEMENT_RADIUS_SMALL, paint);
         if(item_data != null){
-            graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y);
+            graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y,1,1,0,255,false);
         }
     }
 
@@ -58,7 +58,7 @@ public class PaletteElement {
     public void drawBigAndItem(){
         graphic.bookingDrawCircle(x, y, PALETTE_ELEMENT_RADIUS_BIG, paint);
         if(item_data != null) {
-            graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y);
+            graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y,1.5f,1.5f,0,255,false);
         }
     }
 

@@ -30,12 +30,18 @@ public class CircleTextPlate extends CirclePlate {
 
     @Override
     public void update(){
+        if (update_flag == false){
+            return;
+        }
         super.update();
         button_paint.setAlpha(alpha);
     }
 
     @Override
     public void draw() {
+        if (draw_flag == false){
+            return;
+        }
         graphic.bookingDrawCircle(x, y, radius, button_paint);
         button_paint.setColor(Color.argb(255, 0, 0, 0));
         //TODO:テキスト中央ぞろえ

@@ -30,6 +30,7 @@ public abstract class ItemDataAdmin<T extends ItemData>  {
     //public void init(MyDatabaseAdmin databaseAdmin) {}
 
     public ItemData getOneDataByName(String _name) {
+
         for(int i = 0; i < datas.size(); i++) {
             if (datas.get(i).getName().equals(_name)) {
                 return datas.get(i);

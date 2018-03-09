@@ -29,12 +29,18 @@ public class BoxTextPlate extends BoxPlate {
 
     @Override
     public void update(){
+        if (update_flag == false){
+            return;
+        }
         super.update();
         button_paint.setAlpha(alpha);
     }
 
     @Override
     public void draw(){
+        if (draw_flag == false){
+            return;
+        }
         //TODO:テキスト中央ぞろえ
         graphic.bookingDrawRect(left, up, right, down, button_paint);
         graphic.bookingDrawText(text, left, up + (down - up)*3/4, text_paint);
