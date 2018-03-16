@@ -1,7 +1,11 @@
 package com.maohx2.kmhanko.geonode;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.ina.Arrange.Inventry;
+import com.maohx2.ina.Arrange.InventryData;
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Draw.BitmapData;
+import com.maohx2.ina.Draw.ImageContext;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.UI.UserInterface;
 
@@ -40,6 +44,8 @@ import com.maohx2.ina.Text.ListBox;
             1 - 0
 
      */
+
+    //imageMagic
 
 public class GeoSlotAdmin {
 
@@ -121,6 +127,7 @@ public class GeoSlotAdmin {
         //TODO 拡大縮小を動的に行う場合は毎回このmakeImageContextを呼ぶと言うことになるわけだが。
         //TODO そもそも画像の表示位置はContextに入っているから毎回呼ぶと言うことになるわけだが。
         //TODO Contextをベースとして、bookingの時の値をオフセットにするとか？
+        //TODO 0はとりあえずの値。
 
         //このメソッドを呼ぶと、全てのGeoSlotのインスタンス化が完了する。実体は各GeoSlotが子GeoSlotとして持つ。
         grand_geo_slot.makeGeoSlotInstance(tree_code, null);
@@ -172,12 +179,6 @@ public class GeoSlotAdmin {
                             @Override
                             public void callBackEvent() {
                                 //戻るボタンが押された時の処理
-
-                                //TODO DEBUG;
-                                geo_slots.get(0).setGeoObjectByItemID(4);
-                                geo_slots.get(1).setGeoObjectByItemID(1);
-                                geo_slots.get(2).setGeoObjectByItemID(2);
-                                geo_slots.get(3).setGeoObjectByItemID(3);
                                 geoSlotAdminManager.calcPlayerStatus();
 
                                 worldModeAdmin.setGeoSlotMap(Constants.Mode.ACTIVATE.STOP);
@@ -307,6 +308,9 @@ public class GeoSlotAdmin {
                     break;
             }
         }
+
+        checkInventrySelect();
+
         backPlateGroup.update();
     }
 
@@ -324,6 +328,13 @@ public class GeoSlotAdmin {
         */
         geoSlotGroup.draw();
 
+        //Holdの表示
+        if (isHoldGeoObject()) {
+            graphic.bookingDrawBitmapData(
+                    graphic.makeImageContext(holdGeoObject.getItemImage(), 100, 100, 5.0f, 5.0f, 0, 255, false)
+            );
+        }
+
         //ListBox
         if (isReleasePlateActive) {
             if (releasePlateGroup != null) {
@@ -331,6 +342,27 @@ public class GeoSlotAdmin {
             }
         }
         backPlateGroup.draw();
+    }
+
+    //Inventryから何か選択されているならそれを格納
+    public void checkInventrySelect() {
+        InventryData inventryData = userInterface.getInventryData();
+        if (inventryData != null) {
+            if (inventryData.getItemNum() > 0) {
+                setHoldGeoObject((GeoObjectData) inventryData.getItemData());
+                userInterface.setInventryData(null);
+            }
+        }
+    }
+
+    //InventryにGeoを加える
+    public void addToInventry(GeoObjectData geoObjectData) {
+        geoSlotAdminManager.addToInventry(geoObjectData);
+    }
+
+    //InventryからGeoを消す
+    public void deleteFromInventry(GeoObjectData geoObjectData) {
+        geoSlotAdminManager.deleteFromInventry(geoObjectData);
     }
 
     // ***** Getter *****

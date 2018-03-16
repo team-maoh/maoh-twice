@@ -11,6 +11,8 @@ import java.util.List;
  * Created by ina on 2017/10/29.
  */
 
+//TODO HPバー関係と半径関係
+
 //敵キャラのデータベースの管理
 public class BattleUnitDataAdmin {
 
@@ -51,6 +53,10 @@ public class BattleUnitDataAdmin {
         List<Integer> delta_bonus_attack = new ArrayList<Integer>();
         List<Integer> delta_bonus_defence = new ArrayList<Integer>();
 
+        List<Integer> hp_bar_offset = new ArrayList<Integer>();
+        List<Integer> hp_bar_length = new ArrayList<Integer>();
+        List<Integer> hit_radius = new ArrayList<Integer>();
+
         name = battle_unit_data_database.getString("battle_unit_data", "name", null);
         attack_frame = battle_unit_data_database.getInt("battle_unit_data", "attack_frame", null);
         initial_hp = battle_unit_data_database.getInt("battle_unit_data", "initial_hp", null);
@@ -67,6 +73,10 @@ public class BattleUnitDataAdmin {
         delta_bonus_hp = battle_unit_data_database.getInt("battle_unit_data", "delta_bonus_hp", null);
         delta_bonus_attack = battle_unit_data_database.getInt("battle_unit_data", "delta_bonus_attack", null);
         delta_bonus_defence = battle_unit_data_database.getInt("battle_unit_data", "delta_bonus_defence", null);
+
+        hp_bar_offset = battle_unit_data_database.getInt("battle_unit_data", "hp_bar_offset", null);
+        hp_bar_length = battle_unit_data_database.getInt("battle_unit_data", "hp_bar_length", null);
+        hit_radius = battle_unit_data_database.getInt("battle_unit_data", "hit_radius", null);
 
         for (int i = 0; i < name.size(); i++) {
             battle_base_unit_datas.add(new BattleBaseUnitData());
