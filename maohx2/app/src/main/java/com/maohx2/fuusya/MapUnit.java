@@ -1,6 +1,7 @@
 package com.maohx2.fuusya;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.view.SurfaceHolder;
 
 import com.maohx2.horie.map.Camera;
@@ -34,12 +35,21 @@ public class MapUnit extends MapObject {
     double step;
     double dst_w_x, dst_w_y;
     double pre_random_rad;
+    boolean has_bad_status, can_exit_room, can_walk;
+    boolean collide_wall;
 
     //デバッグ用
     int time_count;
 
-    //移動が遅くなる、移動が逆向きになる、移動が不可能になる、移動方向がランダムになる
-    int frames_walking_slowly, frames_walking_inversely, frames_unable_to_walk, frames_being_drunk;
+    //移動が遅くなる、移動が逆向きになる、移動が不可能になる
+    int frames_walking_slowly, frames_walking_inversely, frames_cannot_walk;
+    //酔歩する、駒のように回転した後に別の場所にテレポートする、玄関を通過できなくなる
+    int frames_being_drunk, frames_waiting_teleported, frames_cannot_exit_room;
+    //壁までふっ飛ばされる, ふっ飛ばされる前の待ち時間
+    int frames_being_blown_away, frames_before_blown_away;
+
+    boolean being_blown_away;
+    double blown_rad;
 
     public MapUnit(Graphic _graphic, MapObjectAdmin _map_object_admin, Camera _camera) {
         super(_graphic, _map_object_admin, _camera);
@@ -57,9 +67,22 @@ public class MapUnit extends MapObject {
 
         frames_walking_slowly = 0;
         frames_walking_inversely = 0;
-        frames_unable_to_walk = 0;
-        //
+        frames_cannot_walk = 0;
         frames_being_drunk = 0;
+        frames_waiting_teleported = 0;
+        frames_cannot_exit_room = 0;
+        frames_being_blown_away = 0;
+        frames_before_blown_away = 0;
+        //
+        has_bad_status = false;
+
+        being_blown_away = false;
+
+        can_walk = true;
+        collide_wall = false;
+
+        blown_rad = random.nextDouble() * 2 * PI;
+
 
     }
 
@@ -68,8 +91,11 @@ public class MapUnit extends MapObject {
     }
 
     public void update() {
+
+
     }
 
+    //マップ上のUnitのアイコンの向き（dir_on_map）を更新する
     public void updateDirOnMap(double next_w_x, double next_w_y) {
 
         if (next_w_x != w_x || next_w_y != w_y) {
@@ -86,20 +112,24 @@ public class MapUnit extends MapObject {
 
     //dx, dyを正して(壁に近すぎたらdx, dyをゼロにして)から、
     //xとyを更新する(一歩進む)
-//    public void walkOneStep(double dx, double dy, boolean hit_against_entrance) {
+    protected boolean walkOneStep(double dst_x, double dst_y, double input_step) {
 
-    public void walkOneStep(double dst_x, double dst_y, double input_step, boolean hit_against_entrance) {
+        double dx, dy;
 
         int dst_steps = (int) myDistance(dst_x, dst_y, w_x, w_y) / (int) input_step;
-        dst_steps++;//ゼロ除算対策
-        double dx = (dst_x - w_x) / dst_steps;
-        double dy = (dst_y - w_y) / dst_steps;
+
+        if (dst_steps != 0) {
+            dx = (dst_x - w_x) / dst_steps;
+            dy = (dst_y - w_y) / dst_steps;
+        } else {
+            dx = 0.0;
+            dy = 0.0;
+        }
 
         boolean is_touching_x_wall = false;
         boolean is_touching_y_wall = false;
 
-        double hand_x;
-        double hand_y;
+        double hand_x, hand_y;
 
         for (double i = 0.0; i < 360.0; i += ANGLE_FOR_WALL) {
 
@@ -107,7 +137,7 @@ public class MapUnit extends MapObject {
             hand_x = w_x + REACH_FOR_WALL * cos(i);
             hand_y = w_y - REACH_FOR_WALL * sin(i);
 
-            if (hit_against_entrance == true) {
+            if (can_exit_room == false) {
                 if (map_admin.isEntrance(map_admin.worldToMap((int) (w_x + dx)), map_admin.worldToMap((int) w_y))) {
                     is_touching_x_wall = true;
                 }
@@ -134,6 +164,7 @@ public class MapUnit extends MapObject {
             w_y += dy;
         }
 
+        return (is_touching_x_wall || is_touching_y_wall);
     }
 
     //0:壁なし, 1: －, 2: |
@@ -145,85 +176,174 @@ public class MapUnit extends MapObject {
         return step;
     }
 
-    public void setFramesWalkingSlowly(int _frames_walking_slowly) {
-        frames_walking_slowly = _frames_walking_slowly;
+    public void setBadStatus(String status_name) {
+        setBadStatus(status_name, 1);
     }
 
-    public void setFramesWalkingInversely(int _frames_walking_inversely) {
-        frames_walking_inversely = _frames_walking_inversely;
+    public void setBadStatus(String status_name, int activating_frames) {
+
+        if (status_name.equals("walking_slowly")) {
+            frames_walking_slowly = activating_frames;
+
+        } else if (status_name.equals("walking_inversely")) {
+            frames_walking_inversely = activating_frames;
+
+        } else if (status_name.equals("cannot_walk")) {
+            frames_cannot_walk = activating_frames;
+
+        } else if (status_name.equals("being_drunk")) {
+            frames_being_drunk = activating_frames;
+
+        } else if (status_name.equals("cannot_exit_room")) {
+            frames_cannot_exit_room = activating_frames;
+
+        } else if (status_name.equals("being_teleported")) {
+            frames_waiting_teleported = 20;
+
+        } else if (status_name.equals("found_by_enemy")) {
+            map_object_admin.makeAllEnemysFindPlayer();
+            frames_cannot_walk = 15;
+
+        } else if (status_name.equals("being_blown_away")) {
+
+            frames_being_blown_away = 30;
+            frames_before_blown_away = 10;
+            blown_rad = random.nextDouble() * 2 * PI;
+
+        } else {
+            System.out.println("Bad Statusの引数がおかしい");
+
+        }
     }
 
-    public void setFramesUnableToWalk(int _frames_unable_to_walk) {
-        frames_unable_to_walk = _frames_unable_to_walk;
-    }
-
-    public void setFramesBeingDrunk(int _frames_being_drunk) {
-        frames_being_drunk = _frames_being_drunk;
-    }
-
-    public double checkBadState(double raw_step) {
+    public double checkBadStatus(double raw_step) {
 
         double residual_x = dst_w_x - w_x;
         double residual_y = dst_w_y - w_y;
 
-        if (frames_unable_to_walk > 0) {
-            residual_x = 0;
-            residual_y = 0;
+        has_bad_status = false;
+        can_walk = true;
 
-            frames_unable_to_walk--;
-        } else {
+        //■瞬間移動
+        if (frames_waiting_teleported > 1) {
+            has_bad_status = true;
 
-            if (frames_walking_inversely > 0) {
-                residual_x = -residual_x;
-                residual_y = -residual_y;
+            can_walk = false;
 
-                frames_walking_inversely--;
-            }
-            if (frames_walking_slowly > 0) {
-                raw_step = max(raw_step / 2.0, 1.0);
+            double dst_rad = (PI / 4) * frames_waiting_teleported + PI / 2 + PI / 16;
 
-                frames_walking_slowly--;
-            }
+            residual_x = raw_step * cos(dst_rad);
+            residual_y = raw_step * sin(dst_rad);
 
-//            if ((is_buzzed || frames_being_drunk) == true) {
-            if (frames_being_drunk > 0) {
+            frames_waiting_teleported--;
 
-//                double dst_rad = calcDirOnMap(dst_w_x, dst_w_y);
-                double dst_amp = myDistance(dst_w_x, dst_w_y, w_x, w_y);
+        } else if (frames_waiting_teleported == 1) {
 
-                double random_double = makeNormalDist() * 0.08;
-                //念のため
-                while (!(-1.0 <= random_double && random_double < 1.0)) {
-                    random_double = makeNormalDist() * 0.08;
-                }
+            Point teleported_point = map_admin.getRoomPoint();
+            w_x = teleported_point.x;
+            w_y = teleported_point.y;
 
-                //pre_random_radを平均とした正規分布
-                double random_rad = random_double * PI + pre_random_rad;
+            frames_waiting_teleported--;
+        }
 
-                residual_x =  raw_step * cos(random_rad);
-                residual_y =  raw_step * sin(random_rad);
+        if (frames_cannot_walk > 0) {
+            has_bad_status = true;
 
-                switch (detectWall(w_x, w_y, w_x + residual_x, w_y + residual_y)) {
-                    case 1://横向きの壁と衝突
-                        random_rad = 2 * PI - random_rad;
-                        residual_x = raw_step * cos(random_rad);
-                        residual_y = raw_step * sin(random_rad);
-                        break;
-                    case 2://縦向きの壁と衝突
-                        random_rad = (3 * PI - random_rad) % (2 * PI);
-                        residual_x = raw_step * cos(random_rad);
-                        residual_y = raw_step * sin(random_rad);
-                        break;
-                    default:
-                        break;
-                }
+            can_walk = false;
 
-                pre_random_rad = random_rad;
+            frames_cannot_walk--;
+        }
 
-                System.out.println("drunk    "+frames_being_drunk);
-                frames_being_drunk--;
+        if (frames_walking_inversely > 0) {
+            has_bad_status = true;
+
+            if (raw_step > 0) {
+                raw_step = -raw_step;
             }
 
+            frames_walking_inversely--;
+        }
+        if (frames_walking_slowly > 0) {
+            has_bad_status = true;
+
+            raw_step = max(raw_step / 7.0, 1);
+
+            frames_walking_slowly--;
+        }
+
+        //■酔歩
+        if (frames_being_drunk > 0) {
+            has_bad_status = true;
+
+            double dst_amp = myDistance(dst_w_x, dst_w_y, w_x, w_y);
+
+            double random_double = makeNormalDist() * 0.08;
+            //念のため
+            while (!(-1.0 <= random_double && random_double < 1.0)) {
+                random_double = makeNormalDist() * 0.08;
+            }
+
+            //pre_random_radを平均とした正規分布
+            double random_rad = random_double * PI + pre_random_rad;
+
+            residual_x = raw_step * cos(random_rad);
+            residual_y = raw_step * sin(random_rad);
+
+            switch (detectWall(w_x, w_y, w_x + residual_x, w_y + residual_y)) {
+                case 1://横向きの壁と衝突
+                    random_rad = 2 * PI - random_rad;
+                    residual_x = raw_step * cos(random_rad);
+                    residual_y = raw_step * sin(random_rad);
+                    break;
+                case 2://縦向きの壁と衝突
+                    random_rad = (3 * PI - random_rad) % (2 * PI);
+                    residual_x = raw_step * cos(random_rad);
+                    residual_y = raw_step * sin(random_rad);
+                    break;
+                default:
+                    break;
+            }
+
+            pre_random_rad = random_rad;
+
+            System.out.println("drunk    " + frames_being_drunk);
+            frames_being_drunk--;
+        }//酔歩パートおわり
+
+        if (frames_cannot_exit_room > 1) {
+            can_exit_room = false;
+            frames_cannot_exit_room--;
+        } else if (frames_cannot_exit_room == 1) {
+            can_exit_room = true;
+            frames_cannot_exit_room--;
+        }
+
+        //■ふっ飛ばし
+        if (frames_before_blown_away > 1) {
+
+            has_bad_status = true;
+
+            can_walk = false;
+            raw_step = max(1, raw_step / 5);
+
+            double dst_rad = (PI / 4) * frames_before_blown_away + PI / 2 + PI / 16;
+
+            residual_x = raw_step * cos(dst_rad);
+            residual_y = raw_step * sin(dst_rad);
+
+            frames_before_blown_away--;
+
+        } else if (frames_being_blown_away > 1) {
+
+            has_bad_status = true;
+            being_blown_away = true;
+
+            can_walk = true;
+
+            residual_x = 10.0 * raw_step * cos(blown_rad);
+            residual_y = 10.0 * raw_step * sin(blown_rad);
+
+            frames_being_blown_away--;
         }
 
         dst_w_x = w_x + residual_x;

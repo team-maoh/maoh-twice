@@ -45,9 +45,8 @@ public class MapPlayer extends MapUnit {
     DungeonUserInterface dungeon_user_interface;
 
     int PLAYER_STEP = 26;//プレイヤーの歩幅
-    double touch_w_x, touch_w_y, touch_n_x, touch_n_y;
+    double touch_w_x, touch_w_y, touch_n_x, touch_n_y, pre_w_x, pre_w_y;
     boolean is_moving;
-    double pre_w_x, pre_w_y;
 
     int touching_frame_count;
 
@@ -69,14 +68,13 @@ public class MapPlayer extends MapUnit {
         encount_steps = 0;
         sound_steps = 0;
 
-        Point room_point = map_admin.getRoomPoint();
-        w_x = room_point.x;
-        w_y = room_point.y;
 
         touching_frame_count = 0;
         step = PLAYER_STEP;
 
         is_moving = false;
+
+        can_exit_room = true;
     }
 
     public void init() {
@@ -98,10 +96,6 @@ public class MapPlayer extends MapUnit {
             dst_w_x = touch_w_x;
             dst_w_y = touch_w_y;
 
-            //デバッグ用
-//            touch_x = touch_w_x;
-//            touch_y = touch_w_y;
-
             touching_frame_count++;
 
             is_moving = true;
@@ -112,24 +106,44 @@ public class MapPlayer extends MapUnit {
             is_moving = false;//指を離した時点で歩行を中止する
         }
 
-        if (is_moving == true) {
+        //BadStatus（状態異常）を表現するためにstepとdst_w_x, dst_w_yを適宜書き換える
+        step = checkBadStatus(PLAYER_STEP);
 
+        if (has_bad_status == true) {
+            updateDirOnMap(dst_w_x, dst_w_y);
 
+            if (can_walk == true) {
 
-//            double residual_x = dst_w_x - w_x;
-//            double residual_y = dst_w_y - w_y;
-//
-//            residual_x = -residual_x;
-//            residual_y = -residual_y;
-//
-//            dst_w_x = w_x + residual_x;
-//            dst_w_y = w_y + residual_y;
-            step = checkBadState(PLAYER_STEP);
+                if (being_blown_away == true) {
+                    collide_wall = walkOneStep(dst_w_x, dst_w_y, step);
+                    collide_wall = walkOneStep(dst_w_x, dst_w_y, step);
+                    collide_wall = walkOneStep(dst_w_x, dst_w_y, step);
+                    System.out.println("paopao1");
+                    if (collide_wall == true) {
+                        being_blown_away = false;
+                    }
+                } else {
+                    System.out.println("paopao2");
+                    walkOneStep(dst_w_x, dst_w_y, step);
+                }
+            }
+
+        } else if (is_moving == true) {
+//        if ((is_moving == true) || (has_bad_status = true)) {
+
+//            //BadStatus（状態異常）を表現するためにstepとdst_w_x, dst_w_yを適宜書き換える
+//            //歩行不能時は step = 0 と書かれる
+//            step = checkBadStatus(PLAYER_STEP);
+//            //Playerアイコンの向きを更新する
+            updateDirOnMap(dst_w_x, dst_w_y);
+
+            System.out.println("paopao4");
+            walkOneStep(dst_w_x, dst_w_y, step);
 
             //壁との衝突を考慮した上で、タッチ座標に向かって１歩進む
-            walkOneStep(dst_w_x, dst_w_y, step, false);
-            //
-            updateDirOnMap(dst_w_x, dst_w_y);
+//            walkOneStep(dst_w_x, dst_w_y, step);
+////            //Playerアイコンの向きを更新する
+//            updateDirOnMap(dst_w_x, dst_w_y);
 
             encount_steps++;
             if (encount_steps >= th_encount_steps) {
@@ -143,24 +157,9 @@ public class MapPlayer extends MapUnit {
                 sound_admin.play("walk");//足音SE
             }
 
-//            //タッチ座標との距離が一定未満になる ときに歩み止まる
-//            if (3 > myDistance(touch_w_x, touch_w_y, w_x, w_y)) {
-//                is_moving = false;
-//                System.out.println("●タッチ座標との距離が一定未満 1");
-//            }
-//            //タッチ座標を通過してしまう ときに歩み止まる
-//            if (0 > (touch_w_x - (w_x + dx)) * dx || 0 > (touch_w_y - (w_y + dy)) * dy) {
-//                is_moving = false;
-//                System.out.println("●タッチ座標との距離が一定未満 2");
-//            }
-
         } else {//moving == false のとき
             touching_frame_count = 0;
         }
-
-        //デバッグ用
-//        touch_x = camera.convertToNormCoordinateX((int) touch_w_x);
-//        touch_y = camera.convertToNormCoordinateY((int) touch_w_y);
 
         camera.setCameraOffset(w_x, w_y);
 
@@ -186,7 +185,6 @@ public class MapPlayer extends MapUnit {
         double normal_dist = makeNormalDist();
 
         return (int) (var_encount_steps * normal_dist + mean_encount_steps);
-
     }
 
     public double getTouchWouldX() {
@@ -200,6 +198,5 @@ public class MapPlayer extends MapUnit {
     public boolean getIsMoving() {
         return is_moving;
     }
-
 
 }

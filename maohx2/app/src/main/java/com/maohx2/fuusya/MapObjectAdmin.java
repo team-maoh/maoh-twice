@@ -25,6 +25,7 @@ public class MapObjectAdmin {
 
     int NUM_OF_ENEMY = 10;
     int NUM_OF_ITEM = 10;// > 2
+    int NUM_OF_TRAP = 100;
 
     int PLAYER_DIR = 8;
     int ENEMY_DIR = 8;
@@ -35,13 +36,13 @@ public class MapObjectAdmin {
 
     MapItem[] map_item = new MapItem[NUM_OF_ITEM];
     MapObjectBitmap[] map_item_bitmap = new MapObjectBitmap[NUM_OF_ITEM];
-    MapTrap[] map_trap = new MapTrap[NUM_OF_ITEM];
-    MapObjectBitmap[] map_trap_bitmap = new MapObjectBitmap[NUM_OF_ITEM];
+    MapTrap[] map_trap = new MapTrap[NUM_OF_TRAP];
+    MapObjectBitmap[] map_trap_bitmap = new MapObjectBitmap[NUM_OF_TRAP];
 
     MapEnemy[] map_enemy = new MapEnemy[NUM_OF_ENEMY];
     MapObjectBitmap[] map_enemy_bitmap = new MapObjectBitmap[NUM_OF_ENEMY];
 
-//    int REACH_OF_PLAYER = 25;//プレイヤーのアイテム取得半径
+    //    int REACH_OF_PLAYER = 25;//プレイヤーのアイテム取得半径
     double item_distance, enemy_distance;
 
     BagItemAdmin bag_item_admin;
@@ -87,24 +88,18 @@ public class MapObjectAdmin {
             map_item_bitmap[i].init();
         }
 
-        for (int i = 0; i < NUM_OF_ITEM; i++) {
-            map_trap[i] = new MapTrap(graphic, this, i % 4, camera);
-            map_trap[i].init();
-            map_trap_bitmap[i] = new MapObjectBitmap(8, graphic, "ドラゴン");
-//            switch (i % 4) {
-//                case 0:
-//                    map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "grape");
-//                case 1:
-//                    map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "e15-1");
-//                case 2:
-//                    map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "banana");
-//                default:
-//                    map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "apple");
+        for (int i = 0; i < NUM_OF_TRAP; i++) {
+//            if(i % 2 == 0) {
+//                map_trap[i] = new MapTrap(graphic, this, i % 4, camera, "blown_away");
+//            }else{
+            map_trap[i] = new MapTrap(graphic, this, i % 4, camera, false, "cannot_walk");
+//            map_trap[i] = new MapTrap(graphic, this, i % 4, camera, true, "cannot_exit_room", 100);
 //            }
+            map_trap[i].init();
 
+            map_trap_bitmap[i] = new MapObjectBitmap(8, graphic, "ドラゴン");
             map_trap_bitmap[i].init();
         }
-
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
             map_enemy[i] = new MapEnemy(graphic, this, camera, ENEMY_DIR, true, true);
@@ -135,7 +130,7 @@ public class MapObjectAdmin {
             map_item[i].update();
             map_item_bitmap[i].update();
         }
-        for (int i = 0; i < NUM_OF_ITEM; i++) {
+        for (int i = 0; i < NUM_OF_TRAP; i++) {
             map_trap[i].update();
             map_trap_bitmap[i].update();
         }
@@ -144,6 +139,7 @@ public class MapObjectAdmin {
             map_enemy[i].update();
             map_enemy_bitmap[i].update();
         }
+
 
         //アイテム獲得を判定
 //        checkGettingItem();
@@ -155,8 +151,6 @@ public class MapObjectAdmin {
 
     public void draw() {
 
-//        map_player.draw(map_admin);
-        map_player_bitmap.draw(map_player.getDirOnMap(), map_player.getNormX(), map_player.getNormY());
 
         for (int i = 0; i < NUM_OF_ITEM; i++) {
             if (map_item[i].exists() == true) {
@@ -164,8 +158,8 @@ public class MapObjectAdmin {
                 map_item_bitmap[i].draw(map_item[i].getDirOnMap(), map_item[i].getNormX(), map_item[i].getNormY());
             }
         }
-        for (int i = 0; i < NUM_OF_ITEM; i++) {
-            if (map_trap[i].exists() == true) {
+        for (int i = 0; i < NUM_OF_TRAP; i++) {
+            if (map_trap[i].exists() == true && map_trap[i].is_visible() == true) {
                 map_trap_bitmap[i].draw(map_trap[i].getDirOnMap(), map_trap[i].getNormX(), map_trap[i].getNormY());
             }
         }
@@ -177,15 +171,22 @@ public class MapObjectAdmin {
             }
         }
 
+        //        map_player.draw(map_admin);
+        map_player_bitmap.draw(map_player.getDirOnMap(), map_player.getNormX(), map_player.getNormY());
+
     }
 
     public MapPlayer getPlayer() {
         return map_player;
     }
 
-    public SoundAdmin getSoundAdmin() { return sound_admin;}
+    public SoundAdmin getSoundAdmin() {
+        return sound_admin;
+    }
 
-    public MapAdmin getMapAdmin(){return map_admin;}
+    public MapAdmin getMapAdmin() {
+        return map_admin;
+    }
 
 //    private void checkGettingItem(){
 //        //アイテム獲得
@@ -213,7 +214,16 @@ public class MapObjectAdmin {
 //        }
 //    }
 
+    public void makeAllEnemysFindPlayer() {
+
+        for (int i = 0; i < NUM_OF_ENEMY; i++) {
+            map_enemy[i].setHasFoundPlayer(true);
+
+        }
+    }
+
     //(x1, y1)と(x2, y2)の距離を返す
+
     public double myDistance(double x1, double y1, double x2, double y2) {
         return pow(pow(x1 - x2, 2.0) + pow(y1 - y2, 2.0), 0.5);
     }

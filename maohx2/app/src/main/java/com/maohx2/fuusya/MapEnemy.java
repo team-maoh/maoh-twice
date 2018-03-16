@@ -78,6 +78,8 @@ public class MapEnemy extends MapUnit {
         detect_player = _detect_player;
         has_blind_spot = _has_blind_spot;
         incremental_step = 0;
+
+        can_exit_room = false;
     }
 
     public void init() {
@@ -180,10 +182,12 @@ public class MapEnemy extends MapUnit {
 
             }
 
-            step = checkBadState(step);
-            walkOneStep(dst_w_x, dst_w_y, step, true);//一歩進む
+            step = checkBadStatus(step);
+            walkOneStep(dst_w_x, dst_w_y, step);//一歩進む
             //
             updateDirOnMap(dst_w_x, dst_w_y);
+
+
 
         }
 
@@ -192,6 +196,7 @@ public class MapEnemy extends MapUnit {
         if (distance_for_player < REACH_FOR_PLAYER && exists == true) {
             System.out.println("敵と接触");
             //デバッグのためにコメントアウト
+            exists = false;
 //                map_enemy[i].setExists(false);//接触すると敵が消える(戦闘に突入する)
         }
 
@@ -269,6 +274,10 @@ public class MapEnemy extends MapUnit {
         }
 
         pre_random_rad = random_rad;
+    }
+
+    public void setHasFoundPlayer(boolean _has_found_player){
+        has_found_player = _has_found_player;
     }
 
 }
