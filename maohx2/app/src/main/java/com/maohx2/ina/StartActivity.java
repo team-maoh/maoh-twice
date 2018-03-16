@@ -105,7 +105,7 @@ class StartSurfaceView extends BaseSurfaceView {
     public void gameLoop(){
         paint.setColor(Color.BLUE);
 
-        /*
+/*
         if(touch_state == TouchState.DOWN){
             thread = null;
             Intent intent = new Intent(start_activity, WorldActivity.class);
@@ -113,6 +113,12 @@ class StartSurfaceView extends BaseSurfaceView {
             start_activity.startActivity(intent);
         }
 */
+        if(touch_state == TouchState.DOWN){
+            thread = null;
+            Intent intent = new Intent(start_activity, BattleActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            start_activity.startActivity(intent);
+        }
 
         start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         start_game_system.updata();

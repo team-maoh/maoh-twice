@@ -327,8 +327,8 @@ public class Graphic {
 
     public void bookingDrawText(String draw_string, int draw_left, int draw_down){
 
-        draw_paint.setARGB(255,100,0,0);
-        draw_paint.setTextSize(30);
+        draw_paint.setARGB(255,0,255,0);
+        draw_paint.setTextSize(70);
         bookingDrawText(draw_string, draw_left, draw_down, draw_paint);
     }
 

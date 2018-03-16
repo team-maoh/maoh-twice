@@ -1,5 +1,6 @@
 package com.maohx2.ina.Battle;
 
+import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
@@ -17,9 +18,11 @@ public class BattleUnitDataAdmin {
     MyDatabase battle_unit_data_database;
     List<BattleBaseUnitData> battle_base_unit_datas = new ArrayList<BattleBaseUnitData>();
     //List<BattleDungeonUnitData> battle_dungeon_unit_datas = new ArrayList<BattleDungeonUnitData>();
+    Graphic graphic;
 
 
-    public BattleUnitDataAdmin(MyDatabaseAdmin _databaseAdmin) {
+    public BattleUnitDataAdmin(MyDatabaseAdmin _databaseAdmin, Graphic _graphic) {
+        graphic = _graphic;
         //DBからデータ読み込み
         databaseAdmin = _databaseAdmin;
         databaseAdmin.addMyDatabase("BattleUnitData","BattleUnitData.db",1,"r");
@@ -72,7 +75,12 @@ public class BattleUnitDataAdmin {
             //by kmhanko
             //DBから読み込んだデータを全てBattleBaseUnitDataに格納する
             BattleBaseUnitData tempBattleBaseUnitData = battle_base_unit_datas.get(i);
+
             tempBattleBaseUnitData.setName(name.get(i));
+            tempBattleBaseUnitData.setBitmapData(graphic.searchBitmap(name.get(i)));
+            tempBattleBaseUnitData.setRadius(graphic.searchBitmap(name.get(i)).getHeight() > graphic.searchBitmap(name.get(i)).getWidth() ? graphic.searchBitmap(name.get(i)).getHeight()/2 : graphic.searchBitmap(name.get(i)).getWidth()/2);
+
+
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialHP, initial_hp.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialAttack, initial_attack.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialDefence, initial_defence.get(i));
@@ -87,7 +95,6 @@ public class BattleUnitDataAdmin {
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusHP, delta_bonus_hp.get(i));tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialHP, initial_hp.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusAttack, delta_bonus_attack.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusDefence, delta_bonus_defence.get(i));
-
         }
 
     }

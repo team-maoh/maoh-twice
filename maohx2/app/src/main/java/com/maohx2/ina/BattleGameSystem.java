@@ -56,7 +56,7 @@ public class BattleGameSystem {
         //by kmhanko
         GlobalData globalData = (GlobalData) battle_activity.getApplication();
         PlayerStatus playerStatus = globalData.getPlayerStatus();
-        battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
+        battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
         battle_unit_admin.init(graphic, battle_user_interface, battle_activity, battleUnitDataAdmin, playerStatus);
     }
 

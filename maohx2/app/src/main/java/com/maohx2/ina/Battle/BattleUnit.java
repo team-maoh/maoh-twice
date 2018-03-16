@@ -1,6 +1,12 @@
 package com.maohx2.ina.Battle;
 
 //by kmhanko
+import android.graphics.Paint;
+
+import com.maohx2.ina.Draw.Graphic;
+
+import java.util.Random;
+
 import static com.maohx2.ina.Constants.UnitStatus.Status.*;
 
 /**
@@ -16,6 +22,10 @@ abstract public class BattleUnit {
     protected int defence;
     protected int luck;
     protected boolean exist;
+    Random rnd;
+    Graphic graphic;
+    Paint paint;
+
 
     //by kmhanko
     protected String name;
@@ -23,9 +33,17 @@ abstract public class BattleUnit {
     //by kmhanko
     protected BattleDungeonUnitData battleDungeonUnitData;
 
+
+    //コンストラクタ
+    public BattleUnit(Graphic _graphic){
+        graphic = _graphic;
+        paint = new Paint();
+    }
+
     //by kmhanko
     public void init() {
         exist = false;
+        rnd = new Random();
     }
 
     /* by kmhanko
@@ -34,8 +52,7 @@ abstract public class BattleUnit {
         hit_point = max_hit_point;
         attack = 1;
         attack_unit_num = -1;
-    }
-    */
+    }*/
 
     //by kmhanko
     protected void setBattleDunogenUnitData(BattleDungeonUnitData _battleDungeonUnitData) {
@@ -72,16 +89,17 @@ abstract public class BattleUnit {
         init();
 
         //TODO : 敵の出現位置決定
-        setPositionX(350 + 400 * (i - 1));
-        setPositionY(300);
+        setPositionX(rnd.nextInt(1200)+200);
+        setPositionY(rnd.nextInt(500)+200);
 
-        //TODO : 敵のタッチ半径 これは敵のデータベースか画像サイズ依存にするべきかも
-        setRadius(50);
 
         battleDungeonUnitData = new BattleDungeonUnitData();
         battleDungeonUnitData.setName(_battleBaseUnitData.getName());
         battleDungeonUnitData.setStatus(_battleBaseUnitData.getStatus(repeatCount));
         battleDungeonUnitData.setBonusStatus(_battleBaseUnitData.getBonusStatus(repeatCount));
+        battleDungeonUnitData.setBitmapData(_battleBaseUnitData.getBitmapData());
+
+        setRadius(_battleBaseUnitData.getRadius());
 
         //BattleDungeonUnitDataをもとに初期化
         statusInit();
@@ -126,8 +144,7 @@ abstract public class BattleUnit {
     abstract public void setPositionY(int _position_y);
     abstract public void setUIID(int _uiid);
     public void update(){}
+    public void draw(){}
 
-    //コンストラクタ
-    public BattleUnit() {
-    }
+
 }

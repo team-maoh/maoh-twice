@@ -63,11 +63,12 @@ public final class Constants {
     public static class UnitStatus {
 
         public enum Status {
+            ATTACK_FRAME,
             HP,
             ATTACK,
             DEFENSE,
             LUCK,
-            ATTACK_FRAME,
+            SPEED,
             NUM_OF_STATUS,
         }
 
@@ -75,6 +76,7 @@ public final class Constants {
             BONUS_HP,
             BONUS_ATTACK,
             BONUS_DEFENSE,
+            BONUS_SPEED,
             NUM_OF_BONUS_STATUS,
         }
     }

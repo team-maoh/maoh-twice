@@ -1,10 +1,16 @@
 package com.maohx2.ina.Battle;
 
+import com.maohx2.ina.Draw.Graphic;
+
 /**
  * Created by ina on 2017/09/21.
  */
 
 public class BattlePlayer extends BattleUnit {
+
+    BattlePlayer(Graphic _graphic){
+        super(_graphic);
+    }
 
     @Override
     public int getPositionX() {
