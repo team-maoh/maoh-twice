@@ -335,7 +335,6 @@ public class GeoSlotAdmin {
             );
         }
 
-
         //ListBox
         if (isReleasePlateActive) {
             if (releasePlateGroup != null) {
