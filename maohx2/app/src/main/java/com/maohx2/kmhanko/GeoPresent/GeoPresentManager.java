@@ -151,6 +151,7 @@ public class GeoPresentManager {
 
             if (presentBuf.tableName.equals("GeoObject")) {
                 itemdata.add(new GeoObjectData(
+                        graphic,
                         database.getOneInt(presentListName, "hp", w_script),
                         database.getOneInt(presentListName, "attack", w_script),
                         database.getOneInt(presentListName, "defence", w_script),

@@ -1,6 +1,7 @@
 package com.maohx2.kmhanko.PlayerStatus;
 
 import com.maohx2.ina.Battle.BattleDungeonUnitData;
+import com.maohx2.ina.Constants.UnitStatus.Status;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.geonode.GeoCalcSaverAdmin;
 
@@ -85,11 +86,19 @@ public class PlayerStatus {
     public BattleDungeonUnitData makeBattleDungeonUnitData() {
         BattleDungeonUnitData battleDungeonUnitData = new BattleDungeonUnitData();
         battleDungeonUnitData.setName("Player");
-        battleDungeonUnitData.setStatus(
-                new int[] {
-                    hp, attack, defence, luck, -1,
-                }
-        );
+
+        int[] buf = new int[Status.NUM_OF_STATUS.ordinal()];
+        for(int i = 0; i < buf.length ; i++) {
+            buf[i] = 0;
+        }
+
+        buf[Status.HP.ordinal()] = hp;
+        buf[Status.ATTACK.ordinal()] = attack;
+        buf[Status.DEFENSE.ordinal()] = defence;
+        buf[Status.LUCK.ordinal()] = luck;
+        buf[Status.ATTACK_FRAME.ordinal()] = -1;
+
+        battleDungeonUnitData.setStatus(buf);
         return battleDungeonUnitData;
     }
 

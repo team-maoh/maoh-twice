@@ -17,12 +17,14 @@ import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
 import com.maohx2.kmhanko.effect.EffectAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlotAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlotAdminManager;
+import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.itemshop.ItemShopAdmin;
 import com.maohx2.kmhanko.effect.*;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 import android.graphics.Paint;
 
@@ -71,6 +73,50 @@ public class WorldGameSystem {
 
         geoInventry = new Inventry(map_user_interface, graphic);
 
+        //TODO 仮。適当にGeo入れる GEO1が上がる能力は単一
+        geoInventry.addItemData(new GeoObjectData(
+                graphic,
+                new int[] { 100,0,0,0 },
+                new double[] { 1.0, 1.0, 1.0, 1.0}
+        ));
+        geoInventry.addItemData(new GeoObjectData(
+                graphic,
+                new int[] { 0,50,0,0 },
+                new double[] { 1.0, 1.0, 1.0, 1.0}
+        ));
+        geoInventry.addItemData(new GeoObjectData(
+                graphic,
+                new int[] { 0,0,30,0 },
+                new double[] { 1.0, 1.0, 1.0, 1.0}
+        ));
+        geoInventry.addItemData(new GeoObjectData(
+                graphic,
+                new int[] { 0,0,0,20 },
+                new double[] { 1.0, 1.0, 1.0, 1.0}
+        ));
+        geoInventry.addItemData(new GeoObjectData(
+                graphic,
+                new int[] { 0,0,0,0 },
+                new double[] { 2.0, 1.0, 1.0, 1.0}
+        ));
+        geoInventry.addItemData(new GeoObjectData(
+                graphic,
+                new int[] { 0,0,0,0 },
+                new double[] { 1.0, 3.0, 1.0, 1.0}
+        ));
+        geoInventry.addItemData(new GeoObjectData(
+                graphic,
+                new int[] { 0,0,0,0 },
+                new double[] { 1.0, 1.0, 2.0, 1.0}
+        ));
+        geoInventry.addItemData(new GeoObjectData(
+                graphic,
+                new int[] { 0,0,0,0 },
+                new double[] { 1.0, 1.0, 0.0, 5.0}
+        ));
+
+
+
         worldModeAdmin = new WorldModeAdmin();
         worldModeAdmin.initWorld();
 
@@ -83,7 +129,7 @@ public class WorldGameSystem {
         text_box_admin.setTextBoxExists(1,false);
 
         //list_box_admin = new ListBoxAdmin();
-        geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus);
+        geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry);
         //geo_slot_admin = new GeoSlotAdmin();
         dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, geoSlotAdminManager, worldActivity);
 
@@ -133,7 +179,7 @@ public class WorldGameSystem {
         if (worldModeAdmin.getIsUpdate(worldModeAdmin.getPresent())) {
         }
 
-        //itemShopAdmin.update();
+        geoInventry.updata();
         text_box_admin.update();
         effectAdmin.update();
     }

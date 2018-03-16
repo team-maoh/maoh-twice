@@ -15,6 +15,8 @@ import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.ina.Arrange.Inventry;
+import com.maohx2.kmhanko.itemdata.GeoObjectData;
 
 //GeoSlotAdminの実体を持つクラス
 //GeoSlotMapButtonの実体も持つ。
@@ -36,16 +38,18 @@ public class GeoSlotAdminManager {
     WorldModeAdmin worldModeAdmin;
 
     PlayerStatus playerStatus;
+    Inventry geoInventry;
 
     boolean is_load_database;
 
-    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus) {
+    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, Inventry _geoInventry) {
         graphic = _graphic;
         userInterface = _userInterface;
         databaseAdmin = _databaseAdmin;
         textBoxAdmin = _textBoxAdmin;
         worldModeAdmin = _worldModeAdmin;
         playerStatus = _playerStatus;
+        geoInventry = _geoInventry;
         addDatabase();
 
         this.loadGeoSlotDatabase();
@@ -58,6 +62,7 @@ public class GeoSlotAdminManager {
     }
 
     public void draw() {
+        geoInventry.draw();
         if (activeGeoSlotAdmin != null) {
             activeGeoSlotAdmin.draw();
         }
@@ -107,6 +112,14 @@ public class GeoSlotAdminManager {
             geoSlotAdmins.add(new_geo_slot_admin);
         }
 
+    }
+
+    public void addToInventry(GeoObjectData geoObjectData) {
+        geoInventry.addItemData(geoObjectData);
+    }
+
+    public void deleteFromInventry(GeoObjectData geoObjectData) {
+        geoInventry.subItemData(geoObjectData);
     }
 
     public void calcPlayerStatus() {
