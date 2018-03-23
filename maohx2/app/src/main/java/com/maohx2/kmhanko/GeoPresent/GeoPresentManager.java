@@ -1,5 +1,7 @@
 package com.maohx2.kmhanko.GeoPresent;
 
+import android.graphics.Paint;
+
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.UserInterface;
@@ -8,6 +10,7 @@ import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.itemdata.Money;
+import com.maohx2.ina.Arrange.Inventry;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -40,7 +43,7 @@ public class GeoPresentManager {
     static final String dbName = "GeoPresentDB";
     static final String dbAsset = "GeoPresent.db";
 
-    static final String presentListName = "BasePresentList";
+    static final String presentListTableName = "BasePresentList";
     int size;
 
 
@@ -51,33 +54,47 @@ public class GeoPresentManager {
     int luckScore;
     int specialScore;
     int sumScore;
-    List<Boolean> alreadyGet = new ArrayList<Boolean>();
+    List <PresentGetFlag> presentGetFlags = new ArrayList();
+
+    Inventry geoInventry;
 
     public GeoPresentManager() {
     }
 
-    public void init(UserInterface _user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin) {
+    public void init(UserInterface _user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, Inventry _geoInventry) {
         userInterface = _user_interface;
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
         textBoxAdmin = _textBoxAdmin;
         loadDatabase(databaseAdmin);
+        geoInventry = _geoInventry; //TODO globalから
 
         //TODO : セーブデータからの読み込み
         initAlreadyGet();
+
     }
 
-    private void initAlreadyGet() {
-        for(int i = 0; i < size; i++) {
-            alreadyGet.add(false);
-        }
-    }
-
-    public void loadDatabase(MyDatabaseAdmin database_admin) {
+    private void loadDatabase(MyDatabaseAdmin database_admin) {
         database_admin.addMyDatabase(dbName, dbAsset, 1, "r");
         database = database_admin.getMyDatabase(dbName);
 
-        size = database.getSize(presentListName);
+        size = database.getSize(presentListTableName);
+    }
+
+    //DBに記載された全てのプレゼントについて、それぞれ既にもらったかどうか。
+    private void initAlreadyGet() {
+        for(int i = 0; i < size; i++) {
+            presentGetFlags.add(new PresentGetFlag(
+                    database.getStringByRowID(presentListTableName, "present_name", i + 1),
+                    false)//TODO 初期は全部もらっていないことになってる
+            );
+        }
+    }
+
+    //プレゼント処理を行った上で、何かのプレゼントに達したかチェック
+    public List<ItemData> presentAndCheck(GeoObjectData geoObjectData) {
+        presentGeoObject(geoObjectData);
+        return getPresentItemData(getNewPresentCheckFlags(getCheckFlag()));
     }
 
     private void presentGeoObject(GeoObjectData geoObjectData) {
@@ -94,20 +111,15 @@ public class GeoPresentManager {
         sumScore = hpScore + attackScore + defenceScore + luckScore + specialScore;
     }
 
-    public List<ItemData> presentAndCheck(GeoObjectData geoObjectData) {
-        presentGeoObject(geoObjectData);
-        return getPresentItemData(getNewPresentCheckFlags(getCheckFlag()));
-    }
-
     private List<Boolean> getCheckFlag() {
         List<Boolean> checkFlag = new ArrayList<Boolean>(size);
 
-        List<Integer> hp = database.getInt(presentListName, "hp");
-        List<Integer> attack = database.getInt(presentListName, "attack");
-        List<Integer> defence = database.getInt(presentListName, "defence");
-        List<Integer> luck = database.getInt(presentListName, "luck");
-        List<Integer> special = database.getInt(presentListName, "special");
-        List<Integer> sum = database.getInt(presentListName, "sum");
+        List<Integer> hp = database.getInt(presentListTableName, "hp");
+        List<Integer> attack = database.getInt(presentListTableName, "attack");
+        List<Integer> defence = database.getInt(presentListTableName, "defence");
+        List<Integer> luck = database.getInt(presentListTableName, "luck");
+        List<Integer> special = database.getInt(presentListTableName, "special");
+        List<Integer> sum = database.getInt(presentListTableName, "sum");
 
         for(int i = 0; i < size; i++) {
             if (
@@ -131,10 +143,10 @@ public class GeoPresentManager {
         String tableName;
         String presentName;
         for (int i = 0; i < checkFlag.size(); i++) {
-            if (checkFlag.get(i) && !alreadyGet.get(i)) {
+            if (checkFlag.get(i) && !presentGetFlags.get(i).isAlreadyGet()) {
                 //今回初めて条件を満たしたもの
-                tableName = database.getStringByRowID(presentListName, "table_name", i + 1);
-                presentName = database.getStringByRowID(presentListName, "present_name", i + 1);
+                tableName = database.getStringByRowID(presentListTableName, "table_name", i + 1);
+                presentName = database.getStringByRowID(presentListTableName, "present_name", i + 1);
                 newPresentCheckFlags.add(new Present(tableName, presentName));
             }
         }
@@ -152,18 +164,18 @@ public class GeoPresentManager {
             if (presentBuf.tableName.equals("GeoObject")) {
                 itemdata.add(new GeoObjectData(
                         graphic,
-                        database.getOneInt(presentListName, "hp", w_script),
-                        database.getOneInt(presentListName, "attack", w_script),
-                        database.getOneInt(presentListName, "defence", w_script),
-                        database.getOneInt(presentListName, "luck", w_script),
-                        database.getOneDouble(presentListName, "hp_rate", w_script),
-                        database.getOneDouble(presentListName, "attack_rate", w_script),
-                        database.getOneDouble(presentListName, "defence_rate", w_script),
-                        database.getOneDouble(presentListName, "luck_rate", w_script)
+                        database.getOneInt(presentListTableName, "hp", w_script),
+                        database.getOneInt(presentListTableName, "attack", w_script),
+                        database.getOneInt(presentListTableName, "defence", w_script),
+                        database.getOneInt(presentListTableName, "luck", w_script),
+                        database.getOneDouble(presentListTableName, "hp_rate", w_script),
+                        database.getOneDouble(presentListTableName, "attack_rate", w_script),
+                        database.getOneDouble(presentListTableName, "defence_rate", w_script),
+                        database.getOneDouble(presentListTableName, "luck_rate", w_script)
                 ));
             }
             if (presentBuf.tableName.equals("Money")) {
-                itemdata.add(new Money(database.getOneInt(presentListName, "money", w_script)));
+                itemdata.add(new Money(database.getOneInt(presentListTableName, "money", w_script)));
             }
             if (presentBuf.tableName.equals("ExpendItem")) {
             }
@@ -207,6 +219,35 @@ class Present {
     }
     public String getPresentName() {
         return presentName;
+    }
+
+}
+
+class PresentGetFlag {
+    String presentName;
+    boolean alreadyGet;
+
+    public PresentGetFlag() {
+        presentName = null;
+        alreadyGet = false;
+    }
+
+    public PresentGetFlag(String _presentName, boolean _alreadyGet) {
+        presentName = _presentName;
+        alreadyGet = _alreadyGet;
+    }
+
+    public void setPresentName(String _presentName) {
+        presentName = _presentName;
+    }
+    public void setAlreadyGet(boolean _alreadyGet) {
+        alreadyGet = _alreadyGet;
+    }
+    public String getPresentName() {
+        return presentName;
+    }
+    public boolean isAlreadyGet() {
+        return alreadyGet;
     }
 
 }
