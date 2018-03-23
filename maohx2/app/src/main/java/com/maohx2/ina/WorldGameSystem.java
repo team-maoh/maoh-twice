@@ -57,7 +57,7 @@ public class WorldGameSystem {
 
     WorldActivity worldActivity;
 
-    //TODO 引数にUI,Graphicが入って居るためGlobalDataに設置できない
+    //TODO いな依頼:引数にUI,Graphicが入って居るためGlobalDataに設置できない
     Inventry geoInventry;
     Inventry expendItemInventry;
 
@@ -72,10 +72,10 @@ public class WorldGameSystem {
         PlayerStatus playerStatus = globalData.getPlayerStatus();
         //GeoInventry = globalData.getGeoInventry();
 
-        //TODO Globalに入れる
+        //TODO いな依頼:Globalに入れる
         geoInventry = new Inventry(map_user_interface, graphic);
         expendItemInventry = new Inventry(map_user_interface, graphic);
-        //TODO interfaceはあとで変更できないとまずい場合があるかもしれない
+        //TODO いな依頼:interfaceはあとで変更できないとまずい場合があるかもしれない
 
         //TODO 仮。適当にGeo入れる GEO1が上がる能力は単一
         geoInventry.addItemData(new GeoObjectData(

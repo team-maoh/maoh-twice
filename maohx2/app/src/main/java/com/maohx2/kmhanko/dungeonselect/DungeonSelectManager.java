@@ -73,7 +73,7 @@ public class DungeonSelectManager {
     WorldActivity worldActivity;
 
     //いなの実装までの仮置き
-    boolean enterSelectFlag = false;
+    //boolean enterSelectFlag = false;
 
     public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, WorldActivity _worldActivity) {
         graphic = _graphic;
@@ -169,8 +169,8 @@ public class DungeonSelectManager {
                         )
                 }
         );
-
-        enterSelectFlag = false;
+        dungeonEnterSelectButtonGroup.setUpdateFlag(false);
+        dungeonEnterSelectButtonGroup.setDrawFlag(false);
     }
 
     private void loadModeSelectButton() {
@@ -215,9 +215,7 @@ public class DungeonSelectManager {
 
         // ** Buttonの表示
         mapIconPlateGroup.draw();
-        if (enterSelectFlag) {
-            dungeonEnterSelectButtonGroup.draw();
-        }
+        dungeonEnterSelectButtonGroup.draw();
         modeSelectButtonGroup.draw();
     }
 
@@ -234,18 +232,18 @@ public class DungeonSelectManager {
             }
         }
         */
+
+
+        //TODO いな依頼:同一フレームの同時タッチ問題→PlatePlateにおけるフラグ判定を予約タイプに変更する(set_falseした場合に実際にfalseになるのはupdate()の最後にする。)ことで解決できる。
+        dungeonEnterSelectButtonCheck();
+        dungeonEnterSelectButtonGroup.update();
+
         mapIconPlateCheck();
-        if (enterSelectFlag && selectMode == SELECT_MODE.DUNGEON_SELECT) {
-            dungeonEnterSelectButtonCheck();
-        }
+        mapIconPlateGroup.update();
 
         modeSelectButtonCheck();
-
-        mapIconPlateGroup.update();
-        if (enterSelectFlag) {
-            dungeonEnterSelectButtonGroup.update();
-        }
         modeSelectButtonGroup.update();
+
     }
 
     //注 : 紛らわしいが、DungeonSelectButtonはGeoMapSelectとDungeonSelectとで共通になっている
@@ -255,9 +253,14 @@ public class DungeonSelectManager {
             focusDungeonButtonID = buttonID;
             //TODO plateGroupの内部のT型配列を返す関数が欲しい。eventの確認のため
             //if mapIconPlateGroup.
+            //ボタンに登録されているイベント名を参照して、それそれの場合の結果を返す
             if (event.get(focusDungeonButtonID).equals("dungeon")) {
                 if (selectMode == SELECT_MODE.DUNGEON_SELECT) {
-                    enterSelectFlag = true;
+                    dungeonEnterSelectButtonGroup.setUpdateFlag(true);
+                    dungeonEnterSelectButtonGroup.setDrawFlag(true);
+                    modeSelectButtonGroup.setUpdateFlag(false);
+                    mapIconPlateGroup.setUpdateFlag(false);
+
                 }
                 if (selectMode == SELECT_MODE.GEOMAP_SELECT) {
                     geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
@@ -300,19 +303,24 @@ public class DungeonSelectManager {
     }
 
     public void dungeonEnterSelectButtonCheck() {
+        if (!(dungeonEnterSelectButtonGroup.getUpdateFlag() && selectMode == SELECT_MODE.DUNGEON_SELECT)) {
+            return;
+        }
+
         int buttonID = dungeonEnterSelectButtonGroup.getTouchContentNum();
-
         if (buttonID == 0 ) { //侵入する
-            //侵入処理
+            //TODO 侵入処理
 
-            //TODO 仮
-            //worldActivity.goToBattleActivity();
-
-            //worldModeAdmin.setDungeon(Constants.Mode.ACTIVATE.ACTIVE);
-            enterSelectFlag = false;
+            dungeonEnterSelectButtonGroup.setUpdateFlag(false);
+            dungeonEnterSelectButtonGroup.setDrawFlag(false);
+            modeSelectButtonGroup.setUpdateFlag(true);
+            mapIconPlateGroup.setUpdateFlag(true);
         }
         if (buttonID == 1 ) { //やめる
-            enterSelectFlag = false;
+            dungeonEnterSelectButtonGroup.setUpdateFlag(false);
+            dungeonEnterSelectButtonGroup.setDrawFlag(false);
+            modeSelectButtonGroup.setUpdateFlag(true);
+            mapIconPlateGroup.setUpdateFlag(true);
         }
     }
 
