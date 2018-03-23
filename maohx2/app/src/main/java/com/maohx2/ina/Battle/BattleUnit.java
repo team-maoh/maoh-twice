@@ -25,6 +25,10 @@ abstract public class BattleUnit {
     Random rnd;
     Graphic graphic;
     Paint paint;
+    double dx, dy, dl;
+    int move_end ;
+    int speed;
+    int move_num;
 
 
     //by kmhanko
@@ -38,13 +42,16 @@ abstract public class BattleUnit {
     public BattleUnit(Graphic _graphic){
         graphic = _graphic;
         paint = new Paint();
-    }
-
-    //by kmhanko
-    public void init() {
-        exist = false;
+        speed = 10;
         rnd = new Random();
     }
+
+    /*
+    //by kmhanko
+    public void init() {
+        rnd = new Random();
+    }
+*/
 
     /* by kmhanko
     public void initStatus(BattleDungeonUnitData _battleDungeonUnitData){
@@ -60,21 +67,21 @@ abstract public class BattleUnit {
     }
 
     protected void statusInit() {
-        exist = true;
         name = battleDungeonUnitData.getName();
         max_hit_point = battleDungeonUnitData.getStatus(HP);
         hit_point = max_hit_point;
         attack = battleDungeonUnitData.getStatus(ATTACK);
         defence = battleDungeonUnitData.getStatus(DEFENSE);
         luck = battleDungeonUnitData.getStatus(LUCK);
+        speed = battleDungeonUnitData.getStatus(SPEED);
         attack_unit_num = -1; //TODO 不明
     }
 
     //player用
     public void setBattleUnitData(BattleDungeonUnitData _battleDungeonUnitData) {
         //初期化処理 (データに寄らない)
-        init();
-
+        //init();
+        exist = true;
         //格納
         battleDungeonUnitData = _battleDungeonUnitData;
 
@@ -86,12 +93,12 @@ abstract public class BattleUnit {
     //enemy 用
     public void setBattleUnitData(BattleBaseUnitData _battleBaseUnitData, int repeatCount, int i) {
         //初期化処理 (データに寄らない)
-        init();
+        //init();
 
+        exist = true;
         //TODO : 敵の出現位置決定
         setPositionX(rnd.nextInt(1200)+200);
         setPositionY(rnd.nextInt(500)+200);
-
 
         battleDungeonUnitData = new BattleDungeonUnitData();
         battleDungeonUnitData.setName(_battleBaseUnitData.getName());
@@ -100,6 +107,14 @@ abstract public class BattleUnit {
         battleDungeonUnitData.setBitmapData(_battleBaseUnitData.getBitmapData());
 
         setRadius(_battleBaseUnitData.getRadius());
+
+        dx = rnd.nextInt(1200)+200 - getPositionX();
+        dy = rnd.nextInt(500)+200 - getPositionY();
+        dl = Math.sqrt(dx*dx + dy*dy);
+
+        dx = dx / dl;
+        dy = dy / dl;
+        move_end = (int) (dl / speed);
 
         //BattleDungeonUnitDataをもとに初期化
         statusInit();
@@ -135,13 +150,13 @@ abstract public class BattleUnit {
     public void setName(String _name) { name = _name; }
 
     // *** Override用 ***
-    abstract public int getPositionX();
-    abstract public int getPositionY();
-    abstract public int getRadius();
+    abstract public double getPositionX();
+    abstract public double getPositionY();
+    abstract public double getRadius();
     abstract public int getUIID();
-    abstract public void setRadius(int _radius);
-    abstract public void setPositionX(int _position_x);
-    abstract public void setPositionY(int _position_y);
+    abstract public void setRadius(double _radius);
+    abstract public void setPositionX(double _position_x);
+    abstract public void setPositionY(double _position_y);
     abstract public void setUIID(int _uiid);
     public void update(){}
     public void draw(){}

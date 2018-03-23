@@ -50,9 +50,11 @@ public class BattleUnitAdmin {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             battle_units[i] = new BattleEnemy(graphic);
         }
+        /*
         for (int i = 0; i < BATTLE_UNIT_MAX; i++) {
             battle_units[i].init();
         }
+        */
         for (int i = 0; i < 10000; i++) {
             touch_markers[i] = new TouchMarker(graphic);
         }
@@ -123,15 +125,10 @@ public class BattleUnitAdmin {
             }
         }
 
-        System.out.println("touch_state:" + touch_state);
+        //System.out.println("touch_state:" + touch_state);
 
         //プレイヤーの攻撃によるマーカーの設置
         if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
-            count++;
-            System.out.println("count:" + count);
-
-
-            count = 0;
 
             for (int i = 0; i < 10000; i++) {
                 if (touch_markers[i].isExist() == false) {
@@ -145,9 +142,9 @@ public class BattleUnitAdmin {
 
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (battle_units[i].isExist() == true) {
-                int ex = battle_units[i].getPositionX();
-                int ey = battle_units[i].getPositionY();
-                int er = battle_units[i].getRadius();
+                int ex = (int)battle_units[i].getPositionX();
+                int ey = (int)battle_units[i].getPositionY();
+                int er = (int)battle_units[i].getRadius();
                 for(int j = 0; j< 10000; j++) {
                     if (touch_markers[j].isExist() == true) {
                         int cx = touch_markers[j].getPositionX();
@@ -178,7 +175,7 @@ public class BattleUnitAdmin {
         //敵の更新と攻撃処理
         for (int i = 0; i < BATTLE_UNIT_MAX; i++) {
             if (battle_units[i].isExist() == true) {
-                //   battle_units[i].update();
+                battle_units[i].update();
             }
         }
 

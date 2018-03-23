@@ -13,28 +13,28 @@ public class BattlePlayer extends BattleUnit {
     }
 
     @Override
-    public int getPositionX() {
+    public double getPositionX() {
         return -510;
     }
 
     @Override
-    public void setPositionX(int _position_x) {}
+    public void setPositionX(double _position_x) {}
 
     @Override
-    public int getPositionY() {
+    public double getPositionY() {
         return -510;
     }
 
     @Override
-    public void setPositionY(int _position_y) {}
+    public void setPositionY(double _position_y) {}
 
     @Override
-    public int getRadius() {
+    public double getRadius() {
         return -510;
     }
 
     @Override
-    public void setRadius(int _radius) {}
+    public void setRadius(double _radius) {}
 
     @Override
     public int getUIID(){return  -510; }
