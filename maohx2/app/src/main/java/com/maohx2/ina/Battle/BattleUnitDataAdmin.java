@@ -42,16 +42,20 @@ public class BattleUnitDataAdmin {
         List<Integer> initial_attack = new ArrayList<Integer>();
         List<Integer> initial_defence = new ArrayList<Integer>();
         List<Integer> initial_luck = new ArrayList<Integer>();
+        List<Integer> initial_speed = new ArrayList<Integer>();
         List<Integer> delta_hp = new ArrayList<Integer>();
         List<Integer> delta_attack = new ArrayList<Integer>();
         List<Integer> delta_defence = new ArrayList<Integer>();
         List<Integer> delta_luck = new ArrayList<Integer>();
+        List<Integer> delta_speed = new ArrayList<Integer>();
         List<Integer> initial_bonus_hp = new ArrayList<Integer>();
         List<Integer> initial_bonus_attack = new ArrayList<Integer>();
         List<Integer> initial_bonus_defence = new ArrayList<Integer>();
+        List<Integer> initial_bonus_speed = new ArrayList<Integer>();
         List<Integer> delta_bonus_hp = new ArrayList<Integer>();
         List<Integer> delta_bonus_attack = new ArrayList<Integer>();
         List<Integer> delta_bonus_defence = new ArrayList<Integer>();
+        List<Integer> delta_bonus_speed = new ArrayList<Integer>();
 
         List<Integer> hp_bar_offset = new ArrayList<Integer>();
         List<Integer> hp_bar_length = new ArrayList<Integer>();
@@ -63,20 +67,20 @@ public class BattleUnitDataAdmin {
         initial_attack = battle_unit_data_database.getInt("battle_unit_data", "initial_attack", null);
         initial_defence = battle_unit_data_database.getInt("battle_unit_data", "initial_defence", null);
         initial_luck = battle_unit_data_database.getInt("battle_unit_data", "initial_luck", null);
-        initial_luck = battle_unit_data_database.getInt("battle_unit_data", "initial_speed", null);
+        initial_speed = battle_unit_data_database.getInt("battle_unit_data", "initial_speed", null);
         delta_hp = battle_unit_data_database.getInt("battle_unit_data", "delta_hp", null);
         delta_attack = battle_unit_data_database.getInt("battle_unit_data", "delta_attack", null);
         delta_defence = battle_unit_data_database.getInt("battle_unit_data", "delta_defence", null);
         delta_luck = battle_unit_data_database.getInt("battle_unit_data", "delta_luck", null);
-        delta_luck = battle_unit_data_database.getInt("battle_unit_data", "delta_speed", null);
+        delta_speed = battle_unit_data_database.getInt("battle_unit_data", "delta_speed", null);
         initial_bonus_hp = battle_unit_data_database.getInt("battle_unit_data", "initial_bonus_hp", null);
         initial_bonus_attack = battle_unit_data_database.getInt("battle_unit_data", "initial_bonus_attack", null);
         initial_bonus_defence = battle_unit_data_database.getInt("battle_unit_data", "initial_bonus_defence", null);
-        initial_bonus_defence = battle_unit_data_database.getInt("battle_unit_data", "initial_bonus_speed", null);
+        initial_bonus_speed = battle_unit_data_database.getInt("battle_unit_data", "initial_bonus_speed", null);
         delta_bonus_hp = battle_unit_data_database.getInt("battle_unit_data", "delta_bonus_hp", null);
         delta_bonus_attack = battle_unit_data_database.getInt("battle_unit_data", "delta_bonus_attack", null);
         delta_bonus_defence = battle_unit_data_database.getInt("battle_unit_data", "delta_bonus_defence", null);
-        delta_bonus_defence = battle_unit_data_database.getInt("battle_unit_data", "delta_bonus_speed", null);
+        delta_bonus_speed = battle_unit_data_database.getInt("battle_unit_data", "delta_bonus_speed", null);
 
         hp_bar_offset = battle_unit_data_database.getInt("battle_unit_data", "hp_bar_offset", null);
         hp_bar_length = battle_unit_data_database.getInt("battle_unit_data", "hp_bar_length", null);
@@ -92,30 +96,31 @@ public class BattleUnitDataAdmin {
 
             tempBattleBaseUnitData.setName(name.get(i));
             tempBattleBaseUnitData.setBitmapData(graphic.searchBitmap(name.get(i)));
-            if(radius.get(i) < -1) {
+            if(radius.get(i) < 0) {
                 tempBattleBaseUnitData.setRadius(graphic.searchBitmap(name.get(i)).getHeight() > graphic.searchBitmap(name.get(i)).getWidth() ? graphic.searchBitmap(name.get(i)).getHeight() / 2 : graphic.searchBitmap(name.get(i)).getWidth() / 2);
             }else{
                 tempBattleBaseUnitData.setRadius(radius.get(i));
             }
 
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.AttackFlame, attack_frame.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialHP, initial_hp.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialAttack, initial_attack.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialDefence, initial_defence.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialLuck, initial_luck.get(i));
-            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialSpeed, initial_luck.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialSpeed, initial_speed.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaHP, delta_hp.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaAttack, delta_attack.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaDefence, delta_defence.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaLuck, delta_luck.get(i));
-            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaSpeed, delta_hp.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaSpeed, delta_speed.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialBonusHP, initial_bonus_hp.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialBonusAttack, initial_bonus_attack.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialBonusDefence, initial_bonus_defence.get(i));
-            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialBonusSpeed, initial_bonus_defence.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialBonusSpeed, initial_bonus_speed.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusHP, delta_bonus_hp.get(i));tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialHP, initial_hp.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusAttack, delta_bonus_attack.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusDefence, delta_bonus_defence.get(i));
-            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusSpeed, delta_bonus_defence.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusSpeed, delta_bonus_speed.get(i));
         }
 
     }
