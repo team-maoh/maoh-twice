@@ -13,9 +13,9 @@ import java.util.Random;
 
 public class BattleEnemy extends BattleUnit {
 
-    int position_x;
-    int position_y;
-    int radius;
+    double position_x;
+    double position_y;
+    double radius;
     int uiid;
     int wait_frame;
     int attack_frame;
@@ -25,15 +25,18 @@ public class BattleEnemy extends BattleUnit {
     public BattleEnemy(Graphic _graphic){
         super(_graphic);
         paint.setARGB(255,0,255,0);
-    }
-
-    @Override
-    public void init() {
-        super.init();
         position_x = 0;
         position_y = 0;
         radius = 0;
     }
+
+    /*
+    @Override
+    public void init() {
+        super.init();
+
+    }
+    */
 
     /*
     public void initStatus(BattleDungeonUnitData _battleDungeonUnitData) {
@@ -58,6 +61,7 @@ public class BattleEnemy extends BattleUnit {
     @Override
     public void update(){
 
+
         //時間経過
         wait_frame++;
         attack_flag = false;
@@ -67,46 +71,62 @@ public class BattleEnemy extends BattleUnit {
             wait_frame = 0;
             attack_unit_num = 0;
         }
+
+
+        position_x += dx*speed;
+        position_y += dy*speed;
+        move_num++;
+
+        if(move_num == move_end) {
+            dx = rnd.nextInt(1200)+200 - position_x;
+            dy = rnd.nextInt(500)+200 - position_y;
+            dl = Math.sqrt(dx*dx + dy*dy);
+
+            dx = dx / dl;
+            dy = dy / dl;
+            move_end = (int) (dl/speed);
+            move_num = 0;
+        }
     }
 
     @Override
     public void draw(){
 
-        graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),position_x,position_y);
+        graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y);
         //graphic.bookingDrawCircle(position_x, position_y, radius);
-        graphic.bookingDrawText(String.valueOf(hit_point),position_x,position_y);
+        graphic.bookingDrawText(String.valueOf(hit_point),(int)position_x,(int)position_y);
 
-        graphic.bookingDrawRect((int)(position_x-radius*0.8), (int)(position_y+radius*0.8), (int)(position_x+radius*0.8)*(hit_point/max_hit_point), (int)(position_y+radius*0.9),paint);
+        graphic.bookingDrawRect((int)(position_x-radius*0.8), (int)(position_y+radius*0.8), (int)(((double)position_x-(double)radius*0.8+(double)radius*1.6*((double)hit_point/(double)max_hit_point))), (int)(position_y+radius*0.9),paint);
 
     }
 
     @Override
-    public int getPositionX() {
+    public double getPositionX() {
         return position_x;
     }
 
     @Override
-    public void setPositionX(int _position_x) {
+    public void setPositionX(double _position_x) {
         position_x = _position_x;
     }
 
     @Override
-    public int getPositionY() {
+    public double getPositionY() {
         return position_y;
     }
 
     @Override
-    public void setPositionY(int _position_y) {
+    public void setPositionY(double _position_y) {
         position_y = _position_y;
     }
 
     @Override
-    public int getRadius() {
+    public double getRadius() {
         return radius;
     }
 
     @Override
-    public void setRadius(int _radius) {
+    public void setRadius(double _radius) {
         radius = _radius;
     }
 
