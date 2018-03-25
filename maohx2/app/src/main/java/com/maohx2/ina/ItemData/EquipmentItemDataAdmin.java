@@ -29,7 +29,6 @@ public class EquipmentItemDataAdmin extends ItemDataAdmin<EquipmentItemData> {
         List<String> image_name = database.getString(tableName, "image_name");
         //List<Integer> item_kind = database.getInt(tableName, "item_kind");
         List<Integer> equipment_kind = database.getInt(tableName, "equipment_kind");
-        List<Integer> attack = database.getInt(tableName, "attack");
         List<Integer> price = database.getInt(tableName, "price");
 
 
@@ -38,7 +37,6 @@ public class EquipmentItemDataAdmin extends ItemDataAdmin<EquipmentItemData> {
             datas.get(i).setName(name.get(i));
             datas.get(i).setImageName(image_name.get(i));
             datas.get(i).setEquipmentKind(itoe[equipment_kind.get(i)]);
-            datas.get(i).setAttack(attack.get(i));
             datas.get(i).setPrice(price.get(i));
             datas.get(i).setItemKind(ITEM_KIND.EXPEND);
             datas.get(i).setItemImage(graphic.searchBitmap(image_name.get(i)));

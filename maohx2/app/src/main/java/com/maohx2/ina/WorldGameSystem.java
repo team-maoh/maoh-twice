@@ -84,13 +84,6 @@ public class WorldGameSystem {
         expendItemInventry = new Inventry(map_user_interface, graphic);
         //TODO いな依頼:interfaceはあとで変更できないとまずい場合があるかもしれない
 
-        //TODO 仮。適当にGeo入れる GEO1が上がる能力は単一
-        for (int i = 0; i < 8; i++) {
-            geoInventry.addItemData(GeoObjectDataAdmin.getDebugGeoObjectData(i));
-        }
-
-
-
 
         worldModeAdmin = new WorldModeAdmin();
         worldModeAdmin.initWorld();
@@ -129,6 +122,11 @@ public class WorldGameSystem {
         itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "debug");
 
         canvas = null;
+
+        //TODO 仮。適当にGeo入れる GEO1が上がる能力は単一
+        for (int i = 0; i < 8; i++) {
+            geoInventry.addItemData(GeoObjectDataAdmin.getDebugGeoObjectData(i));
+        }
 
         geoPresentManager = new GeoPresentManager(
                 graphic,
