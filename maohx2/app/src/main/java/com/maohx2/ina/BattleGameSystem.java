@@ -6,7 +6,13 @@ import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.ina.Arrange.Inventry;
+import com.maohx2.ina.Arrange.PaletteAdmin;
+import com.maohx2.ina.Arrange.PaletteBattleAdmin;
+import com.maohx2.ina.Arrange.PaletteCenter;
+import com.maohx2.ina.Arrange.PaletteElement;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.ItemData.EquipmentItemDataAdmin;
 import com.maohx2.ina.Text.ListBoxAdmin;
 
 import com.maohx2.ina.UI.BattleUserInterface;
@@ -39,8 +45,13 @@ public class BattleGameSystem {
     // by kmhanko
     BattleUnitDataAdmin battleUnitDataAdmin;
 
+    Inventry inventry;
+    EquipmentItemDataAdmin equipment_item_data_admin;
+    PaletteAdmin palette_admin;
+
+
     // TODO : holderは不要
-    public void init(SurfaceHolder _holder, Graphic _graphic, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity battle_activity) {
+    public void init(SurfaceHolder _holder, Graphic _graphic, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity battle_activity, MyDatabaseAdmin my_database_admin) {
 
         holder = _holder;
         graphic = _graphic;
@@ -53,11 +64,22 @@ public class BattleGameSystem {
         text_box_admin.init(battle_user_interface);
         list_box_admin.init(battle_user_interface, graphic);
 
+
+
+        PaletteCenter.initStatic(graphic);
+        PaletteElement.initStatic(graphic);
+
+        equipment_item_data_admin = new EquipmentItemDataAdmin(graphic, my_database_admin);
+
+        palette_admin = new PaletteAdmin(battle_user_interface, graphic);
+
+
+
         //by kmhanko
         GlobalData globalData = (GlobalData) battle_activity.getApplication();
         PlayerStatus playerStatus = globalData.getPlayerStatus();
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
-        battle_unit_admin.init(graphic, battle_user_interface, battle_activity, battleUnitDataAdmin, playerStatus);
+        battle_unit_admin.init(graphic, battle_user_interface, battle_activity, battleUnitDataAdmin, playerStatus, palette_admin);
     }
 
     //by kmhanko

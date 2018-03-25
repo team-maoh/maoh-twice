@@ -19,12 +19,9 @@ public class BattleEnemy extends BattleUnit {
     int uiid;
     int wait_frame;
     int attack_frame;
-    boolean attack_flag;
-
 
     public BattleEnemy(Graphic _graphic){
         super(_graphic);
-        paint.setARGB(255,0,255,0);
         position_x = 0;
         position_y = 0;
         radius = 0;
@@ -52,10 +49,8 @@ public class BattleEnemy extends BattleUnit {
     @Override
     protected void statusInit() {
         super.statusInit();
-        wait_frame = rnd.nextInt(80);
-        //by kmhanko
         attack_frame = battleDungeonUnitData.getStatus(ATTACK_FRAME);
-        //attack_frame = 100;//データベースからの読み込み、レベルによる補正などもあり
+        wait_frame = rnd.nextInt((int)(getAttackFrame()/2));
     }
 
     @Override
@@ -98,7 +93,10 @@ public class BattleEnemy extends BattleUnit {
         //graphic.bookingDrawCircle(position_x, position_y, radius);
         graphic.bookingDrawText(String.valueOf(hit_point),(int)position_x,(int)position_y);
 
+        paint.setARGB(255,0,255,0);
         graphic.bookingDrawRect((int)(position_x-radius*0.8), (int)(position_y+radius*0.8), (int)(((double)position_x-(double)radius*0.8+(double)radius*1.6*((double)hit_point/(double)max_hit_point))), (int)(position_y+radius*0.9),paint);
+        paint.setARGB(255,255,0,0);
+        graphic.bookingDrawRect((int)(position_x-radius*0.8), (int)(position_y+radius*0.9), (int)(((double)position_x-(double)radius*0.8+(double)radius*1.6*((double)wait_frame/(double)attack_frame))), (int)(position_y+radius*1.0),paint);
 
     }
 

@@ -1,5 +1,6 @@
 package com.maohx2.ina.ItemData;
 
+import com.maohx2.ina.Constants.Item.*;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.kmhanko.database.NamedData;
 
@@ -13,7 +14,7 @@ public abstract class ItemData {
     String image_name;
     int price;
     String name;
-    int item_kind;
+    ITEM_KIND item_kind;
     BitmapData item_image;
 
 
@@ -35,10 +36,10 @@ public abstract class ItemData {
         image_name = _image_name;
     }
 
-    public int getItemKind() {
+    public ITEM_KIND getItemKind() {
         return item_kind;
     }
-    public void setItemKind(int _item_kind) {item_kind = _item_kind;}
+    public void setItemKind(ITEM_KIND _item_kind) {item_kind = _item_kind;}
 
     public BitmapData getItemImage() {
         return item_image;

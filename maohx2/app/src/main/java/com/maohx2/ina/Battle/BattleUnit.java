@@ -116,8 +116,6 @@ abstract public class BattleUnit {
         dy = dy / dl;
         move_end = (int) (dl / speed);
 
-        setWaitFrame(rnd.nextInt(getAttack()/2));
-
         //BattleDungeonUnitDataをもとに初期化
         statusInit();
         return;
