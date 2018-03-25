@@ -19,6 +19,7 @@ import com.maohx2.kmhanko.effect.EffectAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlotAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlotAdminManager;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
+import com.maohx2.kmhanko.itemdata.GeoObjectDataAdmin;
 import com.maohx2.kmhanko.itemshop.ItemShopAdmin;
 import com.maohx2.kmhanko.effect.*;
 import com.maohx2.kmhanko.sound.SoundAdmin;
@@ -84,46 +85,9 @@ public class WorldGameSystem {
         //TODO いな依頼:interfaceはあとで変更できないとまずい場合があるかもしれない
 
         //TODO 仮。適当にGeo入れる GEO1が上がる能力は単一
-        geoInventry.addItemData(new GeoObjectData(
-                graphic,
-                new int[] { 100,0,0,0 },
-                new double[] { 1.0, 1.0, 1.0, 1.0}
-        ));
-        geoInventry.addItemData(new GeoObjectData(
-                graphic,
-                new int[] { 0,50,0,0 },
-                new double[] { 1.0, 1.0, 1.0, 1.0}
-        ));
-        geoInventry.addItemData(new GeoObjectData(
-                graphic,
-                new int[] { 0,0,30,0 },
-                new double[] { 1.0, 1.0, 1.0, 1.0}
-        ));
-        geoInventry.addItemData(new GeoObjectData(
-                graphic,
-                new int[] { 0,0,0,20 },
-                new double[] { 1.0, 1.0, 1.0, 1.0}
-        ));
-        geoInventry.addItemData(new GeoObjectData(
-                graphic,
-                new int[] { 0,0,0,0 },
-                new double[] { 2.0, 1.0, 1.0, 1.0}
-        ));
-        geoInventry.addItemData(new GeoObjectData(
-                graphic,
-                new int[] { 0,0,0,0 },
-                new double[] { 1.0, 3.0, 1.0, 1.0}
-        ));
-        geoInventry.addItemData(new GeoObjectData(
-                graphic,
-                new int[] { 0,0,0,0 },
-                new double[] { 1.0, 1.0, 2.0, 1.0}
-        ));
-        geoInventry.addItemData(new GeoObjectData(
-                graphic,
-                new int[] { 0,0,0,0 },
-                new double[] { 1.0, 1.0, 0.0, 5.0}
-        ));
+        for (int i = 0; i < 8; i++) {
+            geoInventry.addItemData(GeoObjectDataAdmin.getDebugGeoObjectData(i));
+        }
 
 
 

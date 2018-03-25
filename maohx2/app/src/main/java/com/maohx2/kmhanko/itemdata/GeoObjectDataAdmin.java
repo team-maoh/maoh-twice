@@ -50,4 +50,50 @@ public class GeoObjectDataAdmin extends ItemDataAdmin<GeoObjectData> {
         }
     }
 
+
+    static public GeoObjectData getDebugGeoObjectData(int i) {
+        GeoObjectData[] buf = new GeoObjectData[]{
+                new GeoObjectData(
+                        graphic,
+                        new int[]{100, 0, 0, 0},
+                        new double[]{1.0, 1.0, 1.0, 1.0}
+                ),
+                new GeoObjectData(
+                        graphic,
+                        new int[]{0, 50, 0, 0},
+                        new double[]{1.0, 1.0, 1.0, 1.0}
+                ),
+                new GeoObjectData(
+                        graphic,
+                        new int[]{0, 0, 30, 0},
+                        new double[]{1.0, 1.0, 1.0, 1.0}
+                ),
+                new GeoObjectData(
+                        graphic,
+                        new int[]{0, 0, 0, 20},
+                        new double[]{1.0, 1.0, 1.0, 1.0}
+                ),
+                new GeoObjectData(
+                        graphic,
+                        new int[]{0, 0, 0, 0},
+                        new double[]{2.0, 1.0, 1.0, 1.0}
+                ),
+                new GeoObjectData(
+                        graphic,
+                        new int[]{0, 0, 0, 0},
+                        new double[]{1.0, 3.0, 1.0, 1.0}
+                ),
+                new GeoObjectData(
+                        graphic,
+                        new int[]{0, 0, 0, 0},
+                        new double[]{1.0, 1.0, 2.0, 1.0}
+                ),
+                new GeoObjectData(
+                        graphic,
+                        new int[]{0, 0, 0, 0},
+                        new double[]{1.0, 1.0, 0.0, 5.0}
+                )
+        };
+        return buf[i];
+    }
 }
