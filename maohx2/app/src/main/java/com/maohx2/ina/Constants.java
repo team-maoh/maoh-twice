@@ -98,6 +98,29 @@ public final class Constants {
         }
     }
 
+    public static class Item {
+        public enum ITEM_KIND {
+            EXPEND,
+            EQUIPMENT,
+            GEO,
+        }
+
+        public enum EQUIPMENT_KIND {
+            SWORD,
+            WAND,
+            AX,
+            SPEAR,
+            BOW,
+            GUN,
+            FIST,
+            CLUB,
+            WHIP,
+            MUSIC,
+            MONSTER,
+        }
+
+    }
+
 
     // *** takano ***
     public static class WorldMap {

@@ -10,12 +10,16 @@ public class BattlePlayer extends BattleUnit {
 
     BattlePlayer(Graphic _graphic){
         super(_graphic);
+        paint.setARGB(255,0,255,0);
+        max_hit_point = 10000;
+        hit_point = max_hit_point;
+        exist = true; //todo::消す
     }
 
     @Override
     public void draw(){
         //graphic.bookingDrawText(String.valueOf(hit_point),(int)position_x,(int)position_y);
-        graphic.bookingDrawRect(300,700, (int)(300+1000*((double)hit_point/(double)max_hit_point)), 800, paint);
+        graphic.bookingDrawRect(200,50, (int)(200+1200*((double)hit_point/(double)max_hit_point)), 80, paint);
     }
 
 

@@ -47,22 +47,20 @@ public class StartGameSystem {
         equipment_item_data_admin = new EquipmentItemDataAdmin(graphic, my_database_admin);
 
         inventry = new Inventry(start_user_interface, graphic);
-        palette_admin = new PaletteAdmin(_start_user_interface, graphic, inventry);
+        palette_admin = new PaletteAdmin(_start_user_interface, graphic);
     }
 
 
     public void updata() {
         n++;
+
         if(n == 100) {
             inventry.addItemData(equipment_item_data_admin.getOneDataByName("天使の杖"));
             n = 0;
         }
+
         inventry.updata();
-
-
-
-
-        palette_admin.update();
+        palette_admin.update(false);
     }
 
 
