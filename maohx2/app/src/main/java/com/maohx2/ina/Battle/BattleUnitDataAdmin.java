@@ -21,6 +21,7 @@ public class BattleUnitDataAdmin {
     List<BattleBaseUnitData> battle_base_unit_datas = new ArrayList<BattleBaseUnitData>();
     //List<BattleDungeonUnitData> battle_dungeon_unit_datas = new ArrayList<BattleDungeonUnitData>();
     Graphic graphic;
+    List<String> name_list;
 
 
     public BattleUnitDataAdmin(MyDatabaseAdmin _databaseAdmin, Graphic _graphic) {
@@ -36,7 +37,7 @@ public class BattleUnitDataAdmin {
     private void loadBattleUnitData() {
 
         //by kmhanko String → Integer
-        List<String> name = new ArrayList<String>();
+        name_list = new ArrayList<String>();
         List<Integer> attack_frame = new ArrayList<Integer>();
         List<Integer> initial_hp = new ArrayList<Integer>();
         List<Integer> initial_attack = new ArrayList<Integer>();
@@ -57,7 +58,7 @@ public class BattleUnitDataAdmin {
         List<Integer> hp_bar_length = new ArrayList<Integer>();
         List<Integer> radius = new ArrayList<Integer>();
 
-        name = battle_unit_data_database.getString("battle_unit_data", "name", null);
+        name_list = battle_unit_data_database.getString("battle_unit_data", "name", null);
         attack_frame = battle_unit_data_database.getInt("battle_unit_data", "attack_frame", null);
         initial_hp = battle_unit_data_database.getInt("battle_unit_data", "initial_hp", null);
         initial_attack = battle_unit_data_database.getInt("battle_unit_data", "initial_attack", null);
@@ -82,7 +83,7 @@ public class BattleUnitDataAdmin {
         hp_bar_length = battle_unit_data_database.getInt("battle_unit_data", "hp_bar_length", null);
         radius = battle_unit_data_database.getInt("battle_unit_data", "hit_radius", null);
 
-        for (int i = 0; i < name.size(); i++) {
+        for (int i = 0; i < name_list.size(); i++) {
             battle_base_unit_datas.add(new BattleBaseUnitData());
             //battle_base_unit_Zdatas.get(i)init();
 
@@ -90,10 +91,10 @@ public class BattleUnitDataAdmin {
             //DBから読み込んだデータを全てBattleBaseUnitDataに格納する
             BattleBaseUnitData tempBattleBaseUnitData = battle_base_unit_datas.get(i);
 
-            tempBattleBaseUnitData.setName(name.get(i));
-            tempBattleBaseUnitData.setBitmapData(graphic.searchBitmap(name.get(i)));
+            tempBattleBaseUnitData.setName(name_list.get(i));
+            tempBattleBaseUnitData.setBitmapData(graphic.searchBitmap(name_list.get(i)));
             if(radius.get(i) < -1) {
-                tempBattleBaseUnitData.setRadius(graphic.searchBitmap(name.get(i)).getHeight() > graphic.searchBitmap(name.get(i)).getWidth() ? graphic.searchBitmap(name.get(i)).getHeight() / 2 : graphic.searchBitmap(name.get(i)).getWidth() / 2);
+                tempBattleBaseUnitData.setRadius(graphic.searchBitmap(name_list.get(i)).getHeight() > graphic.searchBitmap(name_list.get(i)).getWidth() ? graphic.searchBitmap(name_list.get(i)).getHeight() / 2 : graphic.searchBitmap(name_list.get(i)).getWidth() / 2);
             }else{
                 tempBattleBaseUnitData.setRadius(radius.get(i));
             }
@@ -117,7 +118,6 @@ public class BattleUnitDataAdmin {
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusDefence, delta_bonus_defence.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusSpeed, delta_bonus_defence.get(i));
         }
-
     }
 
     //name で検索して、BattleBaseUnitData型を返す関数。getBattleDungeonUnitDataByName
@@ -129,6 +129,10 @@ public class BattleUnitDataAdmin {
             }
         }
         throw new Error("その名前のユニットは存在しません");
+    }
+
+    public List<String> getNameList(){
+        return name_list;
     }
 
     /*

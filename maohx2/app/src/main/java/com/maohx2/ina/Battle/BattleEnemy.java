@@ -59,19 +59,12 @@ public class BattleEnemy extends BattleUnit {
     }
 
     @Override
-    public void update(){
+    public int update(){
 
 
         //時間経過
         wait_frame++;
-        attack_flag = false;
-
-        //attackFlameに達したらUnitを対象として攻撃
-        if(wait_frame == attack_frame){
-            wait_frame = 0;
-            attack_unit_num = 0;
-        }
-
+        //attack_flag = false;
 
         position_x += dx*speed;
         position_y += dy*speed;
@@ -87,6 +80,15 @@ public class BattleEnemy extends BattleUnit {
             move_end = (int) (dl/speed);
             move_num = 0;
         }
+
+        //attackFlameに達したらUnitを対象として攻撃
+        if(wait_frame == attack_frame){
+            wait_frame = 0;
+            return attack;
+        }
+
+
+        return 0;
     }
 
     @Override
@@ -116,9 +118,7 @@ public class BattleEnemy extends BattleUnit {
     }
 
     @Override
-    public void setPositionY(double _position_y) {
-        position_y = _position_y;
-    }
+    public void setPositionY(double _position_y) {position_y = _position_y;}
 
     @Override
     public double getRadius() {
@@ -138,6 +138,23 @@ public class BattleEnemy extends BattleUnit {
     @Override
     public void setUIID(int _uiid) {
         uiid = _uiid;
+    }
+
+    @Override
+    public int getWaitFrame() {
+        return wait_frame;
+    }
+    @Override
+    public void setWaitFrame(int _wait_frame) {
+        wait_frame = _wait_frame;
+    }
+    @Override
+    public double getAttackFrame() {
+        return attack_frame;
+    }
+    @Override
+    public void setAttackFrame(int _attack_frame) {
+        attack_frame = _attack_frame;
     }
 
 }

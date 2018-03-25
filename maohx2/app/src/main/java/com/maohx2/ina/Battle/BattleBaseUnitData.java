@@ -117,6 +117,4 @@ public class BattleBaseUnitData {
 
         return bonus_status;
     }
-
-
 }
