@@ -69,7 +69,19 @@ public final class Constants {
             DEFENSE,
             LUCK,
             SPEED,
-            NUM_OF_STATUS,
+            NUM_OF_STATUS;
+
+
+            //enumへのキャスト用
+            public static Status toEnum(int x) {
+                for(Status type : Status.values()) {
+                    if (type.ordinal() == x) {
+                        return type;
+                    }
+                }
+                return null;
+            }
+
         }
 
         public enum BonusStatus {

@@ -217,8 +217,11 @@ public class MyDatabase {
     public int getOneInt(String t_name, String c_name, String w_script) {
         Cursor c = getCursor(t_name, c_name, w_script);
         //該当要素が存在しない場合
-        if (c.getCount() == 0) {
-            throw new Error("☆タカノ: MyDatabase#getOneInt 該当データが存在しない");
+        if (c.getCount() <= 0) {
+            throw new Error("☆タカノ: MyDatabase#getOneInt 該当データが存在しない or エラー" + c.getCount());
+        }
+        if (!c.moveToFirst()) {
+            throw new Error("☆タカノ: MyDatabase#getOneInt moveToFirstエラー");
         }
         return c.getInt(0);
     }
@@ -245,8 +248,11 @@ public class MyDatabase {
     public String getOneString(String t_name, String c_name, String w_script) {
         Cursor c = getCursor(t_name, c_name, w_script);
         //該当要素が存在しない場合
-        if (c.getCount() == 0) {
-            throw new Error("☆タカノ: MyDatabase#getOneString 該当データが存在しない");
+        if (c.getCount() <= 0) {
+            throw new Error("☆タカノ: MyDatabase#getOneString 該当データが存在しない or エラー" + c.getCount());
+        }
+        if (!c.moveToFirst()) {
+            throw new Error("☆タカノ: MyDatabase#getOneString moveToFirstエラー");
         }
         return c.getString(0);
     }
@@ -301,8 +307,11 @@ public class MyDatabase {
     public double getOneDouble(String t_name, String c_name, String w_script) {
         Cursor c = getCursor(t_name, c_name, w_script);
         //該当要素が存在しない場合
-        if (c.getCount() == 0) {
-            throw new Error("☆タカノ: MyDatabase#GetOneDouble 該当データが存在しない");
+        if (c.getCount() <= 0) {
+            throw new Error("☆タカノ: MyDatabase#getOneDouble 該当データが存在しない or エラー" + c.getCount());
+        }
+        if (!c.moveToFirst()) {
+            throw new Error("☆タカノ: MyDatabase#getOneDouble moveToFirstエラー");
         }
         return c.getDouble(0);
     }
@@ -328,8 +337,11 @@ public class MyDatabase {
     public float getOneFloat(String t_name, String c_name, String w_script) {
         Cursor c = getCursor(t_name, c_name, w_script);
         //該当要素が存在しない場合
-        if (c.getCount() == 0) {
-            throw new Error("☆タカノ: MyDatabase#getOneFloat 該当データが存在しない");
+        if (c.getCount() <= 0) {
+            throw new Error("☆タカノ: MyDatabase#getOneFloat 該当データが存在しない or エラー" + c.getCount());
+        }
+        if (!c.moveToFirst()) {
+            throw new Error("☆タカノ: MyDatabase#getOneFloat moveToFirstエラー");
         }
         return c.getFloat(0);
     }

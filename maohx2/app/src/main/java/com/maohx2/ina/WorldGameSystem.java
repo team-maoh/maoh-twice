@@ -11,6 +11,7 @@ import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.ListBoxAdmin;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
+import com.maohx2.kmhanko.GeoPresent.GeoPresentManager;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
@@ -47,6 +48,7 @@ public class WorldGameSystem {
     DungeonSelectManager dungeonSelectManager;
     ItemShopAdmin itemShopAdmin;
     ItemDataAdminManager itemDataAdminManager;
+    GeoPresentManager geoPresentManager;
 
     EffectAdmin effectAdmin;
     SoundAdmin soundAdmin;
@@ -57,9 +59,13 @@ public class WorldGameSystem {
 
     WorldActivity worldActivity;
 
+    PlayerStatus playerStatus;
+
     //TODO いな依頼:引数にUI,Graphicが入って居るためGlobalDataに設置できない
     Inventry geoInventry;
     Inventry expendItemInventry;
+
+    //TODO いな依頼　Inventryのupdateを呼ばないと真っ黒。あとアクティブ関係
 
     public void init(UserInterface _map_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity) {
         graphic = _graphic;
@@ -69,7 +75,7 @@ public class WorldGameSystem {
 
         worldActivity = _worldActivity;
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
-        PlayerStatus playerStatus = globalData.getPlayerStatus();
+        playerStatus = globalData.getPlayerStatus();
         //GeoInventry = globalData.getGeoInventry();
 
         //TODO いな依頼:Globalに入れる
@@ -160,6 +166,19 @@ public class WorldGameSystem {
 
         canvas = null;
 
+        geoPresentManager = new GeoPresentManager(
+                graphic,
+                map_user_interface,
+                worldModeAdmin,
+                databaseAdmin,
+                text_box_admin,
+                geoInventry,
+                expendItemInventry,
+                itemDataAdminManager.getExpendItemDataAdmin(),
+                playerStatus
+        );
+
+
     }
 
 
@@ -191,9 +210,9 @@ public class WorldGameSystem {
             itemShopAdmin.update();
         }
         if (worldModeAdmin.getIsUpdate(worldModeAdmin.getPresent())) {
+            geoPresentManager.update();
         }
 
-        geoInventry.updata();
         text_box_admin.update();
         effectAdmin.update();
     }
@@ -213,6 +232,7 @@ public class WorldGameSystem {
             itemShopAdmin.draw();
         }
         if (worldModeAdmin.getIsDraw(worldModeAdmin.getPresent())) {
+            geoPresentManager.draw();
         }
 
         text_box_admin.draw();

@@ -166,6 +166,8 @@ public abstract class ItemShop {
                         }
                 }
         );
+        backPlateGroup.setUpdateFlag(true);
+        backPlateGroup.setDrawFlag(true);
     }
 
     public void setTextBox() {
@@ -216,7 +218,6 @@ public abstract class ItemShop {
     }
 
     public void productUpdate() {
-
             productPlateGroup.update();
 
             int content = productPlateGroup.getTouchContentNum();
@@ -228,7 +229,6 @@ public abstract class ItemShop {
                 buySelectPlateGroup.setUpdateFlag(true);
                 buySelectPlateGroup.setDrawFlag(true);
             }
-
     }
 
     public void buySelectUpdate() {
