@@ -167,15 +167,15 @@ public class GeoPresentManager {
     private void scoreTextBoxUpdate() {
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "献上ポイント");
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "\n");
-        textBoxAdmin.bookingDrawText(scoreTextBoxID, "HP¥t" + hpScore);
+        textBoxAdmin.bookingDrawText(scoreTextBoxID, "HP " + hpScore);
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "\n");
-        textBoxAdmin.bookingDrawText(scoreTextBoxID, "Attack¥t" + attackScore);
+        textBoxAdmin.bookingDrawText(scoreTextBoxID, "Attack " + attackScore);
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "\n");
-        textBoxAdmin.bookingDrawText(scoreTextBoxID, "Deffence¥t" + defenceScore);
+        textBoxAdmin.bookingDrawText(scoreTextBoxID, "Deffence " + defenceScore);
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "\n");
-        textBoxAdmin.bookingDrawText(scoreTextBoxID, "Luck¥t" + luckScore);
+        textBoxAdmin.bookingDrawText(scoreTextBoxID, "Luck " + luckScore);
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "\n");
-        textBoxAdmin.bookingDrawText(scoreTextBoxID, "Special¥t" + specialScore);
+        textBoxAdmin.bookingDrawText(scoreTextBoxID, "Special " + specialScore);
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "MOP");
         textBoxAdmin.updateText(scoreTextBoxID);
     }
