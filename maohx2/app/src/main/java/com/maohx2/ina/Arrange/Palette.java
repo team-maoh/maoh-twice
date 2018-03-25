@@ -34,13 +34,13 @@ public class Palette {
     Graphic graphic;
     int position_x;
     int position_y;
-    Inventry inventry;
+    //Inventry inventry;
 
-    public Palette(BattleUserInterface _battle_user_interface, Graphic _graphic, Inventry _inventry, int _position_x, int _position_y) {
+    public Palette(BattleUserInterface _battle_user_interface, Graphic _graphic, int _position_x, int _position_y) {
         graphic = _graphic;
         battle_user_interface = _battle_user_interface;
         paint = new Paint();
-        inventry = _inventry;
+        //inventry = _inventry;
 
         position_x = _position_x;
         position_y = _position_y;
@@ -91,39 +91,46 @@ public class Palette {
             battle_palette_mode = 1;
         }
 
+        if(battle_palette_mode == 2) {
+
+            direction_check = Math.atan2((position_y - touch_y), (touch_x - position_x));
+
+            for (int i = 0; i < 8; i++) {
+                if (i != 4) {
+                    if (direction_check >= direction_section_check[i] && direction_check < direction_section_check[(i + 1) % 8]) {
+
+                        select_circle_num = i;
+
+                    }
+                } else {
+                    if ((direction_check >= direction_section_check[i] && direction_check <= Math.PI) || (direction_check < direction_section_check[(i + 1) % 8] && direction_check >= -Math.PI)) {
+
+                        select_circle_num = i;
+
+                    }
+                }
+            }
+
+            palette_center.changeElement(select_circle_num);
+            palette_center.setItemData(palette_elements[select_circle_num].getItemData());
+        }
+
         if (touch_state == Constants.Touch.TouchState.UP) {
 
             if (battle_palette_mode == 2) {
                 selected_circle_num = select_circle_num;
-                palette_center.changeElement(selected_circle_num);
             }
             battle_palette_mode = 0;
         }
 
-
-        direction_check = Math.atan2((position_y - touch_y), (touch_x - position_x));
-
-
-        for (int i = 0; i < 8; i++) {
-            if (i != 4) {
-                if (direction_check >= direction_section_check[i] && direction_check < direction_section_check[(i + 1) % 8]) {
-
-                    select_circle_num = i;
-
-                }
-            } else {
-                if ((direction_check >= direction_section_check[i] && direction_check <= Math.PI) || (direction_check < direction_section_check[(i + 1) % 8] && direction_check >= -Math.PI)) {
-
-                    select_circle_num = i;
-
-                }
-            }
-        }
     }
+
+
+
 
     public void updateSetting() {
 
-        battle_palette_mode = 3;
+        battle_palette_mode = 1;
 
         //指がパレットの上に乗った際のチェック
         if (battle_user_interface.checkUI(palette_center.getTouchID(), Constants.Touch.TouchWay.DOWN_MOMENT) == true) {
@@ -184,28 +191,16 @@ public class Palette {
     public void draw() {
 
         if (battle_palette_mode == 0) {
-            palette_center.drawSmall();
-        } else if (battle_palette_mode == 1) {
-            palette_center.drawBig();
-            for (int i = 0; i < 8; i++) {
-                palette_elements[i].drawSmall();
+            if(palette_center.getItemData() != null) {
+                palette_center.drawBigAndItem();
+            }else{
+                palette_center.drawSmall();
             }
-        } else if (battle_palette_mode == 2) {
-            palette_center.drawBig();
-
-            for (int i = 0; i < 8; i++) {
-                if (i == select_circle_num) {
-                    palette_elements[i].drawBig();
-                } else {
-                    palette_elements[i].drawSmall();
-                }
-            }
-        } else if (battle_palette_mode == 3) {
-
+        }else{
             if (battle_user_interface.getPaletteElement() != null) {
                 if (battle_user_interface.isUIPaletteDraw() == true && battle_user_interface.getPaletteElement().getElementNum() == 0) {
                     palette_center.drawBig();
-                }else{
+                } else {
                     palette_center.drawBigAndItem();
                 }
             } else {
@@ -214,15 +209,21 @@ public class Palette {
 
             for (int i = 0; i < 8; i++) {
                 if (battle_user_interface.getPaletteElement() != null) {
-                    if (battle_user_interface.isUIPaletteDraw() == true && battle_user_interface.getPaletteElement().getElementNum() == i+1) {
-                            palette_elements[i].drawBig();
-                    }else{
+                    if (battle_user_interface.isUIPaletteDraw() == true && battle_user_interface.getPaletteElement().getElementNum() == i + 1) {
+                        palette_elements[i].drawBig();
+                    } else {
                         palette_elements[i].drawBigAndItem();
                     }
                 } else {
                     palette_elements[i].drawBigAndItem();
                 }
             }
+
         }
     }
+
+    public int getPaletteMode() {
+        return battle_palette_mode;
+    }
+
 }

@@ -87,4 +87,6 @@ public abstract class ItemDataAdmin<T extends ItemData>  {
 */
     public List<T> getItemDatas() {return datas;}
 
+    //public static ItemData getDebugItem(){return null;}
+
 }

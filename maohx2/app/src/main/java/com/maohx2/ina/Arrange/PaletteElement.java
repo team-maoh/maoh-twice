@@ -69,4 +69,3 @@ public class PaletteElement {
     public int getElementNum(){return element_num;}
 
 }
-

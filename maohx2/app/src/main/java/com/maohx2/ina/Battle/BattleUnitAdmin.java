@@ -3,6 +3,7 @@ package com.maohx2.ina.Battle;
 import android.app.Activity;
 import android.graphics.Paint;
 
+import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.BattleUserInterface;
@@ -33,17 +34,19 @@ public class BattleUnitAdmin {
     Paint paint = new Paint();
 
     Graphic graphic;
-
-
+    PaletteAdmin palette_admin;
+    boolean marker_flag;
 
     //by kmhanko BattleUnitDataAdmin追加
-    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus) {
-
+    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin) {
         //引数の代入
         graphic = _graphic;
         battle_user_interface = _battle_user_interface;
         battle_activity = _battle_activity;
         battleUnitDataAdmin = _battleUnitDataAdmin;
+        palette_admin = _palette_admin;
+
+        marker_flag = false;
 
         //BattleUnit配列のインスタンス化・初期化
         battle_units[0] = new BattlePlayer(graphic);
@@ -108,16 +111,16 @@ public class BattleUnitAdmin {
         //TODO 仮。本当はダンジョンのデータなどを引数にして出現する敵をランダムなどで決定する
 
         //一覧
-        //setBattleUnitData("e01-0", 1);
-        //setBattleUnitData("e88-0", 1);
-        //setBattleUnitData("e74-0", 1);
-        //setBattleUnitData("m003-2", 1);
-        //setBattleUnitData("e96-0", 1);
-        //setBattleUnitData("e27", 1);
-        //setBattleUnitData("m007", 1);
-        //setBattleUnitData("e103-0", 1);
-        //setBattleUnitData("e94-3", 1);
-        //setBattleUnitData("e83-1", 1);
+        setBattleUnitData("e01-0", 1);
+        setBattleUnitData("e88-0", 1);
+        setBattleUnitData("e74-0", 1);
+        setBattleUnitData("m003-2", 1);
+        setBattleUnitData("e96-0", 1);
+        setBattleUnitData("e27", 1);
+        setBattleUnitData("m007", 1);
+        setBattleUnitData("e103-0", 1);
+        setBattleUnitData("e94-3", 1);
+        setBattleUnitData("e83-1", 1);
     }
 
 
@@ -127,21 +130,31 @@ public class BattleUnitAdmin {
         double touch_y = battle_user_interface.getTouchY();
         TouchState touch_state = battle_user_interface.getTouchState();
 
-        //マーカーの縮小
-        for (int i = 0; i < 10000; i++) {
-            if (touch_markers[i].isExist() == true) {
-                touch_markers[i].update();
+        if(marker_flag == false) {
+            palette_admin.update(true);
+        }
+
+        if(palette_admin.doUsePalette() == false) {
+            //プレイヤーの攻撃によるマーカーの設置
+            if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
+                marker_flag = true;
+                for (int i = 0; i < 10000; i++) {
+                    if (touch_markers[i].isExist() == false) {
+                        touch_markers[i].generate((int) touch_x, (int) touch_y, 100, 10, 0.9);
+                        break;
+                    }
+                }
             }
         }
 
-        //プレイヤーの攻撃によるマーカーの設置
-        if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
+        if ((touch_state == TouchState.UP) || (touch_state == TouchState.AWAY)) {
+            marker_flag = false;
+        }
 
-            for (int i = 0; i < 10000; i++) {
-                if (touch_markers[i].isExist() == false) {
-                    touch_markers[i].generate((int) touch_x, (int) touch_y, 100,10, 0.9);
-                    break;
-                }
+            //マーカーの縮小
+        for (int i = 0; i < 10000; i++) {
+            if (touch_markers[i].isExist() == true) {
+                touch_markers[i].update();
             }
         }
 
@@ -192,6 +205,10 @@ public class BattleUnitAdmin {
         }
     }
 
+
+
+
+
     public void draw() {
 
 
@@ -209,7 +226,8 @@ public class BattleUnitAdmin {
         }
 
         //デバッグ用 プレイヤーのステータスを表示
-        debugPlayerStatusDraw();
+        //debugPlayerStatusDraw();
+        palette_admin.draw();
 
     }
 
