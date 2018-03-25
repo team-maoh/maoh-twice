@@ -57,8 +57,9 @@ public class WorldGameSystem {
 
     WorldActivity worldActivity;
 
-    //引数にUI,Graphicが入って居るためGlobalDataに設置できない
+    //TODO いな依頼:引数にUI,Graphicが入って居るためGlobalDataに設置できない
     Inventry geoInventry;
+    Inventry expendItemInventry;
 
     public void init(UserInterface _map_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity) {
         graphic = _graphic;
@@ -71,7 +72,10 @@ public class WorldGameSystem {
         PlayerStatus playerStatus = globalData.getPlayerStatus();
         //GeoInventry = globalData.getGeoInventry();
 
+        //TODO いな依頼:Globalに入れる
         geoInventry = new Inventry(map_user_interface, graphic);
+        expendItemInventry = new Inventry(map_user_interface, graphic);
+        //TODO いな依頼:interfaceはあとで変更できないとまずい場合があるかもしれない
 
         //TODO 仮。適当にGeo入れる GEO1が上がる能力は単一
         geoInventry.addItemData(new GeoObjectData(
@@ -117,6 +121,7 @@ public class WorldGameSystem {
 
 
 
+
         worldModeAdmin = new WorldModeAdmin();
         worldModeAdmin.initWorld();
 
@@ -140,8 +145,17 @@ public class WorldGameSystem {
 
 
         itemDataAdminManager.init(databaseAdmin,graphic);
+        expendItemInventry.addItemData(
+                itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName("D_ポーション")
+        );
+        expendItemInventry.addItemData(
+                itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName("D_ポーション")
+        );
+        expendItemInventry.addItemData(
+                itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName("D_EXポーション")
+        );
 
-        itemShopAdmin.init(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager);
+        itemShopAdmin.init(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager, expendItemInventry, geoInventry);
         itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "debug");
 
         canvas = null;

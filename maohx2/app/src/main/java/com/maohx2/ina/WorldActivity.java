@@ -73,17 +73,16 @@ class WorldSurfaceView extends BaseSurfaceView {
     public void gameLoop() {
         map_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         world_game_system.updata();
-        //graphic.bookingDrawBitmapName("キノコの森",300,590);
         world_game_system.draw();
 
-
+/*
         if (touch_state == TouchState.DOWN) {
             thread = null;
             Intent intent = new Intent(map_activity, DungeonActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             map_activity.startActivity(intent);
         }
-
+*/
     }
 
 }

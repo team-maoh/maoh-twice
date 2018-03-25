@@ -106,10 +106,18 @@ public class BattleUnitAdmin {
 
     public void spawnEnemy() {
         //TODO 仮。本当はダンジョンのデータなどを引数にして出現する敵をランダムなどで決定する
-        setBattleUnitData("m014", 1);
-        setBattleUnitData("e54-3", 2);
-        setBattleUnitData("m014", 3);
-        setBattleUnitData("e54-3", 4);
+
+        //一覧
+        //setBattleUnitData("e01-0", 1);
+        //setBattleUnitData("e88-0", 1);
+        //setBattleUnitData("e74-0", 1);
+        //setBattleUnitData("m003-2", 1);
+        //setBattleUnitData("e96-0", 1);
+        //setBattleUnitData("e27", 1);
+        //setBattleUnitData("m007", 1);
+        //setBattleUnitData("e103-0", 1);
+        //setBattleUnitData("e94-3", 1);
+        //setBattleUnitData("e83-1", 1);
     }
 
 

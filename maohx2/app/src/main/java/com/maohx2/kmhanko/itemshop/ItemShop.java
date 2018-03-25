@@ -9,6 +9,7 @@ import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.WorldModeAdmin;
 import com.maohx2.kmhanko.database.NamedDataAdmin;
 import com.maohx2.ina.ItemData.ItemDataAdmin;
+import com.maohx2.ina.Arrange.Inventry;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 
@@ -18,6 +19,8 @@ import com.maohx2.kmhanko.plate.BackPlate;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+
+
 
 import java.util.LinkedHashSet;
 
@@ -38,8 +41,8 @@ public abstract class ItemShop {
     //boolean isListBoxItemActive = true;
     //boolean isListBoxSelectActive = false;
     //TODO いなの関数待ち productPlateは非表示にはならないので注意
-    boolean isProductPlateGroupActive = true;
-    boolean isBuySelectPlateGroupActive = false;
+    //boolean isProductPlateGroupActive = true;
+    //boolean isBuySelectPlateGroupActive = false;
 
     String buyItemName;
 
@@ -51,12 +54,16 @@ public abstract class ItemShop {
 
     ItemData focusItemData;//現在選択しているItem
 
+    Inventry itemInventry;
 
-    public ItemShop(UserInterface _userInterface, Graphic _graphic, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin) {
+
+
+    public ItemShop(UserInterface _userInterface, Graphic _graphic, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, Inventry _itemInventry) {
         userInterface = _userInterface;
         graphic = _graphic;
         textBoxAdmin = _textBoxAdmin;
         worldModeAdmin = _worldModeAdmin;
+        itemInventry = _itemInventry;
     }
 
     /*
@@ -108,6 +115,8 @@ public abstract class ItemShop {
             );
         }
         productPlateGroup = new PlateGroup<BoxProductPlate>(boxProductPlates);
+        productPlateGroup.setUpdateFlag(true);
+        productPlateGroup.setDrawFlag(true);
 
 
         Paint textPaint = new Paint();
@@ -119,7 +128,7 @@ public abstract class ItemShop {
                                 graphic, userInterface, new Paint(),
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
-                                new int[]{1100, 50, 1550, 200},
+                                new int[]{1100, 550, 1550, 650},
                                 "購入する",
                                 textPaint
                         ),
@@ -127,12 +136,14 @@ public abstract class ItemShop {
                                 graphic, userInterface, new Paint(),
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
-                                new int[]{1100, 250, 1550, 400},
+                                new int[]{1100, 700, 1550, 800},
                                 "やめる",
                                 textPaint
                         )
                 }
         );
+        buySelectPlateGroup.setUpdateFlag(false);
+        buySelectPlateGroup.setDrawFlag(false);
 
         loadBackPlate();
     }
@@ -146,6 +157,9 @@ public abstract class ItemShop {
                             @Override
                             public void callBackEvent() {
                                 //戻るボタンが押された時の処理
+                                productPlateGroup.setUpdateFlag(true);
+                                buySelectPlateGroup.setUpdateFlag(false);
+                                buySelectPlateGroup.setDrawFlag(false);
                                 worldModeAdmin.setShop(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
                             }
@@ -162,6 +176,7 @@ public abstract class ItemShop {
         productUpdate();
         buySelectUpdate();
         backPlateGroup.update();
+        itemInventry.updata();
 
         /*
         if (isListBoxItemActive) {
@@ -201,7 +216,7 @@ public abstract class ItemShop {
     }
 
     public void productUpdate() {
-        if (isProductPlateGroupActive) {
+
             productPlateGroup.update();
 
             int content = productPlateGroup.getTouchContentNum();
@@ -209,28 +224,29 @@ public abstract class ItemShop {
                 focusItemData = productPlateGroup.getContentItem(content);
 
                 //TODO アイテムの詳細を表示するぷれーとか何か
-
-                isProductPlateGroupActive = false;
-                isBuySelectPlateGroupActive = true;
+                productPlateGroup.setUpdateFlag(false);
+                buySelectPlateGroup.setUpdateFlag(true);
+                buySelectPlateGroup.setDrawFlag(true);
             }
-        }
+
     }
 
     public void buySelectUpdate() {
-        if (isBuySelectPlateGroupActive) {
-            buySelectPlateGroup.update();
-
+        buySelectPlateGroup.update();
+        if (buySelectPlateGroup.getUpdateFlag()) {
             int content = buySelectPlateGroup.getTouchContentNum();
             switch(content) {
                 case(0) ://購入する
                     //itemData = (ItemData)itemShopData.getOneDataByName(buyItemName);
                     buyItem(focusItemData);
-                    isProductPlateGroupActive = true;
-                    isBuySelectPlateGroupActive = false;
+                    productPlateGroup.setUpdateFlag(true);
+                    buySelectPlateGroup.setUpdateFlag(false);
+                    buySelectPlateGroup.setDrawFlag(false);
                     break;
                 case(1) ://キャンセル
-                    isProductPlateGroupActive = true;
-                    isBuySelectPlateGroupActive = false;
+                    productPlateGroup.setUpdateFlag(true);
+                    buySelectPlateGroup.setUpdateFlag(false);
+                    buySelectPlateGroup.setDrawFlag(false);
                     break;
             }
         }
@@ -250,28 +266,10 @@ public abstract class ItemShop {
     }
 
     public void draw() {
-        /*
-        listBox_Item.draw();
-        if (isListBoxSelectActive) {
-            listBox_Select.draw();
-        }
-        */
-        if (isBuySelectPlateGroupActive) {
-            buySelectPlateGroup.draw();
-        }
-        //if (isProductPlateGroupActive) {
-            productPlateGroup.draw();
-        //}
-
+        buySelectPlateGroup.draw();
+        productPlateGroup.draw();
         backPlateGroup.draw();
+        itemInventry.draw();
     }
 
-    /*
-    public void draw(Canvas canvas) {
-        listBox_Item.draw(canvas);
-        if (isListBoxSelectActive) {
-            listBox_Select.draw(canvas);
-        }
-    }
-    */
 }

@@ -30,6 +30,7 @@ public class BoxProductPlate extends BoxItemPlate {
     @Override
     public void draw() {
         //価格の表示を追加
+        ///TODO 大きさの変更とかは無理やりなのであまり褒められたもんではない。いなに頼んで正式に変更できるようにしてもらう必要あり
 
         int iconWidth = (int)(content_item.getItemImage().getWidth() * ICON_RATE);
         int iconHeight = (int)(content_item.getItemImage().getHeight() * ICON_RATE);
