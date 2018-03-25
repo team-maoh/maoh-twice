@@ -116,6 +116,8 @@ abstract public class BattleUnit {
         dy = dy / dl;
         move_end = (int) (dl / speed);
 
+        setWaitFrame(rnd.nextInt(getAttack()/2));
+
         //BattleDungeonUnitDataをもとに初期化
         statusInit();
         return;
@@ -143,7 +145,7 @@ abstract public class BattleUnit {
     public String getName() { return name; }
 
     // *** setter ***
-    public void setExist(boolean _exist) { exist = _exist; }
+    public void existIs(boolean _exist) { exist = _exist; }
     public void setMaxHitPoint(int _max_hit_point){ max_hit_point = _max_hit_point; }
     public void setHitPoint(int _hit_point) { hit_point = _hit_point; }
     public void setAttack(int _attack) { attack = _attack; }
@@ -158,7 +160,11 @@ abstract public class BattleUnit {
     abstract public void setPositionX(double _position_x);
     abstract public void setPositionY(double _position_y);
     abstract public void setUIID(int _uiid);
-    public void update(){}
+    abstract public int getWaitFrame();
+    abstract public void setWaitFrame(int _wait_frame);
+    abstract public double getAttackFrame();
+    abstract public void setAttackFrame(int _attack_frame);
+    public int update(){return 0;}
     public void draw(){}
 
 

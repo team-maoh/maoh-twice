@@ -13,6 +13,13 @@ public class BattlePlayer extends BattleUnit {
     }
 
     @Override
+    public void draw(){
+        //graphic.bookingDrawText(String.valueOf(hit_point),(int)position_x,(int)position_y);
+        graphic.bookingDrawRect(300,700, (int)(300+1000*((double)hit_point/(double)max_hit_point)), 800, paint);
+    }
+
+
+    @Override
     public double getPositionX() {
         return -510;
     }
@@ -42,4 +49,16 @@ public class BattlePlayer extends BattleUnit {
     @Override
     public void setUIID(int _uiid){}
 
+    @Override
+    public int getWaitFrame() {
+        return -1;
+    }
+    @Override
+    public void setWaitFrame(int _wait_frame) {}
+    @Override
+    public double getAttackFrame() {
+        return -1;
+    }
+    @Override
+    public void setAttackFrame(int _attack_frame) {}
 }

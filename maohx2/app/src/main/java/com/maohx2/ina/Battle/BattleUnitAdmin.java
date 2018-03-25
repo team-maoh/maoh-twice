@@ -127,13 +127,12 @@ public class BattleUnitAdmin {
         double touch_y = battle_user_interface.getTouchY();
         TouchState touch_state = battle_user_interface.getTouchState();
 
+        //マーカーの縮小
         for (int i = 0; i < 10000; i++) {
             if (touch_markers[i].isExist() == true) {
                 touch_markers[i].update();
             }
         }
-
-        //System.out.println("touch_state:" + touch_state);
 
         //プレイヤーの攻撃によるマーカーの設置
         if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
@@ -147,7 +146,7 @@ public class BattleUnitAdmin {
         }
 
 
-
+        //敵HP更新
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (battle_units[i].isExist() == true) {
                 int ex = (int)battle_units[i].getPositionX();
@@ -160,7 +159,12 @@ public class BattleUnitAdmin {
                         int cr = touch_markers[j].getRadius();
 
                         if((ex-cx)*(ex-cx)+(ey-cy)*(ey-cy)<(er-cr)*(er-cr)){
-                            battle_units[i].setHitPoint(battle_units[i].getHitPoint() - touch_markers[j].getDamage());
+                            int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage();
+                            if(new_hp > 0) {
+                                battle_units[i].setHitPoint(new_hp);
+                            }else{
+                                battle_units[i].existIs(false);
+                            }
                         }
                     }
                 }
@@ -168,43 +172,17 @@ public class BattleUnitAdmin {
         }
 
 
-
+        //敵の更新と攻撃処理
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (battle_units[i].isExist() == true) {
-                int id = battle_units[i].getUIID();
-
-                if (battle_user_interface.checkUI(id, Constants.Touch.TouchWay.DOWN_MOMENT) == true) {
-                    battle_units[0].setAttackUnitNum(i);
+                int damage_to_player = battle_units[i].update();
+                if(damage_to_player > 0){
+                    int new_hp = battle_units[0].getHitPoint() - damage_to_player;
+                    if(new_hp <= 0){
+                        //ゲームオーバー
+                    }
+                    battle_units[0].setHitPoint(new_hp);
                 }
-            }
-        }
-
-
-        //敵の更新と攻撃処理
-        for (int i = 0; i < BATTLE_UNIT_MAX; i++) {
-            if (battle_units[i].isExist() == true) {
-                battle_units[i].update();
-            }
-        }
-
-        //HP更新
-        for (int i = 0; i < BATTLE_UNIT_MAX; i++) {
-            int attack_unit_num = battle_units[i].getAttackUnitNum();
-            if (attack_unit_num != -1) {
-
-                BattleUnit attack_unit = battle_units[i];
-                BattleUnit attacked_unit = battle_units[attack_unit_num];
-
-                int new_hit_point = attacked_unit.getHitPoint() - attack_unit.getAttack();
-
-                if (new_hit_point > 0) {
-                    attacked_unit.setHitPoint(new_hit_point);
-                    //System.out.println(i + "→" + attack_unit_num + "      " + battle_units[attack_unit_num].getHitPoint());
-                } else {
-                    attacked_unit.setExist(false);
-                    calc_unit_status.breakUnit(attack_unit, attacked_unit);
-                }
-                battle_units[i].setAttackUnitNum(-1);
             }
         }
 
@@ -212,14 +190,6 @@ public class BattleUnitAdmin {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             result_flag = result_flag & !battle_units[i].isExist();
         }
-
-        /*
-        //リザルト演出
-        if (result_flag == true) {
-            battle_activity.finish();
-        }
-        */
-
     }
 
     public void draw() {
@@ -231,28 +201,11 @@ public class BattleUnitAdmin {
             }
         }
 
-        for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
+        for (int i = 0; i < BATTLE_UNIT_MAX; i++) {
 
             if (battle_units[i].isExist() == true) {
-
                 battle_units[i].draw();
-
-                //canvas.drawCircle(battle_units[i].getPositionX(), battle_units[i].getPositionY(), 50.0f, paint);
-
-                //by kmhanko
-                //graphic.bookingDrawBitmapName(battle_units[i].getName(), battle_units[i].getPositionX(), battle_units[i].getPositionY());
-
-                /*
-                if(i%2 == 0) {
-                    graphic.bookingDrawBitmapName("ゴキ", battle_units[i].getPositionX(), battle_units[i].getPositionY());
-                }
-
-                if(i%2 == 1) {
-                    graphic.bookingDrawBitmapName("apple", battle_units[i].getPositionX(), battle_units[i].getPositionY());
-                }
-                */
             }
-
         }
 
         //デバッグ用 プレイヤーのステータスを表示
