@@ -55,7 +55,7 @@ public class StartGameSystem {
         n++;
 
         if(n == 100) {
-            inventry.addItemData(equipment_item_data_admin.getOneDataByName("天使の杖"));
+            inventry.addItemData(equipment_item_data_admin.getOneDataByName("デバッグ剣"));
             n = 0;
         }
 

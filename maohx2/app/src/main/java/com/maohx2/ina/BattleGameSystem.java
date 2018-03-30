@@ -71,7 +71,7 @@ public class BattleGameSystem {
 
         equipment_item_data_admin = new EquipmentItemDataAdmin(graphic, my_database_admin);
 
-        palette_admin = new PaletteAdmin(battle_user_interface, graphic);
+        palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipment_item_data_admin);
 
 
 
