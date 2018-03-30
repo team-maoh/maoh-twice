@@ -129,7 +129,8 @@ public final class Constants {
             WHIP,
             MUSIC,
             MONSTER,
-            SHIELD
+            SHIELD,
+            BARE,
         }
 
     }
