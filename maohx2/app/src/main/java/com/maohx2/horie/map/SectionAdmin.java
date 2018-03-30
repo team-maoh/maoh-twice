@@ -170,7 +170,7 @@ public class SectionAdmin {
     //セクションの分割
     public void divideSection(Section m_section) {
         divide_times++;
-        int buf_space = 13;//分割するときに上下左右をどれだけ空けるか
+        int buf_space = 11;//分割するときに上下左右をどれだけ空けるか
         int top = m_section.top;
         int bottom = m_section.bottom;
         int right = m_section.right;

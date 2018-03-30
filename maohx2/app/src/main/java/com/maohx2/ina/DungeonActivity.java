@@ -78,8 +78,8 @@ class DungeonSurfaceView extends BaseSurfaceView{
         my_database_admin.addMyDatabase("ForestDB", "LocalForestImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("ForestDB"), "Forest");
 
-        //my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
-        //graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
+        my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
+        graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
 
         my_database_admin.addMyDatabase("HauntedDB", "LocalHauntedImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("HauntedDB"), "Haunted");
@@ -99,11 +99,11 @@ class DungeonSurfaceView extends BaseSurfaceView{
         game_system.update();
         game_system.draw();
 
-        if(touch_state == TouchState.DOWN) {
-            thread = null;
-            Intent intent = new Intent(dungeon_activity, BattleActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            dungeon_activity.startActivity(intent);
-        }
+//        if(touch_state == TouchState.DOWN) {
+//            thread = null;
+//            Intent intent = new Intent(dungeon_activity, BattleActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//            dungeon_activity.startActivity(intent);
+//        }
     }
 }

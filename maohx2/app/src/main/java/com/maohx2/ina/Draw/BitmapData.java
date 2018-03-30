@@ -17,7 +17,7 @@ public class BitmapData{
         image_name = "";
     }
 
-    Bitmap getBitmap(){
+    public Bitmap getBitmap(){
         return bitmap;
     }
 
