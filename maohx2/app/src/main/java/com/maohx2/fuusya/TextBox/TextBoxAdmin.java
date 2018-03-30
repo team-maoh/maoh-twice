@@ -30,19 +30,25 @@ public class TextBoxAdmin {
     UserInterface user_interface;
     Graphic graphic;
 
+    int debug_int;
+    int debug_damage_int;
+
     public TextBoxAdmin(Graphic _graphic) {
         graphic = _graphic;
         box_count = 0;
+
+        debug_int = 0;
+        debug_damage_int = 0;
     }
 
     public void init(UserInterface _user_interface) {
         user_interface = _user_interface;
 
-        createTextBox(100.0, 550.0, 800.0, 750.0, ROW_OF_BOX, true);
-
-        createTextBox(80.0, 150.0, 400.0, 350.0, 2, true);
+        createTextBox(100.0, 550.0, 800.0, 750.0, ROW_OF_BOX, true, false);
+        createTextBox(80.0, 150.0, 400.0, 350.0, 2, true, false);
 
         frame_count = 0;
+
     }
 
     public void update() {
@@ -58,9 +64,7 @@ public class TextBoxAdmin {
 
         frame_count = (frame_count + 1) % 300;
 
-//        frame_count++;
-
-        if (frame_count % 50 == 0) {
+        if (frame_count % 5 == 0) {
 
             //テスト用の文章
 //            text_box[0].inputText("え、死んでまんの。ほら、また。", text_paint);
@@ -87,20 +91,20 @@ public class TextBoxAdmin {
 //            text_box[0].inputText("冷", blue_paint);
 //            text_box[0].inputText("えきった朝だった", text_paint);
 //            text_box[0].inputText("MOP", blue_paint);
-            bookingDrawText(0, "え、死んでまんの。ほら、また。", text_paint);
-            bookingDrawText(0, "\n", text_paint);
-            bookingDrawText(0, "見たとこ、", text_paint);
-            bookingDrawText(0, "毛並みといい、", blue_paint);
-            bookingDrawText(0, "\n", text_paint);
-            bookingDrawText(0, "体つきといい、", text_paint);
-            bookingDrawText(0, "\n", text_paint);
-            bookingDrawText(0, "えろうええ馬に見えますが。", blue_paint);
-            bookingDrawText(0, "MOP", blue_paint);
-
-            bookingDrawText(0, frame_count + "ダメージを受けた!!", text_paint);
-            bookingDrawText(0, "MOP", text_paint);
-
-
+//            bookingDrawText(0, "え、死んでまんの。ほら、また。", text_paint);
+//            bookingDrawText(0, "\n", text_paint);
+//            bookingDrawText(0, "見たとこ、", text_paint);
+//            bookingDrawText(0, "毛並みといい、", blue_paint);
+//            bookingDrawText(0, "\n", text_paint);
+//            bookingDrawText(0, "体つきといい、", text_paint);
+//            bookingDrawText(0, "\n", text_paint);
+//            bookingDrawText(0, "えろうええ馬に見えますが。", blue_paint);
+//            bookingDrawText(0, "MOP", blue_paint);
+            for (int i = 0; i < 51; i++) {
+                bookingDrawText(0, debug_damage_int + "ダメージを受けた!!", text_paint);
+                bookingDrawText(0, "MOP", text_paint);
+                debug_damage_int++;
+            }
 //            bookingDrawText(1, "test", text_paint);
 //            bookingDrawText(1, "\n", text_paint);
 //            bookingDrawText(1, "desu", text_paint);
@@ -127,6 +131,14 @@ public class TextBoxAdmin {
 //        if (frame_count == 100) {
 //            text_box[0].updateText();
 //        }
+
+        if (frame_count % 20 == 0) {
+            updateText(0, 3 * debug_int);
+            debug_int = (debug_int + 1) % 50;
+
+            System.out.println(debug_int + "unchi");
+        }
+
         //テスト用ここまで
 
         for (int i = 0; i < box_count; i++) {
@@ -142,13 +154,13 @@ public class TextBoxAdmin {
     }
 
     //TextBoxを生成する関数
-    //　引数：Boxの上下左右の座標, Boxに表示する文章の行数, 文章をタッチで切り替えるか否か
+    //　引数：Boxの上下左右の座標, Boxに表示する文章の行数, 文章をタッチで切り替えるか否か, sentenceにidを割り当てるか否か
     //　戻り値：Boxの通し番号（= box_id）
-    public int createTextBox(double _box_left, double _box_top, double _box_right, double _box_down, int _row_of_box, boolean _update_text_by_touching) {
+    public int createTextBox(double _box_left, double _box_top, double _box_right, double _box_down, int _row_of_box, boolean _update_text_by_touching, boolean _assign_sentence_id) {
 
         int touch_id = user_interface.setBoxTouchUI(_box_left, _box_top, _box_right, _box_down);
 
-        text_box[box_count] = new TextBox(graphic, touch_id, box_count, _update_text_by_touching, _box_left, _box_top, _box_right, _box_down, _row_of_box);
+        text_box[box_count] = new TextBox(graphic, touch_id, box_count, _update_text_by_touching, _assign_sentence_id,_box_left, _box_top, _box_right, _box_down, _row_of_box);
 //        text_box[box_count] = new TextBox(graphic, touch_id, (int) (_box_right - _box_left), _row_of_box, box_count);
         text_box[box_count].init();
 
@@ -158,7 +170,7 @@ public class TextBoxAdmin {
     }
 
     public int createTextBox(double _box_left, double _box_top, double _box_right, double _box_down, int _row_of_box) {
-        return createTextBox(_box_left, _box_top, _box_right, _box_down, _row_of_box, true);
+        return createTextBox(_box_left, _box_top, _box_right, _box_down, _row_of_box, true, true);
     }
 
     //TextBoxの表示・非表示を切り替える関数
@@ -167,13 +179,22 @@ public class TextBoxAdmin {
     }
 
     //Textをタッチで切り替えるかどうか
-    public void setTextBoxUpdateTextByTouching(int _box_id, boolean _update_text_by_touching){
+    public void setTextBoxUpdateTextByTouching(int _box_id, boolean _update_text_by_touching) {
         text_box[_box_id].setUpdateTextByTouching(_update_text_by_touching);
     }
 
     //TextBoxのTextを更新する関数
-    public void updateText(int _box_id){
+    public void updateText(int _box_id) {
         text_box[_box_id].updateText();
+    }
+
+    //TextBoxのTextを変更する関数
+    public void updateText(int _box_id, int _sentence_id) {
+        if (_sentence_id < 0) {
+            updateText(_box_id);
+        } else {
+            text_box[_box_id].changeText(_sentence_id);
+        }
     }
 
     //TextBoxを削除する関数

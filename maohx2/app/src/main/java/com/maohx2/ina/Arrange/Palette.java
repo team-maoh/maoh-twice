@@ -226,4 +226,8 @@ public class Palette {
         return battle_palette_mode;
     }
 
+    public ItemData getSelectedItemData() {
+        return palette_center.getItemData();
+    }
+
 }
