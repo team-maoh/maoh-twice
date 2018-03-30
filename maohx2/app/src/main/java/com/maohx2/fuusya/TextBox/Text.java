@@ -18,6 +18,7 @@ public class Text {
     Paint paint;//文字色やフォント
     int begin_column;//文章の開始位置
     int num_of_lines;//このText()が持つ文は * 行目に含まれる
+    int sentence_id;
 
     boolean isMOP;//MOP(Medium of Paragraph 文章と文章の間に挟まる空のqueue)であるか否か
 
@@ -85,6 +86,10 @@ public class Text {
 
     public void setMOP(boolean _isMOP) {
         isMOP = _isMOP;
+    }
+
+    public void setSentenceId(int _sentence_id){
+        sentence_id = _sentence_id;
     }
 
     public boolean isMOP() {

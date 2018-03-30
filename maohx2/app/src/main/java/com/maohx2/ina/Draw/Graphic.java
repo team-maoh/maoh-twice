@@ -1,6 +1,7 @@
 package com.maohx2.ina.Draw;
 
 import android.app.Activity;
+import android.app.admin.SystemUpdateInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -137,11 +138,14 @@ public class Graphic {
     public void draw() {
         Canvas canvas = null;
         canvas = holder.lockCanvas();
+
+        System.out.println("booking_num:"+booking_num);
+
         if(canvas != null) {
             canvas.drawColor(Color.WHITE);
 
             for (int i = 0; i < booking_num; i++) {
-                booking_task_datas.get(i).draw(canvas);
+               booking_task_datas.get(i).draw(canvas);
             }
 
             draw_paint.setColor(Color.GREEN);
@@ -152,6 +156,7 @@ public class Graphic {
 
             holder.unlockCanvasAndPost(canvas);
         }
+
 
         booking_circle_num = 0;
         booking_rect_num = 0;
@@ -342,7 +347,7 @@ public class Graphic {
 
         if(booking_text_num >= booking_text_datas.size()){
             booking_text_datas.add(new BookingTextData());
-            //System.out.println("add" +booking_rect_num);
+//            System.out.println("add" +booking_rect_num);
         }
 
         ((BookingTextData)booking_text_datas.get(booking_text_num)).update(draw_string, setting_point1.x, setting_point1.y, draw_paint);
@@ -505,6 +510,7 @@ public class Graphic {
                 for(int y = 0; y < constant_length; y++) {
                     for(int x = 0; x < variable_length[i]; x++) {
                         int index = ((x + y * variable_length[i]) + (total_length*y));
+//                        System.out.println("index = " + index);
                         //System.out.println("index = " + index);
                         conbine_pixels[x + (total_length*y + init_copy_index)] = source_pixels[i][x + y * variable_length[i]];
                     }

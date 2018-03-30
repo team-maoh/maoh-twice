@@ -23,7 +23,7 @@ public class MapObjectBitmap {
     int MAX_BITMAP_DIR = 8;//最大で8方位
     int MAX_FRAME = 3;//3枚の画像をループ表示する
     BitmapData bitmap_data[][] = new BitmapData[MAX_BITMAP_DIR][MAX_FRAME];
-    int FRAME_PERIODS = 18;//画像の更新周期
+    int FRAME_PERIODS = 5;//画像の更新周期(値が小さいほどfpsが上がる)
 
     int time_count;//画像の更新周期を数える
     boolean is_increasing_frame;
@@ -85,9 +85,9 @@ public class MapObjectBitmap {
 
         //マップ上でのオブジェクトの向き
         //[0 ~ 2*PI]を[0 ~ 7]に変換する
-        int num_dir_on_map = ((int) ((_dir_on_map + PI / total_dirs) / (2 * PI / total_dirs)))%total_dirs;
+        int int_dir_on_map = ((int) ((_dir_on_map + PI / total_dirs) / (2 * PI / total_dirs)))%total_dirs;
 
-        graphic.bookingDrawBitmapData(bitmap_data[num_dir_on_map][frame], (int) x, (int) y);
+        graphic.bookingDrawBitmapData(bitmap_data[int_dir_on_map][frame], (int) x, (int) y);
 
     }
 

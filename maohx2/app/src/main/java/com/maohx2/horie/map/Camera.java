@@ -13,18 +13,20 @@ public class Camera {
         map_magnification = m_map_magnification;
     }
 
+    //移動用
     public int convertToWorldCoordinateX(int norm_x){
-        if(norm_x < 0){
-            throw new Error("%☆ホリエ:x座標が負 norm_x = "+norm_x+"(Camera:convertToWorldCoordinateX)");
-        }
+//        if(norm_x < 0){
+//            throw new Error("%☆ホリエ:x座標が負 norm_x = "+norm_x+"(Camera:convertToWorldCoordinateX)");
+//        }
         int world_x = norm_x + camera_offset.x;
         return world_x;
     }
 
+    //移動用
     public int convertToWorldCoordinateY(int norm_y){
-        if(norm_y < 0){
-            throw new Error("%☆ホリエ:y座標が負 norm_y = "+norm_y+"(Camera:convertToWorldCoordinateY)");
-        }
+//        if(norm_y < 0){
+//            throw new Error("%☆ホリエ:y座標が負 norm_y = "+norm_y+"(Camera:convertToWorldCoordinateY)");
+//        }
         int world_y = norm_y + camera_offset.y;
         return world_y;
     }
@@ -57,6 +59,7 @@ public class Camera {
         return norm_y;
     }
 
+    //マップ表示用
     public int convertToNormCoordinateXForMap(int world_x){
         int norm_x = world_x - camera_offset.x;
         if(norm_x < -1 * map_magnification || norm_x > normalize_size.x + map_magnification){
@@ -65,6 +68,7 @@ public class Camera {
         return norm_x;
     }
 
+    //マップ表示用
     public int convertToNormCoordinateYForMap(int world_y){
         int norm_y = world_y - camera_offset.y;
         if(norm_y < -1 * map_magnification || norm_y > normalize_size.y + map_magnification){
