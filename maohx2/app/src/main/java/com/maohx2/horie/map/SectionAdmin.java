@@ -5,6 +5,8 @@ import android.graphics.Point;
 
 import com.maohx2.ina.Draw.Graphic;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -500,7 +502,7 @@ public class SectionAdmin {
     }
 
     //垂直な道を作る
-    public void makeVerticalPath(int now_point, int now_top, int connected_point, int connected_bottom, int border, Chip[][] map_data) {
+    private void makeVerticalPath(int now_point, int now_top, int connected_point, int connected_bottom, int border, Chip[][] map_data) {
         map_data[now_point][now_top-1].setEntranceFlag(true);
         map_data[connected_point][connected_bottom+1].setEntranceFlag(true);
         for (int i = connected_bottom; i <= border; i++) {
@@ -521,7 +523,7 @@ public class SectionAdmin {
     }
 
     //水平な道を作る
-    public void makeHorizontalPath(int now_point, int now_left, int connected_point, int connected_right, int border, Chip[][] map_data) {
+    private void makeHorizontalPath(int now_point, int now_left, int connected_point, int connected_right, int border, Chip[][] map_data) {
         map_data[now_left-1][now_point].setEntranceFlag(true);
         map_data[connected_right+1][connected_point].setEntranceFlag(true);
         for (int i = connected_right; i <= border; i++) {
@@ -580,7 +582,6 @@ public class SectionAdmin {
             if (ul + u + ur != 2 && ul + l + dl != 2 && dl + d + dr != 2 && ur + r + dr != 2) {
                 map_data[x][y].setStairsFlag(true);
                 break;
-
             }
         }
 
@@ -599,6 +600,20 @@ public class SectionAdmin {
     public void drawAllRoom(Graphic graphic, Paint paint, int small_map_mag){
         for(int i = 0;i <= now_leaves_number;i++){
             leaves[i].getRoom().drawRoom(graphic, paint, small_map_mag);
+        }
+    }
+
+    //採掘場の生成
+    public void createMine(int min_num, int max_num, Chip[][] map_data){
+        ArrayList<Integer> section_num_list = new ArrayList<Integer>();
+        for(int i = 0;i <= section_max_num;i++){
+            section_num_list.add(i);
+        }
+        Collections.shuffle(section_num_list);
+        Random rnd = new Random();
+        int mine_num = rnd.nextInt(max_num - min_num + 1) + min_num - 1;
+        for(int i = 0;i == mine_num;i++){
+            leaves[section_num_list.get(i)].makeMine(map_data);
         }
     }
 

@@ -10,12 +10,14 @@ public class Chip {
     private boolean isRoom;
     private boolean isDisp;
     private boolean isEntrance;
+    private boolean isMine;
     Chip(){
         isWall = false;
         isStairs = false;
         isRoom = true;
         isDisp = false;
         isEntrance = false;
+        isMine = false;
     }
 
     public void initializeChip(){
@@ -24,6 +26,7 @@ public class Chip {
         isRoom = true;
         isDisp = false;
         isEntrance = false;
+        isMine = false;
     }
 
     //getter
@@ -42,6 +45,9 @@ public class Chip {
     public boolean isEntrance(){
         return isEntrance;
     }
+    public boolean isMine(){
+        return isMine;
+    }
 
     //setter
     public void setWallFlag(boolean m_wall_flag){
@@ -58,5 +64,8 @@ public class Chip {
     }
     public void setEntranceFlag(boolean m_entrance_flag){
         isEntrance = m_entrance_flag;
+    }
+    public void setMineFlag(boolean m_mine_flag){
+        isMine = m_mine_flag;
     }
 }

@@ -157,6 +157,25 @@ public class Section {
         }
     }
 
+    public void makeMine(Chip[][] m_map_data){
+        Random rnd = new Random();
+        int side = rnd.nextInt(4);
+        switch (side){
+            case 0:
+                int x1 = rnd.nextInt(room.getRight() - room.getLeft() + 1) + room.getLeft();
+                m_map_data[x1][room.getTop()].setMineFlag(true);
+            case 1:
+                int x2 = rnd.nextInt(room.getRight() - room.getLeft() + 1) + room.getLeft();
+                m_map_data[x2][room.getBottom()].setMineFlag(true);
+            case 2:
+                int y1 = rnd.nextInt(room.getBottom() - room.getTop() + 1) + room.getTop();
+                m_map_data[room.getLeft()][y1].setMineFlag(true);
+            case 3:
+                int y2 = rnd.nextInt(room.getBottom() - room.getTop() + 1) + room.getTop();
+                m_map_data[room.getRight()][y2].setMineFlag(true);
+        }
+    }
+
     //getter
     public int getTop() {
         return top;
