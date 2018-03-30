@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 
@@ -36,6 +37,8 @@ public class BattleUnitAdmin {
     Graphic graphic;
     PaletteAdmin palette_admin;
     boolean marker_flag;
+    boolean first_attack_frag;
+    int attack_count;
 
     //by kmhanko BattleUnitDataAdmin追加
     public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin) {
@@ -47,6 +50,8 @@ public class BattleUnitAdmin {
         palette_admin = _palette_admin;
 
         marker_flag = false;
+        first_attack_frag = false;
+        attack_count = 0;
 
         //BattleUnit配列のインスタンス化・初期化
         battle_units[0] = new BattlePlayer(graphic);
@@ -130,6 +135,8 @@ public class BattleUnitAdmin {
         double touch_y = battle_user_interface.getTouchY();
         TouchState touch_state = battle_user_interface.getTouchState();
 
+        attack_count++;
+
         if(marker_flag == false) {
             palette_admin.update(true);
         }
@@ -137,18 +144,23 @@ public class BattleUnitAdmin {
         if(palette_admin.doUsePalette() == false) {
             //プレイヤーの攻撃によるマーカーの設置
             if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
-                marker_flag = true;
-                for (int i = 0; i < 10000; i++) {
-                    if (touch_markers[i].isExist() == false) {
-                        //todo:attackの計算
-                        touch_markers[i].generate((int) touch_x, (int) touch_y, palette_admin.getEquipmentItemData().getRadius(), battle_units[0].getAttack() + palette_admin.getEquipmentItemData().getAttack(), palette_admin.getEquipmentItemData().getDecayRate());
-                        break;
+                EquipmentItemData attack_equipment = palette_admin.getEquipmentItemData();
+                if ((first_attack_frag = false && attack_count >= attack_equipment.getTouchFrequency()) || (first_attack_frag = true && attack_count >= attack_equipment.getTouchFrequency() * attack_equipment.getAutoFrequencyRate())) {
+                    first_attack_frag = true;
+                    marker_flag = true;
+                    for (int i = 0; i < 10000; i++) {
+                        if (touch_markers[i].isExist() == false) {
+                            //todo:attackの計算
+                            touch_markers[i].generate((int) touch_x, (int) touch_y, palette_admin.getEquipmentItemData().getRadius(), battle_units[0].getAttack() + palette_admin.getEquipmentItemData().getAttack(), palette_admin.getEquipmentItemData().getDecayRate());
+                            break;
+                        }
                     }
                 }
             }
         }
 
         if ((touch_state == TouchState.UP) || (touch_state == TouchState.AWAY)) {
+            first_attack_frag = false;
             marker_flag = false;
         }
 
