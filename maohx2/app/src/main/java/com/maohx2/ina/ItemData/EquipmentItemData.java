@@ -13,7 +13,7 @@ public class EquipmentItemData extends ItemData{
     int radius;
     float decayRate;
     int touchFrequency;
-    int autoFrequencyRate;
+    float autoFrequencyRate;
     int attack;
     int defence;
 
@@ -37,12 +37,10 @@ public class EquipmentItemData extends ItemData{
     public int getTouchFrequency() {return touchFrequency;}
     public void setTouchFrequency(int touchFrequency) {this.touchFrequency = touchFrequency;}
 
-    public int getAutoFrequencyRate() {return autoFrequencyRate;}
-    public void setAutoFrequencyRate(int autoFrequencyRate) {this.autoFrequencyRate = autoFrequencyRate;}
+    public float getAutoFrequencyRate() {return autoFrequencyRate;}
+    public void setAutoFrequencyRate(float autoFrequencyRate) {this.autoFrequencyRate = autoFrequencyRate;}
 
-    public int getAttack() {
-        return attack;
-    }
+    public int getAttack() {return attack;}
     public void setAttack(int _attack) {attack = _attack;}
 
     public int getDefence() {return defence;}
