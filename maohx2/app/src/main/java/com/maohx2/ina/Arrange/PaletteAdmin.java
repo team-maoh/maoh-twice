@@ -35,15 +35,19 @@ public class PaletteAdmin {
         palettes[1].draw();
     }
 
+    //パレットを押せる状態かどうか
     public boolean doUsePalette(){
 
         for(int i = 0; i < 2; i++) {
-            if(palettes[i].getPaletteMode() != 0) {
+            if (palettes[i].getPaletteMode() != 0) {
                 return true;
             }
         }
-
         return false;
+    }
+
+    public EquipmentItemData getEquipmentItemData(){
+        return (EquipmentItemData) palettes[0].getSelectedItemData();
     }
 
 }

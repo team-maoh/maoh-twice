@@ -140,6 +140,7 @@ public class BattleUnitAdmin {
                 marker_flag = true;
                 for (int i = 0; i < 10000; i++) {
                     if (touch_markers[i].isExist() == false) {
+                        palette_admin.getEquipmentItemData()
                         touch_markers[i].generate((int) touch_x, (int) touch_y, 100, 10, 0.9);
                         break;
                     }
