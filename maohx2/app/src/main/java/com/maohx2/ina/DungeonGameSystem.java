@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.view.SurfaceHolder;
 
 import com.maohx2.fuusya.MapObjectAdmin;
+import com.maohx2.fuusya.MapPlateAdmin;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Arrange.Inventry;
@@ -52,6 +53,8 @@ public class DungeonGameSystem {
     PaletteAdmin palette_admin;
 
     DungeonModeManage dungeonModeManage;
+    boolean is_displaying_menu, is_touching_outside_menu;
+    MapPlateAdmin map_plate_admin;
 
     public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin) {
         dungeon_user_interface = _dungeon_user_interface;
@@ -60,7 +63,7 @@ public class DungeonGameSystem {
 
         dungeonModeManage = new DungeonModeManage();
         map_admin = new MapAdmin(graphic);
-        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin);
+        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin,this, dungeonModeManage);
         paint = new Paint();
         paint.setColor(Color.BLUE);
 
@@ -73,6 +76,7 @@ public class DungeonGameSystem {
         list_box_admin = new ListBoxAdmin();
         text_box_admin.init(dungeon_user_interface);
         list_box_admin.init(dungeon_user_interface, graphic);
+        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, this);
 
 
 
@@ -97,7 +101,8 @@ public class DungeonGameSystem {
         switch (dungeonModeManage.getMode()) {
 
             case MAP:
-                map_object_admin.update();
+                map_object_admin.update(is_displaying_menu, is_touching_outside_menu);
+                map_plate_admin.update(is_displaying_menu);
                 break;
 
             case BUTTLE:
@@ -105,7 +110,6 @@ public class DungeonGameSystem {
                 battle_unit_admin.update();
                 break;
         }
-
     }
 
     public void draw() {
@@ -125,8 +129,18 @@ public class DungeonGameSystem {
         graphic.draw();
     }
 
+    public void setIsDisplayingMenu(boolean _is_displaying_menu){
+        is_displaying_menu = _is_displaying_menu;
+    }
+    public void setIsTouchingOutsideMenu(boolean _is_touching_outside_menu){
+        is_touching_outside_menu = _is_touching_outside_menu;
+    }
+
+
     public DungeonGameSystem() {
     }
+
+
 }
 
 

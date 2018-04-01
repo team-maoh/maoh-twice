@@ -9,6 +9,7 @@ import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.DungeonGameSystem;
+import com.maohx2.ina.DungeonModeManage;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.kmhanko.sound.SoundAdmin;
@@ -57,7 +58,7 @@ public class MapObjectAdmin {
 
     boolean is_displaying_menu;
 
-    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapAdmin _map_admin, DungeonGameSystem _dungeon_game_system) {
+    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapAdmin _map_admin, DungeonGameSystem _dungeon_game_system, DungeonModeManage _dungeon_mode_manage) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
         map_admin = _map_admin;
@@ -67,7 +68,7 @@ public class MapObjectAdmin {
 
         is_displaying_menu = false;
 
-        map_player = new MapPlayer(graphic, this, _map_admin, dungeon_user_interface, _sound_admin, camera, dungeon_game_system);
+        map_player = new MapPlayer(graphic, this, _map_admin, dungeon_user_interface, _sound_admin, camera, dungeon_game_system, _dungeon_mode_manage);
         map_player.init();
         map_player_bitmap = new MapObjectBitmap(PLAYER_DIR, graphic, "ドラゴン");
         map_player_bitmap.init();
