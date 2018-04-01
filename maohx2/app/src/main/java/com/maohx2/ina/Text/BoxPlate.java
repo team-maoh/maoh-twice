@@ -10,12 +10,12 @@ import com.maohx2.ina.UI.UserInterface;
  * Created by ina on 2018/01/14.
  */
 
-abstract public class BoxPlate extends Plate {
+public class BoxPlate extends Plate {
 
-    protected int left, up, right, down;
+    int left, up, right, down;
 
-    BoxPlate(Graphic _graphic, UserInterface _user_interface, TouchWay _judge_way, TouchWay _feedback_way, int _left, int _up, int _right, int _down){
-        super(_graphic, _user_interface, _judge_way, _feedback_way);
+    BoxPlate(Graphic _graphic, UserInterface _user_interface, Paint _paint, TouchWay _judge_way, TouchWay _feedback_way, int _left, int _up, int _right, int _down){
+        super(_graphic, _user_interface, _paint, _judge_way, _feedback_way);
         left = _left;
         up = _up;
         right = _right;
@@ -24,6 +24,7 @@ abstract public class BoxPlate extends Plate {
         touch_id = user_interface.setBoxTouchUI(left, up, right, down);
     }
 
-    abstract public void draw();
-
+    public void draw(){
+        graphic.bookingDrawRect(left, up, right, down, button_paint);
+    }
 }

@@ -10,7 +10,6 @@ import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.DungeonGameSystem;
-import com.maohx2.ina.DungeonModeManage;
 import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 //import com.maohx2.ina.MySprite;
@@ -55,14 +54,12 @@ public class MapPlayer extends MapUnit {
     int touching_frame_count;
 
     TouchState touch_state;
-    DungeonModeManage dungeon_mode_namage;
 
-    public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, MapAdmin _map_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, DungeonGameSystem _dungeon_game_system, DungeonModeManage _dungeon_mode_namage) {
+    public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, MapAdmin _map_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, DungeonGameSystem _dungeon_game_system) {
         super(graphic, _map_object_admin, _camera);
 
         dungeon_user_interface = _dungeon_user_interface;
         dungeon_game_system = _dungeon_game_system;
-        dungeon_mode_namage = _dungeon_mode_namage;
 
         touch_state = dungeon_user_interface.getTouchState();
 
@@ -111,6 +108,7 @@ public class MapPlayer extends MapUnit {
                 } else {
                     dungeon_game_system.setIsDisplayingMenu(false);
                 }
+
             }
 
             if (isWithinReach(touch_w_x, touch_w_y, step * 2) == false) {
@@ -191,7 +189,6 @@ public class MapPlayer extends MapUnit {
                 System.out.println("◆一定歩数 歩いたので敵と遭遇");
                 encount_steps = 0;
                 th_encount_steps = makeThresholdEncountSteps();
-                dungeon_mode_namage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE);
             }
 
             sound_steps = (sound_steps + 1) % SOUND_STEPS_PERIOD;
@@ -248,5 +245,7 @@ public class MapPlayer extends MapUnit {
         } else {
             return true;
         }
+
     }
+
 }

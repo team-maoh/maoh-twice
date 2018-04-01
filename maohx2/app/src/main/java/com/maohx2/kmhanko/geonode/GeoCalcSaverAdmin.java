@@ -59,10 +59,8 @@ public class GeoCalcSaverAdmin {
         }
     }
 
-    //public String getParam(String name) { return name + " : " + getGeoCalcSaver(name).getParam(); }
-
-    public int getParam(String name) {
-        return getGeoCalcSaver(name).getParam();
+    public String getParam(String name) {
+        return name + " : " + getGeoCalcSaver(name).getParam();
     }
 
 }

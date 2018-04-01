@@ -18,7 +18,7 @@ public abstract class ItemDataAdmin<T extends ItemData>  {
     public List<T> datas = new ArrayList<>();
     public MyDatabase database;
 
-    static public Graphic graphic;
+    public Graphic graphic;
 
     public ItemDataAdmin(Graphic _graphic, MyDatabaseAdmin database_admin){
         graphic = _graphic;
@@ -30,7 +30,6 @@ public abstract class ItemDataAdmin<T extends ItemData>  {
     //public void init(MyDatabaseAdmin databaseAdmin) {}
 
     public ItemData getOneDataByName(String _name) {
-
         for(int i = 0; i < datas.size(); i++) {
             if (datas.get(i).getName().equals(_name)) {
                 return datas.get(i);
@@ -86,7 +85,5 @@ public abstract class ItemDataAdmin<T extends ItemData>  {
     }
 */
     public List<T> getItemDatas() {return datas;}
-
-    //public static ItemData getDebugItem(){return null;}
 
 }

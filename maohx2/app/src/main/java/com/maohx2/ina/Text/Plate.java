@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 
-import com.maohx2.ina.Arrange.InventryData;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.ItemData;
@@ -18,27 +17,24 @@ import com.maohx2.ina.Constants.Touch.TouchWay;
 
 public abstract class Plate {
 
-    protected Constants.Touch.TouchWay judge_way;
-    protected Constants.Touch.TouchWay feedback_way;
-    protected int touch_id;
-    protected int alpha;
-    protected UserInterface user_interface;
-    protected Graphic graphic;
-    protected boolean update_flag;
-    protected boolean draw_flag;
+    Constants.Touch.TouchWay judge_way;
+    Constants.Touch.TouchWay feedback_way;
+    int touch_id;
+    int alpha;
+    UserInterface user_interface;
+    Graphic graphic;
+    Paint button_paint;
 
 
-    Plate(Graphic _graphic, UserInterface _user_interface, Constants.Touch.TouchWay _judge_way, Constants.Touch.TouchWay _feedback_way) {
+    Plate(Graphic _graphic, UserInterface _user_interface, Paint _paint, Constants.Touch.TouchWay _judge_way, Constants.Touch.TouchWay _feedback_way) {
         graphic = _graphic;
         user_interface = _user_interface;
-        //button_paint = new Paint();
-        //button_paint.set(_paint);
+        button_paint = new Paint();
+        button_paint.set(_paint);
         judge_way = _judge_way;
         feedback_way = _feedback_way;
 
         alpha = 255;
-        update_flag = true;
-        draw_flag = true;
     }
 
     abstract public void draw();
@@ -53,9 +49,6 @@ public abstract class Plate {
 
     public void update() {
 
-        if (draw_flag == false){
-            return;
-        }
         if (user_interface.checkUI(touch_id, judge_way) == true) {
             alpha = 100;
             callBackEvent();
@@ -64,49 +57,14 @@ public abstract class Plate {
         } else {
             alpha = 100;
         }
+
+        button_paint.setAlpha(alpha);
     }
 
     public void setPaint(Paint _paint) {
-        //button_paint.set(_paint);
+        button_paint.set(_paint);
     }
 
     public void callBackEvent() {}
-
-    public ItemData getContentItem(){
-        throw new Error("%☆イナガキ：getContentItem()はアイテム関係のボタンでしか使えません");
-    }
-
-    public void setContentItem(ItemData _content_item){
-        throw new Error("%☆イナガキ：setContentItem()はアイテム関係のボタンでしか使えません");
-    }
-
-    public InventryData getInventryData(){
-        throw new Error("%☆イナガキ：getContentItem()はアイテム関係のボタンでしか使えません");
-    }
-
-    public void setInventryData(InventryData _inventry_data){
-        throw new Error("%☆イナガキ：setContentItem()はアイテム関係のボタンでしか使えません");
-    }
-
-    public void changeInventryData(){
-        throw new Error("%☆イナガキ：setContentItem()はアイテム関係のボタンでしか使えません");
-    }
-
-    public boolean getDrawFlag(){
-        return draw_flag;
-    }
-
-    public void setDrawFlag(boolean _draw_flag){
-        draw_flag = _draw_flag;
-    }
-
-    public boolean getUpdateFlag(){
-        return update_flag;
-    }
-
-    public void setUpdateFlag(boolean _update_flag){
-        update_flag = _update_flag;
-    }
-
 
 }

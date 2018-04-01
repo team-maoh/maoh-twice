@@ -6,15 +6,9 @@ import com.maohx2.ina.ItemData.ItemData;
  * Created by ina on 2017/12/15.
  */
 
-public class InventryContent {
+public class InventryItem {
 
-    InventryData inventry_data;
     ItemData inventry_item;
-
-    InventryContent(InventryData _inventry_data){
-
-        inventry_data = _inventry_data;
-    }
 
     ItemData getInventyItem(){
 

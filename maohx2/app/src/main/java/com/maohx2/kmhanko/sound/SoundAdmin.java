@@ -88,6 +88,7 @@ public class SoundAdmin {
         try {
             return sound_ID.get(buf);
         } catch (ArrayIndexOutOfBoundsException e) {
+            //TODO:エラー
             throw new Error("SoundAdmin#getSoundID : Cannot get SoundID " + buf + " " + e);
         }
     }

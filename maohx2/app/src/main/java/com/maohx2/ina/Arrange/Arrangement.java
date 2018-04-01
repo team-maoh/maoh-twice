@@ -36,7 +36,7 @@ public class Arrangement {
 
         bag_item_admin = new BagItemAdmin();
         bag_item_admin.init();
-        //palette_admin = new PaletteAdmin();
+        palette_admin = new PaletteAdmin();
 
     }
 

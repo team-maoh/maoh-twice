@@ -14,12 +14,10 @@ public class ImageContext {
     private Paint paint;
 
     public ImageContext(BitmapData _bitmap_data, Matrix _matrix, Paint _paint){
-        matrix = new Matrix();
-        paint = new Paint();
 
         bitmap_data = _bitmap_data;
-        matrix.set(_matrix);
-        paint.set(_paint);
+        matrix = _matrix;
+        paint = _paint;
     }
 
 
@@ -31,7 +29,9 @@ public class ImageContext {
         bitmap_data = _bitmap_data;
     }
 
-    public Matrix getMatrix() {return matrix;}
+    public Matrix getMatrix() {
+        return matrix;
+    }
 
     public void setMatrix(Matrix _matrix) {
         matrix = _matrix;

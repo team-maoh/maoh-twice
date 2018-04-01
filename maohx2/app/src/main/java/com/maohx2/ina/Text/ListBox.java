@@ -103,7 +103,7 @@ public class ListBox {
             Point up_left = new Point(box_up_left_x, box_up_left_y);
             Point down_right = new Point(box_down_right_x, box_down_right_y);
 
-            //System.out.println("(" + up_left.x +  "," + up_left.y + ")" + "(" + down_right.x  + "," + down_right.y + ")");
+            System.out.println("(" + up_left.x +  "," + up_left.y + ")" + "(" + down_right.x  + "," + down_right.y + ")");
 
             graphic.bookingDrawRect(up_left.x, up_left.y + content_height * i, down_right.x, up_left.y + content_height * (i + 1), paint);
             paint.setColor(Color.argb(255, 0, 0, 0));

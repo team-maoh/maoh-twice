@@ -5,9 +5,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.Layout;
 
-import com.maohx2.ina.Arrange.Inventry;
-import com.maohx2.ina.Arrange.InventryData;
-import com.maohx2.ina.Arrange.PaletteElement;
 import com.maohx2.ina.Constants.Touch.*;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.GlobalConstants;
@@ -27,8 +24,6 @@ public class BattleUserInterface extends UserInterface {
     double direction_check;
     int select_circle_num;
     int selected_circle_num;
-
-
 
     public BattleUserInterface(GlobalConstants global_constants, Graphic _graphic){
         super(global_constants, _graphic);
@@ -77,21 +72,13 @@ public class BattleUserInterface extends UserInterface {
     public void update() {
 
         //小→展開、小さな円をタッチした
-        int norm_x = graphic.transrateDispPositionToNormalizedPositionX((int)(touch_x));
-        int norm_y = graphic.transrateDispPositionToNormalizedPositionY((int)(touch_y));
-        double judge_x = norm_x-1000;
-        double judge_y = norm_y-600;
-
-        judge_x *= judge_x;
-        judge_y *= judge_y;
-
-        if (touch_state != TouchState.AWAY && battle_palette_mode == 0 && judge_x + judge_y < 30 * 30) {
+        if (touch_state != TouchState.AWAY && battle_palette_mode == 0 && (touch_x - 1000) * (touch_x - 1000) + (touch_y - 600) * (touch_y - 600) < 30 * 30) {
             battle_palette_mode = 1;
             //展開→方向的大、大きな円からはみ出た
-        } else if (touch_state != TouchState.AWAY && battle_palette_mode == 1 && judge_x + judge_y >= 70 * 70) {
+        } else if (touch_state != TouchState.AWAY && battle_palette_mode == 1 && (touch_x - 1000) * (touch_x - 1000) + (touch_y - 600) * (touch_y - 600) >= 70 * 70) {
             battle_palette_mode = 2;
             //方向的大→展開、大きな円に戻った
-        } else if (touch_state != TouchState.AWAY && battle_palette_mode == 2 && judge_x + judge_y < 70 * 70) {
+        } else if (touch_state != TouchState.AWAY && battle_palette_mode == 2 && (touch_x - 1000) * (touch_x - 1000) + (touch_y - 600) * (touch_y - 600) < 70 * 70) {
             battle_palette_mode = 1;
         }
 
@@ -100,11 +87,12 @@ public class BattleUserInterface extends UserInterface {
             if (battle_palette_mode == 2) {
                 selected_circle_num = select_circle_num;
             }
+
             battle_palette_mode = 0;
         }
 
 
-        direction_check = Math.atan2((600 - norm_y), (norm_x - 1000));
+        direction_check = Math.atan2((600 - touch_y), (touch_x - 1000));
 
         for (int i = 0; i < 8; i++) {
 
@@ -121,40 +109,34 @@ public class BattleUserInterface extends UserInterface {
     }
 
 
-    public void drawBattlePalette() {
+    public void drawBattlePalette(Canvas canvas) {
+
         if (battle_palette_mode == 0) {
             paint.setColor(CIRCLE_COLOR[selected_circle_num]);
-            graphic.bookingDrawCircle(1000, 600, 30, paint);
-            //canvas.drawCircle(1000, 600, 30.0f, paint);
+            canvas.drawCircle(1000, 600, 30.0f, paint);
         } else if (battle_palette_mode == 1) {
             paint.setColor(CIRCLE_COLOR[selected_circle_num]);
-            graphic.bookingDrawCircle(1000, 600, 70, paint);
-            //canvas.drawCircle(1000, 600, 70.0f, paint);
+            canvas.drawCircle(1000, 600, 70.0f, paint);
             for (int i = 0; i < 8; i++) {
                 paint.setColor(CIRCLE_COLOR[i]);
-                graphic.bookingDrawCircle(1000 + (int) (120 * COS[i]), 600 - (int) (120 * SIN[i]), 10, paint);
-                //canvas.drawCircle(1000 + (int) (120 * COS[i]), 600 - (int) (120 * SIN[i]), 10.0f, paint);
+                canvas.drawCircle(1000 + (int) (120 * COS[i]), 600 - (int) (120 * SIN[i]), 10.0f, paint);
             }
         } else if (battle_palette_mode == 2) {
             paint.setColor(CIRCLE_COLOR[selected_circle_num]);
-            graphic.bookingDrawCircle(1000, 600, 30, paint);
-            //canvas.drawCircle(1000, 600, 70.0f, paint);
+            canvas.drawCircle(1000, 600, 70.0f, paint);
 
             for (int i = 0; i < 8; i++) {
+
                 if (i == select_circle_num) {
                     paint.setColor(CIRCLE_COLOR[i]);
-                    graphic.bookingDrawCircle(1000 + (int) (120 * COS[i]), 600 - (int) (120 * SIN[i]), 30, paint);
-                    //canvas.drawCircle(1000 + (int) (120 * COS[i]), 600 - (int) (120 * SIN[i]), 30.0f, paint);
+                    canvas.drawCircle(1000 + (int) (120 * COS[i]), 600 - (int) (120 * SIN[i]), 30.0f, paint);
                 } else {
                     paint.setColor(CIRCLE_COLOR[i]);
-                    graphic.bookingDrawCircle(1000 + (int) (120 * COS[i]), 600 - (int) (120 * SIN[i]), 10, paint);
-                    //canvas.drawCircle(1000 + (int) (120 * COS[i]), 600 - (int) (120 * SIN[i]), 10.0f, paint);
+                    canvas.drawCircle(1000 + (int) (120 * COS[i]), 600 - (int) (120 * SIN[i]), 10.0f, paint);
                 }
             }
         }
     }
-
-
 
 
 }

@@ -23,22 +23,15 @@ public class WorldActivity extends Activity {
 
     RelativeLayout layout;
 
-    //by kmhanko
-    WorldSurfaceView worldSurfaceView;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         layout = new RelativeLayout(this);
         layout.setBackgroundColor(Color.WHITE);
-        //by kmhanko
-        worldSurfaceView = new WorldSurfaceView(this);
-        layout.addView(worldSurfaceView);
-
+        layout.addView(new WorldSurfaceView(this));
         setContentView(layout);
     }
-
 }
 
 
@@ -46,12 +39,12 @@ class WorldSurfaceView extends BaseSurfaceView {
 
     UserInterface map_user_interface;
     WorldGameSystem world_game_system;
-    WorldActivity map_activity;
+    Activity map_activity;
     MyDatabaseAdmin my_database_admin;
     Graphic graphic;
     SoundAdmin soundAdmin;
 
-    public WorldSurfaceView(WorldActivity _map_activity) {
+    public WorldSurfaceView(Activity _map_activity) {
         super(_map_activity);
         map_activity = _map_activity;
 
@@ -66,13 +59,14 @@ class WorldSurfaceView extends BaseSurfaceView {
         soundAdmin = new SoundAdmin(map_activity, my_database_admin);
 
         map_user_interface.init();
-        world_game_system.init(map_user_interface, graphic, my_database_admin, soundAdmin, _map_activity);
+        world_game_system.init(map_user_interface, graphic, my_database_admin, soundAdmin);
     }
 
     @Override
     public void gameLoop() {
         map_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         world_game_system.updata();
+        //graphic.bookingDrawBitmapName("キノコの森",300,590);
         world_game_system.draw();
 
 
@@ -81,8 +75,8 @@ class WorldSurfaceView extends BaseSurfaceView {
             Intent intent = new Intent(map_activity, DungeonActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             map_activity.startActivity(intent);
+
         }
 
     }
-
 }

@@ -130,6 +130,8 @@ public class Graphic {
 
     public void init(){}
 
+
+
     public void loadLocalImages(MyDatabase image_database, String table_folder){
         local_bitmap_data_admin.loadLocalImages(image_database, table_folder);
     }
@@ -147,6 +149,7 @@ public class Graphic {
             for (int i = 0; i < booking_num; i++) {
                booking_task_datas.get(i).draw(canvas);
             }
+
 
             draw_paint.setColor(Color.GREEN);
             canvas.drawRect(0,0,DRAW_RIGHT_END,DRAW_UP_END,draw_paint);
@@ -183,13 +186,11 @@ public class Graphic {
     }
 
     public int transrateDispPositionToNormalizedPositionX(int disp_x){
-        return (int)((disp_x - DRAW_LEFT_END)/NORMARIZED_DRAW_RATE.x);
-        //return (int)((disp_x + DRAW_LEFT_END)* DISP_NORMARIZED_RATE.x);
+        return (int)((disp_x + DRAW_LEFT_END)* DISP_NORMARIZED_RATE.x);
     }
 
     public int transrateDispPositionToNormalizedPositionY(int disp_y){
-        return (int)((disp_y - DRAW_UP_END)/NORMARIZED_DRAW_RATE.y);
-        //return  (int)((disp_y + DRAW_UP_END) * DISP_NORMARIZED_RATE.y);
+        return  (int)((disp_y + DRAW_UP_END) * DISP_NORMARIZED_RATE.y);
     }
 
     public void bookingDrawBitmapData(ImageContext _image_context){
@@ -273,11 +274,6 @@ public class Graphic {
         bookingDrawBitmapData(searchBitmap(bitmap_name), position_x, position_y,1,1,0,255,false);
     }
 
-    public void bookingDrawCircle(int draw_x, int draw_y, int draw_radius){
-        draw_paint.setARGB(100,255,0,0);
-        bookingDrawCircle(draw_x, draw_y, draw_radius, draw_paint);
-    }
-
     public void bookingDrawCircle(int draw_x, int draw_y, int draw_radius, Paint paint){
 
         setting_point1.set(draw_x, draw_y);
@@ -299,12 +295,6 @@ public class Graphic {
         booking_num++;
         booking_circle_num++;
     }
-
-    public void bookingDrawRect(int draw_left, int draw_up, int draw_right, int draw_down){
-        draw_paint.setARGB(100,255,0,0);
-        bookingDrawRect(draw_left, draw_up, draw_right, draw_down, draw_paint);
-    }
-
 
     public void bookingDrawRect(int draw_left, int draw_up, int draw_right, int draw_down, Paint paint){
 
@@ -328,13 +318,6 @@ public class Graphic {
         booking_task_datas.set(booking_num, booking_rect_datas.get(booking_rect_num));
         booking_num++;
         booking_rect_num++;
-    }
-
-    public void bookingDrawText(String draw_string, int draw_left, int draw_down){
-
-        draw_paint.setARGB(255,0,255,0);
-        draw_paint.setTextSize(70);
-        bookingDrawText(draw_string, draw_left, draw_down, draw_paint);
     }
 
     public void bookingDrawText(String draw_string, int draw_left, int draw_down, Paint paint){
@@ -511,7 +494,6 @@ public class Graphic {
                     for(int x = 0; x < variable_length[i]; x++) {
                         int index = ((x + y * variable_length[i]) + (total_length*y));
 //                        System.out.println("index = " + index);
-                        //System.out.println("index = " + index);
                         conbine_pixels[x + (total_length*y + init_copy_index)] = source_pixels[i][x + y * variable_length[i]];
                     }
                 }

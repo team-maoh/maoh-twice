@@ -33,5 +33,4 @@ public class ItemDataAdminManager {
     public GeoObjectDataAdmin getGeoObjectDataAdmin() {
         return geoObjectDataAdmin;
     }
-
 }
