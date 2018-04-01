@@ -110,6 +110,15 @@ public final class Constants {
         }
     }
 
+
+    public static class GAMESYSTEN_MODE {
+
+        public enum DUNGEON_MODE {
+            MAP,
+            BUTTLE,
+        }
+    }
+
     public static class Item {
         public enum ITEM_KIND {
             EXPEND,
