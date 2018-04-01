@@ -48,8 +48,7 @@ public class MapUnit extends MapObject {
     //壁までふっ飛ばされる, ふっ飛ばされる前の待ち時間
     int frames_being_blown_away, frames_before_blown_away;
 
-    boolean being_blown_away;
-    double blown_rad;
+    double blown_rad;//ふっ飛ばされる方角
 
     public MapUnit(Graphic _graphic, MapObjectAdmin _map_object_admin, Camera _camera) {
         super(_graphic, _map_object_admin, _camera);
@@ -76,8 +75,6 @@ public class MapUnit extends MapObject {
         //
         has_bad_status = false;
 
-        being_blown_away = false;
-
         can_walk = true;
         collide_wall = false;
 
@@ -91,7 +88,6 @@ public class MapUnit extends MapObject {
     }
 
     public void update() {
-
 
     }
 
@@ -114,9 +110,10 @@ public class MapUnit extends MapObject {
     //xとyを更新する(一歩進む)
     protected boolean walkOneStep(double dst_x, double dst_y, double input_step) {
 
-        double dx, dy;
-
+        //walking_inversely を[input_step < 0]で表現するので、dst_steps = max(式, 1) では駄目
         int dst_steps = (int) myDistance(dst_x, dst_y, w_x, w_y) / (int) input_step;
+
+        double dx, dy;
 
         if (dst_steps != 0) {
             dx = (dst_x - w_x) / dst_steps;
@@ -182,36 +179,54 @@ public class MapUnit extends MapObject {
 
     public void setBadStatus(String status_name, int activating_frames) {
 
-        if (status_name.equals("walking_slowly")) {
-            frames_walking_slowly = activating_frames;
+        if (status_name == null) {
+            System.out.println("status_name is null");
+        } else switch (status_name) {
 
-        } else if (status_name.equals("walking_inversely")) {
-            frames_walking_inversely = activating_frames;
+            case "walking_slowly":
+                frames_walking_slowly = activating_frames;
+                break;
 
-        } else if (status_name.equals("cannot_walk")) {
-            frames_cannot_walk = activating_frames;
+            case "walking_inversely":
+                frames_walking_inversely = activating_frames;
+                break;
 
-        } else if (status_name.equals("being_drunk")) {
-            frames_being_drunk = activating_frames;
+            case "cannot_walk":
+                frames_cannot_walk = activating_frames;
+                break;
 
-        } else if (status_name.equals("cannot_exit_room")) {
-            frames_cannot_exit_room = activating_frames;
+            case "being_drunk":
+                frames_being_drunk = activating_frames;
+                break;
 
-        } else if (status_name.equals("being_teleported")) {
-            frames_waiting_teleported = 20;
+            case "cannot_exit_room":
+                frames_cannot_exit_room = activating_frames;
+                break;
 
-        } else if (status_name.equals("found_by_enemy")) {
-            map_object_admin.makeAllEnemysFindPlayer();
-            frames_cannot_walk = 15;
+            case "being_teleported":
+                frames_waiting_teleported = 20;
+                break;
 
-        } else if (status_name.equals("being_blown_away")) {
+            case "found_by_enemy":
+                map_object_admin.makeAllEnemiesFindPlayer();
+                frames_cannot_walk = 15;
+                break;
 
-            frames_being_blown_away = 30;
-            frames_before_blown_away = 10;
-            blown_rad = random.nextDouble() * 2 * PI;
+            case "being_blown_away":
+                frames_being_blown_away = 30;
+                frames_before_blown_away = 10;
+                blown_rad = random.nextDouble() * 2 * PI;
+                break;
 
-        } else {
-            System.out.println("Bad Statusの引数がおかしい");
+            case "being_damaged":
+                frames_cannot_walk = 10;
+                //
+                //Playerにダメージを与える文
+                //
+                break;
+
+            default:
+                System.out.println("setBadStatus()の引数がおかしい");
 
         }
     }
@@ -266,7 +281,7 @@ public class MapUnit extends MapObject {
         if (frames_walking_slowly > 0) {
             has_bad_status = true;
 
-            raw_step = max(raw_step / 7.0, 1);
+            raw_step = max(raw_step / 4.0, 1);
 
             frames_walking_slowly--;
         }
@@ -274,8 +289,6 @@ public class MapUnit extends MapObject {
         //■酔歩
         if (frames_being_drunk > 0) {
             has_bad_status = true;
-
-            double dst_amp = myDistance(dst_w_x, dst_w_y, w_x, w_y);
 
             double random_double = makeNormalDist() * 0.08;
             //念のため
@@ -306,6 +319,8 @@ public class MapUnit extends MapObject {
 
             pre_random_rad = random_rad;
 
+            raw_step = max(raw_step / 2.0, 1);
+
             System.out.println("drunk    " + frames_being_drunk);
             frames_being_drunk--;
         }//酔歩パートおわり
@@ -319,7 +334,7 @@ public class MapUnit extends MapObject {
         }
 
         //■ふっ飛ばし
-        if (frames_before_blown_away > 1) {
+        if (frames_before_blown_away > 0) {
 
             has_bad_status = true;
 
@@ -333,10 +348,9 @@ public class MapUnit extends MapObject {
 
             frames_before_blown_away--;
 
-        } else if (frames_being_blown_away > 1) {
+        } else if (frames_being_blown_away > 0) {
 
             has_bad_status = true;
-            being_blown_away = true;
 
             can_walk = true;
 
@@ -353,5 +367,8 @@ public class MapUnit extends MapObject {
 
     }
 
+    public int getFramesWaitingTeleported(){
+        return frames_waiting_teleported;
+    }
 
 }

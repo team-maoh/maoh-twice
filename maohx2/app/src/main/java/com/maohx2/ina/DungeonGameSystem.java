@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.view.SurfaceHolder;
 
 import com.maohx2.fuusya.MapObjectAdmin;
+import com.maohx2.fuusya.MapPlateAdmin;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.DungeonUserInterface;
@@ -18,40 +19,52 @@ import com.maohx2.kmhanko.sound.SoundAdmin;
  */
 
 
-
 public class DungeonGameSystem {
 
     MapObjectAdmin map_object_admin;
     MapAdmin map_admin;
+    MapPlateAdmin map_plate_admin;
     DungeonUserInterface dungeon_user_interface;
     Graphic graphic;
     Paint paint;
-
+    boolean is_displaying_menu, is_touching_outside_menu;
 
     public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin) {
         dungeon_user_interface = _dungeon_user_interface;
         graphic = _graphic;
+        is_displaying_menu = false;
+        is_touching_outside_menu = false;
 
         map_admin = new MapAdmin(graphic);
-        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin);
+        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin, this);
+        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, this);
         paint = new Paint();
         paint.setColor(Color.BLUE);
     }
 
-
     public void update() {
-        //map_object_admin.update();
+        map_object_admin.update(is_displaying_menu, is_touching_outside_menu);
+        map_plate_admin.update(is_displaying_menu);
+
     }
 
     public void draw() {
         map_admin.drawMap_for_autotile_4div_combine();
-        //map_object_admin.draw();
+        map_object_admin.draw();
+        map_plate_admin.draw();
         //graphic.bookingDrawCircle(0,0,10,paint);
         graphic.draw();
     }
 
     public DungeonGameSystem() {
     }
+    public void setIsDisplayingMenu(boolean _is_displaying_menu){
+        is_displaying_menu = _is_displaying_menu;
+    }
+    public void setIsTouchingOutsideMenu(boolean _is_touching_outside_menu){
+        is_touching_outside_menu = _is_touching_outside_menu;
+    }
+
 }
 
 

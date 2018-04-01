@@ -28,9 +28,9 @@ import com.maohx2.ina.Draw.Graphic;
 
 public class MapEnemy extends MapUnit {
 
-    double DEFAULT_STEP = 8;//プレイヤー未発見時の歩幅
+    double DEFAULT_STEP = 5;//プレイヤー未発見時の歩幅
     int chase_count;
-    int REACH_FOR_PLAYER = 25;
+    double REACH_FOR_PLAYER = 25;
     int total_dirs;//画像が1方位なのか、4方位なのか、8方位なのか(Playerの視界に入っているかどうかの判定に使う)
 
     int CHASE_STEPS = 6;//名前は仮 / EnemyはPlayerの{現在座標ではなく}CHASE_STEPS歩前の座標を追いかける
@@ -65,9 +65,7 @@ public class MapEnemy extends MapUnit {
 
         draw_object = "ゴキ太郎";
 
-
         clock_rad = 0.0;
-
 
         step = DEFAULT_STEP;
 
@@ -187,19 +185,14 @@ public class MapEnemy extends MapUnit {
             //
             updateDirOnMap(dst_w_x, dst_w_y);
 
-
-
         }
 
-        double distance_for_player = myDistance(player.getWorldX(), player.getWorldY(), w_x, w_y);
-
-        if (distance_for_player < REACH_FOR_PLAYER && exists == true) {
+        //Playerとの距離が一定以下 && 自身が存在している && Playerがテレポート前の予備動作中ではない
+        if (player.isWithinReach(w_x, w_y, REACH_FOR_PLAYER) == true && exists == true && player.getFramesWaitingTeleported() == 0) {
             System.out.println("敵と接触");
             //デバッグのためにコメントアウト
             exists = false;
-//                map_enemy[i].setExists(false);//接触すると敵が消える(戦闘に突入する)
         }
-
 
     }
 
@@ -276,7 +269,7 @@ public class MapEnemy extends MapUnit {
         pre_random_rad = random_rad;
     }
 
-    public void setHasFoundPlayer(boolean _has_found_player){
+    public void setHasFoundPlayer(boolean _has_found_player) {
         has_found_player = _has_found_player;
     }
 

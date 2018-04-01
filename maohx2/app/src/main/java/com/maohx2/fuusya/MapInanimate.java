@@ -34,17 +34,6 @@ public class MapInanimate extends MapObject {
 
     }
 
-    protected boolean collidePlayer(double reach_for_player) {
-
-        double distance_for_player = myDistance(player.getWorldX(), player.getWorldY(), w_x, w_y);
-        if (distance_for_player < reach_for_player) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
-
     public void setId(int _id) {
 
         id = _id;

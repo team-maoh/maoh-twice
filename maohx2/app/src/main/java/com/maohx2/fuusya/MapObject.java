@@ -3,6 +3,7 @@ package com.maohx2.fuusya;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.view.SurfaceHolder;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
@@ -54,8 +55,10 @@ abstract public class MapObject {
         exists = true;
         id = -1;
 
-        w_x = 800;
-        w_y = 450;
+        Point room_point = map_admin.getRoomPoint();
+        w_x = room_point.x;
+        w_y = room_point.y;
+
         dir_on_map = 0.0;
 
         random = new Random();

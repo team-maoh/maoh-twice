@@ -38,13 +38,15 @@ public class MapItem extends MapInanimate {
         super.update();
 
         if (exists == true) {
-            if (collidePlayer(REACH_FOR_PLAYER) == true) {
+
+            if(player.isWithinReach(w_x, w_y, REACH_FOR_PLAYER)==true){
                 System.out.println("アイテム獲得");
 //                sound_admin.play("getItem");
                 exists = false;
 //            bag_Item_admin.setItemIdToBagItem(map_Item[i].getId());//アイテムidを引き渡す
 //            map_Item[i].setExists(false);
             }
+
         }
 
     }

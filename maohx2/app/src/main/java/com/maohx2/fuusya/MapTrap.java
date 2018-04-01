@@ -65,8 +65,7 @@ public class MapTrap extends MapInanimate {
 
             //Trapを踏む && このTrapを初めて踏む
 //            if (collidePlayer(REACH_FOR_PLAYER) == true && frames_activating == -1) {
-            if (collidePlayer(REACH_FOR_PLAYER) == true && has_activated == false) {
-                System.out.println("トラップを踏んだ");
+            if (player.isWithinReach(w_x, w_y, REACH_FOR_PLAYER) == true && has_activated == false) {
                 has_activated = true;
                 is_visible = true;
 
@@ -100,7 +99,7 @@ public class MapTrap extends MapInanimate {
 
     }
 
-    public boolean is_visible() {
+    public boolean isVisible() {
         return is_visible;
     }
 

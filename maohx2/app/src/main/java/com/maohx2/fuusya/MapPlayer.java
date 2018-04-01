@@ -9,6 +9,7 @@ import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.DungeonGameSystem;
 import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 //import com.maohx2.ina.MySprite;
@@ -25,6 +26,7 @@ import static java.lang.Math.log;
 import static java.lang.Math.pow;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
+import static java.lang.StrictMath.max;
 import static java.lang.StrictMath.signum;
 
 /**
@@ -43,6 +45,7 @@ public class MapPlayer extends MapUnit {
 
     SoundAdmin sound_admin;
     DungeonUserInterface dungeon_user_interface;
+    DungeonGameSystem dungeon_game_system;
 
     int PLAYER_STEP = 26;//プレイヤーの歩幅
     double touch_w_x, touch_w_y, touch_n_x, touch_n_y, pre_w_x, pre_w_y;
@@ -52,10 +55,11 @@ public class MapPlayer extends MapUnit {
 
     TouchState touch_state;
 
-    public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, MapAdmin _map_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera) {
+    public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, MapAdmin _map_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, DungeonGameSystem _dungeon_game_system) {
         super(graphic, _map_object_admin, _camera);
 
         dungeon_user_interface = _dungeon_user_interface;
+        dungeon_game_system = _dungeon_game_system;
 
         touch_state = dungeon_user_interface.getTouchState();
 
@@ -81,20 +85,36 @@ public class MapPlayer extends MapUnit {
         super.init();
     }
 
-    @Override
-    public void update() {
+    //    @Override
+    public void update(boolean is_displaying_menu, boolean is_touching_outside_menu) {
+        super.update();
 
         touch_state = dungeon_user_interface.getTouchState();
 
-        if (touch_state == TouchState.DOWN || touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE) {
+        boolean is_touching = touch_state != Constants.Touch.TouchState.AWAY;
+//            boolean is_touching = (touch_state == TouchState.DOWN || touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE);
+        boolean is_not_touching_menu = is_displaying_menu == false || is_touching_outside_menu == true;
+        if (is_touching == true && is_not_touching_menu == true) {
 
             touch_n_x = dungeon_user_interface.getTouchX();
             touch_n_y = dungeon_user_interface.getTouchY();
             touch_w_x = camera.convertToWorldCoordinateX((int) touch_n_x);
             touch_w_y = camera.convertToWorldCoordinateY((int) touch_n_y);
 
-            dst_w_x = touch_w_x;
-            dst_w_y = touch_w_y;
+            //Player(画面中央)をタッチしたらMENUを表示する
+            if (touch_state != TouchState.MOVE) {
+                if (isWithinReach(touch_w_x, touch_w_y, 80) == true) {
+                    dungeon_game_system.setIsDisplayingMenu(true);
+                } else {
+                    dungeon_game_system.setIsDisplayingMenu(false);
+                }
+
+            }
+
+            if (isWithinReach(touch_w_x, touch_w_y, step * 2) == false) {
+                dst_w_x = touch_w_x;
+                dst_w_y = touch_w_y;
+            }
 
             touching_frame_count++;
 
@@ -106,6 +126,25 @@ public class MapPlayer extends MapUnit {
             is_moving = false;//指を離した時点で歩行を中止する
         }
 
+        if(is_displaying_menu) {
+            System.out.println("displaying_desuno");
+        }
+        if(is_touching_outside_menu) {
+            System.out.println("touching_desuno");
+        }
+        if(touch_state == TouchState.AWAY){
+            System.out.println("■AWAY_desuno");
+        }else if(touch_state == TouchState.MOVE){
+            System.out.println("■MOVE_desuno");
+        }else if(touch_state == TouchState.DOWN){
+            System.out.println("■DOWN_desuno");
+        }else if(touch_state == TouchState.DOWN_MOVE){
+            System.out.println("■DOWN_MOVE_desuno");
+        }else if(touch_state == TouchState.UP){
+            System.out.println("■UP_desuno");
+        }
+        System.out.println(touch_n_x + "    desuno    "+ touch_n_y);
+
         //BadStatus（状態異常）を表現するためにstepとdst_w_x, dst_w_yを適宜書き換える
         step = checkBadStatus(PLAYER_STEP);
 
@@ -114,16 +153,16 @@ public class MapPlayer extends MapUnit {
 
             if (can_walk == true) {
 
-                if (being_blown_away == true) {
+                if (frames_before_blown_away == 0 && frames_being_blown_away > 0) {
+//                if (being_blown_away == true) {
                     collide_wall = walkOneStep(dst_w_x, dst_w_y, step);
                     collide_wall = walkOneStep(dst_w_x, dst_w_y, step);
                     collide_wall = walkOneStep(dst_w_x, dst_w_y, step);
                     System.out.println("paopao1");
-                    if (collide_wall == true) {
-                        being_blown_away = false;
+                    if (collide_wall == true && frames_being_blown_away > 11) {
+                        frames_being_blown_away = 10;
                     }
                 } else {
-                    System.out.println("paopao2");
                     walkOneStep(dst_w_x, dst_w_y, step);
                 }
             }
@@ -197,6 +236,16 @@ public class MapPlayer extends MapUnit {
 
     public boolean getIsMoving() {
         return is_moving;
+    }
+
+    public boolean isWithinReach(double target_w_x, double target_w_y, double target_reach) {
+
+        if (target_reach < myDistance(target_w_x, target_w_y, w_x, w_y)) {
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
 }
