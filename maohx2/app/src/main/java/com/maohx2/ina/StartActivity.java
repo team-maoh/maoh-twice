@@ -127,7 +127,7 @@ class StartSurfaceView extends BaseSurfaceView {
 
 
     public StartSurfaceView(Activity _start_activity, BackSurfaceView _backSurfaceView) {
-        super(_start_activity);
+        super(_start_activity, _backSurfaceView);
         start_activity = _start_activity;
         backSurfaceView = _backSurfaceView;
     }
