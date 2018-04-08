@@ -118,6 +118,14 @@ public class Inventry {
         }
     }
 
+    //by takano
+    public ItemData getItemData(int i) {
+        return inventry_datas[i].getItemData();
+    }
+    public int getItemNum(int i) {
+        return inventry_datas[i].getItemNum();
+    }
+
     public PlateGroup<BoxInventryPlate> getOperateInventryListBox() {
         return operate_inventry_list_box;
     }
