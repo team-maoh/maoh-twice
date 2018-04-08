@@ -74,12 +74,9 @@ public class MapAdmin {
     //int magnification = 30;
     //drawMap2用
 //    Point map_size = new Point(80, 50);//x : 左右幅, y : 上下幅
-<<<<<<< HEAD
     Point map_size = new Point(60, 40);//60, 40
-=======
     //Point map_size = new Point(60, 40);
-    Point map_size = new Point(30, 20);
->>>>>>> 4c7a11532b68a483dae1edb359dc52522bf9901b
+    //Point map_size = new Point(30, 20);
     int magnification = 64;
     int time = 0;//アニメーションタイミング用
 
@@ -315,10 +312,7 @@ public class MapAdmin {
         section_admin.connectRooms(map_data);
         section_admin.makeStairs(map_data);
         //section_admin.createMine(1, 2, map_data);
-<<<<<<< HEAD
         //スタート地点を探す
-=======
->>>>>>> 4c7a11532b68a483dae1edb359dc52522bf9901b
         searchStartPoint();
         offset.set(start_point.x, start_point.y);
 

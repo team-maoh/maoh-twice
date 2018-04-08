@@ -104,11 +104,9 @@ public class DungeonGameSystem {
     }
 
     public void draw() {
-<<<<<<< HEAD
         map_admin.drawMap_for_autotile_light();
         map_object_admin.draw();
         //graphic.bookingDrawCircle(0,0,10,paint);
-=======
 
         switch (dungeonModeManage.getMode()) {
             case MAP:
@@ -122,7 +120,6 @@ public class DungeonGameSystem {
                 battle_unit_admin.draw();
                 break;
         }
->>>>>>> 4c7a11532b68a483dae1edb359dc52522bf9901b
         graphic.draw();
     }
 
