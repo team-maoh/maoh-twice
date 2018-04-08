@@ -100,6 +100,95 @@ public class AutoTileAdmin {
         source_auto_tile.auto_tile[46] = combineFourAutoTile(auto_tile_parts[0][0], auto_tile_parts[0][1], auto_tile_parts[0][2], auto_tile_parts[0][3]);
     }
 
+    public void createAutoTileForSideWall(AutoTile source_auto_tile, BitmapData side_wall[]){
+        auto_tile_parts = new BitmapData[2][4];
+        for(int i = 0;i < 2;i++){
+            for(int j = 0;j < 4;j++){
+                if(j <= 1) {
+                    auto_tile_parts[i][j] = graphic.processTrimmingBitmapData(source_auto_tile.raw_auto_tile[i*2], 16 * (j % 2), 0, 16, 16);
+                }
+                else{
+                    auto_tile_parts[i][j] = graphic.processTrimmingBitmapData(source_auto_tile.raw_auto_tile[i*2], 16 * (j % 2), 16, 16, 16);
+                }
+            }
+        }
+        //r:部屋 w:壁
+        side_wall[0] = combineFourAutoTile(auto_tile_parts[0][0], auto_tile_parts[0][1], auto_tile_parts[0][2], auto_tile_parts[0][3]);//rr 47
+        side_wall[1] = combineFourAutoTile(auto_tile_parts[0][0], auto_tile_parts[1][1], auto_tile_parts[0][2], auto_tile_parts[1][3]);//rw 48
+        side_wall[2] = combineFourAutoTile(auto_tile_parts[1][0], auto_tile_parts[0][1], auto_tile_parts[1][2], auto_tile_parts[0][3]);//wr 49
+        side_wall[3] = combineFourAutoTile(auto_tile_parts[1][0], auto_tile_parts[1][1], auto_tile_parts[1][2], auto_tile_parts[1][3]);//ww 50
+    }
+
+    private void createBigAutoTileParts(AutoTile source_auto_tile_wall, BitmapData source_side_wall[], int source_auto_tile_num, int first_parts_num, int second_parts_num, int third_parts_num, int fourth_parts_num) {
+        //横壁なし
+        if (third_parts_num < 47 || fourth_parts_num < 47) {
+            source_auto_tile_wall.big_auto_tile[source_auto_tile_num] = combineFourAutoTile(source_auto_tile_wall.auto_tile[first_parts_num], source_auto_tile_wall.auto_tile[second_parts_num], source_auto_tile_wall.auto_tile[third_parts_num], source_auto_tile_wall.auto_tile[fourth_parts_num]);
+        }
+        //下二つ(3と4)が横壁
+        else{
+            source_auto_tile_wall.big_auto_tile[source_auto_tile_num] = combineFourAutoTile(source_auto_tile_wall.auto_tile[first_parts_num], source_auto_tile_wall.auto_tile[second_parts_num], source_side_wall[third_parts_num - 47], source_side_wall[fourth_parts_num - 47]);
+        }
+    }
+
+    public void createBigAutoTile(AutoTile m_source_auto_tile_wall, BitmapData m_source_side_wall[]) {
+        //0〜48は壁,49〜52は横壁
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 0, 0, 0, 0, 0);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 1, 1, 0, 0, 0);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 2, 0, 2, 0, 0);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 3, 0, 0, 0, 3);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 4, 0, 0, 4, 0);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 5, 1, 2, 0, 0);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 6, 0, 2, 0, 3);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 7, 0, 0, 4, 3);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 8, 1, 0, 4, 0);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 9, 1, 0, 0, 3);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 10, 0, 2, 4, 0);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 11, 0, 2, 4, 3);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 12, 1, 0, 4, 3);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 13, 1, 2, 4, 0);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 14, 1, 2, 0, 3);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 15, 1, 2, 4, 3);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 16, 16, 0, 16, 0);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 17, 16, 2, 16, 0);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 18, 16, 0, 16, 3);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 19, 16, 2, 16, 3);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 20, 20, 20, 0, 0);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 21, 20, 20, 0, 3);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 22, 20, 20, 4, 0);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 23, 20, 20, 4, 3);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 24, 0, 24, 0, 24);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 25, 0, 24, 4, 24);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 26, 1, 24, 0, 24);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 27, 1, 24, 4, 24);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 28, 28, 28, 50, 50);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 29, 29, 28, 50, 50);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 30, 28, 30, 50, 50);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 31, 29, 30, 50, 50);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 32, 16, 24, 16, 24);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 33, 33, 33, 50, 50);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 34, 34, 20, 16, 0);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 35, 34, 20, 16, 3);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 36, 20, 36, 0, 24);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 37, 20, 36, 4, 24);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 38, 28, 38, 50, 49);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 39, 29, 38, 50, 49);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 40, 40, 28, 48, 50);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 41, 40, 30, 48, 50);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 42, 34, 36, 16, 24);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 43, 43, 33, 48, 50);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 44, 40, 38, 48, 49);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 45, 33, 45, 50, 49);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 46, 43, 45, 50, 49);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 47, 4, 0, 16, 0);//左下半分部屋
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 48, 0, 3, 0, 24);//右下半分部屋
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 49, 4, 24, 16, 24);//左下半分部屋右部屋
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 50, 16, 3, 16, 24);//右下半分部屋左部屋
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 51, 4, 3, 16, 24);//右下半分と左下半分部屋
+
+
+//        source_auto_tile.big_auto_tile[0] = combineFourAutoTile(source_auto_tile.auto_tile[0], source_auto_tile.auto_tile[0], source_auto_tile.auto_tile[0], source_auto_tile.auto_tile[0]);
+    }
+
     public void drawAutoTile(boolean lu,boolean u, boolean ru, boolean l, boolean r, boolean ld, boolean d, boolean rd, AutoTile m_auto_tile, int x, int y, float magnification){
         //luからrdは自分と同じ属性のときtrue
         //0
