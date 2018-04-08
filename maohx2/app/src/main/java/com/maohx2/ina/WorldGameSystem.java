@@ -81,6 +81,25 @@ public class WorldGameSystem {
         playerStatus = globalData.getPlayerStatus();
         //GeoInventry = globalData.getGeoInventry();
 
+        worldModeAdmin = new WorldModeAdmin();
+        worldModeAdmin.initWorld();
+
+        soundAdmin.loadSoundPack("basic");
+
+        text_box_admin = new TextBoxAdmin(graphic);
+        text_box_admin.init(map_user_interface);
+
+        text_box_admin.setTextBoxExists(0,false);
+        text_box_admin.setTextBoxExists(1,false);
+
+
+        itemDataAdminManager = new ItemDataAdminManager();
+        itemShopAdmin = new ItemShopAdmin();
+
+        effectAdmin = new EffectAdmin(graphic, databaseAdmin, soundAdmin);
+
+        itemDataAdminManager.init(databaseAdmin, graphic);
+
         //TODO いな依頼:Globalに入れる
         geoInventry = new Inventry(map_user_interface, graphic);
         expendItemInventry = new InventryS(
@@ -96,31 +115,13 @@ public class WorldGameSystem {
         expendItemInventry.load();
 
 
-        worldModeAdmin = new WorldModeAdmin();
-        worldModeAdmin.initWorld();
-
-        soundAdmin.loadSoundPack("basic");
-
-        text_box_admin = new TextBoxAdmin(graphic);
-        text_box_admin.init(map_user_interface);
-
-        text_box_admin.setTextBoxExists(0,false);
-        text_box_admin.setTextBoxExists(1,false);
+        //TODO いな依頼:interfaceはあとで変更できないとまずい場合があるかもしれない
 
         //list_box_admin = new ListBoxAdmin();
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry);
         //geo_slot_admin = new GeoSlotAdmin();
         dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, geoSlotAdminManager, worldActivity);
 
-        itemDataAdminManager = new ItemDataAdminManager();
-        itemShopAdmin = new ItemShopAdmin();
-
-        effectAdmin = new EffectAdmin(graphic, databaseAdmin, soundAdmin);
-
-
-
-
-        //TODO いな依頼:interfaceはあとで変更できないとまずい場合があるかもしれない
 
         /*
         itemDataAdminManager.init(databaseAdmin,graphic);
@@ -135,8 +136,8 @@ public class WorldGameSystem {
         );
         */
 
-        //itemShopAdmin.init(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager, expendItemInventry, geoInventry);
-        //itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "debug");
+        itemShopAdmin.init(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager, expendItemInventry, geoInventry);
+        itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "debug");
 
         canvas = null;
 
@@ -186,7 +187,7 @@ public class WorldGameSystem {
             dungeonSelectManager.update();
         }
         if (worldModeAdmin.getIsUpdate(worldModeAdmin.getShop())) {
-            //itemShopAdmin.update();
+            itemShopAdmin.update();
         }
         if (worldModeAdmin.getIsUpdate(worldModeAdmin.getPresent())) {
             geoPresentManager.update();
@@ -208,7 +209,7 @@ public class WorldGameSystem {
             dungeonSelectManager.draw();
         }
         if (worldModeAdmin.getIsDraw(worldModeAdmin.getShop())) {
-            //itemShopAdmin.draw();
+            itemShopAdmin.draw();
         }
         if (worldModeAdmin.getIsDraw(worldModeAdmin.getPresent())) {
             geoPresentManager.draw();

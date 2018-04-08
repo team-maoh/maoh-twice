@@ -163,8 +163,8 @@ class StartSurfaceView extends BaseSurfaceView {
 
         if(touch_state == TouchState.DOWN){
 
-            activityChange.toDungeonActivity();
-            //activityChange.toWorldActivity();
+            //activityChange.toDungeonActivity();
+            activityChange.toWorldActivity();
         }
 
         start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
