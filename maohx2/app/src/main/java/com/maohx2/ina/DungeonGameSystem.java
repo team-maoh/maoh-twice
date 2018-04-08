@@ -1,12 +1,8 @@
 package com.maohx2.ina;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.view.SurfaceHolder;
 
 import com.maohx2.fuusya.MapObjectAdmin;
 import com.maohx2.fuusya.MapPlateAdmin;
@@ -30,8 +26,6 @@ import com.maohx2.kmhanko.sound.SoundAdmin;
 /**
  * Created by ina on 2017/09/05.
  */
-
-
 
 public class DungeonGameSystem {
 
@@ -67,18 +61,12 @@ public class DungeonGameSystem {
         paint = new Paint();
         paint.setColor(Color.BLUE);
 
-
-
-
-
         battle_unit_admin = new BattleUnitAdmin();
         text_box_admin = new TextBoxAdmin(graphic);
         list_box_admin = new ListBoxAdmin();
         text_box_admin.init(dungeon_user_interface);
         list_box_admin.init(dungeon_user_interface, graphic);
         map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, this);
-
-
 
         PaletteCenter.initStatic(graphic);
         PaletteElement.initStatic(graphic);
@@ -93,7 +81,7 @@ public class DungeonGameSystem {
         GlobalData globalData = (GlobalData) dungeon_activity.getApplication();
         PlayerStatus playerStatus = globalData.getPlayerStatus();
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
-        battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin);
+        battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage);
     }
 
     public void update() {
@@ -104,6 +92,10 @@ public class DungeonGameSystem {
                 map_object_admin.update(is_displaying_menu, is_touching_outside_menu);
                 map_plate_admin.update(is_displaying_menu);
                 break;
+
+            case BUTTLE_INIT:
+                battle_unit_admin.spawnEnemy();
+                dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE);
 
             case BUTTLE:
                 battle_user_interface.update();
@@ -125,21 +117,18 @@ public class DungeonGameSystem {
                 battle_unit_admin.draw();
                 break;
         }
-
         graphic.draw();
     }
 
     public void setIsDisplayingMenu(boolean _is_displaying_menu){
         is_displaying_menu = _is_displaying_menu;
     }
+
     public void setIsTouchingOutsideMenu(boolean _is_touching_outside_menu){
         is_touching_outside_menu = _is_touching_outside_menu;
     }
 
-
-    public DungeonGameSystem() {
-    }
-
+    public DungeonGameSystem(){}
 
 }
 

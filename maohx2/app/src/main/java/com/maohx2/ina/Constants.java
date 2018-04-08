@@ -57,7 +57,7 @@ public final class Constants {
     }
 
     public static class BattleUnit {
-        public static final int BATTLE_UNIT_MAX = 6;
+        public static final int BATTLE_UNIT_MAX = 15;
     }
 
     public static class UnitStatus {
@@ -115,6 +115,7 @@ public final class Constants {
 
         public enum DUNGEON_MODE {
             MAP,
+            BUTTLE_INIT,
             BUTTLE,
         }
     }

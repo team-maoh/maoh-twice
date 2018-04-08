@@ -2,6 +2,7 @@ package com.maohx2.ina;
 
 
 import android.app.Activity;
+import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
 import com.maohx2.ina.Arrange.Inventry;
@@ -34,6 +35,9 @@ public class StartGameSystem {
     EquipmentItemDataAdmin equipment_item_data_admin;
     PaletteAdmin palette_admin;
     int n = 0;
+    Paint paint;
+    int alpha = 255;
+    int up_down = 5;
 
     public void init(SurfaceHolder _holder, Graphic _graphic, BattleUserInterface _start_user_interface, Activity start_activity, MyDatabaseAdmin my_database_admin) {
 
@@ -48,6 +52,8 @@ public class StartGameSystem {
 
         inventry = new Inventry(start_user_interface, graphic);
         palette_admin = new PaletteAdmin(_start_user_interface, graphic);
+        paint = new Paint();
+        paint.setTextSize(70);
     }
 
 
@@ -59,15 +65,24 @@ public class StartGameSystem {
             n = 0;
         }
 
+        paint.setARGB(alpha,255,255,255);
+
+        alpha += up_down;
+        if(alpha < 0 || alpha > 255){
+            up_down *= -1;
+            alpha += up_down*2;
+        }
+
         inventry.updata();
         palette_admin.update(false);
     }
 
 
     public void draw() {
-        inventry.draw();
-        palette_admin.draw();
-        start_user_interface.draw();
+        //inventry.draw();
+        //palette_admin.draw();
+        //start_user_interface.draw();
+        graphic.bookingDrawText("Please Touch!",550,750, paint);
         graphic.draw();
     }
 }

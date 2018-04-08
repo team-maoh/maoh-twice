@@ -191,7 +191,7 @@ public class MapPlayer extends MapUnit {
                 System.out.println("◆一定歩数 歩いたので敵と遭遇");
                 encount_steps = 0;
                 th_encount_steps = makeThresholdEncountSteps();
-                dungeon_mode_namage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE);
+                dungeon_mode_namage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
             }
 
             sound_steps = (sound_steps + 1) % SOUND_STEPS_PERIOD;

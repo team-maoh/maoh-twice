@@ -106,6 +106,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
     public void gameLoop(){
 
         dungeon_user_interface.updateTouchState(touch_x, touch_y, touch_state);
+        battle_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         game_system.update();
         game_system.draw();
 
