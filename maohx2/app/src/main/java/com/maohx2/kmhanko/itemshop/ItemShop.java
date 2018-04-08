@@ -7,20 +7,26 @@ import com.maohx2.ina.Text.ListBox;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.WorldModeAdmin;
+import com.maohx2.kmhanko.database.ExpendItemInventrySaver;
+import com.maohx2.kmhanko.database.MyDatabase;
+import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.database.NamedDataAdmin;
 import com.maohx2.ina.ItemData.ItemDataAdmin;
 import com.maohx2.ina.Arrange.Inventry;
+import com.maohx2.kmhanko.Arrange.InventryS;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.PlateGroup;
+import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 import com.maohx2.kmhanko.plate.BackPlate;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.LinkedHashSet;
 
@@ -51,19 +57,21 @@ public abstract class ItemShop {
     UserInterface userInterface;
     TextBoxAdmin textBoxAdmin;
     WorldModeAdmin worldModeAdmin;
+    MyDatabaseAdmin databaseAdmin;
 
     ItemData focusItemData;//現在選択しているItem
 
-    Inventry itemInventry;
+    InventryS itemInventry;
 
+    ExpendItemDataAdmin expendItemDataAdmin;
 
-
-    public ItemShop(UserInterface _userInterface, Graphic _graphic, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, Inventry _itemInventry) {
+    public ItemShop(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, InventryS _itemInventry) {
         userInterface = _userInterface;
         graphic = _graphic;
         textBoxAdmin = _textBoxAdmin;
         worldModeAdmin = _worldModeAdmin;
         itemInventry = _itemInventry;
+        databaseAdmin = _databaseAdmin;
     }
 
     /*
@@ -162,6 +170,29 @@ public abstract class ItemShop {
                                 buySelectPlateGroup.setDrawFlag(false);
                                 worldModeAdmin.setShop(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
+
+                                itemInventry.save();
+
+                                /*
+                                databaseAdmin.addMyDatabase("ExpendItemInventrySaveTest", "ExpendItemInventrySaveTest.db", 1, "w");
+                                MyDatabase database = databaseAdmin.getMyDatabase("ExpendItemInventrySaveTest");
+
+                                List<String> itemNames = new ArrayList<String>();
+                                for (int i = 0; i < 30; i++) {
+                                    if (itemInventry.getItemData(i) == null) {
+                                        break;
+                                    }
+                                    itemNames.add(itemInventry.getItemData(i).getName());
+                                }
+                                System.out.println(database.getTables());
+
+                                database.insertRawByList("ExpendItemInventry", "name", itemNames);
+
+                                List<String> load = database.getString("ExpendItemInventry", "name");
+
+                                System.out.println("takano:" + load);
+                                */
+
                             }
                         }
                 }
