@@ -7,6 +7,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.Draw.ImageContext;
+
 /**
  * Created by ina on 2017/09/20.
  */
@@ -31,11 +34,15 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     long oldTime;
     long newTime = System.currentTimeMillis() << 16;
 
+    BackSurfaceView backSurfaceView;
+
+    Graphic graphic;
 
 
-    public BaseSurfaceView(Activity _currentActivity) {
+    public BaseSurfaceView(Activity _currentActivity, BackSurfaceView _backSurfaceView) {
         super(_currentActivity);
         currentActivity = _currentActivity;
+        backSurfaceView = _backSurfaceView;
         setZOrderOnTop(true);
         holder = getHolder();
         holder.addCallback(this);
@@ -49,6 +56,9 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        //ImageContext backImageContext = graphic.makeImageContext(graphic.searchBitmap("e51-0"),0,0,true);
+        //backSurfaceView.drawBackGround(backImageContext);
+
         thread = new Thread(this);
         thread.start();
 

@@ -25,25 +25,20 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 
 
 //タイトル画面など
-public class StartActivity extends Activity {
+public class StartActivity extends BaseActivity {
 
-    RelativeLayout layout;
     boolean game_system_flag = false;
     StartSurfaceView start_surface_view;
     GlobalData global_data;
 
-    BackSurfaceView backSurfaceView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        backSurfaceView = new BackSurfaceView(this);
         start_surface_view = new StartSurfaceView(this, backSurfaceView);
-        layout = new RelativeLayout(this);
-        layout.addView(backSurfaceView);
         layout.addView(start_surface_view);
-        setContentView(layout);
+
     }
 
     @Override
@@ -104,9 +99,7 @@ class BackSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Run
         canvas = holder.lockCanvas();
 
         if(canvas != null) {
-            //canvas.drawColor(Color.RED);
             canvas.drawBitmap(drawImageContext.getBitmapData().getBitmap(), drawImageContext.getMatrix(), paint);
-            //canvas.drawBitmap();
             holder.unlockCanvasAndPost(canvas);
         }
     }
@@ -123,13 +116,12 @@ class StartSurfaceView extends BaseSurfaceView {
     BattleUserInterface start_user_interface;
 
     PlateGroup<CircleImagePlate> image_list;
-    BackSurfaceView backSurfaceView;
 
 
     public StartSurfaceView(Activity _start_activity, BackSurfaceView _backSurfaceView) {
-        super(_start_activity);
+        super(_start_activity, _backSurfaceView);
         start_activity = _start_activity;
-        backSurfaceView = _backSurfaceView;
+
     }
 
     @Override
@@ -137,14 +129,18 @@ class StartSurfaceView extends BaseSurfaceView {
 
     public void runGameSystem() {
 
+
         graphic = new Graphic(start_activity, holder);
         my_database_admin = new MyDatabaseAdmin(start_activity);
 
         my_database_admin.addMyDatabase("StartDB", "LocalStartImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("StartDB"), "Start");
 
-        paint.setColor(Color.rgb(100, 100, 0));
-        paint.setTextSize(30);
+        //ImageContext backImageContext = graphic.makeImageContext(graphic.searchBitmap("e51-0"),0,0,true);
+        //backSurfaceView.drawBackGround(backImageContext);
+
+
+
 
         start_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
         start_user_interface.init();
@@ -152,9 +148,6 @@ class StartSurfaceView extends BaseSurfaceView {
         start_game_system = new StartGameSystem();
         start_game_system.init(holder, graphic, start_user_interface, start_activity, my_database_admin);
 
-        ImageContext backImageContext = graphic.makeImageContext(graphic.searchBitmap("e51-0"),0,0,true);
-
-        backSurfaceView.drawBackGround(backImageContext);
 
         //todo:こいつは一番下
         thread = new Thread(this);
@@ -171,6 +164,7 @@ class StartSurfaceView extends BaseSurfaceView {
         if(touch_state == TouchState.DOWN){
 
             activityChange.toDungeonActivity();
+            //activityChange.toWorldActivity();
         }
 
         start_user_interface.updateTouchState(touch_x, touch_y, touch_state);

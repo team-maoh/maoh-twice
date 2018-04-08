@@ -26,8 +26,10 @@ public class DungeonActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dungeon_surface_view = new DungeonSurfaceView(this);
-        setContentView(dungeon_surface_view);
+
+        dungeon_surface_view = new DungeonSurfaceView(this, backSurfaceView);
+        layout.addView(dungeon_surface_view);
+
     }
 
     //ここでメインループを止める
@@ -55,8 +57,8 @@ class DungeonSurfaceView extends BaseSurfaceView{
     Activity dungeon_activity;
     BattleUserInterface battle_user_interface;
 
-    public DungeonSurfaceView(Activity _dungeon_activity) {
-        super(_dungeon_activity);
+    public DungeonSurfaceView(Activity _dungeon_activity, BackSurfaceView _backSurfaceView) {
+        super(_dungeon_activity, _backSurfaceView);
         dungeon_activity = _dungeon_activity;
 
 
