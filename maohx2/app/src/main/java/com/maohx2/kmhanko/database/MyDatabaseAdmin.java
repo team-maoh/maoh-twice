@@ -33,12 +33,10 @@ public class MyDatabaseAdmin {
         }
     }
 
-    public void addMyDatabase(String db_name, String db_asset, int db_version, String load_mode) {
-        MyDatabase bufDatabase = null;
+    public void addMyDatabase(String db_name,String db_asset,int db_version,String load_mode) {
         if (countUpSameName(db_name) == 0) {
             databases.add(new MyDatabase(mContext));
-            bufDatabase = databases.get(databases.size() - 1);
-            bufDatabase.init(db_name, db_asset, db_version, load_mode);
+            databases.get(databases.size() - 1).init(db_name, db_asset, db_version, load_mode);
         } else {
             System.out.println("☆タカノ:" + "MyDatabaseAdmin#addMyDatabase DbName = " + db_name + " は既に存在するので追加しません");
         }
@@ -62,10 +60,10 @@ public class MyDatabaseAdmin {
             return mydb;
         } else {
             if (count == 0) {
-                throw new Error("☆タカノ:" + "MyDatabaseAdmin#getMyDatabase : DBを見つけられませんでした : " + name);
+                throw new Error("☆タカノ:" + "MyDatabaseAdmin#getMyDatabase : DBを見つけられませんでした : " + name + "¥n");
             }
             if (count > 1) {
-                throw new Error("☆タカノ:" + "MyDatabaseAdmin#getMyDatabase : 同じ名称のDBが複数個見つかりました : "+ count);
+                throw new Error("☆タカノ:" + "MyDatabaseAdmin#getMyDatabase : 同じ名称のDBが複数個見つかりました : "+ count+ "¥n");
             }
             return null;
         }

@@ -47,7 +47,6 @@ public class DungeonGameSystem {
     PaletteAdmin palette_admin;
 
     DungeonModeManage dungeonModeManage;
-    boolean is_displaying_menu, is_touching_outside_menu;
     MapPlateAdmin map_plate_admin;
 
     public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin) {
@@ -55,18 +54,18 @@ public class DungeonGameSystem {
         battle_user_interface = _battle_user_interface;
         graphic = _graphic;
 
-        dungeonModeManage = new DungeonModeManage();
-        map_admin = new MapAdmin(graphic);
-        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin,this, dungeonModeManage);
-        paint = new Paint();
-        paint.setColor(Color.BLUE);
-
         battle_unit_admin = new BattleUnitAdmin();
         text_box_admin = new TextBoxAdmin(graphic);
         list_box_admin = new ListBoxAdmin();
         text_box_admin.init(dungeon_user_interface);
         list_box_admin.init(dungeon_user_interface, graphic);
-        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, this);
+        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface);
+
+        dungeonModeManage = new DungeonModeManage();
+        map_admin = new MapAdmin(graphic);
+        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin, map_plate_admin, dungeonModeManage);
+        paint = new Paint();
+        paint.setColor(Color.BLUE);
 
         PaletteCenter.initStatic(graphic);
         PaletteElement.initStatic(graphic);
@@ -89,8 +88,8 @@ public class DungeonGameSystem {
         switch (dungeonModeManage.getMode()) {
 
             case MAP:
-                map_object_admin.update(is_displaying_menu, is_touching_outside_menu);
-                map_plate_admin.update(is_displaying_menu);
+                map_object_admin.update();
+                map_plate_admin.update();
                 break;
 
             case BUTTLE_INIT:
@@ -110,6 +109,7 @@ public class DungeonGameSystem {
             case MAP:
                 map_admin.drawMap_for_autotile_4div_combine();
                 map_object_admin.draw();
+                map_plate_admin.draw();
                 //graphic.bookingDrawCircle(0,0,10,paint);
                 break;
 
@@ -118,14 +118,6 @@ public class DungeonGameSystem {
                 break;
         }
         graphic.draw();
-    }
-
-    public void setIsDisplayingMenu(boolean _is_displaying_menu){
-        is_displaying_menu = _is_displaying_menu;
-    }
-
-    public void setIsTouchingOutsideMenu(boolean _is_touching_outside_menu){
-        is_touching_outside_menu = _is_touching_outside_menu;
     }
 
     public DungeonGameSystem(){}

@@ -17,8 +17,7 @@ public class MapPlateAdmin {
 
     Graphic graphic;
     DungeonUserInterface dungeon_user_interface;
-    boolean is_displaying_menu;
-    DungeonGameSystem dungeon_game_system;
+    boolean is_displaying_menu, is_touching_outside_menu;
 
     int LEFT_COORD = 1300;
     int RIGHT_COORD = 1550;
@@ -27,14 +26,16 @@ public class MapPlateAdmin {
 
     PlateGroup<BoxTextPlate> menuGroup;//ダンジョンリタイア、ステータス表示、所持アイテム表示等
 
-    public MapPlateAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, DungeonGameSystem _dungeon_game_system) {
+    public MapPlateAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
-        dungeon_game_system = _dungeon_game_system;
 
         Paint text_paint = new Paint();
         text_paint.setTextSize(30f);
         text_paint.setARGB(255,255,255,255);
+
+        is_displaying_menu = false;
+        is_touching_outside_menu = false;
 
         menuGroup = new PlateGroup<BoxTextPlate>(
                 new BoxTextPlate[]{
@@ -67,13 +68,11 @@ public class MapPlateAdmin {
 
     }
 
-    public void update(boolean _is_displaying_menu) {
+    public void update() {
 
         menuGroup.update();
 
-        boolean is_touching_outside_menu = false;
-
-        is_displaying_menu = _is_displaying_menu;
+        is_touching_outside_menu = false;
 
         Constants.Touch.TouchState touch_state = dungeon_user_interface.getTouchState();
 
@@ -109,8 +108,6 @@ public class MapPlateAdmin {
 
         }
 
-        dungeon_game_system.setIsTouchingOutsideMenu(is_touching_outside_menu);
-
     }
 
 
@@ -120,6 +117,22 @@ public class MapPlateAdmin {
             menuGroup.draw();
         }
 
+    }
+
+    public void setIsDisplayingMenu(boolean _is_displaying_menu) {
+        is_displaying_menu = _is_displaying_menu;
+    }
+
+    public void setIsTouchingOutsideMenu(boolean _is_touching_outside_menu) {
+        is_touching_outside_menu = _is_touching_outside_menu;
+    }
+
+    public boolean getIsDisplayingMenu() {
+        return is_displaying_menu;
+    }
+
+    public boolean getIsTouchingOutsideMenu() {
+        return is_touching_outside_menu;
     }
 
 }
