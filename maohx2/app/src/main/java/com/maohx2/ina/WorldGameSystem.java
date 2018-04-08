@@ -11,8 +11,10 @@ import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.ListBoxAdmin;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
+import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.GeoPresent.GeoPresentManager;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
 import com.maohx2.kmhanko.effect.EffectAdmin;
@@ -23,6 +25,7 @@ import com.maohx2.kmhanko.itemdata.GeoObjectDataAdmin;
 import com.maohx2.kmhanko.itemshop.ItemShopAdmin;
 import com.maohx2.kmhanko.effect.*;
 import com.maohx2.kmhanko.sound.SoundAdmin;
+import com.maohx2.kmhanko.database.ExpendItemInventrySaver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,9 +65,12 @@ public class WorldGameSystem {
 
     PlayerStatus playerStatus;
 
+    ExpendItemInventrySaver expendItemInventrySaver;
+
+
     //TODO いな依頼:引数にUI,Graphicが入って居るためGlobalDataに設置できない
     Inventry geoInventry;
-    Inventry expendItemInventry;
+    InventryS expendItemInventry;
 
     //TODO いな依頼　Inventryのupdateを呼ばないと真っ黒。あとアクティブ関係
 
@@ -79,10 +85,6 @@ public class WorldGameSystem {
         playerStatus = globalData.getPlayerStatus();
         //GeoInventry = globalData.getGeoInventry();
 
-        //TODO いな依頼:Globalに入れる
-        geoInventry = new Inventry(map_user_interface, graphic);
-        expendItemInventry = new Inventry(map_user_interface, graphic);
-        //TODO いな依頼:interfaceはあとで変更できないとまずい場合があるかもしれない
 
 
         worldModeAdmin = new WorldModeAdmin();
@@ -108,6 +110,27 @@ public class WorldGameSystem {
 
 
         itemDataAdminManager.init(databaseAdmin,graphic);
+
+
+        //TODO いな依頼:Globalに入れる
+        geoInventry = new Inventry(map_user_interface, graphic);
+        expendItemInventry = new InventryS(
+                map_user_interface,
+                graphic,
+                new ExpendItemInventrySaver(
+                        databaseAdmin,
+                        "ExpendItemInventrySave",
+                        "ExpendItemInventrySave.db",
+                        1, "s", itemDataAdminManager
+                )
+        );
+        expendItemInventry.load();
+
+
+        //TODO いな依頼:interfaceはあとで変更できないとまずい場合があるかもしれない
+
+
+        /*
         expendItemInventry.addItemData(
                 itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName("D_ポーション")
         );
@@ -116,7 +139,7 @@ public class WorldGameSystem {
         );
         expendItemInventry.addItemData(
                 itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName("D_EXポーション")
-        );
+        );*/
 
         itemShopAdmin.init(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager, expendItemInventry, geoInventry);
         itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "debug");

@@ -19,9 +19,9 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 
 
 //ダンジョン選択画面
-public class WorldActivity extends Activity {
+public class WorldActivity extends BaseActivity {
 
-    RelativeLayout layout;
+    //RelativeLayout layout;
 
     //by kmhanko
     WorldSurfaceView worldSurfaceView;
@@ -30,13 +30,9 @@ public class WorldActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        layout = new RelativeLayout(this);
-        layout.setBackgroundColor(Color.WHITE);
-        //by kmhanko
-        worldSurfaceView = new WorldSurfaceView(this);
+        worldSurfaceView = new WorldSurfaceView(this, backSurfaceView);
         layout.addView(worldSurfaceView);
 
-        setContentView(layout);
     }
 
 }
@@ -51,8 +47,9 @@ class WorldSurfaceView extends BaseSurfaceView {
     Graphic graphic;
     SoundAdmin soundAdmin;
 
-    public WorldSurfaceView(WorldActivity _map_activity) {
-        super(_map_activity);
+    public WorldSurfaceView(WorldActivity _map_activity, BackSurfaceView _backSurfaceView) {
+        super(_map_activity, _backSurfaceView);
+        //super(_map_activity);
         map_activity = _map_activity;
 
         graphic = new Graphic(map_activity, holder);
@@ -74,7 +71,7 @@ class WorldSurfaceView extends BaseSurfaceView {
         map_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         world_game_system.updata();
         world_game_system.draw();
-
+/*
 
         if (touch_state == TouchState.DOWN) {
             thread = null;
@@ -82,7 +79,7 @@ class WorldSurfaceView extends BaseSurfaceView {
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             map_activity.startActivity(intent);
         }
-
+*/
     }
 
 }

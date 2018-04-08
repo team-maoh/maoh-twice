@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.SurfaceHolder;
 
 import android.view.SurfaceView;
+import android.widget.RelativeLayout;
 
 import com.maohx2.ina.Draw.Graphic;
 
@@ -16,15 +17,21 @@ import static com.maohx2.ina.Constants.Bitmap.*;
  */
 
 public abstract class BaseActivity extends Activity {
-    SurfaceView surfaceView;
-    SurfaceHolder holder;
-    //Graphic graphic = new Graphic(this);
+
+    RelativeLayout layout;
+    BackSurfaceView backSurfaceView;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //graphic.setHolder(holder);
+
+        layout = new RelativeLayout(this);
+        setContentView(layout);
+
+        //backSurfaceView = new BackSurfaceView(this);
+        //layout.addView(backSurfaceView);
+
     }
 
 
