@@ -610,6 +610,8 @@ public class SectionAdmin {
             section_num_list.add(i);
         }
         Collections.shuffle(section_num_list);
+        int result = section_num_list.get(0);
+        System.out.println("mine_section_num = "+ result);
         Random rnd = new Random();
         int mine_num = rnd.nextInt(max_num - min_num + 1) + min_num - 1;
         for(int i = 0;i == mine_num;i++){

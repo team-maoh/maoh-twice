@@ -13,14 +13,16 @@ import com.maohx2.ina.Draw.Graphic;
 public class AutoTile {
     public BitmapData raw_auto_tile[];//auto_tileを切っただけ
     public BitmapData auto_tile[];//使う可能性のあるauto_tile全パターン
+    public BitmapData big_auto_tile[];//auto_tileの4つを一つにまとめたもの
 
     public AutoTile(){
         raw_auto_tile = new BitmapData[5];
         auto_tile = new BitmapData[47];
+        big_auto_tile = new BitmapData[52];
     }
 
-    public void setAuto_tile(BitmapData _auto_tile, int num) {
-        raw_auto_tile[num] = _auto_tile;
+    public void setAuto_tile(BitmapData m_auto_tile, int num) {
+        raw_auto_tile[num] = m_auto_tile;
     }
 
     public void drawAutoTile(Graphic graphic, int num, int x, int y, int magnification){
