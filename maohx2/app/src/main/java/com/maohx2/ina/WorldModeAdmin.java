@@ -68,7 +68,4 @@ public class WorldModeAdmin {
 
     // *** takano ここまで ***
 
-
-
-
 }

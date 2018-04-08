@@ -23,9 +23,7 @@ public class EquipmentItemData extends ItemData{
     }
     public void setEquipmentKind(EQUIPMENT_KIND _equipment_kind) {equipment_kind = _equipment_kind;}
 
-    public int getUseNum() {
-        return useNum;
-    }
+    public int getUseNum() {return useNum;}
     public void setUseNum(int _useNum) {useNum = _useNum;}
 
     public int getRadius(){return radius;}

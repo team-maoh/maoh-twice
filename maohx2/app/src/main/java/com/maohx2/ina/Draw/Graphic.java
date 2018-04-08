@@ -5,9 +5,12 @@ import android.app.admin.SystemUpdateInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.PointF;
+import android.graphics.PorterDuff;
 import android.view.SurfaceHolder;
 
 import com.maohx2.ina.Constants;
@@ -101,6 +104,7 @@ public class Graphic {
 
         draw_paint.setColor(Color.BLUE);
         holder = _holder;
+        holder.setFormat(PixelFormat.TRANSLUCENT);
         local_bitmap_data_admin = new BitmapDataAdmin();
         local_bitmap_data_admin.init(activity);
 
@@ -142,13 +146,15 @@ public class Graphic {
         System.out.println("booking_num:"+booking_num);
 
         if(canvas != null) {
-            canvas.drawColor(Color.WHITE);
+            //canvas.drawColor(Color.WHITE);
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
             for (int i = 0; i < booking_num; i++) {
                booking_task_datas.get(i).draw(canvas);
             }
 
-            draw_paint.setColor(Color.GREEN);
+            //draw_paint.setColor(Color.GREEN);
+            draw_paint.setColor(Color.BLACK);
             canvas.drawRect(0,0,DRAW_RIGHT_END,DRAW_UP_END,draw_paint);
             canvas.drawRect(DISP_X,0,DRAW_RIGHT_END,DRAW_DOWN_END,draw_paint);
             canvas.drawRect(DISP_X,DISP_Y,DRAW_LEFT_END,DRAW_DOWN_END,draw_paint);

@@ -2,9 +2,13 @@ package com.maohx2.ina;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.widget.RelativeLayout;
 
 import com.maohx2.ina.Draw.BitmapData;
@@ -28,12 +32,16 @@ public class StartActivity extends Activity {
     StartSurfaceView start_surface_view;
     GlobalData global_data;
 
+    BackSurfaceView backSurfaceView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        start_surface_view = new StartSurfaceView(this);
+        backSurfaceView = new BackSurfaceView(this);
+        start_surface_view = new StartSurfaceView(this, backSurfaceView);
         layout = new RelativeLayout(this);
+        layout.addView(backSurfaceView);
         layout.addView(start_surface_view);
         setContentView(layout);
     }
@@ -41,12 +49,14 @@ public class StartActivity extends Activity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+
         if(!game_system_flag) {
             global_data = (GlobalData) this.getApplication();
             global_data.init(start_surface_view.getWidth(), start_surface_view.getHeight());
             start_surface_view.runGameSystem();
             game_system_flag = true;
         }
+
     }
 
 
@@ -55,6 +65,52 @@ public class StartActivity extends Activity {
         super.onDestroy();
         System.out.println("call_destoroy");
     }
+}
+
+class BackSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable{
+
+    Paint paint = new Paint();
+    SurfaceHolder holder;
+
+    public BackSurfaceView(Activity _currentActivity) {
+        super(_currentActivity);
+        setZOrderOnTop(true);
+        holder = getHolder();
+        holder.addCallback(this);
+        //paint.setColor(Color.BLUE);
+    }
+
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {}
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {}
+
+
+    @Override
+    public void run() {}
+
+    public void gameLoop(){}
+
+    public void stopThread(){}
+
+    public void drawBackGround(ImageContext drawImageContext){
+
+        Canvas canvas = null;
+        canvas = holder.lockCanvas();
+
+        if(canvas != null) {
+            //canvas.drawColor(Color.RED);
+            canvas.drawBitmap(drawImageContext.getBitmapData().getBitmap(), drawImageContext.getMatrix(), paint);
+            //canvas.drawBitmap();
+            holder.unlockCanvasAndPost(canvas);
+        }
+    }
+
 }
 
 
@@ -67,11 +123,13 @@ class StartSurfaceView extends BaseSurfaceView {
     BattleUserInterface start_user_interface;
 
     PlateGroup<CircleImagePlate> image_list;
+    BackSurfaceView backSurfaceView;
 
 
-    public StartSurfaceView(Activity _start_activity) {
+    public StartSurfaceView(Activity _start_activity, BackSurfaceView _backSurfaceView) {
         super(_start_activity);
         start_activity = _start_activity;
+        backSurfaceView = _backSurfaceView;
     }
 
     @Override
@@ -94,37 +152,29 @@ class StartSurfaceView extends BaseSurfaceView {
         start_game_system = new StartGameSystem();
         start_game_system.init(holder, graphic, start_user_interface, start_activity, my_database_admin);
 
+        ImageContext backImageContext = graphic.makeImageContext(graphic.searchBitmap("e51-0"),0,0,true);
+
+        backSurfaceView.drawBackGround(backImageContext);
 
         //todo:こいつは一番下
         thread = new Thread(this);
         thread.start();
 
+        activityChange = new ActivityChange(this, currentActivity);
     }
+
 
     @Override
     public void gameLoop(){
         paint.setColor(Color.BLUE);
 
-
         if(touch_state == TouchState.DOWN){
-            thread = null;
-            Intent intent = new Intent(start_activity, WorldActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            start_activity.startActivity(intent);
+
+            activityChange.toDungeonActivity();
         }
 
-
-/*
-        if(touch_state == TouchState.DOWN){
-            thread = null;
-            Intent intent = new Intent(start_activity, BattleActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            start_activity.startActivity(intent);
-        }*/
         start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         start_game_system.updata();
         start_game_system.draw();
-
-
     }
 }
