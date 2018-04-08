@@ -25,17 +25,29 @@ public class ExpendItemInventrySaver extends InventrySaver {
     public void save() {
         deleteAll(); //セーブデータをリセットして書き直す場合に呼び出す
 
+        /*
         List<String> itemNames = new ArrayList<String>();
         List<Integer> nums = new ArrayList<Integer>();
+        */
         for (int i = 0; i < INVENTRY_DATA_MAX; i++) {
             if (inventry.getItemData(i) == null) {
                 break;
             }
+            /*
             itemNames.add(inventry.getItemData(i).getName());
             nums.add(inventry.getItemNum(i));
+            */
+
+            database.insertLineByArrayString(
+                    "ExpendItemInventry",
+                    new String[] { "name", "num" },
+                    new String[] { inventry.getItemData(i).getName(), String.valueOf(inventry.getItemNum(i))}
+            );
         }
+/*
         database.insertRawByList("ExpendItemInventry", "name", itemNames);
         database.rewriteRawByList("ExpendItemInventry", "num", nums);
+*/
     }
 
     @Override

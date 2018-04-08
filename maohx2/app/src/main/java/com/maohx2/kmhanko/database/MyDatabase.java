@@ -427,6 +427,8 @@ public class MyDatabase {
 
     // *** insert ***
 
+    /*
+
     //1列を追加する。c_nameに列を示すカラムを、valiuesに対応するデータを格納して渡す。この列以外は全てNULLになる
     public boolean insertRawByArrayString(String t_name, String c_name, String[] values) {
         if (c_name == null || values == null) {
@@ -462,6 +464,8 @@ public class MyDatabase {
         return insertRawByArrayString(t_name, c_name, array2ArrayString(values));
     }
 
+    */
+
     //1行を追加する。c_namesに被りなく各カラムを、valuesに対応するデータを格納して渡す。
     public boolean insertLineByArrayString(String t_name, String[] c_names, String[] values) {
         if (c_names == null || values == null) {
@@ -478,7 +482,7 @@ public class MyDatabase {
         //TODO:例外処理
         long id = db.insert(t_name, null, content_values);
         if (id == -1) {
-            return false;
+            throw new Error("タカノ : MyDatabase#insertLineByArrayString : insert is Error");
         }
         return true;
     }
@@ -524,6 +528,8 @@ public class MyDatabase {
         return rewrite(t_name, list2ArrayString(c_names), list2ArrayString(values), w_script);
     }
 
+    /*
+
     //あるカラム列を全ての行について上書きしていく関数
     public <T> int rewriteRawByList(String tableName, String columName, List<T> values) {
         String[] bufCName = new String[values.size()];
@@ -533,6 +539,7 @@ public class MyDatabase {
         return rewrite(tableName, bufCName, list2ArrayString(values), "null");
     }
 
+
     public <T> int rewriteRawByArray(String tableName, String columName, T[] values) {
         String[] bufColum = new String[values.length];
         for (int i = 0; i < values.length; i++) {
@@ -540,6 +547,8 @@ public class MyDatabase {
         }
         return rewrite(tableName, bufColum, array2ArrayString(values), "null");
     }
+
+    */
 
     // *** rewriteここまで ***
 
