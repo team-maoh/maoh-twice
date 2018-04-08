@@ -73,7 +73,6 @@ class WorldSurfaceView extends BaseSurfaceView {
     public void gameLoop() {
         map_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         world_game_system.updata();
-        //graphic.bookingDrawBitmapName("キノコの森",300,590);
         world_game_system.draw();
 
 

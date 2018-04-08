@@ -1,6 +1,7 @@
 package com.maohx2.kmhanko.PlayerStatus;
 
 import com.maohx2.ina.Battle.BattleDungeonUnitData;
+import com.maohx2.ina.Constants.UnitStatus.Status;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.geonode.GeoCalcSaverAdmin;
 
@@ -14,17 +15,19 @@ public class PlayerStatus {
     //Inventry
 
     //Status
-    int level;
+    private int level;
 
-    int hp;
-    int attack;
-    int defence;
-    int luck;
+    private int hp;
+    private int attack;
+    private int defence;
+    private int luck;
 
-    int geoHP;
-    int geoAttack;
-    int geoDefence;
-    int geoLuck;
+    private int geoHP;
+    private int geoAttack;
+    private int geoDefence;
+    private int geoLuck;
+
+    private int money;
 
     //Equip
 
@@ -78,6 +81,7 @@ public class PlayerStatus {
         attack = 10;
         defence = 5;
         luck = 5;
+        money = 10000;
     }
 
     //DBからの読み出し
@@ -85,12 +89,32 @@ public class PlayerStatus {
     public BattleDungeonUnitData makeBattleDungeonUnitData() {
         BattleDungeonUnitData battleDungeonUnitData = new BattleDungeonUnitData();
         battleDungeonUnitData.setName("Player");
-        battleDungeonUnitData.setStatus(
-                new int[] {
-                    hp, attack, defence, luck, -1,
-                }
-        );
+
+        int[] buf = new int[Status.NUM_OF_STATUS.ordinal()];
+        for(int i = 0; i < buf.length ; i++) {
+            buf[i] = 0;
+        }
+
+        buf[Status.HP.ordinal()] = hp;
+        buf[Status.ATTACK.ordinal()] = attack;
+        buf[Status.DEFENSE.ordinal()] = defence;
+        buf[Status.LUCK.ordinal()] = luck;
+        buf[Status.ATTACK_FRAME.ordinal()] = -1;
+
+        battleDungeonUnitData.setStatus(buf);
         return battleDungeonUnitData;
+    }
+
+    public int getHP() { return hp; }
+    public int getAttack() { return attack; }
+    public int getDefence() { return defence; }
+    public int getLuck() { return luck; }
+    public int getLevel() { return level; }
+    public int getMoney() { return money; }
+
+    public int addMoney(int _money) {
+        money += _money;
+        return money;
     }
 
 

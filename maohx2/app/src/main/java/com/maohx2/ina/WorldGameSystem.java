@@ -11,18 +11,22 @@ import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.ListBoxAdmin;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
+import com.maohx2.kmhanko.GeoPresent.GeoPresentManager;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
 import com.maohx2.kmhanko.effect.EffectAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlotAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlotAdminManager;
+import com.maohx2.kmhanko.itemdata.GeoObjectData;
+import com.maohx2.kmhanko.itemdata.GeoObjectDataAdmin;
 import com.maohx2.kmhanko.itemshop.ItemShopAdmin;
 import com.maohx2.kmhanko.effect.*;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 import android.graphics.Paint;
 
@@ -45,6 +49,7 @@ public class WorldGameSystem {
     DungeonSelectManager dungeonSelectManager;
     ItemShopAdmin itemShopAdmin;
     ItemDataAdminManager itemDataAdminManager;
+    GeoPresentManager geoPresentManager;
 
     EffectAdmin effectAdmin;
     SoundAdmin soundAdmin;
@@ -55,8 +60,13 @@ public class WorldGameSystem {
 
     WorldActivity worldActivity;
 
-    //引数にUI,Graphicが入って居るためGlobalDataに設置できない
+    PlayerStatus playerStatus;
+
+    //TODO いな依頼:引数にUI,Graphicが入って居るためGlobalDataに設置できない
     Inventry geoInventry;
+    Inventry expendItemInventry;
+
+    //TODO いな依頼　Inventryのupdateを呼ばないと真っ黒。あとアクティブ関係
 
     public void init(UserInterface _map_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity) {
         graphic = _graphic;
@@ -66,10 +76,14 @@ public class WorldGameSystem {
 
         worldActivity = _worldActivity;
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
-        PlayerStatus playerStatus = globalData.getPlayerStatus();
+        playerStatus = globalData.getPlayerStatus();
         //GeoInventry = globalData.getGeoInventry();
 
+        //TODO いな依頼:Globalに入れる
         geoInventry = new Inventry(map_user_interface, graphic);
+        expendItemInventry = new Inventry(map_user_interface, graphic);
+        //TODO いな依頼:interfaceはあとで変更できないとまずい場合があるかもしれない
+
 
         worldModeAdmin = new WorldModeAdmin();
         worldModeAdmin.initWorld();
@@ -83,7 +97,7 @@ public class WorldGameSystem {
         text_box_admin.setTextBoxExists(1,false);
 
         //list_box_admin = new ListBoxAdmin();
-        geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus);
+        geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry);
         //geo_slot_admin = new GeoSlotAdmin();
         dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, geoSlotAdminManager, worldActivity);
 
@@ -94,11 +108,38 @@ public class WorldGameSystem {
 
 
         itemDataAdminManager.init(databaseAdmin,graphic);
+        expendItemInventry.addItemData(
+                itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName("D_ポーション")
+        );
+        expendItemInventry.addItemData(
+                itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName("D_ポーション")
+        );
+        expendItemInventry.addItemData(
+                itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName("D_EXポーション")
+        );
 
-        itemShopAdmin.init(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager);
+        itemShopAdmin.init(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager, expendItemInventry, geoInventry);
         itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "debug");
 
         canvas = null;
+
+        //TODO 仮。適当にGeo入れる GEO1が上がる能力は単一
+        for (int i = 0; i < 8; i++) {
+            geoInventry.addItemData(GeoObjectDataAdmin.getDebugGeoObjectData(i));
+        }
+
+        geoPresentManager = new GeoPresentManager(
+                graphic,
+                map_user_interface,
+                worldModeAdmin,
+                databaseAdmin,
+                text_box_admin,
+                geoInventry,
+                expendItemInventry,
+                itemDataAdminManager.getExpendItemDataAdmin(),
+                playerStatus
+        );
+
 
     }
 
@@ -131,9 +172,9 @@ public class WorldGameSystem {
             itemShopAdmin.update();
         }
         if (worldModeAdmin.getIsUpdate(worldModeAdmin.getPresent())) {
+            geoPresentManager.update();
         }
 
-        //itemShopAdmin.update();
         text_box_admin.update();
         effectAdmin.update();
     }
@@ -153,6 +194,7 @@ public class WorldGameSystem {
             itemShopAdmin.draw();
         }
         if (worldModeAdmin.getIsDraw(worldModeAdmin.getPresent())) {
+            geoPresentManager.draw();
         }
 
         text_box_admin.draw();

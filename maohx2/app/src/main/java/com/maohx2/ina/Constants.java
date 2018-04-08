@@ -57,24 +57,38 @@ public final class Constants {
     }
 
     public static class BattleUnit {
-        public static final int BATTLE_UNIT_MAX = 6;
+        public static final int BATTLE_UNIT_MAX = 15;
     }
 
     public static class UnitStatus {
 
         public enum Status {
+            ATTACK_FRAME,
             HP,
             ATTACK,
             DEFENSE,
             LUCK,
-            ATTACK_FRAME,
-            NUM_OF_STATUS,
+            SPEED,
+            NUM_OF_STATUS;
+
+
+            //enumへのキャスト用
+            public static Status toEnum(int x) {
+                for(Status type : Status.values()) {
+                    if (type.ordinal() == x) {
+                        return type;
+                    }
+                }
+                return null;
+            }
+
         }
 
         public enum BonusStatus {
             BONUS_HP,
             BONUS_ATTACK,
             BONUS_DEFENSE,
+            BONUS_SPEED,
             NUM_OF_BONUS_STATUS,
         }
     }
@@ -94,6 +108,41 @@ public final class Constants {
         public enum GROUP_KIND {
             BOX_
         }
+    }
+
+
+    public static class GAMESYSTEN_MODE {
+
+        public enum DUNGEON_MODE {
+            MAP,
+            BUTTLE_INIT,
+            BUTTLE,
+        }
+    }
+
+    public static class Item {
+        public enum ITEM_KIND {
+            EXPEND,
+            EQUIPMENT,
+            GEO,
+        }
+
+        public enum EQUIPMENT_KIND {
+            SWORD,
+            WAND,
+            AX,
+            SPEAR,
+            BOW,
+            GUN,
+            FIST,
+            CLUB,
+            WHIP,
+            MUSIC,
+            MONSTER,
+            SHIELD,
+            BARE,
+        }
+
     }
 
 

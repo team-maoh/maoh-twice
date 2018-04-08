@@ -44,5 +44,9 @@ public class ExpendItemDataAdmin extends ItemDataAdmin<ExpendItemData> {
             datas.get(i).setItemImage(graphic.searchBitmap(imageName.get(i)));
         }
     }
+/*
+    static public ExpendItemData getDebugExpendItemData(int i) {
 
+    }
+*/
 }

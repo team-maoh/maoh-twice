@@ -1,6 +1,7 @@
 package com.maohx2.fuusya;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.view.SurfaceHolder;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
@@ -19,35 +20,13 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by Fuusya on 2017/09/11.
  */
 
-public class MapItem extends MapObject {
+public class MapItem extends MapInanimate {
 
-    MapObjectAdmin map_object_admin;
+    double REACH_FOR_PLAYER = 25;
 
     public MapItem(Graphic graphic, MapObjectAdmin _map_object_admin, int _id, Camera _camera) {
-        super(graphic, _map_object_admin, _camera);
+        super(graphic, _map_object_admin, _id, _camera);
 
-        id = _id;
-
-        map_object_admin = _map_object_admin;
-
-//        draw_object = "apple";
-
-        switch (id) {
-            case 0:
-                draw_object = "grape";
-            case 1:
-                draw_object = "grape";
-            case 2:
-                draw_object = "banana";
-//            case 3:
-//                draw_object = "watermelon";
-            default:
-                draw_object = "apple";
-        }
-
-        Random random = new Random();
-        w_x = random.nextDouble() * 1000;//アイテムが発生する座標
-        w_y = random.nextDouble() * 1300;
     }
 
     public void init() {
@@ -55,9 +34,21 @@ public class MapItem extends MapObject {
 
     }
 
-    @Override
     public void update() {
         super.update();
+
+        if (exists == true) {
+
+            if(player.isWithinReach(w_x, w_y, REACH_FOR_PLAYER)==true){
+                System.out.println("アイテム獲得");
+//                sound_admin.play("getItem");
+                exists = false;
+//            bag_Item_admin.setItemIdToBagItem(map_Item[i].getId());//アイテムidを引き渡す
+//            map_Item[i].setExists(false);
+            }
+
+        }
+
     }
 
     public void setId(int _id) {

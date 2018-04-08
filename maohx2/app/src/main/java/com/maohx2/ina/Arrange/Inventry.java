@@ -57,10 +57,7 @@ public class Inventry {
 
         operate_inventry_list_box = new PlateGroup<BoxInventryPlate>(inventry_item_plates);
         inventry_item_num = 0;
-
     }
-
-
 
 
     public void updata(){
@@ -111,7 +108,6 @@ public class Inventry {
 
     public void subItemData(ItemData _item_data){
         int i = 0;
-
         for(i = 0; i < INVENTRY_DATA_MAX; i++) {
             //todo:==を書き直す
             if(inventry_datas[i].getItemData() != null) {
@@ -123,8 +119,6 @@ public class Inventry {
     }
 
     public PlateGroup<BoxInventryPlate> getOperateInventryListBox() {
-
         return operate_inventry_list_box;
     }
-
 }
