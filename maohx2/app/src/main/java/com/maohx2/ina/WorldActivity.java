@@ -74,7 +74,7 @@ class WorldSurfaceView extends BaseSurfaceView {
         map_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         world_game_system.updata();
         world_game_system.draw();
-
+/*
 
         if (touch_state == TouchState.DOWN) {
             thread = null;
@@ -82,7 +82,7 @@ class WorldSurfaceView extends BaseSurfaceView {
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             map_activity.startActivity(intent);
         }
-
+*/
     }
 
 }
