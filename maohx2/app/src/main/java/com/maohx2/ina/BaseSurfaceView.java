@@ -16,6 +16,8 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     Paint paint = new Paint();
     SurfaceHolder holder;
     Thread thread;
+    ActivityChange activityChange;
+    Activity currentActivity;
 
     double touch_x = 0;
     double touch_y = 0;
@@ -29,13 +31,16 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     long oldTime;
     long newTime = System.currentTimeMillis() << 16;
 
-    public BaseSurfaceView(Activity activity) {
-        super(activity);
+
+
+    public BaseSurfaceView(Activity _currentActivity) {
+        super(_currentActivity);
+        currentActivity = _currentActivity;
         setZOrderOnTop(true);
         holder = getHolder();
         holder.addCallback(this);
         paint.setColor(Color.BLUE);
-        global_data = (GlobalData) activity.getApplication();
+        global_data = (GlobalData) currentActivity.getApplication();
     }
 
 
@@ -46,6 +51,8 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     public void surfaceCreated(SurfaceHolder holder) {
         thread = new Thread(this);
         thread.start();
+
+        activityChange = new ActivityChange(this, currentActivity);
     }
 
     @Override
@@ -82,6 +89,10 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     public void gameLoop(){}
+
+    public void stopThread(){
+        thread = null;
+    }
 
 
     //なぞられた点を記録するリスト

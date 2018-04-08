@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.database.MyDatabase;
@@ -52,6 +53,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
     DungeonGameSystem game_system;
     Graphic graphic;
     Activity dungeon_activity;
+    BattleUserInterface battle_user_interface;
 
     public DungeonSurfaceView(Activity _dungeon_activity) {
         super(_dungeon_activity);
@@ -70,6 +72,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
 
         my_database_admin.addMyDatabase("DungeonDB", "LocalDungeonImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("DungeonDB"), "Dungeon");
+
 
         my_database_admin.addMyDatabase("DragonDB", "LocalDragonImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("DragonDB"), "Dragon");
@@ -91,7 +94,11 @@ class DungeonSurfaceView extends BaseSurfaceView{
         sound_admin.setDatabase(my_database_admin.getMyDatabase("soundDB"));//扱いやすいやつをセットしている
         sound_admin.loadSoundPack("sound_pack_map");
 
-        game_system.init(dungeon_user_interface, graphic, sound_admin);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
+
+        battle_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
+        battle_user_interface.init();
+
+        game_system.init(dungeon_user_interface, graphic, sound_admin, my_database_admin, battle_user_interface, dungeon_activity, my_database_admin);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
     }
 
 
@@ -99,6 +106,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
     public void gameLoop(){
 
         dungeon_user_interface.updateTouchState(touch_x, touch_y, touch_state);
+        battle_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         game_system.update();
         game_system.draw();
 

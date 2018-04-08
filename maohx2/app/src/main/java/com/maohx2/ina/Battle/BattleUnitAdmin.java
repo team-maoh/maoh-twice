@@ -6,6 +6,8 @@ import android.graphics.Paint;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.DungeonModeManage;
+import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 
@@ -26,7 +28,9 @@ public class BattleUnitAdmin {
     int battle_palette_mode;
     CalcUnitStatus calc_unit_status;
     Activity battle_activity;
-    TouchMarker[] touch_markers = new TouchMarker[10000];
+    int MAKER_NUM = 1000;
+    TouchMarker[] touch_markers = new TouchMarker[MAKER_NUM];
+    DungeonModeManage dungeonModeManage;
 
     //by kmhanko
     BattleUnitDataAdmin battleUnitDataAdmin;
@@ -36,17 +40,22 @@ public class BattleUnitAdmin {
     Graphic graphic;
     PaletteAdmin palette_admin;
     boolean marker_flag;
+    boolean first_attack_frag;
+    int attack_count;
 
     //by kmhanko BattleUnitDataAdmin追加
-    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin) {
+    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage) {
         //引数の代入
         graphic = _graphic;
         battle_user_interface = _battle_user_interface;
         battle_activity = _battle_activity;
         battleUnitDataAdmin = _battleUnitDataAdmin;
         palette_admin = _palette_admin;
+        dungeonModeManage = _dungeonModeManage;
 
         marker_flag = false;
+        first_attack_frag = false;
+        attack_count = 0;
 
         //BattleUnit配列のインスタンス化・初期化
         battle_units[0] = new BattlePlayer(graphic);
@@ -58,7 +67,7 @@ public class BattleUnitAdmin {
             battle_units[i].init();
         }
         */
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < MAKER_NUM; i++) {
             touch_markers[i] = new TouchMarker(graphic);
         }
 
@@ -85,7 +94,7 @@ public class BattleUnitAdmin {
         setPlayer(_playerStatus);
 
         //TODO 仮。敵の生成。本当はここじゃなくて戦闘画面に移動する画面エフェクト的な奴を処理した後とかに呼ぶとかする
-        spawnEnemy();
+        //spawnEnemy();
     }
 
     //by kmhanko
@@ -111,16 +120,16 @@ public class BattleUnitAdmin {
         //TODO 仮。本当はダンジョンのデータなどを引数にして出現する敵をランダムなどで決定する
 
         //一覧
-        setBattleUnitData("e01-0", 1);
-        setBattleUnitData("e88-0", 1);
-        setBattleUnitData("e74-0", 1);
+        //setBattleUnitData("e01-0", 1);
+        //setBattleUnitData("e88-0", 1);
+        //setBattleUnitData("e74-0", 1);
         setBattleUnitData("m003-2", 1);
         setBattleUnitData("e96-0", 1);
-        setBattleUnitData("e27", 1);
-        setBattleUnitData("m007", 1);
-        setBattleUnitData("e103-0", 1);
-        setBattleUnitData("e94-3", 1);
-        setBattleUnitData("e83-1", 1);
+        //setBattleUnitData("e27", 1);
+        //setBattleUnitData("m007", 1);
+        //setBattleUnitData("e103-0", 1);
+        //setBattleUnitData("e94-3", 1);
+        //setBattleUnitData("e83-1", 1);
     }
 
 
@@ -130,6 +139,8 @@ public class BattleUnitAdmin {
         double touch_y = battle_user_interface.getTouchY();
         TouchState touch_state = battle_user_interface.getTouchState();
 
+        attack_count++;
+
         if(marker_flag == false) {
             palette_admin.update(true);
         }
@@ -137,23 +148,32 @@ public class BattleUnitAdmin {
         if(palette_admin.doUsePalette() == false) {
             //プレイヤーの攻撃によるマーカーの設置
             if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
-                marker_flag = true;
-                for (int i = 0; i < 10000; i++) {
-                    if (touch_markers[i].isExist() == false) {
-                        //todo:attackの計算
-                        touch_markers[i].generate((int) touch_x, (int) touch_y, palette_admin.getEquipmentItemData().getRadius(), battle_units[0].getAttack() + palette_admin.getEquipmentItemData().getAttack(), palette_admin.getEquipmentItemData().getDecayRate());
-                        break;
+                EquipmentItemData attack_equipment = palette_admin.getEquipmentItemData();
+                System.out.println("first_attack_flag:   " + first_attack_frag);
+                if(attack_equipment != null) {
+                    if ((first_attack_frag == false && attack_count >= attack_equipment.getTouchFrequency()) || (first_attack_frag == true && attack_count >= attack_equipment.getTouchFrequency() * attack_equipment.getAutoFrequencyRate())) {
+                        first_attack_frag = true;
+                        marker_flag = true;
+                        attack_count = 0;
+                        for (int i = 0; i < MAKER_NUM; i++) {
+                            if (touch_markers[i].isExist() == false) {
+                                //todo:attackの計算
+                                touch_markers[i].generate((int) touch_x, (int) touch_y, palette_admin.getEquipmentItemData().getRadius(), battle_units[0].getAttack() + palette_admin.getEquipmentItemData().getAttack(), palette_admin.getEquipmentItemData().getDecayRate());
+                                break;
+                            }
+                        }
                     }
                 }
             }
         }
 
         if ((touch_state == TouchState.UP) || (touch_state == TouchState.AWAY)) {
+            first_attack_frag = false;
             marker_flag = false;
         }
 
             //マーカーの縮小
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < MAKER_NUM; i++) {
             if (touch_markers[i].isExist() == true) {
                 touch_markers[i].update();
             }
@@ -166,7 +186,7 @@ public class BattleUnitAdmin {
                 int ex = (int)battle_units[i].getPositionX();
                 int ey = (int)battle_units[i].getPositionY();
                 int er = (int)battle_units[i].getRadius();
-                for(int j = 0; j< 10000; j++) {
+                for(int j = 0; j< MAKER_NUM; j++) {
                     if (touch_markers[j].isExist() == true) {
                         int cx = touch_markers[j].getPositionX();
                         int cy = touch_markers[j].getPositionY();
@@ -190,9 +210,14 @@ public class BattleUnitAdmin {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (battle_units[i].isExist() == true) {
                 int damage_to_player = battle_units[i].update();
-                if(damage_to_player > 0){
-                    int new_hp = battle_units[0].getHitPoint() - damage_to_player;
-                    if(new_hp <= 0){
+                if(damage_to_player > 0) {
+                    EquipmentItemData defense_equipment = palette_admin.getEquipmentItemData();
+                    float damage_rate = 1;
+                    if (defense_equipment != null) {
+                        damage_rate = (1 - (float) defense_equipment.getDefence() / 100.0f);
+                    }
+                    int new_hp = battle_units[0].getHitPoint() - (int) (damage_to_player * damage_rate);
+                    if (new_hp <= 0) {
                         //ゲームオーバー
                     }
                     battle_units[0].setHitPoint(new_hp);
@@ -204,6 +229,10 @@ public class BattleUnitAdmin {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             result_flag = result_flag & !battle_units[i].isExist();
         }
+
+        if(result_flag == true){
+            dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
+        }
     }
 
 
@@ -213,7 +242,7 @@ public class BattleUnitAdmin {
     public void draw() {
 
 
-        for(int i = 0; i < 10000; i++) {
+        for(int i = 0; i < MAKER_NUM; i++) {
             if(touch_markers[i].isExist() == true) {
                 touch_markers[i].draw();
             }

@@ -34,9 +34,6 @@ import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 public class BattleGameSystem {
 
     BattleUnitAdmin battle_unit_admin;
-    SurfaceHolder holder; //TODO : 不要
-    Paint paint = new Paint(); //TODO : 不要
-    Canvas canvas; //TODO : 不要
     BattleUserInterface battle_user_interface;
     TextBoxAdmin text_box_admin;
     ListBoxAdmin list_box_admin;
@@ -48,21 +45,21 @@ public class BattleGameSystem {
     Inventry inventry;
     EquipmentItemDataAdmin equipment_item_data_admin;
     PaletteAdmin palette_admin;
+    DungeonModeManage dungeonModeManage;
 
 
     // TODO : holderは不要
-    public void init(SurfaceHolder _holder, Graphic _graphic, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity battle_activity, MyDatabaseAdmin my_database_admin) {
+    public void init(Graphic _graphic, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity battle_activity, MyDatabaseAdmin my_database_admin) {
 
-        holder = _holder;
         graphic = _graphic;
 
         battle_user_interface = _battle_user_interface;
         battle_unit_admin = new BattleUnitAdmin();
         text_box_admin = new TextBoxAdmin(graphic);
         list_box_admin = new ListBoxAdmin();
-        canvas = null;
         text_box_admin.init(battle_user_interface);
         list_box_admin.init(battle_user_interface, graphic);
+        dungeonModeManage = new DungeonModeManage();
 
 
 
@@ -79,7 +76,7 @@ public class BattleGameSystem {
         GlobalData globalData = (GlobalData) battle_activity.getApplication();
         PlayerStatus playerStatus = globalData.getPlayerStatus();
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
-        battle_unit_admin.init(graphic, battle_user_interface, battle_activity, battleUnitDataAdmin, playerStatus, palette_admin);
+        battle_unit_admin.init(graphic, battle_user_interface, battle_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage);
     }
 
     //by kmhanko

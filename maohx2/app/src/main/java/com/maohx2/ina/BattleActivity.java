@@ -63,7 +63,7 @@ class BattleSurfaceView extends BaseSurfaceView{
         graphic.loadLocalImages(my_database_admin.getMyDatabase("StartDB"), "Start");
 
         // by kmhanko
-        game_system.init(holder, graphic, my_database_admin,  battle_user_interface, battle_activity, my_database_admin);
+        game_system.init(graphic, my_database_admin,  battle_user_interface, battle_activity, my_database_admin);
 
     }
 

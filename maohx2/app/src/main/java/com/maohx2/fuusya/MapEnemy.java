@@ -28,10 +28,9 @@ import com.maohx2.ina.Draw.Graphic;
 
 public class MapEnemy extends MapUnit {
 
-    MapPlayer player;
-    double DEFAULT_STEP = 8;//プレイヤー未発見時の歩幅
+    double DEFAULT_STEP = 5;//プレイヤー未発見時の歩幅
     int chase_count;
-    double dst_x, dst_y;
+    double REACH_FOR_PLAYER = 25;
     int total_dirs;//画像が1方位なのか、4方位なのか、8方位なのか(Playerの視界に入っているかどうかの判定に使う)
 
     int CHASE_STEPS = 6;//名前は仮 / EnemyはPlayerの{現在座標ではなく}CHASE_STEPS歩前の座標を追いかける
@@ -39,27 +38,24 @@ public class MapEnemy extends MapUnit {
     double[] chase_w_y = new double[CHASE_STEPS];
 
     double clock_rad;
-    double pre_random_rad;
     int FOUND_DWELL_FRAMES = 15;
     int found_dwell_count;
 
     boolean has_found_player;//プレイヤーを発見しているかどうか
-    boolean detect_player, has_blind_spot;//Playerを発見するか否か / 全方位が見えているか否か
-    double incremental_step;
+    boolean detect_player, has_blind_spot;//Playerを発見するか否か, 全方位が見えているか否か
+    double incremental_step;//Playerを発見して時間が経つとstepが徐々に増えていく（= 足が速くなっていく）
 
-    public MapEnemy(Graphic graphic, MapObjectAdmin map_object_admin, MapAdmin _map_admin, Camera _camera, int _total_dirs, boolean _detect_player, boolean _has_blind_spot) {
-        super(graphic, map_object_admin, _map_admin, _camera);
+    public MapEnemy(Graphic graphic, MapObjectAdmin map_object_admin, Camera _camera, int _total_dirs, boolean _detect_player, boolean _has_blind_spot) {
+        super(graphic, map_object_admin, _camera);
 
         total_dirs = _total_dirs;
-
-        player = map_object_admin.getPlayer();
 
         Point room_point = map_admin.getRoomPoint();
         w_x = room_point.x;
         w_y = room_point.y;
 
-        dst_x = w_x;
-        dst_y = w_y;
+        dst_w_x = w_x;
+        dst_w_y = w_y;
 
         chase_count = 0;
         for (int i = 0; i < CHASE_STEPS; i++) {
@@ -69,10 +65,7 @@ public class MapEnemy extends MapUnit {
 
         draw_object = "ゴキ太郎";
 
-
         clock_rad = 0.0;
-
-        pre_random_rad = random.nextDouble() * 2 * PI;
 
         step = DEFAULT_STEP;
 
@@ -83,6 +76,8 @@ public class MapEnemy extends MapUnit {
         detect_player = _detect_player;
         has_blind_spot = _has_blind_spot;
         incremental_step = 0;
+
+        can_exit_room = false;
     }
 
     public void init() {
@@ -118,7 +113,14 @@ public class MapEnemy extends MapUnit {
             chase_count = (chase_count + 1) % CHASE_STEPS;
 
             if (has_found_player == false) {//プレイヤーを発見していない
-                step = DEFAULT_STEP;
+//                step = DEFAULT_STEP;
+
+                double random_double = makeNormalDist() * 0.4;
+                //念のため
+                while (!(-0.6 <= random_double && random_double < 0.6)) {
+                    random_double = makeNormalDist() * 0.4;
+                }
+                step = DEFAULT_STEP * (1 + random_double);
 
                 //あてどもなく徘徊する(dst_x, dst_yを設定)
                 wander_about();
@@ -134,13 +136,13 @@ public class MapEnemy extends MapUnit {
 
                     incremental_step += DEFAULT_STEP / 100;
 
-                    if(step >= player.getStep()){
-                        dst_x = player.getWorldX();
-                        dst_y = player.getWorldY();
-                    }else {
+                    if (step >= player.getStep()) {
+                        dst_w_x = player.getWorldX();
+                        dst_w_y = player.getWorldY();
+                    } else {
                         //●CHASE_STEPS歩前のプレイヤー座標を目標座標とする
-                        dst_x = chase_w_x[chase_count];
-                        dst_y = chase_w_y[chase_count];
+                        dst_w_x = chase_w_x[chase_count];
+                        dst_w_y = chase_w_y[chase_count];
                     }
 
                     //●プレイヤーがタッチしている間だけ移動する
@@ -178,10 +180,18 @@ public class MapEnemy extends MapUnit {
 
             }
 
-            walkOneStep(dst_x, dst_y, step, true);//一歩進む
+            step = checkBadStatus(step);
+            walkOneStep(dst_w_x, dst_w_y, step);//一歩進む
             //
-            updateDirOnMap(dst_x, dst_y);
+            updateDirOnMap(dst_w_x, dst_w_y);
 
+        }
+
+        //Playerとの距離が一定以下 && 自身が存在している && Playerがテレポート前の予備動作中ではない
+        if (player.isWithinReach(w_x, w_y, REACH_FOR_PLAYER) == true && exists == true && player.getFramesWaitingTeleported() == 0) {
+            System.out.println("敵と接触");
+            //デバッグのためにコメントアウト
+            exists = false;
         }
 
     }
@@ -235,30 +245,32 @@ public class MapEnemy extends MapUnit {
             random_double = makeNormalDist() * 0.08;
         }
 
-        System.out.println("random_double=" + random_double);
-
         //pre_random_radを平均とした正規分布
         double random_rad = random_double * PI + pre_random_rad;
 
-        dst_x = w_x + 2 * step * cos(random_rad);
-        dst_y = w_y + 2 * step * sin(random_rad);
+        dst_w_x = w_x + 2 * step * cos(random_rad);
+        dst_w_y = w_y + 2 * step * sin(random_rad);
 
-        switch (detectWall(w_x, w_y, dst_x, dst_y)) {
+        switch (detectWall(w_x, w_y, dst_w_x, dst_w_y)) {
             case 1://横向きの壁と衝突
                 random_rad = 2 * PI - random_rad;
-                dst_x = w_x + 2 * step * cos(random_rad);
-                dst_y = w_y + 2 * step * sin(random_rad);
+                dst_w_x = w_x + 2 * step * cos(random_rad);
+                dst_w_y = w_y + 2 * step * sin(random_rad);
                 break;
             case 2://縦向きの壁と衝突
                 random_rad = (3 * PI - random_rad) % (2 * PI);
-                dst_x = w_x + 2 * step * cos(random_rad);
-                dst_y = w_y + 2 * step * sin(random_rad);
+                dst_w_x = w_x + 2 * step * cos(random_rad);
+                dst_w_y = w_y + 2 * step * sin(random_rad);
                 break;
             default:
                 break;
         }
 
         pre_random_rad = random_rad;
+    }
+
+    public void setHasFoundPlayer(boolean _has_found_player) {
+        has_found_player = _has_found_player;
     }
 
 }

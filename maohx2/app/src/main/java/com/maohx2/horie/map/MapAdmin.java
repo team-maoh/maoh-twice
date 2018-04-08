@@ -74,7 +74,8 @@ public class MapAdmin {
     //int magnification = 30;
     //drawMap2用
 //    Point map_size = new Point(80, 50);//x : 左右幅, y : 上下幅
-    Point map_size = new Point(60, 40);
+    //Point map_size = new Point(60, 40);
+    Point map_size = new Point(30, 20);
     int magnification = 64;
     int time = 0;//アニメーションタイミング用
 
@@ -297,11 +298,11 @@ public class MapAdmin {
         section_admin = new SectionAdmin(150, map_size);
         section_admin.startDivideSection();
         section_admin.startUpdateLeaves();
-        section_admin.searchNeighbors();
+        section_admin.searchNeighbors();//ちょっと重い
         section_admin.updateMapData(map_data);
         section_admin.connectRooms(map_data);
         section_admin.makeStairs(map_data);
-        section_admin.createMine(1, 2, map_data);
+        //section_admin.createMine(1, 2, map_data);
         searchStartPoint();
         offset.set(start_point.x, start_point.y);
         //section_admin.printNeighborLeafNum();
@@ -356,6 +357,7 @@ public class MapAdmin {
             }
         }
         //4つを1つに
+        //重い
         for(int i = 0;i < map_size.x;i++){
             for(int j = 0;j < map_size.y;j++){
                 map_tile[i][j] = auto_tile_admin.combineFourAutoTile(map_tile_set[2*i][2*j], map_tile_set[2*i+1][2*j], map_tile_set[2*i][2*j+1], map_tile_set[2*i+1][2*j+1]);
