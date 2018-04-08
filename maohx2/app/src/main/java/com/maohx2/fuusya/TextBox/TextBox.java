@@ -65,7 +65,7 @@ public class TextBox {
     int tmp_begin_column[] = new int[MAX_TMP_TEXT];
     int tmp_text_count;//受け取った文の個数
     //
-    int MAX_NUM_OF_LINES = 100;
+    int MAX_NUM_OF_LINES = 10;
     boolean is_too_long[] = new boolean[MAX_NUM_OF_LINES];// * 行目の文が、箱の横幅に対して長過ぎる（エラー文を出すためだけの配列）
 
     int num_of_lines;//格納している文の行数を保持

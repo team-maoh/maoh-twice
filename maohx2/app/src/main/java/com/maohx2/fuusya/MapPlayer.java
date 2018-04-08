@@ -10,7 +10,6 @@ import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.DungeonGameSystem;
-import com.maohx2.ina.DungeonModeManage;
 import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 //import com.maohx2.ina.MySprite;
@@ -46,7 +45,7 @@ public class MapPlayer extends MapUnit {
 
     SoundAdmin sound_admin;
     DungeonUserInterface dungeon_user_interface;
-    DungeonGameSystem dungeon_game_system;
+    MapPlateAdmin map_plate_admin;
 
     int PLAYER_STEP = 26;//プレイヤーの歩幅
     double touch_w_x, touch_w_y, touch_n_x, touch_n_y, pre_w_x, pre_w_y;
@@ -55,14 +54,12 @@ public class MapPlayer extends MapUnit {
     int touching_frame_count;
 
     TouchState touch_state;
-    DungeonModeManage dungeon_mode_namage;
 
-    public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, MapAdmin _map_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, DungeonGameSystem _dungeon_game_system, DungeonModeManage _dungeon_mode_namage) {
+    public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, MapAdmin _map_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, MapPlateAdmin _map_plate_admin) {
         super(graphic, _map_object_admin, _camera);
 
         dungeon_user_interface = _dungeon_user_interface;
-        dungeon_game_system = _dungeon_game_system;
-        dungeon_mode_namage = _dungeon_mode_namage;
+        map_plate_admin = _map_plate_admin;
 
         touch_state = dungeon_user_interface.getTouchState();
 
@@ -88,9 +85,12 @@ public class MapPlayer extends MapUnit {
         super.init();
     }
 
-    //    @Override
-    public void update(boolean is_displaying_menu, boolean is_touching_outside_menu) {
+    @Override
+    public void update() {
         super.update();
+
+        boolean is_touching_outside_menu = map_plate_admin.getIsTouchingOutsideMenu();
+        boolean is_displaying_menu = map_plate_admin.getIsDisplayingMenu();
 
         touch_state = dungeon_user_interface.getTouchState();
 
@@ -107,10 +107,13 @@ public class MapPlayer extends MapUnit {
             //Player(画面中央)をタッチしたらMENUを表示する
             if (touch_state != TouchState.MOVE) {
                 if (isWithinReach(touch_w_x, touch_w_y, 80) == true) {
-                    dungeon_game_system.setIsDisplayingMenu(true);
+                    map_plate_admin.setIsDisplayingMenu(true);
+//                    dungeon_game_system.setIsDisplayingMenu(true);
                 } else {
-                    dungeon_game_system.setIsDisplayingMenu(false);
+                    map_plate_admin.setIsDisplayingMenu(false);
+//                    dungeon_game_system.setIsDisplayingMenu(false);
                 }
+
             }
 
             if (isWithinReach(touch_w_x, touch_w_y, step * 2) == false) {
@@ -191,7 +194,6 @@ public class MapPlayer extends MapUnit {
                 System.out.println("◆一定歩数 歩いたので敵と遭遇");
                 encount_steps = 0;
                 th_encount_steps = makeThresholdEncountSteps();
-                dungeon_mode_namage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
             }
 
             sound_steps = (sound_steps + 1) % SOUND_STEPS_PERIOD;
@@ -248,5 +250,7 @@ public class MapPlayer extends MapUnit {
         } else {
             return true;
         }
+
     }
+
 }
