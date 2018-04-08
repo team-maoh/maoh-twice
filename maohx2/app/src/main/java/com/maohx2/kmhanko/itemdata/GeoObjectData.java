@@ -49,14 +49,14 @@ public class GeoObjectData extends ItemData {
         //適当に計算してジオ画像を決める
 
         String tempBitName = "apple";
-        if (hp > 0) { setName("体力ジオ" + hp); tempBitName = "HpGeo05"; }
-        if (attack > 0) { setName("攻撃ジオ" + attack); tempBitName = "AttackGeo05"; }
-        if (defence > 0) { setName("防御ジオ" + defence); tempBitName = "DeffenceGeo05"; }
-        if (luck > 0) { setName("運命ジオ" + luck); tempBitName = "LuckGeo05"; }
-        if (hp_rate > 1.0) { setName("体力倍ジオ" + hp_rate); tempBitName = "HpGeo06"; }
-        if (attack_rate > 1.0) { setName("攻撃倍ジオ" + attack_rate); tempBitName = "AttackGeo06"; }
-        if (defence_rate > 1.0) { setName("防御倍ジオ" + defence_rate); tempBitName = "DeffenceGeo06"; }
-        if (luck_rate > 1.0) { setName("運命倍ジオ" + luck_rate); tempBitName = "LuckGeo06"; }
+        if (hp > 0) { setName("体力ジオ" + hp); tempBitName = "icon_gem_0"; }
+        if (attack > 0) { setName("攻撃ジオ" + attack); tempBitName = "icon_gem_1"; }
+        if (defence > 0) { setName("防御ジオ" + defence); tempBitName = "icon_gem_2"; }
+        if (luck > 0) { setName("運命ジオ" + luck); tempBitName = "icon_gem_3"; }
+        if (hp_rate > 1.0) { setName("体力倍ジオ" + hp_rate); tempBitName = "icon_gem_4"; }
+        if (attack_rate > 1.0) { setName("攻撃倍ジオ" + attack_rate); tempBitName = "icon_gem_5"; }
+        if (defence_rate > 1.0) { setName("防御倍ジオ" + defence_rate); tempBitName = "icon_gem_6"; }
+        if (luck_rate > 1.0) { setName("運命倍ジオ" + luck_rate); tempBitName = "icon_gem_7"; }
 
         /*
         switch (MyAvail.maxFromIntArrays(new int[] { hp, attack, defence, luck })) {

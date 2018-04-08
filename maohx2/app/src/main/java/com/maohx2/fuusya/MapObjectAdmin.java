@@ -51,24 +51,26 @@ public class MapObjectAdmin {
     MapAdmin map_admin;
     SoundAdmin sound_admin;
     DungeonUserInterface dungeon_user_interface;
-    DungeonGameSystem dungeon_game_system;
+    MapPlateAdmin map_plate_admin;
+    DungeonModeManage dungeon_mode_manage;
 
     Graphic graphic;
     Camera camera;
 
     boolean is_displaying_menu;
 
-    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapAdmin _map_admin, DungeonGameSystem _dungeon_game_system, DungeonModeManage _dungeon_mode_manage) {
+    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapAdmin _map_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
         map_admin = _map_admin;
         camera = map_admin.getCamera();
         sound_admin = _sound_admin;
-        dungeon_game_system = _dungeon_game_system;
+        map_plate_admin = _map_plate_admin;
+        dungeon_mode_manage = _dungeon_mode_manage;
 
         is_displaying_menu = false;
 
-        map_player = new MapPlayer(graphic, this, _map_admin, dungeon_user_interface, _sound_admin, camera, dungeon_game_system, _dungeon_mode_manage);
+        map_player = new MapPlayer(graphic, this, _map_admin, dungeon_user_interface, _sound_admin, camera, map_plate_admin);
         map_player.init();
         map_player_bitmap = new MapObjectBitmap(PLAYER_DIR, graphic, "ドラゴン");
         map_player_bitmap.init();
@@ -114,7 +116,7 @@ public class MapObjectAdmin {
     public void init() {
     }
 
-    public void update(boolean is_displaying_menu, boolean is_toughing_outside_menu) {
+    public void update() {
 
 //        TouchState touch_state = dungeon_user_interface.getTouchState();
 
@@ -130,7 +132,7 @@ public class MapObjectAdmin {
 //            touch_w_y = camera.convertToWorldCoordinateY((int) touch_n_y);
 //        }
 
-        map_player.update(is_displaying_menu, is_toughing_outside_menu);
+        map_player.update();
         map_player_bitmap.update();
         player_x = map_player.getWorldX();
         player_y = map_player.getWorldY();
@@ -202,7 +204,4 @@ public class MapObjectAdmin {
         return pow(pow(x1 - x2, 2.0) + pow(y1 - y2, 2.0), 0.5);
     }
 
-    public void setIsDisplayingMenu(boolean _is_displaying_menu) {
-        is_displaying_menu = _is_displaying_menu;
-    }
 }

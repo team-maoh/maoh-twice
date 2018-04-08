@@ -29,7 +29,6 @@ import java.io.OutputStream;
 public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
     private static final String FOLDER_NAME = "database";
-    private static final String SAVE_FOLDER_NAME = "save";
 
     private String db_name;
     private String db_asset;
@@ -52,10 +51,8 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
         mContext = context;
         db_name = _db_name;
+        db_asset = FOLDER_NAME + "/" + _db_asset;
         db_version = _db_version;
-        db_asset = _db_asset;
-
-        //db_asset = FOLDER_NAME + "/" + _db_asset;
 
         // /data/data/パッケージ名/database/ファイル名のパスを取得する
         mDatabasePath = mContext.getDatabasePath(db_name);
@@ -73,12 +70,11 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
     //assetsフォルダ内のDBファイルをdatabasesフォルダ内のDBファイルにコピーするメソッド。同名のファイルでなければならない。
-    public void copyDataBaseFromAssets(String loadMode) throws IOException {
+    public void copyDataBaseFromAssets() throws IOException {
         //database.close();
-        String folderName = getFolderName(loadMode);
 
         //dbのコピーの下準備
-        InputStream input = mContext.getAssets().open(folderName + "/" + db_asset); //assetフォルダ内のdbファイルを格納
+        InputStream input = mContext.getAssets().open(db_asset); //assetフォルダ内のdbファイルを格納
         OutputStream  output = new FileOutputStream(mDatabasePath); //内部DBのdbファイルを格納
         copy(input, output);//このクラスで扱うdbに、assets内のdbをコピーする。
 
@@ -100,23 +96,19 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
     //内部DBファイルが無い場合はAssetsからコピーし、内部DBファイルがある場合は特に何もしないメソッド
-    public void createEmptyDataBase(String loadMode) throws IOException {
+    public void createEmptyDataBase(String readMode) throws IOException {
         File mDatabasePath = mContext.getDatabasePath(db_name);
-
-        //内部DBが存在するか否かを確認
         if (!mDatabasePath.exists()) {
-            //存在しない場合
-
             //内部DBを生成する
-            getDatabase(loadMode);
+            getDatabase(readMode);
             try {
                 //内部DBにassets内のDBをコピーする
-                copyDataBaseFromAssets(getFolderName(loadMode));
+                copyDataBaseFromAssets();
 
                 //生成されたと思われる内部DBを取得してみる
                 SQLiteDatabase checkDb = null;
                 try {
-                    checkDb = getDatabase(loadMode);
+                    checkDb = getDatabase(readMode);
                 } catch (SQLiteException e) {
                     e.printStackTrace();
                 }
@@ -131,34 +123,27 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
                 e.printStackTrace();
             }
         } else {
-            //内部DBが既に存在している
+            //"r"の場合はコピーしておく必要がある
+            try {
+                //内部DBにassets内のDBをコピーする
+                copyDataBaseFromAssets();
 
-            //"r"の場合はコピーしておく必要がある(厳密にはバージョンが違う場合)
-            //"ds"の場合はデバッグによる書き換えを反映するためコピーしておく
-            //"s"の場合はコピーしない
-
-            if (loadMode.equals("r") || loadMode.equals("ds")) {
+                //生成されたと思われる内部DBを取得してみる
+                SQLiteDatabase checkDb = null;
                 try {
-                    //内部DBにassets内のDBをコピーする
-                    copyDataBaseFromAssets(loadMode);
-
-                    //生成されたと思われる内部DBを取得してみる
-                    SQLiteDatabase checkDb = null;
-                    try {
-                        checkDb = getDatabase(loadMode);
-                    } catch (SQLiteException e) {
-                        e.printStackTrace();
-                    }
-
-                    //ちゃんと生成されていたならバージョンをセットして終了
-                    if (checkDb != null) {
-                        checkDb.setVersion(db_version);
-                        checkDb.close();
-                    }
-                    return;
-                } catch (IOException e) {
+                    checkDb = getDatabase(readMode);
+                } catch (SQLiteException e) {
                     e.printStackTrace();
                 }
+
+                //ちゃんと生成されていたならバージョンをセットして終了
+                if (checkDb != null) {
+                    checkDb.setVersion(db_version);
+                    checkDb.close();
+                }
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             return;
         }
@@ -175,13 +160,13 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
     public SQLiteDatabase getDatabase(String readMode) {
-        if (readMode.equals("s") || readMode.equals("ds")) {
+        if (readMode.equals("w")) {
             return getWritableDatabase();
         }
         if (readMode.equals("r")) {
             return getReadableDatabase();
         }
-        throw new Error("☆タカノ : MySQLiteOpenHelper#getDatabase please set r or ds or s");
+        throw new Error("☆タカノ : MySQLiteOpenHelper#getDatabase please set w or r");
     }
 
     @Override
@@ -195,16 +180,6 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         if (mDatabase != null) {
             super.close();
         }
-    }
-
-    private String getFolderName(String loadMode) {
-        if (loadMode.equals("r")) {
-            return FOLDER_NAME;
-        }
-        if (loadMode.equals("s") || loadMode.equals("ds")) {
-            return SAVE_FOLDER_NAME;
-        }
-        throw new Error("☆タカノ : MySQLiteOpenHelper#getFolderName please set r or ds or s");
     }
 
     //データベースが存在するかどうかを返すメソッド
