@@ -60,7 +60,7 @@ public class GeoSlotAdmin {
     String t_name; //このGeoSlotAdmin = ジオマップの名称 = Table名
 
     List<Integer> tree_code = new ArrayList<Integer>(); //GeoSlotのツリー上構造を表す数値列
-    List<GeoSlot> geo_slots = new ArrayList<GeoSlot>(GEO_SLOT_MAX);
+    List<GeoSlot> geoSlots = new ArrayList<GeoSlot>(GEO_SLOT_MAX);
     GeoSlot grand_geo_slot; //ツリーの中心であるGeoSlot
     GeoCalcSaverAdmin geo_calc_saver_admin; //GeoSlotの計算を行い、計算結果を格納する
 
@@ -134,16 +134,16 @@ public class GeoSlotAdmin {
 
 
         //GeoSlotの管理のため、GeoSlotのインスタンスをコピーしてくるメソッド。
-        geo_slots = grand_geo_slot.getGeoSlots();
+        geoSlots = grand_geo_slot.getGeoSlots();
 
         GeoSlot.staticInit(textBoxAdmin, geoSlotEventDB);
 
-        for(int i = 0; i < geo_slots.size(); i++) {
-            geo_slots.get(i).setParam(xs.get(i), ys.get(i), TOUCH_R);
+        for(int i = 0; i < geoSlots.size(); i++) {
+            geoSlots.get(i).setParam(xs.get(i), ys.get(i), TOUCH_R);
             //TouchIDセット
-            //geo_slots.get(i).setTouchID(userInterface.setCircleTouchUI(xs.get(i), ys.get(i), 100));
-            geo_slots.get(i).setReleaseEvent(release_events.get(i));
-            geo_slots.get(i).setRestriction(restrictions.get(i));
+            //geoSlots.get(i).setTouchID(userInterface.setCircleTouchUI(xs.get(i), ys.get(i), 100));
+            geoSlots.get(i).setReleaseEvent(release_events.get(i));
+            geoSlots.get(i).setRestriction(restrictions.get(i));
         }
 
         //plateGroupインスタンス化
@@ -181,6 +181,7 @@ public class GeoSlotAdmin {
                                 //戻るボタンが押された時の処理
                                 geoSlotAdminManager.calcPlayerStatus();
                                 geoSlotAdminManager.saveGeoInventry();
+                                geoSlotAdminManager.saveGeoSlot();
 
                                 worldModeAdmin.setGeoSlotMap(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
@@ -285,9 +286,9 @@ public class GeoSlotAdmin {
     public void update(){
         //GeoSlot
         /*
-        for(int i = 0; i < geo_slots.size(); i++) {
-            if (geo_slots.get(i) != null) {
-                geo_slots.get(i).update();
+        for(int i = 0; i < geoSlots.size(); i++) {
+            if (geoSlots.get(i) != null) {
+                geoSlots.get(i).update();
             }
         }
         */
@@ -318,13 +319,13 @@ public class GeoSlotAdmin {
     public void draw() {
         //GeoSlot
         //線とスロットの描画は2つのfor文に分けなければならない(描画順の問題)
-        for(int i = 0; i < geo_slots.size(); i++) {
-            geo_slots.get(i).drawLine();
+        for(int i = 0; i < geoSlots.size(); i++) {
+            geoSlots.get(i).drawLine();
         }
         /*
-        for(int i = 0; i < geo_slots.size(); i++) {
-            /oolean f = geo_slots.get(i).equals(focusGeoSlot);
-            geo_slots.get(i).draw(f);
+        for(int i = 0; i < geoSlots.size(); i++) {
+            /oolean f = geoSlots.get(i).equals(focusGeoSlot);
+            geoSlots.get(i).draw(f);
         }
         */
         geoSlotGroup.draw();
@@ -377,8 +378,9 @@ public class GeoSlotAdmin {
     public GeoObjectData getHoldGeoObject() {
         return holdGeoObject;
     }
+    public List<GeoSlot> getGeoSlots() { return geoSlots; }
 
-    // ***** Settet *****
+    // ***** Setter *****
     public void setHoldGeoObject(GeoObjectData geoObjectData) {
         holdGeoObject = geoObjectData;
     }
@@ -391,7 +393,7 @@ public class GeoSlotAdmin {
     //** Created by ina **
 
     //rewrire by kmhanko
-    //GeoSlot geo_slots[] = new GeoSlot[10];
+    //GeoSlot geoSlots[] = new GeoSlot[10];
     //UserInterface user_interface;
 
     /* rewrite by kmhanko
@@ -399,13 +401,13 @@ public class GeoSlotAdmin {
         user_interface = _user_interface;
 
         for(int i = 0; i < 10; i++) {
-            geo_slots.get(i) = new GeoSlot();
-            geo_slots.get(i).init();
+            geoSlots.get(i) = new GeoSlot();
+            geoSlots.get(i).init();
         }
 
         for(int i = 0; i < 10; i++) {
-            geo_slots.get(i).setParam(30+50*i, 30+50*i, 20);
-            geo_slots.get(i).setTouchID(user_interface.setCircleTouchUI(30+50*i,30+50*i,30));
+            geoSlots.get(i).setParam(30+50*i, 30+50*i, 20);
+            geoSlots.get(i).setTouchID(user_interface.setCircleTouchUI(30+50*i,30+50*i,30));
         }
     }
     */
@@ -414,9 +416,9 @@ public class GeoSlotAdmin {
     public void update(){
 
         for(int i = 0; i < 10; i++) {
-            if(user_interface.checkUI(geo_slots.get(i).getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true){
+            if(user_interface.checkUI(geoSlots.get(i).getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true){
                 System.out.println(user_interface.getItemID());
-                geo_slots.get(i).setItemID(user_interface.getItemID());
+                geoSlots.get(i).setItemID(user_interface.getItemID());
             }
         }
     }
@@ -427,7 +429,7 @@ public class GeoSlotAdmin {
     public void draw(Canvas canvas) {
 
         for(int i = 0; i < 10; i++) {
-            geo_slots.get(i).draw(canvas);
+            geoSlots.get(i).draw(canvas);
         }
     }
     */

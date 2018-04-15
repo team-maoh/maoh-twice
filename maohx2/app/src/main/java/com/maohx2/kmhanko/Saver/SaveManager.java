@@ -38,4 +38,8 @@ public abstract class SaveManager {
     public void delete(String t_name) {
         database.delete(t_name,null);
     }
+
+    public void deleteTableAll() {
+        database.deleteTableAll();
+    }
 }

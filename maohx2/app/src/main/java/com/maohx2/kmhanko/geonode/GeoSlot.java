@@ -405,10 +405,12 @@ public class GeoSlot extends CircleImagePlate {
     //public int getPositionY() { eturn position_y; }
 
 
+    public GeoObjectData getGeoObjectData() { return geoObjectData; }
     public String getReleaseEvent() { return release_event; }
     public String getRestriction() { return restriction; }
     public void setReleaseEvent(String _release_event) { release_event = _release_event; }
     public void setRestriction(String _restriction) { restriction = _restriction; }
+    public void setReleased(Boolean _isReleased) { isReleased = _isReleased; }
 
     //TODO: inaの関数ができたら消す
     public void setParam(int _x, int _y, int _r) {

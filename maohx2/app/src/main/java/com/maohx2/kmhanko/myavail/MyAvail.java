@@ -2,6 +2,9 @@ package com.maohx2.kmhanko.myavail;
 
 
 import java.lang.Math;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by user on 2017/10/15.
  */
@@ -26,5 +29,14 @@ public class MyAvail {
             }
         }
         return maxID;
+    }
+
+    static public boolean matchStringList(String str, List<String> buf) {
+        for (int i = 0; i < buf.size(); i++) {
+            if (str.equals(buf.get(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

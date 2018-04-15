@@ -559,6 +559,14 @@ public class MyDatabase {
         return db.delete(t_name, w_script, null);
     }
 
+    public void deleteTableAll() {
+        List<String> tables = getTables();
+        for(int i = 0; i < tables.size(); i++) {
+            db.execSQL("drop table " + tables.get(i));
+            db.execSQL("vacuum");
+        }
+    }
+
     //ゲッター
     public String getDbName() {
         return db_name;

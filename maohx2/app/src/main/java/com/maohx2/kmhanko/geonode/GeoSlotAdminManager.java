@@ -11,6 +11,7 @@ import java.util.List;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.WorldModeAdmin;
+import com.maohx2.kmhanko.Saver.GeoSlotSaver;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
@@ -41,9 +42,11 @@ public class GeoSlotAdminManager {
     PlayerStatus playerStatus;
     InventryS geoInventry;
 
+    GeoSlotSaver geoSlotSaver;
+
     boolean is_load_database;
 
-    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry) {
+    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver) {
         graphic = _graphic;
         userInterface = _userInterface;
         databaseAdmin = _databaseAdmin;
@@ -51,9 +54,11 @@ public class GeoSlotAdminManager {
         worldModeAdmin = _worldModeAdmin;
         playerStatus = _playerStatus;
         geoInventry = _geoInventry;
+        geoSlotSaver = _geoSlotSaver;
         addDatabase();
-
         this.loadGeoSlotDatabase();
+
+        geoSlotSaver.setGeoSlotAdminManager(this);
     }
 
     public void update() {
@@ -139,6 +144,26 @@ public class GeoSlotAdminManager {
 
     public void saveGeoInventry() {
         geoInventry.save();
+    }
+
+    public void saveGeoSlot() {
+        geoSlotSaver.save();
+    }
+
+    public void loadGeoSlot() {
+        geoSlotSaver.load();
+    }
+
+    public List<String> getGeoSlotAdminNames() {
+        List<String> names = new ArrayList<>();
+        for (int i = 0; i < geoSlotAdmins.size(); i++) {
+            names.add(geoSlotAdmins.get(i).getName());
+        }
+        return names;
+    }
+
+    public List<GeoSlotAdmin> getGeoSlotAdmins() {
+        return geoSlotAdmins;
     }
 }
 

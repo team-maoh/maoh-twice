@@ -204,7 +204,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         if (loadMode.equals("s") || loadMode.equals("ds")) {
             return SAVE_FOLDER_NAME;
         }
-        throw new Error("☆タカノ : MySQLiteOpenHelper#getFolderName please set r or ds or s");
+        throw new Error("☆タカノ : MySQLiteOpenHelper#getFolderName please set r or ds or s : " + loadMode);
     }
 
     //データベースが存在するかどうかを返すメソッド
