@@ -1,11 +1,8 @@
-package com.maohx2.kmhanko.database;
+package com.maohx2.kmhanko.Saver;
 
-import java.util.ArrayList;
 import java.util.List;
-import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
-import com.maohx2.kmhanko.Arrange.InventryS;
-
+import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import static com.maohx2.ina.Constants.Inventry.INVENTRY_DATA_MAX;
 
 /**

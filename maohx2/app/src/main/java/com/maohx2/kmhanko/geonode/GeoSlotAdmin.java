@@ -180,6 +180,7 @@ public class GeoSlotAdmin {
                             public void callBackEvent() {
                                 //戻るボタンが押された時の処理
                                 geoSlotAdminManager.calcPlayerStatus();
+                                geoSlotAdminManager.saveGeoInventry();
 
                                 worldModeAdmin.setGeoSlotMap(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);

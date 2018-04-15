@@ -14,7 +14,8 @@ import com.maohx2.ina.ItemData.ItemDataAdminManager;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.GeoPresent.GeoPresentManager;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
-import com.maohx2.kmhanko.database.ExpendItemInventrySaver;
+import com.maohx2.kmhanko.Saver.ExpendItemInventrySaver;
+import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
 import com.maohx2.kmhanko.effect.EffectAdmin;
@@ -64,8 +65,11 @@ public class WorldGameSystem {
 
     PlayerStatus playerStatus;
 
+    GeoInventrySaver geoInventrySaver;
+    ExpendItemInventrySaver expendItemInventrySaver;
+
     //TODO いな依頼:引数にUI,Graphicが入って居るためGlobalDataに設置できない
-    Inventry geoInventry;
+    InventryS geoInventry;
     InventryS expendItemInventry;
 
     //TODO いな依頼　Inventryのupdateを呼ばないと真っ黒。あとアクティブ関係
@@ -100,51 +104,48 @@ public class WorldGameSystem {
 
         itemDataAdminManager.init(databaseAdmin, graphic);
 
-        //TODO いな依頼:Globalに入れる
-        geoInventry = new Inventry(map_user_interface, graphic);
-        expendItemInventry = new InventryS(
-                map_user_interface,
-                graphic,
-                new ExpendItemInventrySaver(
-                        databaseAdmin,
-                        "ExpendItemInventrySave",
-                        "ExpendItemInventrySave.db",
-                        1, "s", itemDataAdminManager
-                )
+        geoInventrySaver = new GeoInventrySaver(
+                databaseAdmin,
+                "GeoInventrySave",
+                "GeoInventrySave.db",
+                1, "s", graphic
         );
+
+        expendItemInventrySaver = new ExpendItemInventrySaver(
+                databaseAdmin,
+                "ExpendItemInventrySave",
+                "ExpendItemInventrySave.db",
+                1, "s", itemDataAdminManager
+        );
+
+        //TODO いな依頼:Globalに入れる
+        //TODO InventrySはSaverを持たせたもの
+        geoInventry = new InventryS(map_user_interface, graphic, geoInventrySaver);
+        geoInventry.load();
+
+        expendItemInventry = new InventryS(map_user_interface, graphic, expendItemInventrySaver);
         expendItemInventry.load();
+
+        geoInventrySaver.setInventry(geoInventry);
+        expendItemInventrySaver.setInventry(expendItemInventry);
 
 
         //TODO いな依頼:interfaceはあとで変更できないとまずい場合があるかもしれない
 
-        //list_box_admin = new ListBoxAdmin();
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry);
-        //geo_slot_admin = new GeoSlotAdmin();
         dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, geoSlotAdminManager, worldActivity);
-
-
-        /*
-        itemDataAdminManager.init(databaseAdmin,graphic);
-        expendItemInventry.addItemData(
-                itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName("D_ポーション")
-        );
-        expendItemInventry.addItemData(
-                itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName("D_ポーション")
-        );
-        expendItemInventry.addItemData(
-                itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName("D_EXポーション")
-        );
-        */
 
         itemShopAdmin.init(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager, expendItemInventry, geoInventry);
         itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "debug");
 
         canvas = null;
 
-        //TODO 仮。適当にGeo入れる GEO1が上がる能力は単一
+        /*
+        // 仮。適当にGeo入れる GEO1が上がる能力は単一
         for (int i = 0; i < 8; i++) {
             geoInventry.addItemData(GeoObjectDataAdmin.getDebugGeoObjectData(i));
         }
+        */
 
         geoPresentManager = new GeoPresentManager(
                 graphic,
