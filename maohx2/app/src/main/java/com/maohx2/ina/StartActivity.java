@@ -159,7 +159,8 @@ class StartSurfaceView extends BaseSurfaceView {
 
     @Override
     public void gameLoop(){
-        paint.setColor(Color.BLUE);
+        //paint.setColor(Color.BLUE);
+
 
         if(touch_state == TouchState.DOWN){
 
