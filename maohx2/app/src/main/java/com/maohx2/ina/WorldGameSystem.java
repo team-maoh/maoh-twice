@@ -17,6 +17,7 @@ import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.Saver.ExpendItemInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoSlotSaver;
+import com.maohx2.kmhanko.Saver.GeoPresentSaver;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
 import com.maohx2.kmhanko.effect.EffectAdmin;
@@ -69,6 +70,7 @@ public class WorldGameSystem {
     GeoInventrySaver geoInventrySaver;
     ExpendItemInventrySaver expendItemInventrySaver;
     GeoSlotSaver geoSlotSaver;
+    GeoPresentSaver geoPresentSaver;
 
     //TODO いな依頼:引数にUI,Graphicが入って居るためGlobalDataに設置できない
     InventryS geoInventry;
@@ -168,6 +170,17 @@ public class WorldGameSystem {
                 itemDataAdminManager.getExpendItemDataAdmin(),
                 playerStatus
         );
+
+
+        GeoPresentSaver.setGeoPresentManager(geoPresentManager);
+        geoPresentSaver = new GeoPresentSaver(
+                databaseAdmin,
+                "GeoPresentSave",
+                "GeoPresentSave.db",
+                1, "ns"
+        );
+
+        geoPresentManager.setGeoPresentSaver(geoPresentSaver);
 
 
     }

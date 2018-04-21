@@ -5,6 +5,7 @@ import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.Saver.InventrySaver;
 import com.maohx2.kmhanko.Saver.SaveManager;
+import com.maohx2.ina.ItemData.ItemData;
 
 /**
  * Created by user on 2018/04/08.
@@ -26,6 +27,18 @@ public class InventryS extends Inventry {
 
     public void load() {
         inventrySaver.load();
+    }
+
+    @Override
+    public void addItemData(ItemData _itemData) {
+        super.addItemData(_itemData);
+        inventrySaver.save();
+    }
+
+    @Override
+    public void subItemData(ItemData _itemData) {
+        super.subItemData(_itemData);
+        inventrySaver.save();
     }
 
 }

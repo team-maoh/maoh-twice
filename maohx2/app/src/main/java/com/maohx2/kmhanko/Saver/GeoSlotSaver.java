@@ -44,10 +44,15 @@ public class GeoSlotSaver extends SaveManager {
 
     public void setGeoSlotAdminManager(GeoSlotAdminManager _geoSlotAdminManager) {
         geoSlotAdminManager = _geoSlotAdminManager;
-        init();//TODO 違和感のある位置にある
+        makeTable();
     }
 
+    @Override
     public void init() {
+    }
+
+    //TODO あまりよくなのでなんとかする。update処理とか
+    public void makeTable() {
         //テーブルの生成
         //deleteAll();
         //deleteTableAll();

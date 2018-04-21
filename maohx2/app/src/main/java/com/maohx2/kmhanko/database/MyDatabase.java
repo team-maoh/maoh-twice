@@ -38,18 +38,21 @@ public class MyDatabase {
     private String db_asset;
     private int db_version;
 
+    private boolean isNew;
+
     public MyDatabase(Context context) {
         //super();
         mContext = context;
     }
 
     public boolean init(String _db_name, String _db_asset, int _db_version, String loadMode) {
-        if (loadMode != "r" && loadMode != "s" && loadMode != "ds") {
-            throw new Error("☆タカノ : MyDatabase#init " + "please set r or s or ds");
+        if (loadMode != "r" && loadMode != "s" && loadMode != "ds" && loadMode != "ns") {
+            throw new Error("☆タカノ : MyDatabase#init " + "please set r or s or ds or ns");
         }
         db_name = _db_name;
         db_asset = _db_asset;
         db_version = _db_version;
+        isNew = false;
 
         //データベース関係の処理
 
@@ -79,16 +82,23 @@ public class MyDatabase {
                 //内部DBに既にDBファイルが存在するかどうかを確認する。
                 //存在するならばDBを獲得して終了
                 //存在しないならば新規作成する
-                mDbHelper.createEmptyDataBase(loadMode);
+                isNew = mDbHelper.createEmptyDataBase(loadMode);
                 db = mDbHelper.getWritableDatabase();
             }
             if (loadMode == "ds") {
                 //内部DBに既にDBファイルが存在するかどうかを確認する。
                 //存在するならばDBを獲得して終了
                 //存在しないならば新規作成する
+                isNew = mDbHelper.createEmptyDataBase(loadMode);
+                db = mDbHelper.getWritableDatabase();
+            }
+
+            if (loadMode == "ns") { //強制的にsaverのinitを呼ぶ
+                isNew = true;
                 mDbHelper.createEmptyDataBase(loadMode);
                 db = mDbHelper.getWritableDatabase();
             }
+
         } catch (IOException e) {
             e.printStackTrace();
             throw new Error("☆タカノ : MyDatabase#init"+ e);
@@ -595,6 +605,10 @@ public class MyDatabase {
             buf[i] = String.valueOf(array[i]);
         }
         return buf;
+    }
+
+    public Boolean isNew() {
+        return isNew;
     }
 
 }

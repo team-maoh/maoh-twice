@@ -16,8 +16,8 @@ import com.maohx2.kmhanko.Arrange.InventryS;
 
 public class GeoObjectShop extends ItemShop {
 
-    public GeoObjectShop(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, Inventry _itemInventry) {
-        super(_userInterface, _graphic, _databaseAdmin, _textBoxAdmin, _worldModeAdmin, (InventryS)_itemInventry);
+    public GeoObjectShop(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, InventryS _itemInventry) {
+        super(_userInterface, _graphic, _databaseAdmin, _textBoxAdmin, _worldModeAdmin, _itemInventry);
     }
 
     @Override

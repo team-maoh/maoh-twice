@@ -163,6 +163,14 @@ public final class Constants {
         }
     }
 
+    public static class PresentFlag {
+        public enum FLAG {
+            NO_DATA,
+            YET,
+            GOT,
+        }
+    }
+
     // *** takanoここまで ***
 
 }

@@ -21,6 +21,10 @@ public class GeoInventrySaver extends InventrySaver {
     }
 
     @Override
+    public void init() {
+    }
+
+    @Override
     public void save() {
         deleteAll(); //セーブデータをリセットして書き直す場合に呼び出す
 
@@ -34,7 +38,7 @@ public class GeoInventrySaver extends InventrySaver {
 
             database.insertLineByArrayString(
                     "GeoInventry",
-                    new String[] { "name", "num", "hp", "attack", "defence", "luck", "hp_rate", "attack_rate", "defence_rate", "luck_rate",  },
+                    new String[] { "name", "num", "hp", "attack", "defence", "luck", "hp_rate", "attack_rate", "defence_rate", "luck_rate" },
                     new String[] {
                             geoObjectData.getName(),
                             String.valueOf(inventry.getItemNum(i)),
@@ -58,7 +62,8 @@ public class GeoInventrySaver extends InventrySaver {
 
     @Override
     public void load() {
-        //System.out.println("takano "+database.getTables());
+        System.out.println("takano "+database.getTables());
+
         List<String> itemNames = database.getString("GeoInventry", "name");
         List<Integer> nums = database.getInt("GeoInventry", "num");
         List<Integer> hps = database.getInt("GeoInventry", "hp");

@@ -12,6 +12,7 @@ import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
 //by kmhanko
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.Saver.PlayerStatusSaver;
 
 //アイテムのアイコン画像、プレイヤーのステータス、アイテムのデータ、をグローバルで持つ予定
 public class GlobalData extends Application {
@@ -22,6 +23,7 @@ public class GlobalData extends Application {
 
     //by kmhanko
     PlayerStatus playerStatus;
+    PlayerStatusSaver playerStatusSaver;
     Inventry geoInventry;
 
     public void init(int disp_x, int disp_y) {
@@ -34,6 +36,14 @@ public class GlobalData extends Application {
 
         //by kmhanko
         playerStatus = new PlayerStatus(g_my_database_admin);
+        playerStatusSaver = new PlayerStatusSaver(
+                g_my_database_admin,
+                "PlayerStatusSave",
+                "PlayerStatusSave.db",
+                1, "s",
+                playerStatus
+        );
+        playerStatusSaver.load();
         //geoInventry = new Inventry();
     }
 
@@ -43,4 +53,5 @@ public class GlobalData extends Application {
     // by kmhanko
     public PlayerStatus getPlayerStatus() { return playerStatus; }
     public Inventry getGeoInventry() { return geoInventry; }
+    public PlayerStatusSaver getPlayerStatusSaver() { return playerStatusSaver; }
 }

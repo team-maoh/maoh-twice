@@ -21,11 +21,15 @@ public abstract class SaveManager {
         loadMode = _loadMode;
         databaseAdmin.addMyDatabase(dbName, dbAsset, version, loadMode);
         database = databaseAdmin.getMyDatabase(dbName);
-        if (!loadMode.equals("s") && !loadMode.equals("ds")) {
-            throw new Error("☆タカノ SaveManager#SaveManager loadMode must be ds or s");
+        if (!loadMode.equals("s") && !loadMode.equals("ds") && !loadMode.equals("ns")) {
+            throw new Error("☆タカノ SaveManager#SaveManager loadMode must be ds or s or ns");
+        }
+        if (database.isNew()) {
+            init();
         }
     }
 
+    abstract public void init();//DBがもともと存在せず、saveフォルダからセーブデータをコピーした時に呼ばれる。loadmode = dsの時は呼ばれない
     abstract public void save();
     abstract public void load();
 

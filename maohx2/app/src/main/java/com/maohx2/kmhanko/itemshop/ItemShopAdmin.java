@@ -48,7 +48,7 @@ public class ItemShopAdmin {
     MyDatabaseAdmin databaseAdmin;
 
     InventryS expendItemInventry;
-    Inventry geoInventry;
+    InventryS geoInventry;
 
     public enum ITEM_KIND {
         EXPEND,
@@ -56,7 +56,7 @@ public class ItemShopAdmin {
         ITEM_KIND_NUM
     }
 
-    public void init(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, ItemDataAdminManager itemDataAdminManager, InventryS _expendItemInventry, Inventry _geoInventry) {
+    public void init(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, ItemDataAdminManager itemDataAdminManager, InventryS _expendItemInventry, InventryS _geoInventry) {
         userInterface = _userInterface;
         graphic = _graphic;
         textBoxAdmin = _textBoxAdmin;

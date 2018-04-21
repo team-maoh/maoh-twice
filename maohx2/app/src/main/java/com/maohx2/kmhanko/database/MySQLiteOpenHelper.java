@@ -100,7 +100,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
     //内部DBファイルが無い場合はAssetsからコピーし、内部DBファイルがある場合は特に何もしないメソッド
-    public void createEmptyDataBase(String loadMode) throws IOException {
+    public boolean createEmptyDataBase(String loadMode) throws IOException {
         File mDatabasePath = mContext.getDatabasePath(db_name);
 
         //内部DBが存在するか否かを確認
@@ -111,7 +111,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
             getDatabase(loadMode);
             try {
                 //内部DBにassets内のDBをコピーする
-                copyDataBaseFromAssets(getFolderName(loadMode));
+                copyDataBaseFromAssets(loadMode);
 
                 //生成されたと思われる内部DBを取得してみる
                 SQLiteDatabase checkDb = null;
@@ -126,7 +126,9 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
                     checkDb.setVersion(db_version);
                     checkDb.close();
                 }
-                return;
+
+                return true;
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -137,7 +139,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
             //"ds"の場合はデバッグによる書き換えを反映するためコピーしておく
             //"s"の場合はコピーしない
 
-            if (loadMode.equals("r") || loadMode.equals("ds")) {
+            if (loadMode.equals("r") || loadMode.equals("ds") || loadMode.equals("ns")) {
                 try {
                     //内部DBにassets内のDBをコピーする
                     copyDataBaseFromAssets(loadMode);
@@ -155,13 +157,15 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
                         checkDb.setVersion(db_version);
                         checkDb.close();
                     }
-                    return;
+
+                    return false;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            return;
+            return false;
         }
+        throw new Error("☆タカノ : MySQLiteOpenHelper#createEmptyDataBase");
     }
 
     @Override
@@ -175,13 +179,13 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
     public SQLiteDatabase getDatabase(String readMode) {
-        if (readMode.equals("s") || readMode.equals("ds")) {
+        if (readMode.equals("s") || readMode.equals("ds") || readMode.equals("ns")) {
             return getWritableDatabase();
         }
         if (readMode.equals("r")) {
             return getReadableDatabase();
         }
-        throw new Error("☆タカノ : MySQLiteOpenHelper#getDatabase please set r or ds or s");
+        throw new Error("☆タカノ : MySQLiteOpenHelper#getDatabase please set r or ds or s or ns");
     }
 
     @Override
@@ -201,10 +205,10 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         if (loadMode.equals("r")) {
             return FOLDER_NAME;
         }
-        if (loadMode.equals("s") || loadMode.equals("ds")) {
+        if (loadMode.equals("s") || loadMode.equals("ds") || loadMode.equals("ns")) {
             return SAVE_FOLDER_NAME;
         }
-        throw new Error("☆タカノ : MySQLiteOpenHelper#getFolderName please set r or ds or s : " + loadMode);
+        throw new Error("☆タカノ : MySQLiteOpenHelper#getFolderName please set r or ds or s or ns: " + loadMode);
     }
 
     //データベースが存在するかどうかを返すメソッド

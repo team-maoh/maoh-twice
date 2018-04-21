@@ -79,7 +79,7 @@ class WorldSurfaceView extends BaseSurfaceView {
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             map_activity.startActivity(intent);
         }
-        */
+*/
 
     }
 

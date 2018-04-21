@@ -420,7 +420,7 @@ public class GeoSlot extends CircleImagePlate {
         touch_id = user_interface.setCircleTouchUI(x, y, radius);
         //TODO: 前の奴を消せないので格納上の問題あり
 
-        notEventCrearImageContext = graphic.makeImageContext(graphic.searchBitmap("e51-0"), x , y, 1.0f, 1.0f, 0.0f, 255, false);
+        notEventCrearImageContext = graphic.makeImageContext(graphic.searchBitmap("apple"), x , y, 5.0f, 5.0f, 0.0f, 255, false);
         slotHoleImageContext = graphic.makeImageContext(graphic.searchBitmap("neco"), x, y, 5.0f, 5.0f, 0.0f, 255, false);
         geoImageContext = null;
 

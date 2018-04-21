@@ -19,6 +19,10 @@ public class ExpendItemInventrySaver extends InventrySaver {
     }
 
     @Override
+    public void init() {
+    }
+
+    @Override
     public void save() {
         deleteAll(); //セーブデータをリセットして書き直す場合に呼び出す
 
