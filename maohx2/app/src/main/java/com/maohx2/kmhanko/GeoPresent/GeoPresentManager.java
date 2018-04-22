@@ -414,6 +414,7 @@ public class GeoPresentManager {
                                 presentSelectPlateGroup.setUpdateFlag(false);
                                 presentSelectPlateGroup.setDrawFlag(false);
                                 holdGeoObbjectData = null;
+
                                 worldModeAdmin.setPresent(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
                             }

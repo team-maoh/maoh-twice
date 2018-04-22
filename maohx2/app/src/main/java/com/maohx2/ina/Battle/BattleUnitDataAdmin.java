@@ -61,6 +61,9 @@ public class BattleUnitDataAdmin {
         List<Integer> hp_bar_length = new ArrayList<Integer>();
         List<Integer> radius = new ArrayList<Integer>();
 
+        List<String> drop_item01 = new ArrayList<String>();
+        List<Double> drop_item01_percent = new ArrayList<Double>();
+
         name = battle_unit_data_database.getString("battle_unit_data", "name", null);
         attack_frame = battle_unit_data_database.getInt("battle_unit_data", "attack_frame", null);
         initial_hp = battle_unit_data_database.getInt("battle_unit_data", "initial_hp", null);
@@ -85,6 +88,9 @@ public class BattleUnitDataAdmin {
         hp_bar_offset = battle_unit_data_database.getInt("battle_unit_data", "hp_bar_offset", null);
         hp_bar_length = battle_unit_data_database.getInt("battle_unit_data", "hp_bar_length", null);
         radius = battle_unit_data_database.getInt("battle_unit_data", "hit_radius", null);
+
+        drop_item01 = battle_unit_data_database.getString("battle_unit_data", "drop_item01", null);
+        drop_item01_percent = battle_unit_data_database.getDouble("battle_unit_data", "drop_item01_percent", null);
 
         for (int i = 0; i < name.size(); i++) {
             battle_base_unit_datas.add(new BattleBaseUnitData());
@@ -117,10 +123,12 @@ public class BattleUnitDataAdmin {
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialBonusAttack, initial_bonus_attack.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialBonusDefence, initial_bonus_defence.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialBonusSpeed, initial_bonus_speed.get(i));
-            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusHP, delta_bonus_hp.get(i));tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialHP, initial_hp.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusHP, delta_bonus_hp.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusAttack, delta_bonus_attack.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusDefence, delta_bonus_defence.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusSpeed, delta_bonus_speed.get(i));
+
+            
         }
 
     }
