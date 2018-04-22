@@ -11,9 +11,9 @@ import com.maohx2.kmhanko.database.MyDatabase;
 
 public abstract class SaveManager {
 
-    MyDatabaseAdmin databaseAdmin;
-    MyDatabase database;
-    String loadMode;
+    protected MyDatabaseAdmin databaseAdmin;
+    protected MyDatabase database;
+    protected String loadMode;
 
     //loadMode = ds or s　dsの場合はAssetsからコピーされる
     public SaveManager(MyDatabaseAdmin _databaseAdmin, String dbName, String dbAsset, int version, String _loadMode) {

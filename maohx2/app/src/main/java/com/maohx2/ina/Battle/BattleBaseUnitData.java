@@ -2,6 +2,8 @@ package com.maohx2.ina.Battle;
 
 
 //by kmhanko
+import com.maohx2.ina.Constants;
+import com.maohx2.ina.Constants.Item.EQUIPMENT_KIND;
 import com.maohx2.ina.Draw.BitmapData;
 
 import static com.maohx2.ina.Constants.UnitStatus.BonusStatus.*;
@@ -37,6 +39,12 @@ public class BattleBaseUnitData {
     String name;
     BitmapData bitmap_data;
     int radius;
+
+    //by kmhank　ドロップアイテム種類
+    EQUIPMENT_KIND[] dropItemEquipmentKind = new EQUIPMENT_KIND[Constants.Item.DROP_NUM];
+    String[] dropItemName = new String[Constants.Item.DROP_NUM];
+    double[] dropItemRate = new double[Constants.Item.DROP_NUM];
+    Constants.Item.ITEM_KIND[] dropItemKind = new Constants.Item.ITEM_KIND[Constants.Item.DROP_NUM];
 
     //配列変数の要素番号との対応のためのenum型
     public enum DbStatusID {
@@ -116,5 +124,32 @@ public class BattleBaseUnitData {
         bonus_status[BONUS_SPEED.ordinal()] = (int)(dbStatus[DbStatusID.InitialBonusSpeed.ordinal()] + dbStatus[DbStatusID.DeltaBonusSpeed.ordinal()] * Math.pow(2,repeat_count));
 
         return bonus_status;
+    }
+
+    //by kmhanko
+    public void setDropItemEquipmentKind(int i, EQUIPMENT_KIND _bufEK) {
+        dropItemEquipmentKind[i] = _bufEK;
+    }
+    public void setDropItemName(int i, String _dropItemName) {
+        dropItemName[i] = _dropItemName;
+    }
+    public void setDropItemRate(int i, double _dropItemRate) {
+        dropItemRate[i] = _dropItemRate;
+    }
+    public void setDropItemKind(int i, Constants.Item.ITEM_KIND _dropItemKind) {
+        dropItemKind[i] = _dropItemKind;
+    }
+
+    public EQUIPMENT_KIND[] getDropItemEquipmentKinds() {
+        return dropItemEquipmentKind;
+    }
+    public String[] getDropItemNames() {
+        return dropItemName;
+    }
+    public double[] getDropItemRate() {
+        return dropItemRate;
+    }
+    public Constants.Item.ITEM_KIND[] getDropItemKinds() {
+        return dropItemKind;
     }
 }

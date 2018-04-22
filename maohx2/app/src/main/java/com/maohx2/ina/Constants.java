@@ -142,6 +142,45 @@ public final class Constants {
             SHIELD,
             BARE,
         }
+        public enum GEO_PARAM_KIND_NORMAL {
+            HP,
+            ATTACK,
+            DEFENCE,
+            LUCK,
+            NUM;
+
+            //enumへのキャスト用
+            public static GEO_PARAM_KIND_NORMAL toEnum(int x) {
+                for(GEO_PARAM_KIND_NORMAL type : GEO_PARAM_KIND_NORMAL.values()) {
+                    if (type.ordinal() == x) {
+                        return type;
+                    }
+                }
+                return null;
+            }
+        }
+
+
+
+        public enum GEO_PARAM_KIND_RATE {
+            HP_RATE,
+            ATTACK_RATE,
+            DEFENCE_RATE,
+            LUCK_RATE,
+            NUM;
+
+            //enumへのキャスト用
+            public static GEO_PARAM_KIND_RATE toEnum(int x) {
+                for(GEO_PARAM_KIND_RATE type : GEO_PARAM_KIND_RATE.values()) {
+                    if (type.ordinal() == x) {
+                        return type;
+                    }
+                }
+                return null;
+            }
+        }
+
+        public static final int DROP_NUM = 3;
 
     }
 

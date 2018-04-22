@@ -1,5 +1,7 @@
 package com.maohx2.ina.Battle;
 
+import com.maohx2.ina.Constants;
+import com.maohx2.ina.Constants.Item.*;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
@@ -61,8 +63,14 @@ public class BattleUnitDataAdmin {
         List<Integer> hp_bar_length = new ArrayList<Integer>();
         List<Integer> radius = new ArrayList<Integer>();
 
-        List<String> drop_item01 = new ArrayList<String>();
-        List<Double> drop_item01_percent = new ArrayList<Double>();
+        List<String>[] drop_item = new ArrayList[Constants.Item.DROP_NUM];
+        for (int i = 0; i<drop_item.length; i++) {
+            drop_item[i] = new ArrayList<String>();
+        }
+        List<Double>[] drop_item_percent = new ArrayList[Constants.Item.DROP_NUM];
+        for (int i = 0; i<drop_item_percent.length; i++) {
+            drop_item_percent[i] = new ArrayList<Double>();
+        }
 
         name = battle_unit_data_database.getString("battle_unit_data", "name", null);
         attack_frame = battle_unit_data_database.getInt("battle_unit_data", "attack_frame", null);
@@ -89,8 +97,10 @@ public class BattleUnitDataAdmin {
         hp_bar_length = battle_unit_data_database.getInt("battle_unit_data", "hp_bar_length", null);
         radius = battle_unit_data_database.getInt("battle_unit_data", "hit_radius", null);
 
-        drop_item01 = battle_unit_data_database.getString("battle_unit_data", "drop_item01", null);
-        drop_item01_percent = battle_unit_data_database.getDouble("battle_unit_data", "drop_item01_percent", null);
+        for (int i = 0; i < drop_item.length; i++) {
+            drop_item[i] = battle_unit_data_database.getString("battle_unit_data", "drop_item0" + String.valueOf(i + 1), null);
+            drop_item_percent[i] = battle_unit_data_database.getDouble("battle_unit_data", "drop_item0" + String.valueOf(i + 1) + "_percent", null);
+        }
 
         for (int i = 0; i < name.size(); i++) {
             battle_base_unit_datas.add(new BattleBaseUnitData());
@@ -128,7 +138,61 @@ public class BattleUnitDataAdmin {
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusDefence, delta_bonus_defence.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusSpeed, delta_bonus_speed.get(i));
 
-            
+
+            for (int j = 0; j < drop_item.length; j++ ) {
+                //武器の場合
+                EQUIPMENT_KIND bufEK;
+                switch (drop_item[j].get(i)) {
+                    case "剣":
+                        bufEK = EQUIPMENT_KIND.SWORD;
+                        break;
+                    case "杖":
+                        bufEK = EQUIPMENT_KIND.WAND;
+                        break;
+                    case "斧":
+                        bufEK = EQUIPMENT_KIND.AX;
+                        break;
+                    case "槍":
+                        bufEK = EQUIPMENT_KIND.SPEAR;
+                        break;
+                    case "弓":
+                        bufEK = EQUIPMENT_KIND.BOW;
+                        break;
+                    case "銃":
+                        bufEK = EQUIPMENT_KIND.GUN;
+                        break;
+                    case "ナックル":
+                        bufEK = EQUIPMENT_KIND.FIST;
+                        break;
+                    case "メイス":
+                        bufEK = EQUIPMENT_KIND.CLUB;
+                        break;
+                    case "鞭":
+                        bufEK = EQUIPMENT_KIND.WHIP;
+                        break;
+                    case "楽器":
+                        bufEK = EQUIPMENT_KIND.MUSIC;
+                        break;
+                    case "盾":
+                        bufEK = EQUIPMENT_KIND.SHIELD;
+                        break;
+                    default:
+                        bufEK = null;
+                        break;
+                }
+                if (bufEK != null) {
+                    tempBattleBaseUnitData.setDropItemEquipmentKind(i, bufEK);
+
+                    tempBattleBaseUnitData.setDropItemName(i, drop_item[j].get(i));
+                    tempBattleBaseUnitData.setDropItemKind(i, Constants.Item.ITEM_KIND.EQUIPMENT);
+                    tempBattleBaseUnitData.setDropItemRate(i, drop_item_percent[j].get(i));
+                } else {
+                    //消費アイテムの場合
+                    tempBattleBaseUnitData.setDropItemName(i, drop_item[j].get(i));
+                    tempBattleBaseUnitData.setDropItemKind(i, Constants.Item.ITEM_KIND.EXPEND);
+                    tempBattleBaseUnitData.setDropItemRate(i, drop_item_percent[j].get(i));
+                }
+            }
         }
 
     }

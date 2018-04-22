@@ -231,6 +231,11 @@ public class BattleUnitAdmin {
         }
 
         if(result_flag == true){
+            //戦闘が終了した時
+            // by kmhanko
+            for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
+                //TODO : 各BattleUnitのBattleUnitBaseDataから、dropEquipmentKindとDropItemRateを取得し、臨時ItemInentryに格納する処理(いな担当？)
+            }
             dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
         }
     }

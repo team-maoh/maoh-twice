@@ -25,6 +25,7 @@ import com.maohx2.kmhanko.geonode.GeoSlotAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlotAdminManager;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.itemdata.GeoObjectDataAdmin;
+import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 import com.maohx2.kmhanko.itemshop.ItemShopAdmin;
 import com.maohx2.kmhanko.effect.*;
 import com.maohx2.kmhanko.sound.SoundAdmin;
@@ -89,6 +90,8 @@ public class WorldGameSystem {
         playerStatus = globalData.getPlayerStatus();
         //GeoInventry = globalData.getGeoInventry();
 
+        GeoObjectDataCreater.setGraphic(graphic);//TODO ゲーム開始時に呼ぶ
+
         worldModeAdmin = new WorldModeAdmin();
         worldModeAdmin.initWorld();
 
@@ -112,7 +115,7 @@ public class WorldGameSystem {
                 databaseAdmin,
                 "GeoInventrySave",
                 "GeoInventrySave.db",
-                1, "s", graphic
+                1, "ns", graphic
         );
 
         expendItemInventrySaver = new ExpendItemInventrySaver(
@@ -155,7 +158,7 @@ public class WorldGameSystem {
 
         // 仮。適当にGeo入れる GEO1が上がる能力は単一
         for (int i = 0; i < 8; i++) {
-            geoInventry.addItemData(GeoObjectDataAdmin.getDebugGeoObjectData(i));
+            geoInventry.addItemData(GeoObjectDataCreater.getGeoObjectData(100));
         }
 
 
