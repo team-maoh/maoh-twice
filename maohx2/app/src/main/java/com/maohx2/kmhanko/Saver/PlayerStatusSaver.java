@@ -17,7 +17,7 @@ public class PlayerStatusSaver extends SaveManager {
         playerStatus = _playerStatus;
     }
     @Override
-    public void init() {
+    public void dbinit() {
         //特にすることなし
     }
 

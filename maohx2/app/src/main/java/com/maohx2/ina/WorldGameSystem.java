@@ -133,7 +133,7 @@ public class WorldGameSystem {
                 databaseAdmin,
                 "GeoSlotSave",
                 "GeoSlotSave.db",
-                1, "s", graphic
+                1, "ns", graphic
         );
 
         //TODO いな依頼:Globalに入れる

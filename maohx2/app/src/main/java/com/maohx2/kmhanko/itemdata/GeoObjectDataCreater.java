@@ -1,5 +1,6 @@
 package com.maohx2.kmhanko.itemdata;
 
+import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Constants.Item.GEO_PARAM_KIND_NORMAL;
 import com.maohx2.ina.Constants.Item.GEO_PARAM_KIND_RATE;
@@ -27,6 +28,10 @@ public class GeoObjectDataCreater {
     public static GeoObjectData getGeoObjectData(int parameter, GEO_PARAM_KIND_NORMAL parameterKind) {
         int[] status1 = new int[GEO_PARAM_KIND_NORMAL.NUM.ordinal()];
         double[] status2 = new double[GEO_PARAM_KIND_RATE.NUM.ordinal()];
+        status2[0] = 1.0;
+        status2[1] = 1.0;
+        status2[2] = 1.0;
+        status2[3] = 1.0;
 
         int calcParam = status1[parameterKind.ordinal()] = parameter/2 + (int)((double)parameter * Math.random());
 
@@ -64,6 +69,9 @@ public class GeoObjectDataCreater {
 
         newGeoObjectData.setName(name);
         newGeoObjectData.setItemImage(graphic.searchBitmap(imageName));
+        newGeoObjectData.setImageName(imageName);
+        newGeoObjectData.setItemKind(Constants.Item.ITEM_KIND.GEO);
+        newGeoObjectData.setPrice(parameter);
 
         return newGeoObjectData;
     }
@@ -71,6 +79,10 @@ public class GeoObjectDataCreater {
     public static GeoObjectData getGeoObjectData(int parameter, GEO_PARAM_KIND_RATE parameterKind) {
         int[] status1 = new int[GEO_PARAM_KIND_NORMAL.NUM.ordinal()];
         double[] status2 = new double[GEO_PARAM_KIND_RATE.NUM.ordinal()];
+        status2[0] = 1.0;
+        status2[1] = 1.0;
+        status2[2] = 1.0;
+        status2[3] = 1.0;
 
         double calcParam = status2[parameterKind.ordinal()] = 1.0 + ((double)parameter/2 + (double)parameter * Math.random())/ 20.0;
 
@@ -98,11 +110,13 @@ public class GeoObjectDataCreater {
                 break;
         }
         imageName += "0" + String.valueOf(imageNum);
-        //TODO 小数点以下の表示を抑える
-        name += calcParam;
+        name += String.format("%.2f",calcParam);
 
         newGeoObjectData.setName(name);
         newGeoObjectData.setItemImage(graphic.searchBitmap(imageName));
+        newGeoObjectData.setImageName(imageName);
+        newGeoObjectData.setItemKind(Constants.Item.ITEM_KIND.GEO);
+        newGeoObjectData.setPrice(parameter);
 
         return newGeoObjectData;
     }

@@ -28,7 +28,7 @@ MakeGeoSlot的なやつ、MyDBをパスしてsql文章で一行づつ消滅さ�
 無理だったらクラスにして渡す。
 これによって検証によるコンストラクタの変更に対応する
  */
-
+//TODO 計算が反映されない
 public class GeoSlot extends CircleImagePlate {
 
     //** Created by kmhanko **//
@@ -303,6 +303,7 @@ public class GeoSlot extends CircleImagePlate {
         geoSlotAdmin.geoSlotReleaseChoice();
         if (isEventClearAll()) {
             setGeoObjectFromHold();
+            geoSlotAdmin.calcPlayerStatus();
         }
     }
 

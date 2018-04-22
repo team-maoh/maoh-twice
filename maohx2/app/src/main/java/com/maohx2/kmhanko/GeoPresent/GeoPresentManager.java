@@ -391,6 +391,8 @@ public class GeoPresentManager {
         scoreTextBoxUpdate();
         backPlateGroup.update();
 
+        //scoreTextBoxUpdate();
+
         //TODO TextBoxの一括ではないupdate
         textBoxAdmin.setTextBoxExists(scoreTextBoxID, worldModeAdmin.getIsDraw(worldModeAdmin.getPresent()));
         textBoxAdmin.setTextBoxExists(messageBoxID, worldModeAdmin.getIsDraw(worldModeAdmin.getPresent()));

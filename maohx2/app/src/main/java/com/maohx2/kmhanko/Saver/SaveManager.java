@@ -25,11 +25,11 @@ public abstract class SaveManager {
             throw new Error("☆タカノ SaveManager#SaveManager loadMode must be ds or s or ns");
         }
         if (database.isNew()) {
-            init();
+            dbinit();
         }
     }
 
-    abstract public void init();//DBがもともと存在せず、saveフォルダからセーブデータをコピーした時に呼ばれる。loadmode = dsの時は呼ばれない
+    abstract public void dbinit();//DBがもともと存在せず、saveフォルダからセーブデータをコピーした時に呼ばれる。loadmode = dsの時は呼ばれない
     abstract public void save();
     abstract public void load();
 
