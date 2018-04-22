@@ -150,7 +150,7 @@ public class WorldGameSystem {
         //TODO いな依頼:interfaceはあとで変更できないとまずい場合があるかもしれない
 
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver);
-        dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, geoSlotAdminManager, worldActivity);
+        dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, geoSlotAdminManager, activityChange);
 
         geoSlotAdminManager.loadGeoSlot();
 

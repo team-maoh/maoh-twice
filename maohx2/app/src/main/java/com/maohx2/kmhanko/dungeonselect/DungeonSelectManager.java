@@ -1,5 +1,6 @@
 package com.maohx2.kmhanko.dungeonselect;
 
+import com.maohx2.ina.ActivityChange;
 import com.maohx2.ina.WorldActivity;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.UI.UserInterface;
@@ -70,18 +71,20 @@ public class DungeonSelectManager {
 
     Paint paint = new Paint(); //TODO GeoMapとDungeonSelectの切り替え表示用。いつか消える
 
-    WorldActivity worldActivity;
+   //WorldActivity worldActivity;
+    ActivityChange activityChange;
 
     //いなの実装までの仮置き
     //boolean enterSelectFlag = false;
 
-    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, WorldActivity _worldActivity) {
+    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, ActivityChange _activityChange) {
         graphic = _graphic;
         userInterface = _userInterface;
         databaseAdmin = _databaseAdmin;
         geoSlotAdminManager = _geoSlotAdminManager;
         worldModeAdmin = _worldModeAdmin;
-        worldActivity = _worldActivity;
+        //worldActivity = _worldActivity;
+        activityChange = _activityChange;
 
         setDatabase(databaseAdmin);
         loadMapIconPlate();
@@ -309,12 +312,14 @@ public class DungeonSelectManager {
 
         int buttonID = dungeonEnterSelectButtonGroup.getTouchContentNum();
         if (buttonID == 0 ) { //侵入する
-            //TODO 侵入処理
-
             dungeonEnterSelectButtonGroup.setUpdateFlag(false);
             dungeonEnterSelectButtonGroup.setDrawFlag(false);
             modeSelectButtonGroup.setUpdateFlag(true);
             mapIconPlateGroup.setUpdateFlag(true);
+
+            //TODO 侵入処理におけるダンジョンデータによる分岐処理
+            //TODO ボタンを押した後処理を止める
+            activityChange.toDungeonActivity();
         }
         if (buttonID == 1 ) { //やめる
             dungeonEnterSelectButtonGroup.setUpdateFlag(false);
