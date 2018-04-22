@@ -140,6 +140,9 @@ public class BattleUnitDataAdmin {
 
 
             for (int j = 0; j < drop_item.length; j++ ) {
+                if (drop_item[j].get(i) == null) {
+                    continue;
+                }
                 //武器の場合
                 EQUIPMENT_KIND bufEK;
                 switch (drop_item[j].get(i)) {
@@ -181,16 +184,16 @@ public class BattleUnitDataAdmin {
                         break;
                 }
                 if (bufEK != null) {
-                    tempBattleBaseUnitData.setDropItemEquipmentKind(i, bufEK);
+                    tempBattleBaseUnitData.setDropItemEquipmentKind(j, bufEK);
 
-                    tempBattleBaseUnitData.setDropItemName(i, drop_item[j].get(i));
-                    tempBattleBaseUnitData.setDropItemKind(i, Constants.Item.ITEM_KIND.EQUIPMENT);
-                    tempBattleBaseUnitData.setDropItemRate(i, drop_item_percent[j].get(i));
+                    tempBattleBaseUnitData.setDropItemName(j, drop_item[j].get(i));
+                    tempBattleBaseUnitData.setDropItemKind(j, Constants.Item.ITEM_KIND.EQUIPMENT);
+                    tempBattleBaseUnitData.setDropItemRate(j, drop_item_percent[j].get(i));
                 } else {
                     //消費アイテムの場合
-                    tempBattleBaseUnitData.setDropItemName(i, drop_item[j].get(i));
-                    tempBattleBaseUnitData.setDropItemKind(i, Constants.Item.ITEM_KIND.EXPEND);
-                    tempBattleBaseUnitData.setDropItemRate(i, drop_item_percent[j].get(i));
+                    tempBattleBaseUnitData.setDropItemName(j, drop_item[j].get(i));
+                    tempBattleBaseUnitData.setDropItemKind(j, Constants.Item.ITEM_KIND.EXPEND);
+                    tempBattleBaseUnitData.setDropItemRate(j, drop_item_percent[j].get(i));
                 }
             }
         }

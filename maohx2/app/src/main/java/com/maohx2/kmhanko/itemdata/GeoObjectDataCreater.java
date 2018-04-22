@@ -12,7 +12,7 @@ import java.lang.Math;
 public class GeoObjectDataCreater {
     static Graphic graphic;
 
-    private GeoObjectDataCreater() {};
+    private GeoObjectDataCreater(){};
 
     public static void setGraphic(Graphic _graphic) {
         graphic = _graphic;
@@ -98,6 +98,7 @@ public class GeoObjectDataCreater {
                 break;
         }
         imageName += "0" + String.valueOf(imageNum);
+        //TODO 小数点以下の表示を抑える
         name += calcParam;
 
         newGeoObjectData.setName(name);

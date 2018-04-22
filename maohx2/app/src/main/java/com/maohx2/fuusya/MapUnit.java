@@ -80,7 +80,6 @@ public class MapUnit extends MapObject {
 
         blown_rad = random.nextDouble() * 2 * PI;
 
-
     }
 
     public void init() {
@@ -134,6 +133,7 @@ public class MapUnit extends MapObject {
             hand_x = w_x + REACH_FOR_WALL * cos(i);
             hand_y = w_y - REACH_FOR_WALL * sin(i);
 
+            //玄関と衝突したりしなかったりする
             if (can_exit_room == false) {
                 if (map_admin.isEntrance(map_admin.worldToMap((int) (w_x + dx)), map_admin.worldToMap((int) w_y))) {
                     is_touching_x_wall = true;
@@ -239,7 +239,7 @@ public class MapUnit extends MapObject {
         has_bad_status = false;
         can_walk = true;
 
-        //■瞬間移動
+        //■瞬間移動する
         if (frames_waiting_teleported > 1) {
             has_bad_status = true;
 
@@ -255,8 +255,9 @@ public class MapUnit extends MapObject {
         } else if (frames_waiting_teleported == 1) {
 
             Point teleported_point = map_admin.getRoomPoint();
-            w_x = teleported_point.x;
-            w_y = teleported_point.y;
+            putUnit(teleported_point.x, teleported_point.y);
+//            w_x = teleported_point.x;
+//            w_y = teleported_point.y;
 
             frames_waiting_teleported--;
         }
@@ -286,7 +287,7 @@ public class MapUnit extends MapObject {
             frames_walking_slowly--;
         }
 
-        //■酔歩
+        //■酔歩する
         if (frames_being_drunk > 0) {
             has_bad_status = true;
 
@@ -325,6 +326,7 @@ public class MapUnit extends MapObject {
             frames_being_drunk--;
         }//酔歩パートおわり
 
+        //■玄関を通過できなくなる
         if (frames_cannot_exit_room > 1) {
             can_exit_room = false;
             frames_cannot_exit_room--;
@@ -333,7 +335,7 @@ public class MapUnit extends MapObject {
             frames_cannot_exit_room--;
         }
 
-        //■ふっ飛ばし
+        //■ふっ飛ばされる
         if (frames_before_blown_away > 0) {
 
             has_bad_status = true;
@@ -369,6 +371,14 @@ public class MapUnit extends MapObject {
 
     public int getFramesWaitingTeleported(){
         return frames_waiting_teleported;
+    }
+
+    //Unitの座標を強制変更して、目標座標もリセット
+    public void putUnit(double put_w_x, double put_w_y){
+        w_x = put_w_x;
+        w_y = put_w_y;
+        dst_w_x = put_w_x;
+        dst_w_y = put_w_y;
     }
 
 }

@@ -26,7 +26,7 @@ public class MapObjectBitmap {
     int FRAME_PERIODS = 5;//画像の更新周期(値が小さいほどfpsが上がる)
 
     int time_count;//画像の更新周期を数える
-    boolean is_increasing_frame;
+    boolean is_increasing_frame;//画像番号が増えている最中 or 減っている最中
     int frame;//いま表示しているフレームの番号（０～２）
     BitmapData raw_bitmap_data;
 

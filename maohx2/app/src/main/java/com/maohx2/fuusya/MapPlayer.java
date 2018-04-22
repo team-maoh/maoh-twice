@@ -89,41 +89,42 @@ public class MapPlayer extends MapUnit {
     public void update() {
         super.update();
 
-        boolean is_touching_outside_menu = map_plate_admin.getIsTouchingOutsideMenu();
-        boolean is_displaying_menu = map_plate_admin.getIsDisplayingMenu();
-
         touch_state = dungeon_user_interface.getTouchState();
 
-        boolean is_touching = touch_state != Constants.Touch.TouchState.AWAY;
-//            boolean is_touching = (touch_state == TouchState.DOWN || touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE);
-        boolean is_not_touching_menu = is_displaying_menu == false || is_touching_outside_menu == true;
-        if (is_touching == true && is_not_touching_menu == true) {
+        if (touch_state != Constants.Touch.TouchState.AWAY) {
 
             touch_n_x = dungeon_user_interface.getTouchX();
             touch_n_y = dungeon_user_interface.getTouchY();
             touch_w_x = camera.convertToWorldCoordinateX((int) touch_n_x);
             touch_w_y = camera.convertToWorldCoordinateY((int) touch_n_y);
 
-            //Player(画面中央)をタッチしたらMENUを表示する
-            if (touch_state != TouchState.MOVE) {
-                if (isWithinReach(touch_w_x, touch_w_y, 80) == true) {
-                    map_plate_admin.setIsDisplayingMenu(true);
-//                    dungeon_game_system.setIsDisplayingMenu(true);
-                } else {
-                    map_plate_admin.setIsDisplayingMenu(false);
-//                    dungeon_game_system.setIsDisplayingMenu(false);
+            //Listではない領域をタッチしているとき
+            if (map_plate_admin.isTouchingList(touch_n_x, touch_n_y) == false) {
+
+                map_plate_admin.setDisplayingContent(-1);
+
+                //Player(画面中央)をタッチしたらMENUを表示する
+                if (touch_state != TouchState.MOVE) {
+                    if (isWithinReach(touch_w_x, touch_w_y, 80) == true) {
+                        map_plate_admin.setDisplayingContent(0);
+                    }
+
                 }
 
+                //タッチ座標が現在位置からある程度離れていたら、その座標を目標座標とする
+                //（近いと walkOneStep() の仕様上、足が早くなってしまう）
+                //（[Playerの近くをタッチすれば高速移動できる]という裏技がまかり通ってしまう）
+                if (isWithinReach(touch_w_x, touch_w_y, step * 2) == false) {
+                    dst_w_x = touch_w_x;
+                    dst_w_y = touch_w_y;
+                }
+
+                touching_frame_count++;
+
+                is_moving = true;
+
             }
 
-            if (isWithinReach(touch_w_x, touch_w_y, step * 2) == false) {
-                dst_w_x = touch_w_x;
-                dst_w_y = touch_w_y;
-            }
-
-            touching_frame_count++;
-
-            is_moving = true;
         } else if (touching_frame_count > TOUCHING_FRAME_NUM) {//画面を10frames以上タッチした場合、
 
             touching_frame_count = 0;
@@ -131,26 +132,20 @@ public class MapPlayer extends MapUnit {
             is_moving = false;//指を離した時点で歩行を中止する
         }
 
-        if(is_displaying_menu) {
-            System.out.println("displaying_desuno");
-        }
-        if(is_touching_outside_menu) {
-            System.out.println("touching_desuno");
-        }
-        if(touch_state == TouchState.AWAY){
-            System.out.println("■AWAY_desuno");
-        }else if(touch_state == TouchState.MOVE){
-            System.out.println("■MOVE_desuno");
-        }else if(touch_state == TouchState.DOWN){
-            System.out.println("■DOWN_desuno");
-        }else if(touch_state == TouchState.DOWN_MOVE){
-            System.out.println("■DOWN_MOVE_desuno");
-        }else if(touch_state == TouchState.UP){
-            System.out.println("■UP_desuno");
-        }
-        System.out.println(touch_n_x + "    desuno    "+ touch_n_y);
+//        if(touch_state == TouchState.AWAY){
+//            System.out.println("■AWAY_desuno");
+//        }else if(touch_state == TouchState.MOVE){
+//            System.out.println("■MOVE_desuno");
+//        }else if(touch_state == TouchState.DOWN){
+//            System.out.println("■DOWN_desuno");
+//        }else if(touch_state == TouchState.DOWN_MOVE){
+//            System.out.println("■DOWN_MOVE_desuno");
+//        }else if(touch_state == TouchState.UP){
+//            System.out.println("■UP_desuno");
+//        }
+//        System.out.println(touch_n_x + "    desuno    "+ touch_n_y);
 
-        //BadStatus（状態異常）を表現するためにstepとdst_w_x, dst_w_yを適宜書き換える
+        //BadStatus（状態異常）を表現するためにstep, dst_w_x, dst_w_y等を適宜書き換える
         step = checkBadStatus(PLAYER_STEP);
 
         if (has_bad_status == true) {
@@ -159,40 +154,34 @@ public class MapPlayer extends MapUnit {
             if (can_walk == true) {
 
                 if (frames_before_blown_away == 0 && frames_being_blown_away > 0) {
-//                if (being_blown_away == true) {
+
+                    //3 * step を引数にすると壁のだいぶ手前で立ち止まってしまう
                     collide_wall = walkOneStep(dst_w_x, dst_w_y, step);
                     collide_wall = walkOneStep(dst_w_x, dst_w_y, step);
                     collide_wall = walkOneStep(dst_w_x, dst_w_y, step);
-                    System.out.println("paopao1");
+
                     if (collide_wall == true && frames_being_blown_away > 11) {
                         frames_being_blown_away = 10;
                     }
                 } else {
+                    //壁との衝突を考慮した上で、タッチ座標に向かって１歩進む
                     walkOneStep(dst_w_x, dst_w_y, step);
                 }
             }
 
         } else if (is_moving == true) {
-//        if ((is_moving == true) || (has_bad_status = true)) {
 
-//            //BadStatus（状態異常）を表現するためにstepとdst_w_x, dst_w_yを適宜書き換える
-//            //歩行不能時は step = 0 と書かれる
-//            step = checkBadStatus(PLAYER_STEP);
-//            //Playerアイコンの向きを更新する
+            //Playerアイコンの向きを更新する
             updateDirOnMap(dst_w_x, dst_w_y);
 
-            System.out.println("paopao4");
-            walkOneStep(dst_w_x, dst_w_y, step);
-
             //壁との衝突を考慮した上で、タッチ座標に向かって１歩進む
-//            walkOneStep(dst_w_x, dst_w_y, step);
-////            //Playerアイコンの向きを更新する
-//            updateDirOnMap(dst_w_x, dst_w_y);
+            walkOneStep(dst_w_x, dst_w_y, step);
 
             encount_steps++;
             if (encount_steps >= th_encount_steps) {
                 System.out.println("◆一定歩数 歩いたので敵と遭遇");
                 encount_steps = 0;
+                //遭遇の瞬間に、次の遭遇までに要する歩数を乱数で決める
                 th_encount_steps = makeThresholdEncountSteps();
             }
 
@@ -243,6 +232,7 @@ public class MapPlayer extends MapUnit {
         return is_moving;
     }
 
+    //自分の座標と (target_w_x, target_w_y) の距離が target_reach 以下であるか否か
     public boolean isWithinReach(double target_w_x, double target_w_y, double target_reach) {
 
         if (target_reach < myDistance(target_w_x, target_w_y, w_x, w_y)) {

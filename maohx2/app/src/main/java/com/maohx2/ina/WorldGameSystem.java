@@ -79,13 +79,17 @@ public class WorldGameSystem {
 
     //TODO いな依頼　Inventryのupdateを呼ばないと真っ黒。あとアクティブ関係
 
-    public void init(UserInterface _map_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity) {
+    ActivityChange activityChange;
+
+    public void init(UserInterface _map_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
         soundAdmin = _soundAdmin;
         map_user_interface = _map_user_interface;
 
         worldActivity = _worldActivity;
+        activityChange = _activityChange;
+
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
         playerStatus = globalData.getPlayerStatus();
         //GeoInventry = globalData.getGeoInventry();
@@ -184,6 +188,8 @@ public class WorldGameSystem {
         );
 
         geoPresentManager.setGeoPresentSaver(geoPresentSaver);
+
+
 
 
     }

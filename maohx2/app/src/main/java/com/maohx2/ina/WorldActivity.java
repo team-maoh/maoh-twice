@@ -63,7 +63,7 @@ class WorldSurfaceView extends BaseSurfaceView {
         soundAdmin = new SoundAdmin(map_activity, my_database_admin);
 
         map_user_interface.init();
-        world_game_system.init(map_user_interface, graphic, my_database_admin, soundAdmin, _map_activity);
+        world_game_system.init(map_user_interface, graphic, my_database_admin, soundAdmin, _map_activity, activityChange);
     }
 
     @Override
@@ -72,14 +72,15 @@ class WorldSurfaceView extends BaseSurfaceView {
         world_game_system.updata();
         world_game_system.draw();
 
-/*
+        /*
         if (touch_state == TouchState.DOWN) {
             thread = null;
             Intent intent = new Intent(map_activity, DungeonActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             map_activity.startActivity(intent);
         }
-*/
+        */
+
 
     }
 

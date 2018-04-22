@@ -145,6 +145,8 @@ class StartSurfaceView extends BaseSurfaceView {
         start_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
         start_user_interface.init();
 
+        activityChange = new ActivityChange(this, currentActivity);
+
         start_game_system = new StartGameSystem();
         start_game_system.init(holder, graphic, start_user_interface, start_activity, my_database_admin);
 
@@ -153,7 +155,6 @@ class StartSurfaceView extends BaseSurfaceView {
         thread = new Thread(this);
         thread.start();
 
-        activityChange = new ActivityChange(this, currentActivity);
     }
 
 

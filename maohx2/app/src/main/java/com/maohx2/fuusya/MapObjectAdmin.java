@@ -28,7 +28,7 @@ public class MapObjectAdmin {
 
     int NUM_OF_ENEMY = 10;
     int NUM_OF_ITEM = 10;// > 2
-    int NUM_OF_TRAP = 5;
+    int NUM_OF_TRAP = 1;
 
     int PLAYER_DIR = 8;
     int ENEMY_DIR = 8;
@@ -70,7 +70,7 @@ public class MapObjectAdmin {
 
         is_displaying_menu = false;
 
-        map_player = new MapPlayer(graphic, this, _map_admin, dungeon_user_interface, _sound_admin, camera, map_plate_admin);
+        map_player = new MapPlayer(graphic, this, map_admin, dungeon_user_interface, _sound_admin, camera, map_plate_admin);
         map_player.init();
         map_player_bitmap = new MapObjectBitmap(PLAYER_DIR, graphic, "ドラゴン");
         map_player_bitmap.init();
@@ -79,20 +79,25 @@ public class MapObjectAdmin {
         player_y = map_player.getWorldY();
 
         for (int i = 0; i < NUM_OF_ITEM; i++) {
-            map_item[i] = new MapItem(graphic, this, i % 4, camera);
+            map_item[i] = new MapItem(graphic, this, i % 2, camera);
             map_item[i].init();
 
-            map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "ハーピー");
+            switch (i%2){
+                case 0:
+                    map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "ハーピー");
+                    break;
+                case 1:
+                    map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "ドラゴン");
+                    break;
+                default:
+                    break;
+            }
             map_item_bitmap[i].init();
         }
 
         for (int i = 0; i < NUM_OF_TRAP; i++) {
-//            if(i % 2 == 0) {
-//                map_trap[i] = new MapTrap(graphic, this, i % 4, camera, "blown_away");
-//            }else{
-            map_trap[i] = new MapTrap(graphic, this, i % 4, camera, false, "being_drunk");
-//            map_trap[i] = new MapTrap(graphic, this, i % 4, camera, true, "cannot_exit_room", 100);
-//            }
+
+            map_trap[i] = new MapTrap(graphic, this, i % 4, camera, false, "being_teleported");
             map_trap[i].init();
 
             map_trap_bitmap[i] = new MapObjectBitmap(1, graphic, "cave_thing_01");
@@ -100,6 +105,7 @@ public class MapObjectAdmin {
         }
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
+
             map_enemy[i] = new MapEnemy(graphic, this, camera, ENEMY_DIR, true, true);
             map_enemy[i].init();
             map_enemy_bitmap[i] = new MapObjectBitmap(ENEMY_DIR, graphic, "ハーピー");
@@ -117,20 +123,6 @@ public class MapObjectAdmin {
     }
 
     public void update() {
-
-//        TouchState touch_state = dungeon_user_interface.getTouchState();
-
-//        if (touch_state == TouchState.DOWN || touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE) {
-
-//            if() {
-//                System.out.println("baobao_");
-//            }
-
-//            touch_n_x = dungeon_user_interface.getTouchX();
-//            touch_n_y = dungeon_user_interface.getTouchY();
-//            touch_w_x = camera.convertToWorldCoordinateX((int) touch_n_x);
-//            touch_w_y = camera.convertToWorldCoordinateY((int) touch_n_y);
-//        }
 
         map_player.update();
         map_player_bitmap.update();
@@ -173,10 +165,6 @@ public class MapObjectAdmin {
         }
 
         map_player_bitmap.draw(map_player.getDirOnMap(), map_player.getNormX(), map_player.getNormY());
-
-        if(is_displaying_menu == true) {
-            System.out.println("display_desuyo");
-        }
 
     }
 
