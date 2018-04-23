@@ -13,7 +13,7 @@ import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.GeoPresent.GeoPresentManager;
-import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.PlayerStatus.*;
 import com.maohx2.kmhanko.Saver.ExpendItemInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoSlotSaver;
@@ -29,6 +29,7 @@ import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 import com.maohx2.kmhanko.itemshop.ItemShopAdmin;
 import com.maohx2.kmhanko.effect.*;
 import com.maohx2.kmhanko.sound.SoundAdmin;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +96,7 @@ public class WorldGameSystem {
         //GeoInventry = globalData.getGeoInventry();
 
         GeoObjectDataCreater.setGraphic(graphic);//TODO ゲーム開始時に呼ぶ
+
 
         worldModeAdmin = new WorldModeAdmin();
         worldModeAdmin.initWorld();

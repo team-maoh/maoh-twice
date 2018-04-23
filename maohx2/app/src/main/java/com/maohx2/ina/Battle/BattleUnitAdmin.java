@@ -235,6 +235,11 @@ public class BattleUnitAdmin {
             // by kmhanko
             for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
                 //TODO : 各BattleUnitのBattleUnitBaseDataから、dropEquipmentKindとDropItemRateを取得し、臨時ItemInentryに格納する処理(いな担当？)
+                for (int j = 0; j < Constants.Item.DROP_NUM; j++) {
+                    //if (battle_units[i].battleDungeonUnitData.)
+                }
+
+
             }
             dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
         }
