@@ -83,7 +83,7 @@ public class DungeonGameSystem {
         GlobalData globalData = (GlobalData) dungeon_activity.getApplication();
         PlayerStatus playerStatus = globalData.getPlayerStatus();
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
-        battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin);
+        battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin);
 
 
     }
@@ -116,6 +116,7 @@ public class DungeonGameSystem {
             case MAP:
                 map_admin.drawMap_for_autotile_4div_combine();
                 map_object_admin.draw();
+                map_plate_admin.draw();
                 //graphic.bookingDrawCircle(0,0,10,paint);
                 break;
 

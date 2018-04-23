@@ -1,4 +1,4 @@
-package com.maohx2.ina;
+/*package com.maohx2.ina;
 
 
 import android.app.Activity;
@@ -22,12 +22,12 @@ import android.graphics.Paint;
 import com.maohx2.ina.Battle.*;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
-
+*/
 
 /**
  * Created by ina on 2017/10/15.
  */
-
+/*
 
 
 
@@ -96,3 +96,4 @@ public class BattleGameSystem {
         graphic.draw();
     }
 }
+*/

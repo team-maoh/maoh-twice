@@ -3,6 +3,7 @@ package com.maohx2.ina.Battle;
 import android.app.Activity;
 import android.graphics.Paint;
 
+import com.maohx2.fuusya.MapPlateAdmin;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Constants;
 import static com.maohx2.ina.Constants.Item.EQUIPMENT_KIND;
@@ -54,6 +55,8 @@ public class BattleUnitAdmin {
     ExpendItemDataAdmin expendItemDataAdmin;
     EquipmentItemDataCreater equipmentItemDataCreater;
 
+    MapPlateAdmin mapPlateAdmin;
+
     Graphic graphic;
     PaletteAdmin palette_admin;
     boolean marker_flag;
@@ -61,16 +64,17 @@ public class BattleUnitAdmin {
     int attack_count;
 
     //by kmhanko BattleUnitDataAdmin追加
-    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage, MyDatabaseAdmin _databaseAdmin) {
+    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage, MyDatabaseAdmin _databaseAdmin, MapPlateAdmin _map_plate_admin) {
         //引数の代入
         graphic = _graphic;
         battle_user_interface = _battle_user_interface;
         battle_activity = _battle_activity;
         battleUnitDataAdmin = _battleUnitDataAdmin;
         palette_admin = _palette_admin;
-        dungeonModeManage = _dungeonModeManage;
 
+        dungeonModeManage = _dungeonModeManage;
         databaseAdmin = _databaseAdmin;
+        mapPlateAdmin = _map_plate_admin;
 
         //by kmhanko
         // *** equipItemDataCreaterのインスタンス化 ***
@@ -318,9 +322,8 @@ public class BattleUnitAdmin {
     private void getDropItem() {
         BattleBaseUnitData tempBattleBaseUnitData = null;
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
-            if (battle_units[i].isDropFlag()) {//TODO これまずい
+            if (battle_units[i].isDropFlag()) {
                 battle_units[i].dropFlagIs(false);
-                //TODO : 各BattleUnitのBattleUnitBaseDataから、dropEquipmentKindとDropItemRateを取得し、臨時ItemInentryに格納する処理(いな担当？)
                 tempBattleBaseUnitData = battleUnitDataAdmin.getBattleUnitDataNum(battle_units[i].getName());
 
                 EQUIPMENT_KIND[] dropItemEquipmentKind = tempBattleBaseUnitData.getDropItemEquipmentKinds();
@@ -349,8 +352,7 @@ public class BattleUnitAdmin {
                         }
                     }
                     if (tempItemData != null) {
-                        //TODO 臨時アイテムインベントリに格納
-                        //TODO アイテムを取得したことをメッセージする
+                        mapPlateAdmin.getInventry().addItemData(tempItemData);
                         System.out.println("☆タカノ:BattleUnitAdmin#getDropItem : アイテムを取得 : " + dropItemName[j] + " from " + battle_units[i].getName());
                     }
                 }

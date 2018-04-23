@@ -1,3 +1,5 @@
+/*
+
 package com.maohx2.ina;
 
 import android.app.Activity;
@@ -8,11 +10,13 @@ import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
-
+*/
 
 /**
  * Created by ina on 2017/10/15.
  */
+
+/*
 public class BattleActivity extends BaseActivity {
 
     RelativeLayout layout;
@@ -74,4 +78,5 @@ class BattleSurfaceView extends BaseSurfaceView{
         game_system.draw();
     }
 }
+*/
 
