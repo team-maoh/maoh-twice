@@ -87,11 +87,11 @@ class WorldSurfaceView extends BaseSurfaceView {
         }
 */
 
+/*
         if(touch_state == TouchState.DOWN){
-
             activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.GOKI);
         }
-
+*/
     }
 
 }
