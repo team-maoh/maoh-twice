@@ -40,13 +40,14 @@ public class PlateGroup<T extends Plate> {
     }
 
     public int getTouchContentNum() {
-
-        for (int i = 0; i < plates.length; i++) {
-            if (plates[i].checkTouchContent() == true) {
-                return i;
+        //by kmhanko
+        if(update_flag == true) {
+            for (int i = 0; i < plates.length; i++) {
+                if (plates[i].checkTouchContent() == true) {
+                    return i;
+                }
             }
         }
-
         return -1;
     }
 
