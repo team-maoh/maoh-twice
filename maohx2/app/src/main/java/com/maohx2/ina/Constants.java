@@ -141,6 +141,7 @@ public final class Constants {
             MONSTER,
             SHIELD,
             BARE,
+            NUM,
         }
         public enum GEO_PARAM_KIND_NORMAL {
             HP,

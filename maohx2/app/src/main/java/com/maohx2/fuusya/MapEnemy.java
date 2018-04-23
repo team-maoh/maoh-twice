@@ -12,6 +12,7 @@ import static java.lang.Math.cos;
 import static java.lang.Math.pow;
 import static java.lang.Math.sin;
 
+import com.maohx2.ina.DungeonModeManage;
 
 //import com.maohx2.ina.MySprite;
 // import com.maohx2.ina.waste.MySprite;
@@ -20,7 +21,9 @@ import java.util.Random;
 
 import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.MapAdmin;
+import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
 
 /**
  * Created by Fuusya on 2017/09/11.
@@ -189,6 +192,7 @@ public class MapEnemy extends MapUnit {
         if (player.isWithinReach(w_x, w_y, REACH_FOR_PLAYER) == true && exists == true && player.getFramesWaitingTeleported() == 0) {
             System.out.println("敵と接触");
             //デバッグのためにコメントアウト
+            map_object_admin.battleStart();
             exists = false;
         }
 

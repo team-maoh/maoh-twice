@@ -197,5 +197,9 @@ public class MapPlateAdmin {
 
     }
 
+    //by kmhanko
+    public Inventry getInventry() {
+        return inventry;
+    }
 
 }

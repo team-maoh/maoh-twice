@@ -22,6 +22,7 @@ abstract public class BattleUnit {
     protected int defence;
     protected int luck;
     protected boolean exist;
+    protected boolean dropFlag;
     Random rnd;
     Graphic graphic;
     Paint paint;
@@ -44,6 +45,8 @@ abstract public class BattleUnit {
         paint = new Paint();
         speed = 10;
         rnd = new Random();
+        exist = false;
+        dropFlag = false;
     }
 
     /*
@@ -82,6 +85,8 @@ abstract public class BattleUnit {
         //初期化処理 (データに寄らない)
         //init();
         exist = true;
+        dropFlag = true;
+
         //格納
         battleDungeonUnitData = _battleDungeonUnitData;
 
@@ -96,6 +101,8 @@ abstract public class BattleUnit {
         //init();
 
         exist = true;
+        dropFlag = true;
+
         //TODO : 敵の出現位置決定
         setPositionX(rnd.nextInt(1200)+200);
         setPositionY(rnd.nextInt(500)+200);
@@ -135,6 +142,7 @@ abstract public class BattleUnit {
 
     // *** getter ***
     public boolean isExist() { return exist; }
+    public boolean isDropFlag() { return dropFlag; }
     public int getMaxHitPoint() { return max_hit_point; }
     public int getHitPoint() { return hit_point; }
     public int getAttack(){ return attack; }
@@ -145,6 +153,7 @@ abstract public class BattleUnit {
 
     // *** setter ***
     public void existIs(boolean _exist) { exist = _exist; }
+    public void dropFlagIs(boolean _dropFlag) { dropFlag = _dropFlag; }
     public void setMaxHitPoint(int _max_hit_point){ max_hit_point = _max_hit_point; }
     public void setHitPoint(int _hit_point) { hit_point = _hit_point; }
     public void setAttack(int _attack) { attack = _attack; }

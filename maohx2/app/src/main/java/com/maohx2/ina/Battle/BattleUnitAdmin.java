@@ -5,10 +5,11 @@ import android.graphics.Paint;
 
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Constants;
-import com.maohx2.ina.Constants.Item.EQUIPMENT_KIND;
-import com.maohx2.ina.Constants.Item.ITEM_KIND;
+import static com.maohx2.ina.Constants.Item.EQUIPMENT_KIND;
+import static com.maohx2.ina.Constants.Item.ITEM_KIND;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.DungeonModeManage;
+import com.maohx2.ina.GlobalData;
 import com.maohx2.ina.ItemData.EquipmentItemBaseData;
 import com.maohx2.ina.ItemData.EquipmentItemBaseDataAdmin;
 import com.maohx2.ina.ItemData.EquipmentItemData;
@@ -16,11 +17,17 @@ import com.maohx2.ina.ItemData.EquipmentItemDataCreater;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 
+import com.maohx2.ina.ItemData.ItemData;
+
 import static com.maohx2.ina.Constants.BattleUnit.BATTLE_UNIT_MAX;
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
 import com.maohx2.ina.Battle.*;
+import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ina on 2017/09/21.
@@ -42,6 +49,7 @@ public class BattleUnitAdmin {
     BattleUnitDataAdmin battleUnitDataAdmin;
     int count = 0;
     Paint paint = new Paint();
+    MyDatabaseAdmin databaseAdmin;
 
     ExpendItemDataAdmin expendItemDataAdmin;
     EquipmentItemDataCreater equipmentItemDataCreater;
@@ -53,7 +61,7 @@ public class BattleUnitAdmin {
     int attack_count;
 
     //by kmhanko BattleUnitDataAdmin追加
-    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage) {
+    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage, MyDatabaseAdmin _databaseAdmin) {
         //引数の代入
         graphic = _graphic;
         battle_user_interface = _battle_user_interface;
@@ -62,9 +70,24 @@ public class BattleUnitAdmin {
         palette_admin = _palette_admin;
         dungeonModeManage = _dungeonModeManage;
 
+        databaseAdmin = _databaseAdmin;
 
-        //EquipmentItemBaseDataAdmin equipmentItemBaseData = new EquipmentItemBaseDataAdmin();
-        //equipmentItemDataCreater = new EquipmentItemDataCreater(equipmentItemBaseData);
+        //by kmhanko
+        // *** equipItemDataCreaterのインスタンス化 ***
+        EquipmentItemBaseDataAdmin equipmentItemBaseDataAdmin = new EquipmentItemBaseDataAdmin(graphic, databaseAdmin);
+        List<EquipmentItemBaseData> tempEquipmentItemBaseDatas = equipmentItemBaseDataAdmin.getItemDatas();
+        EquipmentItemBaseData[] equipmentItemBaseDatas = new EquipmentItemBaseData[EQUIPMENT_KIND.NUM.ordinal()];
+        for (int i = 0; i < EQUIPMENT_KIND.NUM.ordinal(); i++) {
+            equipmentItemBaseDatas[i] = tempEquipmentItemBaseDatas.get(i);
+        }
+        equipmentItemDataCreater = new EquipmentItemDataCreater(equipmentItemBaseDatas);
+        // *** ここまで ***
+
+
+        // *** expendItemDataAdminの取得 ***///
+        GlobalData globalData = (GlobalData) battle_activity.getApplication();
+        expendItemDataAdmin = globalData.getItemDataAdminManager().getExpendItemDataAdmin();
+        // *** ここまで ***
 
         marker_flag = false;
         first_attack_frag = false;
@@ -221,7 +244,7 @@ public class BattleUnitAdmin {
 
         //敵の更新と攻撃処理
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
-            if (battle_units[i].isExist() == true) {
+            if (battle_units[i].isExist() == true ) {
                 int damage_to_player = battle_units[i].update();
                 if(damage_to_player > 0) {
                     EquipmentItemData defense_equipment = palette_admin.getEquipmentItemData();
@@ -240,7 +263,7 @@ public class BattleUnitAdmin {
 
         boolean result_flag = true;
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
-            result_flag = result_flag & !battle_units[i].isExist();
+            result_flag = result_flag && !battle_units[i].isExist();
         }
 
         if(result_flag == true){
@@ -260,14 +283,14 @@ public class BattleUnitAdmin {
 
 
         for(int i = 0; i < MAKER_NUM; i++) {
-            if(touch_markers[i].isExist() == true) {
+            if(touch_markers[i].isExist() == true ) {
                 touch_markers[i].draw();
             }
         }
 
         for (int i = 0; i < BATTLE_UNIT_MAX; i++) {
 
-            if (battle_units[i].isExist() == true) {
+            if (battle_units[i].isExist() == true ) {
                 battle_units[i].draw();
             }
         }
@@ -295,18 +318,41 @@ public class BattleUnitAdmin {
     private void getDropItem() {
         BattleBaseUnitData tempBattleBaseUnitData = null;
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
-            //TODO : 各BattleUnitのBattleUnitBaseDataから、dropEquipmentKindとDropItemRateを取得し、臨時ItemInentryに格納する処理(いな担当？)
-            tempBattleBaseUnitData = battleUnitDataAdmin.getBattleUnitDataNum(battle_units[i].getName());
+            if (battle_units[i].isDropFlag()) {//TODO これまずい
+                battle_units[i].dropFlagIs(false);
+                //TODO : 各BattleUnitのBattleUnitBaseDataから、dropEquipmentKindとDropItemRateを取得し、臨時ItemInentryに格納する処理(いな担当？)
+                tempBattleBaseUnitData = battleUnitDataAdmin.getBattleUnitDataNum(battle_units[i].getName());
 
-            EQUIPMENT_KIND[] dropItemEquipmentKind = tempBattleBaseUnitData.getDropItemEquipmentKinds();
-            String[] dropItemName = tempBattleBaseUnitData.getDropItemNames();
-            double[] dropItemRate = tempBattleBaseUnitData.getDropItemRate();
-            ITEM_KIND[] dropItemKind = tempBattleBaseUnitData.getDropItemKinds();
+                EQUIPMENT_KIND[] dropItemEquipmentKind = tempBattleBaseUnitData.getDropItemEquipmentKinds();
+                String[] dropItemName = tempBattleBaseUnitData.getDropItemNames();
+                double[] dropItemRate = tempBattleBaseUnitData.getDropItemRate();
+                ITEM_KIND[] dropItemKind = tempBattleBaseUnitData.getDropItemKinds();
+                ItemData tempItemData = null;
+                double tempRand;
+                for (int j = 0; j < Constants.Item.DROP_NUM; j++) {
+                    if (dropItemName[j] != null) {
+                        tempRand = Math.random();
+                        System.out.println("☆タカノ:BattleUnitAdmin#getDropItem : アイテムドロップ率計算 : " + dropItemName[j] + " from " + battle_units[i].getName() + " : " + dropItemRate[j] + " ? " + tempRand);
 
-            for (int j = 0; j < Constants.Item.DROP_NUM; j++) {
-                if (dropItemName[j] != null) {
-                    //dropItemName[j]
-
+                        if (dropItemRate[j] > tempRand) { //ドロップ確率
+                            switch (dropItemKind[j]) {
+                                case EQUIPMENT:
+                                    tempItemData = equipmentItemDataCreater.getEquipmentItemData(dropItemEquipmentKind[j], battle_units[i].getBattleDungeonUnitData());
+                                    break;
+                                case EXPEND:
+                                    tempItemData = expendItemDataAdmin.getOneDataByName(dropItemName[j]);
+                                    break;
+                                default:
+                                    tempItemData = null;
+                                    break;
+                            }
+                        }
+                    }
+                    if (tempItemData != null) {
+                        //TODO 臨時アイテムインベントリに格納
+                        //TODO アイテムを取得したことをメッセージする
+                        System.out.println("☆タカノ:BattleUnitAdmin#getDropItem : アイテムを取得 : " + dropItemName[j] + " from " + battle_units[i].getName());
+                    }
                 }
             }
         }

@@ -26,7 +26,6 @@ public class EquipmentItemBaseDataAdmin extends ItemDataAdmin<EquipmentItemBaseD
 
         List<String> name = database.getString(tableName, "name");
         List<String> imageName = database.getString(tableName, "imageName");
-        List<Integer> price = database.getInt(tableName, "price");
         List<Integer> equipmentKind = database.getInt(tableName, "equipmentKind");
         List<Integer> useNum = database.getInt(tableName, "useNum");
         List<Integer> radius = database.getInt(tableName, "radius");
@@ -43,7 +42,6 @@ public class EquipmentItemBaseDataAdmin extends ItemDataAdmin<EquipmentItemBaseD
             datas.get(i).setName(name.get(i));
             datas.get(i).setImageName(imageName.get(i));
             datas.get(i).setItemImage(graphic.searchBitmap(imageName.get(i)));
-            datas.get(i).setPrice(price.get(i));
             datas.get(i).setEquipmentKind(itoe[equipmentKind.get(i)]);
             datas.get(i).setUseNum(useNum.get(i));
             datas.get(i).setRadius(radius.get(i));

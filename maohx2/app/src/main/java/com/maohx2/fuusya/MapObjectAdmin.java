@@ -7,6 +7,7 @@ import android.view.SurfaceHolder;
 
 import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.MapAdmin;
+import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.DungeonGameSystem;
 import com.maohx2.ina.DungeonModeManage;
@@ -190,6 +191,11 @@ public class MapObjectAdmin {
     //(x1, y1)と(x2, y2)の距離を返す
     public double myDistance(double x1, double y1, double x2, double y2) {
         return pow(pow(x1 - x2, 2.0) + pow(y1 - y2, 2.0), 0.5);
+    }
+
+    //by kmhanko
+    public void battleStart() {
+        dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
     }
 
 }
