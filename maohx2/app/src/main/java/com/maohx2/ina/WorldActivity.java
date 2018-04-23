@@ -69,7 +69,7 @@ class WorldSurfaceView extends BaseSurfaceView {
         global_data.getExpendItemInventry().init(map_user_interface, graphic,1000,100,1400,508, 10);
 
 
-        world_game_system.init(map_user_interface, graphic, my_database_admin, soundAdmin, _map_activity);
+        world_game_system.init(map_user_interface, graphic, my_database_admin, soundAdmin, _map_activity, activityChange);
     }
 
     @Override

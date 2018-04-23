@@ -17,17 +17,11 @@ public class ExpendItemInventrySaver extends InventrySaver {
         super(_databaseAdmin, dbName, dbAsset, version, _loadMode);
     }
 
-
-
     @Override
-<<<<<<< HEAD
-    public void dbinit() {
-=======
     public void dbinit() {}
 
     public void init(ItemDataAdminManager _itemDataAdminManager) {
         itemDataAdminManager = _itemDataAdminManager;
->>>>>>> master
     }
 
     @Override

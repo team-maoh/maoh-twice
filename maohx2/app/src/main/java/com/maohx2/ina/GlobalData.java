@@ -56,19 +56,19 @@ public class GlobalData extends Application {
 
         //by kmhanko
         playerStatus = new PlayerStatus(g_my_database_admin);
-        playerStatusSaver = new PlayerStatusSaver(g_my_database_admin, "PlayerStatusSave", "PlayerStatusSave.db", 1, "s", playerStatus);
+        playerStatusSaver = new PlayerStatusSaver(g_my_database_admin, "PlayerStatusSave", "PlayerStatusSave.db", 1, "ds", playerStatus);
         playerStatusSaver.load();
 
 
-        equipmentInventrySaver = new EquipmentInventrySaver(g_my_database_admin, "EquipmentInventrySave", "EquipmentInventrySave.db", 1, "s");
+        equipmentInventrySaver = new EquipmentInventrySaver(g_my_database_admin, "EquipmentInventrySave", "EquipmentInventrySave.db", 1, "ds");
         equipmentInventry = new InventryS(equipmentInventrySaver);
 
 
-        geoInventrySaver = new GeoInventrySaver(g_my_database_admin, "GeoInventrySave", "GeoInventrySave.db", 1, "s", graphic);
+        geoInventrySaver = new GeoInventrySaver(g_my_database_admin, "GeoInventrySave", "GeoInventrySave.db", 1, "ds", graphic);
         geoInventry = new InventryS(geoInventrySaver);
 
 
-        expendItemInventrySaver = new ExpendItemInventrySaver(g_my_database_admin, "ExpendItemInventrySave", "ExpendItemInventrySave.db", 1, "s");
+        expendItemInventrySaver = new ExpendItemInventrySaver(g_my_database_admin, "ExpendItemInventrySave", "ExpendItemInventrySave.db", 1, "ds");
         expendItemInventry = new InventryS(expendItemInventrySaver);
 
         itemDataAdminManager = new ItemDataAdminManager();

@@ -58,7 +58,7 @@ public class DungeonSelectManager {
     PlateGroup<BoxTextPlate> dungeonInformationPlate;
     PlateGroup<BoxTextPlate> dungeonEnterSelectButtonGroup;
 
-    PlateGroup<CircleImagePlate> modeSelectButtonGroup;
+    PlateGroup<CircleImagePlate> menuButtonGroup;
 
     static final String DB_NAME = "dungeonselectDB";
     static final String DB_ASSET = "dungeonselectDB.db";
@@ -177,26 +177,44 @@ public class DungeonSelectManager {
     }
 
     private void loadModeSelectButton() {
-        int x = 1500;
-        int y = 100;
+        int x1 = 1500;
+        int y1 = 100;
+        int x2 = 1500;
+        int y2 = 400;
         float defaultRate = DUNGEON_SELECT_BUTTON_RATE_DEFAULT;
         float feedbackRate = DUNGEON_SELECT_BUTTON_RATE_FEEDBACK;
 
-        modeSelectButtonGroup = new PlateGroup<CircleImagePlate>(
+        menuButtonGroup = new PlateGroup<CircleImagePlate>(
                 new CircleImagePlate[]{
                         new CircleImagePlate(
                                 graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
-                                new int[]{ x, y, 100 },
+                                new int[]{ x1, y1, 100 },
                                 graphic.makeImageContext(
-                                        graphic.searchBitmap("マップ"),
-                                        x, y,
+                                        graphic.searchBitmap("地図"),
+                                        x1, y1,
                                         defaultRate, feedbackRate,
                                         0.0f, 255, false),
                                 graphic.makeImageContext(
-                                        graphic.searchBitmap("マップ"),
-                                        x, y,
+                                        graphic.searchBitmap("地図"),
+                                        x1, y1,
+                                        defaultRate, feedbackRate,
+                                        0.0f, 255, false)
+                        ),
+                        new CircleImagePlate(
+                                graphic, userInterface,
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{ x2, y2, 100 },
+                                graphic.makeImageContext(
+                                        graphic.searchBitmap("装備"),
+                                        x2, y2,
+                                        defaultRate, feedbackRate,
+                                        0.0f, 255, false),
+                                graphic.makeImageContext(
+                                        graphic.searchBitmap("装備"),
+                                        x2, y2,
                                         defaultRate, feedbackRate,
                                         0.0f, 255, false)
                         )
@@ -219,7 +237,7 @@ public class DungeonSelectManager {
         // ** Buttonの表示
         mapIconPlateGroup.draw();
         dungeonEnterSelectButtonGroup.draw();
-        modeSelectButtonGroup.draw();
+        menuButtonGroup.draw();
     }
 
     //***** update関係 *****
@@ -245,7 +263,7 @@ public class DungeonSelectManager {
         mapIconPlateGroup.update();
 
         modeSelectButtonCheck();
-        modeSelectButtonGroup.update();
+        menuButtonGroup.update();
 
     }
 
@@ -261,7 +279,7 @@ public class DungeonSelectManager {
                 if (selectMode == SELECT_MODE.DUNGEON_SELECT) {
                     dungeonEnterSelectButtonGroup.setUpdateFlag(true);
                     dungeonEnterSelectButtonGroup.setDrawFlag(true);
-                    modeSelectButtonGroup.setUpdateFlag(false);
+                    menuButtonGroup.setUpdateFlag(false);
                     mapIconPlateGroup.setUpdateFlag(false);
 
                 }
@@ -299,9 +317,17 @@ public class DungeonSelectManager {
     }*/
 
     public void modeSelectButtonCheck() {
-        int buttonID = modeSelectButtonGroup.getTouchContentNum();
-        if (buttonID != -1 ) {
+        int buttonID = menuButtonGroup.getTouchContentNum();
+        if (buttonID == 0 ) {
             switchSelectMode();
+        }
+        if (buttonID == 1 ) {
+            dungeonEnterSelectButtonGroup.setUpdateFlag(false);
+            dungeonEnterSelectButtonGroup.setDrawFlag(false);
+            menuButtonGroup.setUpdateFlag(false);
+            mapIconPlateGroup.setUpdateFlag(false);
+            worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
+            worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.ACTIVE);
         }
     }
 
@@ -314,8 +340,8 @@ public class DungeonSelectManager {
         if (buttonID == 0 ) { //侵入する
             dungeonEnterSelectButtonGroup.setUpdateFlag(false);
             dungeonEnterSelectButtonGroup.setDrawFlag(false);
-            modeSelectButtonGroup.setUpdateFlag(true);
-            mapIconPlateGroup.setUpdateFlag(true);
+            menuButtonGroup.setUpdateFlag(false);
+            mapIconPlateGroup.setUpdateFlag(false);
 
             //TODO 侵入処理におけるダンジョンデータによる分岐処理
             //TODO ボタンを押した後処理を止める
@@ -324,7 +350,7 @@ public class DungeonSelectManager {
         if (buttonID == 1 ) { //やめる
             dungeonEnterSelectButtonGroup.setUpdateFlag(false);
             dungeonEnterSelectButtonGroup.setDrawFlag(false);
-            modeSelectButtonGroup.setUpdateFlag(true);
+            menuButtonGroup.setUpdateFlag(true);
             mapIconPlateGroup.setUpdateFlag(true);
         }
     }

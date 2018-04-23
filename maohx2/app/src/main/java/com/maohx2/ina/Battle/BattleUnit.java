@@ -141,6 +141,7 @@ abstract public class BattleUnit {
     public int getDefence(){ return defence; }
     public int getLuck(){ return luck; }
     public String getName() { return name; }
+    public BattleDungeonUnitData getBattleDungeonUnitData() { return battleDungeonUnitData; }
 
     // *** setter ***
     public void existIs(boolean _exist) { exist = _exist; }

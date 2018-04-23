@@ -23,6 +23,7 @@ public class WorldModeAdmin {
     private ACTIVATE geoSlotMap;
     private ACTIVATE shop;
     private ACTIVATE present;
+    private ACTIVATE equip;
 
 /*
     public WorldModeAdmin(GeoSlotAdminManager _geoSlotAdminManager, DungeonSelectManager _dungeonSelectManager, ItemShopAdmin _itemShopAdmin, GeoPresentManager _geoPresentManager) {
@@ -38,6 +39,7 @@ public class WorldModeAdmin {
         geoSlotMap = ACTIVATE.STOP;
         shop = ACTIVATE.STOP;
         present = ACTIVATE.STOP;
+        equip = ACTIVATE.STOP;
     }
 
     // ** setter **
@@ -53,6 +55,9 @@ public class WorldModeAdmin {
     public void setPresent(ACTIVATE _f) {
         present = _f;
     }
+    public void setEquip(ACTIVATE _f) {
+        equip = _f;
+    }
 
     // ** getter **
     public ACTIVATE getWorldMap() {
@@ -66,6 +71,9 @@ public class WorldModeAdmin {
     }
     public ACTIVATE getPresent() {
         return present;
+    }
+    public ACTIVATE getEquip() {
+        return equip;
     }
 
     public boolean getIsDraw(ACTIVATE _act) {

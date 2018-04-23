@@ -52,7 +52,8 @@ public class MapPlateAdmin {
     public MapPlateAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
-        inventry = new Inventry(dungeon_user_interface, graphic);
+        inventry = new Inventry();
+        inventry.init(dungeon_user_interface, graphic, 1000, 100, 1400, 800, 10);
 
         Paint text_paint = new Paint();
         text_paint.setTextSize(30f);

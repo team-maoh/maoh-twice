@@ -6,7 +6,7 @@ import com.maohx2.ina.Constants.Item.*;
  * Created by ina on 2018/04/15.
  */
 
-public class EquipmentItemBaseData extends ItemData{
+public class EquipmentItemBaseData extends ItemData {
 
     EQUIPMENT_KIND equipment_kind;
     int useNum;
