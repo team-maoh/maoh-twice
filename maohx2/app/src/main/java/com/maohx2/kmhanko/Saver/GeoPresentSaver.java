@@ -28,7 +28,7 @@ public class GeoPresentSaver extends SaveManager {
 
 
     @Override
-    public void init() {
+    public void dbinit() {
         deleteAll();
         int size = geoPresentManager.getPresentListSize();
         for (int i = 1; i < size + 1; i++) {

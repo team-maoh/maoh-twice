@@ -8,11 +8,21 @@ import android.app.Application;
 
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Draw.BitmapDataAdmin;
+import com.maohx2.ina.ItemData.EquipmentInventrySaver;
+import com.maohx2.ina.ItemData.EquipmentItemData;
+import com.maohx2.ina.ItemData.ItemDataAdminManager;
+import com.maohx2.kmhanko.Arrange.InventryS;
+import com.maohx2.kmhanko.Saver.ExpendItemInventrySaver;
+import com.maohx2.kmhanko.Saver.GeoInventrySaver;
+import com.maohx2.kmhanko.Saver.GeoPresentSaver;
+import com.maohx2.kmhanko.Saver.GeoSlotSaver;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
 //by kmhanko
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.Saver.PlayerStatusSaver;
+
+import static com.maohx2.ina.ItemData.ItemDataAdmin.graphic;
 
 //アイテムのアイコン画像、プレイヤーのステータス、アイテムのデータ、をグローバルで持つ予定
 public class GlobalData extends Application {
@@ -24,7 +34,17 @@ public class GlobalData extends Application {
     //by kmhanko
     PlayerStatus playerStatus;
     PlayerStatusSaver playerStatusSaver;
-    Inventry geoInventry;
+
+    EquipmentInventrySaver equipmentInventrySaver;
+    InventryS equipmentInventry;
+
+    GeoInventrySaver geoInventrySaver;
+    InventryS geoInventry;
+
+    ExpendItemInventrySaver expendItemInventrySaver;
+    InventryS expendItemInventry;
+
+    ItemDataAdminManager itemDataAdminManager;
 
     public void init(int disp_x, int disp_y) {
         g_my_database_admin = new MyDatabaseAdmin(this);
@@ -36,22 +56,43 @@ public class GlobalData extends Application {
 
         //by kmhanko
         playerStatus = new PlayerStatus(g_my_database_admin);
-        playerStatusSaver = new PlayerStatusSaver(
-                g_my_database_admin,
-                "PlayerStatusSave",
-                "PlayerStatusSave.db",
-                1, "s",
-                playerStatus
-        );
+        playerStatusSaver = new PlayerStatusSaver(g_my_database_admin, "PlayerStatusSave", "PlayerStatusSave.db", 1, "s", playerStatus);
         playerStatusSaver.load();
-        //geoInventry = new Inventry();
+
+
+        equipmentInventrySaver = new EquipmentInventrySaver(g_my_database_admin, "EquipmentInventrySave", "EquipmentInventrySave.db", 1, "s");
+        equipmentInventry = new InventryS(equipmentInventrySaver);
+
+
+        geoInventrySaver = new GeoInventrySaver(g_my_database_admin, "GeoInventrySave", "GeoInventrySave.db", 1, "s", graphic);
+        geoInventry = new InventryS(geoInventrySaver);
+
+
+        expendItemInventrySaver = new ExpendItemInventrySaver(g_my_database_admin, "ExpendItemInventrySave", "ExpendItemInventrySave.db", 1, "s");
+        expendItemInventry = new InventryS(expendItemInventrySaver);
+
+        itemDataAdminManager = new ItemDataAdminManager();
+
+
     }
 
     //ゲッターとか
     public BitmapDataAdmin getGlobalBitmapDataAdmin() { return g_bitmap_data_admin;}
     public GlobalConstants getGlobalConstants() { return g_constants;}
+
+
+    public EquipmentInventrySaver getEquipmentInventrySaver(){return equipmentInventrySaver;}
+    public InventryS getEquipmentInventry(){return equipmentInventry;}
+
+    public InventryS getGeoInventry() { return geoInventry; }
+    public GeoInventrySaver getGeoInventrySaver() {return geoInventrySaver;}
+
+    public ExpendItemInventrySaver getExpendItemInventrySaver() {return expendItemInventrySaver;}
+    public InventryS getExpendItemInventry() {return expendItemInventry;}
+
+    public ItemDataAdminManager getItemDataAdminManager(){return itemDataAdminManager;}
+
     // by kmhanko
     public PlayerStatus getPlayerStatus() { return playerStatus; }
-    public Inventry getGeoInventry() { return geoInventry; }
     public PlayerStatusSaver getPlayerStatusSaver() { return playerStatusSaver; }
 }

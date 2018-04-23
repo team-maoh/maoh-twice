@@ -14,11 +14,15 @@ import android.widget.RelativeLayout;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Draw.ImageContext;
+import com.maohx2.ina.ItemData.ItemDataAdminManager;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.CircleImagePlate;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
+import com.maohx2.kmhanko.Arrange.InventryS;
+import com.maohx2.kmhanko.Saver.ExpendItemInventrySaver;
+import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
@@ -149,11 +153,47 @@ class StartSurfaceView extends BaseSurfaceView {
         start_game_system.init(holder, graphic, start_user_interface, start_activity, my_database_admin);
 
 
+
+        activityChange = new ActivityChange(this, currentActivity);
+
+
+        global_data.getEquipmentInventrySaver().init(graphic);
+        global_data.getEquipmentInventry().init(start_user_interface, graphic, 1000,100,1400,508, 10);
+        global_data.getEquipmentInventry().load();
+        global_data.getEquipmentInventrySaver().setInventry(global_data.getEquipmentInventry());
+
+
+
+
+        GeoInventrySaver geoInventrySaver = global_data.getGeoInventrySaver();
+        InventryS geoInventry = global_data.getGeoInventry();
+        ExpendItemInventrySaver expendItemInventrySaver = global_data.getExpendItemInventrySaver();
+        InventryS expendItemInventry = global_data.getExpendItemInventry();
+
+
+
+
+        global_data.getItemDataAdminManager().init(my_database_admin, graphic);
+
+
+        geoInventry.init(start_user_interface, graphic,1000,100,1400,508, 10);
+        geoInventry.load();
+        geoInventrySaver.setInventry(geoInventry);
+
+        expendItemInventry.init(start_user_interface, graphic,1000,100,1400,508, 10);
+        expendItemInventrySaver.init(global_data.getItemDataAdminManager());
+        expendItemInventry.load();
+        expendItemInventrySaver.setInventry(expendItemInventry);
+
+
+
+
+
         //todo:こいつは一番下
         thread = new Thread(this);
         thread.start();
 
-        activityChange = new ActivityChange(this, currentActivity);
+
     }
 
 

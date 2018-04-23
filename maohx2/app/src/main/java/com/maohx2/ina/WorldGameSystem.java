@@ -108,39 +108,15 @@ public class WorldGameSystem {
 
         itemDataAdminManager.init(databaseAdmin, graphic);
 
-        geoInventrySaver = new GeoInventrySaver(
-                databaseAdmin,
-                "GeoInventrySave",
-                "GeoInventrySave.db",
-                1, "s", graphic
-        );
+        geoInventrySaver = globalData.getGeoInventrySaver();
+        geoInventry = globalData.getGeoInventry();
+        expendItemInventrySaver = globalData.getExpendItemInventrySaver();
+        expendItemInventry = globalData.getExpendItemInventry();
 
-        expendItemInventrySaver = new ExpendItemInventrySaver(
-                databaseAdmin,
-                "ExpendItemInventrySave",
-                "ExpendItemInventrySave.db",
-                1, "s", itemDataAdminManager
-        );
 
-        geoSlotSaver = new GeoSlotSaver(
-                databaseAdmin,
-                "GeoSlotSave",
-                "GeoSlotSave.db",
-                1, "s", graphic
-        );
+        geoSlotSaver = new GeoSlotSaver(databaseAdmin, "GeoSlotSave", "GeoSlotSave.db", 1, "s", graphic);
 
-        //TODO いな依頼:Globalに入れる
-        //TODO InventrySはSaverを持たせたもの
-        geoInventry = new InventryS(map_user_interface, graphic, geoInventrySaver);
-        geoInventry.load();
 
-        expendItemInventry = new InventryS(map_user_interface, graphic, expendItemInventrySaver);
-        expendItemInventry.load();
-
-        geoInventrySaver.setInventry(geoInventry);
-        expendItemInventrySaver.setInventry(expendItemInventry);
-
-        //TODO いな依頼:interfaceはあとで変更できないとまずい場合があるかもしれない
 
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver);
         dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, geoSlotAdminManager, worldActivity);

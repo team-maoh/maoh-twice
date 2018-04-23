@@ -13,13 +13,17 @@ public class ExpendItemInventrySaver extends InventrySaver {
 
     ItemDataAdminManager itemDataAdminManager;
 
-    public ExpendItemInventrySaver(MyDatabaseAdmin _databaseAdmin, String dbName, String dbAsset, int version, String _loadMode, ItemDataAdminManager _itemDataAdminManager) {
+    public ExpendItemInventrySaver(MyDatabaseAdmin _databaseAdmin, String dbName, String dbAsset, int version, String _loadMode) {
         super(_databaseAdmin, dbName, dbAsset, version, _loadMode);
-        itemDataAdminManager = _itemDataAdminManager;
     }
 
+
+
     @Override
-    public void init() {
+    public void dbinit() {}
+
+    public void init(ItemDataAdminManager _itemDataAdminManager) {
+        itemDataAdminManager = _itemDataAdminManager;
     }
 
     @Override
@@ -30,6 +34,7 @@ public class ExpendItemInventrySaver extends InventrySaver {
         List<String> itemNames = new ArrayList<String>();
         List<Integer> nums = new ArrayList<Integer>();
         */
+
         for (int i = 0; i < INVENTRY_DATA_MAX; i++) {
             if (inventry.getItemData(i) == null) {
                 break;

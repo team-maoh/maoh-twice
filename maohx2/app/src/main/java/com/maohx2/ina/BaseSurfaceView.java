@@ -48,6 +48,9 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         holder.addCallback(this);
         paint.setColor(Color.BLUE);
         global_data = (GlobalData) currentActivity.getApplication();
+
+
+
     }
 
 

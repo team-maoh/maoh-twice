@@ -21,7 +21,7 @@ public class GeoInventrySaver extends InventrySaver {
     }
 
     @Override
-    public void init() {
+    public void dbinit() {
     }
 
     @Override

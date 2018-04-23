@@ -11,9 +11,9 @@ import com.maohx2.kmhanko.database.MyDatabase;
 
 public abstract class SaveManager {
 
-    MyDatabaseAdmin databaseAdmin;
-    MyDatabase database;
-    String loadMode;
+    protected MyDatabaseAdmin databaseAdmin;
+    protected MyDatabase database;
+    protected String loadMode;
 
     //loadMode = ds or s　dsの場合はAssetsからコピーされる
     public SaveManager(MyDatabaseAdmin _databaseAdmin, String dbName, String dbAsset, int version, String _loadMode) {
@@ -25,11 +25,11 @@ public abstract class SaveManager {
             throw new Error("☆タカノ SaveManager#SaveManager loadMode must be ds or s or ns");
         }
         if (database.isNew()) {
-            init();
+            dbinit();
         }
     }
 
-    abstract public void init();//DBがもともと存在せず、saveフォルダからセーブデータをコピーした時に呼ばれる。loadmode = dsの時は呼ばれない
+    abstract public void dbinit();//DBがもともと存在せず、saveフォルダからセーブデータをコピーした時に呼ばれる。loadmode = dsの時は呼ばれない
     abstract public void save();
     abstract public void load();
 

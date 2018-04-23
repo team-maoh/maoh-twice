@@ -15,10 +15,13 @@ public class InventryS extends Inventry {
 
     InventrySaver inventrySaver;
 
-    public InventryS(UserInterface _user_interface, Graphic graphic, InventrySaver _inventrySaver){
-        super(_user_interface, graphic);
+    public InventryS(InventrySaver _inventrySaver){
         inventrySaver = _inventrySaver;
         inventrySaver.setInventry(this);
+    }
+
+    public void init(UserInterface _user_interface, Graphic graphic, int left, int top, int right, int bottom, int _contentNum){
+        super.init(_user_interface, graphic, left, top, right, bottom, _contentNum);
     }
 
     public void save() {
@@ -29,6 +32,7 @@ public class InventryS extends Inventry {
         inventrySaver.load();
     }
 
+    /*
     @Override
     public void addItemData(ItemData _itemData) {
         super.addItemData(_itemData);
@@ -40,5 +44,6 @@ public class InventryS extends Inventry {
         super.subItemData(_itemData);
         inventrySaver.save();
     }
+    */
 
 }

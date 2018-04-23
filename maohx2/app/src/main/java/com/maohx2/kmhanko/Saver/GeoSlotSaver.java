@@ -48,7 +48,7 @@ public class GeoSlotSaver extends SaveManager {
     }
 
     @Override
-    public void init() {
+    public void dbinit() {
     }
 
     //TODO あまりよくなのでなんとかする。update処理とか
