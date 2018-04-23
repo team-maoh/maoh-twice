@@ -38,6 +38,7 @@ public class MapEnemy extends MapUnit {
     double[] chase_w_y = new double[CHASE_STEPS];
 
     double clock_rad;
+    //EnemyがPlayerを発見したFOUND_DWELL_FRAMES[frames]後にPlayerに向かって走り始める
     int FOUND_DWELL_FRAMES = 15;
     int found_dwell_count;
 
@@ -62,8 +63,6 @@ public class MapEnemy extends MapUnit {
             chase_w_x[i] = 0.0;
             chase_w_y[i] = 0.0;
         }
-
-        draw_object = "ゴキ太郎";
 
         clock_rad = 0.0;
 
@@ -113,7 +112,6 @@ public class MapEnemy extends MapUnit {
             chase_count = (chase_count + 1) % CHASE_STEPS;
 
             if (has_found_player == false) {//プレイヤーを発見していない
-//                step = DEFAULT_STEP;
 
                 double random_double = makeNormalDist() * 0.4;
                 //念のため
@@ -196,7 +194,7 @@ public class MapEnemy extends MapUnit {
 
     }
 
-    //Playerから見える場所にいるorいない（Playerと自身の中間に壁(or玄関マス)が無いor有る）
+    //Playerから見える場所にいるorいない（= Playerと自身の中間に壁(or玄関マス)が無いor有る）
     private boolean exposedToPlayer() {
 
         int num_of_units = (int) (myDistance(w_x, w_y, player.getWorldX(), player.getWorldY()) / step);
@@ -237,6 +235,7 @@ public class MapEnemy extends MapUnit {
         }
     }
 
+    //あてどもなく徘徊する
     private void wander_about() {
 
         double random_double = makeNormalDist() * 0.08;

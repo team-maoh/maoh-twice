@@ -25,6 +25,7 @@ import com.maohx2.kmhanko.geonode.GeoSlotAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlotAdminManager;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.itemdata.GeoObjectDataAdmin;
+import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 import com.maohx2.kmhanko.itemshop.ItemShopAdmin;
 import com.maohx2.kmhanko.effect.*;
 import com.maohx2.kmhanko.sound.SoundAdmin;
@@ -71,6 +72,7 @@ public class WorldGameSystem {
     ExpendItemInventrySaver expendItemInventrySaver;
     GeoSlotSaver geoSlotSaver;
     GeoPresentSaver geoPresentSaver;
+    ActivityChange activityChange;
 
     //TODO いな依頼:引数にUI,Graphicが入って居るためGlobalDataに設置できない
     InventryS geoInventry;
@@ -78,11 +80,12 @@ public class WorldGameSystem {
 
     //TODO いな依頼　Inventryのupdateを呼ばないと真っ黒。あとアクティブ関係
 
-    public void init(UserInterface _map_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity) {
+    public void init(UserInterface _map_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
         soundAdmin = _soundAdmin;
         map_user_interface = _map_user_interface;
+        activityChange = _activityChange;
 
         worldActivity = _worldActivity;
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
@@ -114,12 +117,12 @@ public class WorldGameSystem {
         expendItemInventry = globalData.getExpendItemInventry();
 
 
-        geoSlotSaver = new GeoSlotSaver(databaseAdmin, "GeoSlotSave", "GeoSlotSave.db", 1, "s", graphic);
+        geoSlotSaver = new GeoSlotSaver(databaseAdmin, "GeoSlotSave", "GeoSlotSave.db", 1, "ns", graphic);
 
 
 
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver);
-        dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, geoSlotAdminManager, worldActivity);
+        dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, geoSlotAdminManager, activityChange);
 
         geoSlotAdminManager.loadGeoSlot();
 
@@ -128,10 +131,10 @@ public class WorldGameSystem {
 
         canvas = null;
 
-
+        GeoObjectDataCreater.setGraphic(graphic);
         // 仮。適当にGeo入れる GEO1が上がる能力は単一
         for (int i = 0; i < 8; i++) {
-            geoInventry.addItemData(GeoObjectDataAdmin.getDebugGeoObjectData(i));
+            geoInventry.addItemData(GeoObjectDataCreater.getGeoObjectData(100));
         }
 
 

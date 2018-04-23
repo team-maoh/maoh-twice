@@ -391,6 +391,8 @@ public class GeoPresentManager {
         scoreTextBoxUpdate();
         backPlateGroup.update();
 
+        //scoreTextBoxUpdate();
+
         //TODO TextBoxの一括ではないupdate
         textBoxAdmin.setTextBoxExists(scoreTextBoxID, worldModeAdmin.getIsDraw(worldModeAdmin.getPresent()));
         textBoxAdmin.setTextBoxExists(messageBoxID, worldModeAdmin.getIsDraw(worldModeAdmin.getPresent()));
@@ -414,6 +416,7 @@ public class GeoPresentManager {
                                 presentSelectPlateGroup.setUpdateFlag(false);
                                 presentSelectPlateGroup.setDrawFlag(false);
                                 holdGeoObbjectData = null;
+
                                 worldModeAdmin.setPresent(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
                             }

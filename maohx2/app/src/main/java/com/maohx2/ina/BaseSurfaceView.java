@@ -48,9 +48,7 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         holder.addCallback(this);
         paint.setColor(Color.BLUE);
         global_data = (GlobalData) currentActivity.getApplication();
-
-
-
+        activityChange = new ActivityChange(this, currentActivity);
     }
 
 
@@ -65,7 +63,7 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         thread = new Thread(this);
         thread.start();
 
-        activityChange = new ActivityChange(this, currentActivity);
+        //activityChange = new ActivityChange(this, currentActivity);
     }
 
     @Override

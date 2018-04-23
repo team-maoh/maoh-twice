@@ -28,10 +28,15 @@ public class GeoObjectData extends ItemData {
         this(_graphic, status1[0],status1[1],status1[2],status1[3],status2[0],status2[1],status2[2],status2[3]);
     }
 
+    public GeoObjectData(int[] status1, double[] status2) {
+        this(null, status1[0],status1[1],status1[2],status1[3],status2[0],status2[1],status2[2],status2[3]);
+    }
+
+
     public GeoObjectData(Graphic _graphic, int _hp, int _attack, int _defence, int _luck, double _hp_rate, double _attack_rate, double _defence_rate, double _luck_rate) {
         graphic = _graphic;
         setStatus(_hp, _attack, _defence, _luck, _hp_rate, _attack_rate, _defence_rate, _luck_rate);
-        setGeoImage();
+        //setGeoImage();
     }
 
     public void setStatus(int _hp, int _attack, int _defence, int _luck, double _hp_rate, double _attack_rate, double _defence_rate, double _luck_rate) {

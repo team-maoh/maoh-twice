@@ -73,6 +73,8 @@ public class GeoSlotAdmin {
     WorldModeAdmin worldModeAdmin;
     GeoSlotAdminManager geoSlotAdminManager;
 
+    int statusTextBoxID;
+
     PlateGroup<GeoSlot> geoSlotGroup;
     PlateGroup<BoxTextPlate> releasePlateGroup;//解放する/やめる　の選択
     PlateGroup<BackPlate> backPlateGroup;
@@ -86,18 +88,16 @@ public class GeoSlotAdmin {
     PlayerStatus playerStatus;
 
     //Rewrite by kmhanko
-    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, TextBoxAdmin _textBoxAdmin, GeoSlotAdminManager _geoSlotAdminManager) {
+    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, TextBoxAdmin _textBoxAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus) {
         graphic = _graphic;
         userInterface = _user_interface;
         textBoxAdmin = _textBoxAdmin;
         worldModeAdmin = _worldModeAdmin;
         geoSlotAdminManager = _geoSlotAdminManager;
+        playerStatus = _playerStatus;
 
         //TextBoxなどの初期化
-        releaseTextBoxID = textBoxAdmin.createTextBox(650,600,1450,800,2);
-        textBoxAdmin.setTextBoxUpdateTextByTouching(releaseTextBoxID, false);
-        textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
-        //textBoxAdmin.hideTextBox(releaseTextBoxID);
+        initTextBox();
 
         loadBackPlate();
     }
@@ -153,24 +153,6 @@ public class GeoSlotAdmin {
 
 
     private void loadBackPlate() {
-        /*
-        Paint textPaint = new Paint();
-        textPaint.setTextSize(80f);
-        textPaint.setARGB(255,255,255,255);
-
-        backPlateGroup = new PlateGroup<BoxTextPlate>(
-                new BoxTextPlate[] {
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
-                                Constants.Touch.TouchWay.UP_MOMENT,
-                                Constants.Touch.TouchWay.MOVE,
-                                Constants.BUTTON.BACK_BUTTON_POS,
-                                "戻る",
-                                textPaint
-                        )
-                }
-        );
-        */
         backPlateGroup = new PlateGroup<BackPlate>(
                 new BackPlate[] {
                         new BackPlate(
@@ -182,6 +164,8 @@ public class GeoSlotAdmin {
                                 geoSlotAdminManager.calcPlayerStatus();
                                 geoSlotAdminManager.saveGeoInventry();
                                 geoSlotAdminManager.saveGeoSlot();
+                                textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
+                                textBoxAdmin.setTextBoxExists(statusTextBoxID, false);
 
                                 worldModeAdmin.setGeoSlotMap(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
@@ -189,6 +173,18 @@ public class GeoSlotAdmin {
                         }
                 }
         );
+    }
+
+    private void initTextBox() {
+        releaseTextBoxID = textBoxAdmin.createTextBox(650,600,1450,800,2);
+        textBoxAdmin.setTextBoxUpdateTextByTouching(releaseTextBoxID, false);
+        textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
+        //textBoxAdmin.hideTextBox(releaseTextBoxID);
+
+        statusTextBoxID = textBoxAdmin.createTextBox(0,600,300,900,5);
+        textBoxAdmin.setTextBoxUpdateTextByTouching(statusTextBoxID, false);
+        textBoxAdmin.setTextBoxExists(statusTextBoxID, false);
+        statusTextBoxUpdate();
     }
 
     //***** GeoObjectステータス計算関係 *****
@@ -222,6 +218,20 @@ public class GeoSlotAdmin {
         canvas.drawText(geo_calc_saver_admin.getParam("Luck"), 1550, 500, paint);
     }
     */
+
+    public void statusTextBoxUpdate() {//TODO playerStatusがぬる
+        textBoxAdmin.bookingDrawText(statusTextBoxID, "Status");
+        textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
+        textBoxAdmin.bookingDrawText(statusTextBoxID, "HP " + playerStatus.getHP());
+        textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
+        textBoxAdmin.bookingDrawText(statusTextBoxID, "Attack " + playerStatus.getAttack());
+        textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
+        textBoxAdmin.bookingDrawText(statusTextBoxID, "Deffence " + playerStatus.getDefence());
+        textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
+        textBoxAdmin.bookingDrawText(statusTextBoxID, "Luck " + playerStatus.getLuck());
+        textBoxAdmin.bookingDrawText(statusTextBoxID, "MOP");
+        textBoxAdmin.updateText(statusTextBoxID);
+    }
 
     // ***** GeoObject計算関係ここまで　*****
 
@@ -292,6 +302,8 @@ public class GeoSlotAdmin {
             }
         }
         */
+
+
         geoSlotGroup.update();
 
         if (isReleasePlateActive) {
@@ -303,10 +315,12 @@ public class GeoSlotAdmin {
                     focusGeoSlot.geoSlotRelease();
                     isReleasePlateActive = false;
                     textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
+
                     break;
                 case (1)://やめる
                     isReleasePlateActive = false;
                     textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
+
                     break;
             }
         }
@@ -314,6 +328,8 @@ public class GeoSlotAdmin {
         checkInventrySelect();
 
         backPlateGroup.update();
+        textBoxAdmin.setTextBoxExists(statusTextBoxID, true);
+        textBoxAdmin.update();
     }
 
     public void draw() {
@@ -344,6 +360,8 @@ public class GeoSlotAdmin {
             }
         }
         backPlateGroup.draw();
+
+        textBoxAdmin.draw();
     }
 
     //Inventryから何か選択されているならそれを格納
@@ -365,6 +383,10 @@ public class GeoSlotAdmin {
     //InventryからGeoを消す
     public void deleteFromInventry(GeoObjectData geoObjectData) {
         geoSlotAdminManager.deleteFromInventry(geoObjectData);
+    }
+
+    public void calcPlayerStatus() {
+        geoSlotAdminManager.calcPlayerStatus();
     }
 
     // ***** Getter *****

@@ -22,6 +22,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class MapItem extends MapInanimate {
 
+    //Playerに対する当たり判定の半径
     double REACH_FOR_PLAYER = 25;
 
     public MapItem(Graphic graphic, MapObjectAdmin _map_object_admin, int _id, Camera _camera) {

@@ -75,9 +75,6 @@ public class GeoInventrySaver extends InventrySaver {
         List<Float> defenceRates = database.getFloat("GeoInventry", "defence_rate");
         List<Float> luckRates = database.getFloat("GeoInventry", "luck_rate");
 
-        if (itemNames.size() != nums.size()) {
-            throw new Error("☆タカノ:ExpendItemInventrySaver#load 取得したアイテム名とアイテムの個数のデータ数が一致しない " + itemNames.size() + "," + nums.size());
-        }
         for(int i = 0; i < itemNames.size(); i++) {
             for(int j = 0; j < nums.get(i); j++){
                 inventry.addItemData(

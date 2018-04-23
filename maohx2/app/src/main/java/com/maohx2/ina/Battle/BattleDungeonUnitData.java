@@ -18,7 +18,6 @@ public class BattleDungeonUnitData {
     BitmapData bitmap_data;
     int radius;
 
-
     int[] status = new int[Status.NUM_OF_STATUS.ordinal()];
     int[] bonus_status = new int[BonusStatus.NUM_OF_BONUS_STATUS.ordinal()];
 
@@ -40,5 +39,6 @@ public class BattleDungeonUnitData {
 
     public BitmapData getBitmapDate(){return bitmap_data;}
     public void setBitmapData(BitmapData _bitmap_data){bitmap_data = _bitmap_data;}
+
 
 }

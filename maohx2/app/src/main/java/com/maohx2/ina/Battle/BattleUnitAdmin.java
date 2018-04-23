@@ -5,9 +5,14 @@ import android.graphics.Paint;
 
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Constants.Item.EQUIPMENT_KIND;
+import com.maohx2.ina.Constants.Item.ITEM_KIND;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.DungeonModeManage;
+import com.maohx2.ina.ItemData.EquipmentItemBaseData;
+import com.maohx2.ina.ItemData.EquipmentItemBaseDataAdmin;
 import com.maohx2.ina.ItemData.EquipmentItemData;
+import com.maohx2.ina.ItemData.EquipmentItemDataCreater;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 
@@ -15,6 +20,7 @@ import static com.maohx2.ina.Constants.BattleUnit.BATTLE_UNIT_MAX;
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
 import com.maohx2.ina.Battle.*;
+import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 
 /**
  * Created by ina on 2017/09/21.
@@ -37,6 +43,9 @@ public class BattleUnitAdmin {
     int count = 0;
     Paint paint = new Paint();
 
+    ExpendItemDataAdmin expendItemDataAdmin;
+    EquipmentItemDataCreater equipmentItemDataCreater;
+
     Graphic graphic;
     PaletteAdmin palette_admin;
     boolean marker_flag;
@@ -52,6 +61,10 @@ public class BattleUnitAdmin {
         battleUnitDataAdmin = _battleUnitDataAdmin;
         palette_admin = _palette_admin;
         dungeonModeManage = _dungeonModeManage;
+
+
+        //EquipmentItemBaseDataAdmin equipmentItemBaseData = new EquipmentItemBaseDataAdmin();
+        //equipmentItemDataCreater = new EquipmentItemDataCreater(equipmentItemBaseData);
 
         marker_flag = false;
         first_attack_frag = false;
@@ -231,6 +244,10 @@ public class BattleUnitAdmin {
         }
 
         if(result_flag == true){
+            //戦闘が終了した時
+            // by kmhanko
+            getDropItem();
+
             dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
         }
     }
@@ -272,6 +289,28 @@ public class BattleUnitAdmin {
         //graphic.bookingDrawText(""+battle_units[0].getLuck(), 0, 250, playerStatusPaint);
     }
 
+
+    //by kmhanko
+
+    private void getDropItem() {
+        BattleBaseUnitData tempBattleBaseUnitData = null;
+        for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
+            //TODO : 各BattleUnitのBattleUnitBaseDataから、dropEquipmentKindとDropItemRateを取得し、臨時ItemInentryに格納する処理(いな担当？)
+            tempBattleBaseUnitData = battleUnitDataAdmin.getBattleUnitDataNum(battle_units[i].getName());
+
+            EQUIPMENT_KIND[] dropItemEquipmentKind = tempBattleBaseUnitData.getDropItemEquipmentKinds();
+            String[] dropItemName = tempBattleBaseUnitData.getDropItemNames();
+            double[] dropItemRate = tempBattleBaseUnitData.getDropItemRate();
+            ITEM_KIND[] dropItemKind = tempBattleBaseUnitData.getDropItemKinds();
+
+            for (int j = 0; j < Constants.Item.DROP_NUM; j++) {
+                if (dropItemName[j] != null) {
+                    //dropItemName[j]
+
+                }
+            }
+        }
+    }
 
     public BattleUnitAdmin() {}
 

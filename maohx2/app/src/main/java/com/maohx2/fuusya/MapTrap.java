@@ -33,7 +33,6 @@ public class MapTrap extends MapInanimate {
         super(graphic, _map_object_admin, _id, _camera);
 
         has_activated = false;
-//        frames_activating = -1;
         frames_activating = CONST_FRAMES_ACTIVATING;
         player = map_object_admin.getPlayer();
         is_visible = _is_visible;
@@ -64,20 +63,11 @@ public class MapTrap extends MapInanimate {
         if (exists == true) {
 
             //Trapを踏む && このTrapを初めて踏む
-//            if (collidePlayer(REACH_FOR_PLAYER) == true && frames_activating == -1) {
             if (player.isWithinReach(w_x, w_y, REACH_FOR_PLAYER) == true && has_activated == false) {
                 has_activated = true;
                 is_visible = true;
 
                 player.setBadStatus(status_name, frames_activating);
-//                player.setBadStatus("found_by_enemy");
-//                player.setBadStatus("cannot_exit_room", FRAMES_ACTIVATING);
-//                player.setBadStatus("walking_slowly", FRAMES_ACTIVATING);
-//                player.setBadStatus("cannot_walk", FRAMES_ACTIVATING);
-//                player.setBadStatus("waiting_teleported", 20);
-//                player.setBadStatus("being_drunk", FRAMES_ACTIVATING);
-//                sound_admin.play("getItem");
-//                exists = false;
             }
         }
 
@@ -87,15 +77,6 @@ public class MapTrap extends MapInanimate {
         if (frames_activating <= 0) {
             exists = false;
         }
-
-//        if (is_activating == true) {
-//            frames_activating--;
-//        }
-//
-//        if (frames_activating <= 0) {
-//            is_activating = false;
-//            exists = false;
-//        }
 
     }
 

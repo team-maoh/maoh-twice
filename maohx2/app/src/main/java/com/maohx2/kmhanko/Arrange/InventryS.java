@@ -36,13 +36,13 @@ public class InventryS extends Inventry {
     @Override
     public void addItemData(ItemData _itemData) {
         super.addItemData(_itemData);
-        inventrySaver.save();
+        //inventrySaver.save();
     }
 
     @Override
     public void subItemData(ItemData _itemData) {
         super.subItemData(_itemData);
-        inventrySaver.save();
+        //inventrySaver.save();
     }
     */
 

@@ -17,8 +17,6 @@ public class ExpendItemInventrySaver extends InventrySaver {
         super(_databaseAdmin, dbName, dbAsset, version, _loadMode);
     }
 
-
-
     @Override
     public void dbinit() {}
 
