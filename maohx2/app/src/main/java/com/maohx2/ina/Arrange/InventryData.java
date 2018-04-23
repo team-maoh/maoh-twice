@@ -22,4 +22,10 @@ public class InventryData {
     public ItemData getItemData(){return item_data;}
     public void setItemData(ItemData _item_data){item_data = _item_data;}
 
+    //by kmhanko
+    public void delete() {
+        item_data = null;
+        item_num = 0;
+    }
+
 }

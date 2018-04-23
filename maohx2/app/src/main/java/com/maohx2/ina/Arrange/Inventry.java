@@ -170,6 +170,18 @@ public class Inventry {
     public int getItemNum(int i) {
         return inventry_datas[i].getItemNum();
     }
+    public void deleteItemData(int i) {
+        inventry_datas[i].delete();
+    }
+    public void deleteItemData(String name) {
+        for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
+            if(inventry_datas[i].getItemData() != null) {
+                if (inventry_datas[i].getItemData().getName().equals(name)) {
+                    inventry_datas[i].delete();
+                }
+            }
+        }
+    }
 
     public PlateGroup<BoxInventryPlate> getOperateInventryListBox() {
         return operate_inventry_list_box;
