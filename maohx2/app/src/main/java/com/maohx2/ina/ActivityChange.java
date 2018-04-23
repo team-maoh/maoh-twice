@@ -33,10 +33,11 @@ public class ActivityChange {
         currentActivity.startActivity(intent);
     }
 
-    public void toDungeonActivity() {
+    public void toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND dungeon_kind) {
         //thread.interrupt();
         currentSurfaceView.stopThread();
         Intent intent = new Intent(currentActivity, DungeonActivity.class);
+        intent.putExtra("DungeonKind", dungeon_kind);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         currentActivity.startActivity(intent);
     }

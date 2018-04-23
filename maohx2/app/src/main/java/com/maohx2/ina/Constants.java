@@ -25,14 +25,24 @@ public final class Constants {
         public static final int PALETTE_CENTER_RADIUS_BIG = 70;
         public static final int PALETTE_CENTER_RADIUS_SMALL = 30;
         public static final int PALETTE_ARRANGE_RADIUS = 120;
-
     }
 
     public static class Inventry {
         public static final int INVENTRY_CONTENT_MAX = 10;
         public static final int INVENTRY_DATA_MAX = 1000;
-
     }
+
+    public static class DungeonKind {
+        public enum DUNGEON_KIND {
+            CHESS,
+            DRAGON,
+            FOREST,
+            GOKI,
+            HAUNTED,
+            DNGEON_KIND_NUM
+        }
+    }
+
 
     public static class Touch {
         public enum TouchState {

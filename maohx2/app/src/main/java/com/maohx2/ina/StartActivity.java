@@ -193,7 +193,6 @@ class StartSurfaceView extends BaseSurfaceView {
         thread = new Thread(this);
         thread.start();
 
-
     }
 
 
@@ -204,7 +203,7 @@ class StartSurfaceView extends BaseSurfaceView {
 
         if(touch_state == TouchState.DOWN){
 
-            //activityChange.toDungeonActivity();
+            //activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.GOKI);
             activityChange.toWorldActivity();
         }
 
