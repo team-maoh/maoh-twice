@@ -65,7 +65,7 @@ class WorldSurfaceView extends BaseSurfaceView {
         map_user_interface.init();
 
         global_data.getEquipmentInventry().init(map_user_interface, graphic, 1000,100,1400,508, 10);
-        global_data.getGeoInventry().init(map_user_interface, graphic,1000,100,1400,508, 10);
+        global_data.getGeoInventry().init(map_user_interface, graphic,1200,150,1600,900, 10);
         global_data.getExpendItemInventry().init(map_user_interface, graphic,1000,100,1400,508, 10);
 
 
