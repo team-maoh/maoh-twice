@@ -148,7 +148,7 @@ public class MapAdmin {
         floor_tile = auto_tile_admin.combineFourAutoTile(raw_floor_tile, raw_floor_tile, raw_floor_tile, raw_floor_tile);
 
         BitmapData cave_hole_raw = graphic.searchBitmap("cave_hole_01");//穴（アニメーション）
-        BitmapData dragon_hole_raw = graphic.searchBitmap("Dragon_hole_f_01");//穴（アニメーション）
+        //BitmapData dragon_hole_raw = graphic.searchBitmap("Dragon_hole_f_01");//穴（アニメーション）
 
         //階段画像4分割
         stair_tile = graphic.searchBitmap("step");
