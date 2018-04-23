@@ -61,7 +61,10 @@ public class BoxInventryPlate extends BoxPlate {
         if(inventry_data != null) {
             if(inventry_data.getItemData() != null) {
                 graphic.bookingDrawText(inventry_data.getItemData().getName(), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1.7 + (int) ((down - up) * (1.0 / 5))), (int) (down - (down - up) * (1.0 / 5)), text_paint);
-                graphic.bookingDrawText(String.valueOf(inventry_data.getItemNum()), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1.7 + (int) ((down - up) * (1.0 / 5))) + 270, (int) (down - (down - up) * (1.0 / 5)), text_paint);
+
+                if(!(inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT) && !(inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.GEO)) {
+                    graphic.bookingDrawText(String.valueOf(inventry_data.getItemNum()), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1.7 + (int) ((down - up) * (1.0 / 5))) + 270, (int) (down - (down - up) * (1.0 / 5)), text_paint);
+                }
                 //graphic.bookingDrawText(content_item.getName(), left+(int)(content_item.getItemImage().getWidth()*1.7), 100, text_paint);
                 graphic.bookingDrawBitmapData(image_context);
             }

@@ -50,7 +50,7 @@ public class EquipmentInventrySaver extends InventrySaver {
 
             database.insertLineByArrayString(
                     "EquipmentInventry",
-                    new String[]{"name", "imageName", "price", "equipmentKind", "useNum", "radius", "decayRate", "touchFrequency", "autoFrequencyRate", "attack", "defence"},
+                    new String[]{"name", "imageName", "price", "equipmentKind", "useNum", "radius", "decayRate", "touchFrequency", "autoFrequencyRate", "attack", "defence", "palettePosition"},
                     new String[]{
                             equipmentItemData.getName(),
                             equipmentItemData.getImageName(),
@@ -63,17 +63,10 @@ public class EquipmentInventrySaver extends InventrySaver {
                             String.valueOf(equipmentItemData.getAutoFrequencyRate()),
                             String.valueOf(equipmentItemData.getAttack()),
                             String.valueOf(equipmentItemData.getDefence()),
+                            String.valueOf(equipmentItemData.getPalettePosition()),
                     }
             );
-
         }
-
-
-        /*
-        database.insertRawByList("ExpendItemInventry", "name", itemNames);
-        database.rewriteRawByList("ExpendItemInventry", "num", nums);
-        */
-
     }
 
     @Override
@@ -91,6 +84,7 @@ public class EquipmentInventrySaver extends InventrySaver {
         List<Float> autoFrequencyRate = database.getFloat("EquipmentInventry", "autoFrequencyRate");
         List<Integer> attack = database.getInt("EquipmentInventry", "attack");
         List<Integer> defence = database.getInt("EquipmentInventry", "defence");
+        List<Integer> palettePosition = database.getInt("EquipmentInventry", "palettePosition");
 
         for (int i = 0; i < name.size(); i++) {
 
@@ -109,6 +103,7 @@ public class EquipmentInventrySaver extends InventrySaver {
             tmpEquipmentItemData.setAutoFrequencyRate(autoFrequencyRate.get(i));
             tmpEquipmentItemData.setAttack(attack.get(i));
             tmpEquipmentItemData.setDefence(defence.get(i));
+            tmpEquipmentItemData.setPalettePosition(palettePosition.get(i));
 
             inventry.addItemData(tmpEquipmentItemData);
         }
