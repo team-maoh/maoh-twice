@@ -14,6 +14,7 @@ import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.sound.SoundAdmin;
+import com.maohx2.ina.Constants.DungeonKind.*;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
@@ -72,25 +73,41 @@ class DungeonSurfaceView extends BaseSurfaceView{
         dungeon_user_interface.init();
 
 
+
         my_database_admin.addMyDatabase("DungeonDB", "LocalDungeonImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("DungeonDB"), "Dungeon");
 
+        Intent intent = currentActivity.getIntent();
+        DUNGEON_KIND dungeon_kind = (DUNGEON_KIND)intent.getSerializableExtra("DungeonKind");
 
-        my_database_admin.addMyDatabase("DragonDB", "LocalDragonImage.db", 1, "r");
-        graphic.loadLocalImages(my_database_admin.getMyDatabase("DragonDB"), "Dragon");
 
-        //todo:ここはダンジョンセレクト関係の人からもらってくる
-        my_database_admin.addMyDatabase("ChessDB", "LocalChessImage.db", 1, "r");
-        graphic.loadLocalImages(my_database_admin.getMyDatabase("ChessDB"), "Chess");
+        switch (dungeon_kind){
+            case CHESS:
+                my_database_admin.addMyDatabase("ChessDB", "LocalChessImage.db", 1, "r");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("ChessDB"), "Chess");
+                break;
 
-        my_database_admin.addMyDatabase("ForestDB", "LocalForestImage.db", 1, "r");
-        graphic.loadLocalImages(my_database_admin.getMyDatabase("ForestDB"), "Forest");
+            case DRAGON:
+                my_database_admin.addMyDatabase("DragonDB", "LocalDragonImage.db", 1, "r");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("DragonDB"), "Dragon");
+                break;
 
-        my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
-        graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
+            case FOREST:
+                my_database_admin.addMyDatabase("ForestDB", "LocalForestImage.db", 1, "r");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("ForestDB"), "Forest");
+                break;
 
-        my_database_admin.addMyDatabase("HauntedDB", "LocalHauntedImage.db", 1, "r");
-        graphic.loadLocalImages(my_database_admin.getMyDatabase("HauntedDB"), "Haunted");
+            case GOKI:
+                my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
+                break;
+
+            case HAUNTED:
+                my_database_admin.addMyDatabase("HauntedDB", "LocalHauntedImage.db", 1, "r");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("HauntedDB"), "Haunted");
+                break;
+
+        }
 
         my_database_admin.addMyDatabase("soundDB", "soundDB.db", 1, "r");//データベースのコピーしMySQLiteのdbを扱いやすいMyDataBase型にしている
         sound_admin.setDatabase(my_database_admin.getMyDatabase("soundDB"));//扱いやすいやつをセットしている
