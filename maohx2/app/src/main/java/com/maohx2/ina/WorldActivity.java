@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.widget.RelativeLayout;
 
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.sound.SoundAdmin;
@@ -40,7 +41,7 @@ public class WorldActivity extends BaseActivity {
 
 class WorldSurfaceView extends BaseSurfaceView {
 
-    UserInterface map_user_interface;
+    BattleUserInterface map_user_interface;
     WorldGameSystem world_game_system;
     WorldActivity map_activity;
     MyDatabaseAdmin my_database_admin;
@@ -53,7 +54,7 @@ class WorldSurfaceView extends BaseSurfaceView {
         map_activity = _map_activity;
 
         graphic = new Graphic(map_activity, holder);
-        map_user_interface = new UserInterface(global_data.getGlobalConstants(), graphic);
+        map_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
         my_database_admin = new MyDatabaseAdmin(map_activity);
         world_game_system = new WorldGameSystem();
 
@@ -86,12 +87,6 @@ class WorldSurfaceView extends BaseSurfaceView {
             map_activity.startActivity(intent);
         }
 */
-
-        if(touch_state == TouchState.DOWN){
-
-            activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.GOKI);
-        }
-
     }
 
 }

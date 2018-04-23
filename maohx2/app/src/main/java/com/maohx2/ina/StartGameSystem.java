@@ -32,7 +32,7 @@ public class StartGameSystem {
 
     BattleUnitAdmin battle_unit_admin;
     SurfaceHolder holder;
-    UserInterface start_user_interface;
+    BattleUserInterface start_user_interface;
     Graphic graphic;
     EquipmentItemDataAdmin equipment_item_data_admin;
     PaletteAdmin palette_admin;
@@ -63,8 +63,14 @@ public class StartGameSystem {
 
 
         palette_admin = new PaletteAdmin(_start_user_interface, graphic);
+
+        //equipment_item_data_admin = new EquipmentItemDataAdmin(graphic, my_database_admin);
+        //palette_admin = new PaletteAdmin(start_user_interface, graphic, equipment_item_data_admin);
+
         paint = new Paint();
         paint.setTextSize(70);
+
+
 
     }
 

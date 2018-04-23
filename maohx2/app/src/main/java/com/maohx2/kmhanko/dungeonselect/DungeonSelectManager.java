@@ -345,7 +345,7 @@ public class DungeonSelectManager {
 
             //TODO 侵入処理におけるダンジョンデータによる分岐処理
             //TODO ボタンを押した後処理を止める
-            activityChange.toDungeonActivity();
+            //activityChange.toDungeonActivity();
         }
         if (buttonID == 1 ) { //やめる
             dungeonEnterSelectButtonGroup.setUpdateFlag(false);

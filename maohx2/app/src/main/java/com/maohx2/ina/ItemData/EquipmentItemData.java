@@ -16,6 +16,19 @@ public class EquipmentItemData extends ItemData{
     float autoFrequencyRate;
     int attack;
     int defence;
+    int palettePosition;
+
+    public EquipmentItemData(){
+        equipment_kind = EQUIPMENT_KIND.AX;
+        useNum = 0;
+        radius = 1;
+        decayRate = 1.5f;
+        touchFrequency = 1;
+        autoFrequencyRate = 0.5f;
+        attack = 100;
+        defence = 50;
+        palettePosition = 0;
+    }
 
 
     public EQUIPMENT_KIND getEquipmentKind() {
@@ -44,4 +57,6 @@ public class EquipmentItemData extends ItemData{
     public int getDefence() {return defence;}
     public void setDefence(int defence) {this.defence = defence;}
 
+    public int getPalettePosition() {return palettePosition;}
+    public void setPalettePosition(int _palettePosition) {palettePosition = _palettePosition;}
 }

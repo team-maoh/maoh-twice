@@ -4,6 +4,7 @@ import android.graphics.Paint;
 
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
@@ -144,10 +145,11 @@ public class Palette {
         }
 
 
+        //指が離れた際のパレットのチェック(パレット間)
         if (battle_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
             InventryData inventry_data = battle_user_interface.getInventryData();
 
-            //指が離れた際のパレットのチェック(パレット間)
+            //アイテム移動中
             if (battle_user_interface.getPaletteElement() != null) {
 
 
@@ -172,17 +174,16 @@ public class Palette {
             if (inventry_data != null) {
                 palette_center.setItemData(inventry_data.getItemData());
             }
-
             if (battle_user_interface.getPaletteElement() != null) {
+                if(battle_user_interface.getPaletteElement().getItemData().getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT) {
+                    //todo
+                }
                 battle_user_interface.getPaletteElement().setItemData(null);
                 battle_user_interface.setPaletteElement(null);
             }
-
-
             if (battle_user_interface.getInventryData() != null) {
                 battle_user_interface.setInventryData(null);
             }
-
 
         }
     }
@@ -220,6 +221,12 @@ public class Palette {
             }
 
         }
+    }
+
+    public void save(){
+
+
+
     }
 
     public int getPaletteMode() {

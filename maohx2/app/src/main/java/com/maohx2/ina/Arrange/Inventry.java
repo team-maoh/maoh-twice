@@ -3,6 +3,7 @@ package com.maohx2.ina.Arrange;
 import android.graphics.Paint;
 import android.provider.Settings;
 
+import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.EquipmentItemDataAdmin;
 import com.maohx2.ina.ItemData.ItemData;
@@ -128,11 +129,15 @@ public class Inventry {
     public void addItemData(ItemData _item_data){
         int i = 0;
 
-        for(i = 0; i < INVENTRY_DATA_MAX; i++) {
-            if(inventry_datas[i].getItemData() != null) {
-                if (inventry_datas[i].getItemData().getName().equals(_item_data.getName())) {
-                    inventry_datas[i].setItemNum(inventry_datas[i].getItemNum() + 1);
-                    break;
+        if(_item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT || _item_data.getItemKind() == Constants.Item.ITEM_KIND.GEO) {
+            i = INVENTRY_DATA_MAX;
+        }else{
+            for (i = 0; i < INVENTRY_DATA_MAX; i++) {
+                if (inventry_datas[i].getItemData() != null) {
+                    if (inventry_datas[i].getItemData().getName().equals(_item_data.getName())) {
+                        inventry_datas[i].setItemNum(inventry_datas[i].getItemNum() + 1);
+                        break;
+                    }
                 }
             }
         }

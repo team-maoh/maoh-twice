@@ -6,9 +6,14 @@ import android.view.SurfaceHolder;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Arrange.Inventry;
+import com.maohx2.ina.Arrange.PaletteAdmin;
+import com.maohx2.ina.Arrange.PaletteCenter;
+import com.maohx2.ina.Arrange.PaletteElement;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.ItemData.EquipmentInventrySaver;
 import com.maohx2.ina.Text.ListBoxAdmin;
+import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
 import com.maohx2.kmhanko.Arrange.InventryS;
@@ -60,7 +65,7 @@ public class WorldGameSystem {
     EffectAdmin effectAdmin;
     SoundAdmin soundAdmin;
 
-    UserInterface map_user_interface;
+    BattleUserInterface world_user_interface;
 
     WorldModeAdmin worldModeAdmin;
 
@@ -79,13 +84,18 @@ public class WorldGameSystem {
     InventryS expendItemInventry;
 
     //TODO いな依頼　Inventryのupdateを呼ばないと真っ黒。あとアクティブ関係
+    PaletteAdmin palette_admin;
+    EquipmentInventrySaver equipmentInventrySaver;
+    InventryS equipmentInventry;
 
-    public void init(UserInterface _map_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
+    public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
         soundAdmin = _soundAdmin;
-        map_user_interface = _map_user_interface;
+        world_user_interface = _world_user_interface;
         activityChange = _activityChange;
+
+
 
         worldActivity = _worldActivity;
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
@@ -98,7 +108,7 @@ public class WorldGameSystem {
         soundAdmin.loadSoundPack("basic");
 
         text_box_admin = new TextBoxAdmin(graphic);
-        text_box_admin.init(map_user_interface);
+        text_box_admin.init(world_user_interface);
 
         text_box_admin.setTextBoxExists(0,false);
         text_box_admin.setTextBoxExists(1,false);
@@ -121,12 +131,12 @@ public class WorldGameSystem {
 
 
 
-        geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver);
-        dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, geoSlotAdminManager, activityChange);
+        geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver);
+        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, geoSlotAdminManager, activityChange);
 
         geoSlotAdminManager.loadGeoSlot();
 
-        itemShopAdmin.init(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager, expendItemInventry, geoInventry);
+        itemShopAdmin.init(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager, expendItemInventry, geoInventry);
         itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "debug");
 
         canvas = null;
@@ -140,7 +150,7 @@ public class WorldGameSystem {
 
         geoPresentManager = new GeoPresentManager(
                 graphic,
-                map_user_interface,
+                world_user_interface,
                 worldModeAdmin,
                 databaseAdmin,
                 text_box_admin,
@@ -160,6 +170,14 @@ public class WorldGameSystem {
         );
 
         geoPresentManager.setGeoPresentSaver(geoPresentSaver);
+
+        PaletteCenter.initStatic(graphic);
+        PaletteElement.initStatic(graphic);
+
+        palette_admin = new PaletteAdmin(world_user_interface, graphic);
+
+        equipmentInventry = globalData.getEquipmentInventry();
+        equipmentInventrySaver = globalData.getEquipmentInventrySaver();
 
 
     }
@@ -195,6 +213,11 @@ public class WorldGameSystem {
         if (worldModeAdmin.getIsUpdate(worldModeAdmin.getPresent())) {
             geoPresentManager.update();
         }
+        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getEquip())) {
+            equipmentInventry.updata();
+            palette_admin.update(false);
+        }
+
 
         text_box_admin.update();
         effectAdmin.update();
@@ -216,6 +239,12 @@ public class WorldGameSystem {
         }
         if (worldModeAdmin.getIsDraw(worldModeAdmin.getPresent())) {
             geoPresentManager.draw();
+        }
+
+        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getEquip())) {
+            equipmentInventry.draw();
+            palette_admin.draw();
+            world_user_interface.draw();
         }
 
         text_box_admin.draw();

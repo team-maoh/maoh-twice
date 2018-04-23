@@ -2,7 +2,9 @@ package com.maohx2.ina.Arrange;
 
 import android.graphics.Paint;
 
+import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.ItemData.ItemData;
 
 import static com.maohx2.ina.Constants.Palette.CIRCLE_COLOR;
@@ -63,7 +65,13 @@ public class PaletteElement {
     }
 
 
-    public void setItemData(ItemData _item_data){item_data = _item_data;}
+    public void setItemData(ItemData _item_data){
+        item_data = _item_data;
+        if(item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT){
+            ((EquipmentItemData)(item_data)).setPalettePosition(element_num);
+        }
+    }
+
     public ItemData getItemData(){return item_data;}
     public int getTouchID(){return touch_id;}
     public int getElementNum(){return element_num;}
