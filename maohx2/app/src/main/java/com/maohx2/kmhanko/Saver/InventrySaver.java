@@ -17,8 +17,6 @@ public abstract class InventrySaver extends SaveManager {
         super(_databaseAdmin, dbName, dbAsset, version, _loadMode);
     }
 
-    public void setInventry(InventryS _inventry) {
-        inventry = _inventry;
-    }
+    public void setInventry(InventryS _inventry) {inventry = _inventry;}
 
 }

@@ -41,7 +41,7 @@ public class EquipmentItemDataAdmin extends ItemDataAdmin<EquipmentItemData> {
 
         for (int i = 0; i < size; i++) {
             datas.add(new EquipmentItemData());
-            datas.get(i).setItemKind(ITEM_KIND.EXPEND);
+            datas.get(i).setItemKind(ITEM_KIND.EQUIPMENT);
             datas.get(i).setName(name.get(i));
             datas.get(i).setImageName(imageName.get(i));
             datas.get(i).setItemImage(graphic.searchBitmap(imageName.get(i)));
