@@ -114,7 +114,7 @@ public class DungeonGameSystem {
 
         switch (dungeonModeManage.getMode()) {
             case MAP:
-                map_admin.drawMap_for_autotile_4div_combine();
+                map_admin.drawMap_for_autotile_light();
                 map_object_admin.draw();
                 map_plate_admin.draw();
                 //graphic.bookingDrawCircle(0,0,10,paint);

@@ -77,10 +77,10 @@ public class MapAdmin {
     //drawMap2用
 //    Point map_size = new Point(80, 50);//x : 左右幅, y : 上下幅
     Point map_size = new Point(60, 40);//60, 40
-    int magnification = 64*4;//倍率
+    int magnification = 40;//64*4;//倍率
     int time = 0;//アニメーションタイミング用
     int now_floor_num = 1;//現在のフロア階層
-    int boss_floor_num = 3;//ボスフロアの階層
+    int boss_floor_num = 5;//ボスフロアの階層
 
     Point offset = new Point(0, 0);
     Point start_point = new Point(0, 0);
@@ -160,7 +160,7 @@ public class MapAdmin {
         floor_tile = auto_tile_admin.combineFourAutoTile(raw_floor_tile, raw_floor_tile, raw_floor_tile, raw_floor_tile);
 
         BitmapData cave_hole_raw = graphic.searchBitmap("cave_hole_01");//穴（アニメーション）
-        BitmapData dragon_hole_raw = graphic.searchBitmap("Dragon_hole_f_01");//穴（アニメーション）
+        //BitmapData dragon_hole_raw = graphic.searchBitmap("Dragon_hole_f_01");//穴（アニメーション）
 
         //階段画像4分割
         stair_tile = graphic.searchBitmap("step");
@@ -324,9 +324,7 @@ public class MapAdmin {
         section_admin.connectRooms(map_data);
         section_admin.makeStairs(map_data);
         //section_admin.createMine(1, 2, map_data);
-        //スタート地点を探す
-//        searchStartPoint();
-//        camera.setCameraOffset(start_point.x, start_point.y);
+
 
         //section_admin.printNeighborLeafNum();
         //createMapTileData_old();//以前のバージョン
@@ -481,6 +479,10 @@ public class MapAdmin {
         now_floor_num++;
         if(now_floor_num < boss_floor_num) {
             createMap();
+            //スタート地点を探す
+            searchStartPoint();
+            camera.setCameraOffset(start_point.x, start_point.y);
+            map_player.putUnit(start_point.x, start_point.y);
         }
         else{
             goBossFloor();
@@ -496,8 +498,8 @@ public class MapAdmin {
             }
         }
         //ボスマップの空間
-        for (int i = 1; i < map_size.x-1; i++) {
-            for (int j = 1; j < map_size.y-1; j++) {
+        for (int i = 5; i < 10; i++) {
+            for (int j = 5; j < 10; j++) {
                 map_data[i][j].setWallFlag(false);
             }
         }
@@ -528,6 +530,7 @@ public class MapAdmin {
             }
         }
         camera.setCameraOffset(7.5*magnification, 9*magnification);
+        map_player.putUnit(7.5*magnification, 9*magnification);
     }
 
     //一歩先に壁があるかどうかと壁の方向を判定
