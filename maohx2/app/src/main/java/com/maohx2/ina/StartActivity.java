@@ -162,8 +162,7 @@ class StartSurfaceView extends BaseSurfaceView {
         global_data.getEquipmentInventry().load();
         global_data.getEquipmentInventrySaver().setInventry(global_data.getEquipmentInventry());
 
-
-
+        global_data.getGeoInventrySaver().init(graphic);
 
         GeoInventrySaver geoInventrySaver = global_data.getGeoInventrySaver();
         InventryS geoInventry = global_data.getGeoInventry();

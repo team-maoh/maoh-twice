@@ -32,6 +32,10 @@ public class InventryS extends Inventry {
         inventrySaver.load();
     }
 
+    public SaveManager getSaver() {
+        return inventrySaver;
+    }
+
     /*
     @Override
     public void addItemData(ItemData _itemData) {

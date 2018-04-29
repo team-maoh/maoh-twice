@@ -144,6 +144,7 @@ public class GeoSlotAdmin {
             //geoSlots.get(i).setTouchID(userInterface.setCircleTouchUI(xs.get(i), ys.get(i), 100));
             geoSlots.get(i).setReleaseEvent(release_events.get(i));
             geoSlots.get(i).setRestriction(restrictions.get(i));
+            geoSlots.get(i).setID(i);
         }
 
         //plateGroupインスタンス化
@@ -370,7 +371,8 @@ public class GeoSlotAdmin {
     public void checkInventrySelect() {
         InventryData inventryData = userInterface.getInventryData();
         if (inventryData != null) {
-            if (inventryData.getItemNum() > 0) {
+            GeoObjectData tmp = (GeoObjectData)inventryData.getItemData();
+            if (inventryData.getItemNum() > 0 && tmp.getName() != null && tmp.getSlotSetName().equals("noSet")) {
                 setHoldGeoObject((GeoObjectData) inventryData.getItemData());
                 userInterface.setInventryData(null);
             }
@@ -386,6 +388,18 @@ public class GeoSlotAdmin {
     public void deleteFromInventry(GeoObjectData geoObjectData) {
         geoSlotAdminManager.deleteFromInventry(geoObjectData);
     }
+
+    public void setSlotData(GeoObjectData geoObjectData, int id) {
+        geoObjectData.setSlotSetID(id);
+        geoObjectData.setSlotSetName(t_name);
+    }
+
+    public void popSlotData(GeoObjectData geoObjectData) {
+        geoObjectData.setSlotSetID(-1);
+        geoObjectData.setSlotSetName("noSet");
+    }
+
+
 
     public void calcPlayerStatus() {
         geoSlotAdminManager.calcPlayerStatus();

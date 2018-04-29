@@ -45,6 +45,8 @@ public class GeoSlot extends CircleImagePlate {
     boolean is_in_geoObjectData; //穴にGeoが入っているかどうか
     boolean is_exist; //穴が存在するかどうか
 
+    int id;//自分のID
+
     String release_event;
     String restriction;
 
@@ -71,7 +73,6 @@ public class GeoSlot extends CircleImagePlate {
                    ImageContext _default_image_context, ImageContext _feedback_image_context
     ){
         super(_graphic, _user_interface, _judge_way, _feedback_way, position, _default_image_context, _feedback_image_context);
-
         item_id = -1;
         is_exist = true;
         geoSlotAdmin = _geoSlotAdmin;
@@ -310,21 +311,25 @@ public class GeoSlot extends CircleImagePlate {
                     pushGeoObject(geoSlotAdmin.getHoldGeoObject());
 
                     //GeoをInventryとHoldから消す
-                    geoSlotAdmin.deleteFromInventry(geoObjectData);
+                    //geoSlotAdmin.deleteFromInventry(geoObjectData);
+                    geoSlotAdmin.setSlotData(geoObjectData, id);
+
                     geoSlotAdmin.setHoldGeoObject(null);
 
                 } else {
                     //Holdしており、Geoが入っている時　→　入れ替え
                     GeoObjectData tempGeoObjectData = geoSlotAdmin.getHoldGeoObject();
 
-                    geoSlotAdmin.addToInventry(geoObjectData);
+                    //geoSlotAdmin.addToInventry(geoObjectData);
+                    geoSlotAdmin.popSlotData(geoObjectData);
                     geoSlotAdmin.setHoldGeoObject(geoObjectData);
 
                     //Geoを上書きセットする
                     pushGeoObject(tempGeoObjectData);
 
                     //GeoをInventryからけす。
-                    geoSlotAdmin.deleteFromInventry(tempGeoObjectData);
+                    //geoSlotAdmin.deleteFromInventry(tempGeoObjectData);
+                    geoSlotAdmin.setSlotData(geoObjectData, id);
                 }
                 geoSlotAdmin.calcGeoSlot();
             } else {
@@ -332,7 +337,9 @@ public class GeoSlot extends CircleImagePlate {
                     //Holdしておらず、Geoも入っていない時　→　何もしない
                 } else {
                     //Holdしておらず、Geoが入っている時　→　Holdにセット
-                    geoSlotAdmin.addToInventry(geoObjectData);
+                    //geoSlotAdmin.addToInventry(geoObjectData);
+                    geoSlotAdmin.popSlotData(geoObjectData);
+
                     geoSlotAdmin.setHoldGeoObject(geoObjectData);
                     popGeoObject();
                 }
@@ -403,6 +410,7 @@ public class GeoSlot extends CircleImagePlate {
     public void setReleaseEvent(String _release_event) { release_event = _release_event; }
     public void setRestriction(String _restriction) { restriction = _restriction; }
     public void setReleased(Boolean _isReleased) { isReleased = _isReleased; }
+    public void setID(int _id) { id = _id; }
 
     //TODO: inaの関数ができたら消す
     public void setParam(int _x, int _y, int _r) {

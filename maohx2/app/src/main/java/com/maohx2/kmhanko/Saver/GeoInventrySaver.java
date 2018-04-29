@@ -22,6 +22,10 @@ public class GeoInventrySaver extends InventrySaver {
         graphic = _graphic;
     }
 
+    public void init(Graphic _graphic) {
+        graphic = _graphic;
+    }
+
     @Override
     public void dbinit() {
     }
@@ -40,7 +44,7 @@ public class GeoInventrySaver extends InventrySaver {
 
             database.insertLineByArrayString(
                     "GeoInventry",
-                    new String[] { "name", "image_name", "num", "hp", "attack", "defence", "luck", "hp_rate", "attack_rate", "defence_rate", "luck_rate" },
+                    new String[] { "name", "image_name", "num", "hp", "attack", "defence", "luck", "hp_rate", "attack_rate", "defence_rate", "luck_rate", "slot_set_name", "slot_set_id" },
                     new String[] {
                             geoObjectData.getName(),
                             geoObjectData.getImageName(),
@@ -53,6 +57,8 @@ public class GeoInventrySaver extends InventrySaver {
                             String.valueOf(geoObjectData.getAttackRate()),
                             String.valueOf(geoObjectData.getDefenceRate()),
                             String.valueOf(geoObjectData.getLuckRate()),
+                            String.valueOf(geoObjectData.getSlotSetName()),
+                            String.valueOf(geoObjectData.getSlotSetID())
                     }
             );
 
@@ -78,6 +84,9 @@ public class GeoInventrySaver extends InventrySaver {
         List<Float> attackRates = database.getFloat("GeoInventry", "attack_rate");
         List<Float> defenceRates = database.getFloat("GeoInventry", "defence_rate");
         List<Float> luckRates = database.getFloat("GeoInventry", "luck_rate");
+        List<String> slotSetNames = database.getString("GeoInventry", "slot_set_name");
+        List<Integer> slotSetIDs = database.getInt("GeoInventry", "slot_set_id");
+
 
         for(int i = 0; i < itemNames.size(); i++) {
             for(int j = 0; j < nums.get(i); j++){
@@ -92,7 +101,9 @@ public class GeoInventrySaver extends InventrySaver {
                                 hpRates.get(i),
                                 attackRates.get(i),
                                 defenceRates.get(i),
-                                luckRates.get(i)
+                                luckRates.get(i),
+                                slotSetNames.get(i),
+                                slotSetIDs.get(i)
                         )
                 );
             }

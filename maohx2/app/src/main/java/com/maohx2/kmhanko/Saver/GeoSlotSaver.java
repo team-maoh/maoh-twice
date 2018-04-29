@@ -12,6 +12,7 @@ import com.maohx2.kmhanko.geonode.GeoSlotAdminManager;
 import com.maohx2.kmhanko.geonode.GeoSlotAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlot;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
+import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 import com.maohx2.kmhanko.myavail.MyAvail;
 
 /**
@@ -69,9 +70,12 @@ public class GeoSlotSaver extends SaveManager {
             database.execSQL(
                     "create table " + tableNames.get(i) + "(" +
                             "ID integer primary key," +
+                            /*
                             "name string," +
                             "image_name string," +
-                            "release_flag string," +
+                            */
+                            "release_flag string" +
+                            /*
                             "hp integer," +
                             "attack integer," +
                             "defence integer," +
@@ -80,6 +84,7 @@ public class GeoSlotSaver extends SaveManager {
                             "attack_rate real," +
                             "defence_rate real," +
                             "luck_rate real" +
+                            */
                             ")"
             );
             System.out.println("☆タカノ:GeoSlotSaver#init テーブル生成: " + tableNames.get(i));
@@ -108,10 +113,11 @@ public class GeoSlotSaver extends SaveManager {
             }
 
             for(int j = 0; j < geoSlots.size(); j++) {
+                /*
                 GeoObjectData geoObjectData = (GeoObjectData)geoSlots.get(j).getGeoObjectData();
 
                 if (geoObjectData == null) {
-                    datas[0] = null;
+                    datas[0] = "noData";
                     datas[1] = null;
                     datas[2] = null;
                     datas[3] = null;
@@ -133,14 +139,22 @@ public class GeoSlotSaver extends SaveManager {
                     datas[8] = String.valueOf(geoObjectData.getDefenceRate());
                     datas[9] = String.valueOf(geoObjectData.getLuckRate());
                 }
-
+*/
                 String releaseFlag;
                 if (geoSlots.get(j).isReleased()) {
                     releaseFlag = "true";
                 } else {
                     releaseFlag = "false";
                 }
-
+                database.insertLineByArrayString(
+                        name,
+                        new String[] { "id", "release_flag"},
+                        new String[] {
+                                String.valueOf(j),
+                                releaseFlag
+                        }
+                );
+/*
                 database.insertLineByArrayString(
                         name,
                         new String[] { "id", "release_flag", "name", "image_name", "hp", "attack", "defence", "luck", "hp_rate", "attack_rate", "defence_rate", "luck_rate" },
@@ -162,6 +176,7 @@ public class GeoSlotSaver extends SaveManager {
                 if (geoObjectData != null) {
                     System.out.println("☆タカノ:GeoSlotSaver#save : " + name + "(" + j + ") " + "<-" + geoObjectData.getName());
                 }
+                */
             }
         }
     }
@@ -180,9 +195,12 @@ public class GeoSlotSaver extends SaveManager {
             }
 
             List<Integer> ids = database.getInt(tableName, "id");
+            /*
             List<String> names = database.getString(tableName, "name");
             List<String> imageNames = database.getString(tableName, "image_name");
+            */
             List<Boolean> releaseFlags = database.getBoolean(tableName, "release_flag");
+            /*
             List<Integer> hps = database.getInt(tableName, "hp");
             List<Integer> attacks = database.getInt(tableName, "attack");
             List<Integer> defences = database.getInt(tableName, "defence");
@@ -191,10 +209,15 @@ public class GeoSlotSaver extends SaveManager {
             List<Float> attackRates = database.getFloat(tableName, "attack_rate");
             List<Float> defenceRates = database.getFloat(tableName, "defence_rate");
             List<Float> luckRates = database.getFloat(tableName, "luck_rate");
+            */
+
+            //List<String> slotSetNames = database.getString(tableName, "slot_set_name");
+            //List<Integer> slotSetIDs = database.getInt(tableName, "slot_set_id");
 
             List<GeoSlot> geoSlots = geoSlotAdmins.get(i).getGeoSlots();
             for(int j = 0; j < ids.size(); j++) {
-                if (names.get(i) != null) {
+                /*
+                if (!names.get(j).equals("noData")) {
                     if (geoSlots.get(ids.get(j)).pushGeoObject(
                             new GeoObjectData(
                                     names.get(j),
@@ -206,16 +229,19 @@ public class GeoSlotSaver extends SaveManager {
                                     hpRates.get(j),
                                     attackRates.get(j),
                                     defenceRates.get(j),
-                                    luckRates.get(j)
+                                    luckRates.get(j),
                             )
                     )
                             ) {
                         System.out.println("☆タカノ:GeoSlotSaver#load : " + tableName + "(" + ids.get(j) + ") " + "->" + names.get(j));
                     }
                 }
+                */
                 geoSlots.get(ids.get(j)).setReleased(releaseFlags.get(j));
             }
         }
+
+        //geoSlotAdminManager.setSlot();
 
     }
 }
