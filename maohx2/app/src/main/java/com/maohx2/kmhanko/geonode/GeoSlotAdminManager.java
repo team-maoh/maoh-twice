@@ -63,6 +63,10 @@ public class GeoSlotAdminManager {
         setSlot();
     }
 
+    public void start() {
+        //activeGeoSlotAdmin.start();
+    }
+
     public void update() {
         geoInventry.updata();
         if (activeGeoSlotAdmin != null) {

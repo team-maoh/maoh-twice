@@ -102,6 +102,16 @@ public class GeoSlotAdmin {
         loadBackPlate();
     }
 
+    /*
+    public void start() {
+        textBoxAdmin.setTextBoxExists(statusTextBoxID, true);
+    }
+
+    public void exit() {
+        textBoxAdmin.setTextBoxExists(statusTextBoxID, false);
+    }
+    */
+
     //ジオスロットの並びを表すツリーコードを用いて、GeoSlotのインスタンス化を行う。
     public void loadDatabase(String _t_name) {
         t_name = _t_name;
@@ -267,7 +277,7 @@ public class GeoSlotAdmin {
                                     graphic, userInterface, new Paint(),
                                     Constants.Touch.TouchWay.UP_MOMENT,
                                     Constants.Touch.TouchWay.MOVE,
-                                    new int[]{1100, 50, 1550, 200},
+                                    new int[]{300, 550, 700, 700},
                                     "解放する",
                                     textPaint
                             ),
@@ -275,7 +285,7 @@ public class GeoSlotAdmin {
                                     graphic, userInterface, new Paint(),
                                     Constants.Touch.TouchWay.UP_MOMENT,
                                     Constants.Touch.TouchWay.MOVE,
-                                    new int[]{1100, 250, 1550, 400},
+                                    new int[]{900, 550, 1300, 700},
                                     "やめる",
                                     textPaint
                             )
@@ -331,7 +341,6 @@ public class GeoSlotAdmin {
         checkInventrySelect();
 
         backPlateGroup.update();
-        textBoxAdmin.setTextBoxExists(statusTextBoxID, true);
         textBoxAdmin.update();
     }
 

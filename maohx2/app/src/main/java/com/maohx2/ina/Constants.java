@@ -103,6 +103,7 @@ public final class Constants {
         }
     }
 
+
     public static class Draw {
 
         public enum DRAW_TASK_KIND {
@@ -128,6 +129,23 @@ public final class Constants {
             BUTTLE_INIT,
             BUTTLE,
         }
+    }
+
+    public static class SELECT_WINDOW {
+        public static final int BACK_LEFT = 400;
+        public static final int BACK_RIGHT = 1200;
+        public static final int BACK_UP = 300;
+        public static final int BACK_BOTTOM = 500;
+
+        public static final int YES_LEFT = 400;
+        public static final int YES_RIGHT = 800;
+        public static final int YES_UP = 500;
+        public static final int YES_BOTTOM = 600;
+
+        public static final int NO_LEFT = 800;
+        public static final int NO_RIGHT = 1200;
+        public static final int NO_UP = 500;
+        public static final int NO_BOTTOM = 600;
     }
 
     public static class Item {
