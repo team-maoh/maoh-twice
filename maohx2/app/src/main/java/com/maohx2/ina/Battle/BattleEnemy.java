@@ -63,11 +63,36 @@ public class BattleEnemy extends BattleUnit {
 
         position_x += dx*speed;
         position_y += dy*speed;
+
+        //とりあえず外には出ないようにする
+        if (position_x < 0) {
+            position_x = -position_x;
+            dx = -dx;
+        }
+        if (position_y < 0) {
+            position_y = -position_y;
+            dy = -dy;
+        }
+        if (position_x > 1600) {
+            position_x = 1600-(position_x-1600);
+            dx = -dx;
+        }
+        if (position_y > 900) {
+            position_y = 900-(position_y-900);
+            dy = -dy;
+        }
+
         move_num++;
 
         if(move_num == move_end) {
+            //memo rnd.nextInt(x) = 0 ~ x-1
+
+
+            //現在の位置から200~1400 - pの範囲で移動する。→これだと画面外に出る(positison_x = 1500, 乱数 = 0の時など)
             dx = rnd.nextInt(1200)+200 - position_x;
             dy = rnd.nextInt(500)+200 - position_y;
+
+
             dl = Math.sqrt(dx*dx + dy*dy);
 
             dx = dx / dl;

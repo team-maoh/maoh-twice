@@ -117,6 +117,7 @@ abstract public class BattleUnit {
 
         dx = rnd.nextInt(1200)+200 - getPositionX();
         dy = rnd.nextInt(500)+200 - getPositionY();
+
         dl = Math.sqrt(dx*dx + dy*dy);
 
         dx = dx / dl;

@@ -125,6 +125,8 @@ public class DungeonSelectManager {
         List<String> imageName = database.getString(tableName, "image_name");
         List<Integer> x = database.getInt(tableName, "x");
         List<Integer> y = database.getInt(tableName, "y");
+        List<Integer> scale = database.getInt(tableName, "scale");
+        List<Integer> scale_feed = database.getInt(tableName, "scale_feed");
         event = database.getString(tableName, "event");
 
         List<MapIconPlate> mapIconPlateList = new ArrayList<MapIconPlate>();
@@ -136,8 +138,8 @@ public class DungeonSelectManager {
                     Constants.Touch.TouchWay.UP_MOMENT,
                     Constants.Touch.TouchWay.MOVE,
                     new int[] { x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_TOURH_R },
-                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_DEFAULT, DUNGEON_SELECT_BUTTON_RATE_DEFAULT, 0.0f, 255, false),
-                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_FEEDBACK, DUNGEON_SELECT_BUTTON_RATE_FEEDBACK, 0.0f, 255, false),
+                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale.get(i), scale.get(i), 0.0f, 255, false),
+                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale_feed.get(i), scale_feed.get(i), 0.0f, 255, false),
                     dungeonName.get(i),
                     event.get(i)
 

@@ -128,7 +128,7 @@ public class WorldGameSystem {
 
 
 
-        geoSlotSaver = new GeoSlotSaver(databaseAdmin, "GeoSlotSave", "GeoSlotSave.db", 1, "ns", graphic);
+        geoSlotSaver = new GeoSlotSaver(databaseAdmin, "GeoSlotSave", "GeoSlotSave.db", 1, "s", graphic);
 
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver);
         dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, geoSlotAdminManager, activityChange);
