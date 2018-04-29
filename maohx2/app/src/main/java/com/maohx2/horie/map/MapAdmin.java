@@ -482,9 +482,24 @@ public class MapAdmin {
         return point;
     }
 
+    //部屋の端の座標を返す
+    private Point getRoomEdgePoint(){
+        Point point = new Point(0, 0);
+        for(;;) {
+            Random rnd = new Random();
+            int x = rnd.nextInt(map_size.x);
+            int y = rnd.nextInt(map_size.y);
+            if(map_data[x][y].isRoom() && (map_data[x-1][y].isWall() || map_data[x+1][y].isWall() || map_data[x][y-1].isWall() || map_data[x][y+1].isWall())){
+                point.set(x * magnification, y * magnification);
+                break;
+            }
+        }
+        return point;
+    }
+
     //room_pointをset(magnificationをかけてない)
     public void setRoomPoint(){
-        Point point = getRoomPoint();
+        Point point = getRoomEdgePoint();
         room_point.set(point.x/magnification, point.y/magnification);
     }
 
@@ -556,6 +571,7 @@ public class MapAdmin {
         map_player.putUnit(7.5*magnification, 9*magnification);
     }
 
+    //採掘場所を作る(部屋の淵のみに生成)
     private void createMine(int min_num, int max_num){
         Random rnd = new Random();
         int mine_num = rnd.nextInt(max_num - min_num + 1) + min_num;
