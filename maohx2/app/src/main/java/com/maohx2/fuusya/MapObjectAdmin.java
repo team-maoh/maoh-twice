@@ -49,7 +49,6 @@ public class MapObjectAdmin {
     double item_distance, enemy_distance;
 
     BagItemAdmin bag_item_admin;
-    MapAdmin map_admin;
     SoundAdmin sound_admin;
     DungeonUserInterface dungeon_user_interface;
     MapPlateAdmin map_plate_admin;
@@ -60,18 +59,16 @@ public class MapObjectAdmin {
 
     boolean is_displaying_menu;
 
-    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapAdmin _map_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage) {
+    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
-        map_admin = _map_admin;
-        camera = map_admin.getCamera();
         sound_admin = _sound_admin;
         map_plate_admin = _map_plate_admin;
         dungeon_mode_manage = _dungeon_mode_manage;
 
         is_displaying_menu = false;
 
-        map_player = new MapPlayer(graphic, this, map_admin, dungeon_user_interface, _sound_admin, camera, map_plate_admin);
+        map_player = new MapPlayer(graphic, this, dungeon_user_interface, _sound_admin, camera, map_plate_admin);
         map_player.init();
         map_player_bitmap = new MapObjectBitmap(PLAYER_DIR, graphic, "ドラゴン");
         map_player_bitmap.init();
@@ -177,10 +174,6 @@ public class MapObjectAdmin {
         return sound_admin;
     }
 
-    public MapAdmin getMapAdmin() {
-        return map_admin;
-    }
-
     public void makeAllEnemiesFindPlayer() {
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
             map_enemy[i].setHasFoundPlayer(true);
@@ -196,6 +189,33 @@ public class MapObjectAdmin {
     //by kmhanko
     public void battleStart() {
         //dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+    }
+
+//    public void getCamera(Camera _camera){
+//        camera = _camera;
+////        map_player.setCamera(camera);
+//    }
+
+    public void initObjectPosition(MapAdmin map_admin) {
+
+        map_player.initPosition(map_admin);
+//        map_player.setMapAdmin(map_admin);
+
+        for (int i = 0; i < NUM_OF_ITEM; i++) {
+            map_item[i].initPosition(map_admin);
+//            map_item[i].setMapAdmin(map_admin);
+
+        }
+        for (int i = 0; i < NUM_OF_ENEMY; i++) {
+            map_enemy[i].initPosition(map_admin);
+//            map_enemy[i].setMapAdmin(map_admin);
+
+        }
+
+        for (int i = 0; i < NUM_OF_TRAP; i++) {
+            map_trap[i].initPosition(map_admin);
+//            map_trap[i].setMapAdmin(map_admin);
+        }
     }
 
 }

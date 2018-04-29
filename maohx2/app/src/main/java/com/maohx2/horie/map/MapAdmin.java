@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.view.SurfaceHolder;
 
+import com.maohx2.fuusya.MapObjectAdmin;
 import com.maohx2.fuusya.MapPlayer;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
@@ -77,10 +78,10 @@ public class MapAdmin {
     //drawMap2用
 //    Point map_size = new Point(80, 50);//x : 左右幅, y : 上下幅
     Point map_size = new Point(60, 40);//60, 40
-    int magnification = 40;//64*4;//倍率
+    int magnification = 64*4;//倍率
     int time = 0;//アニメーションタイミング用
-    int now_floor_num = 1;//現在のフロア階層
-    int boss_floor_num = 5;//ボスフロアの階層
+    int now_floor_num = 0;//現在のフロア階層
+    int boss_floor_num = 2;//ボスフロアの階層
 
     Point offset = new Point(0, 0);
     Point start_point = new Point(0, 0);
@@ -92,6 +93,7 @@ public class MapAdmin {
     Canvas canvas;
     SurfaceHolder holder;
     MapPlayer map_player;
+    MapObjectAdmin map_object_admin;
 
     //auto_tile用
     AutoTile auto_tile_wall = new AutoTile();
@@ -139,8 +141,10 @@ public class MapAdmin {
         return camera;
     }
 
-    public MapAdmin(Graphic m_graphic) {
+    public MapAdmin(Graphic m_graphic, MapObjectAdmin m_map_object_admin) {
         graphic = m_graphic;
+        map_object_admin = m_map_object_admin;
+        map_player = map_object_admin.getPlayer();
         map_data = new Chip[map_size.x][map_size.y];
         for (int i = 0; i < map_size.x; i++) {
             for (int j = 0; j < map_size.y; j++) {
@@ -211,7 +215,8 @@ public class MapAdmin {
             transportMatrix();//デバッグ用
             intToChip(t_map_data_int);//デバッグ用
         } else {
-            createMap();//自動生成
+            goNextFloor();
+            //createMap();//自動生成
             //createDispMapData();
         }
         //intToChip(map_data_int);//デバッグ用x, yが反転する
@@ -355,6 +360,9 @@ public class MapAdmin {
                 }
             }
         }
+        //map_object_admin初期化
+        map_object_admin.initObjectPosition(this);
+//        map_object_admin.getCamera(camera);
         //System.out.println("map_create_finish");
         //sizeRect.set(0,0,map_tile[0][0].getBitmap().getWidth(),map_tile[0][0].getBitmap().getHeight());
     }
@@ -480,12 +488,14 @@ public class MapAdmin {
         if(now_floor_num < boss_floor_num) {
             createMap();
             //スタート地点を探す
-            searchStartPoint();
-            camera.setCameraOffset(start_point.x, start_point.y);
-            map_player.putUnit(start_point.x, start_point.y);
+                searchStartPoint();
+                camera.setCameraOffset(start_point.x, start_point.y);
+                map_player.putUnit(start_point.x, start_point.y);
         }
         else{
             goBossFloor();
+            camera.setCameraOffset(7.5*magnification, 9*magnification);
+            map_player.putUnit(7.5*magnification, 9*magnification);
         }
     }
 
@@ -529,8 +539,6 @@ public class MapAdmin {
                 }
             }
         }
-        camera.setCameraOffset(7.5*magnification, 9*magnification);
-        map_player.putUnit(7.5*magnification, 9*magnification);
     }
 
     //一歩先に壁があるかどうかと壁の方向を判定

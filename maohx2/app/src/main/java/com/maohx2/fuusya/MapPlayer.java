@@ -46,7 +46,6 @@ public class MapPlayer extends MapUnit {
     SoundAdmin sound_admin;
     DungeonUserInterface dungeon_user_interface;
     MapPlateAdmin map_plate_admin;
-    MapAdmin map_admin;
 
     int PLAYER_STEP = 26;//プレイヤーの歩幅
     double touch_w_x, touch_w_y, touch_n_x, touch_n_y, pre_w_x, pre_w_y;
@@ -56,14 +55,12 @@ public class MapPlayer extends MapUnit {
 
     TouchState touch_state;
 
-    public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, MapAdmin _map_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, MapPlateAdmin _map_plate_admin) {
+    public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, MapPlateAdmin _map_plate_admin) {
         super(graphic, _map_object_admin, _camera);
 
         dungeon_user_interface = _dungeon_user_interface;
         map_plate_admin = _map_plate_admin;
-        map_admin = _map_admin;
 
-        map_admin.getMapPlayer(this);
 
         touch_state = dungeon_user_interface.getTouchState();
 

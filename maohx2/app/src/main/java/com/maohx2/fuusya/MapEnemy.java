@@ -54,9 +54,8 @@ public class MapEnemy extends MapUnit {
 
         total_dirs = _total_dirs;
 
-        Point room_point = map_admin.getRoomPoint();
-        w_x = room_point.x;
-        w_y = room_point.y;
+        w_x = 0;
+        w_y = 0;
 
         dst_w_x = w_x;
         dst_w_y = w_y;

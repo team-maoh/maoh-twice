@@ -56,10 +56,11 @@ public class DungeonGameSystem {
         graphic = _graphic;
 
         dungeonModeManage = new DungeonModeManage();
-        map_admin = new MapAdmin(graphic);
-        //map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin,this, dungeonModeManage);
         map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface);
-        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin, map_plate_admin, dungeonModeManage);
+        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_plate_admin, dungeonModeManage);
+        map_admin = new MapAdmin(graphic, map_object_admin);
+//        map_object_admin.getCamera(map_admin.getCamera());
+        //map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin,this, dungeonModeManage);
         paint = new Paint();
         paint.setColor(Color.BLUE);
 
