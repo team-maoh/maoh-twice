@@ -77,8 +77,10 @@ public class MapAdmin {
     //drawMap2用
 //    Point map_size = new Point(80, 50);//x : 左右幅, y : 上下幅
     Point map_size = new Point(60, 40);//60, 40
-    int magnification = 64*4;
+    int magnification = 64*4;//倍率
     int time = 0;//アニメーションタイミング用
+    int now_floor_num = 1;//現在のフロア階層
+    int boss_floor_num = 3;//ボスフロアの階層
 
     Point offset = new Point(0, 0);
     Point start_point = new Point(0, 0);
@@ -98,6 +100,7 @@ public class MapAdmin {
     AutoTileAdmin auto_tile_admin;
     boolean is_map_data_wall[][] = new boolean[map_size.x*2][map_size.y*2];//表示用に4分割されたmap_data
     boolean is_map_data_sidewall[][] = new boolean[map_size.x*2][map_size.y*2];
+
     BitmapData map_tile_set[][] = new BitmapData[map_size.x*2][map_size.y*2];//4分割されたmap画像
     BitmapData map_tile_set_animation[][][] = new BitmapData[3][map_size.x*2][map_size.y*2];
     BitmapData map_tile[][] = new BitmapData[map_size.x][map_size.y];//map_tile_set[][]を1つに纏めた画像
@@ -354,7 +357,7 @@ public class MapAdmin {
                 }
             }
         }
-        System.out.println("map_create_finish");
+        //System.out.println("map_create_finish");
         //sizeRect.set(0,0,map_tile[0][0].getBitmap().getWidth(),map_tile[0][0].getBitmap().getHeight());
     }
 
@@ -475,7 +478,56 @@ public class MapAdmin {
 
     //階層移動
     public void goNextFloor(){
-        createMap();
+        now_floor_num++;
+        if(now_floor_num < boss_floor_num) {
+            createMap();
+        }
+        else{
+            goBossFloor();
+        }
+    }
+
+    private void goBossFloor(){
+        //map_dataの初期化
+        for (int i = 0; i < map_size.x; i++) {
+            for (int j = 0; j < map_size.y; j++) {
+                map_data[i][j].initializeChip();
+                map_data[i][j].setWallFlag(true);
+            }
+        }
+        //ボスマップの空間
+        for (int i = 1; i < map_size.x-1; i++) {
+            for (int j = 1; j < map_size.y-1; j++) {
+                map_data[i][j].setWallFlag(false);
+            }
+        }
+        for(int i = 0;i < map_size.x;i++) {
+            for (int j = 0; j < map_size.y; j++) {
+                if (!isWall(i, j) && !isStairs(i, j)) {
+                    map_tile[i][j] = floor_tile;
+                    //アニメーション用
+//                    for(int k = 0;k < 3;k++) {
+//                        map_tile_set_animation[k][2*i][2*j] = floor_tile;
+//                        map_tile_set_animation[k][2*i+1][2*j] = floor_tile;
+//                        map_tile_set_animation[k][2*i][2*j+1] = floor_tile;
+//                        map_tile_set_animation[k][2*i+1][2*j+1] = floor_tile;
+//                    }
+                    //階段
+                } else if (isStairs(i, j)) {
+                    map_tile[i][j] = stair_tile;
+                    //アニメーション用
+//                    for (int k = 0; k < 3; k++) {
+//                        map_tile_set_animation[k][2 * i][2 * j] = stair_tile_div[0];
+//                        map_tile_set_animation[k][2 * i + 1][2 * j] = stair_tile_div[1];
+//                        map_tile_set_animation[k][2 * i][2 * j + 1] = stair_tile_div[2];
+//                        map_tile_set_animation[k][2 * i + 1][2 * j + 1] = stair_tile_div[3];
+//                    }
+                } else {
+                    setAutoTile_light(i, j, i, j);
+                }
+            }
+        }
+        camera.setCameraOffset(7.5*magnification, 9*magnification);
     }
 
     //一歩先に壁があるかどうかと壁の方向を判定
@@ -1422,10 +1474,12 @@ public class MapAdmin {
             paint.setColor(Color.RED);
             graphic.bookingDrawCircle(camera.convertToNormCoordinateX(offset.x), camera.convertToNormCoordinateY(offset.y), 20, paint);
         }
-        //ミニマップの表示
-        updateMiniMapDispState(worldToMap(camera.getNowPoint().x), worldToMap(camera.getNowPoint().y));
-        //drawSmallMap3(camera.getCameraOffset().x+800, camera.getCameraOffset().y+450);
-        drawSmallMap3(camera.getNowPoint().x, camera.getNowPoint().y);
+        if(now_floor_num < boss_floor_num) {
+            //ミニマップの表示
+            updateMiniMapDispState(worldToMap(camera.getNowPoint().x), worldToMap(camera.getNowPoint().y));
+            //drawSmallMap3(camera.getCameraOffset().x+800, camera.getCameraOffset().y+450);
+            drawSmallMap3(camera.getNowPoint().x, camera.getNowPoint().y);
+        }
         //画像表示デバッグ用
         //graphic.bookingDrawBitmapData(auto_tile_wall.big_auto_tile[46], 0, 0, 1, 1, 0, 255, true);
     }
