@@ -34,6 +34,11 @@ public class PlayerStatus {
 
     private int money;
 
+    //Record
+
+    private int maohWinCount;
+    //TODO 今出てる魔王保存？
+
     //Equip
 
 
@@ -112,6 +117,7 @@ public class PlayerStatus {
     public int getLuck() { return luck; }
     public int getLevel() { return level; }
     public int getMoney() { return money; }
+    public int getMaohWinCount() { return maohWinCount; }
 
     public void setHP(int x) { hp = x; }
     public void setAttack(int x) { attack = x; }
@@ -125,6 +131,8 @@ public class PlayerStatus {
     public void setBaseDefence(int x) { baseDefence = x; }
     public void setBaseLuck(int x) { baseLuck = x; }
 
+    public void setMaohWinCount(int _maohWinCount) { maohWinCount = _maohWinCount; }
+
     public int addMoney(int _money) {
         money += _money;
         return money;
@@ -137,7 +145,8 @@ public class PlayerStatus {
                 baseAttack,
                 baseDefence,
                 baseLuck,
-                money
+                money,
+                maohWinCount
         };
     }
 
