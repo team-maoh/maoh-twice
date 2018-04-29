@@ -50,7 +50,7 @@ public class GeoObjectDataAdmin extends ItemDataAdmin<GeoObjectData> {
         }
     }
 
-
+/*
     static public GeoObjectData getDebugGeoObjectData(int i) {
         GeoObjectData[] buf = new GeoObjectData[]{
                 new GeoObjectData(
@@ -95,5 +95,5 @@ public class GeoObjectDataAdmin extends ItemDataAdmin<GeoObjectData> {
                 )
         };
         return buf[i];
-    }
+    }*/
 }

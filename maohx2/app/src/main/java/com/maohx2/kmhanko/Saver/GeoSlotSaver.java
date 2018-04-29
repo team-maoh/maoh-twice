@@ -44,18 +44,19 @@ public class GeoSlotSaver extends SaveManager {
 
     public void setGeoSlotAdminManager(GeoSlotAdminManager _geoSlotAdminManager) {
         geoSlotAdminManager = _geoSlotAdminManager;
-        makeTable();
+        makeTable();//TODO あまり良くない
     }
 
     @Override
     public void dbinit() {
+        //TODO あまり良くない
     }
 
-    //TODO あまりよくなのでなんとかする。update処理とか
+    //TODO データベースのアップデートがあった場合に良くない処理。
     public void makeTable() {
         //テーブルの生成
-        //deleteAll();
-        //deleteTableAll();
+        deleteAll();
+        deleteTableAll();
         List<String> dBtableNames = database.getTables();
         List<String> tableNames = geoSlotAdminManager.getGeoSlotAdminNames();
         for(int i = 0; i < tableNames.size(); i++) {
@@ -68,6 +69,7 @@ public class GeoSlotSaver extends SaveManager {
                     "create table " + tableNames.get(i) + "(" +
                             "ID integer primary key," +
                             "name string," +
+                            "image_name string," +
                             "release_flag string," +
                             "hp integer," +
                             "attack integer," +
@@ -81,6 +83,10 @@ public class GeoSlotSaver extends SaveManager {
             );
             System.out.println("☆タカノ:GeoSlotSaver#init テーブル生成: " + tableNames.get(i));
         }
+
+
+
+
     }
 
     @Override
@@ -114,11 +120,12 @@ public class GeoSlotSaver extends SaveManager {
 
                 database.insertLineByArrayString(
                         name,
-                        new String[] { "id", "release_flag", "name", "hp", "attack", "defence", "luck", "hp_rate", "attack_rate", "defence_rate", "luck_rate" },
+                        new String[] { "id", "release_flag", "name", "image_name", "hp", "attack", "defence", "luck", "hp_rate", "attack_rate", "defence_rate", "luck_rate" },
                         new String[] {
                                 String.valueOf(j),
                                 releaseFlag,
                                 geoObjectData.getName(),
+                                geoObjectData.getImageName(),
                                 String.valueOf(geoObjectData.getHp()),
                                 String.valueOf(geoObjectData.getAttack()),
                                 String.valueOf(geoObjectData.getDefence()),
@@ -149,6 +156,7 @@ public class GeoSlotSaver extends SaveManager {
 
             List<Integer> ids = database.getInt(tableName, "id");
             List<String> names = database.getString(tableName, "name");
+            List<String> imageNames = database.getString(tableName, "image_name");
             List<Boolean> releaseFlags = database.getBoolean(tableName, "release_flag");
             List<Integer> hps = database.getInt(tableName, "hp");
             List<Integer> attacks = database.getInt(tableName, "attack");
@@ -163,7 +171,8 @@ public class GeoSlotSaver extends SaveManager {
             for(int j = 0; j < ids.size(); j++) {
                 if (geoSlots.get(ids.get(j)).pushGeoObject(
                         new GeoObjectData(
-                                graphic,
+                                names.get(j),
+                                graphic.searchBitmap(imageNames.get(j)),
                                 hps.get(j),
                                 attacks.get(j),
                                 defences.get(j),

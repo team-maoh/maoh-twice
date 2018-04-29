@@ -1,5 +1,7 @@
 package com.maohx2.kmhanko.itemdata;
 
+import com.maohx2.ina.Constants;
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.myavail.*;
@@ -19,24 +21,25 @@ public class GeoObjectData extends ItemData {
     double defence_rate;
     double luck_rate;
 
-    Graphic graphic;
+    //Graphic graphic;
+
 
     public GeoObjectData() {
     }
 
-    public GeoObjectData(Graphic _graphic, int[] status1, double[] status2) {
-        this(_graphic, status1[0],status1[1],status1[2],status1[3],status2[0],status2[1],status2[2],status2[3]);
+
+    public GeoObjectData(String _name, BitmapData _bitmapData, int[] status1, double[] status2) {
+        this(_name,_bitmapData, status1[0],status1[1],status1[2],status1[3],status2[0],status2[1],status2[2],status2[3]);
     }
 
-    public GeoObjectData(int[] status1, double[] status2) {
-        this(null, status1[0],status1[1],status1[2],status1[3],status2[0],status2[1],status2[2],status2[3]);
-    }
+    public GeoObjectData(String _name, BitmapData _bitmapData, int _hp, int _attack, int _defence, int _luck, double _hp_rate, double _attack_rate, double _defence_rate, double _luck_rate) {
+        //graphic = _graphic;
+        setName(_name);
+        setItemImage(_bitmapData);
 
-
-    public GeoObjectData(Graphic _graphic, int _hp, int _attack, int _defence, int _luck, double _hp_rate, double _attack_rate, double _defence_rate, double _luck_rate) {
-        graphic = _graphic;
         setStatus(_hp, _attack, _defence, _luck, _hp_rate, _attack_rate, _defence_rate, _luck_rate);
         //setGeoImage();
+        setItemKind(Constants.Item.ITEM_KIND.GEO);
     }
 
     public void setStatus(int _hp, int _attack, int _defence, int _luck, double _hp_rate, double _attack_rate, double _defence_rate, double _luck_rate) {
@@ -50,6 +53,7 @@ public class GeoObjectData extends ItemData {
         luck_rate = _luck_rate;
     }
 
+    /*
     public void setGeoImage() {
         //適当に計算してジオ画像を決める
 
@@ -63,7 +67,7 @@ public class GeoObjectData extends ItemData {
         if (defence_rate > 1.0) { setName("防御倍ジオ" + defence_rate); tempBitName = "DeffenceGeo06"; }
         if (luck_rate > 1.0) { setName("運命倍ジオ" + luck_rate); tempBitName = "LuckGeo06"; }
 
-        /*
+
         switch (MyAvail.maxFromIntArrays(new int[] { hp, attack, defence, luck })) {
             case(0):
                 setName("体力ジオ" + hp);
@@ -86,9 +90,10 @@ public class GeoObjectData extends ItemData {
                 tempBitName = "icon_gem_9";
                 break;
         }
-        */
+
         setItemImage(graphic.searchBitmap(tempBitName));
     }
+    */
 
     public int getHp() {
         return hp;

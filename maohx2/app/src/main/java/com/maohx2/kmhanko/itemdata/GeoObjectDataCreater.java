@@ -25,7 +25,30 @@ public class GeoObjectDataCreater {
             return getGeoObjectData(parameter, getRandKindRate());
         }
     }
+
+    /*
+    public static GeoObjectData getGeoObjectData(int[] status1, double[] status2) {
+
+        //String[] names = getNamesNormal(parameterKind, calcParam);
+        //String name = names[0];
+        //String imageName = names[1];
+
+
+        //GeoObjectData newGeoObjectData = new GeoObjectData(name, graphic.searchBitmap(imageName),status1, status2);
+        //newGeoObjectData.setImageName(imageName);
+        //newGeoObjectData.setPrice(0);
+
+        //return newGeoObjectData;
+        return null;
+    }
+    */
+
     public static GeoObjectData getGeoObjectData(int parameter, GEO_PARAM_KIND_NORMAL parameterKind) {
+        return getGeoObjectData(parameter, parameterKind, true);
+    }
+
+
+    public static GeoObjectData getGeoObjectData(int parameter, GEO_PARAM_KIND_NORMAL parameterKind, boolean randFlag) {
         int[] status1 = new int[GEO_PARAM_KIND_NORMAL.NUM.ordinal()];
         double[] status2 = new double[GEO_PARAM_KIND_RATE.NUM.ordinal()];
         status2[0] = 1.0;
@@ -33,7 +56,28 @@ public class GeoObjectDataCreater {
         status2[2] = 1.0;
         status2[3] = 1.0;
 
-        int calcParam = status1[parameterKind.ordinal()] = parameter/2 + (int)((double)parameter * Math.random());
+        int calcParam = 0;
+
+        if (randFlag) {
+            calcParam = status1[parameterKind.ordinal()] = parameter / 2 + (int) ((double) parameter * Math.random());
+        } else {
+            calcParam = parameter;
+        }
+
+        String[] names = getNamesNormal(parameterKind, calcParam);
+        String name = names[0];
+        String imageName = names[1];
+
+        GeoObjectData newGeoObjectData = new GeoObjectData(name,graphic.searchBitmap(imageName),status1, status2);
+        newGeoObjectData.setImageName(imageName);
+        //newGeoObjectData.setItemKind(Constants.Item.ITEM_KIND.GEO);
+        //newGeoObjectData.setPrice(parameter);
+
+        return newGeoObjectData;
+    }
+
+
+    private static String[] getNamesNormal(GEO_PARAM_KIND_NORMAL parameterKind, int calcParam) {
 
         int imageNum = 1;
         for (int i = 6; i >= 2; i--) {
@@ -43,7 +87,6 @@ public class GeoObjectDataCreater {
             }
         }
 
-        GeoObjectData newGeoObjectData = new GeoObjectData(status1, status2);
         String imageName = null;
         String name = null;
         switch (parameterKind) {
@@ -63,32 +106,24 @@ public class GeoObjectDataCreater {
                 imageName = "LuckGeo";
                 name = "運命ジオ";
                 break;
+
         }
         imageName += "0" + String.valueOf(imageNum);
         name += calcParam;
 
-        newGeoObjectData.setName(name);
-        newGeoObjectData.setItemImage(graphic.searchBitmap(imageName));
-        newGeoObjectData.setImageName(imageName);
-        newGeoObjectData.setItemKind(Constants.Item.ITEM_KIND.GEO);
-        newGeoObjectData.setPrice(parameter);
-
-        return newGeoObjectData;
+        return new String[] { name, imageName };
     }
 
-    public static GeoObjectData getGeoObjectData(int parameter, GEO_PARAM_KIND_RATE parameterKind) {
-        int[] status1 = new int[GEO_PARAM_KIND_NORMAL.NUM.ordinal()];
-        double[] status2 = new double[GEO_PARAM_KIND_RATE.NUM.ordinal()];
-        status2[0] = 1.0;
-        status2[1] = 1.0;
-        status2[2] = 1.0;
-        status2[3] = 1.0;
+    private static String[] getNamesRate(GEO_PARAM_KIND_RATE parameterKind, double calcParam) {
 
-        double calcParam = status2[parameterKind.ordinal()] = 1.0 + ((double)parameter/2 + (double)parameter * Math.random())/ 20.0;
+        int imageNum = 1;
+        for (int i = 6; i >= 2; i--) {
+            if (calcParam > Math.pow(10,i)) {
+                imageNum = i - 1;
+                break;
+            }
+        }
 
-        int imageNum = 6;
-
-        GeoObjectData newGeoObjectData = new GeoObjectData(status1, status2);
         String imageName = null;
         String name = null;
         switch (parameterKind) {
@@ -112,11 +147,29 @@ public class GeoObjectDataCreater {
         imageName += "0" + String.valueOf(imageNum);
         name += String.format("%.2f",calcParam);
 
-        newGeoObjectData.setName(name);
-        newGeoObjectData.setItemImage(graphic.searchBitmap(imageName));
+
+        return new String[] { name, imageName };
+    }
+
+
+    public static GeoObjectData getGeoObjectData(int parameter, GEO_PARAM_KIND_RATE parameterKind) {
+        int[] status1 = new int[GEO_PARAM_KIND_NORMAL.NUM.ordinal()];
+        double[] status2 = new double[GEO_PARAM_KIND_RATE.NUM.ordinal()];
+        status2[0] = 1.0;
+        status2[1] = 1.0;
+        status2[2] = 1.0;
+        status2[3] = 1.0;
+
+        double calcParam = status2[parameterKind.ordinal()] = 1.0 + ((double)parameter/2 + (double)parameter * Math.random())/ 20.0;
+
+        String[] names = getNamesRate(parameterKind, calcParam);
+        String name = names[0];
+        String imageName = names[1];
+
+        GeoObjectData newGeoObjectData = new GeoObjectData(name,graphic.searchBitmap(imageName),status1, status2);
         newGeoObjectData.setImageName(imageName);
-        newGeoObjectData.setItemKind(Constants.Item.ITEM_KIND.GEO);
-        newGeoObjectData.setPrice(parameter);
+        //newGeoObjectData.setItemKind(Constants.Item.ITEM_KIND.GEO);
+        //newGeoObjectData.setPrice(parameter);
 
         return newGeoObjectData;
     }

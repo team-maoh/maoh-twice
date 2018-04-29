@@ -16,6 +16,7 @@ import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
+import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 import com.maohx2.kmhanko.itemdata.Money;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.ina.Arrange.Inventry;
@@ -308,8 +309,11 @@ public class GeoPresentManager {
 
             if (tableName.equals("GeoObject")) {
                 w_script = "name = " + MyDatabase.s_quo(presentName);
+
+
                 GeoObjectData bufGeoObjectData = new GeoObjectData(
-                        graphic,
+                        MyDatabase.s_quo(presentName),
+                       graphic.searchBitmap("DefenceGeo01"),//TODO ちゃんと検索。直す
                         database.getOneInt(tableName, "hp", w_script),
                         database.getOneInt(tableName, "attack", w_script),
                         database.getOneInt(tableName, "defence", w_script),
@@ -319,6 +323,22 @@ public class GeoPresentManager {
                         database.getOneDouble(tableName, "defence_rate", w_script),
                         database.getOneDouble(tableName, "luck_rate", w_script)
                 );
+/*
+                GeoObjectData bufGeoObjectData = GeoObjectDataCreater.getGeoObjectData(
+                        new int[] {
+                                database.getOneInt(tableName, "hp", w_script),
+                                database.getOneInt(tableName, "attack", w_script),
+                                database.getOneInt(tableName, "defence", w_script),
+                                database.getOneInt(tableName, "luck", w_script),
+                        },
+                        new double[] {
+                                database.getOneDouble(tableName, "hp_rate", w_script),
+                                database.getOneDouble(tableName, "attack_rate", w_script),
+                                database.getOneDouble(tableName, "defence_rate", w_script),
+                                database.getOneDouble(tableName, "luck_rate", w_script)
+                        }
+                );*/
+
                 geoInventry.addItemData(bufGeoObjectData);
                 name = bufGeoObjectData.getName();
             }

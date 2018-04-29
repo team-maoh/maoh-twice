@@ -4,6 +4,8 @@ import java.util.List;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
+
 import static com.maohx2.ina.Constants.Inventry.INVENTRY_DATA_MAX;
 
 
@@ -38,9 +40,10 @@ public class GeoInventrySaver extends InventrySaver {
 
             database.insertLineByArrayString(
                     "GeoInventry",
-                    new String[] { "name", "num", "hp", "attack", "defence", "luck", "hp_rate", "attack_rate", "defence_rate", "luck_rate" },
+                    new String[] { "name", "image_name", "num", "hp", "attack", "defence", "luck", "hp_rate", "attack_rate", "defence_rate", "luck_rate" },
                     new String[] {
                             geoObjectData.getName(),
+                            geoObjectData.getImageName(),
                             String.valueOf(inventry.getItemNum(i)),
                             String.valueOf(geoObjectData.getHp()),
                             String.valueOf(geoObjectData.getAttack()),
@@ -65,6 +68,7 @@ public class GeoInventrySaver extends InventrySaver {
         System.out.println("takano "+database.getTables());
 
         List<String> itemNames = database.getString("GeoInventry", "name");
+        List<String> imageNames = database.getString("GeoInventry", "image_name");
         List<Integer> nums = database.getInt("GeoInventry", "num");
         List<Integer> hps = database.getInt("GeoInventry", "hp");
         List<Integer> attacks = database.getInt("GeoInventry", "attack");
@@ -79,7 +83,8 @@ public class GeoInventrySaver extends InventrySaver {
             for(int j = 0; j < nums.get(i); j++){
                 inventry.addItemData(
                         new GeoObjectData(
-                                graphic,
+                                itemNames.get(i),
+                                graphic.searchBitmap(imageNames.get(i)),
                                 hps.get(i),
                                 attacks.get(i),
                                 defences.get(i),
