@@ -138,9 +138,9 @@ public class AutoTileAdmin {
         createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 3, 0, 0, 0, 3);
         createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 4, 0, 0, 4, 0);
         createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 5, 1, 2, 0, 0);
-        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 6, 0, 2, 0, 3);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 6, 0, 6, 0, 24);
         createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 7, 0, 0, 4, 3);
-        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 8, 1, 0, 4, 0);
+        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 8, 8, 0, 16, 0);
         createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 9, 1, 0, 0, 3);
         createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 10, 0, 2, 4, 0);
         createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 11, 0, 2, 4, 3);

@@ -31,7 +31,7 @@ import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
 
 public class MapEnemy extends MapUnit {
 
-    double DEFAULT_STEP = 3;//プレイヤー未発見時の歩幅
+    double DEFAULT_STEP = 5;//プレイヤー未発見時の歩幅
     int chase_count;
     double REACH_FOR_PLAYER = 25;
     int total_dirs;//画像が1方位なのか、4方位なのか、8方位なのか(Playerの視界に入っているかどうかの判定に使う)
@@ -53,6 +53,9 @@ public class MapEnemy extends MapUnit {
         super(graphic, map_object_admin, _camera);
 
         total_dirs = _total_dirs;
+
+        w_x = 0;
+        w_y = 0;
 
         dst_w_x = w_x;
         dst_w_y = w_y;
@@ -129,7 +132,7 @@ public class MapEnemy extends MapUnit {
 
                 } else {
 
-                    step = 5 * DEFAULT_STEP + incremental_step;
+                    step = 3 * DEFAULT_STEP + incremental_step;
 
                     incremental_step += DEFAULT_STEP / 100;
 
@@ -271,8 +274,6 @@ public class MapEnemy extends MapUnit {
     public void setHasFoundPlayer(boolean _has_found_player) {
         has_found_player = _has_found_player;
     }
-
-
 
 }
 

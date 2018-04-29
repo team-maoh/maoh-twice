@@ -49,7 +49,6 @@ public class MapObjectAdmin {
     double item_distance, enemy_distance;
 
     BagItemAdmin bag_item_admin;
-    MapAdmin map_admin;
     SoundAdmin sound_admin;
     DungeonUserInterface dungeon_user_interface;
     MapPlateAdmin map_plate_admin;
@@ -69,7 +68,7 @@ public class MapObjectAdmin {
 
         is_displaying_menu = false;
 
-        map_player = new MapPlayer(graphic, this, map_admin, dungeon_user_interface, _sound_admin, camera, map_plate_admin);
+        map_player = new MapPlayer(graphic, this, dungeon_user_interface, _sound_admin, camera, map_plate_admin);
         map_player.init();
         map_player_bitmap = new MapObjectBitmap(PLAYER_DIR, graphic, "主人公");
         map_player_bitmap.init();
@@ -175,10 +174,6 @@ public class MapObjectAdmin {
         return sound_admin;
     }
 
-    public MapAdmin getMapAdmin() {
-        return map_admin;
-    }
-
     public void makeAllEnemiesFindPlayer() {
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
             map_enemy[i].setHasFoundPlayer(true);
@@ -193,8 +188,14 @@ public class MapObjectAdmin {
 
     //by kmhanko
     public void battleStart() {
-        dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+        //dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
     }
+
+//    public void getCamera(Camera _camera){
+//        camera = _camera;
+////        map_player.setCamera(camera);
+//    }
+
 
     public void initObjectPosition(MapAdmin map_admin) {
 

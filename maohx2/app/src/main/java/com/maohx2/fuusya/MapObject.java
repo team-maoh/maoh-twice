@@ -50,7 +50,6 @@ abstract public class MapObject {
         camera = _camera;
         sound_admin = map_object_admin.getSoundAdmin();
         player = map_object_admin.getPlayer();
-        map_admin = map_object_admin.getMapAdmin();
 
         exists = true;
         id = -1;
@@ -123,7 +122,15 @@ abstract public class MapObject {
         w_x = room_point.x;
         w_y = room_point.y;
 
+
     }
+
+//    public void setCamera(Camera _camera){
+//        camera = _camera;
+//    }
+
+//    public void setMapAdmin(MapAdmin _map_admin){
+//    }
 
 
 }

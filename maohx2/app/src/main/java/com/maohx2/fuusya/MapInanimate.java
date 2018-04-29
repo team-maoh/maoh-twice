@@ -18,6 +18,9 @@ public class MapInanimate extends MapObject {
 
         id = _id;
 
+        w_x = 0;
+        w_y = 0;
+
     }
 
     public void init() {
