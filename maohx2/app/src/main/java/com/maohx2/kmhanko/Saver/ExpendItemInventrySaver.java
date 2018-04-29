@@ -59,9 +59,6 @@ public class ExpendItemInventrySaver extends InventrySaver {
     public void load() {
         List<String> itemNames = database.getString("ExpendItemInventry", "name");
         List<Integer> nums = database.getInt("ExpendItemInventry", "num");
-        if (itemNames.size() != nums.size()) {
-            throw new Error("☆タカノ:ExpendItemInventrySaver#load 取得したアイテム名とアイテムの個数のデータ数が一致しない " + itemNames.size() + "," + nums.size());
-        }
         for(int i = 0; i < itemNames.size(); i++) {
             for(int j = 0; j < nums.get(i); j++){
                 inventry.addItemData(

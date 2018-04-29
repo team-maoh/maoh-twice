@@ -175,6 +175,7 @@ public class Inventry {
     public int getItemNum(int i) {
         return inventry_datas[i].getItemNum();
     }
+    /*
     public void deleteItemData(int i) {
         inventry_datas[i].delete();
     }
@@ -196,4 +197,5 @@ public class Inventry {
     public PlateGroup<BoxInventryPlate> getOperateInventryListBox() {
         return operate_inventry_list_box;
     }
+    */
 }

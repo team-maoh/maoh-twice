@@ -188,7 +188,7 @@ public class TextBoxAdmin {
         text_box[_box_id].updateText();
     }
 
-    //TextBoxのTextを変更する関数
+    //TextBoxのTextを変更する関数(idを指定する)
     public void updateText(int _box_id, int _sentence_id) {
         if (_sentence_id < 0) {
             updateText(_box_id);
@@ -198,9 +198,9 @@ public class TextBoxAdmin {
     }
 
     //TextBoxを削除する関数
-    public void deleteTextBox(int _box_id) {
-
-    }
+//    public void deleteTextBox(int _box_id) {
+//
+//    }
 
     //TextBoxに文章を入力する関数
     //　引数：Boxの通し番号, 文章, 文章のPaint
@@ -212,19 +212,19 @@ public class TextBoxAdmin {
     //    bookingDrawText(1,"\n",text_paint);
     //    bookingDrawText(1,"です",text_paint);
     //    bookingDrawText(1,"MOP",text_paint);
-    public void bookingDrawText(int _box_id, String _text, Paint _paint) {
-
-        text_box[_box_id].inputText(_text, _paint);
-
-    }
-
     public void bookingDrawText(int _box_id, String _text) {
 
         Paint default_paint = new Paint();
         default_paint.setTextSize(40);
         default_paint.setColor(Color.GREEN);
 
-        text_box[_box_id].inputText(_text, default_paint);
+        bookingDrawText(_box_id, _text, default_paint);
+//        text_box[_box_id].inputText(_text, default_paint);
+    }
+    //
+    public void bookingDrawText(int _box_id, String _text, Paint _paint) {
+
+        text_box[_box_id].inputText(_text, _paint);
     }
 
 }

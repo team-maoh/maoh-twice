@@ -46,6 +46,15 @@ public class BookingBitmapData extends BookingTaskData {
     public void draw(Canvas canvas){
 
         if(isRect == true) {
+            //TODO by kmhanko　なんかエラー吐くのでチェック
+            if (canvas == null) {
+                System.out.println("BookingBitMapData#draw MyERROR!!! ☆タカノ: canvas == null");
+                return;
+            }
+            if (draw_bitmap_data == null) {
+                System.out.println("BookingBitMapData#draw MyERROR!!! ☆タカノ: draw_bitmap_data == null");
+                return;
+            }
             canvas.drawBitmap(draw_bitmap_data.getBitmap(), new Rect(0,0,draw_bitmap_data.getWidth(),draw_bitmap_data.getHeight()), draw_rect,null);
             //canvas.drawBitmap(draw_bitmap_data.getBitmap(),0,0,paint);
         }else{
