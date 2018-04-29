@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.maohx2.fuusya.MapInventryAdmin;
 import com.maohx2.fuusya.MapObjectAdmin;
 import com.maohx2.fuusya.MapPlateAdmin;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
@@ -50,18 +49,21 @@ public class DungeonGameSystem {
     DungeonModeManage dungeonModeManage;
     boolean is_displaying_menu, is_touching_outside_menu;
     MapPlateAdmin map_plate_admin;
-    MapInventryAdmin map_inventry_admin;
+    ActivityChange activityChange;
 
-    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange activityChange) {
+    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange _activityChange) {
         dungeon_user_interface = _dungeon_user_interface;
         battle_user_interface = _battle_user_interface;
         graphic = _graphic;
 
         dungeonModeManage = new DungeonModeManage();
-        map_admin = new MapAdmin(graphic);
-        //map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin,this, dungeonModeManage);
+
+
         map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange);
-        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin, map_plate_admin, dungeonModeManage);
+        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_plate_admin, dungeonModeManage);
+        map_admin = new MapAdmin(graphic, map_object_admin);
+//        map_object_admin.getCamera(map_admin.getCamera());
+        //map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin,this, dungeonModeManage);
         paint = new Paint();
         paint.setColor(Color.BLUE);
 
@@ -87,8 +89,6 @@ public class DungeonGameSystem {
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
         battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin);
 
-        map_inventry_admin = new MapInventryAdmin(globalData, map_plate_admin.getInventry(), map_object_admin, map_plate_admin);
-        map_inventry_admin.init();
 
     }
 
@@ -101,7 +101,6 @@ public class DungeonGameSystem {
                 //map_plate_admin.update(is_displaying_menu);
                 map_object_admin.update();
                 map_plate_admin.update();
-                map_inventry_admin.update();
                 break;
 
             case BUTTLE_INIT:
@@ -119,7 +118,7 @@ public class DungeonGameSystem {
 
         switch (dungeonModeManage.getMode()) {
             case MAP:
-                map_admin.drawMap_for_autotile_4div_combine();
+                map_admin.drawMap_for_autotile_light();
                 map_object_admin.draw();
                 map_plate_admin.draw();
                 //graphic.bookingDrawCircle(0,0,10,paint);

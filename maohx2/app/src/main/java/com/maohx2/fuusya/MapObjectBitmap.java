@@ -23,7 +23,9 @@ public class MapObjectBitmap {
     int MAX_BITMAP_DIR = 8;//最大で8方位
     int MAX_FRAME = 3;//3枚の画像をループ表示する
     BitmapData bitmap_data[][] = new BitmapData[MAX_BITMAP_DIR][MAX_FRAME];
-    int FRAME_PERIODS = 5;//画像の更新周期(値が小さいほどfpsが上がる)
+    int FRAME_QUICK_PERIODS = 5;//画像の更新周期(値が小さいほどfpsが上がる)
+    int FRAME_SLOW_PERIODS = 10;
+    int frame_periods;
 
     int time_count;//画像の更新周期を数える
     boolean is_increasing_frame;//画像番号が増えている最中 or 減っている最中
@@ -57,6 +59,8 @@ public class MapObjectBitmap {
                 System.out.println("Bitmapの方位数（total_dirs）がおかしい");
         }
 
+        frame_periods = FRAME_SLOW_PERIODS;
+
 //        if (total_dirs == 8) {
 //            storeEightBD(raw_bitmap_data);
 //        }
@@ -74,7 +78,7 @@ public class MapObjectBitmap {
 
             case 8:
                 //フレームの番号
-                time_count = (time_count + 1) % FRAME_PERIODS;
+                time_count = (time_count + 1) % frame_periods;
                 if (time_count == 0) {
 
                     if (is_increasing_frame == true) {
@@ -105,7 +109,7 @@ public class MapObjectBitmap {
 
         switch (total_dirs) {
             case 1:
-                graphic.bookingDrawBitmapData(raw_bitmap_data,  (int) x, (int) y);
+                graphic.bookingDrawBitmapData(raw_bitmap_data, (int) x, (int) y);
                 break;
 
             case 8:
@@ -169,6 +173,15 @@ public class MapObjectBitmap {
             bitmap_data[_object_dir][i] = graphic.processTrimmingBitmapData(_raw_bitmap_data, col * (unit_width * 3) + i * unit_width, row * unit_height, unit_width, unit_height);
         }
     }
+
+    public void makeFpsQuick() {
+        frame_periods = FRAME_QUICK_PERIODS;
+    }
+
+    public void makeFpsSlow() {
+        frame_periods = FRAME_SLOW_PERIODS;
+    }
+
 
 //    private void storeEightBD(BitmapData _raw_bitmap_data) {
 //

@@ -60,11 +60,9 @@ public class MapObjectAdmin {
 
     boolean is_displaying_menu;
 
-    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapAdmin _map_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage) {
+    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
-        map_admin = _map_admin;
-        camera = map_admin.getCamera();
         sound_admin = _sound_admin;
         map_plate_admin = _map_plate_admin;
         dungeon_mode_manage = _dungeon_mode_manage;
@@ -73,7 +71,7 @@ public class MapObjectAdmin {
 
         map_player = new MapPlayer(graphic, this, map_admin, dungeon_user_interface, _sound_admin, camera, map_plate_admin);
         map_player.init();
-        map_player_bitmap = new MapObjectBitmap(PLAYER_DIR, graphic, "ドラゴン");
+        map_player_bitmap = new MapObjectBitmap(PLAYER_DIR, graphic, "主人公");
         map_player_bitmap.init();
 
         player_x = map_player.getWorldX();
@@ -83,7 +81,7 @@ public class MapObjectAdmin {
             map_item[i] = new MapItem(graphic, this, i % 2, camera);
             map_item[i].init();
 
-            switch (i%2){
+            switch (i % 2) {
                 case 0:
                     map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "ハーピー");
                     break;
@@ -109,7 +107,7 @@ public class MapObjectAdmin {
 
             map_enemy[i] = new MapEnemy(graphic, this, camera, ENEMY_DIR, true, true);
             map_enemy[i].init();
-            map_enemy_bitmap[i] = new MapObjectBitmap(ENEMY_DIR, graphic, "ハーピー");
+            map_enemy_bitmap[i] = new MapObjectBitmap(ENEMY_DIR, graphic, "ジオイーター");
             map_enemy_bitmap[i].init();
         }
 
@@ -196,6 +194,24 @@ public class MapObjectAdmin {
     //by kmhanko
     public void battleStart() {
         dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+    }
+
+    public void initObjectPosition(MapAdmin map_admin) {
+
+        map_player.initPosition(map_admin);
+
+        for (int i = 0; i < NUM_OF_ITEM; i++) {
+            map_item[i].initPosition(map_admin);
+
+        }
+        for (int i = 0; i < NUM_OF_ENEMY; i++) {
+            map_enemy[i].initPosition(map_admin);
+
+        }
+
+        for (int i = 0; i < NUM_OF_TRAP; i++) {
+            map_trap[i].initPosition(map_admin);
+        }
     }
 
 }

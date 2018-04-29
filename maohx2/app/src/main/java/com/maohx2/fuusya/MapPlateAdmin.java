@@ -33,6 +33,7 @@ public class MapPlateAdmin {
     Graphic graphic;
     DungeonUserInterface dungeon_user_interface;
     Inventry inventry;
+    MapInventryAdmin map_inventry_admin;
     ActivityChange activityChange;
     boolean is_displaying_list;
 
@@ -179,7 +180,6 @@ public class MapPlateAdmin {
                 break;
 
             case 1://[ステータス]
-                will_storage_inventry = true;
 
                 break;
 
@@ -188,9 +188,9 @@ public class MapPlateAdmin {
                 break;
 
             case 3://[リタイア]
-
+                map_inventry_admin.storageMapInventry();
                 activityChange.toWorldActivity();
-//                System.out.println("desudesu");
+
                 break;
 
             default:
@@ -298,6 +298,10 @@ public class MapPlateAdmin {
 
     public boolean getWillStorageInventry(){
         return will_storage_inventry;
+    }
+
+    public void setMapInventryAdmin(MapInventryAdmin _map_inventry_admin){
+        map_inventry_admin = _map_inventry_admin;
     }
 
 }

@@ -44,12 +44,13 @@ public class GeoSlotSaver extends SaveManager {
 
     public void setGeoSlotAdminManager(GeoSlotAdminManager _geoSlotAdminManager) {
         geoSlotAdminManager = _geoSlotAdminManager;
-        makeTable();//TODO あまり良くない
+        if (database.isNew()) {
+            makeTable();//TODO よくない
+        }
     }
 
     @Override
     public void dbinit() {
-        //TODO あまり良くない
     }
 
     //TODO データベースのアップデートがあった場合に良くない処理。
@@ -75,10 +76,10 @@ public class GeoSlotSaver extends SaveManager {
                             "attack integer," +
                             "defence integer," +
                             "luck integer," +
-                            "hp_rate integer," +
-                            "attack_rate integer," +
-                            "defence_rate integer," +
-                            "luck_rate integer" +
+                            "hp_rate real," +
+                            "attack_rate real," +
+                            "defence_rate real," +
+                            "luck_rate real" +
                             ")"
             );
             System.out.println("☆タカノ:GeoSlotSaver#init テーブル生成: " + tableNames.get(i));
@@ -91,6 +92,8 @@ public class GeoSlotSaver extends SaveManager {
 
     @Override
     public void save() {
+        String datas[] = new String[10];
+
         deleteAll();
         List<GeoSlotAdmin> geoSlotAdmins  = geoSlotAdminManager.getGeoSlotAdmins();
         List<String> dBtableNames = database.getTables();
@@ -108,11 +111,31 @@ public class GeoSlotSaver extends SaveManager {
                 GeoObjectData geoObjectData = (GeoObjectData)geoSlots.get(j).getGeoObjectData();
 
                 if (geoObjectData == null) {
-                    continue;
+                    datas[0] = null;
+                    datas[1] = null;
+                    datas[2] = null;
+                    datas[3] = null;
+                    datas[4] = null;
+                    datas[5] = null;
+                    datas[6] = null;
+                    datas[7] = null;
+                    datas[8] = null;
+                    datas[9] = null;
+                } else {
+                    datas[0] = geoObjectData.getName();
+                    datas[1] = geoObjectData.getImageName();
+                    datas[2] = String.valueOf(geoObjectData.getHp());
+                    datas[3] = String.valueOf(geoObjectData.getAttack());
+                    datas[4] = String.valueOf(geoObjectData.getDefence());
+                    datas[5] = String.valueOf(geoObjectData.getLuck());
+                    datas[6] = String.valueOf(geoObjectData.getHpRate());
+                    datas[7] = String.valueOf(geoObjectData.getAttackRate());
+                    datas[8] = String.valueOf(geoObjectData.getDefenceRate());
+                    datas[9] = String.valueOf(geoObjectData.getLuckRate());
                 }
 
                 String releaseFlag;
-                if (geoSlots.get(j).isEventClear()) {
+                if (geoSlots.get(j).isReleased()) {
                     releaseFlag = "true";
                 } else {
                     releaseFlag = "false";
@@ -124,19 +147,21 @@ public class GeoSlotSaver extends SaveManager {
                         new String[] {
                                 String.valueOf(j),
                                 releaseFlag,
-                                geoObjectData.getName(),
-                                geoObjectData.getImageName(),
-                                String.valueOf(geoObjectData.getHp()),
-                                String.valueOf(geoObjectData.getAttack()),
-                                String.valueOf(geoObjectData.getDefence()),
-                                String.valueOf(geoObjectData.getLuck()),
-                                String.valueOf(geoObjectData.getHpRate()),
-                                String.valueOf(geoObjectData.getAttackRate()),
-                                String.valueOf(geoObjectData.getDefenceRate()),
-                                String.valueOf(geoObjectData.getLuckRate()),
+                                datas[0],
+                                datas[1],
+                                datas[2],
+                                datas[3],
+                                datas[4],
+                                datas[5],
+                                datas[6],
+                                datas[7],
+                                datas[8],
+                                datas[9]
                         }
                 );
-                System.out.println("☆タカノ:GeoSlotSaver#save : " + name + "(" + j + ") " + "<-" + geoObjectData.getName());
+                if (geoObjectData != null) {
+                    System.out.println("☆タカノ:GeoSlotSaver#save : " + name + "(" + j + ") " + "<-" + geoObjectData.getName());
+                }
             }
         }
     }
@@ -169,25 +194,26 @@ public class GeoSlotSaver extends SaveManager {
 
             List<GeoSlot> geoSlots = geoSlotAdmins.get(i).getGeoSlots();
             for(int j = 0; j < ids.size(); j++) {
-                if (geoSlots.get(ids.get(j)).pushGeoObject(
-                        new GeoObjectData(
-                                names.get(j),
-                                graphic.searchBitmap(imageNames.get(j)),
-                                hps.get(j),
-                                attacks.get(j),
-                                defences.get(j),
-                                lucks.get(j),
-                                hpRates.get(j),
-                                attackRates.get(j),
-                                defenceRates.get(j),
-                                luckRates.get(j)
-                        )
+                if (names.get(i) != null) {
+                    if (geoSlots.get(ids.get(j)).pushGeoObject(
+                            new GeoObjectData(
+                                    names.get(j),
+                                    graphic.searchBitmap(imageNames.get(j)),
+                                    hps.get(j),
+                                    attacks.get(j),
+                                    defences.get(j),
+                                    lucks.get(j),
+                                    hpRates.get(j),
+                                    attackRates.get(j),
+                                    defenceRates.get(j),
+                                    luckRates.get(j)
+                            )
                     )
-                ) {
-                    System.out.println("☆タカノ:GeoSlotSaver#load : " + tableName + "(" + ids.get(j) + ") " + "->" + names.get(j));
+                            ) {
+                        System.out.println("☆タカノ:GeoSlotSaver#load : " + tableName + "(" + ids.get(j) + ") " + "->" + names.get(j));
+                    }
                 }
                 geoSlots.get(ids.get(j)).setReleased(releaseFlags.get(j));
-
             }
         }
 

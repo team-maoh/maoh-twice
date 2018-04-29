@@ -18,10 +18,6 @@ public class MapInanimate extends MapObject {
 
         id = _id;
 
-        Point room_point = map_admin.getRoomPoint();
-        w_x = room_point.x;
-        w_y = room_point.y;
-
     }
 
     public void init() {

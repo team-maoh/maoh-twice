@@ -131,21 +131,11 @@ public class GeoSlot extends CircleImagePlate {
         return true;
     }
 
-    //TODO:イベントがクリアされているか返す関数。
+    //イベントがクリアされているか返す関数。
     public boolean isEventClear() {
         if (release_event == null) {
             return true;
         } else {
-            //何かしらrelease_eventが設定されている
-
-            //セーブデータにアクセスし、その条件を満たしているかを確認する
-
-            //満たしているなら
-            //return true;
-            //満たしていないなら
-            //return false;
-
-            //TODO:デバッグ用　とりあえずSlot自身が一時的にイベントがクリアされたかの変数を持つことにする
             if (isReleased == true) {
                 return true;
             } else {
@@ -394,6 +384,7 @@ public class GeoSlot extends CircleImagePlate {
     public boolean isInGeoObjectAndExist() {
         return (is_in_geoObjectData && is_exist);
     }
+    public boolean isReleased() { return isReleased; }
 
     public void setGeoSlotAdmin(GeoSlotAdmin _geoSlotAdmin) { geoSlotAdmin = _geoSlotAdmin; }
     //static public void setUserInterface(UserInterface _userInterface) { userInterface = _userInterface; }

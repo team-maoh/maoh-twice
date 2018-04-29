@@ -163,7 +163,9 @@ public class GeoSlotAdmin {
                                 //戻るボタンが押された時の処理
                                 geoSlotAdminManager.calcPlayerStatus();
                                 geoSlotAdminManager.saveGeoInventry();
+
                                 geoSlotAdminManager.saveGeoSlot();
+
                                 textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
                                 textBoxAdmin.setTextBoxExists(statusTextBoxID, false);
 
