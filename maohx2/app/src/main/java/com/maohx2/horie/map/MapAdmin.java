@@ -81,7 +81,7 @@ public class MapAdmin {
     int magnification = 64*4;//倍率
     int time = 0;//アニメーションタイミング用
     int now_floor_num = 0;//現在のフロア階層
-    int boss_floor_num = 2;//ボスフロアの階層
+    int boss_floor_num = 1;//ボスフロアの階層
 
     Point offset = new Point(0, 0);
     Point start_point = new Point(0, 0);
@@ -494,8 +494,6 @@ public class MapAdmin {
         }
         else{
             goBossFloor();
-            camera.setCameraOffset(7.5*magnification, 9*magnification);
-            map_player.putUnit(7.5*magnification, 9*magnification);
         }
     }
 
@@ -539,6 +537,11 @@ public class MapAdmin {
                 }
             }
         }
+        if(boss_floor_num == 1) {
+            map_object_admin.initObjectPosition(this);
+        }
+        camera.setCameraOffset(7.5*magnification, 9*magnification);
+        map_player.putUnit(7.5*magnification, 9*magnification);
     }
 
     //一歩先に壁があるかどうかと壁の方向を判定
