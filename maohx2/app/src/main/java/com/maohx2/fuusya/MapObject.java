@@ -50,14 +50,9 @@ abstract public class MapObject {
         camera = _camera;
         sound_admin = map_object_admin.getSoundAdmin();
         player = map_object_admin.getPlayer();
-        map_admin = map_object_admin.getMapAdmin();
 
         exists = true;
         id = -1;
-
-        Point room_point = map_admin.getRoomPoint();
-        w_x = room_point.x;
-        w_y = room_point.y;
 
         dir_on_map = 0.0;
 
@@ -117,6 +112,25 @@ abstract public class MapObject {
     protected double myDistance(double x1, double y1, double x2, double y2) {
         return (pow(pow(x1 - x2, 2.0) + pow(y1 - y2, 2.0), 0.5));
     }
+
+    public void initPosition(MapAdmin _map_admin){
+        map_admin = _map_admin;
+
+        camera = map_admin.getCamera();
+
+        Point room_point = map_admin.getRoomPoint();
+        w_x = room_point.x;
+        w_y = room_point.y;
+
+
+    }
+
+//    public void setCamera(Camera _camera){
+//        camera = _camera;
+//    }
+
+//    public void setMapAdmin(MapAdmin _map_admin){
+//    }
 
 
 }

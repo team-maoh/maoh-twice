@@ -56,12 +56,13 @@ public class MapPlayer extends MapUnit {
 
     TouchState touch_state;
 
-    public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, MapAdmin _map_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, MapPlateAdmin _map_plate_admin) {
+    public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, MapPlateAdmin _map_plate_admin) {
         super(graphic, _map_object_admin, _camera);
 
         dungeon_user_interface = _dungeon_user_interface;
         map_plate_admin = _map_plate_admin;
         map_admin = _map_admin;
+
 
         touch_state = dungeon_user_interface.getTouchState();
 

@@ -96,4 +96,9 @@ public class Camera {
     public Point getCameraOffset(){
         return camera_offset;
     }
+
+    public Point getNowPoint(){
+        Point now_point = new Point(camera_offset.x + normalize_size.x/2, camera_offset.y + normalize_size.y/2);
+        return now_point;
+    }
 }
