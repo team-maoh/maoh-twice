@@ -1,13 +1,27 @@
 package com.maohx2.kmhanko.GeoPresent;
 
+import android.graphics.Paint;
+
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.ina.Arrange.InventryData;
+import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.Text.BoxTextPlate;
+import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemData;
+import com.maohx2.ina.WorldModeAdmin;
+import com.maohx2.kmhanko.Saver.GeoPresentSaver;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.database.MyDatabase;
+import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
+import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 import com.maohx2.kmhanko.itemdata.Money;
+import com.maohx2.kmhanko.Arrange.InventryS;
+import com.maohx2.ina.Arrange.Inventry;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.plate.BackPlate;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -37,12 +51,18 @@ public class GeoPresentManager {
     TextBoxAdmin textBoxAdmin;
     MyDatabase database;
 
+    int scoreTextBoxID;
+    int messageBoxID;
+
     static final String dbName = "GeoPresentDB";
     static final String dbAsset = "GeoPresent.db";
 
-    static final String presentListName = "BasePresentList";
+    static final String presentListTableName = "BasePresentList";
     int size;
 
+    PlateGroup<BackPlate> backPlateGroup;
+
+    GeoObjectData holdGeoObbjectData;
 
     //TODO: セーブデータの一部
     int hpScore;
@@ -51,33 +71,154 @@ public class GeoPresentManager {
     int luckScore;
     int specialScore;
     int sumScore;
-    List<Boolean> alreadyGet = new ArrayList<Boolean>();
 
-    public GeoPresentManager() {
-    }
 
-    public void init(UserInterface _user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin) {
+    List<Boolean> alreadyPresentGetFlags = new ArrayList<>();
+
+
+    InventryS geoInventry;
+    InventryS expendItemInventry;
+    ExpendItemDataAdmin expendItemDataAdmin;
+
+    PlateGroup<BoxTextPlate> presentSelectPlateGroup;
+
+    WorldModeAdmin worldModeAdmin;
+
+    PlayerStatus playerStatus;
+
+    GeoPresentSaver geoPresentSaver;
+
+    public GeoPresentManager(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, InventryS _geoInventry, InventryS _expendItemInventry, ExpendItemDataAdmin _expendItemDataAdmin, PlayerStatus _playerStatus) {
         userInterface = _user_interface;
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
         textBoxAdmin = _textBoxAdmin;
         loadDatabase(databaseAdmin);
+        geoInventry = _geoInventry; //TODO globalから
+        expendItemInventry = _expendItemInventry;
+        expendItemDataAdmin = _expendItemDataAdmin;
+        playerStatus = _playerStatus;
+        worldModeAdmin = _worldModeAdmin;
 
-        //TODO : セーブデータからの読み込み
-        initAlreadyGet();
+        //initAlreadyGet();
+        initTextBox();
+        initPlateGroup();
+
     }
 
-    private void initAlreadyGet() {
-        for(int i = 0; i < size; i++) {
-            alreadyGet.add(false);
-        }
+    public void setGeoPresentSaver(GeoPresentSaver _geoPresentSaver) {
+        geoPresentSaver = _geoPresentSaver;
+        geoPresentSaver.load();
+        scoreTextBoxUpdate();
     }
 
-    public void loadDatabase(MyDatabaseAdmin database_admin) {
+    private void loadDatabase(MyDatabaseAdmin database_admin) {
         database_admin.addMyDatabase(dbName, dbAsset, 1, "r");
         database = database_admin.getMyDatabase(dbName);
 
-        size = database.getSize(presentListName);
+        size = database.getSize(presentListTableName);
+    }
+
+    /*
+    public void setPresentGetFlags(List<Boolean> _presentGetFlags) {
+        presentGetFlags = _presentGetFlags;
+    }
+    */
+
+    //DBに記載された全てのプレゼントについて、それぞれ既にもらったかどうか。
+    /*
+    private void initAlreadyGet() {
+        List<String> bufPresentName = database.getString(presentListTableName, "present_name");
+        for(int i = 0; i < size; i++) {
+            presentGetFlags.add(new PresentGetFlag(
+                    bufPresentName.get(i),
+                    false)
+            );
+        }
+    }
+    */
+
+    private void initTextBox() {
+        scoreTextBoxID = textBoxAdmin.createTextBox(50,50,500,600,6);
+        textBoxAdmin.setTextBoxUpdateTextByTouching(scoreTextBoxID, false);
+        textBoxAdmin.setTextBoxExists(scoreTextBoxID, false);
+        scoreTextBoxUpdate();
+
+        messageBoxID = textBoxAdmin.createTextBox(50,650,1000,850,3);
+        textBoxAdmin.setTextBoxExists(messageBoxID, false);
+
+
+        textBoxAdmin.setTextBoxUpdateTextByTouching(messageBoxID, false);
+        textBoxAdmin.bookingDrawText(messageBoxID, "ジオオブジェクトちょうだ〜い");
+        textBoxAdmin.bookingDrawText(messageBoxID, "MOP");
+        textBoxAdmin.updateText(messageBoxID);
+    }
+
+    private void initPlateGroup() {
+        Paint textPaint = new Paint();
+        textPaint.setTextSize(80f);
+        textPaint.setARGB(255,255,255,255);
+        presentSelectPlateGroup = new PlateGroup<BoxTextPlate>(
+                new BoxTextPlate[]{
+                        new BoxTextPlate(
+                                graphic, userInterface, new Paint(),
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{1100, 550, 1550, 650},
+                                "献上する",
+                                textPaint
+                        ),
+                        new BoxTextPlate(
+                                graphic, userInterface, new Paint(),
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{1100, 700, 1550, 800},
+                                "やめる",
+                                textPaint
+                        )
+                }
+        );
+        presentSelectPlateGroup.setUpdateFlag(false);
+        presentSelectPlateGroup.setDrawFlag(false);
+
+        initBackPlate();
+    }
+
+
+    private void scoreTextBoxUpdate() {
+        textBoxAdmin.bookingDrawText(scoreTextBoxID, "献上ポイント");
+        textBoxAdmin.bookingDrawText(scoreTextBoxID, "\n");
+        textBoxAdmin.bookingDrawText(scoreTextBoxID, "HP " + hpScore);
+        textBoxAdmin.bookingDrawText(scoreTextBoxID, "\n");
+        textBoxAdmin.bookingDrawText(scoreTextBoxID, "Attack " + attackScore);
+        textBoxAdmin.bookingDrawText(scoreTextBoxID, "\n");
+        textBoxAdmin.bookingDrawText(scoreTextBoxID, "Deffence " + defenceScore);
+        textBoxAdmin.bookingDrawText(scoreTextBoxID, "\n");
+        textBoxAdmin.bookingDrawText(scoreTextBoxID, "Luck " + luckScore);
+        textBoxAdmin.bookingDrawText(scoreTextBoxID, "\n");
+        textBoxAdmin.bookingDrawText(scoreTextBoxID, "Special " + specialScore);
+        textBoxAdmin.bookingDrawText(scoreTextBoxID, "MOP");
+        textBoxAdmin.updateText(scoreTextBoxID);
+    }
+
+    public void geoInventryUpdate() {
+        geoInventry.updata();
+        InventryData inventryData = userInterface.getInventryData();
+        if (inventryData != null) {
+            if (inventryData.getItemNum() > 0) {
+                //TODO InventryOFF
+                holdGeoObbjectData = (GeoObjectData)inventryData.getItemData();
+                userInterface.setInventryData(null);
+                presentSelectPlateGroup.setUpdateFlag(true);
+                presentSelectPlateGroup.setDrawFlag(true);
+            }
+        }
+    }
+
+    //プレゼント処理まとめ
+    public void presentAndCheck(GeoObjectData geoObjectData) {
+        presentGeoObject(geoObjectData);
+        presentToInventry(getNewPresentCheckFlags(getCheckFlag()));
     }
 
     private void presentGeoObject(GeoObjectData geoObjectData) {
@@ -92,22 +233,31 @@ public class GeoPresentManager {
         specialScore += (geoObjectData.getLuckRate() - 1.0) * 10;
 
         sumScore = hpScore + attackScore + defenceScore + luckScore + specialScore;
+
+        geoInventry.subItemData(holdGeoObbjectData);
+        holdGeoObbjectData = null;
+
+        textBoxAdmin.bookingDrawText(messageBoxID, "ありがたくいただくとするわ");
+        textBoxAdmin.bookingDrawText(messageBoxID, "MOP");
+        textBoxAdmin.updateText(messageBoxID);
     }
 
-    public List<ItemData> presentAndCheck(GeoObjectData geoObjectData) {
-        presentGeoObject(geoObjectData);
-        return getPresentItemData(getNewPresentCheckFlags(getCheckFlag()));
-    }
 
+
+    //プレゼントリストのDBをチェックして、どのプレゼントの取得条件を満たしているかを返す
     private List<Boolean> getCheckFlag() {
-        List<Boolean> checkFlag = new ArrayList<Boolean>(size);
+        List<Boolean> checkFlag = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            checkFlag.add(false);
+        }
 
-        List<Integer> hp = database.getInt(presentListName, "hp");
-        List<Integer> attack = database.getInt(presentListName, "attack");
-        List<Integer> defence = database.getInt(presentListName, "defence");
-        List<Integer> luck = database.getInt(presentListName, "luck");
-        List<Integer> special = database.getInt(presentListName, "special");
-        List<Integer> sum = database.getInt(presentListName, "sum");
+        List<Integer> id = database.getInt(presentListTableName, "id");
+        List<Integer> hp = database.getInt(presentListTableName, "hp");
+        List<Integer> attack = database.getInt(presentListTableName, "attack");
+        List<Integer> defence = database.getInt(presentListTableName, "defence");
+        List<Integer> luck = database.getInt(presentListTableName, "luck");
+        List<Integer> special = database.getInt(presentListTableName, "special");
+        List<Integer> sum = database.getInt(presentListTableName, "sum");
 
         for(int i = 0; i < size; i++) {
             if (
@@ -118,66 +268,217 @@ public class GeoPresentManager {
                     specialScore >= special.get(i) &&
                     sumScore >= sum.get(i)
                     ) {
-                checkFlag.add(true);
-            } else {
-                checkFlag.add(false);
+                    checkFlag.set(id.get(i) - 1, true);
             }
         }
         return checkFlag;
     }
 
-    private List<Present> getNewPresentCheckFlags(List<Boolean> checkFlag) {
-        List<Present> newPresentCheckFlags = new ArrayList<Present>();
+    //まだ入手していない且つ入手条件を満たしているPresentのリストを返す
+    private List<Integer> getNewPresentCheckFlags(List<Boolean> checkFlag) {
+        List<Integer> newPresentNumber = new ArrayList<Integer>();
         String tableName;
         String presentName;
         for (int i = 0; i < checkFlag.size(); i++) {
-            if (checkFlag.get(i) && !alreadyGet.get(i)) {
+            if (checkFlag.get(i) && !alreadyPresentGetFlags.get(i)) {
                 //今回初めて条件を満たしたもの
-                tableName = database.getStringByRowID(presentListName, "table_name", i + 1);
-                presentName = database.getStringByRowID(presentListName, "present_name", i + 1);
-                newPresentCheckFlags.add(new Present(tableName, presentName));
+                //tableName = database.getStringByRowID(presentListTableName, "table_name", i);
+                //presentName = database.getStringByRowID(presentListTableName, "present_name", i);
+                newPresentNumber.add(i + 1);
             }
         }
-        return newPresentCheckFlags;
+        return newPresentNumber;
     }
 
-    private List<ItemData> getPresentItemData(List<Present> newPresent) {
-        Present presentBuf;
-        String w_script;
-        List<ItemData> itemdata = new ArrayList<ItemData>();
-        for(int i = 0; i < newPresent.size();i++) {
-            presentBuf = newPresent.get(i);
-            w_script = database.s_quo("present_name") + " = " + presentBuf.getPresentName();
+    //入手するプレゼント処理
+    private void presentToInventry(List<Integer> newPresentNumber) {
+        //Present bufPresent = null;
+        String w_script = "";
+        String name = "";
 
-            if (presentBuf.tableName.equals("GeoObject")) {
-                itemdata.add(new GeoObjectData(
-                        database.getOneInt(presentListName, "hp", w_script),
-                        database.getOneInt(presentListName, "attack", w_script),
-                        database.getOneInt(presentListName, "defence", w_script),
-                        database.getOneInt(presentListName, "luck", w_script),
-                        database.getOneDouble(presentListName, "hp_rate", w_script),
-                        database.getOneDouble(presentListName, "attack_rate", w_script),
-                        database.getOneDouble(presentListName, "defence_rate", w_script),
-                        database.getOneDouble(presentListName, "luck_rate", w_script)
-                ));
+        //System.out.println("takano : 貰えるアイテム個数 : " + newPresent.size());
+        //List<ItemData> itemdata = new ArrayList<ItemData>();
+
+        String tableName;
+        String presentName;
+
+        for(int i = 0; i < newPresentNumber.size();i++) {
+            w_script = "id = " + newPresentNumber.get(i);
+            tableName = database.getOneString(presentListTableName, "table_name", w_script);
+            presentName = database.getOneString(presentListTableName, "present_name", w_script);
+
+            if (tableName.equals("GeoObject")) {
+                w_script = "name = " + MyDatabase.s_quo(presentName);
+
+
+                GeoObjectData bufGeoObjectData = new GeoObjectData(
+                        MyDatabase.s_quo(presentName),
+                       graphic.searchBitmap("DefenceGeo01"),//TODO ちゃんと検索。直す
+                        database.getOneInt(tableName, "hp", w_script),
+                        database.getOneInt(tableName, "attack", w_script),
+                        database.getOneInt(tableName, "defence", w_script),
+                        database.getOneInt(tableName, "luck", w_script),
+                        database.getOneDouble(tableName, "hp_rate", w_script),
+                        database.getOneDouble(tableName, "attack_rate", w_script),
+                        database.getOneDouble(tableName, "defence_rate", w_script),
+                        database.getOneDouble(tableName, "luck_rate", w_script)
+                );
+/*
+                GeoObjectData bufGeoObjectData = GeoObjectDataCreater.getGeoObjectData(
+                        new int[] {
+                                database.getOneInt(tableName, "hp", w_script),
+                                database.getOneInt(tableName, "attack", w_script),
+                                database.getOneInt(tableName, "defence", w_script),
+                                database.getOneInt(tableName, "luck", w_script),
+                        },
+                        new double[] {
+                                database.getOneDouble(tableName, "hp_rate", w_script),
+                                database.getOneDouble(tableName, "attack_rate", w_script),
+                                database.getOneDouble(tableName, "defence_rate", w_script),
+                                database.getOneDouble(tableName, "luck_rate", w_script)
+                        }
+                );*/
+
+                geoInventry.addItemData(bufGeoObjectData);
+                name = bufGeoObjectData.getName();
             }
-            if (presentBuf.tableName.equals("Money")) {
-                itemdata.add(new Money(database.getOneInt(presentListName, "money", w_script)));
+            if (tableName.equals("Money")) {
+                w_script = "name = " + MyDatabase.s_quo(presentName);
+                int bufMoney = database.getOneInt(tableName, "price", w_script);
+                playerStatus.addMoney(bufMoney);
+                name = bufMoney + "G";
             }
-            if (presentBuf.tableName.equals("ExpendItem")) {
+            //Expendだけはプレゼント名＝アイテム名
+            if (tableName.equals("ExpendItem")) {
+                w_script = null;
+                ItemData bufItemData = expendItemDataAdmin.getOneDataByName(presentName);
+                expendItemInventry.addItemData(bufItemData);
+                name = bufItemData.getName();
+            }
+            presentGetMessage(name);
+            System.out.println("takano:GeoPresentManager#presentToInventry : 献上により獲得 : " + name);
+
+            //セーブのために格納
+            alreadyPresentGetFlags.set(newPresentNumber.get(i) - 1, true);
+        }
+        //セーブ
+        geoPresentSaver.save();
+        return;
+    }
+
+    //TODO 藤原依頼 TextBoxが最後に到達してるかのフラグ
+    private void presentGetMessage(String name) {
+        textBoxAdmin.setTextBoxUpdateTextByTouching(messageBoxID, true);
+        textBoxAdmin.bookingDrawText(messageBoxID, "献上ポイントが上がったから");
+        textBoxAdmin.bookingDrawText(messageBoxID, "\n");
+        textBoxAdmin.bookingDrawText(messageBoxID, name + " をあげる！大事に使いなさい");
+        textBoxAdmin.bookingDrawText(messageBoxID, "MOP");
+    }
+
+    public void presentSelectUpdate() {
+        presentSelectPlateGroup.update();
+        if (presentSelectPlateGroup.getUpdateFlag()) {
+            int content = presentSelectPlateGroup.getTouchContentNum();
+            switch(content) {
+                case(0) ://献上する
+                    presentAndCheck(holdGeoObbjectData);
+                    holdGeoObbjectData = null;
+                    scoreTextBoxUpdate();
+                    presentSelectPlateGroup.setUpdateFlag(false);
+                    presentSelectPlateGroup.setDrawFlag(false);
+                    break;
+                case(1) ://キャンセル
+                    holdGeoObbjectData = null;
+                    presentSelectPlateGroup.setUpdateFlag(false);
+                    presentSelectPlateGroup.setDrawFlag(false);
+                    break;
             }
         }
-        return itemdata;
     }
 
     //debug
+    /*
     private void expressPresent(List<Present> newPresent) {
         for(int i = 0; i < newPresent.size(); i++) {
             System.out.println("present : " + newPresent.get(i).getPresentName() +" " + newPresent.get(i).getTableName());
         }
     }
-}
+    */
 
+    public void update() {
+        geoInventryUpdate();
+        presentSelectUpdate();
+        scoreTextBoxUpdate();
+        backPlateGroup.update();
+
+        //scoreTextBoxUpdate();
+
+        //TODO TextBoxの一括ではないupdate
+        textBoxAdmin.setTextBoxExists(scoreTextBoxID, worldModeAdmin.getIsDraw(worldModeAdmin.getPresent()));
+        textBoxAdmin.setTextBoxExists(messageBoxID, worldModeAdmin.getIsDraw(worldModeAdmin.getPresent()));
+    }
+
+    public void draw() {
+        geoInventry.draw();
+        presentSelectPlateGroup.draw();
+        backPlateGroup.draw();
+    }
+
+    private void initBackPlate() {
+        backPlateGroup = new PlateGroup<BackPlate>(
+                new BackPlate[] {
+                        new BackPlate(
+                                graphic, userInterface, worldModeAdmin
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //戻るボタンが押された時の処理
+                                presentSelectPlateGroup.setUpdateFlag(false);
+                                presentSelectPlateGroup.setDrawFlag(false);
+                                holdGeoObbjectData = null;
+
+                                worldModeAdmin.setPresent(Constants.Mode.ACTIVATE.STOP);
+                                worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
+                            }
+                        }
+                }
+        );
+        backPlateGroup.setUpdateFlag(true);
+        backPlateGroup.setDrawFlag(true);
+    }
+
+
+    public void setAlreadyPresentGetFlags(List<Boolean> _alreadyPresentGetFlags) {
+        alreadyPresentGetFlags = _alreadyPresentGetFlags;
+    }
+    public List<Boolean> getAlreadyPresentGetFlags() {
+        return alreadyPresentGetFlags;
+    }
+
+    public int getPresentListSize() {
+        return size;
+    }
+
+    public Integer[] getScores() {
+        return new Integer[] {
+            hpScore,
+            attackScore,
+            defenceScore,
+            luckScore,
+            specialScore
+        };
+    }
+
+    public void setScores(int[] _scores) {
+        hpScore = _scores[0];
+        attackScore = _scores[1];
+        defenceScore = _scores[2];
+        luckScore = _scores[3];
+        specialScore = _scores[4];
+    }
+
+}
+/*
 class Present {
     String tableName;
     String presentName;
@@ -209,3 +510,52 @@ class Present {
     }
 
 }
+
+class IdAndCheckFlag {
+    boolean flag;
+    int id;
+    public IdAndCheckFlag(int _id, boolean _flag) {
+        id = _id;
+        flag  = _flag;
+    }
+
+    public int getID() {
+        return id;
+    }
+    public boolean getFlag() {
+        return flag;
+    }
+    public void setID(int _id) {
+        id = _id;
+    }
+}
+*/
+/*
+class PresentGetFlag {
+    String presentName;
+    boolean alreadyGet;
+
+    public PresentGetFlag() {
+        presentName = null;
+        alreadyGet = false;
+    }
+
+    public PresentGetFlag(String _presentName, boolean _alreadyGet) {
+        presentName = _presentName;
+        alreadyGet = _alreadyGet;
+    }
+
+    public void setPresentName(String _presentName) {
+        presentName = _presentName;
+    }
+    public void setAlreadyGet(boolean _alreadyGet) {
+        alreadyGet = _alreadyGet;
+    }
+    public String getPresentName() {
+        return presentName;
+    }
+    public boolean isAlreadyGet() {
+        return alreadyGet;
+    }
+}
+*/

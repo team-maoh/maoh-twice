@@ -5,9 +5,13 @@ import android.app.admin.SystemUpdateInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.PointF;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.view.SurfaceHolder;
 
 import com.maohx2.ina.Constants;
@@ -75,6 +79,7 @@ public class Graphic {
     Point setting_point1;
     Point setting_point2;
     Matrix setting_matrix;
+    Rect settingRect;
 
     public Graphic(Activity _activity, SurfaceHolder _holder) {
 
@@ -101,6 +106,7 @@ public class Graphic {
 
         draw_paint.setColor(Color.BLUE);
         holder = _holder;
+        holder.setFormat(PixelFormat.TRANSLUCENT);
         local_bitmap_data_admin = new BitmapDataAdmin();
         local_bitmap_data_admin.init(activity);
 
@@ -108,6 +114,7 @@ public class Graphic {
         setting_point1 = new Point();
         setting_point2 = new Point();
         setting_matrix = new Matrix();
+        settingRect = new Rect();
 
         booking_circle_num = 0;
         booking_rect_num = 0;
@@ -139,20 +146,25 @@ public class Graphic {
         Canvas canvas = null;
         canvas = holder.lockCanvas();
 
-        System.out.println("booking_num:"+booking_num);
+        //System.out.println("booking_num:"+booking_num);
 
         if(canvas != null) {
-            canvas.drawColor(Color.WHITE);
+            //canvas.drawColor(Color.WHITE);
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
             for (int i = 0; i < booking_num; i++) {
                booking_task_datas.get(i).draw(canvas);
             }
 
-            draw_paint.setColor(Color.GREEN);
+            //draw_paint.setColor(Color.GREEN);
+            draw_paint.setColor(Color.BLACK);
             canvas.drawRect(0,0,DRAW_RIGHT_END,DRAW_UP_END,draw_paint);
             canvas.drawRect(DISP_X,0,DRAW_RIGHT_END,DRAW_DOWN_END,draw_paint);
             canvas.drawRect(DISP_X,DISP_Y,DRAW_LEFT_END,DRAW_DOWN_END,draw_paint);
             canvas.drawRect(0,DISP_Y,DRAW_LEFT_END,DRAW_UP_END,draw_paint);
+
+            //BitmapData bitmapData = searchBitmap("mush");
+            //canvas.drawBitmap(bitmapData.getBitmap(), new Rect(0,0,bitmapData.getWidth(),bitmapData.getHeight()), new Rect(100,100,400,400), null);
 
             holder.unlockCanvasAndPost(canvas);
         }
@@ -211,7 +223,7 @@ public class Graphic {
     }
 
 
-    public void bookingDrawBitmapData(BitmapData draw_bitmap_data, Point position, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
+    public void bookingDrawBitmapDataByMat(BitmapData draw_bitmap_data, Point position, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
 
         setting_point1.set(position.x, position.y);
         transrateNormalizedPositionToDispPosition(setting_point1);
@@ -245,32 +257,73 @@ public class Graphic {
 
     }
 
+    public void bookingDrawBitmapData(BitmapData draw_bitmap_data, Point position, float scale_x, float scale_y, boolean is_upleft){
+
+        setting_point1.set(position.x, position.y);
+        transrateNormalizedPositionToDispPosition(setting_point1);
+
+        setting_matrix.reset();
+
+        if(is_upleft == false) {
+            setting_point1.x -= draw_bitmap_data.getBitmap().getWidth() / 2;
+            setting_point1.y -= draw_bitmap_data.getBitmap().getHeight() / 2;
+        }
+
+        if(booking_bitmap_num >= booking_bitmap_datas.size()){
+            booking_bitmap_datas.add(new BookingBitmapData());
+        }
+
+
+        settingRect.set(setting_point1.x, setting_point1.y, (int)(setting_point1.x + draw_bitmap_data.getWidth()*DENSITY*scale_x), (int)(setting_point1.y + draw_bitmap_data.getHeight()*DENSITY*scale_y));
+
+        ((BookingBitmapData)booking_bitmap_datas.get(booking_bitmap_num)).update(draw_bitmap_data, settingRect, draw_paint);
+
+        if(booking_num >= booking_task_datas.size()) {
+            booking_task_datas.add(new BookingBitmapData());
+        }
+
+        booking_task_datas.set(booking_num, booking_bitmap_datas.get(booking_bitmap_num));
+        booking_num++;
+        booking_bitmap_num++;
+
+    }
+
 
 
     public void bookingDrawBitmapData(BitmapData bitmap_data, int position_x, int position_y, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
         Point position = new Point(position_x, position_y);
-        bookingDrawBitmapData(bitmap_data,position,scale_x,scale_y,degree,alpha,is_upleft);
+        if(degree == 0 && alpha == 255) {
+            bookingDrawBitmapData(bitmap_data, position, scale_x, scale_y, is_upleft);
+        }else{
+            bookingDrawBitmapDataByMat(bitmap_data, position, scale_x, scale_y, degree, alpha, is_upleft);
+        }
     }
 
     public void bookingDrawBitmapData(BitmapData bitmap_data, Point position){
-        bookingDrawBitmapData(bitmap_data,position,1,1,0,255,false);
+        bookingDrawBitmapData(bitmap_data,position,1,1,false);
     }
 
     public void bookingDrawBitmapData(BitmapData bitmap_data, int position_x, int position_y){
-        bookingDrawBitmapData(bitmap_data, position_x, position_y,1,1,0,255,false);
+        Point position = new Point(position_x, position_y);
+        bookingDrawBitmapData(bitmap_data, position,1,1,false);
     }
 
     public void bookingDrawBitmapName(String bitmap_name, int position_x, int position_y, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
         Point position = new Point(position_x, position_y);
-        bookingDrawBitmapData(searchBitmap(bitmap_name),position,scale_x,scale_y,degree,alpha,is_upleft);
+        if(degree == 0 && alpha == 255) {
+            bookingDrawBitmapData(searchBitmap(bitmap_name), position, scale_x, scale_y, is_upleft);
+        }else{
+            bookingDrawBitmapDataByMat(searchBitmap(bitmap_name), position, scale_x, scale_y, degree, alpha, is_upleft);
+        }
     }
 
     public void bookingDrawBitmapName(String bitmap_name, Point position){
-        bookingDrawBitmapData(searchBitmap(bitmap_name),position,1,1,0,255,false);
+        bookingDrawBitmapData(searchBitmap(bitmap_name),position,1,1,false);
     }
 
     public void bookingDrawBitmapName(String bitmap_name, int position_x, int position_y){
-        bookingDrawBitmapData(searchBitmap(bitmap_name), position_x, position_y,1,1,0,255,false);
+        Point position = new Point(position_x, position_y);
+        bookingDrawBitmapData(searchBitmap(bitmap_name), position,1,1,false);
     }
 
     public void bookingDrawCircle(int draw_x, int draw_y, int draw_radius){
@@ -332,8 +385,8 @@ public class Graphic {
 
     public void bookingDrawText(String draw_string, int draw_left, int draw_down){
 
-        draw_paint.setARGB(255,100,0,0);
-        draw_paint.setTextSize(30);
+        draw_paint.setARGB(255,0,255,0);
+        draw_paint.setTextSize(70);
         bookingDrawText(draw_string, draw_left, draw_down, draw_paint);
     }
 

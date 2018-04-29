@@ -7,7 +7,11 @@ import android.view.SurfaceHolder;
 
 import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.MapAdmin;
+import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.DungeonGameSystem;
+import com.maohx2.ina.DungeonModeManage;
+import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 //import com.maohx2.ina.ImageAdmin;
@@ -24,7 +28,8 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 public class MapObjectAdmin {
 
     int NUM_OF_ENEMY = 10;
-    int NUM_OF_ITEM = 1;// > 2
+    int NUM_OF_ITEM = 10;// > 2
+    int NUM_OF_TRAP = 1;
 
     int PLAYER_DIR = 8;
     int ENEMY_DIR = 8;
@@ -32,32 +37,41 @@ public class MapObjectAdmin {
     MapPlayer map_player;
     MapObjectBitmap map_player_bitmap;
     double player_x, player_y;
-    double chase_x, chase_y;
 
     MapItem[] map_item = new MapItem[NUM_OF_ITEM];
     MapObjectBitmap[] map_item_bitmap = new MapObjectBitmap[NUM_OF_ITEM];
+    MapTrap[] map_trap = new MapTrap[NUM_OF_TRAP];
+    MapObjectBitmap[] map_trap_bitmap = new MapObjectBitmap[NUM_OF_TRAP];
+
     MapEnemy[] map_enemy = new MapEnemy[NUM_OF_ENEMY];
     MapObjectBitmap[] map_enemy_bitmap = new MapObjectBitmap[NUM_OF_ENEMY];
 
-    int REACH_OF_PLAYER = 25;//プレイヤーのアイテム取得半径
     double item_distance, enemy_distance;
 
     BagItemAdmin bag_item_admin;
     MapAdmin map_admin;
     SoundAdmin sound_admin;
     DungeonUserInterface dungeon_user_interface;
+    MapPlateAdmin map_plate_admin;
+    DungeonModeManage dungeon_mode_manage;
 
     Graphic graphic;
     Camera camera;
 
-    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapAdmin _map_admin) {
+    boolean is_displaying_menu;
+
+    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapAdmin _map_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
         map_admin = _map_admin;
         camera = map_admin.getCamera();
         sound_admin = _sound_admin;
+        map_plate_admin = _map_plate_admin;
+        dungeon_mode_manage = _dungeon_mode_manage;
 
-        map_player = new MapPlayer(graphic, this, map_admin, dungeon_user_interface, _sound_admin, camera);
+        is_displaying_menu = false;
+
+        map_player = new MapPlayer(graphic, this, map_admin, dungeon_user_interface, _sound_admin, camera, map_plate_admin);
         map_player.init();
         map_player_bitmap = new MapObjectBitmap(PLAYER_DIR, graphic, "ドラゴン");
         map_player_bitmap.init();
@@ -66,28 +80,34 @@ public class MapObjectAdmin {
         player_y = map_player.getWorldY();
 
         for (int i = 0; i < NUM_OF_ITEM; i++) {
-            map_item[i] = new MapItem(graphic, this, i % 4, camera);
+            map_item[i] = new MapItem(graphic, this, i % 2, camera);
             map_item[i].init();
 
-            map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "モンスター男");
-
-//            switch (i % 4) {
-//                case 0:
-//                    map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "grape");
-//                case 1:
-//                    map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "grape");
-//                case 2:
-//                    map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "banana");
-//                default:
-//                    map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "apple");
-//            }
-
-//            map_item_bitmap[i] = new MapObjectBitmap(1, graphic);
+            switch (i%2){
+                case 0:
+                    map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "ハーピー");
+                    break;
+                case 1:
+                    map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "ドラゴン");
+                    break;
+                default:
+                    break;
+            }
             map_item_bitmap[i].init();
         }
 
+        for (int i = 0; i < NUM_OF_TRAP; i++) {
+
+            map_trap[i] = new MapTrap(graphic, this, i % 4, camera, false, "being_teleported");
+            map_trap[i].init();
+
+            map_trap_bitmap[i] = new MapObjectBitmap(1, graphic, "cave_thing_01");
+            map_trap_bitmap[i].init();
+        }
+
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
-            map_enemy[i] = new MapEnemy(graphic, this, map_admin, camera, ENEMY_DIR, true, true);
+
+            map_enemy[i] = new MapEnemy(graphic, this, camera, ENEMY_DIR, true, true);
             map_enemy[i].init();
             map_enemy_bitmap[i] = new MapObjectBitmap(ENEMY_DIR, graphic, "ハーピー");
             map_enemy_bitmap[i].init();
@@ -101,7 +121,6 @@ public class MapObjectAdmin {
     }
 
     public void init() {
-
     }
 
     public void update() {
@@ -115,38 +134,38 @@ public class MapObjectAdmin {
             map_item[i].update();
             map_item_bitmap[i].update();
         }
+        for (int i = 0; i < NUM_OF_TRAP; i++) {
+            map_trap[i].update();
+            map_trap_bitmap[i].update();
+        }
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
             map_enemy[i].update();
             map_enemy_bitmap[i].update();
         }
 
-        //アイテム獲得を判定
-        checkGettingItem();
-
-        //敵との接触を判定
-        checkTouchingEnemy();
-
     }
 
     public void draw() {
 
-//        map_player.draw(map_admin);
-        map_player_bitmap.draw(map_player.getDirOnMap(), map_player.getNormX(), map_player.getNormY());
-
         for (int i = 0; i < NUM_OF_ITEM; i++) {
             if (map_item[i].exists() == true) {
-//                map_item[i].draw(map_admin);
                 map_item_bitmap[i].draw(map_item[i].getDirOnMap(), map_item[i].getNormX(), map_item[i].getNormY());
+            }
+        }
+        for (int i = 0; i < NUM_OF_TRAP; i++) {
+            if (map_trap[i].exists() == true && map_trap[i].isVisible() == true) {
+                map_trap_bitmap[i].draw(map_trap[i].getDirOnMap(), map_trap[i].getNormX(), map_trap[i].getNormY());
             }
         }
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
             if (map_enemy[i].exists() == true) {
-//                map_enemy[i].draw(map_admin);
                 map_enemy_bitmap[i].draw(map_enemy[i].getDirOnMap(), map_enemy[i].getNormX(), map_enemy[i].getNormY());
             }
         }
+
+        map_player_bitmap.draw(map_player.getDirOnMap(), map_player.getNormX(), map_player.getNormY());
 
     }
 
@@ -154,29 +173,18 @@ public class MapObjectAdmin {
         return map_player;
     }
 
-    private void checkGettingItem(){
-        //アイテム獲得
-        for (int i = 0; i < NUM_OF_ITEM; i++) {
-            item_distance = myDistance(player_x, player_y, map_item[i].getWorldX(), map_item[i].getWorldY());
-
-            if (item_distance < REACH_OF_PLAYER && map_item[i].exists() == true) {
-                System.out.println("アイテム獲得");
-                sound_admin.play("getitem");
-                bag_item_admin.setItemIdToBagItem(map_item[i].getId());//アイテムidを引き渡す
-                map_item[i].setExists(false);
-            }
-        }
+    public SoundAdmin getSoundAdmin() {
+        return sound_admin;
     }
 
-    private void checkTouchingEnemy(){
-        for (int i = 0; i < NUM_OF_ENEMY; i++) {
-            enemy_distance = myDistance(player_x, player_y, map_enemy[i].getWorldX(), map_enemy[i].getWorldY());
+    public MapAdmin getMapAdmin() {
+        return map_admin;
+    }
 
-            if (enemy_distance < REACH_OF_PLAYER && map_enemy[i].exists() == true) {
-                System.out.println("敵と接触");
-                //デバッグのためにコメントアウト
-//                map_enemy[i].setExists(false);//接触すると敵が消える(戦闘に突入する)
-            }
+    public void makeAllEnemiesFindPlayer() {
+        for (int i = 0; i < NUM_OF_ENEMY; i++) {
+            map_enemy[i].setHasFoundPlayer(true);
+
         }
     }
 
@@ -184,4 +192,10 @@ public class MapObjectAdmin {
     public double myDistance(double x1, double y1, double x2, double y2) {
         return pow(pow(x1 - x2, 2.0) + pow(y1 - y2, 2.0), 0.5);
     }
+
+    //by kmhanko
+    public void battleStart() {
+        dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+    }
+
 }

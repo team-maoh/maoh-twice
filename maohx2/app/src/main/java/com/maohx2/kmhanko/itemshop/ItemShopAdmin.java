@@ -1,11 +1,15 @@
 package com.maohx2.kmhanko.itemshop;
 
+import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.WorldModeAdmin;
+import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+
+
 /**
  * Created by user on 2017/11/19.
  */
@@ -41,6 +45,10 @@ public class ItemShopAdmin {
     Graphic graphic;
     TextBoxAdmin textBoxAdmin;
     WorldModeAdmin worldModeAdmin;
+    MyDatabaseAdmin databaseAdmin;
+
+    InventryS expendItemInventry;
+    InventryS geoInventry;
 
     public enum ITEM_KIND {
         EXPEND,
@@ -48,16 +56,19 @@ public class ItemShopAdmin {
         ITEM_KIND_NUM
     }
 
-    public void init(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin myDatabaseAdmin, TextBoxAdmin _textBoxAdmin, ItemDataAdminManager itemDataAdminManager) {
+    public void init(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, ItemDataAdminManager itemDataAdminManager, InventryS _expendItemInventry, InventryS _geoInventry) {
         userInterface = _userInterface;
         graphic = _graphic;
         textBoxAdmin = _textBoxAdmin;
         worldModeAdmin = _worldModeAdmin;
+        expendItemInventry = _expendItemInventry;
+        geoInventry = _geoInventry;
+        databaseAdmin = _databaseAdmin;
 
-        expendItemShopData = new ExpendItemShopData(graphic, myDatabaseAdmin);
+        expendItemShopData = new ExpendItemShopData(graphic, databaseAdmin);
         expendItemShopData.setExpendItemDataAdmin(itemDataAdminManager.getExpendItemDataAdmin());
 
-        geoObjectShopData = new GeoObjectShopData(graphic, myDatabaseAdmin);
+        geoObjectShopData = new GeoObjectShopData(graphic, databaseAdmin);
         geoObjectShopData.setGeoObjectDataAdmin(itemDataAdminManager.getGeoObjectDataAdmin());
     }
 
@@ -65,12 +76,12 @@ public class ItemShopAdmin {
         boolean itemKindFlag = false;
 
         if (_itemKind == ITEM_KIND.EXPEND) {
-            itemShop = new ExpendItemShop(userInterface, graphic, textBoxAdmin, worldModeAdmin);
+            itemShop = new ExpendItemShop(userInterface, graphic, databaseAdmin, textBoxAdmin, worldModeAdmin, expendItemInventry);
             itemShop.setItemShopData(expendItemShopData);
             itemKindFlag = true;
         }
         if (_itemKind == ITEM_KIND.GEO_OBJECT) {
-            itemShop = new GeoObjectShop(userInterface, graphic, textBoxAdmin, worldModeAdmin);
+            itemShop = new GeoObjectShop(userInterface, graphic, databaseAdmin, textBoxAdmin, worldModeAdmin, geoInventry);
             itemShop.setItemShopData(geoObjectShopData);
             itemKindFlag = true;
         }

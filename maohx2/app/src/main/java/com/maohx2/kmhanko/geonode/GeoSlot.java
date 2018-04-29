@@ -27,9 +27,8 @@ GeoSlotとGeoSlotADmin, 動かすためにいくつかコメントアウトさ�
 MakeGeoSlot的なやつ、MyDBをパスしてsql文章で一行づつ消滅させる形を取ることによりtree_codeをgeoSlotCodeに変更する。
 無理だったらクラスにして渡す。
 これによって検証によるコンストラクタの変更に対応する
-
  */
-
+//TODO 計算が反映されない
 public class GeoSlot extends CircleImagePlate {
 
     //** Created by kmhanko **//
@@ -49,12 +48,11 @@ public class GeoSlot extends CircleImagePlate {
     String release_event;
     String restriction;
 
-    //static Graphic graphic;
-    //Graphic graphic;
-
     GeoObjectData geoObjectData;
 
     ImageContext notEventCrearImageContext;
+    ImageContext slotHoleImageContext;
+    ImageContext geoImageContext;
 
     //TODO:デバッグ用。セーブデータの用意が必要
     boolean isReleased = false;
@@ -113,6 +111,7 @@ public class GeoSlot extends CircleImagePlate {
         }
         is_in_geoObjectData = true;
         geoObjectData = _geoObjectData;
+        geoImageContext = graphic.makeImageContext(geoObjectData.getItemImage(), x, y, 5.0f, 5.0f, 0.0f, 128, false);
         return true;
     }
 
@@ -122,6 +121,8 @@ public class GeoSlot extends CircleImagePlate {
             return false;
         }
         is_in_geoObjectData = false;
+        geoObjectData = null;
+        geoImageContext = null;
         return true;
     }
 
@@ -231,44 +232,6 @@ public class GeoSlot extends CircleImagePlate {
         geo_calc_saver_admin.getGeoCalcSaver("Luck").calc(geoObjectData.getLuck(),geoObjectData.getLuckRate());
     }
 
-    //itemIDを元に、GeoObjectの数値を代入する。デバッグ用
-    public void setGeoObjectByItemID(int id) {
-        //TODO: 正式にはGeoObjectのDatabaseなどが完成してから書き直す。itemID→GeoObjectDatabaseROWIDへの変換も必要だろう。
-
-        GeoObjectData geoObjectData = null;
-        switch(id) {
-            case 0:
-                geoObjectData = new GeoObjectData(50,0,0,0,1.0,1.0,1.0,1.0);
-                this.pushGeoObject(geoObjectData);
-                break;
-            case 1:
-                geoObjectData = new GeoObjectData(5,20,0,0,1.0,1.0,1.0,1.0);
-                this.pushGeoObject(geoObjectData);
-                break;
-            case 2:
-                geoObjectData = new GeoObjectData(5,10,0,0,1.0,1.0,1.0,1.0);
-                this.pushGeoObject(geoObjectData);
-                break;
-            case 3:
-                geoObjectData = new GeoObjectData(5,0,0,0,1.5,1.0,1.0,1.0);
-                this.pushGeoObject(geoObjectData);
-                break;
-            case 4:
-                geoObjectData = new GeoObjectData(20,10,0,0,1.0,1.0,1.0,1.0);
-                this.pushGeoObject(geoObjectData);
-                break;
-            case 5:
-                geoObjectData = new GeoObjectData(0,0,0,0,1.2,1.2,1.0,1.0);
-                this.pushGeoObject(geoObjectData);
-                break;
-            default:
-                this.popGeoObject();
-                break;
-        }
-
-
-    }
-
     public void drawLine() {
         //子に対しての線を書く
 
@@ -303,6 +266,9 @@ public class GeoSlot extends CircleImagePlate {
         if (!isEventClear()) {
             graphic.bookingDrawBitmapData(notEventCrearImageContext);
         }
+        if (isInGeoObject()) {
+            graphic.bookingDrawBitmapData(geoImageContext);
+        }
     }
     /*
     public void draw(boolean isFocused) {
@@ -331,22 +297,57 @@ public class GeoSlot extends CircleImagePlate {
     */
 
     @Override
+    //タッチされた時の処理
     public void callBackEvent() {
-        //TODO:isPushThisObject引数
-
         geoSlotAdmin.setFocusGeoSlot(this);
-        //ジオオブジェクトをホールドしている時
-        if (geoSlotAdmin.isHoldGeoObject()) {
-            if (isEventClearAll() && isPushThisObject(null)) {
-                //GeoSlotを設置する
-                setItemID(user_interface.getItemID());
-                //TODO geoをセットする関数
-                //setGeoObjectByItemID();
+        geoSlotAdmin.geoSlotReleaseChoice();
+        if (isEventClearAll()) {
+            setGeoObjectFromHold();
+            geoSlotAdmin.calcPlayerStatus();
+        }
+    }
+
+    public void setGeoObjectFromHold() {
+
+        if (isPushThisObject(geoSlotAdmin.getHoldGeoObject())) {
+            if (geoSlotAdmin.isHoldGeoObject()) {
+                if (!isInGeoObject()) {
+                    //Holdしており、Geoが入っていない時　→そのままセット
+
+                    //この辺りは書き方の順序に注意。nullにしてからセットしようとしてしまったりするため
+
+                    //Geoをセットする
+                    pushGeoObject(geoSlotAdmin.getHoldGeoObject());
+
+                    //GeoをInventryとHoldから消す
+                    geoSlotAdmin.deleteFromInventry(geoObjectData);
+                    geoSlotAdmin.setHoldGeoObject(null);
+
+                } else {
+                    //Holdしており、Geoが入っている時　→　入れ替え
+                    GeoObjectData tempGeoObjectData = geoSlotAdmin.getHoldGeoObject();
+
+                    geoSlotAdmin.addToInventry(geoObjectData);
+                    geoSlotAdmin.setHoldGeoObject(geoObjectData);
+
+                    //Geoを上書きセットする
+                    pushGeoObject(tempGeoObjectData);
+
+                    //GeoをInventryからけす。
+                    geoSlotAdmin.deleteFromInventry(tempGeoObjectData);
+                }
                 geoSlotAdmin.calcGeoSlot();
+            } else {
+                if (!isInGeoObject()) {
+                    //Holdしておらず、Geoも入っていない時　→　何もしない
+                } else {
+                    //Holdしておらず、Geoが入っている時　→　Holdにセット
+                    geoSlotAdmin.addToInventry(geoObjectData);
+                    geoSlotAdmin.setHoldGeoObject(geoObjectData);
+                    popGeoObject();
+                }
+
             }
-        } else {
-            //ジオオブジェクトをホールドしていない時
-            geoSlotAdmin.geoSlotReleaseChoice();
         }
     }
 
@@ -384,30 +385,6 @@ public class GeoSlot extends CircleImagePlate {
         }
     }
 
-
-/*
-    public void touchEvent() {
-        if (userInterface.checkUI(getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
-            //System.out.println(userInterface.getItemID());
-            //TODO:isPushThisObject引数
-
-            geoSlotAdmin.setFocusGeoSlot(this);
-
-            //ジオオブジェクトをホールドしている時
-            if (geoSlotAdmin.isHoldGeoObject()) {
-                if (isEventClearAll() && isPushThisObject(null)) {
-                    //GeoSlotを設置する
-                    setItemID(userInterface.getItemID());
-                    setGeoObjectByItemID();
-                    geoSlotAdmin.calcGeoSlot();
-                }
-            } else {
-                //ジオオブジェクトをホールドしていない時
-                geoSlotAdmin.geoSlotReleaseChoice();
-            }
-        }
-    }
-*/
     public boolean isInGeoObject() {
         return is_in_geoObjectData;
     }
@@ -429,10 +406,12 @@ public class GeoSlot extends CircleImagePlate {
     //public int getPositionY() { eturn position_y; }
 
 
+    public GeoObjectData getGeoObjectData() { return geoObjectData; }
     public String getReleaseEvent() { return release_event; }
     public String getRestriction() { return restriction; }
     public void setReleaseEvent(String _release_event) { release_event = _release_event; }
     public void setRestriction(String _restriction) { restriction = _restriction; }
+    public void setReleased(Boolean _isReleased) { isReleased = _isReleased; }
 
     //TODO: inaの関数ができたら消す
     public void setParam(int _x, int _y, int _r) {
@@ -442,11 +421,13 @@ public class GeoSlot extends CircleImagePlate {
         touch_id = user_interface.setCircleTouchUI(x, y, radius);
         //TODO: 前の奴を消せないので格納上の問題あり
 
-        notEventCrearImageContext = graphic.makeImageContext(graphic.searchBitmap("e51-0"), x , y, 1.0f, 1.0f, 0.0f, 255, false);
+        notEventCrearImageContext = graphic.makeImageContext(graphic.searchBitmap("apple"), x , y, 5.0f, 5.0f, 0.0f, 255, false);
+        slotHoleImageContext = graphic.makeImageContext(graphic.searchBitmap("neco"), x, y, 5.0f, 5.0f, 0.0f, 255, false);
+        geoImageContext = null;
 
-        default_image_context = graphic.makeImageContext(graphic.searchBitmap("neco"), x, y, 5.0f, 5.0f, 0.0f, 255, false);
-        draw_image_context = graphic.makeImageContext(graphic.searchBitmap("neco"), x, y, 5.0f, 5.0f, 0.0f, 255, false);
-        feedback_image_context = graphic.makeImageContext(graphic.searchBitmap("neco"), x, y, 6.0f, 6.0f, 0.0f, 255, false);
+        default_image_context = slotHoleImageContext;
+        draw_image_context = slotHoleImageContext;
+        feedback_image_context = slotHoleImageContext;
     }
 
     //** Created by ina **//
@@ -544,3 +525,66 @@ public class GeoSlot extends CircleImagePlate {
             canvas.drawText("×", position_x, position_y, paint);
         }
         */
+
+
+
+        //by kmhanko
+        //itemIDを元に、GeoObjectの数値を代入する。デバッグ用
+    /*
+        public void setGeoObjectByItemID(int id) {
+
+        GeoObjectData geoObjectData = null;
+        switch(id) {
+            case 0:
+                geoObjectData = new GeoObjectData(graphic, 50,0,0,0,1.0,1.0,1.0,1.0);
+                this.pushGeoObject(geoObjectData);
+                break;
+            case 1:
+                geoObjectData = new GeoObjectData(graphic, 5,20,0,0,1.0,1.0,1.0,1.0);
+                this.pushGeoObject(geoObjectData);
+                break;
+            case 2:
+                geoObjectData = new GeoObjectData(graphic, 5,10,0,0,1.0,1.0,1.0,1.0);
+                this.pushGeoObject(geoObjectData);
+                break;
+            case 3:
+                geoObjectData = new GeoObjectData(graphic, 5,0,0,0,1.5,1.0,1.0,1.0);
+                this.pushGeoObject(geoObjectData);
+                break;
+            case 4:
+                geoObjectData = new GeoObjectData(graphic, 20,10,0,0,1.0,1.0,1.0,1.0);
+                this.pushGeoObject(geoObjectData);
+                break;
+            case 5:
+                geoObjectData = new GeoObjectData(graphic, 0,0,0,0,1.2,1.2,1.0,1.0);
+                this.pushGeoObject(geoObjectData);
+                break;
+            default:
+                this.popGeoObject();
+                break;
+        }
+}*/
+
+    /*
+    public void touchEvent() {
+        if (userInterface.checkUI(getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
+            //System.out.println(userInterface.getItemID());
+            //TODO:isPushThisObject引数
+
+            geoSlotAdmin.setFocusGeoSlot(this);
+
+            //ジオオブジェクトをホールドしている時
+            if (geoSlotAdmin.isHoldGeoObject()) {
+                if (isEventClearAll() && isPushThisObject(null)) {
+                    //GeoSlotを設置する
+                    setItemID(userInterface.getItemID());
+                    setGeoObjectByItemID();
+                    geoSlotAdmin.calcGeoSlot();
+                }
+            } else {
+                //ジオオブジェクトをホールドしていない時
+                geoSlotAdmin.geoSlotReleaseChoice();
+            }
+        }
+    }
+*/

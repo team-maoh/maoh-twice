@@ -1,5 +1,6 @@
 package com.maohx2.kmhanko.dungeonselect;
 
+import com.maohx2.ina.ActivityChange;
 import com.maohx2.ina.WorldActivity;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.UI.UserInterface;
@@ -56,8 +57,9 @@ public class DungeonSelectManager {
 
     PlateGroup<BoxTextPlate> dungeonInformationPlate;
     PlateGroup<BoxTextPlate> dungeonEnterSelectButtonGroup;
+    PlateGroup<BoxTextPlate> maohEnterSelectButtonGroup;
 
-    PlateGroup<CircleImagePlate> modeSelectButtonGroup;
+    PlateGroup<CircleImagePlate> menuButtonGroup;
 
     static final String DB_NAME = "dungeonselectDB";
     static final String DB_ASSET = "dungeonselectDB.db";
@@ -70,22 +72,25 @@ public class DungeonSelectManager {
 
     Paint paint = new Paint(); //TODO GeoMapとDungeonSelectの切り替え表示用。いつか消える
 
-    WorldActivity worldActivity;
+   //WorldActivity worldActivity;
+    ActivityChange activityChange;
 
     //いなの実装までの仮置き
-    boolean enterSelectFlag = false;
+    //boolean enterSelectFlag = false;
 
-    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, WorldActivity _worldActivity) {
+    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, ActivityChange _activityChange) {
         graphic = _graphic;
         userInterface = _userInterface;
         databaseAdmin = _databaseAdmin;
         geoSlotAdminManager = _geoSlotAdminManager;
         worldModeAdmin = _worldModeAdmin;
-        worldActivity = _worldActivity;
+        //worldActivity = _worldActivity;
+        activityChange = _activityChange;
 
         setDatabase(databaseAdmin);
         loadMapIconPlate();
         loadDungeonEnterSelectButton();
+        loadMaohEnterSelectButton();
         loadModeSelectButton();
 
         //TODO : Loopselect
@@ -144,7 +149,6 @@ public class DungeonSelectManager {
     }
 
     private void loadDungeonEnterSelectButton(){
-
         Paint textPaint = new Paint();
         textPaint.setTextSize(60f);
         textPaint.setARGB(255,255,255,255);
@@ -155,7 +159,7 @@ public class DungeonSelectManager {
                                 graphic, userInterface, new Paint(),
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
-                                new int[]{1100, 50, 1550, 200},
+                                new int[]{300, 550, 700, 700},
                                 "侵入する",
                                 textPaint
                         ),
@@ -163,37 +167,99 @@ public class DungeonSelectManager {
                                 graphic, userInterface, new Paint(),
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
-                                new int[]{1100, 450, 1550, 600},
+                                new int[]{900, 550, 1300, 700},
                                 "やめる",
                                 textPaint
                         )
                 }
         );
+        dungeonEnterSelectButtonGroup.setUpdateFlag(false);
+        dungeonEnterSelectButtonGroup.setDrawFlag(false);
+    }
 
-        enterSelectFlag = false;
+    private void loadMaohEnterSelectButton(){
+        Paint textPaint = new Paint();
+        textPaint.setTextSize(60f);
+        textPaint.setARGB(255,255,255,255);
+
+        maohEnterSelectButtonGroup = new PlateGroup<BoxTextPlate>(
+                new BoxTextPlate[]{
+                        new BoxTextPlate(
+                                graphic, userInterface, new Paint(),
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{300, 550, 700, 700},
+                                "魔王と戦う",
+                                textPaint
+                        ),
+                        new BoxTextPlate(
+                                graphic, userInterface, new Paint(),
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{900, 550, 1300, 700},
+                                "やめる",
+                                textPaint
+                        )
+                }
+        );
+        maohEnterSelectButtonGroup.setUpdateFlag(false);
+        maohEnterSelectButtonGroup.setDrawFlag(false);
     }
 
     private void loadModeSelectButton() {
         int x = 1500;
-        int y = 100;
+        int y[] = { 100,300,500,700 };
+
         float defaultRate = DUNGEON_SELECT_BUTTON_RATE_DEFAULT;
         float feedbackRate = DUNGEON_SELECT_BUTTON_RATE_FEEDBACK;
 
-        modeSelectButtonGroup = new PlateGroup<CircleImagePlate>(
+        menuButtonGroup = new PlateGroup<CircleImagePlate>(
                 new CircleImagePlate[]{
                         new CircleImagePlate(
                                 graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
-                                new int[]{ x, y, 100 },
+                                new int[]{ x, y[0], 100 },
                                 graphic.makeImageContext(
                                         graphic.searchBitmap("マップ"),
-                                        x, y,
+                                        x, y[0],
                                         defaultRate, feedbackRate,
                                         0.0f, 255, false),
                                 graphic.makeImageContext(
                                         graphic.searchBitmap("マップ"),
-                                        x, y,
+                                        x, y[0],
+                                        defaultRate, feedbackRate,
+                                        0.0f, 255, false)
+                        ),
+                        new CircleImagePlate(
+                                graphic, userInterface,
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{ x, y[1], 100 },
+                                graphic.makeImageContext(
+                                        graphic.searchBitmap("武器"),
+                                        x, y[1],
+                                        defaultRate, feedbackRate,
+                                        0.0f, 255, false),
+                                graphic.makeImageContext(
+                                        graphic.searchBitmap("武器"),
+                                        x, y[1],
+                                        defaultRate, feedbackRate,
+                                        0.0f, 255, false)
+                        ),
+                        new CircleImagePlate(
+                                graphic, userInterface,
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{ x, y[2], 100 },
+                                graphic.makeImageContext(
+                                        graphic.searchBitmap("オプション"),
+                                        x, y[2],
+                                        defaultRate, feedbackRate,
+                                        0.0f, 255, false),
+                                graphic.makeImageContext(
+                                        graphic.searchBitmap("オプション"),
+                                        x, y[2],
                                         defaultRate, feedbackRate,
                                         0.0f, 255, false)
                         )
@@ -215,10 +281,9 @@ public class DungeonSelectManager {
 
         // ** Buttonの表示
         mapIconPlateGroup.draw();
-        if (enterSelectFlag) {
-            dungeonEnterSelectButtonGroup.draw();
-        }
-        modeSelectButtonGroup.draw();
+        dungeonEnterSelectButtonGroup.draw();
+        maohEnterSelectButtonGroup.draw();
+        menuButtonGroup.draw();
     }
 
     //***** update関係 *****
@@ -234,45 +299,66 @@ public class DungeonSelectManager {
             }
         }
         */
+
+
+        //TODO いな依頼:同一フレームの同時タッチ問題→PlatePlateにおけるフラグ判定を予約タイプに変更する(set_falseした場合に実際にfalseになるのはupdate()の最後にする。)ことで解決できる。
+        dungeonEnterSelectButtonCheck();
+        dungeonEnterSelectButtonGroup.update();
+
+        maohEnterSelectButtonCheck();
+        maohEnterSelectButtonGroup.update();
+
         mapIconPlateCheck();
-        if (enterSelectFlag && selectMode == SELECT_MODE.DUNGEON_SELECT) {
-            dungeonEnterSelectButtonCheck();
-        }
+        mapIconPlateGroup.update();
 
         modeSelectButtonCheck();
+        menuButtonGroup.update();
 
-        mapIconPlateGroup.update();
-        if (enterSelectFlag) {
-            dungeonEnterSelectButtonGroup.update();
-        }
-        modeSelectButtonGroup.update();
     }
 
     //注 : 紛らわしいが、DungeonSelectButtonはGeoMapSelectとDungeonSelectとで共通になっている
     public void mapIconPlateCheck() {
         int buttonID = mapIconPlateGroup.getTouchContentNum();
         if (buttonID != -1 ) {
+            //この間、マップアイコンなどの操作を受け付けない
+            menuButtonGroup.setUpdateFlag(false);
+            mapIconPlateGroup.setUpdateFlag(false);
+
             focusDungeonButtonID = buttonID;
             //TODO plateGroupの内部のT型配列を返す関数が欲しい。eventの確認のため
             //if mapIconPlateGroup.
+            //ボタンに登録されているイベント名を参照して、それそれの場合の結果を返す
             if (event.get(focusDungeonButtonID).equals("dungeon")) {
                 if (selectMode == SELECT_MODE.DUNGEON_SELECT) {
-                    enterSelectFlag = true;
+                    dungeonEnterSelectButtonGroup.setUpdateFlag(true);
+                    dungeonEnterSelectButtonGroup.setDrawFlag(true);
+
                 }
                 if (selectMode == SELECT_MODE.GEOMAP_SELECT) {
                     geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
                     worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
                     worldModeAdmin.setGeoSlotMap(Constants.Mode.ACTIVATE.ACTIVE);
+                    menuButtonGroup.setUpdateFlag(true);//TODO よくない。モード間モードを実装する
+                    mapIconPlateGroup.setUpdateFlag(true);
                 }
             }
 
             if (event.get(focusDungeonButtonID).equals("shop")) {
                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
                 worldModeAdmin.setShop(Constants.Mode.ACTIVATE.ACTIVE);
+                menuButtonGroup.setUpdateFlag(true);
+                mapIconPlateGroup.setUpdateFlag(true);
+
             }
             if (event.get(focusDungeonButtonID).equals("present")) {
                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
                 worldModeAdmin.setPresent(Constants.Mode.ACTIVATE.ACTIVE);
+                menuButtonGroup.setUpdateFlag(true);
+                mapIconPlateGroup.setUpdateFlag(true);
+            }
+            if (event.get(focusDungeonButtonID).equals("maoh")) {
+                maohEnterSelectButtonGroup.setUpdateFlag(true);
+                maohEnterSelectButtonGroup.setDrawFlag(true);
             }
         }
     }
@@ -293,26 +379,70 @@ public class DungeonSelectManager {
     }*/
 
     public void modeSelectButtonCheck() {
-        int buttonID = modeSelectButtonGroup.getTouchContentNum();
-        if (buttonID != -1 ) {
+        int buttonID = menuButtonGroup.getTouchContentNum();
+        if (buttonID == 0 ) { //Map
             switchSelectMode();
+        }
+        if (buttonID == 1 ) { //Equip
+            dungeonEnterSelectButtonGroup.setUpdateFlag(false);
+            dungeonEnterSelectButtonGroup.setDrawFlag(false);
+            //menuButtonGroup.setUpdateFlag(false);
+            //mapIconPlateGroup.setUpdateFlag(false);
+            menuButtonGroup.setUpdateFlag(true);
+            mapIconPlateGroup.setUpdateFlag(true);
+            worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
+            worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.ACTIVE);
         }
     }
 
     public void dungeonEnterSelectButtonCheck() {
+        if (!(dungeonEnterSelectButtonGroup.getUpdateFlag() && selectMode == SELECT_MODE.DUNGEON_SELECT)) {
+            return;
+        }
+
         int buttonID = dungeonEnterSelectButtonGroup.getTouchContentNum();
-
         if (buttonID == 0 ) { //侵入する
-            //侵入処理
+            dungeonEnterSelectButtonGroup.setUpdateFlag(false);
+            dungeonEnterSelectButtonGroup.setDrawFlag(false);
+            //menuButtonGroup.setUpdateFlag(false);
+            //mapIconPlateGroup.setUpdateFlag(false);
+            menuButtonGroup.setUpdateFlag(true);
+            mapIconPlateGroup.setUpdateFlag(true);
 
-            //TODO 仮
-            //worldActivity.goToBattleActivity();
+            //TODO 侵入処理におけるダンジョンデータによる分岐処理
 
-            //worldModeAdmin.setDungeon(Constants.Mode.ACTIVATE.ACTIVE);
-            enterSelectFlag = false;
+            activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.GOKI);
         }
         if (buttonID == 1 ) { //やめる
-            enterSelectFlag = false;
+            dungeonEnterSelectButtonGroup.setUpdateFlag(false);
+            dungeonEnterSelectButtonGroup.setDrawFlag(false);
+            menuButtonGroup.setUpdateFlag(true);
+            mapIconPlateGroup.setUpdateFlag(true);
+        }
+    }
+
+    public void maohEnterSelectButtonCheck() {
+        if (!(maohEnterSelectButtonGroup.getUpdateFlag() && selectMode == SELECT_MODE.DUNGEON_SELECT)) {
+            return;
+        }
+
+        int buttonID = maohEnterSelectButtonGroup.getTouchContentNum();
+        if (buttonID == 0 ) { //侵入する
+            maohEnterSelectButtonGroup.setUpdateFlag(false);
+            maohEnterSelectButtonGroup.setDrawFlag(false);
+            //menuButtonGroup.setUpdateFlag(false);
+            //mapIconPlateGroup.setUpdateFlag(false);
+            menuButtonGroup.setUpdateFlag(true);
+            mapIconPlateGroup.setUpdateFlag(true);
+
+            //TODO 魔王の画面へ行く
+            //activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.GOKI);
+        }
+        if (buttonID == 1 ) { //やめる
+            maohEnterSelectButtonGroup.setUpdateFlag(false);
+            maohEnterSelectButtonGroup.setDrawFlag(false);
+            menuButtonGroup.setUpdateFlag(true);
+            mapIconPlateGroup.setUpdateFlag(true);
         }
     }
 

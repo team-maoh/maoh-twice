@@ -85,8 +85,6 @@ public class BattleUserInterface extends UserInterface {
         judge_x *= judge_x;
         judge_y *= judge_y;
 
-        System.out.println(norm_x + "," + norm_y);
-
         if (touch_state != TouchState.AWAY && battle_palette_mode == 0 && judge_x + judge_y < 30 * 30) {
             battle_palette_mode = 1;
             //展開→方向的大、大きな円からはみ出た

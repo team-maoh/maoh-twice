@@ -1,6 +1,10 @@
 package com.maohx2.kmhanko.itemdata;
 
+import com.maohx2.ina.Constants;
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.ItemData.ItemData;
+import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.kmhanko.myavail.*;
 
 /**
  * Created by user on 2017/11/12.
@@ -17,11 +21,25 @@ public class GeoObjectData extends ItemData {
     double defence_rate;
     double luck_rate;
 
+    //Graphic graphic;
+
+
     public GeoObjectData() {
     }
 
-    public GeoObjectData(int _hp, int _attack, int _defence, int _luck, double _hp_rate, double _attack_rate, double _defence_rate, double _luck_rate) {
+
+    public GeoObjectData(String _name, BitmapData _bitmapData, int[] status1, double[] status2) {
+        this(_name,_bitmapData, status1[0],status1[1],status1[2],status1[3],status2[0],status2[1],status2[2],status2[3]);
+    }
+
+    public GeoObjectData(String _name, BitmapData _bitmapData, int _hp, int _attack, int _defence, int _luck, double _hp_rate, double _attack_rate, double _defence_rate, double _luck_rate) {
+        //graphic = _graphic;
+        setName(_name);
+        setItemImage(_bitmapData);
+
         setStatus(_hp, _attack, _defence, _luck, _hp_rate, _attack_rate, _defence_rate, _luck_rate);
+        //setGeoImage();
+        setItemKind(Constants.Item.ITEM_KIND.GEO);
     }
 
     public void setStatus(int _hp, int _attack, int _defence, int _luck, double _hp_rate, double _attack_rate, double _defence_rate, double _luck_rate) {
@@ -34,6 +52,48 @@ public class GeoObjectData extends ItemData {
         defence_rate = _defence_rate;
         luck_rate = _luck_rate;
     }
+
+    /*
+    public void setGeoImage() {
+        //適当に計算してジオ画像を決める
+
+        String tempBitName = "apple";
+        if (hp > 0) { setName("体力ジオ" + hp); tempBitName = "HpGeo05"; }
+        if (attack > 0) { setName("攻撃ジオ" + attack); tempBitName = "AttackGeo05"; }
+        if (defence > 0) { setName("防御ジオ" + defence); tempBitName = "DeffenceGeo05"; }
+        if (luck > 0) { setName("運命ジオ" + luck); tempBitName = "LuckGeo05"; }
+        if (hp_rate > 1.0) { setName("体力倍ジオ" + hp_rate); tempBitName = "HpGeo06"; }
+        if (attack_rate > 1.0) { setName("攻撃倍ジオ" + attack_rate); tempBitName = "AttackGeo06"; }
+        if (defence_rate > 1.0) { setName("防御倍ジオ" + defence_rate); tempBitName = "DeffenceGeo06"; }
+        if (luck_rate > 1.0) { setName("運命倍ジオ" + luck_rate); tempBitName = "LuckGeo06"; }
+
+
+        switch (MyAvail.maxFromIntArrays(new int[] { hp, attack, defence, luck })) {
+            case(0):
+                setName("体力ジオ" + hp);
+                tempBitName = "icon_gem_0";
+                break;
+            case(1):
+                setName("攻撃ジオ" + attack);
+                tempBitName = "icon_gem_1";
+                break;
+            case(2):
+                setName("防御ジオ" + defence);
+                tempBitName = "icon_gem_2";
+                break;
+            case(3):
+                setName("運命ジオ" + luck);
+                tempBitName = "icon_gem_4";
+                break;
+            default:
+                setName("エラージオ" + luck);
+                tempBitName = "icon_gem_9";
+                break;
+        }
+
+        setItemImage(graphic.searchBitmap(tempBitName));
+    }
+    */
 
     public int getHp() {
         return hp;

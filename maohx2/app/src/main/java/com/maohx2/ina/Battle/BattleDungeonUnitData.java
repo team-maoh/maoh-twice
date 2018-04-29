@@ -1,5 +1,7 @@
 package com.maohx2.ina.Battle;
 
+import com.maohx2.ina.Draw.BitmapData;
+
 import static com.maohx2.ina.Constants.UnitStatus.BonusStatus;
 import static com.maohx2.ina.Constants.UnitStatus.Status;
 
@@ -13,20 +15,8 @@ import static com.maohx2.ina.Constants.UnitStatus.Status;
 public class BattleDungeonUnitData {
 
     String name;
-
-    int draw_id;
-
-    //by kmhanko status, bonus_statusがあるため不要と
-    /*
-    int hp;
-    int attack;
-    int defence;
-    int luck;
-
-    int bonus_hp;
-    int bonus_attack;
-    int bonus_defence;
-    */
+    BitmapData bitmap_data;
+    int radius;
 
     int[] status = new int[Status.NUM_OF_STATUS.ordinal()];
     int[] bonus_status = new int[BonusStatus.NUM_OF_BONUS_STATUS.ordinal()];
@@ -47,15 +37,8 @@ public class BattleDungeonUnitData {
     public int getBonusStatus(BonusStatus _bonusStatus) { return bonus_status[_bonusStatus.ordinal()]; }
     public void setName(String _name) { name = _name; }
 
-    /*
-    public void setHP(int _hp) { hp = _hp; }
-    public void setAttack(int _attack) { attack = _attack; }
-    public void setDefence(int _defence) { defence = _defence; }
-    public void setLuck(int _luck) { luck = _luck; }
-    public void setBonusHP(int _bonus_hp) { bonus_hp = _bonus_hp; }
-    public void setBonusAttack(int _bonus_attack) { bonus_attack = _bonus_attack; }
-    public void setBonusDefence(int _bonus_defence) { bonus_defence = _bonus_defence; }
-    */
+    public BitmapData getBitmapDate(){return bitmap_data;}
+    public void setBitmapData(BitmapData _bitmap_data){bitmap_data = _bitmap_data;}
 
 
 }

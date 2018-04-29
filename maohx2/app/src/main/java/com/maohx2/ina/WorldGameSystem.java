@@ -6,23 +6,38 @@ import android.view.SurfaceHolder;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Arrange.Inventry;
+import com.maohx2.ina.Arrange.PaletteAdmin;
+import com.maohx2.ina.Arrange.PaletteCenter;
+import com.maohx2.ina.Arrange.PaletteElement;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.ItemData.EquipmentInventrySaver;
 import com.maohx2.ina.Text.ListBoxAdmin;
+import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
+import com.maohx2.kmhanko.Arrange.InventryS;
+import com.maohx2.kmhanko.GeoPresent.GeoPresentManager;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.Saver.ExpendItemInventrySaver;
+import com.maohx2.kmhanko.Saver.GeoInventrySaver;
+import com.maohx2.kmhanko.Saver.GeoSlotSaver;
+import com.maohx2.kmhanko.Saver.GeoPresentSaver;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
 import com.maohx2.kmhanko.effect.EffectAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlotAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlotAdminManager;
+import com.maohx2.kmhanko.itemdata.GeoObjectData;
+import com.maohx2.kmhanko.itemdata.GeoObjectDataAdmin;
+import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 import com.maohx2.kmhanko.itemshop.ItemShopAdmin;
 import com.maohx2.kmhanko.effect.*;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 import android.graphics.Paint;
 
@@ -45,31 +60,47 @@ public class WorldGameSystem {
     DungeonSelectManager dungeonSelectManager;
     ItemShopAdmin itemShopAdmin;
     ItemDataAdminManager itemDataAdminManager;
+    GeoPresentManager geoPresentManager;
 
     EffectAdmin effectAdmin;
     SoundAdmin soundAdmin;
 
-    UserInterface map_user_interface;
+    BattleUserInterface world_user_interface;
 
     WorldModeAdmin worldModeAdmin;
 
     WorldActivity worldActivity;
 
-    //引数にUI,Graphicが入って居るためGlobalDataに設置できない
-    Inventry geoInventry;
+    PlayerStatus playerStatus;
 
-    public void init(UserInterface _map_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity) {
+    GeoInventrySaver geoInventrySaver;
+    ExpendItemInventrySaver expendItemInventrySaver;
+    GeoSlotSaver geoSlotSaver;
+    GeoPresentSaver geoPresentSaver;
+    ActivityChange activityChange;
+
+    //TODO いな依頼:引数にUI,Graphicが入って居るためGlobalDataに設置できない
+    InventryS geoInventry;
+    InventryS expendItemInventry;
+
+    //TODO いな依頼　Inventryのupdateを呼ばないと真っ黒。あとアクティブ関係
+    PaletteAdmin palette_admin;
+    EquipmentInventrySaver equipmentInventrySaver;
+    InventryS equipmentInventry;
+
+    public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
         soundAdmin = _soundAdmin;
-        map_user_interface = _map_user_interface;
+        world_user_interface = _world_user_interface;
+        activityChange = _activityChange;
+
+
 
         worldActivity = _worldActivity;
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
-        PlayerStatus playerStatus = globalData.getPlayerStatus();
+        playerStatus = globalData.getPlayerStatus();
         //GeoInventry = globalData.getGeoInventry();
-
-        geoInventry = new Inventry(map_user_interface, graphic);
 
         worldModeAdmin = new WorldModeAdmin();
         worldModeAdmin.initWorld();
@@ -77,28 +108,76 @@ public class WorldGameSystem {
         soundAdmin.loadSoundPack("basic");
 
         text_box_admin = new TextBoxAdmin(graphic);
-        text_box_admin.init(map_user_interface);
+        text_box_admin.init(world_user_interface);
 
         text_box_admin.setTextBoxExists(0,false);
         text_box_admin.setTextBoxExists(1,false);
 
-        //list_box_admin = new ListBoxAdmin();
-        geoSlotAdminManager = new GeoSlotAdminManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus);
-        //geo_slot_admin = new GeoSlotAdmin();
-        dungeonSelectManager = new DungeonSelectManager(graphic, map_user_interface, worldModeAdmin, databaseAdmin, geoSlotAdminManager, worldActivity);
 
         itemDataAdminManager = new ItemDataAdminManager();
         itemShopAdmin = new ItemShopAdmin();
 
         effectAdmin = new EffectAdmin(graphic, databaseAdmin, soundAdmin);
 
+        itemDataAdminManager.init(databaseAdmin, graphic);
 
-        itemDataAdminManager.init(databaseAdmin,graphic);
+        geoInventrySaver = globalData.getGeoInventrySaver();
+        geoInventry = globalData.getGeoInventry();
+        expendItemInventrySaver = globalData.getExpendItemInventrySaver();
+        expendItemInventry = globalData.getExpendItemInventry();
 
-        itemShopAdmin.init(graphic, map_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager);
+
+
+        geoSlotSaver = new GeoSlotSaver(databaseAdmin, "GeoSlotSave", "GeoSlotSave.db", 1, "ns", graphic);
+
+        geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver);
+        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, geoSlotAdminManager, activityChange);
+
+        geoSlotAdminManager.loadGeoSlot();
+
+        itemShopAdmin.init(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager, expendItemInventry, geoInventry);
         itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "debug");
 
         canvas = null;
+
+        GeoObjectDataCreater.setGraphic(graphic);
+        // 仮。適当にGeo入れる GEO1が上がる能力は単一
+        for (int i = 0; i < 8; i++) {
+            geoInventry.addItemData(GeoObjectDataCreater.getGeoObjectData(100));
+        }
+
+
+        geoPresentManager = new GeoPresentManager(
+                graphic,
+                world_user_interface,
+                worldModeAdmin,
+                databaseAdmin,
+                text_box_admin,
+                geoInventry,
+                expendItemInventry,
+                itemDataAdminManager.getExpendItemDataAdmin(),
+                playerStatus
+        );
+
+
+        GeoPresentSaver.setGeoPresentManager(geoPresentManager);
+        geoPresentSaver = new GeoPresentSaver(
+                databaseAdmin,
+                "GeoPresentSave",
+                "GeoPresentSave.db",
+                1, "ns"
+        );
+
+        geoPresentManager.setGeoPresentSaver(geoPresentSaver);
+
+        PaletteCenter.initStatic(graphic);
+        PaletteElement.initStatic(graphic);
+
+        palette_admin = new PaletteAdmin(world_user_interface, graphic);
+
+        equipmentInventry = globalData.getEquipmentInventry();
+        equipmentInventrySaver = globalData.getEquipmentInventrySaver();
+
 
     }
 
@@ -131,9 +210,14 @@ public class WorldGameSystem {
             itemShopAdmin.update();
         }
         if (worldModeAdmin.getIsUpdate(worldModeAdmin.getPresent())) {
+            geoPresentManager.update();
+        }
+        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getEquip())) {
+            equipmentInventry.updata();
+            palette_admin.update(false);
         }
 
-        //itemShopAdmin.update();
+
         text_box_admin.update();
         effectAdmin.update();
     }
@@ -153,6 +237,13 @@ public class WorldGameSystem {
             itemShopAdmin.draw();
         }
         if (worldModeAdmin.getIsDraw(worldModeAdmin.getPresent())) {
+            geoPresentManager.draw();
+        }
+
+        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getEquip())) {
+            equipmentInventry.draw();
+            palette_admin.draw();
+            world_user_interface.draw();
         }
 
         text_box_admin.draw();

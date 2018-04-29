@@ -25,14 +25,24 @@ public final class Constants {
         public static final int PALETTE_CENTER_RADIUS_BIG = 70;
         public static final int PALETTE_CENTER_RADIUS_SMALL = 30;
         public static final int PALETTE_ARRANGE_RADIUS = 120;
-
     }
 
     public static class Inventry {
         public static final int INVENTRY_CONTENT_MAX = 10;
         public static final int INVENTRY_DATA_MAX = 1000;
-
     }
+
+    public static class DungeonKind {
+        public enum DUNGEON_KIND {
+            CHESS,
+            DRAGON,
+            FOREST,
+            GOKI,
+            HAUNTED,
+            DNGEON_KIND_NUM
+        }
+    }
+
 
     public static class Touch {
         public enum TouchState {
@@ -57,24 +67,38 @@ public final class Constants {
     }
 
     public static class BattleUnit {
-        public static final int BATTLE_UNIT_MAX = 6;
+        public static final int BATTLE_UNIT_MAX = 15;
     }
 
     public static class UnitStatus {
 
         public enum Status {
+            ATTACK_FRAME,
             HP,
             ATTACK,
             DEFENSE,
             LUCK,
-            ATTACK_FRAME,
-            NUM_OF_STATUS,
+            SPEED,
+            NUM_OF_STATUS;
+
+
+            //enumへのキャスト用
+            public static Status toEnum(int x) {
+                for(Status type : Status.values()) {
+                    if (type.ordinal() == x) {
+                        return type;
+                    }
+                }
+                return null;
+            }
+
         }
 
         public enum BonusStatus {
             BONUS_HP,
             BONUS_ATTACK,
             BONUS_DEFENSE,
+            BONUS_SPEED,
             NUM_OF_BONUS_STATUS,
         }
     }
@@ -97,6 +121,81 @@ public final class Constants {
     }
 
 
+    public static class GAMESYSTEN_MODE {
+
+        public enum DUNGEON_MODE {
+            MAP,
+            BUTTLE_INIT,
+            BUTTLE,
+        }
+    }
+
+    public static class Item {
+        public enum ITEM_KIND {
+            EXPEND,
+            EQUIPMENT,
+            GEO,
+        }
+
+        public enum EQUIPMENT_KIND {
+            SWORD,
+            WAND,
+            AX,
+            SPEAR,
+            BOW,
+            GUN,
+            FIST,
+            CLUB,
+            WHIP,
+            MUSIC,
+            MONSTER,
+            SHIELD,
+            BARE,
+            NUM,
+        }
+        public enum GEO_PARAM_KIND_NORMAL {
+            HP,
+            ATTACK,
+            DEFENCE,
+            LUCK,
+            NUM;
+
+            //enumへのキャスト用
+            public static GEO_PARAM_KIND_NORMAL toEnum(int x) {
+                for(GEO_PARAM_KIND_NORMAL type : GEO_PARAM_KIND_NORMAL.values()) {
+                    if (type.ordinal() == x) {
+                        return type;
+                    }
+                }
+                return null;
+            }
+        }
+
+
+
+        public enum GEO_PARAM_KIND_RATE {
+            HP_RATE,
+            ATTACK_RATE,
+            DEFENCE_RATE,
+            LUCK_RATE,
+            NUM;
+
+            //enumへのキャスト用
+            public static GEO_PARAM_KIND_RATE toEnum(int x) {
+                for(GEO_PARAM_KIND_RATE type : GEO_PARAM_KIND_RATE.values()) {
+                    if (type.ordinal() == x) {
+                        return type;
+                    }
+                }
+                return null;
+            }
+        }
+
+        public static final int DROP_NUM = 3;
+
+    }
+
+
     // *** takano ***
     public static class WorldMap {
         public enum SELECT_MODE {
@@ -111,6 +210,14 @@ public final class Constants {
             STOP,
             DRAW_ONLY,
             ACTIVE,
+        }
+    }
+
+    public static class PresentFlag {
+        public enum FLAG {
+            NO_DATA,
+            YET,
+            GOT,
         }
     }
 

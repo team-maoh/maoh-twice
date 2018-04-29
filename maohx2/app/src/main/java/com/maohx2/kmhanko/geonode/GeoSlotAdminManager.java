@@ -11,10 +11,14 @@ import java.util.List;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.WorldModeAdmin;
+import com.maohx2.kmhanko.Saver.GeoSlotSaver;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.ina.Arrange.Inventry;
+import com.maohx2.kmhanko.Arrange.InventryS;
+import com.maohx2.kmhanko.itemdata.GeoObjectData;
 
 //GeoSlotAdminの実体を持つクラス
 //GeoSlotMapButtonの実体も持つ。
@@ -36,28 +40,36 @@ public class GeoSlotAdminManager {
     WorldModeAdmin worldModeAdmin;
 
     PlayerStatus playerStatus;
+    InventryS geoInventry;
+
+    GeoSlotSaver geoSlotSaver;
 
     boolean is_load_database;
 
-    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus) {
+    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver) {
         graphic = _graphic;
         userInterface = _userInterface;
         databaseAdmin = _databaseAdmin;
         textBoxAdmin = _textBoxAdmin;
         worldModeAdmin = _worldModeAdmin;
         playerStatus = _playerStatus;
+        geoInventry = _geoInventry;
+        geoSlotSaver = _geoSlotSaver;
         addDatabase();
-
         this.loadGeoSlotDatabase();
+
+        geoSlotSaver.setGeoSlotAdminManager(this);
     }
 
     public void update() {
+        geoInventry.updata();
         if (activeGeoSlotAdmin != null) {
             activeGeoSlotAdmin.update();
         }
     }
 
     public void draw() {
+        geoInventry.draw();
         if (activeGeoSlotAdmin != null) {
             activeGeoSlotAdmin.draw();
         }
@@ -102,11 +114,19 @@ public class GeoSlotAdminManager {
         GeoSlotAdmin.setGeoSlotEventDB(geoSlotEventDB);
 
         for(int i = 0; i < t_names.size(); i++) {
-            GeoSlotAdmin new_geo_slot_admin = new GeoSlotAdmin(graphic, userInterface, worldModeAdmin, textBoxAdmin, this);
+            GeoSlotAdmin new_geo_slot_admin = new GeoSlotAdmin(graphic, userInterface, worldModeAdmin, textBoxAdmin, this, playerStatus);
             new_geo_slot_admin.loadDatabase(t_names.get(i));
             geoSlotAdmins.add(new_geo_slot_admin);
         }
 
+    }
+
+    public void addToInventry(GeoObjectData geoObjectData) {
+        geoInventry.addItemData(geoObjectData);
+    }
+
+    public void deleteFromInventry(GeoObjectData geoObjectData) {
+        geoInventry.subItemData(geoObjectData);
     }
 
     public void calcPlayerStatus() {
@@ -120,6 +140,32 @@ public class GeoSlotAdminManager {
                 }
             }
         }
+        playerStatus.calcStatus();
+        activeGeoSlotAdmin.statusTextBoxUpdate();
+    }
+
+    public void saveGeoInventry() {
+        geoInventry.save();
+    }
+
+    public void saveGeoSlot() {
+        geoSlotSaver.save();
+    }
+
+    public void loadGeoSlot() {
+        geoSlotSaver.load();
+    }
+
+    public List<String> getGeoSlotAdminNames() {
+        List<String> names = new ArrayList<>();
+        for (int i = 0; i < geoSlotAdmins.size(); i++) {
+            names.add(geoSlotAdmins.get(i).getName());
+        }
+        return names;
+    }
+
+    public List<GeoSlotAdmin> getGeoSlotAdmins() {
+        return geoSlotAdmins;
     }
 }
 

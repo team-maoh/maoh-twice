@@ -9,10 +9,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.sound.SoundAdmin;
+import com.maohx2.ina.Constants.DungeonKind.*;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
@@ -25,8 +27,10 @@ public class DungeonActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dungeon_surface_view = new DungeonSurfaceView(this);
-        setContentView(dungeon_surface_view);
+
+        dungeon_surface_view = new DungeonSurfaceView(this, backSurfaceView);
+        layout.addView(dungeon_surface_view);
+
     }
 
     //ここでメインループを止める
@@ -52,9 +56,10 @@ class DungeonSurfaceView extends BaseSurfaceView{
     DungeonGameSystem game_system;
     Graphic graphic;
     Activity dungeon_activity;
+    BattleUserInterface battle_user_interface;
 
-    public DungeonSurfaceView(Activity _dungeon_activity) {
-        super(_dungeon_activity);
+    public DungeonSurfaceView(Activity _dungeon_activity, BackSurfaceView _backSurfaceView) {
+        super(_dungeon_activity, _backSurfaceView);
         dungeon_activity = _dungeon_activity;
 
 
@@ -68,30 +73,55 @@ class DungeonSurfaceView extends BaseSurfaceView{
         dungeon_user_interface.init();
 
 
+
         my_database_admin.addMyDatabase("DungeonDB", "LocalDungeonImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("DungeonDB"), "Dungeon");
 
-        my_database_admin.addMyDatabase("DragonDB", "LocalDragonImage.db", 1, "r");
-        graphic.loadLocalImages(my_database_admin.getMyDatabase("DragonDB"), "Dragon");
+        Intent intent = currentActivity.getIntent();
+        DUNGEON_KIND dungeon_kind = (DUNGEON_KIND)intent.getSerializableExtra("DungeonKind");
 
-        //todo:ここはダンジョンセレクト関係の人からもらってくる
-        my_database_admin.addMyDatabase("ChessDB", "LocalChessImage.db", 1, "r");
-        graphic.loadLocalImages(my_database_admin.getMyDatabase("ChessDB"), "Chess");
 
-        my_database_admin.addMyDatabase("ForestDB", "LocalForestImage.db", 1, "r");
-        graphic.loadLocalImages(my_database_admin.getMyDatabase("ForestDB"), "Forest");
+        switch (dungeon_kind){
+            case CHESS:
+                my_database_admin.addMyDatabase("ChessDB", "LocalChessImage.db", 1, "r");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("ChessDB"), "Chess");
+                break;
 
-        my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
-        graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
+            case DRAGON:
+                my_database_admin.addMyDatabase("DragonDB", "LocalDragonImage.db", 1, "r");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("DragonDB"), "Dragon");
+                break;
 
-        my_database_admin.addMyDatabase("HauntedDB", "LocalHauntedImage.db", 1, "r");
-        graphic.loadLocalImages(my_database_admin.getMyDatabase("HauntedDB"), "Haunted");
+            case FOREST:
+                my_database_admin.addMyDatabase("ForestDB", "LocalForestImage.db", 1, "r");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("ForestDB"), "Forest");
+                break;
+
+            case GOKI:
+                my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
+                break;
+
+            case HAUNTED:
+                my_database_admin.addMyDatabase("HauntedDB", "LocalHauntedImage.db", 1, "r");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("HauntedDB"), "Haunted");
+                break;
+
+        }
 
         my_database_admin.addMyDatabase("soundDB", "soundDB.db", 1, "r");//データベースのコピーしMySQLiteのdbを扱いやすいMyDataBase型にしている
         sound_admin.setDatabase(my_database_admin.getMyDatabase("soundDB"));//扱いやすいやつをセットしている
         sound_admin.loadSoundPack("sound_pack_map");
 
-        game_system.init(dungeon_user_interface, graphic, sound_admin);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
+
+        battle_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
+        battle_user_interface.init();
+
+        global_data.getEquipmentInventry().init(battle_user_interface, graphic, 1000,100,1400,508, 10);
+        global_data.getGeoInventry().init(battle_user_interface, graphic,1000,100,1400,508, 10);
+        global_data.getExpendItemInventry().init(battle_user_interface, graphic,1000,100,1400,508, 10);
+
+        game_system.init(dungeon_user_interface, graphic, sound_admin, my_database_admin, battle_user_interface, dungeon_activity, my_database_admin);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
     }
 
 
@@ -99,6 +129,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
     public void gameLoop(){
 
         dungeon_user_interface.updateTouchState(touch_x, touch_y, touch_state);
+        battle_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         game_system.update();
         game_system.draw();
 

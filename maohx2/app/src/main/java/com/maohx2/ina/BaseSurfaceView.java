@@ -7,6 +7,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.Draw.ImageContext;
+
 /**
  * Created by ina on 2017/09/20.
  */
@@ -16,6 +19,8 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     Paint paint = new Paint();
     SurfaceHolder holder;
     Thread thread;
+    ActivityChange activityChange;
+    Activity currentActivity;
 
     double touch_x = 0;
     double touch_y = 0;
@@ -29,13 +34,21 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     long oldTime;
     long newTime = System.currentTimeMillis() << 16;
 
-    public BaseSurfaceView(Activity activity) {
-        super(activity);
+    BackSurfaceView backSurfaceView;
+
+    Graphic graphic;
+
+
+    public BaseSurfaceView(Activity _currentActivity, BackSurfaceView _backSurfaceView) {
+        super(_currentActivity);
+        currentActivity = _currentActivity;
+        backSurfaceView = _backSurfaceView;
         setZOrderOnTop(true);
         holder = getHolder();
         holder.addCallback(this);
         paint.setColor(Color.BLUE);
-        global_data = (GlobalData) activity.getApplication();
+        global_data = (GlobalData) currentActivity.getApplication();
+        activityChange = new ActivityChange(this, currentActivity);
     }
 
 
@@ -44,8 +57,13 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        //ImageContext backImageContext = graphic.makeImageContext(graphic.searchBitmap("e51-0"),0,0,true);
+        //backSurfaceView.drawBackGround(backImageContext);
+
         thread = new Thread(this);
         thread.start();
+
+        //activityChange = new ActivityChange(this, currentActivity);
     }
 
     @Override
@@ -82,6 +100,10 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     public void gameLoop(){}
+
+    public void stopThread(){
+        thread = null;
+    }
 
 
     //なぞられた点を記録するリスト

@@ -1,3 +1,5 @@
+/*
+
 package com.maohx2.ina;
 
 import android.app.Activity;
@@ -8,12 +10,14 @@ import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
-
+*/
 
 /**
  * Created by ina on 2017/10/15.
  */
-public class BattleActivity extends Activity {
+
+/*
+public class BattleActivity extends BaseActivity {
 
     RelativeLayout layout;
 
@@ -21,9 +25,9 @@ public class BattleActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        layout = new RelativeLayout(this);
-        layout.addView(new BattleSurfaceView(this));
-        setContentView(layout);
+        //layout = new RelativeLayout(this);
+        layout.addView(new BattleSurfaceView(this, backSurfaceView));
+        //setContentView(layout);
     }
 
     @Override
@@ -41,8 +45,8 @@ class BattleSurfaceView extends BaseSurfaceView{
     MyDatabaseAdmin my_database_admin;
     Graphic graphic;
 
-    public BattleSurfaceView(Activity battle_activity) {
-        super(battle_activity);
+    public BattleSurfaceView(Activity battle_activity, BackSurfaceView _backSurfaceView) {
+        super(battle_activity, _backSurfaceView);
 
         graphic = new Graphic(battle_activity, holder);
         my_database_admin = new MyDatabaseAdmin(battle_activity);
@@ -58,8 +62,12 @@ class BattleSurfaceView extends BaseSurfaceView{
         battle_user_interface.init();
 
         game_system = new BattleGameSystem();
+
+        my_database_admin.addMyDatabase("StartDB", "LocalStartImage.db", 1, "r");
+        graphic.loadLocalImages(my_database_admin.getMyDatabase("StartDB"), "Start");
+
         // by kmhanko
-        game_system.init(holder, graphic, my_database_admin,  battle_user_interface, battle_activity);
+        game_system.init(graphic, my_database_admin,  battle_user_interface, battle_activity, my_database_admin);
 
     }
 
@@ -70,4 +78,5 @@ class BattleSurfaceView extends BaseSurfaceView{
         game_system.draw();
     }
 }
+*/
 

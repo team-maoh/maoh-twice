@@ -3,17 +3,20 @@ package com.maohx2.fuusya;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.view.SurfaceHolder;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
 import static java.lang.Math.PI;
 import static java.lang.Math.cos;
 import static java.lang.Math.log;
+import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
 import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 //import com.maohx2.ina.MySprite;
 
 import java.util.Map;
@@ -27,7 +30,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 abstract public class MapObject {
 
-    double w_x, w_y, pre_w_x, pre_w_y;
+    double w_x, w_y;
     String draw_object;
     boolean exists;//自身がマップ上に存在しているかどうか
     int id;
@@ -36,18 +39,26 @@ abstract public class MapObject {
     double dir_on_map;//マップ上での自分自身の向き( 0 ~ 2*PI )
     Random random;
     MapObjectAdmin map_object_admin;
+    SoundAdmin sound_admin;
+    MapPlayer player;
+    MapAdmin map_admin;
 
     public MapObject(Graphic _graphic, MapObjectAdmin _map_object_admin, Camera _camera) {
 
         graphic = _graphic;
         map_object_admin = _map_object_admin;
         camera = _camera;
+        sound_admin = map_object_admin.getSoundAdmin();
+        player = map_object_admin.getPlayer();
+        map_admin = map_object_admin.getMapAdmin();
 
         exists = true;
         id = -1;
 
-        w_x = 800;
-        w_y = 450;
+        Point room_point = map_admin.getRoomPoint();
+        w_x = room_point.x;
+        w_y = room_point.y;
+
         dir_on_map = 0.0;
 
         random = new Random();
@@ -102,6 +113,11 @@ abstract public class MapObject {
 
         return sqrt(-2 * log(seed1)) * cos(2 * PI * seed2);
     }
+
+    protected double myDistance(double x1, double y1, double x2, double y2) {
+        return (pow(pow(x1 - x2, 2.0) + pow(y1 - y2, 2.0), 0.5));
+    }
+
 
 }
 
