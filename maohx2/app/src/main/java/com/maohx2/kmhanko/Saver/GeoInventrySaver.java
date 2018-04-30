@@ -87,12 +87,14 @@ public class GeoInventrySaver extends InventrySaver {
         List<String> slotSetNames = database.getString("GeoInventry", "slot_set_name");
         List<Integer> slotSetIDs = database.getInt("GeoInventry", "slot_set_id");
 
+        System.out.println("takano :"+itemNames);
 
         for(int i = 0; i < itemNames.size(); i++) {
             for(int j = 0; j < nums.get(i); j++){
                 inventry.addItemData(
                         new GeoObjectData(
                                 itemNames.get(i),
+                                imageNames.get(i),
                                 graphic.searchBitmap(imageNames.get(i)),
                                 hps.get(i),
                                 attacks.get(i),

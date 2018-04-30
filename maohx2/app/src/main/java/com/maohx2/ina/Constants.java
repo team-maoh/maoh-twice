@@ -132,10 +132,10 @@ public final class Constants {
     }
 
     public static class SELECT_WINDOW {
-        public static final int BACK_LEFT = 400;
-        public static final int BACK_RIGHT = 1200;
-        public static final int BACK_UP = 300;
-        public static final int BACK_BOTTOM = 500;
+        public static final int MESS_LEFT = 400;
+        public static final int MESS_RIGHT = 1200;
+        public static final int MESS_UP = 300;
+        public static final int MESS_BOTTOM = 500;
 
         public static final int YES_LEFT = 400;
         public static final int YES_RIGHT = 800;
@@ -146,6 +146,9 @@ public final class Constants {
         public static final int NO_RIGHT = 1200;
         public static final int NO_UP = 500;
         public static final int NO_BOTTOM = 600;
+
+        public static final float TEXT_SIZE = 40f;
+        public static final int MESS_ROW = 3;
     }
 
     public static class Item {
@@ -237,6 +240,10 @@ public final class Constants {
             YET,
             GOT,
         }
+    }
+
+    public static class GeoSlotParam {
+        public static final float GEO_SLOT_SCALE = 4.0f;
     }
 
     // *** takanoここまで ***
