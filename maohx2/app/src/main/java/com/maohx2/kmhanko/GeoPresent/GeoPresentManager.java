@@ -1,10 +1,12 @@
 package com.maohx2.kmhanko.GeoPresent;
 
+import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Arrange.InventryData;
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Constants.SELECT_WINDOW;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.PlateGroup;
@@ -14,6 +16,7 @@ import com.maohx2.ina.WorldModeAdmin;
 import com.maohx2.kmhanko.Saver.GeoPresentSaver;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.database.MyDatabase;
+import com.maohx2.kmhanko.dungeonselect.MapIconPlate;
 import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
@@ -53,6 +56,9 @@ public class GeoPresentManager {
 
     int scoreTextBoxID;
     int messageBoxID;
+
+    Paint presentTextPaint;
+    int presentTextBoxID;
 
     static final String dbName = "GeoPresentDB";
     static final String dbAsset = "GeoPresent.db";
@@ -103,7 +109,18 @@ public class GeoPresentManager {
         //initAlreadyGet();
         initTextBox();
         initPlateGroup();
+        initPresentTextBox();
+        initUIs();
 
+    }
+
+    private void initPresentTextBox() {
+        presentTextBoxID = textBoxAdmin.createTextBox(SELECT_WINDOW.MESS_LEFT, SELECT_WINDOW.MESS_UP, SELECT_WINDOW.MESS_RIGHT, SELECT_WINDOW.MESS_BOTTOM, Constants.SELECT_WINDOW.MESS_ROW);
+        textBoxAdmin.setTextBoxUpdateTextByTouching(presentTextBoxID, false);
+        textBoxAdmin.setTextBoxExists(presentTextBoxID, false);
+        presentTextPaint = new Paint();
+        presentTextPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
+        presentTextPaint.setColor(Color.WHITE);
     }
 
     public void setGeoPresentSaver(GeoPresentSaver _geoPresentSaver) {
@@ -139,12 +156,12 @@ public class GeoPresentManager {
     */
 
     private void initTextBox() {
-        scoreTextBoxID = textBoxAdmin.createTextBox(50,50,500,600,6);
+        scoreTextBoxID = textBoxAdmin.createTextBox(0,0,300,500,6);
         textBoxAdmin.setTextBoxUpdateTextByTouching(scoreTextBoxID, false);
         textBoxAdmin.setTextBoxExists(scoreTextBoxID, false);
         scoreTextBoxUpdate();
 
-        messageBoxID = textBoxAdmin.createTextBox(50,650,1000,850,3);
+        messageBoxID = textBoxAdmin.createTextBox(0,600,1000,900,3);
         textBoxAdmin.setTextBoxExists(messageBoxID, false);
 
 
@@ -156,7 +173,7 @@ public class GeoPresentManager {
 
     private void initPlateGroup() {
         Paint textPaint = new Paint();
-        textPaint.setTextSize(80f);
+        textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
         textPaint.setARGB(255,255,255,255);
         presentSelectPlateGroup = new PlateGroup<BoxTextPlate>(
                 new BoxTextPlate[]{
@@ -164,7 +181,7 @@ public class GeoPresentManager {
                                 graphic, userInterface, new Paint(),
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
-                                new int[]{1100, 550, 1550, 650},
+                                new int[]{SELECT_WINDOW.YES_LEFT, SELECT_WINDOW.YES_UP, SELECT_WINDOW.YES_RIGHT, SELECT_WINDOW.YES_BOTTOM},
                                 "献上する",
                                 textPaint
                         ),
@@ -172,7 +189,7 @@ public class GeoPresentManager {
                                 graphic, userInterface, new Paint(),
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
-                                new int[]{1100, 700, 1550, 800},
+                                new int[]{SELECT_WINDOW.NO_LEFT, SELECT_WINDOW.NO_UP, SELECT_WINDOW.NO_RIGHT, SELECT_WINDOW.NO_BOTTOM},
                                 "やめる",
                                 textPaint
                         )
@@ -206,11 +223,14 @@ public class GeoPresentManager {
         InventryData inventryData = userInterface.getInventryData();
         if (inventryData != null) {
             if (inventryData.getItemNum() > 0) {
-                //TODO InventryOFF
-                holdGeoObbjectData = (GeoObjectData)inventryData.getItemData();
-                userInterface.setInventryData(null);
-                presentSelectPlateGroup.setUpdateFlag(true);
-                presentSelectPlateGroup.setDrawFlag(true);
+                GeoObjectData tmp = (GeoObjectData)inventryData.getItemData();
+                if (inventryData.getItemNum() > 0 && tmp.getName() != null && tmp.getSlotSetName().equals("noSet")) {
+                    holdGeoObbjectData = (GeoObjectData) inventryData.getItemData();
+                    userInterface.setInventryData(null);
+                    presentSelectPlateGroup.setUpdateFlag(true);
+                    presentSelectPlateGroup.setDrawFlag(true);
+                    presentTextBoxUpdate();
+                }
             }
         }
     }
@@ -234,7 +254,7 @@ public class GeoPresentManager {
 
         sumScore = hpScore + attackScore + defenceScore + luckScore + specialScore;
 
-        geoInventry.subItemData(holdGeoObbjectData);
+        geoInventry.deleteItemData(holdGeoObbjectData.getName());
         holdGeoObbjectData = null;
 
         textBoxAdmin.bookingDrawText(messageBoxID, "ありがたくいただくとするわ");
@@ -384,13 +404,11 @@ public class GeoPresentManager {
                     presentAndCheck(holdGeoObbjectData);
                     holdGeoObbjectData = null;
                     scoreTextBoxUpdate();
-                    presentSelectPlateGroup.setUpdateFlag(false);
-                    presentSelectPlateGroup.setDrawFlag(false);
+                    initUIs();
                     break;
                 case(1) ://キャンセル
                     holdGeoObbjectData = null;
-                    presentSelectPlateGroup.setUpdateFlag(false);
-                    presentSelectPlateGroup.setDrawFlag(false);
+                    initUIs();
                     break;
             }
         }
@@ -410,8 +428,6 @@ public class GeoPresentManager {
         presentSelectUpdate();
         scoreTextBoxUpdate();
         backPlateGroup.update();
-
-        //scoreTextBoxUpdate();
 
         //TODO TextBoxの一括ではないupdate
         textBoxAdmin.setTextBoxExists(scoreTextBoxID, worldModeAdmin.getIsDraw(worldModeAdmin.getPresent()));
@@ -433,9 +449,8 @@ public class GeoPresentManager {
                             @Override
                             public void callBackEvent() {
                                 //戻るボタンが押された時の処理
-                                presentSelectPlateGroup.setUpdateFlag(false);
-                                presentSelectPlateGroup.setDrawFlag(false);
                                 holdGeoObbjectData = null;
+                                initUIs();
 
                                 worldModeAdmin.setPresent(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
@@ -475,6 +490,25 @@ public class GeoPresentManager {
         defenceScore = _scores[2];
         luckScore = _scores[3];
         specialScore = _scores[4];
+    }
+
+
+    public void presentTextBoxUpdate() {
+        textBoxAdmin.setTextBoxExists(presentTextBoxID, true);
+
+        textBoxAdmin.bookingDrawText(presentTextBoxID, "ジオ名 : ", presentTextPaint);
+        textBoxAdmin.bookingDrawText(presentTextBoxID, holdGeoObbjectData.getName(), presentTextPaint);
+        textBoxAdmin.bookingDrawText(presentTextBoxID, "\n", presentTextPaint);
+        textBoxAdmin.bookingDrawText(presentTextBoxID, "これもらっちゃうけどOK?", presentTextPaint);
+        textBoxAdmin.bookingDrawText(presentTextBoxID, "MOP", presentTextPaint);
+
+        textBoxAdmin.updateText(presentTextBoxID);
+    }
+
+    private void initUIs() {
+        presentSelectPlateGroup.setUpdateFlag(false);
+        presentSelectPlateGroup.setDrawFlag(false);
+        textBoxAdmin.setTextBoxExists(presentTextBoxID, false);
     }
 
 }
