@@ -70,7 +70,6 @@ public class GeoPresentManager {
 
     GeoObjectData holdGeoObbjectData;
 
-    //TODO: セーブデータの一部
     int hpScore;
     int attackScore;
     int defenceScore;
@@ -78,9 +77,7 @@ public class GeoPresentManager {
     int specialScore;
     int sumScore;
 
-
     List<Boolean> alreadyPresentGetFlags = new ArrayList<>();
-
 
     InventryS geoInventry;
     InventryS expendItemInventry;
@@ -106,7 +103,6 @@ public class GeoPresentManager {
         playerStatus = _playerStatus;
         worldModeAdmin = _worldModeAdmin;
 
-        //initAlreadyGet();
         initTextBox();
         initPlateGroup();
         initPresentTextBox();
@@ -135,25 +131,6 @@ public class GeoPresentManager {
 
         size = database.getSize(presentListTableName);
     }
-
-    /*
-    public void setPresentGetFlags(List<Boolean> _presentGetFlags) {
-        presentGetFlags = _presentGetFlags;
-    }
-    */
-
-    //DBに記載された全てのプレゼントについて、それぞれ既にもらったかどうか。
-    /*
-    private void initAlreadyGet() {
-        List<String> bufPresentName = database.getString(presentListTableName, "present_name");
-        for(int i = 0; i < size; i++) {
-            presentGetFlags.add(new PresentGetFlag(
-                    bufPresentName.get(i),
-                    false)
-            );
-        }
-    }
-    */
 
     private void initTextBox() {
         scoreTextBoxID = textBoxAdmin.createTextBox(0,0,300,500,6);
@@ -262,8 +239,6 @@ public class GeoPresentManager {
         textBoxAdmin.updateText(messageBoxID);
     }
 
-
-
     //プレゼントリストのDBをチェックして、どのプレゼントの取得条件を満たしているかを返す
     private List<Boolean> getCheckFlag() {
         List<Boolean> checkFlag = new ArrayList<>();
@@ -330,7 +305,7 @@ public class GeoPresentManager {
             if (tableName.equals("GeoObject")) {
                 w_script = "name = " + MyDatabase.s_quo(presentName);
 
-
+                /*
                 GeoObjectData bufGeoObjectData = new GeoObjectData(
                         MyDatabase.s_quo(presentName),
                        graphic.searchBitmap("DefenceGeo01"),//TODO ちゃんと検索。直す
@@ -343,7 +318,8 @@ public class GeoPresentManager {
                         database.getOneDouble(tableName, "defence_rate", w_script),
                         database.getOneDouble(tableName, "luck_rate", w_script)
                 );
-/*
+                */
+
                 GeoObjectData bufGeoObjectData = GeoObjectDataCreater.getGeoObjectData(
                         new int[] {
                                 database.getOneInt(tableName, "hp", w_script),
@@ -357,7 +333,7 @@ public class GeoPresentManager {
                                 database.getOneDouble(tableName, "defence_rate", w_script),
                                 database.getOneDouble(tableName, "luck_rate", w_script)
                         }
-                );*/
+                );
 
                 geoInventry.addItemData(bufGeoObjectData);
                 name = bufGeoObjectData.getName();
@@ -413,15 +389,6 @@ public class GeoPresentManager {
             }
         }
     }
-
-    //debug
-    /*
-    private void expressPresent(List<Present> newPresent) {
-        for(int i = 0; i < newPresent.size(); i++) {
-            System.out.println("present : " + newPresent.get(i).getPresentName() +" " + newPresent.get(i).getTableName());
-        }
-    }
-    */
 
     public void update() {
         geoInventryUpdate();
