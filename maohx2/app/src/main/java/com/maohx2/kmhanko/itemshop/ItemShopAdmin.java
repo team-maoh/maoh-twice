@@ -88,9 +88,8 @@ public class ItemShopAdmin {
         if (!itemKindFlag) {
             throw new Error("ItemShopAdmin#makeItemShop : ☆タカノ itemKindが不適切 : " + _itemKind);
         }
-        itemShop.loadShopData(_tableName);
-        itemShop.initPlateGroup();
-        itemShop.setTextBox();
+        itemShop.loadShopData(_tableName);//こちらがinitより先でなけらばならない
+        itemShop.init();
     }
 
     public void makeAndOpenItemShop(ITEM_KIND _itemKind, String _tableName) {

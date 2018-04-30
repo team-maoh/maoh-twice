@@ -21,7 +21,7 @@ public class BackPlate extends BoxTextPlate {
         super(_graphic, _userInterFace,new Paint(),
                 Constants.Touch.TouchWay.UP_MOMENT,
                 Constants.Touch.TouchWay.MOVE,
-                new int[] { 1430, 20, 1580, 120 },
+                new int[] { 1400, 0, 1600, 100 },
                 "戻る",
                 new Paint()
                 );
