@@ -2,17 +2,11 @@ package com.maohx2.kmhanko.itemshop;
 
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.ina.Text.BoxItemPlate;
-import com.maohx2.ina.Text.ListBox;
+import com.maohx2.ina.Constants.SELECT_WINDOW;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.WorldModeAdmin;
-import com.maohx2.kmhanko.Saver.ExpendItemInventrySaver;
-import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
-import com.maohx2.kmhanko.database.NamedDataAdmin;
-import com.maohx2.ina.ItemData.ItemDataAdmin;
-import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.kmhanko.Arrange.InventryS;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
@@ -23,6 +17,7 @@ import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 import com.maohx2.kmhanko.plate.BackPlate;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 
 import java.util.ArrayList;
@@ -52,6 +47,9 @@ public abstract class ItemShop {
 
     String buyItemName;
 
+    int buyTextBoxID;
+    Paint buyTextBoxPaint;
+
     ItemShopData itemShopData;
     Graphic graphic;
     UserInterface userInterface;
@@ -74,17 +72,22 @@ public abstract class ItemShop {
         databaseAdmin = _databaseAdmin;
     }
 
-    /*
-    public void init(UserInterface _userInterface, Graphic _graphic, TextBoxAdmin _textBoxAdmin) {
-        //listBox_Item = new ListBox();
-        //listBox_Select = new ListBox();
-
-        userInterface = _userInterface;
-        graphic = _graphic;
-
-        textBoxAdmin = _textBoxAdmin;
+    public void init() {
+        initProductPlate();
+        initBuySelectPlate();
+        initBackPlate();
+        initTextBox();
+        initUIs();
     }
-    */
+
+    private void initTextBox() {
+        buyTextBoxID = textBoxAdmin.createTextBox(SELECT_WINDOW.MESS_LEFT, SELECT_WINDOW.MESS_UP, SELECT_WINDOW.MESS_RIGHT, SELECT_WINDOW.MESS_BOTTOM, SELECT_WINDOW.MESS_ROW);
+        textBoxAdmin.setTextBoxUpdateTextByTouching(buyTextBoxID, false);
+        textBoxAdmin.setTextBoxExists(buyTextBoxID, false);
+        buyTextBoxPaint = new Paint();
+        buyTextBoxPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
+        buyTextBoxPaint.setColor(Color.WHITE);
+    }
 
     public void setItemShopData(ItemShopData _itemShopData) {
         itemShopData = _itemShopData;
@@ -98,19 +101,11 @@ public abstract class ItemShop {
         }
     }
 
-    public void initPlateGroup() {
+    public void initProductPlate() {
         int size = itemShopData.getItemDataSize();
-        /*
-        listBox_Item.init(userInterface, graphic, Constants.Touch.TouchWay.DOWN_MOMENT, size , 50, 50, 50 + 600, 50 + 80 * size);
-        for (int i = 0; i < size; i++) {
-            listBox_Item.setContent(i, itemShopData.getItemData(i).getName());
-            //ItemDataを渡す予定
-            //listBox_Item.setItemContent(i, itemShopData.getItemData(i).getName());
-        }
-        */
 
         Paint productPlatePaint = new Paint();
-        productPlatePaint.setARGB(255,64,64,64);
+        productPlatePaint.setARGB(255, 64, 64, 64);
         //TODO このPlateは価格表示ができないので、オーバーライドするかしてBoxProductPlatesでも作る
         BoxProductPlate[] boxProductPlates = new BoxProductPlate[size];
         for (int i = 0; i < size; i++) {
@@ -118,17 +113,16 @@ public abstract class ItemShop {
                     graphic, userInterface, productPlatePaint,
                     Constants.Touch.TouchWay.UP_MOMENT,
                     Constants.Touch.TouchWay.MOVE,
-                    new int[] { 50, 50 + 100 * i, 900, 150 + 100 * i },
+                    new int[]{50, 50 + 100 * i, 900, 150 + 100 * i},
                     itemShopData.getItemData(i)
             );
         }
         productPlateGroup = new PlateGroup<BoxProductPlate>(boxProductPlates);
-        productPlateGroup.setUpdateFlag(true);
-        productPlateGroup.setDrawFlag(true);
+    }
 
-
+    public void initBuySelectPlate() {
         Paint textPaint = new Paint();
-        textPaint.setTextSize(80f);
+        textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
         textPaint.setARGB(255,255,255,255);
         buySelectPlateGroup = new PlateGroup<BoxTextPlate>(
                 new BoxTextPlate[]{
@@ -136,7 +130,7 @@ public abstract class ItemShop {
                                 graphic, userInterface, new Paint(),
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
-                                new int[]{1100, 550, 1550, 650},
+                                new int[]{SELECT_WINDOW.YES_LEFT, SELECT_WINDOW.YES_UP, SELECT_WINDOW.YES_RIGHT, SELECT_WINDOW.YES_BOTTOM},
                                 "購入する",
                                 textPaint
                         ),
@@ -144,19 +138,15 @@ public abstract class ItemShop {
                                 graphic, userInterface, new Paint(),
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
-                                new int[]{1100, 700, 1550, 800},
+                                new int[]{SELECT_WINDOW.NO_LEFT, SELECT_WINDOW.NO_UP, SELECT_WINDOW.NO_RIGHT, SELECT_WINDOW.NO_BOTTOM},
                                 "やめる",
                                 textPaint
                         )
                 }
         );
-        buySelectPlateGroup.setUpdateFlag(false);
-        buySelectPlateGroup.setDrawFlag(false);
-
-        loadBackPlate();
     }
 
-    private void loadBackPlate() {
+    private void initBackPlate() {
         backPlateGroup = new PlateGroup<BackPlate>(
                 new BackPlate[] {
                         new BackPlate(
@@ -172,26 +162,6 @@ public abstract class ItemShop {
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
 
                                 itemInventry.save();
-
-                                /*
-                                databaseAdmin.addMyDatabase("ExpendItemInventrySaveTest", "ExpendItemInventrySaveTest.db", 1, "w");
-                                MyDatabase database = databaseAdmin.getMyDatabase("ExpendItemInventrySaveTest");
-
-                                List<String> itemNames = new ArrayList<String>();
-                                for (int i = 0; i < 30; i++) {
-                                    if (itemInventry.getItemData(i) == null) {
-                                        break;
-                                    }
-                                    itemNames.add(itemInventry.getItemData(i).getName());
-                                }
-                                System.out.println(database.getTables());
-
-                                database.insertRawByList("ExpendItemInventry", "name", itemNames);
-
-                                List<String> load = database.getString("ExpendItemInventry", "name");
-
-                                System.out.println("takano:" + load);
-                                */
 
                             }
                         }
@@ -252,13 +222,17 @@ public abstract class ItemShop {
             productPlateGroup.update();
 
             int content = productPlateGroup.getTouchContentNum();
+
             if (content != -1) {
+                //何かの商品をタッチした
                 focusItemData = productPlateGroup.getContentItem(content);
 
                 //TODO アイテムの詳細を表示するぷれーとか何か
                 productPlateGroup.setUpdateFlag(false);
                 buySelectPlateGroup.setUpdateFlag(true);
                 buySelectPlateGroup.setDrawFlag(true);
+                buyTextBoxUpdate(focusItemData);
+
             }
     }
 
@@ -270,14 +244,10 @@ public abstract class ItemShop {
                 case(0) ://購入する
                     //itemData = (ItemData)itemShopData.getOneDataByName(buyItemName);
                     buyItem(focusItemData);
-                    productPlateGroup.setUpdateFlag(true);
-                    buySelectPlateGroup.setUpdateFlag(false);
-                    buySelectPlateGroup.setDrawFlag(false);
+                    initUIs();
                     break;
                 case(1) ://キャンセル
-                    productPlateGroup.setUpdateFlag(true);
-                    buySelectPlateGroup.setUpdateFlag(false);
-                    buySelectPlateGroup.setDrawFlag(false);
+                    initUIs();
                     break;
             }
         }
@@ -289,6 +259,18 @@ public abstract class ItemShop {
     //TODO:商品詳細情報の表示処理
     public abstract void explainItem(ItemData _itemData);
 
+    public void buyTextBoxUpdate(ItemData _itemData) {
+        textBoxAdmin.setTextBoxExists(buyTextBoxID, true);
+
+        textBoxAdmin.bookingDrawText(buyTextBoxID, _itemData.getName(), buyTextBoxPaint);
+        textBoxAdmin.bookingDrawText(buyTextBoxID, "を購入しますか？", buyTextBoxPaint);
+        textBoxAdmin.bookingDrawText(buyTextBoxID, "\n", buyTextBoxPaint);
+        textBoxAdmin.bookingDrawText(buyTextBoxID, "価格 : ", buyTextBoxPaint);
+        textBoxAdmin.bookingDrawText(buyTextBoxID, String.valueOf(_itemData.getPrice()), buyTextBoxPaint);
+        textBoxAdmin.bookingDrawText(buyTextBoxID, "MOP", buyTextBoxPaint);
+
+        textBoxAdmin.updateText(buyTextBoxID);
+    }
 
     public void debugDraw() {
         for (int i = 0 ; i < itemShopData.getItemDataSize(); i++) {
@@ -301,6 +283,14 @@ public abstract class ItemShop {
         productPlateGroup.draw();
         backPlateGroup.draw();
         itemInventry.draw();
+    }
+
+    public void initUIs() {
+        productPlateGroup.setUpdateFlag(true);
+        productPlateGroup.setDrawFlag(true);
+        buySelectPlateGroup.setUpdateFlag(false);
+        buySelectPlateGroup.setDrawFlag(false);
+        textBoxAdmin.setTextBoxExists(buyTextBoxID, false);
     }
 
 }
