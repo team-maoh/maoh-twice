@@ -22,6 +22,8 @@ import java.util.List;
  * Created by ina on 2017/12/15.
  */
 
+//TODO 頼む、位置を後からセッターで変更できるように。そうしないと売却画面でインベントリを並べられない(現状だと全ての画面共通で、最初に定めた位置となっている)
+
 public class Inventry {
 
     int inventry_item_num;

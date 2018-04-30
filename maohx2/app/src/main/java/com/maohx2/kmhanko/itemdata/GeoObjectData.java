@@ -21,6 +21,9 @@ public class GeoObjectData extends ItemData {
     double defence_rate;
     double luck_rate;
 
+    String slotSetName = "noSet";
+    int slotSetID;
+
     //Graphic graphic;
 
 
@@ -32,6 +35,25 @@ public class GeoObjectData extends ItemData {
         this(_name,_bitmapData, status1[0],status1[1],status1[2],status1[3],status2[0],status2[1],status2[2],status2[3]);
     }
 
+    //DBからの生成用
+    public GeoObjectData(String _name, String _imageName, BitmapData _bitmapData, int _hp, int _attack, int _defence, int _luck, double _hp_rate, double _attack_rate, double _defence_rate, double _luck_rate, String _slotSetName, int _slotSetID) {
+        this(_name,_bitmapData, _hp,_attack,_defence,_luck,_hp_rate,_attack_rate,_defence_rate,_luck_rate);
+        this.setImageName(_imageName);
+    }
+
+
+    /*
+    public GeoObjectData(String _name, String _imageName, int _hp, int _attack, int _defence, int _luck, double _hp_rate, double _attack_rate, double _defence_rate, double _luck_rate, String _slotSetName, int _slotSetID) {
+        this(_name,null,_hp,_attack,_defence,_luck,_hp_rate,_attack_rate,_defence_rate,_luck_rate);
+    }
+    */
+
+    public GeoObjectData(String _name, BitmapData _bitmapData, int _hp, int _attack, int _defence, int _luck, double _hp_rate, double _attack_rate, double _defence_rate, double _luck_rate, String _slotSetName, int _slotSetID) {
+        this(_name,_bitmapData,_hp,_attack,_defence,_luck,_hp_rate,_attack_rate,_defence_rate,_luck_rate);
+        slotSetName = _slotSetName;
+        slotSetID = _slotSetID;
+    }
+
     public GeoObjectData(String _name, BitmapData _bitmapData, int _hp, int _attack, int _defence, int _luck, double _hp_rate, double _attack_rate, double _defence_rate, double _luck_rate) {
         //graphic = _graphic;
         setName(_name);
@@ -40,6 +62,19 @@ public class GeoObjectData extends ItemData {
         setStatus(_hp, _attack, _defence, _luck, _hp_rate, _attack_rate, _defence_rate, _luck_rate);
         //setGeoImage();
         setItemKind(Constants.Item.ITEM_KIND.GEO);
+    }
+
+    public void setSlotSetName(String _slotSetName) {
+        slotSetName = _slotSetName;
+    }
+    public void setSlotSetID(int _slotSetID) {
+        slotSetID = _slotSetID;
+    }
+    public String getSlotSetName() {
+        return slotSetName;
+    }
+    public int getSlotSetID() {
+        return slotSetID;
     }
 
     public void setStatus(int _hp, int _attack, int _defence, int _luck, double _hp_rate, double _attack_rate, double _defence_rate, double _luck_rate) {

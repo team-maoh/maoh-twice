@@ -81,13 +81,14 @@ public class MapAdmin {
     int magnification = 64*4;//倍率
     int time = 0;//アニメーションタイミング用
     int now_floor_num = 0;//現在のフロア階層
-    int boss_floor_num = 1;//ボスフロアの階層
+    int boss_floor_num = 3;//ボスフロアの階層
 
     Point offset = new Point(0, 0);
     Point start_point = new Point(0, 0);
 
     Paint paint = new Paint();
     Point map_offset = new Point(0, 0);
+    Point room_point = new Point(0, 0);
     Camera camera = new Camera(map_size, magnification);
     SectionAdmin section_admin;
     Canvas canvas;
@@ -113,6 +114,7 @@ public class MapAdmin {
     BitmapData floor_tile;
     BitmapData stair_tile;
     BitmapData mine_tile;
+    BitmapData mine_tile4;
     BitmapData stair_tile_div[] = new BitmapData[4];//階段の画像を4分割
     BitmapData mine_tile_div[] = new BitmapData[4];
     BitmapData cave_hole_div[] = new BitmapData[3];
@@ -175,6 +177,7 @@ public class MapAdmin {
 
         //採掘場画像4分割
         mine_tile = graphic.searchBitmap("cave_thing_01");
+        mine_tile4 = auto_tile_admin.combineFourAutoTile(mine_tile, mine_tile, mine_tile, mine_tile);
 //        mine_tile_div[0] = graphic.processTrimmingBitmapData(mine_tile, 0, 0, 32, 32);
 //        mine_tile_div[1] = graphic.processTrimmingBitmapData(mine_tile, 32, 0, 32, 32);
 //        mine_tile_div[2] = graphic.processTrimmingBitmapData(mine_tile, 0, 32, 32, 32);
@@ -328,7 +331,7 @@ public class MapAdmin {
         section_admin.updateMapData(map_data);
         section_admin.connectRooms(map_data);
         section_admin.makeStairs(map_data);
-        //section_admin.createMine(1, 2, map_data);
+        createMine(5, 8);
 
 
         //section_admin.printNeighborLeafNum();
@@ -336,7 +339,7 @@ public class MapAdmin {
 
         for(int i = 0;i < map_size.x;i++) {
             for (int j = 0; j < map_size.y; j++) {
-                if (!isWall(i, j) && !isStairs(i, j)) {
+                if (!isWall(i, j) && !isStairs(i, j) && !isMine(i, j)) {
                     map_tile[i][j] = floor_tile;
                     //アニメーション用
 //                    for(int k = 0;k < 3;k++) {
@@ -346,7 +349,7 @@ public class MapAdmin {
 //                        map_tile_set_animation[k][2*i+1][2*j+1] = floor_tile;
 //                    }
                     //階段
-                } else if (isStairs(i, j)) {
+                } else if (isStairs(i, j) && !isMine(i, j)) {
                     map_tile[i][j] = stair_tile;
                     //アニメーション用
 //                    for (int k = 0; k < 3; k++) {
@@ -355,6 +358,8 @@ public class MapAdmin {
 //                        map_tile_set_animation[k][2 * i][2 * j + 1] = stair_tile_div[2];
 //                        map_tile_set_animation[k][2 * i + 1][2 * j + 1] = stair_tile_div[3];
 //                    }
+                }else if(isMine(i, j)){
+                    map_tile[i][j] = mine_tile4;
                 } else {
                     setAutoTile_light(i, j, i, j);
                 }
@@ -462,7 +467,7 @@ public class MapAdmin {
         start_point.set(point.x, point.y);
     }
 
-    //部屋のある一点を返す
+    //部屋のある一点を返す(magnificationをかけてある)
     public Point getRoomPoint(){
         Point point = new Point(0, 0);
         for(;;) {
@@ -475,6 +480,27 @@ public class MapAdmin {
             }
         }
         return point;
+    }
+
+    //部屋の端の座標を返す
+    private Point getRoomEdgePoint(){
+        Point point = new Point(0, 0);
+        for(;;) {
+            Random rnd = new Random();
+            int x = rnd.nextInt(map_size.x);
+            int y = rnd.nextInt(map_size.y);
+            if(map_data[x][y].isRoom() && (map_data[x-1][y].isWall() || map_data[x+1][y].isWall() || map_data[x][y-1].isWall() || map_data[x][y+1].isWall())){
+                point.set(x * magnification, y * magnification);
+                break;
+            }
+        }
+        return point;
+    }
+
+    //room_pointをset(magnificationをかけてない)
+    public void setRoomPoint(){
+        Point point = getRoomEdgePoint();
+        room_point.set(point.x/magnification, point.y/magnification);
     }
 
     //playerの現在位置を返す
@@ -497,6 +523,7 @@ public class MapAdmin {
         }
     }
 
+    //ボスフロアに移動
     private void goBossFloor(){
         //map_dataの初期化
         for (int i = 0; i < map_size.x; i++) {
@@ -542,6 +569,21 @@ public class MapAdmin {
         }
         camera.setCameraOffset(7.5*magnification, 9*magnification);
         map_player.putUnit(7.5*magnification, 9*magnification);
+    }
+
+    //採掘場所を作る(部屋の淵のみに生成)
+    private void createMine(int min_num, int max_num){
+        Random rnd = new Random();
+        int mine_num = rnd.nextInt(max_num - min_num + 1) + min_num;
+        for(int i = 0;i < mine_num;i++){
+            while(true) {
+                setRoomPoint();
+                if (!map_data[room_point.x][room_point.y].isMine() && !map_data[room_point.x][room_point.y].isStairs()) {
+                    map_data[room_point.x][room_point.y].setMineFlag(true);
+                    break;
+                }
+            }
+        }
     }
 
     //一歩先に壁があるかどうかと壁の方向を判定

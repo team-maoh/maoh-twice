@@ -50,13 +50,13 @@ public class DungeonGameSystem {
     boolean is_displaying_menu, is_touching_outside_menu;
     MapPlateAdmin map_plate_admin;
 
-    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin) {
+    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange activityChange) {
         dungeon_user_interface = _dungeon_user_interface;
         battle_user_interface = _battle_user_interface;
         graphic = _graphic;
 
         dungeonModeManage = new DungeonModeManage();
-        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface);
+        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange);
         map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_plate_admin, dungeonModeManage);
         map_admin = new MapAdmin(graphic, map_object_admin);
 //        map_object_admin.getCamera(map_admin.getCamera());

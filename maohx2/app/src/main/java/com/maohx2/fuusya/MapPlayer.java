@@ -61,7 +61,7 @@ public class MapPlayer extends MapUnit {
 
         dungeon_user_interface = _dungeon_user_interface;
         map_plate_admin = _map_plate_admin;
-        map_admin = _map_admin;
+        //map_admin = _map_admin;
 
 
         touch_state = dungeon_user_interface.getTouchState();

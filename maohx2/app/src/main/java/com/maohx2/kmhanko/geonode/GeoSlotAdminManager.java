@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.ina.Constants;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.WorldModeAdmin;
 import com.maohx2.kmhanko.Saver.GeoSlotSaver;
@@ -59,6 +60,11 @@ public class GeoSlotAdminManager {
         this.loadGeoSlotDatabase();
 
         geoSlotSaver.setGeoSlotAdminManager(this);
+        setSlot();
+    }
+
+    public void start() {
+        //activeGeoSlotAdmin.start();
     }
 
     public void update() {
@@ -166,6 +172,26 @@ public class GeoSlotAdminManager {
 
     public List<GeoSlotAdmin> getGeoSlotAdmins() {
         return geoSlotAdmins;
+    }
+
+    //この関数はManagerが作られたあとであって、かつGeoInventryが読まれた後に一度だけ実行する
+    public void setSlot() {
+        GeoObjectData geoObjectData;
+        for(int i = 0; i < Constants.Inventry.INVENTRY_DATA_MAX; i++) {
+            geoObjectData = (GeoObjectData)geoInventry.getItemData(i);
+            if (geoObjectData != null) {
+                for (int j = 0; j < geoSlotAdmins.size(); j++ ) {
+                    if (geoObjectData.getSlotSetName() != null) {
+                        if (geoObjectData.getSlotSetName().equals(getGeoSlotAdminNames().get(j))) {
+                            geoSlotAdmins.get(j).getGeoSlots().get(geoObjectData.getSlotSetID()).pushGeoObject(geoObjectData);
+                            System.out.println("☆タカノ:GeoSlotAdminManager#setSlot : " + getGeoSlotAdminNames().get(j) + "(" + geoObjectData.getSlotSetID() + ") " + "->" + geoObjectData.getName());
+
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }
 

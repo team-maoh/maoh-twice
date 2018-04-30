@@ -42,8 +42,9 @@ public class MapInventryAdmin {
 
         player = map_object_admin.getPlayer();
         map_plate_admin = _map_plate_admin;
+        map_plate_admin.setMapInventryAdmin(this);
 
-        debug_count = 30;
+        debug_count = 300;
 
     }
 
@@ -53,18 +54,17 @@ public class MapInventryAdmin {
 
     public void update() {
 
-        System.out.println("dededede" + debug_count);
-        if (debug_count > 0) {
-            debug_count--;
-
-        } else if(debug_count == 0){
-
-//            int obtained_item_num = map_plate_admin.getObtainedItemNum();
-            storageMapInventry(map_plate_admin.getObtainedItemNum());
-
-
-            debug_count = -1;
-        }
+//        System.out.println("dededede" + debug_count);
+//        if (debug_count > 0) {
+//            debug_count--;
+//
+//        } else if(debug_count == 0){
+//
+////            int obtained_item_num = map_plate_admin.getObtainedItemNum();
+//            storageMapInventry(map_plate_admin.getObtainedItemNum());
+//
+//            debug_count = -1;
+//        }
 
 
 //        if (map_plate_admin.getWillStorageInventry()) {
@@ -75,36 +75,40 @@ public class MapInventryAdmin {
 
     }
 
-    public void storageMapInventry(int obtained_item_num) {
+    public void storageMapInventry() {
 
         System.out.println("sutoreigi");
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < Constants.Inventry.INVENTRY_DATA_MAX; i++) {
             ItemData tmp_item_data = inventry.getItemData(i);
-//                int tmp_item_num = inventry.getItemNum(i);
 
-            ITEM_KIND tmp_item_kind = tmp_item_data.getItemKind();
+            if (tmp_item_data == null) {
+                break;
+            } else {
 
-            switch (tmp_item_kind) {
-                case EXPEND:
-                    expendItemInventry.addItemData(tmp_item_data);
-                    System.out.println("_sutoreigi   1");
+                ITEM_KIND tmp_item_kind = tmp_item_data.getItemKind();
 
-                    break;
-                case GEO:
-                    geoItemInventry.addItemData(tmp_item_data);
-                    System.out.println("_sutoreigi   2");
+                switch (tmp_item_kind) {
+                    case EXPEND:
+                        expendItemInventry.addItemData(tmp_item_data);
+                        System.out.println("_sutoreigi   1");
 
-                    break;
-                case EQUIPMENT:
-                    equipmentInventry.addItemData(tmp_item_data);
-                    System.out.println("_sutoreigi   3");
+                        break;
+                    case GEO:
+                        geoItemInventry.addItemData(tmp_item_data);
+                        System.out.println("_sutoreigi   2");
 
-                    break;
-                default:
-                    System.out.println("_sutoreigi   default");
+                        break;
+                    case EQUIPMENT:
+                        equipmentInventry.addItemData(tmp_item_data);
+                        System.out.println("_sutoreigi   3");
 
-                    break;
+                        break;
+                    default:
+                        System.out.println("_sutoreigi   default");
+
+                        break;
+                }
             }
 
         }

@@ -126,12 +126,11 @@ public class WorldGameSystem {
         expendItemInventrySaver = globalData.getExpendItemInventrySaver();
         expendItemInventry = globalData.getExpendItemInventry();
 
-
-
-        geoSlotSaver = new GeoSlotSaver(databaseAdmin, "GeoSlotSave", "GeoSlotSave.db", 1, "s", graphic);
-
+        geoSlotSaver = new GeoSlotSaver(databaseAdmin, "GeoSlotSave", "GeoSlotSave.db", 1, "ns", graphic);
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver);
-        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, geoSlotAdminManager, activityChange);
+
+
+        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, activityChange);
 
         geoSlotAdminManager.loadGeoSlot();
 
@@ -143,7 +142,7 @@ public class WorldGameSystem {
         GeoObjectDataCreater.setGraphic(graphic);
         // 仮。適当にGeo入れる GEO1が上がる能力は単一
         for (int i = 0; i < 8; i++) {
-            geoInventry.addItemData(GeoObjectDataCreater.getGeoObjectData(100));
+            //geoInventry.addItemData(GeoObjectDataCreater.getGeoObjectData(100));
         }
 
 
