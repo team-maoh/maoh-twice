@@ -181,6 +181,7 @@ public class Inventry {
     public void deleteItemData(int i) {
         inventry_datas[i].delete();
     }
+    */
     public void deleteItemData(String name) {
         for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
             if(inventry_datas[i].getItemData() != null) {
@@ -190,6 +191,7 @@ public class Inventry {
             }
         }
     }
+    /*
     public void deleteAllItemData() {
         for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
             inventry_datas[i].delete();
