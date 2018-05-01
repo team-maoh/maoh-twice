@@ -40,52 +40,11 @@ public class Inventry {
         for(int i = 0; i< INVENTRY_DATA_MAX; i++){
             inventry_datas[i] = new InventryData(null, 0);
         }
-
-
-        /*
-        user_interface = _user_interface;
-
-        Paint paint = new Paint();
-
-        for(int i = 0; i< INVENTRY_DATA_MAX; i++){
-                inventry_datas[i] = new InventryData(null, 0);
-        }
-
-        for (int i = 0; i < INVENTRY_CONTENT_MAX; i++) {
-            position[i][0] = 1000;
-            position[i][1] = 100 + (int)(i*40.8);
-            position[i][2] = 1400;
-            position[i][3] = 100 + (int)((i+1)*40.8);
-            //inventry_item_plates[i] = new BoxItemPlate(graphic, user_interface, paint, UP_MOMENT, MOVE, position[i], test_item);
-            inventry_item_plates[i] = new BoxInventryPlate(graphic, user_interface, paint, UP_MOMENT, MOVE, position[i], inventry_datas[i]);
-        }
-
-
-        paint.setARGB(255,0,0,0);
-        paint.setTextSize(30);
-
-
-        operate_inventry_list_box = new PlateGroup<BoxInventryPlate>(inventry_item_plates);
-        inventry_item_num = 0;
-        */
     }
 
     public void init(UserInterface _user_interface, Graphic graphic, int left, int top, int right, int bottom, int _contentNum){
         user_interface = _user_interface;
         contentNum = _contentNum;
-
-
-        /*
-        for (int i = 0; i < INVENTRY_CONTENT_MAX; i++) {
-            position[i][0] = 1000;
-            position[i][1] = 100 + (int)(i*40.8);
-            position[i][2] = 1400;
-            position[i][3] = 100 + (int)((i+1)*40.8);
-            //inventry_item_plates[i] = new BoxItemPlate(graphic, user_interface, paint, UP_MOMENT, MOVE, position[i], test_item);
-            inventry_item_plates[i] = new BoxInventryPlate(graphic, user_interface, paint, UP_MOMENT, MOVE, position[i], inventry_datas[i]);
-        }
-        */
-
 
         Paint paint = new Paint();
 
@@ -113,7 +72,7 @@ public class Inventry {
 
     public void updata(){
 
-        System.out.println(inventry_datas[0].getItemNum());
+        //System.out.println(inventry_datas[0].getItemNum());
 
         operate_inventry_list_box.update();
 

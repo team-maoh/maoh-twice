@@ -173,10 +173,12 @@ public class WorldGameSystem {
         PaletteCenter.initStatic(graphic);
         PaletteElement.initStatic(graphic);
 
-        palette_admin = new PaletteAdmin(world_user_interface, graphic);
-
+        //palette_admin = new PaletteAdmin(world_user_interface, graphic);
         equipmentInventry = globalData.getEquipmentInventry();
         equipmentInventrySaver = globalData.getEquipmentInventrySaver();
+
+        palette_admin = new PaletteAdmin(world_user_interface, graphic, equipmentInventry, expendItemInventry);
+
 
 
     }
@@ -214,6 +216,7 @@ public class WorldGameSystem {
         }
         if (worldModeAdmin.getIsUpdate(worldModeAdmin.getEquip())) {
             equipmentInventry.updata();
+            expendItemInventry.updata();
             palette_admin.update(false);
         }
 
@@ -242,6 +245,7 @@ public class WorldGameSystem {
 
         if (worldModeAdmin.getIsUpdate(worldModeAdmin.getEquip())) {
             equipmentInventry.draw();
+            expendItemInventry.draw();
             palette_admin.draw();
             world_user_interface.draw();
         }
