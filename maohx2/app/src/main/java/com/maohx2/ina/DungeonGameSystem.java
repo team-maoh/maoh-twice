@@ -71,6 +71,9 @@ public class DungeonGameSystem {
         list_box_admin.init(dungeon_user_interface, graphic);
         //map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, this);
 
+        text_box_admin.setTextBoxExists(0,false);
+        text_box_admin.setTextBoxExists(1,false);
+
         PaletteCenter.initStatic(graphic);
         PaletteElement.initStatic(graphic);
 
@@ -84,7 +87,7 @@ public class DungeonGameSystem {
         GlobalData globalData = (GlobalData) dungeon_activity.getApplication();
         PlayerStatus playerStatus = globalData.getPlayerStatus();
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
-        battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin);
+        battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin, text_box_admin);
 
 
     }
@@ -109,6 +112,8 @@ public class DungeonGameSystem {
                 battle_unit_admin.update();
                 break;
         }
+
+        text_box_admin.update();
     }
 
     public void draw() {
@@ -125,6 +130,7 @@ public class DungeonGameSystem {
                 battle_unit_admin.draw();
                 break;
         }
+        text_box_admin.draw();
         graphic.draw();
     }
 

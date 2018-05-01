@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Paint;
 
 import com.maohx2.fuusya.MapPlateAdmin;
+import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Constants;
 import static com.maohx2.ina.Constants.Item.EQUIPMENT_KIND;
@@ -29,6 +30,12 @@ import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 
 import java.util.ArrayList;
 import java.util.List;
+
+// text
+import android.graphics.Color;
+import com.maohx2.ina.Text.PlateGroup;
+import com.maohx2.ina.Text.BoxTextPlate;
+import com.maohx2.ina.Constants.POPUP_WINDOW;
 
 /**
  * Created by ina on 2017/09/21.
@@ -64,7 +71,7 @@ public class BattleUnitAdmin {
     int attack_count;
 
     //by kmhanko BattleUnitDataAdmin追加
-    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage, MyDatabaseAdmin _databaseAdmin, MapPlateAdmin _map_plate_admin) {
+    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage, MyDatabaseAdmin _databaseAdmin, MapPlateAdmin _map_plate_admin, TextBoxAdmin _textBoxAdmin) {
         //引数の代入
         graphic = _graphic;
         battle_user_interface = _battle_user_interface;
@@ -75,6 +82,10 @@ public class BattleUnitAdmin {
         dungeonModeManage = _dungeonModeManage;
         databaseAdmin = _databaseAdmin;
         mapPlateAdmin = _map_plate_admin;
+
+        textBoxAdmin = _textBoxAdmin;
+        initResultTextBox();
+        initResultButton();
 
         //by kmhanko
         // *** equipItemDataCreaterのインスタンス化 ***
@@ -160,16 +171,17 @@ public class BattleUnitAdmin {
         //TODO 仮。本当はダンジョンのデータなどを引数にして出現する敵をランダムなどで決定する
 
         //一覧
-        //setBattleUnitData("e01-0", 1);
-        //setBattleUnitData("e88-0", 1);
-        //setBattleUnitData("e74-0", 1);
-        setBattleUnitData("m003-2", 1);
-        setBattleUnitData("e96-0", 1);
-        //setBattleUnitData("e27", 1);
-        //setBattleUnitData("m007", 1);
-        //setBattleUnitData("e103-0", 1);
-        //setBattleUnitData("e94-3", 1);
-        //setBattleUnitData("e83-1", 1);
+        setBattleUnitData("m014", 0);
+        setBattleUnitData("e54-3", 0);
+        setBattleUnitData("e01-0", 0);
+        //setBattleUnitData("e74-0", 0);
+        //setBattleUnitData("m003-2", 0);
+        //setBattleUnitData("e96-0", 0);
+        //setBattleUnitData("e27", 0);
+        //setBattleUnitData("m007", 0);
+        //setBattleUnitData("e103-0", 0);
+        //setBattleUnitData("e94-3", 0);
+        //setBattleUnitData("e83-1", 0);
     }
 
 
@@ -275,8 +287,13 @@ public class BattleUnitAdmin {
             // by kmhanko
             getDropItem();
 
-            dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
+            //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
         }
+
+
+        //text関係
+        resultButtonCheck();
+        resultButtonGroup.update();
     }
 
 
@@ -303,6 +320,9 @@ public class BattleUnitAdmin {
         //debugPlayerStatusDraw();
         palette_admin.draw();
 
+        //text
+        resultButtonGroup.draw();
+
     }
 
     //by kmhanko
@@ -320,6 +340,7 @@ public class BattleUnitAdmin {
     //by kmhanko
 
     private void getDropItem() {
+        List<String> dropItemNames = new ArrayList<String>();
         BattleBaseUnitData tempBattleBaseUnitData = null;
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (battle_units[i].isDropFlag()) {
@@ -337,7 +358,7 @@ public class BattleUnitAdmin {
                         tempRand = Math.random();
                         System.out.println("☆タカノ:BattleUnitAdmin#getDropItem : アイテムドロップ率計算 : " + dropItemName[j] + " from " + battle_units[i].getName() + " : " + dropItemRate[j] + " ? " + tempRand);
 
-                        if (dropItemRate[j] > tempRand) { //ドロップ確率
+                        if(true){//if (dropItemRate[j] > tempRand) { //ドロップ確率
                             switch (dropItemKind[j]) {
                                 case EQUIPMENT:
                                     tempItemData = equipmentItemDataCreater.getEquipmentItemData(dropItemEquipmentKind[j], battle_units[i].getBattleDungeonUnitData());
@@ -353,14 +374,101 @@ public class BattleUnitAdmin {
                     }
                     if (tempItemData != null) {
                         mapPlateAdmin.getInventry().addItemData(tempItemData);
+                        dropItemNames.add(tempItemData.getName());
+
                         System.out.println("☆タカノ:BattleUnitAdmin#getDropItem : アイテムを取得 : " + dropItemName[j] + " from " + battle_units[i].getName());
                     }
                 }
             }
         }
+
+        // result関係
+        resultTextBoxUpdate(dropItemNames);
+        resultButtonGroup.setUpdateFlag(true);
+        resultButtonGroup.setDrawFlag(true);
     }
 
     public BattleUnitAdmin() {}
-    
+
+
+
+    // *** リザルトメッセージ関係 ***
+
+    int resultTextBoxID;
+    Paint resultTextPaint;
+    TextBoxAdmin textBoxAdmin;
+    PlateGroup resultButtonGroup;
+
+    private void initResultTextBox() {
+        resultTextBoxID = textBoxAdmin.createTextBox(POPUP_WINDOW.MESS_LEFT, POPUP_WINDOW.MESS_UP, POPUP_WINDOW.MESS_RIGHT, POPUP_WINDOW.MESS_BOTTOM, POPUP_WINDOW.MESS_ROW);
+        textBoxAdmin.setTextBoxUpdateTextByTouching(resultTextBoxID, true);
+        textBoxAdmin.setTextBoxExists(resultTextBoxID, false);
+        resultTextPaint = new Paint();
+        resultTextPaint.setTextSize(POPUP_WINDOW.TEXT_SIZE);
+        resultTextPaint.setColor(Color.WHITE);
+    }
+
+    private void resultTextBoxUpdate(List<String> itemNames) {
+        textBoxAdmin.setTextBoxExists(resultTextBoxID, true);
+
+        String winMessage = "▽入手アイテム▽";
+
+        int row = 0;
+
+        for (int i = 0; i < itemNames.size(); i++) {
+            if (row == 0) {
+                textBoxAdmin.bookingDrawText(resultTextBoxID, winMessage, resultTextPaint);
+                textBoxAdmin.bookingDrawText(resultTextBoxID, "\n", resultTextPaint);
+                row++;
+                continue;
+            }
+
+            textBoxAdmin.bookingDrawText(resultTextBoxID, itemNames.get(i), resultTextPaint);
+            row++;
+
+            if (row == POPUP_WINDOW.MESS_ROW) {
+                textBoxAdmin.bookingDrawText(resultTextBoxID, "MOP", resultTextPaint);
+                row = 0;
+            } else {
+                textBoxAdmin.bookingDrawText(resultTextBoxID, "\n", resultTextPaint);
+            }
+        }
+        textBoxAdmin.bookingDrawText(resultTextBoxID, "MOP", resultTextPaint);
+    }
+
+    private void initResultButton(){
+        Paint textPaint = new Paint();
+        textPaint.setTextSize(POPUP_WINDOW.TEXT_SIZE);
+        textPaint.setARGB(255,255,255,255);
+
+        resultButtonGroup = new PlateGroup<BoxTextPlate>(
+                new BoxTextPlate[]{
+                        new BoxTextPlate(
+                                graphic, battle_user_interface, new Paint(),
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{POPUP_WINDOW.OK_LEFT, POPUP_WINDOW.OK_UP, POPUP_WINDOW.OK_RIGHT, POPUP_WINDOW.OK_BOTTOM},
+                                "OK",
+                                textPaint
+                        )
+                }
+        );
+        resultButtonGroup.setUpdateFlag(false);
+        resultButtonGroup.setDrawFlag(false);
+    }
+
+    private void resultButtonCheck() {
+        if (!(resultButtonGroup.getUpdateFlag())) { return; }
+        int buttonID = resultButtonGroup.getTouchContentNum();
+        if (buttonID == 0 ) { //OK
+            //戦闘画面終了する
+            dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
+            resultButtonGroup.setUpdateFlag(false);
+            resultButtonGroup.setDrawFlag(false);
+            textBoxAdmin.setTextBoxExists(resultTextBoxID, false);
+        }
+    }
+
+    // *** リザルトメッセージ関係ここまで ***
 
 }
