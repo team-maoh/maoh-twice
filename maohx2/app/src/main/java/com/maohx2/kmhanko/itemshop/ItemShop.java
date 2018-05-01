@@ -16,6 +16,8 @@ import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 import com.maohx2.kmhanko.plate.BackPlate;
 
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -56,6 +58,8 @@ public abstract class ItemShop {
     TextBoxAdmin textBoxAdmin;
     WorldModeAdmin worldModeAdmin;
     MyDatabaseAdmin databaseAdmin;
+    ItemShopAdmin itemShopAdmin;
+    PlayerStatus playerStatus;
 
     ItemData focusItemData;//現在選択しているItem
 
@@ -63,14 +67,17 @@ public abstract class ItemShop {
 
     ExpendItemDataAdmin expendItemDataAdmin;
 
-    public ItemShop(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, InventryS _itemInventry) {
+    public ItemShop(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, InventryS _itemInventry, PlayerStatus _playerStatus, ItemShopAdmin _itemShopAdmin) {
         userInterface = _userInterface;
         graphic = _graphic;
         textBoxAdmin = _textBoxAdmin;
         worldModeAdmin = _worldModeAdmin;
         itemInventry = _itemInventry;
         databaseAdmin = _databaseAdmin;
+        itemShopAdmin = _itemShopAdmin;
+        playerStatus = _playerStatus;
     }
+
 
     public void init() {
         initProductPlate();
@@ -160,7 +167,7 @@ public abstract class ItemShop {
                                 buySelectPlateGroup.setDrawFlag(false);
                                 worldModeAdmin.setShop(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
-
+                                textBoxAdmin.setTextBoxExists(itemShopAdmin.getMoneyTextBoxID(), false);
                                 itemInventry.save();
 
                             }
@@ -245,6 +252,7 @@ public abstract class ItemShop {
                     //itemData = (ItemData)itemShopData.getOneDataByName(buyItemName);
                     buyItem(focusItemData);
                     initUIs();
+
                     break;
                 case(1) ://キャンセル
                     initUIs();

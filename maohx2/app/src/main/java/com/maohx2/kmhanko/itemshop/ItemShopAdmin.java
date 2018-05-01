@@ -1,10 +1,15 @@
 package com.maohx2.kmhanko.itemshop;
 
+import android.graphics.Color;
+import android.graphics.Paint;
+
 import com.maohx2.ina.Arrange.Inventry;
+import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.WorldModeAdmin;
 import com.maohx2.kmhanko.Arrange.InventryS;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
@@ -50,13 +55,17 @@ public class ItemShopAdmin {
     InventryS expendItemInventry;
     InventryS geoInventry;
 
+    PlayerStatus playerStatus;
+
+    int moneyTextBoxID;
+
     public enum ITEM_KIND {
         EXPEND,
         GEO_OBJECT,
         ITEM_KIND_NUM
     }
 
-    public void init(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, ItemDataAdminManager itemDataAdminManager, InventryS _expendItemInventry, InventryS _geoInventry) {
+    public void init(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, ItemDataAdminManager itemDataAdminManager, InventryS _expendItemInventry, InventryS _geoInventry, PlayerStatus _playerStatus) {
         userInterface = _userInterface;
         graphic = _graphic;
         textBoxAdmin = _textBoxAdmin;
@@ -64,24 +73,27 @@ public class ItemShopAdmin {
         expendItemInventry = _expendItemInventry;
         geoInventry = _geoInventry;
         databaseAdmin = _databaseAdmin;
+        playerStatus = _playerStatus;
 
         expendItemShopData = new ExpendItemShopData(graphic, databaseAdmin);
         expendItemShopData.setExpendItemDataAdmin(itemDataAdminManager.getExpendItemDataAdmin());
 
         geoObjectShopData = new GeoObjectShopData(graphic, databaseAdmin);
         geoObjectShopData.setGeoObjectDataAdmin(itemDataAdminManager.getGeoObjectDataAdmin());
+
+        initTextBox();
     }
 
     public void makeItemShop(ITEM_KIND _itemKind, String _tableName) {
         boolean itemKindFlag = false;
 
         if (_itemKind == ITEM_KIND.EXPEND) {
-            itemShop = new ExpendItemShop(userInterface, graphic, databaseAdmin, textBoxAdmin, worldModeAdmin, expendItemInventry);
+            itemShop = new ExpendItemShop(userInterface, graphic, databaseAdmin, textBoxAdmin, worldModeAdmin, expendItemInventry, playerStatus, this);
             itemShop.setItemShopData(expendItemShopData);
             itemKindFlag = true;
         }
         if (_itemKind == ITEM_KIND.GEO_OBJECT) {
-            itemShop = new GeoObjectShop(userInterface, graphic, databaseAdmin, textBoxAdmin, worldModeAdmin, geoInventry);
+            itemShop = new GeoObjectShop(userInterface, graphic, databaseAdmin, textBoxAdmin, worldModeAdmin, geoInventry, playerStatus, this);
             itemShop.setItemShopData(geoObjectShopData);
             itemKindFlag = true;
         }
@@ -119,10 +131,28 @@ public class ItemShopAdmin {
         if (itemShopActive) {
             itemShop.draw();
         }
+        textBoxAdmin.setTextBoxExists(moneyTextBoxID, worldModeAdmin.getIsDraw(worldModeAdmin.getShop()));
     }
 
     public ItemShop getItemShop() {
         return itemShop;
+    }
+
+    public void moneyTextBoxUpdate() {
+        textBoxAdmin.bookingDrawText(moneyTextBoxID, "所持金 " + playerStatus.getMoney());
+        textBoxAdmin.bookingDrawText(moneyTextBoxID, "MOP");
+        textBoxAdmin.updateText(moneyTextBoxID);
+    }
+
+    private void initTextBox() {
+        moneyTextBoxID = textBoxAdmin.createTextBox(0,600,300,900,6);
+        textBoxAdmin.setTextBoxUpdateTextByTouching(moneyTextBoxID, false);
+        textBoxAdmin.setTextBoxExists(moneyTextBoxID, false);
+        moneyTextBoxUpdate();
+    }
+
+    public int getMoneyTextBoxID() {
+        return moneyTextBoxID;
     }
 
 }
