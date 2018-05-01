@@ -100,7 +100,6 @@ public class TextBox {
         box_paint = new Paint();
         box_paint.setColor(Color.argb(100, 0, 0, 0));
 
-
         touch_id = _touch_id;
         has_updated_text = false;
 
@@ -146,7 +145,7 @@ public class TextBox {
 
                 if (update_text_by_touching == true) {
                     updateText();
-                }
+                }//false の場合は、外の人がTextBox.updateText()でTextを更新する
 //                if (first != last) {//文章キューが空でなかったら、
 //
 //                    int tmp_first = first;
@@ -185,7 +184,7 @@ public class TextBox {
 
             if (sentence_exists == true) {
                 if (queue[first].getSentence().equals("null")) {
-                    System.out.println("◆文queueが空です");
+//                    System.out.println("◆文queueが空です");
 
                 } else {
                     displayText();//文章を描画する
@@ -210,14 +209,14 @@ public class TextBox {
             tmp_text_count = 0;
             num_of_lines = 0;
             begin_column = 0;
-            System.out.println("◆文queueが満杯なので受け取ったtextを破棄した from TextBox.java◆");
+//            System.out.println("◆文queueが満杯なので受け取ったtextを破棄した from TextBox.java◆");
 
         } else if ((tmp_text_count + 1) >= MAX_TMP_TEXT) {//tmp*[]が満杯だったら、
 
             tmp_text_count = 0;
             num_of_lines = 0;
             begin_column = 0;
-            System.out.println("◆tmp_*[]が満杯なので受け取ったtextを破棄した from TextBox.java◆");
+//            System.out.println("◆tmp_*[]が満杯なので受け取ったtextを破棄した from TextBox.java◆");
 
         } else {
 
@@ -232,7 +231,7 @@ public class TextBox {
                 judgeSentence();
 
                 if (assign_sentence_id == true) {
-                    sentence_firsts[sentence_count] = last;
+                    sentence_firsts[sentence_count] = last;//20180423 ここで落ちるという話だった
                 }
 
                 for (int i = 0; i < tmp_text_count; i++) {//tmp_*[]に保持しておいた文、paint、開始位置、行数をqueueに格納する
@@ -257,9 +256,11 @@ public class TextBox {
                 begin_column = 0;
 
                 if (assign_sentence_id == true) {
-                    sentence_count++;
-//                    sentence_count = (sentence_count + 1) % MAX_QUEUE_TEXT;
-                    if (sentence_count > MAX_QUEUE_TEXT) {
+
+                    sentence_count = (sentence_count + 1) % MAX_QUEUE_TEXT;//変更後(20180423)
+//                    sentence_count++;//変更前
+
+                    if (sentence_count >= MAX_QUEUE_TEXT) {
 //                        throw new Error("%☆◆フジワラ:sentence_countがデカくなりすぎた");//アプリを落とす
                         System.out.println("%☆◆フジワラ:sentence_id指定モードのTextBoxが受け取れるsentenceの総数には限度がある");
                         throw new Error("%☆◆フジワラ:その限度を超える量のsentenceが入力されそうになった");//アプリを落とす
@@ -394,16 +395,16 @@ public class TextBox {
         } else {
             sentence_exists = true;
 
-            System.out.println("uunchi changeText()");
+//            System.out.println("uunchi changeText()");
 
-            if (_sentence_id < sentence_count) {
-                System.out.println("uunchi");
+//            if (_sentence_id < sentence_count) {//コメントアウトした(20180423)
+//                System.out.println("uunchi");
 
-                if (sentence_firsts[_sentence_id] > 0) {
-                    first = sentence_firsts[_sentence_id];
-                } else {
-                    System.out.println("◆負数のsentence_firsts[]をfirstに代入しようとした from TextBox.java");
-                }
+            if (sentence_firsts[_sentence_id] > 0) {
+                first = sentence_firsts[_sentence_id];
+            } else {
+                System.out.println("◆負数のsentence_firsts[]をfirstに代入しようとした from TextBox.java");
+//                }
             }
         }
     }

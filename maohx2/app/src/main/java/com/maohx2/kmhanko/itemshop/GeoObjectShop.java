@@ -6,6 +6,7 @@ import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.WorldModeAdmin;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.Arrange.InventryS;
@@ -16,14 +17,21 @@ import com.maohx2.kmhanko.Arrange.InventryS;
 
 public class GeoObjectShop extends ItemShop {
 
-    public GeoObjectShop(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, InventryS _itemInventry) {
-        super(_userInterface, _graphic, _databaseAdmin, _textBoxAdmin, _worldModeAdmin, _itemInventry);
+    public GeoObjectShop(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, InventryS _itemInventry, PlayerStatus _playerStatus, ItemShopAdmin _itemShopAdmin) {
+        super(_userInterface, _graphic, _databaseAdmin, _textBoxAdmin, _worldModeAdmin, _itemInventry, _playerStatus, _itemShopAdmin);
     }
 
     @Override
     public void buyItem(ItemData _itemData) {
         GeoObjectData buyItemData = (GeoObjectData)_itemData;
-        System.out.println("shop :" + buyItemData.getName()+ " を ¥" + buyItemData.getPrice() + " で購入した");
+        if (playerStatus.getMoney() >= buyItemData.getPrice()) {
+            System.out.println("shop :" + buyItemData.getName()+ " を ¥" + buyItemData.getPrice() + " で購入した");
+            itemInventry.addItemData(buyItemData);
+            playerStatus.subMoney(buyItemData.getPrice());
+            itemShopAdmin.moneyTextBoxUpdate();
+        } else {
+            //TODO お金足りない
+        }
     }
 
     @Override

@@ -70,7 +70,7 @@ public class MapObjectAdmin {
 
         map_player = new MapPlayer(graphic, this, dungeon_user_interface, _sound_admin, camera, map_plate_admin);
         map_player.init();
-        map_player_bitmap = new MapObjectBitmap(PLAYER_DIR, graphic, "ドラゴン");
+        map_player_bitmap = new MapObjectBitmap(PLAYER_DIR, graphic, "主人公");
         map_player_bitmap.init();
 
         player_x = map_player.getWorldX();
@@ -80,7 +80,7 @@ public class MapObjectAdmin {
             map_item[i] = new MapItem(graphic, this, i % 2, camera);
             map_item[i].init();
 
-            switch (i%2){
+            switch (i % 2) {
                 case 0:
                     map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "ハーピー");
                     break;
@@ -106,7 +106,7 @@ public class MapObjectAdmin {
 
             map_enemy[i] = new MapEnemy(graphic, this, camera, ENEMY_DIR, true, true);
             map_enemy[i].init();
-            map_enemy_bitmap[i] = new MapObjectBitmap(ENEMY_DIR, graphic, "ハーピー");
+            map_enemy_bitmap[i] = new MapObjectBitmap(ENEMY_DIR, graphic, "ジオイーター");
             map_enemy_bitmap[i].init();
         }
 
@@ -196,25 +196,22 @@ public class MapObjectAdmin {
 ////        map_player.setCamera(camera);
 //    }
 
+
     public void initObjectPosition(MapAdmin map_admin) {
 
         map_player.initPosition(map_admin);
-//        map_player.setMapAdmin(map_admin);
 
         for (int i = 0; i < NUM_OF_ITEM; i++) {
             map_item[i].initPosition(map_admin);
-//            map_item[i].setMapAdmin(map_admin);
 
         }
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
             map_enemy[i].initPosition(map_admin);
-//            map_enemy[i].setMapAdmin(map_admin);
 
         }
 
         for (int i = 0; i < NUM_OF_TRAP; i++) {
             map_trap[i].initPosition(map_admin);
-//            map_trap[i].setMapAdmin(map_admin);
         }
     }
 

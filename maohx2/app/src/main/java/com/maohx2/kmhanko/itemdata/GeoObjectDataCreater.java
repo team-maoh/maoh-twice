@@ -76,6 +76,73 @@ public class GeoObjectDataCreater {
         return newGeoObjectData;
     }
 
+    public static GeoObjectData getGeoObjectData(int[] status1, double[] status2) {
+        if (status1[0] != 0) { return getGeoObjectData(status1[0], GEO_PARAM_KIND_NORMAL.HP, false); }
+        if (status1[1] != 0) { return getGeoObjectData(status1[1], GEO_PARAM_KIND_NORMAL.ATTACK,false); }
+        if (status1[2] != 0) { return getGeoObjectData(status1[2], GEO_PARAM_KIND_NORMAL.DEFENCE, false); }
+        if (status1[3] != 0) { return getGeoObjectData(status1[3], GEO_PARAM_KIND_NORMAL.LUCK, false); }
+        if (status1[0] != 1.0) { return getGeoObjectData(status2[0], GEO_PARAM_KIND_RATE.HP_RATE, false); }
+        if (status1[1] != 1.0) { return getGeoObjectData(status2[1], GEO_PARAM_KIND_RATE.ATTACK_RATE, false); }
+        if (status1[2] != 1.0) { return getGeoObjectData(status2[2], GEO_PARAM_KIND_RATE.DEFENCE_RATE, false); }
+        if (status1[3] != 1.0) { return getGeoObjectData(status2[3], GEO_PARAM_KIND_RATE.LUCK_RATE, false); }
+        throw new Error("☆タカノ : GeoObjectDataCreater#getNames : 数値が不適切");
+    }
+
+
+    public static GeoObjectData getGeoObjectData(double parameter, GEO_PARAM_KIND_RATE parameterKind) {
+        return getGeoObjectData(parameter, parameterKind, true);
+    }
+
+    public static GeoObjectData getGeoObjectData(double parameter, GEO_PARAM_KIND_RATE parameterKind, boolean randFlag) {
+        int[] status1 = new int[GEO_PARAM_KIND_NORMAL.NUM.ordinal()];
+        double[] status2 = new double[GEO_PARAM_KIND_RATE.NUM.ordinal()];
+        status2[0] = 1.0;
+        status2[1] = 1.0;
+        status2[2] = 1.0;
+        status2[3] = 1.0;
+
+        double calcParam;
+        if (randFlag) {
+            calcParam = status2[parameterKind.ordinal()] = 1.0 + ((double)parameter/2 + (double)parameter * Math.random())/ 20.0;
+        } else {
+            calcParam = parameter;
+        }
+
+        String[] names = getNamesRate(parameterKind, calcParam);
+        String name = names[0];
+        String imageName = names[1];
+
+        GeoObjectData newGeoObjectData = new GeoObjectData(name,graphic.searchBitmap(imageName),status1, status2);
+        newGeoObjectData.setImageName(imageName);
+        //newGeoObjectData.setItemKind(Constants.Item.ITEM_KIND.GEO);
+        //newGeoObjectData.setPrice(parameter);
+
+        return newGeoObjectData;
+    }
+
+    public static boolean compare(GeoObjectData geoObjectData1, GeoObjectData geoObjectData2) {
+        if (    geoObjectData1.getHp() >= geoObjectData2.getHp() &&
+                geoObjectData1.getAttack() >= geoObjectData2.getAttack() &&
+                geoObjectData1.getDefence() >= geoObjectData2.getDefence() &&
+                geoObjectData1.getHpRate() >= geoObjectData2.getHpRate() &&
+                geoObjectData1.getAttackRate() >= geoObjectData2.getAttack() &&
+                geoObjectData1.getDefenceRate() >= geoObjectData2.getDefenceRate() &&
+                geoObjectData1.getLuckRate() >= geoObjectData2.getLuckRate()
+                ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private static GEO_PARAM_KIND_NORMAL getRandKindNormal() {
+        return GEO_PARAM_KIND_NORMAL.toEnum((int)(GEO_PARAM_KIND_NORMAL.NUM.ordinal() * Math.random()));
+    }
+
+    private static GEO_PARAM_KIND_RATE getRandKindRate() {
+        return GEO_PARAM_KIND_RATE.toEnum((int)(GEO_PARAM_KIND_RATE.NUM.ordinal() * Math.random()));
+    }
+
 
     private static String[] getNamesNormal(GEO_PARAM_KIND_NORMAL parameterKind, int calcParam) {
 
@@ -149,37 +216,6 @@ public class GeoObjectDataCreater {
 
 
         return new String[] { name, imageName };
-    }
-
-
-    public static GeoObjectData getGeoObjectData(int parameter, GEO_PARAM_KIND_RATE parameterKind) {
-        int[] status1 = new int[GEO_PARAM_KIND_NORMAL.NUM.ordinal()];
-        double[] status2 = new double[GEO_PARAM_KIND_RATE.NUM.ordinal()];
-        status2[0] = 1.0;
-        status2[1] = 1.0;
-        status2[2] = 1.0;
-        status2[3] = 1.0;
-
-        double calcParam = status2[parameterKind.ordinal()] = 1.0 + ((double)parameter/2 + (double)parameter * Math.random())/ 20.0;
-
-        String[] names = getNamesRate(parameterKind, calcParam);
-        String name = names[0];
-        String imageName = names[1];
-
-        GeoObjectData newGeoObjectData = new GeoObjectData(name,graphic.searchBitmap(imageName),status1, status2);
-        newGeoObjectData.setImageName(imageName);
-        //newGeoObjectData.setItemKind(Constants.Item.ITEM_KIND.GEO);
-        //newGeoObjectData.setPrice(parameter);
-
-        return newGeoObjectData;
-    }
-
-    private static GEO_PARAM_KIND_NORMAL getRandKindNormal() {
-        return GEO_PARAM_KIND_NORMAL.toEnum((int)(GEO_PARAM_KIND_NORMAL.NUM.ordinal() * Math.random()));
-    }
-
-    private static GEO_PARAM_KIND_RATE getRandKindRate() {
-        return GEO_PARAM_KIND_RATE.toEnum((int)(GEO_PARAM_KIND_RATE.NUM.ordinal() * Math.random()));
     }
 
 }

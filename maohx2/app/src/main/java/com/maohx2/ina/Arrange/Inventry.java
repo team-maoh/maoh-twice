@@ -22,6 +22,8 @@ import java.util.List;
  * Created by ina on 2017/12/15.
  */
 
+//TODO 頼む、位置を後からセッターで変更できるように。そうしないと売却画面でインベントリを並べられない(現状だと全ての画面共通で、最初に定めた位置となっている)
+
 public class Inventry {
 
     int inventry_item_num;
@@ -175,9 +177,11 @@ public class Inventry {
     public int getItemNum(int i) {
         return inventry_datas[i].getItemNum();
     }
+    /*
     public void deleteItemData(int i) {
         inventry_datas[i].delete();
     }
+    */
     public void deleteItemData(String name) {
         for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
             if(inventry_datas[i].getItemData() != null) {
@@ -187,6 +191,7 @@ public class Inventry {
             }
         }
     }
+    /*
     public void deleteAllItemData() {
         for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
             inventry_datas[i].delete();
@@ -196,4 +201,5 @@ public class Inventry {
     public PlateGroup<BoxInventryPlate> getOperateInventryListBox() {
         return operate_inventry_list_box;
     }
+    */
 }

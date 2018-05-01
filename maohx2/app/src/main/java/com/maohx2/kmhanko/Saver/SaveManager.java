@@ -29,6 +29,7 @@ public abstract class SaveManager {
         }
     }
 
+    public void init() {};
     abstract public void dbinit();//DBがもともと存在せず、saveフォルダからセーブデータをコピーした時に呼ばれる。loadmode = dsの時は呼ばれない
     abstract public void save();
     abstract public void load();

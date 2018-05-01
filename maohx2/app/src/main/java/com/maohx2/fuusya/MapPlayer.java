@@ -52,6 +52,7 @@ public class MapPlayer extends MapUnit {
     boolean is_moving;
 
     int touching_frame_count;
+    MapAdmin map_admin;
 
     TouchState touch_state;
 
@@ -60,6 +61,7 @@ public class MapPlayer extends MapUnit {
 
         dungeon_user_interface = _dungeon_user_interface;
         map_plate_admin = _map_plate_admin;
+        //map_admin = _map_admin;
 
 
         touch_state = dungeon_user_interface.getTouchState();

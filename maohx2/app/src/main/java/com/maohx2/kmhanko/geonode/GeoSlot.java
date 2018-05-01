@@ -7,14 +7,18 @@ import java.util.List;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Constants.GeoSlotParam;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Draw.ImageContext;
 import com.maohx2.ina.Text.CircleImagePlate;
 import com.maohx2.ina.Text.ListBox;
 import com.maohx2.ina.UI.UserInterface;
+import com.maohx2.kmhanko.Arrange.InventryS;
+import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
+import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 
 /**
  * Created by ina on 2017/10/08.
@@ -35,15 +39,20 @@ public class GeoSlot extends CircleImagePlate {
 
     static final int GEO_SLOT_CHILDREN_MAX = 8;
 
+
+
     GeoSlotAdmin geoSlotAdmin; //staticにしてはならない。いくつかのGeoSlotAdminがあるため。
     static TextBoxAdmin textBoxAdmin;
     static MyDatabase geoSlotEventDB;
+    static InventryS geoInventry;
 
     List<GeoSlot> children_slot = new ArrayList<GeoSlot>(GEO_SLOT_CHILDREN_MAX);
     GeoSlot parent_slot;
 
     boolean is_in_geoObjectData; //穴にGeoが入っているかどうか
     boolean is_exist; //穴が存在するかどうか
+
+    int id;//自分のID
 
     String release_event;
     String restriction;
@@ -71,7 +80,6 @@ public class GeoSlot extends CircleImagePlate {
                    ImageContext _default_image_context, ImageContext _feedback_image_context
     ){
         super(_graphic, _user_interface, _judge_way, _feedback_way, position, _default_image_context, _feedback_image_context);
-
         item_id = -1;
         is_exist = true;
         geoSlotAdmin = _geoSlotAdmin;
@@ -79,9 +87,10 @@ public class GeoSlot extends CircleImagePlate {
 
 
 
-    static public void staticInit(TextBoxAdmin _textBoxAdmin, MyDatabase _geoSlotEventDB) {
+    static public void staticInit(TextBoxAdmin _textBoxAdmin, MyDatabase _geoSlotEventDB, InventryS _geoInventry) {
         textBoxAdmin = _textBoxAdmin;
         geoSlotEventDB = _geoSlotEventDB;
+        geoInventry = _geoInventry;
     }
 
     //GeoSlotのツリーコードを元に、GeoSlotのインスタンス化を行う。再帰ライクに生成する。
@@ -111,7 +120,7 @@ public class GeoSlot extends CircleImagePlate {
         }
         is_in_geoObjectData = true;
         geoObjectData = _geoObjectData;
-        geoImageContext = graphic.makeImageContext(geoObjectData.getItemImage(), x, y, 5.0f, 5.0f, 0.0f, 128, false);
+        geoImageContext = graphic.makeImageContext(geoObjectData.getItemImage(), x, y, GeoSlotParam.GEO_SLOT_SCALE, GeoSlotParam.GEO_SLOT_SCALE, 0.0f, 255, false);
         return true;
     }
 
@@ -131,21 +140,11 @@ public class GeoSlot extends CircleImagePlate {
         return true;
     }
 
-    //TODO:イベントがクリアされているか返す関数。
+    //イベントがクリアされているか返す関数。
     public boolean isEventClear() {
         if (release_event == null) {
             return true;
         } else {
-            //何かしらrelease_eventが設定されている
-
-            //セーブデータにアクセスし、その条件を満たしているかを確認する
-
-            //満たしているなら
-            //return true;
-            //満たしていないなら
-            //return false;
-
-            //TODO:デバッグ用　とりあえずSlot自身が一時的にイベントがクリアされたかの変数を持つことにする
             if (isReleased == true) {
                 return true;
             } else {
@@ -320,21 +319,25 @@ public class GeoSlot extends CircleImagePlate {
                     pushGeoObject(geoSlotAdmin.getHoldGeoObject());
 
                     //GeoをInventryとHoldから消す
-                    geoSlotAdmin.deleteFromInventry(geoObjectData);
+                    //geoSlotAdmin.deleteFromInventry(geoObjectData);
+                    geoSlotAdmin.setSlotData(geoObjectData, id);
+
                     geoSlotAdmin.setHoldGeoObject(null);
 
                 } else {
                     //Holdしており、Geoが入っている時　→　入れ替え
                     GeoObjectData tempGeoObjectData = geoSlotAdmin.getHoldGeoObject();
 
-                    geoSlotAdmin.addToInventry(geoObjectData);
+                    //geoSlotAdmin.addToInventry(geoObjectData);
+                    geoSlotAdmin.popSlotData(geoObjectData);
                     geoSlotAdmin.setHoldGeoObject(geoObjectData);
 
                     //Geoを上書きセットする
                     pushGeoObject(tempGeoObjectData);
 
                     //GeoをInventryからけす。
-                    geoSlotAdmin.deleteFromInventry(tempGeoObjectData);
+                    //geoSlotAdmin.deleteFromInventry(tempGeoObjectData);
+                    geoSlotAdmin.setSlotData(geoObjectData, id);
                 }
                 geoSlotAdmin.calcGeoSlot();
             } else {
@@ -342,7 +345,9 @@ public class GeoSlot extends CircleImagePlate {
                     //Holdしておらず、Geoも入っていない時　→　何もしない
                 } else {
                     //Holdしておらず、Geoが入っている時　→　Holdにセット
-                    geoSlotAdmin.addToInventry(geoObjectData);
+                    //geoSlotAdmin.addToInventry(geoObjectData);
+                    geoSlotAdmin.popSlotData(geoObjectData);
+
                     geoSlotAdmin.setHoldGeoObject(geoObjectData);
                     popGeoObject();
                 }
@@ -352,7 +357,7 @@ public class GeoSlot extends CircleImagePlate {
     }
 
     //GeoSlot解放のデータ的処理
-    public void geoSlotRelease() {
+    public boolean geoSlotRelease() {
         if (!isEventClear()) {
             //GeoSlotEvent.DBを参照し、release_eventと一致するものを探し、そのTable名で分岐して処理
             List<String> tableName = geoSlotEventDB.getTables();
@@ -371,18 +376,47 @@ public class GeoSlot extends CircleImagePlate {
                 throw new Error("☆タカノ : GeoSlot#geoSlotRelease 該当する解放イベント名がDB上に存在しない : " + release_event);
             }
 
-            if (eventGroupName == "Money") {
-                //プレイヤーの所持金をチェック、必要金額以上あれば減らす。
-                System.out.println("GeoSlot#geoSlotRelease　金を支払う　" + release_event);
-            }
-            if (eventGroupName == "GeoObject") {
-                //プレイヤーの所持GeoObjectを表示、選択させるイベントを発生させる。
-                System.out.println("GeoSlot#geoSlotRelease　ジオオブジェクトを支払う　" + release_event);
-            }
+            if (eventGroupName.equals("Money")) {
+                int money = geoSlotEventDB.getOneInt(eventGroupName, "money", "name = " + MyDatabase.s_quo(release_event));
 
-            //色々あって解決した場合
-            isReleased = true;
+                if (geoSlotAdmin.getPlayerStatus().getMoney() >= money) {
+                    geoSlotAdmin.getPlayerStatus().subMoney(money);
+                    isReleased = true;
+                    geoSlotAdmin.statusTextBoxUpdate();
+
+                    System.out.println("GeoSlot#geoSlotRelease　金を支払う　" + release_event);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            if (eventGroupName.equals("GeoObject")) {
+                if (geoSlotAdmin.getHoldGeoObject() != null) {
+                    if (GeoObjectDataCreater.compare(
+                            geoSlotAdmin.getHoldGeoObject(),
+                            new GeoObjectData(
+                                    "", null,
+                                    geoSlotEventDB.getOneInt(eventGroupName, "hp", "name = " + MyDatabase.s_quo(release_event)),
+                                    geoSlotEventDB.getOneInt(eventGroupName, "attack", "name = " + MyDatabase.s_quo(release_event)),
+                                    geoSlotEventDB.getOneInt(eventGroupName, "defence", "name = " + MyDatabase.s_quo(release_event)),
+                                    geoSlotEventDB.getOneInt(eventGroupName, "luck", "name = " + MyDatabase.s_quo(release_event)),
+                                    geoSlotEventDB.getOneDouble(eventGroupName, "hp_rate", "name = " + MyDatabase.s_quo(release_event)),
+                                    geoSlotEventDB.getOneDouble(eventGroupName, "attack_rate", "name = " + MyDatabase.s_quo(release_event)),
+                                    geoSlotEventDB.getOneDouble(eventGroupName, "defence_rate", "name = " + MyDatabase.s_quo(release_event)),
+                                    geoSlotEventDB.getOneDouble(eventGroupName, "luck_rate", "name = " + MyDatabase.s_quo(release_event))
+                            )
+                    )) {
+                        geoInventry.deleteItemData(geoSlotAdmin.getHoldGeoObject().getName());
+                        geoSlotAdmin.setHoldGeoObject(null);
+                        isReleased = true;
+                        System.out.println("GeoSlot#geoSlotRelease　ジオオブジェクトを支払う　" + release_event);
+                    }
+                }
+                return true;
+            }
         }
+
+        return false;
     }
 
     public boolean isInGeoObject() {
@@ -394,6 +428,7 @@ public class GeoSlot extends CircleImagePlate {
     public boolean isInGeoObjectAndExist() {
         return (is_in_geoObjectData && is_exist);
     }
+    public boolean isReleased() { return isReleased; }
 
     public void setGeoSlotAdmin(GeoSlotAdmin _geoSlotAdmin) { geoSlotAdmin = _geoSlotAdmin; }
     //static public void setUserInterface(UserInterface _userInterface) { userInterface = _userInterface; }
@@ -412,6 +447,7 @@ public class GeoSlot extends CircleImagePlate {
     public void setReleaseEvent(String _release_event) { release_event = _release_event; }
     public void setRestriction(String _restriction) { restriction = _restriction; }
     public void setReleased(Boolean _isReleased) { isReleased = _isReleased; }
+    public void setID(int _id) { id = _id; }
 
     //TODO: inaの関数ができたら消す
     public void setParam(int _x, int _y, int _r) {
@@ -421,8 +457,8 @@ public class GeoSlot extends CircleImagePlate {
         touch_id = user_interface.setCircleTouchUI(x, y, radius);
         //TODO: 前の奴を消せないので格納上の問題あり
 
-        notEventCrearImageContext = graphic.makeImageContext(graphic.searchBitmap("apple"), x , y, 5.0f, 5.0f, 0.0f, 255, false);
-        slotHoleImageContext = graphic.makeImageContext(graphic.searchBitmap("neco"), x, y, 5.0f, 5.0f, 0.0f, 255, false);
+        notEventCrearImageContext = graphic.makeImageContext(graphic.searchBitmap("apple"), x , y, GeoSlotParam.GEO_SLOT_SCALE, GeoSlotParam.GEO_SLOT_SCALE, 0.0f, 255, false);
+        slotHoleImageContext = graphic.makeImageContext(graphic.searchBitmap("GeoSlotHole"), x, y, GeoSlotParam.GEO_SLOT_SCALE, GeoSlotParam.GEO_SLOT_SCALE, 0.0f, 255, false);
         geoImageContext = null;
 
         default_image_context = slotHoleImageContext;

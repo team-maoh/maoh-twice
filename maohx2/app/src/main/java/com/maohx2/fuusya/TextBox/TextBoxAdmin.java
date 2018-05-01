@@ -32,10 +32,13 @@ public class TextBoxAdmin {
 
     int debug_int;
     int debug_damage_int;
+    int debug_i;
 
     public TextBoxAdmin(Graphic _graphic) {
         graphic = _graphic;
         box_count = 0;
+
+        debug_i = 0;
 
         debug_int = 0;
         debug_damage_int = 0;
@@ -44,7 +47,7 @@ public class TextBoxAdmin {
     public void init(UserInterface _user_interface) {
         user_interface = _user_interface;
 
-        createTextBox(100.0, 550.0, 800.0, 750.0, ROW_OF_BOX, true, false);
+        createTextBox(100.0, 550.0, 800.0, 750.0, ROW_OF_BOX, true, true);
         createTextBox(80.0, 150.0, 400.0, 350.0, 2, true, false);
 
         frame_count = 0;
@@ -100,11 +103,11 @@ public class TextBoxAdmin {
 //            bookingDrawText(0, "\n", text_paint);
 //            bookingDrawText(0, "えろうええ馬に見えますが。", blue_paint);
 //            bookingDrawText(0, "MOP", blue_paint);
-            for (int i = 0; i < 51; i++) {
-                bookingDrawText(0, debug_damage_int + "ダメージを受けた!!", text_paint);
-                bookingDrawText(0, "MOP", text_paint);
-                debug_damage_int++;
-            }
+//            for (int i = 0; i < 51; i++) {
+//                bookingDrawText(0, debug_damage_int + "ダメージを受けた!!", text_paint);
+//                bookingDrawText(0, "MOP", text_paint);
+//                debug_damage_int++;
+//            }
 //            bookingDrawText(1, "test", text_paint);
 //            bookingDrawText(1, "\n", text_paint);
 //            bookingDrawText(1, "desu", text_paint);
@@ -126,18 +129,33 @@ public class TextBoxAdmin {
 //            text_box[0].inputText("\n", text_paint);
 //            text_box[0].inputText("行数が多すぎる文章の例5", text_paint);
 //            text_box[0].inputText("MOP", text_paint);
+
+            //20180429
+//            debug_i = text_box[0].inputText("テスト" + debug_i, text_paint);
+//            text_box[0].inputText("MOP", text_paint);
+//            System.out.println("vaovao" + debug_i);
+//            debug_i = text_box[0].inputText("テスト" + debug_i, text_paint);
+//            text_box[0].inputText("MOP", text_paint);
+//            System.out.println("vaovao" + debug_i);
+//            debug_i = text_box[0].inputText("テスト" + debug_i, text_paint);
+//            text_box[0].inputText("MOP", text_paint);
+//            System.out.println("vaovao" + debug_i);
+//            debug_i = text_box[0].inputText("テスト" + debug_i, text_paint);
+//            text_box[0].inputText("MOP", text_paint);
+//            System.out.println("vaovao" + debug_i);
+
         }
 
 //        if (frame_count == 100) {
 //            text_box[0].updateText();
 //        }
 
-        if (frame_count % 20 == 0) {
-            updateText(0, 3 * debug_int);
-            debug_int = (debug_int + 1) % 50;
-
-            System.out.println(debug_int + "unchi");
-        }
+//        if (frame_count % 20 == 0) {
+//            updateText(0, 3 * debug_int);
+//            debug_int = (debug_int + 1) % 50;
+//
+//            System.out.println(debug_int + "unchi");
+//        }
 
         //テスト用ここまで
 
@@ -160,7 +178,7 @@ public class TextBoxAdmin {
 
         int touch_id = user_interface.setBoxTouchUI(_box_left, _box_top, _box_right, _box_down);
 
-        text_box[box_count] = new TextBox(graphic, touch_id, box_count, _update_text_by_touching, _assign_sentence_id,_box_left, _box_top, _box_right, _box_down, _row_of_box);
+        text_box[box_count] = new TextBox(graphic, touch_id, box_count, _update_text_by_touching, _assign_sentence_id, _box_left, _box_top, _box_right, _box_down, _row_of_box);
 //        text_box[box_count] = new TextBox(graphic, touch_id, (int) (_box_right - _box_left), _row_of_box, box_count);
         text_box[box_count].init();
 
@@ -188,7 +206,7 @@ public class TextBoxAdmin {
         text_box[_box_id].updateText();
     }
 
-    //TextBoxのTextを変更する関数
+    //TextBoxのTextを変更する関数(idを指定する)
     public void updateText(int _box_id, int _sentence_id) {
         if (_sentence_id < 0) {
             updateText(_box_id);
@@ -198,9 +216,9 @@ public class TextBoxAdmin {
     }
 
     //TextBoxを削除する関数
-    public void deleteTextBox(int _box_id) {
-
-    }
+//    public void deleteTextBox(int _box_id) {
+//
+//    }
 
     //TextBoxに文章を入力する関数
     //　引数：Boxの通し番号, 文章, 文章のPaint
@@ -212,19 +230,27 @@ public class TextBoxAdmin {
     //    bookingDrawText(1,"\n",text_paint);
     //    bookingDrawText(1,"です",text_paint);
     //    bookingDrawText(1,"MOP",text_paint);
-    public void bookingDrawText(int _box_id, String _text, Paint _paint) {
-
-        text_box[_box_id].inputText(_text, _paint);
-
-    }
-
     public void bookingDrawText(int _box_id, String _text) {
 
         Paint default_paint = new Paint();
         default_paint.setTextSize(40);
         default_paint.setColor(Color.GREEN);
 
-        text_box[_box_id].inputText(_text, default_paint);
+        bookingDrawText(_box_id, _text, default_paint);
+//        text_box[_box_id].inputText(_text, default_paint);
     }
+
+    //
+    public void bookingDrawText(int _box_id, String _text, Paint _paint) {
+
+        text_box[_box_id].inputText(_text, _paint);
+    }
+
+    //改行する
+    public void bookingBreakingLine(int _box_id) {
+        Paint default_paint = new Paint();
+        text_box[_box_id].inputText("\n", default_paint);
+    }
+
 
 }

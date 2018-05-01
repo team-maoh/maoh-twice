@@ -103,6 +103,7 @@ public final class Constants {
         }
     }
 
+
     public static class Draw {
 
         public enum DRAW_TASK_KIND {
@@ -128,6 +129,26 @@ public final class Constants {
             BUTTLE_INIT,
             BUTTLE,
         }
+    }
+
+    public static class SELECT_WINDOW {
+        public static final int MESS_LEFT = 200;
+        public static final int MESS_RIGHT = 1400;
+        public static final int MESS_UP = 300;
+        public static final int MESS_BOTTOM = 500;
+
+        public static final int YES_LEFT = 200;
+        public static final int YES_RIGHT = 800;
+        public static final int YES_UP = 500;
+        public static final int YES_BOTTOM = 600;
+
+        public static final int NO_LEFT = 800;
+        public static final int NO_RIGHT = 1400;
+        public static final int NO_UP = 500;
+        public static final int NO_BOTTOM = 600;
+
+        public static final float TEXT_SIZE = 40f;
+        public static final int MESS_ROW = 4;
     }
 
     public static class Item {
@@ -219,6 +240,10 @@ public final class Constants {
             YET,
             GOT,
         }
+    }
+
+    public static class GeoSlotParam {
+        public static final float GEO_SLOT_SCALE = 4.0f;
     }
 
     // *** takanoここまで ***

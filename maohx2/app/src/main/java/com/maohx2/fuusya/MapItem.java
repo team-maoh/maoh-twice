@@ -1,20 +1,10 @@
 package com.maohx2.fuusya;
 
-import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.view.SurfaceHolder;
-
-import static com.maohx2.ina.Constants.Touch.TouchState;
-
 
 //import com.maohx2.ina.MySprite;
 
 import com.maohx2.horie.map.Camera;
 import com.maohx2.ina.Draw.Graphic;
-
-import java.util.Random;
-
-import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by Fuusya on 2017/09/11.
@@ -55,5 +45,12 @@ public class MapItem extends MapInanimate {
     public void setId(int _id) {
 
         id = _id;
+    }
+
+    /**
+     * Created by Fuusya on 2018/04/23.
+     */
+
+    public static class MapInventryAdmin {
     }
 }

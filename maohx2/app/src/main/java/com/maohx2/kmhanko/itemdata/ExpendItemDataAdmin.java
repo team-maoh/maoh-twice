@@ -1,6 +1,7 @@
 package com.maohx2.kmhanko.itemdata;
 
 
+import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.itemdata.ExpendItemData;
 import com.maohx2.ina.ItemData.ItemDataAdmin;
@@ -40,6 +41,8 @@ public class ExpendItemDataAdmin extends ItemDataAdmin<ExpendItemData> {
             datas.get(i).setPrice(price.get(i));
             datas.get(i).setHp(hp.get(i));
             datas.get(i).setExpline(expline.get(i));
+
+            datas.get(i).setItemKind(Constants.Item.ITEM_KIND.EXPEND);
 
             datas.get(i).setItemImage(graphic.searchBitmap(imageName.get(i)));
         }
