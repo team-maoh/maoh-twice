@@ -89,6 +89,7 @@ public class MapAdmin {
     Paint paint = new Paint();
     Point map_offset = new Point(0, 0);
     Point room_point = new Point(0, 0);
+    Point mine_point[];
     Camera camera = new Camera(map_size, magnification);
     SectionAdmin section_admin;
     Canvas canvas;
@@ -143,6 +144,10 @@ public class MapAdmin {
         return camera;
     }
 
+    public int getMagnification(){
+        return magnification;
+    }
+
     public MapAdmin(Graphic m_graphic, MapObjectAdmin m_map_object_admin) {
         graphic = m_graphic;
         map_object_admin = m_map_object_admin;
@@ -152,6 +157,11 @@ public class MapAdmin {
             for (int j = 0; j < map_size.y; j++) {
                 map_data[i][j] = new Chip();
             }
+        }
+
+        mine_point = new Point[5];
+        for(int i = 0;i < 5;i++){
+            mine_point[i] = new Point(-1, -1);
         }
 
         sizeRect = new Rect();
@@ -311,7 +321,7 @@ public class MapAdmin {
     }
 
     //壁かどうかワールドマップで判定
-    public boolean isWallWorld(int world_x, int world_y, int magnification_x, int magnification_y) {
+    public boolean isWallWorld(int world_x, int world_y) {
         return map_data[worldToMap(world_x)][worldToMap(world_y)].isWall();
     }
 
@@ -331,7 +341,9 @@ public class MapAdmin {
         section_admin.updateMapData(map_data);
         section_admin.connectRooms(map_data);
         section_admin.makeStairs(map_data);
-        createMine(5, 8);
+        createMine(3, 5);
+        //map_object_adminに採掘場所の座標を渡す
+//        map_object_admin.getMinePoint(mine_point);
 
 
         //section_admin.printNeighborLeafNum();
@@ -580,6 +592,7 @@ public class MapAdmin {
                 setRoomPoint();
                 if (!map_data[room_point.x][room_point.y].isMine() && !map_data[room_point.x][room_point.y].isStairs()) {
                     map_data[room_point.x][room_point.y].setMineFlag(true);
+                    mine_point[i].set(room_point.x, room_point.y);
                     break;
                 }
             }
@@ -1501,7 +1514,7 @@ public class MapAdmin {
         //graphic.bookingDrawBitmapData(auto_tile_cave_hole[(time/3)%3].raw_auto_tile[1], 0, 0, 5, 5, 0, 255, true);
     }
 
-    //4分割した物を事前にくっつけて保存して表示
+    //4分割した物を事前にくっつけて保存して表示(現行バージョン)
     public void drawMap_for_autotile_light() {
         boolean is_debug_mode = false;
         int mx = worldToMap(camera.getCameraOffset().x+800);
