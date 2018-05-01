@@ -9,24 +9,75 @@ import com.maohx2.ina.ItemData.ItemData;
 public class ExpendItemData extends ItemData {
     int hp;
     String expline;
+    boolean[] palettePositions = new boolean[8];
 
     public ExpendItemData() {
         super();
+        for(int i = 0; i< 8; i++){
+            palettePositions[i] = false;
+        }
     }
 
     public int getHp() {
         return hp;
     }
+    public void setHp(int _hp) {
+        hp = _hp;
+    }
 
     public String getExpline() {
         return expline;
     }
-
-    public void setHp(int _hp) {
-        hp = _hp;
-    }
     public void setExpline(String _expline) {
         expline = _expline;
     }
+
+    public int getPalettePosition(){
+        int boolCheck = 1;
+        int palettePosition = 0;
+        for(int i = 0; i < 8; i++) {
+            if(palettePositions[i] == true) {
+                palettePosition += boolCheck;
+            }
+            boolCheck *= 2;
+        }
+        return palettePosition;
+    }
+
+    public void setPalettePosition(int _palettePosition, boolean _setBoolean) {
+        int boolCheck = 1;
+        for(int i = 0; i < 8; i++) {
+            if((_palettePosition&boolCheck) != 0) {
+                palettePositions[i] = _setBoolean;
+            }
+            boolCheck *= 2;
+        }
+    }
+
+    public int getPalettePositionNum(){
+        int palettePositionNum = 0;
+        for(int i = 0; i < 8; i++) {
+            if(palettePositions[i] == true) {
+                palettePositionNum++;
+            }
+        }
+
+        return palettePositionNum;
+    }
+
+    public int getPalettePosition(int index_num){
+        int count = 0;
+        for(int i = 0; i < 8; i++){
+            if(palettePositions[i] == true){
+                count++;
+                if(count == index_num){
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+    }
+
 }
 
