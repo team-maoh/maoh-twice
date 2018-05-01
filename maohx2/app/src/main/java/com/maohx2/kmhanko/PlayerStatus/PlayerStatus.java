@@ -137,6 +137,11 @@ public class PlayerStatus {
         money += _money;
         return money;
     }
+    public int subMoney(int _money) {
+        money -= _money;
+        return money;
+    }
+
 
     public Integer[] getSaveStatuses() {
         return new Integer[] {

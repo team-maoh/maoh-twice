@@ -20,6 +20,7 @@ import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.myavail.MyAvail;
 import com.maohx2.kmhanko.plate.BackPlate;
+import com.maohx2.kmhanko.Arrange.InventryS;
 
 // *** Graphic関係 ***
 import android.graphics.Color;
@@ -83,6 +84,8 @@ public class GeoSlotAdmin {
 
     Paint releaseTextPaint;
 
+    InventryS geoInventry;
+
 
     GeoSlot focusGeoSlot; //今操作している(条件の解放のため選択している)GeoSlot
 
@@ -93,13 +96,14 @@ public class GeoSlotAdmin {
     PlayerStatus playerStatus;
 
     //Rewrite by kmhanko
-    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, TextBoxAdmin _textBoxAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus) {
+    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, TextBoxAdmin _textBoxAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, InventryS _geoInventry) {
         graphic = _graphic;
         userInterface = _user_interface;
         textBoxAdmin = _textBoxAdmin;
         worldModeAdmin = _worldModeAdmin;
         geoSlotAdminManager = _geoSlotAdminManager;
         playerStatus = _playerStatus;
+        geoInventry = _geoInventry;
 
         //初期化
         initTextBox();
@@ -151,7 +155,7 @@ public class GeoSlotAdmin {
         //GeoSlotの管理のため、GeoSlotのインスタンスをコピーしてくるメソッド。
         geoSlots = grand_geo_slot.getGeoSlots();
 
-        GeoSlot.staticInit(textBoxAdmin, geoSlotEventDB);
+        GeoSlot.staticInit(textBoxAdmin, geoSlotEventDB, geoInventry);
 
         for(int i = 0; i < geoSlots.size(); i++) {
             geoSlots.get(i).setParam(xs.get(i), ys.get(i), TOUCH_R);
@@ -253,7 +257,7 @@ public class GeoSlotAdmin {
 
         //textBoxAdmin.hideTextBox(releaseTextBoxID);
 
-        statusTextBoxID = textBoxAdmin.createTextBox(0,600,300,900,5);
+        statusTextBoxID = textBoxAdmin.createTextBox(0,600,300,900,6);
         textBoxAdmin.setTextBoxUpdateTextByTouching(statusTextBoxID, false);
         textBoxAdmin.setTextBoxExists(statusTextBoxID, false);
         statusTextBoxUpdate();
@@ -281,6 +285,8 @@ public class GeoSlotAdmin {
         textBoxAdmin.bookingDrawText(statusTextBoxID, "Deffence " + playerStatus.getDefence());
         textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
         textBoxAdmin.bookingDrawText(statusTextBoxID, "Luck " + playerStatus.getLuck());
+        textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
+        textBoxAdmin.bookingDrawText(statusTextBoxID, "所持金 " + playerStatus.getMoney());
         textBoxAdmin.bookingDrawText(statusTextBoxID, "MOP");
         textBoxAdmin.updateText(statusTextBoxID);
     }
@@ -295,10 +301,13 @@ public class GeoSlotAdmin {
 
             textBoxAdmin.setTextBoxExists(releaseTextBoxID, true);
 
-            textBoxAdmin.bookingDrawText(releaseTextBoxID, "このスロットを解放するには", releaseTextPaint);
-            textBoxAdmin.bookingDrawText(releaseTextBoxID, "\n", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, "このスロットを解放するには ", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, focusGeoSlot.getReleaseEvent(), releaseTextPaint);//TODO:イベント名そのままになっているが、これは仮
-            textBoxAdmin.bookingDrawText(releaseTextBoxID, "が必要です。", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, " が必要です。", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, "\n", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, "条件がジオの場合は今ホールドしているジオを消費します。", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, "\n", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, "お金の場合は所持金から消費します。", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "\n", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "解放しますか？", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "MOP", releaseTextPaint);
@@ -308,6 +317,7 @@ public class GeoSlotAdmin {
             releasePlateGroup.setDrawFlag(true);
             releasePlateGroup.setUpdateFlag(true);
 
+            geoSlotGroup.setUpdateFlag(false);
         }
     }
 
@@ -321,16 +331,22 @@ public class GeoSlotAdmin {
             switch (content) {
                 case (0)://解放する
                     //解放するための色々な処理
-                    focusGeoSlot.geoSlotRelease();
+                    if (focusGeoSlot.geoSlotRelease()) {
+                        //TODO 解放したことを通知
+                    } else {
+                        //TODO 条件を満たしていないことを通知
+                    }
                     releasePlateGroup.setDrawFlag(false);
                     releasePlateGroup.setUpdateFlag(false);
                     textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
+                    geoSlotGroup.setUpdateFlag(true);
 
                     break;
                 case (1)://やめる
                     releasePlateGroup.setDrawFlag(false);
                     releasePlateGroup.setUpdateFlag(false);
                     textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
+                    geoSlotGroup.setUpdateFlag(true);
                     break;
             }
         }
@@ -422,6 +438,8 @@ public class GeoSlotAdmin {
     }
     public List<GeoSlot> getGeoSlots() { return geoSlots; }
     public GeoCalcSaverAdmin getGeoCalcSaverAdmin() { return geo_calc_saver_admin; }
+    public PlayerStatus getPlayerStatus() { return playerStatus; }
+
     // ***** Setter *****
     public void setHoldGeoObject(GeoObjectData geoObjectData) {
         holdGeoObject = geoObjectData;

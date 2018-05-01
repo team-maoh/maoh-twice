@@ -120,6 +120,21 @@ public class GeoObjectDataCreater {
         return newGeoObjectData;
     }
 
+    public static boolean compare(GeoObjectData geoObjectData1, GeoObjectData geoObjectData2) {
+        if (    geoObjectData1.getHp() >= geoObjectData2.getHp() &&
+                geoObjectData1.getAttack() >= geoObjectData2.getAttack() &&
+                geoObjectData1.getDefence() >= geoObjectData2.getDefence() &&
+                geoObjectData1.getHpRate() >= geoObjectData2.getHpRate() &&
+                geoObjectData1.getAttackRate() >= geoObjectData2.getAttack() &&
+                geoObjectData1.getDefenceRate() >= geoObjectData2.getDefenceRate() &&
+                geoObjectData1.getLuckRate() >= geoObjectData2.getLuckRate()
+                ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private static GEO_PARAM_KIND_NORMAL getRandKindNormal() {
         return GEO_PARAM_KIND_NORMAL.toEnum((int)(GEO_PARAM_KIND_NORMAL.NUM.ordinal() * Math.random()));
     }
