@@ -6,6 +6,7 @@ import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.ItemData.ItemData;
+import com.maohx2.kmhanko.itemdata.ExpendItemData;
 
 import static com.maohx2.ina.Constants.Palette.CIRCLE_COLOR;
 import static com.maohx2.ina.Constants.Palette.PALETTE_ELEMENT_RADIUS_BIG;
@@ -59,7 +60,7 @@ public class PaletteElement {
 
     public void drawBigAndItem(){
         graphic.bookingDrawCircle(x, y, PALETTE_ELEMENT_RADIUS_BIG, paint);
-        if(item_data != null) {
+        if(item_data != null){
             graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y,1.5f,1.5f,0,255,false);
         }
     }
@@ -67,10 +68,42 @@ public class PaletteElement {
 
     public void setItemData(ItemData _item_data){
         item_data = _item_data;
-        if(item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT){
-            ((EquipmentItemData)(item_data)).setPalettePosition(element_num);
+        if(item_data != null) {
+            if (item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT){
+                ((EquipmentItemData) (item_data)).setPalettePosition(element_num);
+            }else if(item_data.getItemKind() == Constants.Item.ITEM_KIND.EXPEND){
+                if(element_num == 0){
+                    //((ExpendItemData) (item_data)).setPalettePosition((int)Math.pow(2,item_data), false);
+                }else {
+                    ((ExpendItemData) (item_data)).setPalettePosition((int) Math.pow(2, element_num - 1), true);
+                }
+            }
         }
     }
+
+    public void setItemData(ItemData _item_data, int preElementNum){
+        if(_item_data != null) {
+            if (_item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT){
+                ((EquipmentItemData) (_item_data)).setPalettePosition(element_num);
+            }else if(_item_data.getItemKind() == Constants.Item.ITEM_KIND.EXPEND){
+                if(element_num == 0){
+                    ((ExpendItemData) (_item_data)).setPalettePosition((int)Math.pow(2,preElementNum-1), false);
+                    if(item_data != null) {
+                        ((ExpendItemData) (item_data)).setPalettePosition((int) Math.pow(2, element_num - 1), false);
+                    }
+                }else {
+                    ((ExpendItemData) (_item_data)).setPalettePosition((int) Math.pow(2, element_num - 1), true);
+                    ((ExpendItemData) (_item_data)).setPalettePosition((int) Math.pow(2, preElementNum - 1), false);
+                    if(item_data != null) {
+                        ((ExpendItemData) (item_data)).setPalettePosition((int) Math.pow(2, element_num - 1), false);
+                    }
+                }
+            }
+        }
+        item_data = _item_data;
+    }
+
+
 
     public ItemData getItemData(){return item_data;}
     public int getTouchID(){return touch_id;}

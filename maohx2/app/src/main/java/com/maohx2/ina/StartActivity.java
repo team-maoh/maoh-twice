@@ -149,29 +149,17 @@ class StartSurfaceView extends BaseSurfaceView {
         start_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
         start_user_interface.init();
 
-        start_game_system = new StartGameSystem();
-        start_game_system.init(holder, graphic, start_user_interface, start_activity, my_database_admin);
-
-
-
         activityChange = new ActivityChange(this, currentActivity);
-
 
         global_data.getEquipmentInventrySaver().init(graphic);
         global_data.getEquipmentInventry().init(start_user_interface, graphic, 1000,100,1400,508, 10);
         global_data.getEquipmentInventry().load();
         global_data.getEquipmentInventrySaver().setInventry(global_data.getEquipmentInventry());
 
-
-
-
         GeoInventrySaver geoInventrySaver = global_data.getGeoInventrySaver();
         InventryS geoInventry = global_data.getGeoInventry();
         ExpendItemInventrySaver expendItemInventrySaver = global_data.getExpendItemInventrySaver();
         InventryS expendItemInventry = global_data.getExpendItemInventry();
-
-
-
 
         global_data.getItemDataAdminManager().init(my_database_admin, graphic);
 
@@ -180,18 +168,19 @@ class StartSurfaceView extends BaseSurfaceView {
         geoInventry.load();
         geoInventrySaver.setInventry(geoInventry);
 
-        expendItemInventry.init(start_user_interface, graphic,1000,100,1400,508, 10);
+        expendItemInventry.init(start_user_interface, graphic,100,100,500,508, 10);
         expendItemInventrySaver.init(global_data.getItemDataAdminManager());
         expendItemInventry.load();
         expendItemInventrySaver.setInventry(expendItemInventry);
 
 
+        start_game_system = new StartGameSystem();
+        start_game_system.init(holder, graphic, start_user_interface, start_activity, my_database_admin);
 
 
         //todo:こいつは一番下
         thread = new Thread(this);
         thread.start();
-
     }
 
 
@@ -200,13 +189,15 @@ class StartSurfaceView extends BaseSurfaceView {
         //paint.setColor(Color.BLUE);
 
 
-        /*
+
+
         if(touch_state == TouchState.DOWN){
 
             //activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.GOKI);
             activityChange.toWorldActivity();
         }
-        */
+
+
 
         start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         start_game_system.updata();
