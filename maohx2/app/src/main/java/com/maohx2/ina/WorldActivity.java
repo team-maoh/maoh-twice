@@ -67,7 +67,7 @@ class WorldSurfaceView extends BaseSurfaceView {
 
         global_data.getEquipmentInventry().init(map_user_interface, graphic, 1000,100,1400,508, 10);
         global_data.getGeoInventry().init(map_user_interface, graphic,1200,100,1600,900, 10);
-        global_data.getExpendItemInventry().init(map_user_interface, graphic,1200,100,1600,900, 10);
+        global_data.getExpendItemInventry().init(map_user_interface, graphic,200,100,600,508, 10);
 
 
         world_game_system.init(map_user_interface, graphic, my_database_admin, soundAdmin, _map_activity, activityChange);
@@ -79,14 +79,14 @@ class WorldSurfaceView extends BaseSurfaceView {
         world_game_system.updata();
         world_game_system.draw();
 
-/*
+
         if (touch_state == TouchState.DOWN) {
             thread = null;
             Intent intent = new Intent(map_activity, DungeonActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             map_activity.startActivity(intent);
         }
-*/
+
     }
 
 }

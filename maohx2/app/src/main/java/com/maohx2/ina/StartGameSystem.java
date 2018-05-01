@@ -93,7 +93,6 @@ public class StartGameSystem {
 
 
         if(n == 100) {
-            /*
             tmpEquipmentItemData = new EquipmentItemData();
 
             tmpEquipmentItemData.setItemKind(Constants.Item.ITEM_KIND.EQUIPMENT);
@@ -113,7 +112,9 @@ public class StartGameSystem {
 
 
             equipmentInventry.addItemData(tmpEquipmentItemData);
-            */
+
+
+
             equipmentInventry.save();
             expendInventry.save();
 

@@ -149,8 +149,6 @@ class StartSurfaceView extends BaseSurfaceView {
         start_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
         start_user_interface.init();
 
-        start_game_system = new StartGameSystem();
-        start_game_system.init(holder, graphic, start_user_interface, start_activity, my_database_admin);
 
 
 
@@ -179,12 +177,14 @@ class StartSurfaceView extends BaseSurfaceView {
         geoInventry.load();
         geoInventrySaver.setInventry(geoInventry);
 
-        expendItemInventry.init(start_user_interface, graphic,1000,100,1400,508, 10);
+        expendItemInventry.init(start_user_interface, graphic,200,100,600,508, 10);
         expendItemInventrySaver.init(global_data.getItemDataAdminManager());
         expendItemInventry.load();
         expendItemInventrySaver.setInventry(expendItemInventry);
 
 
+        start_game_system = new StartGameSystem();
+        start_game_system.init(holder, graphic, start_user_interface, start_activity, my_database_admin);
 
 
         //todo:こいつは一番下
@@ -200,12 +200,13 @@ class StartSurfaceView extends BaseSurfaceView {
 
 
 
+        /*
         if(touch_state == TouchState.DOWN){
 
             //activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.GOKI);
             activityChange.toWorldActivity();
         }
-
+        */
 
         start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         start_game_system.updata();
