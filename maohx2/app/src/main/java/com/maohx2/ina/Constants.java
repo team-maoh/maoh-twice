@@ -131,6 +131,21 @@ public final class Constants {
         }
     }
 
+    public static class POPUP_WINDOW {
+        public static final int MESS_LEFT = 200;
+        public static final int MESS_RIGHT = 1400;
+        public static final int MESS_UP = 300;
+        public static final int MESS_BOTTOM = 500;
+
+        public static final int OK_LEFT = 200;
+        public static final int OK_RIGHT = 1400;
+        public static final int OK_UP = 500;
+        public static final int OK_BOTTOM = 600;
+
+        public static final float TEXT_SIZE = 40f;
+        public static final int MESS_ROW = 4;
+    }
+
     public static class SELECT_WINDOW {
         public static final int MESS_LEFT = 200;
         public static final int MESS_RIGHT = 1400;

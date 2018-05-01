@@ -361,5 +361,6 @@ public class BattleUnitAdmin {
     }
 
     public BattleUnitAdmin() {}
+    
 
 }
