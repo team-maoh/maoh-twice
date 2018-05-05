@@ -300,7 +300,7 @@ public class DungeonSelectManager {
         if (selectMode == SELECT_MODE.GEOMAP_SELECT) {
             paint.setARGB(255, 255, 255, 128);
         }
-        graphic.bookingDrawRect(0, 0, 1600, 900, paint);
+        //graphic.bookingDrawRect(0, 0, 1600, 900, paint);
 
 
         // ** Buttonの表示

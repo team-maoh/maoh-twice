@@ -114,7 +114,10 @@ public class Palette {
             }
 
             palette_center.changeElement(select_circle_num);
-            palette_center.setItemData(palette_elements[select_circle_num].getItemData());
+            palette_center.setItemData(palette_elements[select_circle_num].getItemData(), select_circle_num);
+            if(palette_elements[select_circle_num].getItemData().getItemKind() == Constants.Item.ITEM_KIND.EXPEND){
+                palette_elements[select_circle_num].setItemData(null);
+            }
         }
 
         if (touch_state == Constants.Touch.TouchState.UP) {
@@ -126,7 +129,7 @@ public class Palette {
         }
     }
 
-
+    public int getPalettePrePos(){return palette_center.getPrePos();}
 
 
     public void updateSetting() {
@@ -187,9 +190,6 @@ public class Palette {
                         //palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData());
                         palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData(),battle_user_interface.getPaletteElement().getElementNum());
                         battle_user_interface.getPaletteElement().setItemData(a);
-//                        if(a.getItemKind() == Constants.Item.ITEM_KIND.EXPEND){
-  //                          ((ExpendItemData)(a)).setPalettePosition((int) Math.pow(2, i), false);
-    //                    }
                         battle_user_interface.setPaletteElement(null);
                     }
                 }
@@ -274,4 +274,5 @@ public class Palette {
         return palette_center.getItemData();
     }
 
+    public void setPaletteCenter(ItemData _item_data){palette_center.setItemData(_item_data);}
 }

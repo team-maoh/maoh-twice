@@ -11,6 +11,7 @@ import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
 import com.maohx2.ina.Arrange.PaletteElement;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.EquipmentInventrySaver;
 import com.maohx2.ina.ItemData.EquipmentItemData;
@@ -50,6 +51,8 @@ public class StartGameSystem {
     TextBoxAdmin textBoxAdmin;
     int itemExplainTextBoxID;
 
+    BitmapData backGround;
+
     public void init(SurfaceHolder _holder, Graphic _graphic, BattleUserInterface _start_user_interface, Activity start_activity, MyDatabaseAdmin my_database_admin) {
 
         holder = _holder;
@@ -69,7 +72,7 @@ public class StartGameSystem {
         paint = new Paint();
         paint.setTextSize(70);
 
-
+        backGround = graphic.searchBitmap("e51-0");
 
 
         /*
@@ -93,6 +96,7 @@ public class StartGameSystem {
 
 
         if(n == 100) {
+            /*
             tmpEquipmentItemData = new EquipmentItemData();
 
             tmpEquipmentItemData.setItemKind(Constants.Item.ITEM_KIND.EQUIPMENT);
@@ -109,9 +113,8 @@ public class StartGameSystem {
             tmpEquipmentItemData.setAttack(100);
             tmpEquipmentItemData.setDefence(50);
 
-
-
             equipmentInventry.addItemData(tmpEquipmentItemData);
+            */
 
 
 
@@ -140,8 +143,8 @@ public class StartGameSystem {
 
     }
 
-
     public void draw() {
+        graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
         equipmentInventry.draw();
         expendInventry.draw();
         palette_admin.draw();

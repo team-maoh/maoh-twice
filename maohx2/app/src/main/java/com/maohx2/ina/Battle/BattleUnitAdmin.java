@@ -256,7 +256,18 @@ public class BattleUnitAdmin {
                     if (defense_equipment != null) {
                         damage_rate = (1 - (float) defense_equipment.getDefence() / 100.0f);
                     }
-                    int new_hp = battle_units[0].getHitPoint() - (int) (damage_to_player * damage_rate);
+
+                    int heel_to_palyer = 0;
+                    if(palette_admin.checkSelectedExpendItemData() != null) {
+                        heel_to_palyer = battle_units[0].getHitPoint()*palette_admin.checkSelectedExpendItemData().getHp();
+                        palette_admin.deleteExpendItemData();
+                    }
+
+                    int new_hp = battle_units[0].getHitPoint() - (int) (damage_to_player * damage_rate) + heel_to_palyer;
+                    if(new_hp > battle_units[0].getMaxHitPoint()){
+                        new_hp = battle_units[0].getMaxHitPoint();
+                    }
+
                     if (new_hp <= 0) {
                         //ゲームオーバー
                     }

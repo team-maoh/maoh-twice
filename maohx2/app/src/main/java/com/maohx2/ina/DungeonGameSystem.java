@@ -14,11 +14,13 @@ import com.maohx2.ina.Arrange.PaletteCenter;
 import com.maohx2.ina.Arrange.PaletteElement;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Battle.BattleUnitDataAdmin;
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.EquipmentItemDataAdmin;
 import com.maohx2.ina.Text.ListBoxAdmin;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.DungeonUserInterface;
+import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.sound.SoundAdmin;
@@ -50,6 +52,10 @@ public class DungeonGameSystem {
     boolean is_displaying_menu, is_touching_outside_menu;
     MapPlateAdmin map_plate_admin;
 
+    InventryS equipmentInventry;
+    InventryS expendInventry;
+    BitmapData backGround;
+
     public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange activityChange) {
         dungeon_user_interface = _dungeon_user_interface;
         battle_user_interface = _battle_user_interface;
@@ -76,16 +82,19 @@ public class DungeonGameSystem {
 
         equipment_item_data_admin = new EquipmentItemDataAdmin(graphic, my_database_admin);
 
-        palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipment_item_data_admin);
+        GlobalData globalData = (GlobalData)(dungeon_activity.getApplication());
+        equipmentInventry = globalData.getEquipmentInventry();
+        expendInventry = globalData.getExpendItemInventry();
+
+        palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipmentInventry, expendInventry);
+        //palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipment_item_data_admin);
 
 
-
-        //by kmhanko
-        GlobalData globalData = (GlobalData) dungeon_activity.getApplication();
         PlayerStatus playerStatus = globalData.getPlayerStatus();
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
         battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin);
 
+        backGround = graphic.searchBitmap("e51-0");
 
     }
 
@@ -112,6 +121,8 @@ public class DungeonGameSystem {
     }
 
     public void draw() {
+
+        graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
 
         switch (dungeonModeManage.getMode()) {
             case MAP:
