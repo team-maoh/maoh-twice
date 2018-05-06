@@ -17,11 +17,13 @@ import com.maohx2.ina.Arrange.PaletteCenter;
 import com.maohx2.ina.Arrange.PaletteElement;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Battle.BattleUnitDataAdmin;
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.EquipmentItemDataAdmin;
 import com.maohx2.ina.Text.ListBoxAdmin;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.DungeonUserInterface;
+import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.sound.SoundAdmin;
@@ -56,7 +58,11 @@ public class DungeonGameSystem {
     boolean is_displaying_menu, is_touching_outside_menu;
     MapPlateAdmin map_plate_admin;
 
-    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange activityChange) {
+    InventryS equipmentInventry;
+    InventryS expendInventry;
+    BitmapData backGround;
+
+    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange activityChange, int _repeat_count) {
         dungeon_user_interface = _dungeon_user_interface;
         battle_user_interface = _battle_user_interface;
         graphic = _graphic;
@@ -81,28 +87,25 @@ public class DungeonGameSystem {
         list_box_admin.init(dungeon_user_interface, graphic);
         //map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, this);
 
-        text_box_admin.setTextBoxExists(0,false);
-        text_box_admin.setTextBoxExists(1,false);
-
         PaletteCenter.initStatic(graphic);
         PaletteElement.initStatic(graphic);
 
         equipment_item_data_admin = new EquipmentItemDataAdmin(graphic, my_database_admin);
 
-        palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipment_item_data_admin);
+        GlobalData globalData = (GlobalData)(dungeon_activity.getApplication());
+        equipmentInventry = globalData.getEquipmentInventry();
+        expendInventry = globalData.getExpendItemInventry();
+
+        palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipmentInventry, expendInventry);
+        //palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipment_item_data_admin);
 
 
-
-        //by kmhanko
-        GlobalData globalData = (GlobalData) dungeon_activity.getApplication();
         PlayerStatus playerStatus = globalData.getPlayerStatus();
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
-        battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin, text_box_admin);
+        battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin, _repeat_count);
 
+        backGround = graphic.searchBitmap("firstBackground");
 
-
-        //デバッグ用。消すの忘れない
-        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
     }
 
     public void update() {
@@ -110,34 +113,19 @@ public class DungeonGameSystem {
         switch (dungeonModeManage.getMode()) {
 
             case MAP:
-                //map_object_admin.update(is_displaying_menu, is_touching_outside_menu);
-                //map_plate_admin.update(is_displaying_menu);
                 map_object_admin.update();
                 map_plate_admin.update();
                 break;
 
             case BUTTLE_INIT:
-                battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
-                //battle_unit_admin.spawnEnemy(); reset内で呼んでいる
+                battle_unit_admin.spawnEnemy();
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE);
 
             case BUTTLE:
                 battle_user_interface.update();
                 battle_unit_admin.update();
                 break;
-
-            case GEO_MINING_INIT:
-                battle_unit_admin.reset(BattleUnitAdmin.MODE.MINING);
-                //battle_unit_admin.spawnRock();　reset内で呼んでいる
-                dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING);
-
-            case GEO_MINING:
-                battle_user_interface.update();
-                battle_unit_admin.update();
-                break;
         }
-
-        text_box_admin.update();
     }
 
     public void draw() {
@@ -151,14 +139,10 @@ public class DungeonGameSystem {
                 break;
 
             case BUTTLE:
-                battle_unit_admin.draw();
-                break;
-
-            case GEO_MINING:
+                graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
                 battle_unit_admin.draw();
                 break;
         }
-        text_box_admin.draw();
         graphic.draw();
     }
 
