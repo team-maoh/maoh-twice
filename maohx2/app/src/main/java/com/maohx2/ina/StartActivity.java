@@ -158,23 +158,20 @@ class StartSurfaceView extends BaseSurfaceView {
         //paint.setColor(Color.BLUE);
 
 
-
-
-        if(touch_state == TouchState.DOWN){
+       if(touch_state == TouchState.DOWN){
 
             //activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.GOKI);
             activityChange.toWorldActivity();
         }
 
-
         start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         start_game_system.updata();
-        /*
+/*
         if(back_ground_flag == false){
             drawBackGround();
             back_ground_flag = true;
         }
-        */
+*/
         start_game_system.draw();
     }
 

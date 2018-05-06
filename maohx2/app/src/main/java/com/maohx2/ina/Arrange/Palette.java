@@ -114,10 +114,14 @@ public class Palette {
             }
 
             palette_center.changeElement(select_circle_num);
-            palette_center.setItemData(palette_elements[select_circle_num].getItemData(), select_circle_num);
-            if(palette_elements[select_circle_num].getItemData().getItemKind() == Constants.Item.ITEM_KIND.EXPEND){
-                palette_elements[select_circle_num].setItemData(null);
+
+            if(palette_elements[select_circle_num].getItemData() != null) {
+                palette_center.setItemData(palette_elements[select_circle_num].getItemData(), select_circle_num);
+                if (palette_elements[select_circle_num].getItemData().getItemKind() == Constants.Item.ITEM_KIND.EXPEND) {
+                    palette_elements[select_circle_num].setItemData(null);
+                }
             }
+
         }
 
         if (touch_state == Constants.Touch.TouchState.UP) {
