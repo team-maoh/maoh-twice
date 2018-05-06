@@ -7,8 +7,6 @@ import com.maohx2.ina.Draw.Graphic;
 
 import java.util.Random;
 
-import com.maohx2.ina.Constants.UnitKind;
-
 import static com.maohx2.ina.Constants.UnitStatus.Status.*;
 
 /**
@@ -33,7 +31,6 @@ abstract public class BattleUnit {
     int speed;
     int move_num;
 
-    UnitKind unitKind;
 
     //by kmhanko
     protected String name;
@@ -84,11 +81,9 @@ abstract public class BattleUnit {
     }
 
     //player用
-    public void setBattleUnitDataPlayer(BattleDungeonUnitData _battleDungeonUnitData) {
+    public void setBattleUnitData(BattleDungeonUnitData _battleDungeonUnitData) {
         //初期化処理 (データに寄らない)
         //init();
-        unitKind = UnitKind.PLAYER;
-
         exist = true;
         dropFlag = true;
 
@@ -101,12 +96,10 @@ abstract public class BattleUnit {
     }
 
     //enemy 用
-    public void setBattleUnitDataEnemy(BattleBaseUnitData _battleBaseUnitData, int repeatCount) {
+    public void setBattleUnitData(BattleBaseUnitData _battleBaseUnitData, int repeatCount, int i) {
         //初期化処理 (データに寄らない)
         //init();
 
-
-        unitKind = UnitKind.ENEMY;
         exist = true;
         dropFlag = true;
 
@@ -136,29 +129,6 @@ abstract public class BattleUnit {
         return;
     }
 
-    //rock用
-    public void setBattleUnitDataRock(BattleBaseUnitData _battleBaseUnitData) {
-        exist = true;
-        dropFlag = true;
-        unitKind = UnitKind.ROCK;
-
-
-        //TODO : 敵の出現位置決定
-        setPositionX(rnd.nextInt(1200)+200);
-        setPositionY(rnd.nextInt(500)+200);
-
-        battleDungeonUnitData = new BattleDungeonUnitData();
-        battleDungeonUnitData.setName(_battleBaseUnitData.getName());
-        battleDungeonUnitData.setStatus(_battleBaseUnitData.getStatus(0));
-        battleDungeonUnitData.setBonusStatus(_battleBaseUnitData.getBonusStatus(0));
-        battleDungeonUnitData.setBitmapData(_battleBaseUnitData.getBitmapData());
-
-        setRadius(_battleBaseUnitData.getRadius());
-
-
-        statusInit();
-        return;
-    }
 
 
     //のちに技について保存したクラスを返すことになるかも
@@ -181,7 +151,6 @@ abstract public class BattleUnit {
     public int getLuck(){ return luck; }
     public String getName() { return name; }
     public BattleDungeonUnitData getBattleDungeonUnitData() { return battleDungeonUnitData; }
-    public UnitKind getUnitKind() { return unitKind; }
 
     // *** setter ***
     public void existIs(boolean _exist) { exist = _exist; }
