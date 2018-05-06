@@ -14,6 +14,7 @@ import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -24,6 +25,8 @@ import static java.lang.Math.abs;
 /**
  * Created by horie on 2017/08/30.
  */
+
+//TODO:中ボスの名前を渡す関数をつくる(数は指定できるように，同じやつでもいい,配列で返す)
 
 public class MapAdmin {
     int map_data_int[][] = {
@@ -87,6 +90,10 @@ public class MapAdmin {
     int mine_min_num;
     int mine_max_num;
 
+    String floor_tile_name;
+    String wall_tile_name;
+    String sidewall_tile_name;
+
     Point offset = new Point(0, 0);
     Point start_point = new Point(0, 0);
 
@@ -101,6 +108,7 @@ public class MapAdmin {
     MapPlayer map_player;
     MapObjectAdmin map_object_admin;
     DungeonData dungeon_data;
+    List<DungeonMonsterData> dungeon_monster_data;
 
     //auto_tile用
     AutoTile auto_tile_wall = new AutoTile();
@@ -154,20 +162,21 @@ public class MapAdmin {
     }
 
     //TODO：ダンジョンデータの受け渡しがちゃんと出来ているか確認する
-    public MapAdmin(Graphic m_graphic, MapObjectAdmin m_map_object_admin, DungeonData m_dungeon_data) {
+    public MapAdmin(Graphic m_graphic, MapObjectAdmin m_map_object_admin, DungeonData m_dungeon_data, List<DungeonMonsterData> m_dungeon_monster_data) {
         graphic = m_graphic;
         map_object_admin = m_map_object_admin;
         map_player = map_object_admin.getPlayer();
         dungeon_data = m_dungeon_data;
+        dungeon_monster_data = m_dungeon_monster_data;
 
         //データベースからマップ情報の読み込み
         map_size.set(dungeon_data.getMap_size_x(), dungeon_data.getMap_size_y());
         boss_floor_num = dungeon_data.getFloor_num();
         mine_min_num = dungeon_data.getMine_min_num();
         mine_max_num = dungeon_data.getMine_max_num();
-        String floor_tile_name = dungeon_data.getFloor_tile_name();
-        String wall_tile_name = dungeon_data.getWall_tile_name();
-        String sidewall_tile_name = dungeon_data.getSidewall_tile_name();
+        floor_tile_name = dungeon_data.getFloor_tile_name();
+        wall_tile_name = dungeon_data.getWall_tile_name();
+        sidewall_tile_name = dungeon_data.getSidewall_tile_name();
         /*デバッグ*/
 //        System.out.println("堀江　mapsize_x = "+dungeon_data.getMap_size_x());
 //        System.out.println("堀江　mapsize_y = "+dungeon_data.getMap_size_y());
@@ -175,6 +184,10 @@ public class MapAdmin {
 //        System.out.println("堀江　mine_min_num = "+dungeon_data.getMine_min_num());
 //        System.out.println("堀江　dungeon_name = "+dungeon_data.getDungeon_name());
 //        System.out.println("堀江　floortile_name = "+dungeon_data.getFloor_tile_name());
+
+//        for(int i = 0;i < 10;i++) {
+//            System.out.println("horie monster_name = " + dungeon_monster_data.get(i).getMonsterName());
+//        }
 
         //マップ生成用変数初期化
         camera = new Camera(map_size, magnification);
@@ -204,6 +217,7 @@ public class MapAdmin {
 
         //オートタイル生成
         auto_tile_admin = new AutoTileAdmin(graphic);
+//        createAutoTileImg();
         //画像読込
         BitmapData auto_tile_block_wall = graphic.searchBitmap("cave_wall_w_01");//壁のauto_tile元データ
         BitmapData auto_tile_block_side_wall = graphic.searchBitmap("cave_wall_f_01");//側壁のauto_tileの元データ
@@ -256,8 +270,6 @@ public class MapAdmin {
             auto_tile_admin.createAutoTile(auto_tile_cave_hole[i]);
         }
 
-
-
         //マップ生成
         if (is_debug_mode) {
             transportMatrix();//デバッグ用
@@ -308,6 +320,61 @@ public class MapAdmin {
 //        }
 //        map_image = graphic.processCombineBitmapData(wide_map_image, true);
         getHolder();
+    }
+
+    private void createAutoTileImg(){
+        //画像読込
+        BitmapData auto_tile_block_wall = graphic.searchBitmap(wall_tile_name);//壁のauto_tile元データ
+        BitmapData auto_tile_block_side_wall = graphic.searchBitmap(sidewall_tile_name);//側壁のauto_tileの元データ
+        BitmapData raw_floor_tile = graphic.searchBitmap(floor_tile_name);//TODO:ドラゴンステージだけfloorタイルがオートタイルになっていて対応していない
+        floor_tile = auto_tile_admin.combineFourAutoTile(raw_floor_tile, raw_floor_tile, raw_floor_tile, raw_floor_tile);
+
+        BitmapData cave_hole_raw = graphic.searchBitmap("cave_hole_01");//穴（アニメーション）
+        //BitmapData dragon_hole_raw = graphic.searchBitmap("Dragon_hole_f_01");//穴（アニメーション）
+
+        //階段画像4分割
+        stair_tile = graphic.searchBitmap("step");
+        stair_tile_div[0] = graphic.processTrimmingBitmapData(stair_tile, 0, 0, 32, 32);
+        stair_tile_div[1] = graphic.processTrimmingBitmapData(stair_tile, 32, 0, 32, 32);
+        stair_tile_div[2] = graphic.processTrimmingBitmapData(stair_tile, 0, 32, 32, 32);
+        stair_tile_div[3] = graphic.processTrimmingBitmapData(stair_tile, 32, 32, 32, 32);
+
+        //採掘場画像4分割
+        mine_tile = graphic.searchBitmap("cave_thing_01");
+        mine_tile4 = auto_tile_admin.combineFourAutoTile(mine_tile, mine_tile, mine_tile, mine_tile);
+//        mine_tile_div[0] = graphic.processTrimmingBitmapData(mine_tile, 0, 0, 32, 32);
+//        mine_tile_div[1] = graphic.processTrimmingBitmapData(mine_tile, 32, 0, 32, 32);
+//        mine_tile_div[2] = graphic.processTrimmingBitmapData(mine_tile, 0, 32, 32, 32);
+//        mine_tile_div[3] = graphic.processTrimmingBitmapData(mine_tile, 32, 32, 32, 32);
+
+        //縦分割、分割数可変
+        //
+        ArrayList<BitmapData> auto_tile_set_wall = new ArrayList<BitmapData>();//auto_tile縦一列繋がったもの
+        for(int i = 0;i < auto_tile_block_wall.getWidth()/32;i++){
+            auto_tile_set_wall.add(graphic.processTrimmingBitmapData(auto_tile_block_wall,i*32, 0, 32, 32*5));
+        }
+        ArrayList<BitmapData> auto_tile_set_side_wall = new ArrayList<BitmapData>();//auto_tile縦一列繋がったもの
+        for(int i = 0;i < auto_tile_block_side_wall.getWidth()/32;i++){
+            auto_tile_set_side_wall.add(graphic.processTrimmingBitmapData(auto_tile_block_wall,i*32, 0, 32, 32*5));
+        }
+
+        //autotileを元画像から5つに分割
+        for(int i = 0;i < 5;i++){
+            auto_tile_wall.setAuto_tile(graphic.processTrimmingBitmapData(auto_tile_block_wall, 0, 32*i, 32, 32), i);
+            auto_tile_side_wall.setAuto_tile(graphic.processTrimmingBitmapData(auto_tile_block_side_wall, 0, 32*i, 32, 32), i);
+            for(int j = 0;j < 3; j++){
+                auto_tile_cave_hole[j].setAuto_tile(graphic.processTrimmingBitmapData(cave_hole_div[j], 0, 32*i, 32, 32), i);
+            }
+        }
+        auto_tile_admin.createAutoTile(auto_tile_wall);
+        auto_tile_admin.createAutoTile(auto_tile_side_wall);
+        //横壁4種類作成
+        auto_tile_admin.createAutoTileForSideWall(auto_tile_side_wall, side_wall);
+        auto_tile_admin.createBigAutoTile(auto_tile_wall, side_wall);
+
+        for(int i = 0;i < 3;i++){
+            auto_tile_admin.createAutoTile(auto_tile_cave_hole[i]);
+        }
     }
 
     //壁かどうかマップ座標で判定
@@ -378,7 +445,6 @@ public class MapAdmin {
         section_admin.makeStairs(map_data);
         createMine(mine_min_num, mine_max_num);
         //map_object_adminに採掘場所の座標を渡す
-//        map_object_admin.getMinePoint(mine_point);
 
 
         //section_admin.printNeighborLeafNum();
@@ -413,7 +479,10 @@ public class MapAdmin {
             }
         }
         //map_object_admin初期化
-        map_object_admin.initObjectPosition(this);
+        //TODO:藤原変更適用後修正必要
+        map_object_admin.initObjectPosition(this);//藤原変更を適用後要変更
+//        map_object_admin.getMapAdmin(this);//藤原変更を適用していないため今はコメントアウトしている
+//        map_object_admin.getMinePoint(mine_point);//藤原変更を適用していないため今はコメントアウトしている
 //        map_object_admin.getCamera(camera);
         //System.out.println("map_create_finish");
         //sizeRect.set(0,0,map_tile[0][0].getBitmap().getWidth(),map_tile[0][0].getBitmap().getHeight());
@@ -542,6 +611,19 @@ public class MapAdmin {
             }
         }
         return point;
+    }
+
+    //中ボスを返す関数
+    public String[] getMidMonster(int mid_boss_num){
+        int k = 0;
+        String mid_boss[] = new String[5];
+        for(int i = 0;i < dungeon_monster_data.size();i++){
+            if(dungeon_monster_data.get(i).getType() == 1 && k < mid_boss_num){
+                mid_boss[k] = dungeon_monster_data.get(i).getMonsterName();
+                k++;
+            }
+        }
+        return mid_boss;
     }
 
     //room_pointをset(magnificationをかけてない)
