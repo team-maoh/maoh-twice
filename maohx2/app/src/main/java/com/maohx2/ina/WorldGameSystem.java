@@ -13,6 +13,7 @@ import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.EquipmentInventrySaver;
 import com.maohx2.ina.Text.ListBoxAdmin;
+import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
@@ -33,6 +34,7 @@ import com.maohx2.kmhanko.itemdata.GeoObjectDataAdmin;
 import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 import com.maohx2.kmhanko.itemshop.ItemShopAdmin;
 import com.maohx2.kmhanko.effect.*;
+import com.maohx2.kmhanko.plate.BackPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import java.util.ArrayList;
@@ -87,6 +89,7 @@ public class WorldGameSystem {
     PaletteAdmin palette_admin;
     EquipmentInventrySaver equipmentInventrySaver;
     InventryS equipmentInventry;
+
     BitmapData backGround;
 
     public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
@@ -180,9 +183,10 @@ public class WorldGameSystem {
 
         palette_admin = new PaletteAdmin(world_user_interface, graphic, equipmentInventry, expendItemInventry);
 
-
         backGround = graphic.searchBitmap("firstBackground");
 
+        //TODO かり。戻るボタン
+        initBackPlate();
     }
 
 
@@ -220,6 +224,8 @@ public class WorldGameSystem {
             equipmentInventry.updata();
             expendItemInventry.updata();
             palette_admin.update(false);
+
+            backPlateGroup.update();
         }
 
 
@@ -230,20 +236,28 @@ public class WorldGameSystem {
 
     public void draw() {
         graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
+        //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
 
         if (worldModeAdmin.getIsDraw(worldModeAdmin.getGetSlotMap())) {
             geoSlotAdminManager.draw();
-        }if (worldModeAdmin.getIsDraw(worldModeAdmin.getWorldMap())) {
+        }
+        if (worldModeAdmin.getIsDraw(worldModeAdmin.getWorldMap())) {
             dungeonSelectManager.draw();
-        }if (worldModeAdmin.getIsDraw(worldModeAdmin.getShop())) {
+        }
+        if (worldModeAdmin.getIsDraw(worldModeAdmin.getShop())) {
             itemShopAdmin.draw();
-        }if (worldModeAdmin.getIsDraw(worldModeAdmin.getPresent())) {
+        }
+        if (worldModeAdmin.getIsDraw(worldModeAdmin.getPresent())) {
             geoPresentManager.draw();
-        }if (worldModeAdmin.getIsUpdate(worldModeAdmin.getEquip())) {
+        }
+
+        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getEquip())) {
             equipmentInventry.draw();
             expendItemInventry.draw();
             palette_admin.draw();
             world_user_interface.draw();
+
+            backPlateGroup.draw();
         }
 
         text_box_admin.draw();
@@ -251,6 +265,27 @@ public class WorldGameSystem {
 
         graphic.draw();
     }
+
+    //TODO 仮。もどるボタン
+    PlateGroup<BackPlate> backPlateGroup;
+    private void initBackPlate() {
+        backPlateGroup = new PlateGroup<BackPlate>(
+                new BackPlate[] {
+                        new BackPlate(
+                                graphic, world_user_interface, worldModeAdmin
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //戻るボタンが押された時の処理
+                                worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.STOP);
+                                worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
+                            }
+                        }
+                }
+        );
+    }
+
+
 }
 
 /*
