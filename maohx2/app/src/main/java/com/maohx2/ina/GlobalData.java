@@ -66,7 +66,7 @@ public class GlobalData extends Application {
         geoInventrySaver = new GeoInventrySaver(g_my_database_admin, "GeoInventrySave", "GeoInventrySave.db", 1, "ns", graphic);
         geoInventry = new InventryS(geoInventrySaver);
 
-        expendItemInventrySaver = new ExpendItemInventrySaver(g_my_database_admin, "ExpendItemInventrySave", "ExpendItemInventrySave.db", 1, "s");
+        expendItemInventrySaver = new ExpendItemInventrySaver(g_my_database_admin, "ExpendItemInventrySave", "ExpendItemInventrySave.db", 1, "ns");
         expendItemInventry = new InventryS(expendItemInventrySaver);
 
         itemDataAdminManager = new ItemDataAdminManager();
