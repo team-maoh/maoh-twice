@@ -191,7 +191,7 @@ public class BattleUnitAdmin {
 
     public void setPlayer(PlayerStatus playerStatus) {
         playerStatus.calcStatus();
-        battle_units[0].setBattleUnitDataPlayer(playerStatus.makeBattleDungeonUnitData());//TODO なぜかコメントアウトされてた
+        //battle_units[0].setBattleUnitDataPlayer(playerStatus.makeBattleDungeonUnitData());//TODO なぜかコメントアウトされてた
     }
 
     public void spawnEnemy() {
