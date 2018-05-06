@@ -72,7 +72,7 @@ public class StartGameSystem {
         paint = new Paint();
         paint.setTextSize(70);
 
-        backGround = graphic.searchBitmap("e51-0");
+        backGround = graphic.searchBitmap("firstBackground");
 
 
         /*

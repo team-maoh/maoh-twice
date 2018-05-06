@@ -62,9 +62,10 @@ public class BattleUnitAdmin {
     boolean marker_flag;
     boolean first_attack_frag;
     int attack_count;
+    int repeat_count;
 
     //by kmhanko BattleUnitDataAdmin追加
-    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage, MyDatabaseAdmin _databaseAdmin, MapPlateAdmin _map_plate_admin) {
+    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage, MyDatabaseAdmin _databaseAdmin, MapPlateAdmin _map_plate_admin, int _repeat_count) {
         //引数の代入
         graphic = _graphic;
         battle_user_interface = _battle_user_interface;
@@ -75,6 +76,8 @@ public class BattleUnitAdmin {
         dungeonModeManage = _dungeonModeManage;
         databaseAdmin = _databaseAdmin;
         mapPlateAdmin = _map_plate_admin;
+
+        repeat_count = _repeat_count;
 
         //by kmhanko
         // *** equipItemDataCreaterのインスタンス化 ***
@@ -102,11 +105,7 @@ public class BattleUnitAdmin {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             battle_units[i] = new BattleEnemy(graphic);
         }
-        /*
-        for (int i = 0; i < BATTLE_UNIT_MAX; i++) {
-            battle_units[i].init();
-        }
-        */
+
         for (int i = 0; i < MAKER_NUM; i++) {
             touch_markers[i] = new TouchMarker(graphic);
         }
@@ -115,26 +114,9 @@ public class BattleUnitAdmin {
         calc_unit_status = new CalcUnitStatus();
         calc_unit_status.init();
 
-
-        /*
-        //削除 仮に敵を適当な位置に配置する setBattleUnitDataに入れた
-        for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
-            battle_units[i].setPositionX(200 + 200 * (i - 1));
-            battle_units[i].setPositionY(300);
-            battle_units[i].setRadius(50);
-        }
-
-        //削除 仮に敵にUIのタッチIDを割り振る setBattleUnitDataに入れた
-        for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
-            battle_units[i].setUIID(battle_user_interface.setCircleTouchUI(battle_units[i].getPositionX(), battle_units[i].getPositionY(), battle_units[i].getRadius()));
-        }
-        */
-
         //TODO 仮。プレイヤーデータのコンバート
         setPlayer(_playerStatus);
 
-        //TODO 仮。敵の生成。本当はここじゃなくて戦闘画面に移動する画面エフェクト的な奴を処理した後とかに呼ぶとかする
-        //spawnEnemy();
     }
 
     //by kmhanko
@@ -163,13 +145,21 @@ public class BattleUnitAdmin {
         //setBattleUnitData("e01-0", 1);
         //setBattleUnitData("e88-0", 1);
         //setBattleUnitData("e74-0", 1);
-        setBattleUnitData("m003-2", 1);
-        setBattleUnitData("e96-0", 1);
+        setBattleUnitData("m003-2", repeat_count);
+        setBattleUnitData("e96-0", repeat_count);
         //setBattleUnitData("e27", 1);
         //setBattleUnitData("m007", 1);
         //setBattleUnitData("e103-0", 1);
         //setBattleUnitData("e94-3", 1);
         //setBattleUnitData("e83-1", 1);
+    }
+
+    public void spawnEnemy(String[] monsters) {
+        //TODO 仮。本当はダンジョンのデータなどを引数にして出現する敵をランダムなどで決定する
+
+        for (int i = 0; i < monsters.length; i++){
+            setBattleUnitData(monsters[i],repeat_count);
+        }
     }
 
 

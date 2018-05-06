@@ -62,7 +62,7 @@ public class DungeonGameSystem {
     InventryS expendInventry;
     BitmapData backGround;
 
-    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange activityChange) {
+    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange activityChange, int _repeat_count) {
         dungeon_user_interface = _dungeon_user_interface;
         battle_user_interface = _battle_user_interface;
         graphic = _graphic;
@@ -102,9 +102,9 @@ public class DungeonGameSystem {
 
         PlayerStatus playerStatus = globalData.getPlayerStatus();
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
-        battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin);
+        battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin, _repeat_count);
 
-        backGround = graphic.searchBitmap("e51-0");
+        backGround = graphic.searchBitmap("firstBackground");
 
     }
 
@@ -113,8 +113,6 @@ public class DungeonGameSystem {
         switch (dungeonModeManage.getMode()) {
 
             case MAP:
-                //map_object_admin.update(is_displaying_menu, is_touching_outside_menu);
-                //map_plate_admin.update(is_displaying_menu);
                 map_object_admin.update();
                 map_plate_admin.update();
                 break;
@@ -132,8 +130,6 @@ public class DungeonGameSystem {
 
     public void draw() {
 
-        graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
-
         switch (dungeonModeManage.getMode()) {
             case MAP:
                 map_admin.drawMap_for_autotile_light();
@@ -143,6 +139,7 @@ public class DungeonGameSystem {
                 break;
 
             case BUTTLE:
+                graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
                 battle_unit_admin.draw();
                 break;
         }
