@@ -257,7 +257,7 @@ public class GeoSlotAdmin {
 
         //textBoxAdmin.hideTextBox(releaseTextBoxID);
 
-        statusTextBoxID = textBoxAdmin.createTextBox(0,600,300,900,6);
+        statusTextBoxID = textBoxAdmin.createTextBox(0,600,300,900,7);
         textBoxAdmin.setTextBoxUpdateTextByTouching(statusTextBoxID, false);
         textBoxAdmin.setTextBoxExists(statusTextBoxID, false);
         statusTextBoxUpdate();
@@ -287,6 +287,8 @@ public class GeoSlotAdmin {
         textBoxAdmin.bookingDrawText(statusTextBoxID, "Luck " + playerStatus.getLuck());
         textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
         textBoxAdmin.bookingDrawText(statusTextBoxID, "所持金 " + playerStatus.getMoney());
+        textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
+        textBoxAdmin.bookingDrawText(statusTextBoxID, "クリア回数 " + playerStatus.getNowClearCount() + "/" + playerStatus.getClearCount());
         textBoxAdmin.bookingDrawText(statusTextBoxID, "MOP");
         textBoxAdmin.updateText(statusTextBoxID);
     }
