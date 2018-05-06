@@ -133,7 +133,7 @@ public class ItemShopAdmin {
         if (itemShopActive) {
             itemShop.draw();
         }
-        textBoxAdmin.setTextBoxExists(moneyTextBoxID, worldModeAdmin.getIsDraw(worldModeAdmin.getShop()));
+        textBoxAdmin.setTextBoxExists(moneyTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.SHOP);
     }
 
     public ItemShop getItemShop() {

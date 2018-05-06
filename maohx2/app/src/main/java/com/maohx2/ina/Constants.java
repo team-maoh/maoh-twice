@@ -146,6 +146,14 @@ public final class Constants {
             SHOP,
             GEO_MAP,
             EQUIP,
+            PRESENT,
+
+            DUNGEON_SELECT_INIT,
+            GEO_MAP_SELECT_INIT,
+            SHOP_INIT,
+            GEO_MAP_INIT,
+            EQUIP_INIT,
+            PRESENT_INIT,
         }
     }
 

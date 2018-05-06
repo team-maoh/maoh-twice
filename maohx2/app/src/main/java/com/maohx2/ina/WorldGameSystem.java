@@ -9,6 +9,7 @@ import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
 import com.maohx2.ina.Arrange.PaletteElement;
+import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.EquipmentInventrySaver;
@@ -17,6 +18,7 @@ import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
+import com.maohx2.ina.Constants.GAMESYSTEN_MODE.WORLD_MODE;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.GeoPresent.GeoPresentManager;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
@@ -208,6 +210,48 @@ public class WorldGameSystem {
         }
         */
 
+        switch (worldModeAdmin.getMode()) {
+            case DUNGEON_SELECT_INIT:
+                backGround = graphic.searchBitmap("firstBackground");
+                worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT);
+            case DUNGEON_SELECT:
+                dungeonSelectManager.update();
+                break;
+            case GEO_MAP_SELECT_INIT:
+                backGround = graphic.searchBitmap("GeoMap");
+                worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT);
+            case GEO_MAP_SELECT:
+                dungeonSelectManager.update();
+                break;
+            case GEO_MAP_INIT:
+                backGround = graphic.searchBitmap("GeoMap");
+                worldModeAdmin.setMode(WORLD_MODE.GEO_MAP);
+            case GEO_MAP:
+                geoSlotAdminManager.update();
+                break;
+            case SHOP_INIT:
+                backGround = graphic.searchBitmap("City");
+                worldModeAdmin.setMode(WORLD_MODE.SHOP);
+            case SHOP:
+                itemShopAdmin.update();
+                break;
+            case EQUIP_INIT:
+                backGround = graphic.searchBitmap("firstBackground");//仮
+                worldModeAdmin.setMode(WORLD_MODE.EQUIP);
+            case EQUIP:
+                equipmentInventry.updata();
+                expendItemInventry.updata();
+                palette_admin.update(false);
+                backPlateGroup.update();
+                break;
+            case PRESENT_INIT:
+                backGround = graphic.searchBitmap("firstBackground");//TODO 仮
+                worldModeAdmin.setMode(WORLD_MODE.PRESENT);
+            case PRESENT:
+                geoPresentManager.update();
+                break;
+        }
+/*
         if (worldModeAdmin.getIsUpdate(worldModeAdmin.getGetSlotMap())) {
             geoSlotAdminManager.update();
         }
@@ -224,10 +268,9 @@ public class WorldGameSystem {
             equipmentInventry.updata();
             expendItemInventry.updata();
             palette_admin.update(false);
-
             backPlateGroup.update();
         }
-
+        */
 
         text_box_admin.update();
         effectAdmin.update();
@@ -238,6 +281,37 @@ public class WorldGameSystem {
         graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
         //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
 
+        switch (worldModeAdmin.getMode()) {
+            case DUNGEON_SELECT_INIT:
+            case DUNGEON_SELECT:
+                dungeonSelectManager.draw();
+                break;
+            case GEO_MAP_SELECT_INIT:
+            case GEO_MAP_SELECT:
+                dungeonSelectManager.draw();
+                break;
+            case GEO_MAP_INIT:
+            case GEO_MAP:
+                geoSlotAdminManager.draw();
+                break;
+            case SHOP_INIT:
+            case SHOP:
+                itemShopAdmin.draw();
+                break;
+            case EQUIP_INIT:
+            case EQUIP:
+                equipmentInventry.draw();
+                expendItemInventry.draw();
+                palette_admin.draw();
+                world_user_interface.draw();
+                backPlateGroup.draw();
+                break;
+            case PRESENT_INIT:
+            case PRESENT:
+                geoPresentManager.draw();
+                break;
+        }
+        /*
         if (worldModeAdmin.getIsDraw(worldModeAdmin.getGetSlotMap())) {
             geoSlotAdminManager.draw();
         }
@@ -259,6 +333,7 @@ public class WorldGameSystem {
 
             backPlateGroup.draw();
         }
+        */
 
         text_box_admin.draw();
         effectAdmin.draw();
@@ -277,10 +352,10 @@ public class WorldGameSystem {
                             @Override
                             public void callBackEvent() {
                                 //戻るボタンが押された時の処理
-                                worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.STOP);
+                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT_INIT);
+                                /*worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
-                                expendItemInventry.save();
-                                equipmentInventry.save();
+                                */
                             }
                         }
                 }

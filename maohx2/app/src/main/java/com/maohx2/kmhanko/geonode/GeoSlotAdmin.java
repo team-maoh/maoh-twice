@@ -192,8 +192,7 @@ public class GeoSlotAdmin {
                                 releasePlateGroup.setDrawFlag(false);
                                 releasePlateGroup.setUpdateFlag(false);
 
-                                worldModeAdmin.setGeoSlotMap(Constants.Mode.ACTIVATE.STOP);
-                                worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
+                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT_INIT);
                             }
                         }
                 }
@@ -356,7 +355,7 @@ public class GeoSlotAdmin {
         checkInventrySelect();
 
         backPlateGroup.update();
-        textBoxAdmin.setTextBoxExists(statusTextBoxID, worldModeAdmin.getIsDraw(worldModeAdmin.getGetSlotMap()));
+        textBoxAdmin.setTextBoxExists(statusTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.GEO_MAP_SELECT);
 
         //textBoxAdmin.update();
     }
