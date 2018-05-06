@@ -616,6 +616,9 @@ public class MapAdmin {
     //中ボスを返す関数
     public String[] getMidMonster(int mid_boss_num){
         int k = 0;
+        if(mid_boss_num > 5){
+            throw new Error("%☆ホリエ:mid_boss_num > 5 (MapAdmin:getMidMonster)");
+        }
         String mid_boss[] = new String[5];
         for(int i = 0;i < dungeon_monster_data.size();i++){
             if(dungeon_monster_data.get(i).getType() == 1 && k < mid_boss_num){
