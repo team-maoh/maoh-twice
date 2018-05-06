@@ -78,10 +78,12 @@ public class BattleUnitAdmin {
     boolean first_attack_frag;
     int attack_count;
 
+    int repeat_count;
+
     PlayerStatus playerStatus;
 
     //by kmhanko BattleUnitDataAdmin追加
-    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage, MyDatabaseAdmin _databaseAdmin, MapPlateAdmin _map_plate_admin, TextBoxAdmin _textBoxAdmin) {
+    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage, MyDatabaseAdmin _databaseAdmin, MapPlateAdmin _map_plate_admin, TextBoxAdmin _textBoxAdmin, int _repeat_count) {
         //引数の代入
         graphic = _graphic;
         BattleRockCreater.setGraphic(graphic);
@@ -97,6 +99,8 @@ public class BattleUnitAdmin {
         textBoxAdmin = _textBoxAdmin;
         initResultTextBox();
         initResultButton();
+
+        repeat_count = _repeat_count;
 
         playerStatus = _playerStatus;
 
@@ -193,6 +197,13 @@ public class BattleUnitAdmin {
         playerStatus.calcStatus();
         //battle_units[0].setBattleUnitDataPlayer(playerStatus.makeBattleDungeonUnitData());//TODO なぜかコメントアウトされてた
     }
+
+    public void spawnEnemy(String[] monsters) {
+        for (int i = 0; i < monsters.length; i++){
+            setBattleUnitData(monsters[i],repeat_count);
+        }
+    }
+
 
     public void spawnEnemy() {
         //TODO 仮。本当はダンジョンのデータなどを引数にして出現する敵をランダムなどで決定する
@@ -314,6 +325,13 @@ public class BattleUnitAdmin {
                     if (defense_equipment != null) {
                         damage_rate = (1 - (float) defense_equipment.getDefence() / 100.0f);
                     }
+
+                    int heel_to_palyer = 0;
+                    if(palette_admin.checkSelectedExpendItemData() != null) {
+                        heel_to_palyer = battle_units[0].getHitPoint()*palette_admin.checkSelectedExpendItemData().getHp();
+                        palette_admin.deleteExpendItemData();
+                    }
+
                     int new_hp = battle_units[0].getHitPoint() - (int) (damage_to_player * damage_rate);
                     if (new_hp <= 0) {
                         //ゲームオーバー

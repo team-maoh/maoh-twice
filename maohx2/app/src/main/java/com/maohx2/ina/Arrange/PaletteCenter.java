@@ -17,6 +17,7 @@ public class PaletteCenter extends PaletteElement{
 
 
     static Graphic graphic;
+    int prePos;
 
     public PaletteCenter(int _x, int _y, int _element_num, int _touch_id){
         super( _x, _y, _element_num, _touch_id);
@@ -54,6 +55,12 @@ public class PaletteCenter extends PaletteElement{
         graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_BIG, paint);
     }
 
+    @Override
+    public void setItemData(ItemData _item_data, int preElementNum){
+        super.setItemData(_item_data,preElementNum);
+        prePos = preElementNum;
+    }
+
 
     @Override
     public void drawBigAndItem(){
@@ -63,5 +70,7 @@ public class PaletteCenter extends PaletteElement{
             graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y,2,2,0,255,false);
         }
     }
+
+    public int getPrePos(){return prePos;}
 
 }

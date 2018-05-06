@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.Draw.ImageContext;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
@@ -23,6 +24,7 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 public class DungeonActivity extends BaseActivity {
 
     DungeonSurfaceView dungeon_surface_view;
+    boolean game_system_flag = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,18 @@ public class DungeonActivity extends BaseActivity {
     public void onResume(){
         super.onResume();
     }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        if(!game_system_flag) {
+
+            dungeon_surface_view.runGameSystem();
+            game_system_flag = true;
+        }
+    }
+
 
 }
 
@@ -76,10 +90,6 @@ class DungeonSurfaceView extends BaseSurfaceView{
 
         my_database_admin.addMyDatabase("DungeonDB", "LocalDungeonImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("DungeonDB"), "Dungeon");
-
-        my_database_admin.addMyDatabase("BattleDB", "LocalBattleImage.db", 1, "r");
-        graphic.loadLocalImages(my_database_admin.getMyDatabase("BattleDB"), "Battle");
-
 
         Intent intent = currentActivity.getIntent();
         DUNGEON_KIND dungeon_kind = (DUNGEON_KIND)intent.getSerializableExtra("DungeonKind");
@@ -125,7 +135,17 @@ class DungeonSurfaceView extends BaseSurfaceView{
         global_data.getGeoInventry().init(battle_user_interface, graphic,1000,100,1400,508, 10);
         global_data.getExpendItemInventry().init(battle_user_interface, graphic,1000,100,1400,508, 10);
 
-        game_system.init(dungeon_user_interface, graphic, sound_admin, my_database_admin, battle_user_interface, dungeon_activity, my_database_admin, activityChange);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
+        game_system.init(dungeon_user_interface, graphic, sound_admin, my_database_admin, battle_user_interface, dungeon_activity, my_database_admin, activityChange,1);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
+    }
+
+    public void runGameSystem() {
+        thread = new Thread(this);
+        thread.start();
+    }
+
+    public void drawBackGround(){
+        ImageContext backImageContext = graphic.makeImageContext(graphic.searchBitmap("e51-0"),0,0,true);
+        backSurfaceView.drawBackGround(backImageContext);
     }
 
 
@@ -135,6 +155,12 @@ class DungeonSurfaceView extends BaseSurfaceView{
         dungeon_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         battle_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         game_system.update();
+        /*
+        if(back_ground_flag == false){
+            drawBackGround();
+            back_ground_flag = true;
+        }
+        */
         game_system.draw();
 
 //        if(touch_state == TouchState.DOWN) {
