@@ -31,13 +31,15 @@ public class PlayerStatusSaver extends SaveManager {
         playerStatus.setLevel(database.getOneInt("BaseStatus", "level", "rowid = 1"));
         playerStatus.setMoney(database.getOneInt("BaseStatus", "money", "rowid = 1"));
         playerStatus.setMaohWinCount(database.getOneInt("BaseStatus", "maoh_win_count", "rowid = 1"));
+        playerStatus.setClearCount(database.getOneInt("BaseStatus", "clear_count", "rowid = 1"));
+        playerStatus.setNowClearCount(database.getOneInt("BaseStatus", "now_clear_count", "rowid = 1"));
     }
 
     @Override
     public void save() {
         database.insertLineByArray(
                 "BaseStatus",
-                new String[] { "level", "hp", "attack", "defence", "luck", "money", "maoh_win_count"},
+                new String[] { "level", "hp", "attack", "defence", "luck", "money", "maoh_win_count", "clear_count", "now_clear_count"},
                 playerStatus.getSaveStatuses()
         );
     }

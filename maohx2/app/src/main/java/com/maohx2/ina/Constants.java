@@ -103,6 +103,14 @@ public final class Constants {
         }
     }
 
+    public enum UnitKind {
+        PLAYER,
+        ENEMY,
+        ROCK,
+        UNIT_KIND_NUM,
+        NONE,
+    }
+
 
     public static class Draw {
 
@@ -128,6 +136,16 @@ public final class Constants {
             MAP,
             BUTTLE_INIT,
             BUTTLE,
+            GEO_MINING_INIT,
+            GEO_MINING,
+        }
+
+        public enum WORLD_MODE {
+            DUNGEON_SELECT,
+            GEO_MAP_SELECT,
+            SHOP,
+            GEO_MAP,
+            EQUIP,
         }
     }
 

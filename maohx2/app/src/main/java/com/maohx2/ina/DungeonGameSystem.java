@@ -100,6 +100,9 @@ public class DungeonGameSystem {
         battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin, text_box_admin);
 
 
+
+        //デバッグ用。消すの忘れない
+        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
     }
 
     public void update() {
@@ -114,10 +117,21 @@ public class DungeonGameSystem {
                 break;
 
             case BUTTLE_INIT:
-                battle_unit_admin.spawnEnemy();
+                battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
+                //battle_unit_admin.spawnEnemy(); reset内で呼んでいる
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE);
 
             case BUTTLE:
+                battle_user_interface.update();
+                battle_unit_admin.update();
+                break;
+
+            case GEO_MINING_INIT:
+                battle_unit_admin.reset(BattleUnitAdmin.MODE.MINING);
+                //battle_unit_admin.spawnRock();　reset内で呼んでいる
+                dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING);
+
+            case GEO_MINING:
                 battle_user_interface.update();
                 battle_unit_admin.update();
                 break;
@@ -137,6 +151,10 @@ public class DungeonGameSystem {
                 break;
 
             case BUTTLE:
+                battle_unit_admin.draw();
+                break;
+
+            case GEO_MINING:
                 battle_unit_admin.draw();
                 break;
         }
