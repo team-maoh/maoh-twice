@@ -189,6 +189,10 @@ public class MapObjectAdmin {
 
     //by kmhanko
     public void battleStart() {
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/kmhanko2
         dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
     }
 

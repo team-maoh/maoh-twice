@@ -19,6 +19,8 @@ import com.maohx2.fuusya.TextBox.TextBoxAdmin;
  * Created by user on 2017/11/19.
  */
 
+//TODO この魔王は倒した、フラグ
+
 /*
 package itemshop
 ItemShopAdminだけインスタンス化すれば、他は全てインスタンス化される。

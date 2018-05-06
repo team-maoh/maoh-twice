@@ -87,6 +87,9 @@ public class DungeonGameSystem {
         list_box_admin.init(dungeon_user_interface, graphic);
         //map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, this);
 
+        text_box_admin.setTextBoxExists(0,false);
+        text_box_admin.setTextBoxExists(1,false);
+
         PaletteCenter.initStatic(graphic);
         PaletteElement.initStatic(graphic);
 
@@ -102,10 +105,17 @@ public class DungeonGameSystem {
 
         PlayerStatus playerStatus = globalData.getPlayerStatus();
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
+<<<<<<< HEAD
         battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin, _repeat_count);
+=======
+        battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin, text_box_admin);
+
+>>>>>>> origin/kmhanko2
 
         backGround = graphic.searchBitmap("firstBackground");
 
+        //デバッグ用。消すの忘れない
+        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
     }
 
     public void update() {
@@ -118,14 +128,27 @@ public class DungeonGameSystem {
                 break;
 
             case BUTTLE_INIT:
-                battle_unit_admin.spawnEnemy();
+                battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
+                //battle_unit_admin.spawnEnemy(); reset内で呼んでいる
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE);
 
             case BUTTLE:
                 battle_user_interface.update();
                 battle_unit_admin.update();
                 break;
+
+            case GEO_MINING_INIT:
+                battle_unit_admin.reset(BattleUnitAdmin.MODE.MINING);
+                //battle_unit_admin.spawnRock();　reset内で呼んでいる
+                dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING);
+
+            case GEO_MINING:
+                battle_user_interface.update();
+                battle_unit_admin.update();
+                break;
         }
+
+        text_box_admin.update();
     }
 
     public void draw() {
@@ -142,7 +165,12 @@ public class DungeonGameSystem {
                 graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
                 battle_unit_admin.draw();
                 break;
+
+            case GEO_MINING:
+                battle_unit_admin.draw();
+                break;
         }
+        text_box_admin.draw();
         graphic.draw();
     }
 

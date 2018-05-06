@@ -70,59 +70,58 @@ public class BattleBaseUnitData {
         DbStatusNum
     }
 
+    public enum ActionID {
+        NORMAL_ATTACK,
+        POISON,
+        PARALYSIS,
+        STOP,
+        BLINDNESS,
+        CURSE,
+        ACTION_ID_NUM
+    }
+
     int[] dbStatus = new int[DbStatusID.DbStatusNum.ordinal()];
 
 
     int status[] = new int[NUM_OF_STATUS.ordinal()];
     int bonus_status[] = new int[NUM_OF_BONUS_STATUS.ordinal()];
 
+    float[] actionRate = new float[ActionID.ACTION_ID_NUM.ordinal()];
+
+    public enum SpecialAction {
+        NONE,
+        BARRIER,
+        COUNTER,
+        STEALTH,
+        SPECIAL_ACTION_NUM
+    }
+
+    SpecialAction specialAction;
+    int specialActionPeriod;
+    int specialActionWidth;
 
 
     public void init(){}
 
+    //by kmhanko
+
     // *** setter & getter ***
-    public String getName(){return name;}
-    public  void setName(String _name){name = _name;}
-
-    public BitmapData getBitmapData(){return bitmap_data;}
-    public void setBitmapData(BitmapData _bitmap_data){bitmap_data = _bitmap_data;}
-
-    public int getRadius(){return radius;}
-    public void setRadius(int _radius){radius = _radius;}
-
-
-
-
-    //by kmhanko
-    public void setDbStatus(DbStatusID _dbStatusID, int _dbStatus) {
-        dbStatus[_dbStatusID.ordinal()] = _dbStatus;
-    }
-
-    public int getDbStatus(DbStatusID _dbStatusID) {
-        return dbStatus[_dbStatusID.ordinal()];
-    }
-
-    //by kmhanko
     public int[] getStatus(int repeat_count) {
-
         status[ATTACK_FRAME.ordinal()] = dbStatus[DbStatusID.AttackFlame.ordinal()];
         status[HP.ordinal()] = (int) (dbStatus[DbStatusID.InitialHP.ordinal()] + (dbStatus[DbStatusID.DeltaHP.ordinal()] * Math.pow(2, repeat_count)));
         status[ATTACK.ordinal()] = (int)(dbStatus[DbStatusID.InitialAttack.ordinal()] + dbStatus[DbStatusID.DeltaAttack.ordinal()] * Math.pow(2,repeat_count));
         status[DEFENSE.ordinal()] = (int)(dbStatus[DbStatusID.InitialDefence.ordinal()] + dbStatus[DbStatusID.DeltaDefence.ordinal()] * Math.pow(2,repeat_count));
         status[LUCK.ordinal()] = (int)(dbStatus[DbStatusID.InitialLuck.ordinal()] + dbStatus[DbStatusID.DeltaLuck.ordinal()] * Math.pow(2,repeat_count));
         status[SPEED.ordinal()] = (int)(dbStatus[DbStatusID.InitialSpeed.ordinal()] + dbStatus[DbStatusID.DeltaSpeed.ordinal()] * Math.pow(2,repeat_count));
-
         return status;
     }
 
     //プレイヤーの成長するステータス量を、initialX + deltaX * 2^repeat_countで算出する関数
     public int[] getBonusStatus(int repeat_count) {
-
         bonus_status[BONUS_HP.ordinal()] = (int) (dbStatus[DbStatusID.InitialBonusHP.ordinal()] + (dbStatus[DbStatusID.DeltaBonusHP.ordinal()] * Math.pow(2, repeat_count)));
         bonus_status[BONUS_ATTACK.ordinal()] = (int)(dbStatus[DbStatusID.InitialBonusAttack.ordinal()] + dbStatus[DbStatusID.DeltaBonusAttack.ordinal()] * Math.pow(2,repeat_count));
         bonus_status[BONUS_DEFENSE.ordinal()] = (int)(dbStatus[DbStatusID.InitialBonusDefence.ordinal()] + dbStatus[DbStatusID.DeltaBonusDefence.ordinal()] * Math.pow(2,repeat_count));
         bonus_status[BONUS_SPEED.ordinal()] = (int)(dbStatus[DbStatusID.InitialBonusSpeed.ordinal()] + dbStatus[DbStatusID.DeltaBonusSpeed.ordinal()] * Math.pow(2,repeat_count));
-
         return bonus_status;
     }
 
@@ -136,9 +135,11 @@ public class BattleBaseUnitData {
     public void setDropItemRate(int i, double _dropItemRate) {
         dropItemRate[i] = _dropItemRate;
     }
-    public void setDropItemKind(int i, Constants.Item.ITEM_KIND _dropItemKind) {
-        dropItemKind[i] = _dropItemKind;
-    }
+    public void setDropItemKind(int i, Constants.Item.ITEM_KIND _dropItemKind) { dropItemKind[i] = _dropItemKind; }
+
+    public float[] getActionRate() { return actionRate; }
+    public void setActionRate(ActionID _actionRateID, float _actionRate) { actionRate[_actionRateID.ordinal()] = _actionRate; }
+    public float getActionRate(ActionID _actionRateID) { return actionRate[_actionRateID.ordinal()]; }
 
     public EQUIPMENT_KIND[] getDropItemEquipmentKinds() {
         return dropItemEquipmentKind;
@@ -152,4 +153,49 @@ public class BattleBaseUnitData {
     public Constants.Item.ITEM_KIND[] getDropItemKinds() {
         return dropItemKind;
     }
+
+    public void setSpecialAction(String name) {
+        specialAction = SpecialAction.STEALTH;
+        if (name == null) {
+            specialAction = SpecialAction.NONE;
+            return;
+        }
+
+        if (name.equals("barrier")) {
+            specialAction = SpecialAction.BARRIER;
+            return;
+        }
+        if (name.equals("counter")) {
+            specialAction = SpecialAction.COUNTER;
+            return;
+        }
+        if (name.equals("stealth")) {
+            specialAction = SpecialAction.STEALTH;
+            return;
+        }
+    }
+
+    public String getName(){return name;}
+    public  void setName(String _name){name = _name;}
+
+    public BitmapData getBitmapData(){return bitmap_data;}
+    public void setBitmapData(BitmapData _bitmap_data){bitmap_data = _bitmap_data;}
+
+    public int getRadius(){return radius;}
+    public void setRadius(int _radius){radius = _radius;}
+
+    public void setDbStatus(DbStatusID _dbStatusID, int _dbStatus) { dbStatus[_dbStatusID.ordinal()] = _dbStatus; }
+
+    public int getDbStatus(DbStatusID _dbStatusID) {
+        return dbStatus[_dbStatusID.ordinal()];
+    }
+
+    public void setSpecialAction(SpecialAction _specialAction) { specialAction = _specialAction; }
+    public SpecialAction getSpecialAction() { return specialAction; }
+    public int getSpecialActionWidth() { return specialActionWidth; }
+    public int getSpecialActionPeriod() { return specialActionPeriod; }
+    public void setSpecialActionWidth(int _specialActionWidth) { specialActionWidth = _specialActionWidth; }
+    public void setSpecialActionPeriod(int _specialActionPeriod) { specialActionPeriod = _specialActionPeriod; }
+
+
 }
