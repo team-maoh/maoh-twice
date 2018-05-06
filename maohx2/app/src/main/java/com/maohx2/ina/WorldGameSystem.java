@@ -13,6 +13,7 @@ import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.EquipmentInventrySaver;
 import com.maohx2.ina.Text.ListBoxAdmin;
+import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
@@ -33,6 +34,7 @@ import com.maohx2.kmhanko.itemdata.GeoObjectDataAdmin;
 import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 import com.maohx2.kmhanko.itemshop.ItemShopAdmin;
 import com.maohx2.kmhanko.effect.*;
+import com.maohx2.kmhanko.plate.BackPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import java.util.ArrayList;
@@ -183,6 +185,8 @@ public class WorldGameSystem {
 
         backGround = graphic.searchBitmap("firstBackground");
 
+        //TODO かり。戻るボタン
+        initBackPlate();
     }
 
 
@@ -220,6 +224,8 @@ public class WorldGameSystem {
             equipmentInventry.updata();
             expendItemInventry.updata();
             palette_admin.update(false);
+
+            backPlateGroup.update();
         }
 
 
@@ -250,6 +256,8 @@ public class WorldGameSystem {
             expendItemInventry.draw();
             palette_admin.draw();
             world_user_interface.draw();
+
+            backPlateGroup.draw();
         }
 
         text_box_admin.draw();
@@ -257,6 +265,27 @@ public class WorldGameSystem {
 
         graphic.draw();
     }
+
+    //TODO 仮。もどるボタン
+    PlateGroup<BackPlate> backPlateGroup;
+    private void initBackPlate() {
+        backPlateGroup = new PlateGroup<BackPlate>(
+                new BackPlate[] {
+                        new BackPlate(
+                                graphic, world_user_interface, worldModeAdmin
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //戻るボタンが押された時の処理
+                                worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.STOP);
+                                worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
+                            }
+                        }
+                }
+        );
+    }
+
+
 }
 
 /*
