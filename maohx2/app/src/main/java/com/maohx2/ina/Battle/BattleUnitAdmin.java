@@ -31,6 +31,8 @@ import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.maohx2.ina.Battle.BattleRockCreater;
+
 // text
 import android.graphics.Color;
 import com.maohx2.ina.Text.PlateGroup;
@@ -43,6 +45,12 @@ import com.maohx2.ina.Constants.POPUP_WINDOW;
 
 //BattleUnitを一括管理するクラス
 public class BattleUnitAdmin {
+
+    public enum MODE {
+            BATTLE, MINING
+    }
+
+    MODE mode;
 
     BattleUserInterface battle_user_interface;
     BattleUnit[] battle_units = new BattleUnit[BATTLE_UNIT_MAX];
@@ -70,10 +78,13 @@ public class BattleUnitAdmin {
     boolean first_attack_frag;
     int attack_count;
 
+    PlayerStatus playerStatus;
+
     //by kmhanko BattleUnitDataAdmin追加
     public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage, MyDatabaseAdmin _databaseAdmin, MapPlateAdmin _map_plate_admin, TextBoxAdmin _textBoxAdmin) {
         //引数の代入
         graphic = _graphic;
+        BattleRockCreater.setGraphic(graphic);
         battle_user_interface = _battle_user_interface;
         battle_activity = _battle_activity;
         battleUnitDataAdmin = _battleUnitDataAdmin;
@@ -86,6 +97,8 @@ public class BattleUnitAdmin {
         textBoxAdmin = _textBoxAdmin;
         initResultTextBox();
         initResultButton();
+
+        playerStatus = _playerStatus;
 
         //by kmhanko
         // *** equipItemDataCreaterのインスタンス化 ***
@@ -141,11 +154,26 @@ public class BattleUnitAdmin {
         }
         */
 
-        //TODO 仮。プレイヤーデータのコンバート
-        setPlayer(_playerStatus);
+    }
 
-        //TODO 仮。敵の生成。本当はここじゃなくて戦闘画面に移動する画面エフェクト的な奴を処理した後とかに呼ぶとかする
-        //spawnEnemy();
+    //by kmhanko
+    public void reset(MODE _mode) {
+        mode = _mode;
+
+        //毎戦闘開始時に、前回の戦闘でのゴミなどを消す処理を行う
+
+        //プレイヤーデータのコンバート
+        setPlayer(playerStatus);
+
+        //TODO タッチマーカー残骸を消す
+
+        if (mode == MODE.BATTLE) {
+            spawnEnemy();
+        }
+
+        if (mode == MODE.MINING) {
+            spawnRock();
+        }
     }
 
     //by kmhanko
@@ -154,7 +182,7 @@ public class BattleUnitAdmin {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (!battle_units[i].isExist()) {
                 BattleBaseUnitData tempBattleBaseUnitData = battleUnitDataAdmin.getBattleUnitDataNum(enemyName);
-                battle_units[i].setBattleUnitData(tempBattleBaseUnitData, repeatCount, i);//TODO: iはそのうち消す
+                battle_units[i].setBattleUnitDataEnemy(tempBattleBaseUnitData, repeatCount);
                 return i;
             }
         }
@@ -162,9 +190,8 @@ public class BattleUnitAdmin {
     }
 
     public void setPlayer(PlayerStatus playerStatus) {
-        //TODO
         playerStatus.calcStatus();
-        //battle_units[0].setBattleUnitData(playerStatus.makeBattleDungeonUnitData());
+        battle_units[0].setBattleUnitDataPlayer(playerStatus.makeBattleDungeonUnitData());//TODO なぜかコメントアウトされてた
     }
 
     public void spawnEnemy() {
@@ -182,6 +209,26 @@ public class BattleUnitAdmin {
         //setBattleUnitData("e103-0", 0);
         //setBattleUnitData("e94-3", 0);
         //setBattleUnitData("e83-1", 0);
+    }
+
+    public void spawnRock() {
+        //GeoMining画面のスポーン用。岩を出現させる
+
+        //TODO:そのダンジョンに出現する敵のデータからジオを決める
+        for (int i = 0 ; i < 5; i ++) {
+            setRockUnitData(10000, 100);
+        }
+    }
+
+    public int setRockUnitData(int hp, int defence) {
+        for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
+            if (!battle_units[i].isExist()) {
+                BattleBaseUnitData tempBBUD = BattleRockCreater.getBattleBaseUnitData(hp, defence);
+                battle_units[i].setBattleUnitDataRock(tempBBUD);
+                return i;
+            }
+        }
+        return -1;
     }
 
 
@@ -257,7 +304,6 @@ public class BattleUnitAdmin {
             }
         }
 
-
         //敵の更新と攻撃処理
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (battle_units[i].isExist() == true ) {
@@ -285,11 +331,12 @@ public class BattleUnitAdmin {
         if(result_flag == true){
             //戦闘が終了した時
             // by kmhanko
-            getDropItem();
+            if (mode == MODE.BATTLE) {
+                getDropItem();
+            }
 
-            //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
+            //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP); 戦闘終了はボタン押下時に変更
         }
-
 
         //text関係
         resultButtonCheck();
@@ -312,6 +359,10 @@ public class BattleUnitAdmin {
         for (int i = 0; i < BATTLE_UNIT_MAX; i++) {
 
             if (battle_units[i].isExist() == true ) {
+                if ( i == 0 && mode == MODE.MINING) {
+                    continue;
+                    //TODO HPゲージを非表示にしているが、あまりよく無い書き方
+                }
                 battle_units[i].draw();
             }
         }
