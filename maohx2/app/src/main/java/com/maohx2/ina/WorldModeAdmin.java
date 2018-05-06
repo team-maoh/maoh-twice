@@ -1,23 +1,38 @@
 package com.maohx2.ina;
 
+import com.maohx2.ina.Constants.GAMESYSTEN_MODE.WORLD_MODE;
 import com.maohx2.ina.Constants.Mode.ACTIVATE;
-import com.maohx2.kmhanko.GeoPresent.GeoPresentManager;
-import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
-import com.maohx2.kmhanko.geonode.GeoSlotAdminManager;
-import com.maohx2.kmhanko.itemshop.ItemShopAdmin;
+
 
 /**
  * Created by ina on 2018/02/04.
  */
 
 public class WorldModeAdmin {
-//TODO いなと相談
-    GeoSlotAdminManager geoSlotAdminManager;
-    DungeonSelectManager dungeonSelectManager;
-    ItemShopAdmin itemShopAdmin;
-    GeoPresentManager geoPresentManager;
-
     // *** takano ***
+
+    WORLD_MODE mode;
+
+    public WorldModeAdmin() {
+        initWorld();
+    }
+
+    /*
+    public void initWorld() {
+        mode = WORLD_MODE.DUNGEON_SELECT;
+    }
+    */
+
+    public WORLD_MODE getMode() {
+        return mode;
+    }
+
+    public void setMode(WORLD_MODE mode) {
+        this.mode = mode;
+    }
+
+
+
 
     private ACTIVATE worldMap;
     private ACTIVATE geoSlotMap;
@@ -25,14 +40,6 @@ public class WorldModeAdmin {
     private ACTIVATE present;
     private ACTIVATE equip;
 
-/*
-    public WorldModeAdmin(GeoSlotAdminManager _geoSlotAdminManager, DungeonSelectManager _dungeonSelectManager, ItemShopAdmin _itemShopAdmin, GeoPresentManager _geoPresentManager) {
-        geoSlotAdminManager = _geoSlotAdminManager;
-        dungeonSelectManager = _dungeonSelectManager;
-        itemShopAdmin = _itemShopAdmin;
-        geoPresentManager = _geoPresentManager;
-    }
-*/
 
     public void initWorld() {
         worldMap = ACTIVATE.ACTIVE;
@@ -91,6 +98,7 @@ public class WorldModeAdmin {
             return false;
         }
     }
+
 
     // *** takano ここまで ***
 
