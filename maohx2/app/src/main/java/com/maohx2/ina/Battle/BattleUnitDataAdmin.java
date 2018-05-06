@@ -5,8 +5,6 @@ import com.maohx2.ina.Constants.Item.*;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
-import com.maohx2.ina.Battle.BattleBaseUnitData.DbStatusID;
-import com.maohx2.ina.Battle.BattleBaseUnitData.ActionID;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +37,6 @@ public class BattleUnitDataAdmin {
     //データベースを読み込んで画像をbitmap_dataに保存する
     private void loadBattleUnitData() {
 
-        /*
         //by kmhanko String → Integer
         List<String> name = new ArrayList<String>();
         List<Integer> attack_frame = new ArrayList<Integer>();
@@ -66,21 +63,6 @@ public class BattleUnitDataAdmin {
         List<Integer> hp_bar_length = new ArrayList<Integer>();
         List<Integer> radius = new ArrayList<Integer>();
 
-        //特殊行動　バリア、カウンター、ステルス
-        //List<String> special_action_name = new ArrayList<String>();
-        List<Integer> special_action_period = new ArrayList<Integer>();
-        List<Integer> special_action_width = new ArrayList<Integer>();
-
-        //攻撃確率　通常攻撃、毒、まひ、ストップ、盲目、呪い
-        List<Float> normal_attack = new ArrayList<Float>();
-        List<Float> poison = new ArrayList<Float>();
-        List<Float> paralysys = new ArrayList<Float>();
-        List<Float> stop = new ArrayList<Float>();
-        List<Float> blindness = new ArrayList<Float>();
-        List<Float> curse = new ArrayList<Float>();
-        */
-
-
         List<String>[] drop_item = new ArrayList[Constants.Item.DROP_NUM];
         for (int i = 0; i<drop_item.length; i++) {
             drop_item[i] = new ArrayList<String>();
@@ -90,41 +72,30 @@ public class BattleUnitDataAdmin {
             drop_item_percent[i] = new ArrayList<Double>();
         }
 
-        List<String> name = battle_unit_data_database.getString("battle_unit_data", "name", null);
-        List<Integer> attack_frame = battle_unit_data_database.getInt("battle_unit_data", "attack_frame", null);
-        List<Integer> initial_hp = battle_unit_data_database.getInt("battle_unit_data", "initial_hp", null);
-        List<Integer> initial_attack = battle_unit_data_database.getInt("battle_unit_data", "initial_attack", null);
-        List<Integer> initial_defence = battle_unit_data_database.getInt("battle_unit_data", "initial_defence", null);
-        List<Integer> initial_luck = battle_unit_data_database.getInt("battle_unit_data", "initial_luck", null);
-        List<Integer> initial_speed = battle_unit_data_database.getInt("battle_unit_data", "initial_speed", null);
-        List<Integer> delta_hp = battle_unit_data_database.getInt("battle_unit_data", "delta_hp", null);
-        List<Integer> delta_attack = battle_unit_data_database.getInt("battle_unit_data", "delta_attack", null);
-        List<Integer> delta_defence = battle_unit_data_database.getInt("battle_unit_data", "delta_defence", null);
-        List<Integer> delta_luck = battle_unit_data_database.getInt("battle_unit_data", "delta_luck", null);
-        List<Integer> delta_speed = battle_unit_data_database.getInt("battle_unit_data", "delta_speed", null);
-        List<Integer> initial_bonus_hp = battle_unit_data_database.getInt("battle_unit_data", "initial_bonus_hp", null);
-        List<Integer> initial_bonus_attack = battle_unit_data_database.getInt("battle_unit_data", "initial_bonus_attack", null);
-        List<Integer> initial_bonus_defence = battle_unit_data_database.getInt("battle_unit_data", "initial_bonus_defence", null);
-        List<Integer> initial_bonus_speed = battle_unit_data_database.getInt("battle_unit_data", "initial_bonus_speed", null);
-        List<Integer> delta_bonus_hp = battle_unit_data_database.getInt("battle_unit_data", "delta_bonus_hp", null);
-        List<Integer> delta_bonus_attack = battle_unit_data_database.getInt("battle_unit_data", "delta_bonus_attack", null);
-        List<Integer> delta_bonus_defence = battle_unit_data_database.getInt("battle_unit_data", "delta_bonus_defence", null);
-        List<Integer> delta_bonus_speed = battle_unit_data_database.getInt("battle_unit_data", "delta_bonus_speed", null);
+        name = battle_unit_data_database.getString("battle_unit_data", "name", null);
+        attack_frame = battle_unit_data_database.getInt("battle_unit_data", "attack_frame", null);
+        initial_hp = battle_unit_data_database.getInt("battle_unit_data", "initial_hp", null);
+        initial_attack = battle_unit_data_database.getInt("battle_unit_data", "initial_attack", null);
+        initial_defence = battle_unit_data_database.getInt("battle_unit_data", "initial_defence", null);
+        initial_luck = battle_unit_data_database.getInt("battle_unit_data", "initial_luck", null);
+        initial_speed = battle_unit_data_database.getInt("battle_unit_data", "initial_speed", null);
+        delta_hp = battle_unit_data_database.getInt("battle_unit_data", "delta_hp", null);
+        delta_attack = battle_unit_data_database.getInt("battle_unit_data", "delta_attack", null);
+        delta_defence = battle_unit_data_database.getInt("battle_unit_data", "delta_defence", null);
+        delta_luck = battle_unit_data_database.getInt("battle_unit_data", "delta_luck", null);
+        delta_speed = battle_unit_data_database.getInt("battle_unit_data", "delta_speed", null);
+        initial_bonus_hp = battle_unit_data_database.getInt("battle_unit_data", "initial_bonus_hp", null);
+        initial_bonus_attack = battle_unit_data_database.getInt("battle_unit_data", "initial_bonus_attack", null);
+        initial_bonus_defence = battle_unit_data_database.getInt("battle_unit_data", "initial_bonus_defence", null);
+        initial_bonus_speed = battle_unit_data_database.getInt("battle_unit_data", "initial_bonus_speed", null);
+        delta_bonus_hp = battle_unit_data_database.getInt("battle_unit_data", "delta_bonus_hp", null);
+        delta_bonus_attack = battle_unit_data_database.getInt("battle_unit_data", "delta_bonus_attack", null);
+        delta_bonus_defence = battle_unit_data_database.getInt("battle_unit_data", "delta_bonus_defence", null);
+        delta_bonus_speed = battle_unit_data_database.getInt("battle_unit_data", "delta_bonus_speed", null);
 
-        List<Integer> hp_bar_offset = battle_unit_data_database.getInt("battle_unit_data", "hp_bar_offset", null);
-        List<Integer> hp_bar_length = battle_unit_data_database.getInt("battle_unit_data", "hp_bar_length", null);
-        List<Integer> radius = battle_unit_data_database.getInt("battle_unit_data", "hit_radius", null);
-
-        List<String> special_action_name = battle_unit_data_database.getString("battle_unit_data", "special_action_name", null);
-        List<Integer> special_action_period = battle_unit_data_database.getInt("battle_unit_data", "special_action_period", null);
-        List<Integer> special_action_width = battle_unit_data_database.getInt("battle_unit_data", "special_action_width", null);
-
-        List<Float> normal_attack = battle_unit_data_database.getFloat("battle_unit_data", "normal_attack", null);
-        List<Float> poison = battle_unit_data_database.getFloat("battle_unit_data", "poison", null);
-        List<Float> paralysis = battle_unit_data_database.getFloat("battle_unit_data", "paralysis", null);
-        List<Float> stop = battle_unit_data_database.getFloat("battle_unit_data", "stop", null);
-        List<Float> blindness = battle_unit_data_database.getFloat("battle_unit_data", "blindness", null);
-        List<Float> curse = battle_unit_data_database.getFloat("battle_unit_data", "curse", null);
+        hp_bar_offset = battle_unit_data_database.getInt("battle_unit_data", "hp_bar_offset", null);
+        hp_bar_length = battle_unit_data_database.getInt("battle_unit_data", "hp_bar_length", null);
+        radius = battle_unit_data_database.getInt("battle_unit_data", "hit_radius", null);
 
         for (int i = 0; i < drop_item.length; i++) {
             drop_item[i] = battle_unit_data_database.getString("battle_unit_data", "drop_item0" + String.valueOf(i + 1), null);
@@ -147,36 +118,26 @@ public class BattleUnitDataAdmin {
                 tempBattleBaseUnitData.setRadius(radius.get(i));
             }
 
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.AttackFlame, attack_frame.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.InitialHP, initial_hp.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.InitialAttack, initial_attack.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.InitialDefence, initial_defence.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.InitialLuck, initial_luck.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.InitialSpeed, initial_speed.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.DeltaHP, delta_hp.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.DeltaAttack, delta_attack.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.DeltaDefence, delta_defence.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.DeltaLuck, delta_luck.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.DeltaSpeed, delta_speed.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.InitialBonusHP, initial_bonus_hp.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.InitialBonusAttack, initial_bonus_attack.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.InitialBonusDefence, initial_bonus_defence.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.InitialBonusSpeed, initial_bonus_speed.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.DeltaBonusHP, delta_bonus_hp.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.DeltaBonusAttack, delta_bonus_attack.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.DeltaBonusDefence, delta_bonus_defence.get(i));
-            tempBattleBaseUnitData.setDbStatus(DbStatusID.DeltaBonusSpeed, delta_bonus_speed.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.AttackFlame, attack_frame.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialHP, initial_hp.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialAttack, initial_attack.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialDefence, initial_defence.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialLuck, initial_luck.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialSpeed, initial_speed.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaHP, delta_hp.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaAttack, delta_attack.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaDefence, delta_defence.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaLuck, delta_luck.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaSpeed, delta_speed.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialBonusHP, initial_bonus_hp.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialBonusAttack, initial_bonus_attack.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialBonusDefence, initial_bonus_defence.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialBonusSpeed, initial_bonus_speed.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusHP, delta_bonus_hp.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusAttack, delta_bonus_attack.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusDefence, delta_bonus_defence.get(i));
+            tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.DeltaBonusSpeed, delta_bonus_speed.get(i));
 
-            tempBattleBaseUnitData.setSpecialAction(special_action_name.get(i));
-            tempBattleBaseUnitData.setSpecialActionPeriod(special_action_period.get(i));
-            tempBattleBaseUnitData.setSpecialActionWidth(special_action_width.get(i));
-
-            tempBattleBaseUnitData.setActionRate(ActionID.NORMAL_ATTACK, normal_attack.get(i));
-            tempBattleBaseUnitData.setActionRate(ActionID.POISON, poison.get(i));
-            tempBattleBaseUnitData.setActionRate(ActionID.PARALYSIS, paralysis.get(i));
-            tempBattleBaseUnitData.setActionRate(ActionID.STOP, stop.get(i));
-            tempBattleBaseUnitData.setActionRate(ActionID.BLINDNESS, blindness.get(i));
-            tempBattleBaseUnitData.setActionRate(ActionID.CURSE, curse.get(i));
 
             for (int j = 0; j < drop_item.length; j++ ) {
                 if (drop_item[j].get(i) == null) {

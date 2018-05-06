@@ -20,7 +20,6 @@ public class BattleEnemy extends BattleUnit {
     int wait_frame;
     int attack_frame;
 
-
     public BattleEnemy(Graphic _graphic){
         super(_graphic);
         position_x = 0;
@@ -51,11 +50,7 @@ public class BattleEnemy extends BattleUnit {
     protected void statusInit() {
         super.statusInit();
         attack_frame = battleDungeonUnitData.getStatus(ATTACK_FRAME);
-        if (attack_frame > 0 ) {
-            wait_frame = rnd.nextInt((int) (getAttackFrame() / 2));
-        } else {
-            wait_frame = 0;
-        }
+        wait_frame = rnd.nextInt((int)(getAttackFrame()/2));
     }
 
     @Override
@@ -125,11 +120,8 @@ public class BattleEnemy extends BattleUnit {
 
         paint.setARGB(255,0,255,0);
         graphic.bookingDrawRect((int)(position_x-radius*0.8), (int)(position_y+radius*0.8), (int)(((double)position_x-(double)radius*0.8+(double)radius*1.6*((double)hit_point/(double)max_hit_point))), (int)(position_y+radius*0.9),paint);
-
-        if (attack_frame > 0) {
-            paint.setARGB(255, 255, 0, 0);
-            graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 0.9), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) wait_frame / (double) attack_frame))), (int) (position_y + radius * 1.0), paint);
-        }
+        paint.setARGB(255,255,0,0);
+        graphic.bookingDrawRect((int)(position_x-radius*0.8), (int)(position_y+radius*0.9), (int)(((double)position_x-(double)radius*0.8+(double)radius*1.6*((double)wait_frame/(double)attack_frame))), (int)(position_y+radius*1.0),paint);
 
     }
 

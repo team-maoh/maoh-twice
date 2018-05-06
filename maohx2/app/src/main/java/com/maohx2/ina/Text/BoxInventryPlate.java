@@ -68,15 +68,12 @@ public class BoxInventryPlate extends BoxPlate {
                 switch(inventry_data.getItemData().getItemKind()){
                     case GEO:
                         graphic.bookingDrawText(inventry_data.getItemData().getName(), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1.7 + (int) ((down - up) * (1.0 / 5))), (int) (down - (down - up) * (1.0 / 5)), text_paint);
-                        break;
 
                     case EQUIPMENT:
                         graphic.bookingDrawText(inventry_data.getItemData().getName()+" +"+String.valueOf(((EquipmentItemData)(inventry_data.getItemData())).getAttack()), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1.7 + (int) ((down - up) * (1.0 / 5))), (int) (down - (down - up) * (1.0 / 5)), text_paint);
-                        break;
 
                     case EXPEND:
                         graphic.bookingDrawText(inventry_data.getItemData().getName(), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1.7 + (int) ((down - up) * (1.0 / 5))), (int) (down - (down - up) * (1.0 / 5)), text_paint);
-                        break;
                 }
 
                 if((inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT) || (inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.GEO)) {
