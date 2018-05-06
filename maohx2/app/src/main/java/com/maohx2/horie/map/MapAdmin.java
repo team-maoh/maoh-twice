@@ -12,7 +12,9 @@ import com.maohx2.fuusya.MapPlayer;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
+import java.util.List;
 import java.util.Random;
 
 import static android.content.Context.SYSTEM_HEALTH_SERVICE;
@@ -82,6 +84,8 @@ public class MapAdmin {
     int time = 0;//アニメーションタイミング用
     int now_floor_num = 0;//現在のフロア階層
     int boss_floor_num = 3;//ボスフロアの階層
+    int mine_min_num;
+    int mine_max_num;
 
     Point offset = new Point(0, 0);
     Point start_point = new Point(0, 0);
@@ -96,6 +100,7 @@ public class MapAdmin {
     SurfaceHolder holder;
     MapPlayer map_player;
     MapObjectAdmin map_object_admin;
+    DungeonData dungeon_data;
 
     //auto_tile用
     AutoTile auto_tile_wall = new AutoTile();
@@ -148,10 +153,27 @@ public class MapAdmin {
         return magnification;
     }
 
-    public MapAdmin(Graphic m_graphic, MapObjectAdmin m_map_object_admin) {
+    //TODO：ダンジョンデータの受け渡しがちゃんと出来ているか確認する
+    public MapAdmin(Graphic m_graphic, MapObjectAdmin m_map_object_admin, DungeonData m_dungeon_data) {
         graphic = m_graphic;
         map_object_admin = m_map_object_admin;
         map_player = map_object_admin.getPlayer();
+        dungeon_data = m_dungeon_data;
+        //データベースからマップ情報の読み込み
+        map_size.set(dungeon_data.getMap_size_x(), dungeon_data.getMap_size_y());
+        boss_floor_num = dungeon_data.getFloor_num();
+        mine_min_num = dungeon_data.getMine_min_num();
+        mine_max_num = dungeon_data.getMine_max_num();
+        String floor_tile_name = dungeon_data.getFloor_tile_name();
+        String wall_tile_name = dungeon_data.getWall_tile_name();
+        String sidewall_tile_name = dungeon_data.getSidewall_tile_name();
+        /*デバッグ*/
+//        System.out.println("堀江　mapsize_x = "+dungeon_data.getMap_size_x());
+//        System.out.println("堀江　mapsize_y = "+dungeon_data.getMap_size_y());
+//        System.out.println("堀江　mine_max_num = "+dungeon_data.getMine_max_num());
+//        System.out.println("堀江　mine_min_num = "+dungeon_data.getMine_min_num());
+//        System.out.println("堀江　dungeon_name = "+dungeon_data.getDungeon_name());
+//        System.out.println("堀江　floortile_name = "+dungeon_data.getFloor_tile_name());
         map_data = new Chip[map_size.x][map_size.y];
         for (int i = 0; i < map_size.x; i++) {
             for (int j = 0; j < map_size.y; j++) {
@@ -341,7 +363,7 @@ public class MapAdmin {
         section_admin.updateMapData(map_data);
         section_admin.connectRooms(map_data);
         section_admin.makeStairs(map_data);
-        createMine(3, 5);
+        createMine(mine_min_num, mine_max_num);
         //map_object_adminに採掘場所の座標を渡す
 //        map_object_admin.getMinePoint(mine_point);
 

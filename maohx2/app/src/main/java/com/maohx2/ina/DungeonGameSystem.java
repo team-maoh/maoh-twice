@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import com.maohx2.fuusya.MapObjectAdmin;
 import com.maohx2.fuusya.MapPlateAdmin;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.horie.map.DungeonDataAdmin;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
@@ -38,6 +39,7 @@ public class DungeonGameSystem {
     BattleUnitAdmin battle_unit_admin;
     TextBoxAdmin text_box_admin;
     ListBoxAdmin list_box_admin;
+    DungeonDataAdmin dungeon_data_admin;
 
     // by kmhanko
     BattleUnitDataAdmin battleUnitDataAdmin;
@@ -58,7 +60,9 @@ public class DungeonGameSystem {
         dungeonModeManage = new DungeonModeManage();
         map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange);
         map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_plate_admin, dungeonModeManage);
-        map_admin = new MapAdmin(graphic, map_object_admin);
+
+        dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
+        map_admin = new MapAdmin(graphic, map_object_admin, dungeon_data_admin.getDungeon_data().get(1));
 //        map_object_admin.getCamera(map_admin.getCamera());
         //map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin,this, dungeonModeManage);
         paint = new Paint();
