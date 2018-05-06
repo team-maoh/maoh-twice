@@ -17,6 +17,7 @@ public class EquipmentItemData extends ItemData{
     int attack;
     int defence;
     int palettePosition;
+    int dungeonUseNum;
 
     public EquipmentItemData(){
         equipment_kind = EQUIPMENT_KIND.AX;
@@ -28,6 +29,8 @@ public class EquipmentItemData extends ItemData{
         attack = 100;
         defence = 50;
         palettePosition = 0;
+
+        dungeonUseNum = 0;
     }
 
 
@@ -59,4 +62,7 @@ public class EquipmentItemData extends ItemData{
 
     public int getPalettePosition() {return palettePosition;}
     public void setPalettePosition(int _palettePosition) {palettePosition = _palettePosition;}
+
+    public int getDungeonUseNum() {return dungeonUseNum;}
+    public void setDungeonUseNum(int _dungeonUseNum) {dungeonUseNum = _dungeonUseNum;}
 }

@@ -40,6 +40,9 @@ abstract public class BattleUnit {
 
     //by kmhanko
     protected BattleDungeonUnitData battleDungeonUnitData;
+    protected boolean specialActionFlag;
+
+
 
 
     //コンストラクタ
@@ -207,5 +210,23 @@ abstract public class BattleUnit {
     public int update(){return 0;}
     public void draw(){}
 
+
+    //** enemy用
+    float[] actionRate = new float[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
+    BattleBaseUnitData.SpecialAction specialAction;
+    int specialActionPeriod;
+    int specialActionWidth;
+    public void setSpecialAction(BattleBaseUnitData.SpecialAction _specialAction) { specialAction = _specialAction; }
+    public BattleBaseUnitData.SpecialAction getSpecialAction() { return specialAction; }
+    public int getSpecialActionWidth() { return specialActionWidth; }
+    public int getSpecialActionPeriod() { return specialActionPeriod; }
+    public void setSpecialActionWidth(int _specialActionWidth) { specialActionWidth = _specialActionWidth; }
+    public void setSpecialActionPeriod(int _specialActionPeriod) { specialActionPeriod = _specialActionPeriod; }
+    public float[] getActionRate() { return actionRate; }
+    public void setActionRate(BattleBaseUnitData.ActionID _actionRateID, float _actionRate) { actionRate[_actionRateID.ordinal()] = _actionRate; }
+    public float getActionRate(BattleBaseUnitData.ActionID _actionRateID) { return actionRate[_actionRateID.ordinal()]; }
+
+    public boolean isSpecialAction(){return specialActionFlag;}
+    public void isSpecialAction(boolean _specialActionFlag){specialActionFlag = _specialActionFlag;}
 
 }

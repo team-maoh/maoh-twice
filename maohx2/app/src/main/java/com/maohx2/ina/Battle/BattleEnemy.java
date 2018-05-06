@@ -17,8 +17,9 @@ public class BattleEnemy extends BattleUnit {
     double position_y;
     double radius;
     int uiid;
-    int wait_frame;
+    int attackCount;
     int attack_frame;
+    int specialActionCount;
 
 
     public BattleEnemy(Graphic _graphic){
@@ -26,6 +27,8 @@ public class BattleEnemy extends BattleUnit {
         position_x = 0;
         position_y = 0;
         radius = 0;
+        specialActionCount = 0;
+        specialActionFlag = false;
     }
 
     /*
@@ -51,10 +54,11 @@ public class BattleEnemy extends BattleUnit {
     protected void statusInit() {
         super.statusInit();
         attack_frame = battleDungeonUnitData.getStatus(ATTACK_FRAME);
+
         if (attack_frame > 0 ) {
-            wait_frame = rnd.nextInt((int) (getAttackFrame() / 2));
+            attackCount = rnd.nextInt((int) (getAttackFrame() / 2));
         } else {
-            wait_frame = 0;
+            attackCount = 0;
         }
     }
 
@@ -63,7 +67,8 @@ public class BattleEnemy extends BattleUnit {
 
 
         //時間経過
-        wait_frame++;
+        attackCount++;
+        specialActionCount++;
         //attack_flag = false;
 
         position_x += dx*speed;
@@ -106,12 +111,21 @@ public class BattleEnemy extends BattleUnit {
             move_num = 0;
         }
 
-        //attackFlameに達したらUnitを対象として攻撃
-        if(wait_frame == attack_frame){
-            wait_frame = 0;
-            return attack;
+
+        if(specialActionCount == specialActionWidth){
+            specialActionFlag = false;
         }
 
+        if(specialActionCount == specialActionPeriod){
+            specialActionCount = 0;
+            specialActionFlag = true;
+        }
+
+        //attackFlameに達したらUnitを対象として攻撃
+        if(attackCount == attack_frame){
+            attackCount = 0;
+            return attack;
+        }
 
         return 0;
     }
@@ -119,16 +133,35 @@ public class BattleEnemy extends BattleUnit {
     @Override
     public void draw(){
 
-        graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y);
-        //graphic.bookingDrawCircle(position_x, position_y, radius);
-        graphic.bookingDrawText(String.valueOf(hit_point),(int)position_x,(int)position_y);
+        //graphic.bookingDrawText(String.valueOf(hit_point),(int)position_x,(int)position_y);
+
+        if(specialActionFlag == true) {
+
+            switch (specialAction) {
+                case BARRIER:
+                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y);
+                    paint.setARGB(100,0,0,255);
+                    graphic.bookingDrawCircle((int)position_x, (int)position_y, (int)radius, paint);
+                    break;
+                case COUNTER:
+                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y);
+                    paint.setARGB(100,255,100,0);
+                    graphic.bookingDrawCircle((int)position_x, (int)position_y, (int)radius, paint);
+                    break;
+                case STEALTH:
+                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1,1,0,100,false);
+                    break;
+            }
+        }else{
+            graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y);
+        }
 
         paint.setARGB(255,0,255,0);
         graphic.bookingDrawRect((int)(position_x-radius*0.8), (int)(position_y+radius*0.8), (int)(((double)position_x-(double)radius*0.8+(double)radius*1.6*((double)hit_point/(double)max_hit_point))), (int)(position_y+radius*0.9),paint);
 
         if (attack_frame > 0) {
             paint.setARGB(255, 255, 0, 0);
-            graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 0.9), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) wait_frame / (double) attack_frame))), (int) (position_y + radius * 1.0), paint);
+            graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 0.9), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) attackCount / (double) attack_frame))), (int) (position_y + radius * 1.0), paint);
         }
 
     }
@@ -173,11 +206,11 @@ public class BattleEnemy extends BattleUnit {
 
     @Override
     public int getWaitFrame() {
-        return wait_frame;
+        return attackCount;
     }
     @Override
     public void setWaitFrame(int _wait_frame) {
-        wait_frame = _wait_frame;
+        attackCount = _wait_frame;
     }
     @Override
     public double getAttackFrame() {

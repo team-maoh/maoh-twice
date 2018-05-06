@@ -120,4 +120,12 @@ public class PaletteAdmin {
         palettes[1].setPaletteCenter(null);
     }
 
+    public void resetDungeonUseNum(){
+        for(int i = 0; i < 8; i++) {
+            if(palettes[0].getItemData(i) != null) {
+                ((EquipmentItemData) (palettes[0].getItemData(i))).setDungeonUseNum(((EquipmentItemData) (palettes[0].getItemData(i))).getUseNum());
+            }
+        }
+    }
+
 }

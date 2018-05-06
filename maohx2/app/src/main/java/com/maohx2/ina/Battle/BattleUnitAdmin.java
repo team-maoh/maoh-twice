@@ -130,11 +130,7 @@ public class BattleUnitAdmin {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             battle_units[i] = new BattleEnemy(graphic);
         }
-        /*
-        for (int i = 0; i < BATTLE_UNIT_MAX; i++) {
-            battle_units[i].init();
-        }
-        */
+
         for (int i = 0; i < MAKER_NUM; i++) {
             touch_markers[i] = new TouchMarker(graphic);
         }
@@ -144,19 +140,7 @@ public class BattleUnitAdmin {
         calc_unit_status.init();
 
 
-        /*
-        //削除 仮に敵を適当な位置に配置する setBattleUnitDataに入れた
-        for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
-            battle_units[i].setPositionX(200 + 200 * (i - 1));
-            battle_units[i].setPositionY(300);
-            battle_units[i].setRadius(50);
-        }
-
-        //削除 仮に敵にUIのタッチIDを割り振る setBattleUnitDataに入れた
-        for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
-            battle_units[i].setUIID(battle_user_interface.setCircleTouchUI(battle_units[i].getPositionX(), battle_units[i].getPositionY(), battle_units[i].getRadius()));
-        }
-        */
+        palette_admin.resetDungeonUseNum();
 
     }
 
@@ -209,17 +193,19 @@ public class BattleUnitAdmin {
         //TODO 仮。本当はダンジョンのデータなどを引数にして出現する敵をランダムなどで決定する
 
         //一覧
-        setBattleUnitData("m014", 0);
-        setBattleUnitData("e54-3", 0);
-        setBattleUnitData("e01-0", 0);
-        //setBattleUnitData("e74-0", 0);
-        //setBattleUnitData("m003-2", 0);
-        //setBattleUnitData("e96-0", 0);
-        //setBattleUnitData("e27", 0);
-        //setBattleUnitData("m007", 0);
-        //setBattleUnitData("e103-0", 0);
-        //setBattleUnitData("e94-3", 0);
-        //setBattleUnitData("e83-1", 0);
+        // setBattleUnitData("m014", 0); //通常攻撃のみ
+        //setBattleUnitData("e54-3", 0); //毒攻撃のみ
+        //setBattleUnitData("e01-0", 0); //麻痺のみ
+        //setBattleUnitData("e88-0", 0); //ストップのみ
+        //setBattleUnitData("e74-0", 0); //カウンター持ち　暗黒のみ
+        //setBattleUnitData("m003-2", 0); //呪いのみ
+        //setBattleUnitData("e96-0", 0); //ステルス持ち　行動いろいろ
+        //setBattleUnitData("e27", 0); //バリア持ち　行動いろいろ
+        //setBattleUnitData("m007", 0); //行動いろいろ
+        setBattleUnitData("e103-0", 0);//バリア持ち　行動いろいろ
+        setBattleUnitData("e83-1", 0);//カウンター持ち　行動いろいろ
+        setBattleUnitData("e94-3", 0);//ステルス持ち　行動いろいろ
+
     }
 
     public void spawnRock() {
@@ -259,17 +245,20 @@ public class BattleUnitAdmin {
             //プレイヤーの攻撃によるマーカーの設置
             if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
                 EquipmentItemData attack_equipment = palette_admin.getEquipmentItemData();
-                System.out.println("first_attack_flag:   " + first_attack_frag);
                 if(attack_equipment != null) {
-                    if ((first_attack_frag == false && attack_count >= attack_equipment.getTouchFrequency()) || (first_attack_frag == true && attack_count >= attack_equipment.getTouchFrequency() * attack_equipment.getAutoFrequencyRate())) {
-                        first_attack_frag = true;
-                        marker_flag = true;
-                        attack_count = 0;
-                        for (int i = 0; i < MAKER_NUM; i++) {
-                            if (touch_markers[i].isExist() == false) {
-                                //todo:attackの計算
-                                touch_markers[i].generate((int) touch_x, (int) touch_y, palette_admin.getEquipmentItemData().getRadius(), battle_units[0].getAttack() + palette_admin.getEquipmentItemData().getAttack(), palette_admin.getEquipmentItemData().getDecayRate());
-                                break;
+                    if(attack_equipment.getDungeonUseNum() > 0) {
+                        //最高攻撃頻度を上回っていないか
+                        if ((first_attack_frag == false && attack_count >= attack_equipment.getTouchFrequency()) || (first_attack_frag == true && attack_count >= attack_equipment.getTouchFrequency() * attack_equipment.getAutoFrequencyRate())) {
+                            attack_equipment.setDungeonUseNum(attack_equipment.getDungeonUseNum() - 1);
+                            first_attack_frag = true;
+                            marker_flag = true;
+                            attack_count = 0;
+                            for (int i = 0; i < MAKER_NUM; i++) {
+                                if (touch_markers[i].isExist() == false) {
+                                    //todo:attackの計算
+                                    touch_markers[i].generate((int) touch_x, (int) touch_y, palette_admin.getEquipmentItemData().getRadius(), battle_units[0].getAttack() + palette_admin.getEquipmentItemData().getAttack(), palette_admin.getEquipmentItemData().getDecayRate());
+                                    break;
+                                }
                             }
                         }
                     }
@@ -326,13 +315,14 @@ public class BattleUnitAdmin {
                         damage_rate = (1 - (float) defense_equipment.getDefence() / 100.0f);
                     }
 
-                    int heel_to_palyer = 0;
+                    int heel_to_player = 0;
                     if(palette_admin.checkSelectedExpendItemData() != null) {
-                        heel_to_palyer = battle_units[0].getHitPoint()*palette_admin.checkSelectedExpendItemData().getHp();
+                        heel_to_player = battle_units[0].getHitPoint()*palette_admin.checkSelectedExpendItemData().getHp();
                         palette_admin.deleteExpendItemData();
                     }
 
-                    int new_hp = battle_units[0].getHitPoint() - (int) (damage_to_player * damage_rate);
+                    int new_hp = battle_units[0].getHitPoint() - (int) (damage_to_player * damage_rate) + heel_to_player;
+                    if(new_hp > battle_units[0].getMaxHitPoint()){new_hp = battle_units[0].getMaxHitPoint();}
                     if (new_hp <= 0) {
                         //ゲームオーバー
                     }

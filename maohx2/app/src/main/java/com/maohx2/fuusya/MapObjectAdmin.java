@@ -27,7 +27,8 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 
 public class MapObjectAdmin {
 
-    int NUM_OF_ENEMY = 10;
+    //int NUM_OF_ENEMY = 10;
+    int NUM_OF_ENEMY = 100;
     int NUM_OF_ITEM = 10;// > 2
     int NUM_OF_TRAP = 1;
 

@@ -279,6 +279,8 @@ public class WorldGameSystem {
                                 //戻るボタンが押された時の処理
                                 worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
+                                expendItemInventry.save();
+                                equipmentInventry.save();
                             }
                         }
                 }
