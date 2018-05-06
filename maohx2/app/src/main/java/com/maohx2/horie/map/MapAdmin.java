@@ -79,11 +79,11 @@ public class MapAdmin {
     //int magnification = 30;
     //drawMap2用
 //    Point map_size = new Point(80, 50);//x : 左右幅, y : 上下幅
-    Point map_size = new Point(60, 40);//60, 40
+    Point map_size = new Point(0, 0);//60, 40
     int magnification = 64*4;//倍率
     int time = 0;//アニメーションタイミング用
     int now_floor_num = 0;//現在のフロア階層
-    int boss_floor_num = 3;//ボスフロアの階層
+    int boss_floor_num;//ボスフロアの階層
     int mine_min_num;
     int mine_max_num;
 
@@ -94,7 +94,7 @@ public class MapAdmin {
     Point map_offset = new Point(0, 0);
     Point room_point = new Point(0, 0);
     Point mine_point[];
-    Camera camera = new Camera(map_size, magnification);
+    Camera camera;// = new Camera(map_size, magnification);
     SectionAdmin section_admin;
     Canvas canvas;
     SurfaceHolder holder;
@@ -107,13 +107,13 @@ public class MapAdmin {
     AutoTile auto_tile_side_wall = new AutoTile();
     AutoTile auto_tile_cave_hole[] = new AutoTile[3];
     AutoTileAdmin auto_tile_admin;
-    boolean is_map_data_wall[][] = new boolean[map_size.x*2][map_size.y*2];//表示用に4分割されたmap_data
-    boolean is_map_data_sidewall[][] = new boolean[map_size.x*2][map_size.y*2];
+    boolean is_map_data_wall[][];// = new boolean[map_size.x*2][map_size.y*2];//表示用に4分割されたmap_data
+    boolean is_map_data_sidewall[][];// = new boolean[map_size.x*2][map_size.y*2];
 
-    BitmapData map_tile_set[][] = new BitmapData[map_size.x*2][map_size.y*2];//4分割されたmap画像
-    BitmapData map_tile_set_animation[][][] = new BitmapData[3][map_size.x*2][map_size.y*2];
-    BitmapData map_tile[][] = new BitmapData[map_size.x][map_size.y];//map_tile_set[][]を1つに纏めた画像
-    BitmapData map_tile_animation[][][] = new BitmapData[3][map_size.x][map_size.y];//上のアニメション用
+    BitmapData map_tile_set[][];// = new BitmapData[map_size.x*2][map_size.y*2];//4分割されたmap画像
+    BitmapData map_tile_set_animation[][][];// = new BitmapData[3][map_size.x*2][map_size.y*2];
+    BitmapData map_tile[][];// = new BitmapData[map_size.x][map_size.y];//map_tile_set[][]を1つに纏めた画像
+    BitmapData map_tile_animation[][][];// = new BitmapData[3][map_size.x][map_size.y];//上のアニメション用
     BitmapData map_image;//mapを1つの画像にした物
     BitmapData side_wall[] = new BitmapData[4];//横壁4種類
 
@@ -159,6 +159,7 @@ public class MapAdmin {
         map_object_admin = m_map_object_admin;
         map_player = map_object_admin.getPlayer();
         dungeon_data = m_dungeon_data;
+
         //データベースからマップ情報の読み込み
         map_size.set(dungeon_data.getMap_size_x(), dungeon_data.getMap_size_y());
         boss_floor_num = dungeon_data.getFloor_num();
@@ -174,6 +175,17 @@ public class MapAdmin {
 //        System.out.println("堀江　mine_min_num = "+dungeon_data.getMine_min_num());
 //        System.out.println("堀江　dungeon_name = "+dungeon_data.getDungeon_name());
 //        System.out.println("堀江　floortile_name = "+dungeon_data.getFloor_tile_name());
+
+        //マップ生成用変数初期化
+        camera = new Camera(map_size, magnification);
+        is_map_data_wall = new boolean[map_size.x*2][map_size.y*2];//表示用に4分割されたmap_data
+        is_map_data_sidewall = new boolean[map_size.x*2][map_size.y*2];
+        map_tile_set = new BitmapData[map_size.x*2][map_size.y*2];//4分割されたmap画像
+        map_tile_set_animation = new BitmapData[3][map_size.x*2][map_size.y*2];
+        map_tile = new BitmapData[map_size.x][map_size.y];//map_tile_set[][]を1つに纏めた画像
+        map_tile_animation = new BitmapData[3][map_size.x][map_size.y];//上のアニメション用
+
+        //map_dataを初期化
         map_data = new Chip[map_size.x][map_size.y];
         for (int i = 0; i < map_size.x; i++) {
             for (int j = 0; j < map_size.y; j++) {
@@ -181,6 +193,7 @@ public class MapAdmin {
             }
         }
 
+        //採掘場の場所を格納する配列
         mine_point = new Point[5];
         for(int i = 0;i < 5;i++){
             mine_point[i] = new Point(-1, -1);
@@ -2279,7 +2292,7 @@ public class MapAdmin {
         if (map_data[worldToMap(x)][worldToMap(y)].isRoom()) {
             section_admin.getNowRoom(worldToMap(x), worldToMap(y)).setDispflag(true);
         }
-        blue_paint.setARGB(200, 0, 0, 255);
+        blue_paint.setARGB(100, 0, 0, 255);
         section_admin.drawAllRoom(graphic, blue_paint, small_map_mag);
         for (int i = 0; i < this.getMap_size_x(); i++) {
             for (int j = 0; j < this.getMap_size_y(); j++) {

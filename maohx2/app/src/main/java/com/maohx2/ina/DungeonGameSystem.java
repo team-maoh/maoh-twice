@@ -3,10 +3,12 @@ package com.maohx2.ina;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 
 import com.maohx2.fuusya.MapObjectAdmin;
 import com.maohx2.fuusya.MapPlateAdmin;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.DungeonDataAdmin;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Arrange.Inventry;
@@ -40,6 +42,8 @@ public class DungeonGameSystem {
     TextBoxAdmin text_box_admin;
     ListBoxAdmin list_box_admin;
     DungeonDataAdmin dungeon_data_admin;
+    Camera camera;
+    Point map_size = new Point(0, 0);//カメラのインスタンス化に必要
 
     // by kmhanko
     BattleUnitDataAdmin battleUnitDataAdmin;
@@ -62,7 +66,9 @@ public class DungeonGameSystem {
         map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_plate_admin, dungeonModeManage);
 
         dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
-        map_admin = new MapAdmin(graphic, map_object_admin, dungeon_data_admin.getDungeon_data().get(1));
+        map_size.set(dungeon_data_admin.getDungeon_data().get(2).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(2).getMap_size_y());
+        //camera = new Camera(map_size, 64*4);
+        map_admin = new MapAdmin(graphic, map_object_admin, dungeon_data_admin.getDungeon_data().get(2));
 //        map_object_admin.getCamera(map_admin.getCamera());
         //map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin,this, dungeonModeManage);
         paint = new Paint();
