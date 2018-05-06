@@ -146,6 +146,7 @@ public final class Constants {
             SHOP,
             GEO_MAP,
             EQUIP,
+            PRESENT,
         }
     }
 

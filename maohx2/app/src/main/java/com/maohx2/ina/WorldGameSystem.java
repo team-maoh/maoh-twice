@@ -9,6 +9,7 @@ import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
 import com.maohx2.ina.Arrange.PaletteElement;
+import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.EquipmentInventrySaver;
@@ -208,6 +209,30 @@ public class WorldGameSystem {
         }
         */
 
+        switch (worldModeAdmin.getMode()) {
+            case DUNGEON_SELECT:
+                dungeonSelectManager.update();
+                break;
+            case GEO_MAP_SELECT:
+                dungeonSelectManager.update();
+                break;
+            case GEO_MAP:
+                geoSlotAdminManager.update();
+                break;
+            case SHOP:
+                itemShopAdmin.update();
+                break;
+            case EQUIP:
+                equipmentInventry.updata();
+                expendItemInventry.updata();
+                palette_admin.update(false);
+                backPlateGroup.update();
+                break;
+            case PRESENT:
+                geoPresentManager.update();
+                break;
+        }
+/*
         if (worldModeAdmin.getIsUpdate(worldModeAdmin.getGetSlotMap())) {
             geoSlotAdminManager.update();
         }
@@ -224,10 +249,9 @@ public class WorldGameSystem {
             equipmentInventry.updata();
             expendItemInventry.updata();
             palette_admin.update(false);
-
             backPlateGroup.update();
         }
-
+        */
 
         text_box_admin.update();
         effectAdmin.update();
@@ -238,6 +262,31 @@ public class WorldGameSystem {
         graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
         //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
 
+        switch (worldModeAdmin.getMode()) {
+            case DUNGEON_SELECT:
+                dungeonSelectManager.draw();
+                break;
+            case GEO_MAP_SELECT:
+                dungeonSelectManager.draw();
+                break;
+            case GEO_MAP:
+                geoSlotAdminManager.draw();
+                break;
+            case SHOP:
+                itemShopAdmin.draw();
+                break;
+            case EQUIP:
+                equipmentInventry.draw();
+                expendItemInventry.draw();
+                palette_admin.draw();
+                world_user_interface.draw();
+                backPlateGroup.draw();
+                break;
+            case PRESENT:
+                geoPresentManager.draw();
+                break;
+        }
+        /*
         if (worldModeAdmin.getIsDraw(worldModeAdmin.getGetSlotMap())) {
             geoSlotAdminManager.draw();
         }
@@ -259,6 +308,7 @@ public class WorldGameSystem {
 
             backPlateGroup.draw();
         }
+        */
 
         text_box_admin.draw();
         effectAdmin.draw();
@@ -277,8 +327,10 @@ public class WorldGameSystem {
                             @Override
                             public void callBackEvent() {
                                 //戻るボタンが押された時の処理
-                                worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.STOP);
+                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT);
+                                /*worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
+                                */
                             }
                         }
                 }

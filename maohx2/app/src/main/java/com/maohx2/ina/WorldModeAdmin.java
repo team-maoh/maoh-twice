@@ -17,11 +17,11 @@ public class WorldModeAdmin {
         initWorld();
     }
 
-    /*
+
     public void initWorld() {
         mode = WORLD_MODE.DUNGEON_SELECT;
     }
-    */
+
 
     public WORLD_MODE getMode() {
         return mode;
@@ -31,7 +31,7 @@ public class WorldModeAdmin {
         this.mode = mode;
     }
 
-
+/*
 
 
     private ACTIVATE worldMap;
@@ -98,6 +98,7 @@ public class WorldModeAdmin {
             return false;
         }
     }
+*/
 
 
     // *** takano ここまで ***

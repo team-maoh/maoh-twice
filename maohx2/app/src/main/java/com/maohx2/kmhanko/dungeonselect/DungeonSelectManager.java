@@ -363,21 +363,18 @@ public class DungeonSelectManager {
                 }
                 if (selectMode == SELECT_MODE.GEOMAP_SELECT) {
                     geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
-                    worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
-                    worldModeAdmin.setGeoSlotMap(Constants.Mode.ACTIVATE.ACTIVE);
+                    worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.GEO_MAP_SELECT);
                     initUIs();
                 }
             }
 
             if (event.get(focusDungeonButtonID).equals("shop")) {
-                worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
-                worldModeAdmin.setShop(Constants.Mode.ACTIVATE.ACTIVE);
+                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.SHOP);
                 initUIs();
 
             }
             if (event.get(focusDungeonButtonID).equals("present")) {
-                worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
-                worldModeAdmin.setPresent(Constants.Mode.ACTIVATE.ACTIVE);
+                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.PRESENT);
                 initUIs();
             }
             if (event.get(focusDungeonButtonID).equals("maoh")) {
@@ -395,8 +392,7 @@ public class DungeonSelectManager {
         }
         if (buttonID == 1 ) { //Equip
             initUIs();
-            worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
-            worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.ACTIVE);
+            worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.EQUIP);
         }
     }
 
