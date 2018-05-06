@@ -87,6 +87,9 @@ public class DungeonGameSystem {
         list_box_admin.init(dungeon_user_interface, graphic);
         //map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, this);
 
+        text_box_admin.setTextBoxExists(0,false);
+        text_box_admin.setTextBoxExists(1,false);
+
         PaletteCenter.initStatic(graphic);
         PaletteElement.initStatic(graphic);
 

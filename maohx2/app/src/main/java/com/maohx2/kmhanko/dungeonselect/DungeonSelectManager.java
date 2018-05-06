@@ -9,6 +9,7 @@ import com.maohx2.ina.WorldModeAdmin;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+import com.maohx2.ina.Constants.GAMESYSTEN_MODE.WORLD_MODE;
 
 import com.maohx2.ina.Text.CircleImagePlate;
 import com.maohx2.ina.Text.BoxTextPlate;
@@ -75,7 +76,7 @@ public class DungeonSelectManager {
 
     int focusDungeonButtonID;
 
-    SELECT_MODE selectMode = SELECT_MODE.DUNGEON_SELECT;
+    //SELECT_MODE selectMode = SELECT_MODE.DUNGEON_SELECT;
 
     Paint paint = new Paint(); //TODO GeoMapとDungeonSelectの切り替え表示用。いつか消える
 
@@ -115,20 +116,14 @@ public class DungeonSelectManager {
     }
 
     //***** GeoMapとDungeonSelectMapの切り替え *****
+
     public void switchSelectMode() {
-        if (selectMode == SELECT_MODE.GEOMAP_SELECT) {
-            selectMode = SELECT_MODE.DUNGEON_SELECT;
+        if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
+            worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT_INIT);
         } else {
-            selectMode = SELECT_MODE.GEOMAP_SELECT;
+            worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT_INIT);
         }
     }
-    public void switchSelectModeDungeon() {
-        selectMode = SELECT_MODE.DUNGEON_SELECT;
-    }
-    public void switchSelectModeGeoMap() {
-        selectMode = SELECT_MODE.GEOMAP_SELECT;
-    }
-
 
     //***** Buttonのinit関係 *****
     private void initMapIconPlate(){
@@ -293,23 +288,12 @@ public class DungeonSelectManager {
 
     //***** draw関係 *****
     public void draw() {
-        // ** GeoMap / DungeonSelectの表示 **
-        if (selectMode == SELECT_MODE.DUNGEON_SELECT) {
-            paint.setARGB(255, 255, 255, 255);
-        }
-        if (selectMode == SELECT_MODE.GEOMAP_SELECT) {
-            paint.setARGB(255, 255, 255, 128);
-        }
-        //graphic.bookingDrawRect(0, 0, 1600, 900, paint);
-
-
         // ** Buttonの表示
         mapIconPlateGroup.draw();
         dungeonEnterSelectButtonGroup.draw();
         menuButtonGroup.draw();
 
         maohEnterSelectButtonGroup.draw();
-
     }
 
     //***** update関係 *****
@@ -355,26 +339,26 @@ public class DungeonSelectManager {
             //if mapIconPlateGroup.
             //ボタンに登録されているイベント名を参照して、それそれの場合の結果を返す
             if (event.get(focusDungeonButtonID).equals("dungeon")) {
-                if (selectMode == SELECT_MODE.DUNGEON_SELECT) {
+                if (worldModeAdmin.getMode() == WORLD_MODE.DUNGEON_SELECT) {
                     enterTextBoxUpdateDungeon();
                     dungeonEnterSelectButtonGroup.setUpdateFlag(true);
                     dungeonEnterSelectButtonGroup.setDrawFlag(true);
 
                 }
-                if (selectMode == SELECT_MODE.GEOMAP_SELECT) {
+                if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
                     geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
-                    worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.GEO_MAP_SELECT);
+                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
                     initUIs();
                 }
             }
 
             if (event.get(focusDungeonButtonID).equals("shop")) {
-                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.SHOP);
+                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.SHOP_INIT);
                 initUIs();
 
             }
             if (event.get(focusDungeonButtonID).equals("present")) {
-                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.PRESENT);
+                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.PRESENT_INIT);
                 initUIs();
             }
             if (event.get(focusDungeonButtonID).equals("maoh")) {
@@ -397,7 +381,7 @@ public class DungeonSelectManager {
     }
 
     public void dungeonEnterSelectButtonCheck() {
-        if (!(dungeonEnterSelectButtonGroup.getUpdateFlag() && selectMode == SELECT_MODE.DUNGEON_SELECT)) {
+        if (!(dungeonEnterSelectButtonGroup.getUpdateFlag() && worldModeAdmin.getMode() == WORLD_MODE.DUNGEON_SELECT)) {
             return;
         }
 
@@ -420,7 +404,7 @@ public class DungeonSelectManager {
     }
 
     public void maohEnterSelectButtonCheck() {
-        if (!(maohEnterSelectButtonGroup.getUpdateFlag() && selectMode == SELECT_MODE.DUNGEON_SELECT)) {
+        if (!(maohEnterSelectButtonGroup.getUpdateFlag() && worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT)) {
             return;
         }
 

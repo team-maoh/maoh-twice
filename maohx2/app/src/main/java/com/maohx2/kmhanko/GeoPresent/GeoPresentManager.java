@@ -422,7 +422,7 @@ public class GeoPresentManager {
                                 holdGeoObbjectData = null;
                                 initUIs();
 
-                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT);
+                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT_INIT);
                             }
                         }
                 }

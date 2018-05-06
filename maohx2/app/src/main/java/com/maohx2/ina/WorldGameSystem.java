@@ -18,6 +18,7 @@ import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
+import com.maohx2.ina.Constants.GAMESYSTEN_MODE.WORLD_MODE;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.GeoPresent.GeoPresentManager;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
@@ -210,24 +211,42 @@ public class WorldGameSystem {
         */
 
         switch (worldModeAdmin.getMode()) {
+            case DUNGEON_SELECT_INIT:
+                backGround = graphic.searchBitmap("firstBackground");
+                worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT);
             case DUNGEON_SELECT:
                 dungeonSelectManager.update();
                 break;
+            case GEO_MAP_SELECT_INIT:
+                backGround = graphic.searchBitmap("GeoMap");
+                worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT);
             case GEO_MAP_SELECT:
                 dungeonSelectManager.update();
                 break;
+            case GEO_MAP_INIT:
+                backGround = graphic.searchBitmap("GeoMap");
+                worldModeAdmin.setMode(WORLD_MODE.GEO_MAP);
             case GEO_MAP:
                 geoSlotAdminManager.update();
                 break;
+            case SHOP_INIT:
+                backGround = graphic.searchBitmap("City");
+                worldModeAdmin.setMode(WORLD_MODE.SHOP);
             case SHOP:
                 itemShopAdmin.update();
                 break;
+            case EQUIP_INIT:
+                backGround = graphic.searchBitmap("firstBackground");//仮
+                worldModeAdmin.setMode(WORLD_MODE.EQUIP);
             case EQUIP:
                 equipmentInventry.updata();
                 expendItemInventry.updata();
                 palette_admin.update(false);
                 backPlateGroup.update();
                 break;
+            case PRESENT_INIT:
+                backGround = graphic.searchBitmap("firstBackground");//TODO 仮
+                worldModeAdmin.setMode(WORLD_MODE.PRESENT);
             case PRESENT:
                 geoPresentManager.update();
                 break;
@@ -263,18 +282,23 @@ public class WorldGameSystem {
         //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
 
         switch (worldModeAdmin.getMode()) {
+            case DUNGEON_SELECT_INIT:
             case DUNGEON_SELECT:
                 dungeonSelectManager.draw();
                 break;
+            case GEO_MAP_SELECT_INIT:
             case GEO_MAP_SELECT:
                 dungeonSelectManager.draw();
                 break;
+            case GEO_MAP_INIT:
             case GEO_MAP:
                 geoSlotAdminManager.draw();
                 break;
+            case SHOP_INIT:
             case SHOP:
                 itemShopAdmin.draw();
                 break;
+            case EQUIP_INIT:
             case EQUIP:
                 equipmentInventry.draw();
                 expendItemInventry.draw();
@@ -282,6 +306,7 @@ public class WorldGameSystem {
                 world_user_interface.draw();
                 backPlateGroup.draw();
                 break;
+            case PRESENT_INIT:
             case PRESENT:
                 geoPresentManager.draw();
                 break;
@@ -327,7 +352,7 @@ public class WorldGameSystem {
                             @Override
                             public void callBackEvent() {
                                 //戻るボタンが押された時の処理
-                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT);
+                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT_INIT);
                                 /*worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
                                 */

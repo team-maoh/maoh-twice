@@ -11,6 +11,8 @@ import com.maohx2.ina.Constants.UnitKind;
 
 import static com.maohx2.ina.Constants.UnitStatus.Status.*;
 
+import static com.maohx2.ina.Battle.BattleBaseUnitData.SpecialAction;
+
 /**
  * Created by ina on 2017/09/21.
  */
@@ -120,6 +122,12 @@ abstract public class BattleUnit {
         battleDungeonUnitData.setBonusStatus(_battleBaseUnitData.getBonusStatus(repeatCount));
         battleDungeonUnitData.setBitmapData(_battleBaseUnitData.getBitmapData());
 
+        battleDungeonUnitData.setActionRate(_battleBaseUnitData.getActionRate());
+        battleDungeonUnitData.setSpecialAction(_battleBaseUnitData.getSpecialAction());
+        battleDungeonUnitData.setSpecialActionPeriod(_battleBaseUnitData.getSpecialActionPeriod());
+        battleDungeonUnitData.setSpecialActionWidth(_battleBaseUnitData.getSpecialActionWidth());
+
+
         setRadius(_battleBaseUnitData.getRadius());
 
         dx = rnd.nextInt(1200)+200 - getPositionX();
@@ -205,7 +213,6 @@ abstract public class BattleUnit {
     abstract public double getAttackFrame();
     abstract public void setAttackFrame(int _attack_frame);
     public int update(){return 0;}
-    public void draw(){}
-
+    public void draw(){};
 
 }

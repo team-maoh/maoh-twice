@@ -5,6 +5,9 @@ import com.maohx2.ina.Draw.Graphic;
 
 import static com.maohx2.ina.Constants.UnitStatus.Status.*;
 
+import static com.maohx2.ina.Battle.BattleBaseUnitData.SpecialAction;
+import static com.maohx2.ina.Battle.BattleBaseUnitData.ActionID;
+
 import java.util.Random;
 
 /**
@@ -187,5 +190,14 @@ public class BattleEnemy extends BattleUnit {
     public void setAttackFrame(int _attack_frame) {
         attack_frame = _attack_frame;
     }
+
+
+
+    // enemy用
+    public SpecialAction getSpecialAction() { return battleDungeonUnitData.getSpecialAction(); }
+    public int getSpecialActionWidth() { return battleDungeonUnitData.getSpecialActionWidth(); }
+    public int getSpecialActionPeriod() { return battleDungeonUnitData.getSpecialActionPeriod(); }
+    public float[] getActionRate() { return battleDungeonUnitData.getActionRate(); }
+    public float getActionRate(ActionID _actionRateID) { return battleDungeonUnitData.getActionRate(_actionRateID); }
 
 }

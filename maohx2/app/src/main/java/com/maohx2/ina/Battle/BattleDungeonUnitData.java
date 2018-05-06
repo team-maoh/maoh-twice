@@ -4,6 +4,8 @@ import com.maohx2.ina.Draw.BitmapData;
 
 import static com.maohx2.ina.Constants.UnitStatus.BonusStatus;
 import static com.maohx2.ina.Constants.UnitStatus.Status;
+import static com.maohx2.ina.Battle.BattleBaseUnitData.SpecialAction;
+import static com.maohx2.ina.Battle.BattleBaseUnitData.ActionID;
 
 /**
  * Created by ina on 2017/10/20.
@@ -39,6 +41,25 @@ public class BattleDungeonUnitData {
 
     public BitmapData getBitmapDate(){return bitmap_data;}
     public void setBitmapData(BitmapData _bitmap_data){bitmap_data = _bitmap_data;}
+
+
+    float[] actionRate = new float[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
+    BattleBaseUnitData.SpecialAction specialAction;
+    int specialActionPeriod;
+    int specialActionWidth;
+
+    public void setActionRate(ActionID _actionRateID, float _actionRate) { actionRate[_actionRateID.ordinal()] = _actionRate; }
+    public void setActionRate(float[] _actionRate) { actionRate = _actionRate; }
+    public void setSpecialAction(SpecialAction _specialAction) { specialAction = _specialAction; }
+    public void setSpecialActionWidth(int _specialActionWidth) { specialActionWidth = _specialActionWidth; }
+    public void setSpecialActionPeriod(int _specialActionPeriod) { specialActionPeriod = _specialActionPeriod; }
+
+    public float[] getActionRate() { return actionRate; }
+    public float getActionRate(ActionID _actionRateID) { return actionRate[_actionRateID.ordinal()]; }
+    public SpecialAction getSpecialAction() { return specialAction; }
+    public int getSpecialActionWidth() { return specialActionWidth; }
+    public int getSpecialActionPeriod() { return specialActionPeriod; }
+
 
 
 }

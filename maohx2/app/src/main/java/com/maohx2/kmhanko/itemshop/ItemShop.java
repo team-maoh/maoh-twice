@@ -165,7 +165,7 @@ public abstract class ItemShop {
                                 productPlateGroup.setUpdateFlag(true);
                                 buySelectPlateGroup.setUpdateFlag(false);
                                 buySelectPlateGroup.setDrawFlag(false);
-                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT);
+                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT_INIT);
                                 textBoxAdmin.setTextBoxExists(itemShopAdmin.getMoneyTextBoxID(), false);
                                 itemInventry.save();
 
