@@ -111,13 +111,4 @@ public class PaletteAdmin {
         return (EquipmentItemData) palettes[0].getSelectedItemData();
     }
 
-    public ExpendItemData checkSelectedExpendItemData(){
-        //palettes[0].getPalettePrePos();
-        return (ExpendItemData) palettes[1].getSelectedItemData();
-    }
-
-    public void deleteExpendItemData(){
-        palettes[1].setPaletteCenter(null);
-    }
-
 }

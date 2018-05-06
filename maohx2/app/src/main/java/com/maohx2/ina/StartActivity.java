@@ -41,9 +41,7 @@ public class StartActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         start_surface_view = new StartSurfaceView(this, backSurfaceView);
-        //layout.addView(backSurfaceView);
         layout.addView(start_surface_view);
-
 
     }
 
@@ -57,6 +55,7 @@ public class StartActivity extends BaseActivity {
             start_surface_view.runGameSystem();
             game_system_flag = true;
         }
+
     }
 
 
@@ -65,6 +64,50 @@ public class StartActivity extends BaseActivity {
         super.onDestroy();
         System.out.println("call_destoroy");
     }
+}
+
+class BackSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable{
+
+    Paint paint = new Paint();
+    SurfaceHolder holder;
+
+    public BackSurfaceView(Activity _currentActivity) {
+        super(_currentActivity);
+        setZOrderOnTop(true);
+        holder = getHolder();
+        holder.addCallback(this);
+        //paint.setColor(Color.BLUE);
+    }
+
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {}
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {}
+
+
+    @Override
+    public void run() {}
+
+    public void gameLoop(){}
+
+    public void stopThread(){}
+
+    public void drawBackGround(ImageContext drawImageContext){
+
+        Canvas canvas = null;
+        canvas = holder.lockCanvas();
+
+        if(canvas != null) {
+            canvas.drawBitmap(drawImageContext.getBitmapData().getBitmap(), drawImageContext.getMatrix(), paint);
+            holder.unlockCanvasAndPost(canvas);
+        }
+    }
+
 }
 
 
@@ -97,6 +140,8 @@ class StartSurfaceView extends BaseSurfaceView {
         my_database_admin.addMyDatabase("StartDB", "LocalStartImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("StartDB"), "Start");
 
+        //ImageContext backImageContext = graphic.makeImageContext(graphic.searchBitmap("e51-0"),0,0,true);
+        //backSurfaceView.drawBackGround(backImageContext);
 
 
 
@@ -104,6 +149,8 @@ class StartSurfaceView extends BaseSurfaceView {
         start_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
         start_user_interface.init();
 
+        start_game_system = new StartGameSystem();
+        start_game_system.init(holder, graphic, start_user_interface, start_activity, my_database_admin);
 
 
 
@@ -132,31 +179,24 @@ class StartSurfaceView extends BaseSurfaceView {
         geoInventry.load();
         geoInventrySaver.setInventry(geoInventry);
 
-        expendItemInventry.init(start_user_interface, graphic,200,100,600,508, 10);
+        expendItemInventry.init(start_user_interface, graphic,1000,100,1400,508, 10);
         expendItemInventrySaver.init(global_data.getItemDataAdminManager());
         expendItemInventry.load();
         expendItemInventrySaver.setInventry(expendItemInventry);
 
 
-        start_game_system = new StartGameSystem();
-        start_game_system.init(holder, graphic, start_user_interface, start_activity, my_database_admin);
 
 
         //todo:こいつは一番下
         thread = new Thread(this);
         thread.start();
-    }
 
-    public void drawBackGround(){
-        ImageContext backImageContext = graphic.makeImageContext(graphic.searchBitmap("e51-0"),0,0,true);
-        backSurfaceView.drawBackGround(backImageContext);
     }
 
 
     @Override
     public void gameLoop(){
         //paint.setColor(Color.BLUE);
-
 
 
 
@@ -169,15 +209,6 @@ class StartSurfaceView extends BaseSurfaceView {
 
         start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         start_game_system.updata();
-        /*
-        if(back_ground_flag == false){
-            drawBackGround();
-            back_ground_flag = true;
-        }
-        */
         start_game_system.draw();
     }
-
-
-
 }

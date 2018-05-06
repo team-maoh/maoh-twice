@@ -87,7 +87,6 @@ public class WorldGameSystem {
     PaletteAdmin palette_admin;
     EquipmentInventrySaver equipmentInventrySaver;
     InventryS equipmentInventry;
-    BitmapData backGround;
 
     public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
         graphic = _graphic;
@@ -181,7 +180,6 @@ public class WorldGameSystem {
         palette_admin = new PaletteAdmin(world_user_interface, graphic, equipmentInventry, expendItemInventry);
 
 
-        backGround = graphic.searchBitmap("firstBackground");
 
     }
 
@@ -229,17 +227,23 @@ public class WorldGameSystem {
 
 
     public void draw() {
-        graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
+
+        //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
 
         if (worldModeAdmin.getIsDraw(worldModeAdmin.getGetSlotMap())) {
             geoSlotAdminManager.draw();
-        }if (worldModeAdmin.getIsDraw(worldModeAdmin.getWorldMap())) {
+        }
+        if (worldModeAdmin.getIsDraw(worldModeAdmin.getWorldMap())) {
             dungeonSelectManager.draw();
-        }if (worldModeAdmin.getIsDraw(worldModeAdmin.getShop())) {
+        }
+        if (worldModeAdmin.getIsDraw(worldModeAdmin.getShop())) {
             itemShopAdmin.draw();
-        }if (worldModeAdmin.getIsDraw(worldModeAdmin.getPresent())) {
+        }
+        if (worldModeAdmin.getIsDraw(worldModeAdmin.getPresent())) {
             geoPresentManager.draw();
-        }if (worldModeAdmin.getIsUpdate(worldModeAdmin.getEquip())) {
+        }
+
+        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getEquip())) {
             equipmentInventry.draw();
             expendItemInventry.draw();
             palette_admin.draw();

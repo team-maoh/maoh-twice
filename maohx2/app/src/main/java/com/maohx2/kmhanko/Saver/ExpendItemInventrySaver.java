@@ -1,12 +1,8 @@
 package com.maohx2.kmhanko.Saver;
 
 import java.util.List;
-
-import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
-import com.maohx2.kmhanko.itemdata.ExpendItemData;
-
 import static com.maohx2.ina.Constants.Inventry.INVENTRY_DATA_MAX;
 
 /**
@@ -48,8 +44,8 @@ public class ExpendItemInventrySaver extends InventrySaver {
 
             database.insertLineByArrayString(
                     "ExpendItemInventry",
-                    new String[] { "name", "num", "palettePosition"},
-                    new String[] { inventry.getItemData(i).getName(), String.valueOf(inventry.getItemNum(i)), String.valueOf(((ExpendItemData)(inventry.getItemData(i))).getPalettePosition())}
+                    new String[] { "name", "num" },
+                    new String[] { inventry.getItemData(i).getName(), String.valueOf(inventry.getItemNum(i))}
             );
 
         }
@@ -63,17 +59,11 @@ public class ExpendItemInventrySaver extends InventrySaver {
     public void load() {
         List<String> itemNames = database.getString("ExpendItemInventry", "name");
         List<Integer> nums = database.getInt("ExpendItemInventry", "num");
-        List<Integer> palettePosition = database.getInt("ExpendItemInventry", "palettePosition");
-
-        if (itemNames.size() != nums.size()) {
-            throw new Error("☆タカノ:ExpendItemInventrySaver#load 取得したアイテム名とアイテムの個数のデータ数が一致しない " + itemNames.size() + "," + nums.size());
-        }
-
         for(int i = 0; i < itemNames.size(); i++) {
-            ExpendItemData tempExpendItemData = ((ExpendItemData)(itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName(itemNames.get(i))));
-            tempExpendItemData.setPalettePosition(palettePosition.get(i),true);
             for(int j = 0; j < nums.get(i); j++){
-                inventry.addItemData(itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName(itemNames.get(i)));
+                inventry.addItemData(
+                        itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName(itemNames.get(i))
+                );
             }
         }
     }

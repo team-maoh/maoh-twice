@@ -29,11 +29,9 @@ public abstract class BaseActivity extends Activity {
         layout = new RelativeLayout(this);
         setContentView(layout);
 
+        //backSurfaceView = new BackSurfaceView(this);
+        //layout.addView(backSurfaceView);
 
-        /*
-        backSurfaceView = new BackSurfaceView(this);
-        layout.addView(backSurfaceView);
-        */
     }
 
 

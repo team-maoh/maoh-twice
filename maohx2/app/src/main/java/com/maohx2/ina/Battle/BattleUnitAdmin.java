@@ -77,16 +77,11 @@ public class BattleUnitAdmin {
     boolean marker_flag;
     boolean first_attack_frag;
     int attack_count;
-    int repeat_count;
 
     PlayerStatus playerStatus;
 
     //by kmhanko BattleUnitDataAdmin追加
-<<<<<<< HEAD
-    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage, MyDatabaseAdmin _databaseAdmin, MapPlateAdmin _map_plate_admin, int _repeat_count) {
-=======
     public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage, MyDatabaseAdmin _databaseAdmin, MapPlateAdmin _map_plate_admin, TextBoxAdmin _textBoxAdmin) {
->>>>>>> origin/kmhanko2
         //引数の代入
         graphic = _graphic;
         BattleRockCreater.setGraphic(graphic);
@@ -99,15 +94,11 @@ public class BattleUnitAdmin {
         databaseAdmin = _databaseAdmin;
         mapPlateAdmin = _map_plate_admin;
 
-<<<<<<< HEAD
-        repeat_count = _repeat_count;
-=======
         textBoxAdmin = _textBoxAdmin;
         initResultTextBox();
         initResultButton();
 
         playerStatus = _playerStatus;
->>>>>>> origin/kmhanko2
 
         //by kmhanko
         // *** equipItemDataCreaterのインスタンス化 ***
@@ -135,7 +126,11 @@ public class BattleUnitAdmin {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             battle_units[i] = new BattleEnemy(graphic);
         }
-
+        /*
+        for (int i = 0; i < BATTLE_UNIT_MAX; i++) {
+            battle_units[i].init();
+        }
+        */
         for (int i = 0; i < MAKER_NUM; i++) {
             touch_markers[i] = new TouchMarker(graphic);
         }
@@ -144,11 +139,6 @@ public class BattleUnitAdmin {
         calc_unit_status = new CalcUnitStatus();
         calc_unit_status.init();
 
-<<<<<<< HEAD
-        //TODO 仮。プレイヤーデータのコンバート
-        setPlayer(_playerStatus);
-
-=======
 
         /*
         //削除 仮に敵を適当な位置に配置する setBattleUnitDataに入れた
@@ -184,7 +174,6 @@ public class BattleUnitAdmin {
         if (mode == MODE.MINING) {
             spawnRock();
         }
->>>>>>> origin/kmhanko2
     }
 
     //by kmhanko
@@ -209,18 +198,6 @@ public class BattleUnitAdmin {
         //TODO 仮。本当はダンジョンのデータなどを引数にして出現する敵をランダムなどで決定する
 
         //一覧
-<<<<<<< HEAD
-        //setBattleUnitData("e01-0", 1);
-        //setBattleUnitData("e88-0", 1);
-        //setBattleUnitData("e74-0", 1);
-        setBattleUnitData("m003-2", repeat_count);
-        setBattleUnitData("e96-0", repeat_count);
-        //setBattleUnitData("e27", 1);
-        //setBattleUnitData("m007", 1);
-        //setBattleUnitData("e103-0", 1);
-        //setBattleUnitData("e94-3", 1);
-        //setBattleUnitData("e83-1", 1);
-=======
         setBattleUnitData("m014", 0);
         setBattleUnitData("e54-3", 0);
         setBattleUnitData("e01-0", 0);
@@ -252,15 +229,6 @@ public class BattleUnitAdmin {
             }
         }
         return -1;
->>>>>>> origin/kmhanko2
-    }
-
-    public void spawnEnemy(String[] monsters) {
-        //TODO 仮。本当はダンジョンのデータなどを引数にして出現する敵をランダムなどで決定する
-
-        for (int i = 0; i < monsters.length; i++){
-            setBattleUnitData(monsters[i],repeat_count);
-        }
     }
 
 
@@ -346,18 +314,7 @@ public class BattleUnitAdmin {
                     if (defense_equipment != null) {
                         damage_rate = (1 - (float) defense_equipment.getDefence() / 100.0f);
                     }
-
-                    int heel_to_palyer = 0;
-                    if(palette_admin.checkSelectedExpendItemData() != null) {
-                        heel_to_palyer = battle_units[0].getHitPoint()*palette_admin.checkSelectedExpendItemData().getHp();
-                        palette_admin.deleteExpendItemData();
-                    }
-
-                    int new_hp = battle_units[0].getHitPoint() - (int) (damage_to_player * damage_rate) + heel_to_palyer;
-                    if(new_hp > battle_units[0].getMaxHitPoint()){
-                        new_hp = battle_units[0].getMaxHitPoint();
-                    }
-
+                    int new_hp = battle_units[0].getHitPoint() - (int) (damage_to_player * damage_rate);
                     if (new_hp <= 0) {
                         //ゲームオーバー
                     }

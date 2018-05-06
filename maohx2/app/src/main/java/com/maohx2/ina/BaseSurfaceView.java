@@ -37,7 +37,6 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     BackSurfaceView backSurfaceView;
 
     Graphic graphic;
-    boolean back_ground_flag = false;
 
 
     public BaseSurfaceView(Activity _currentActivity, BackSurfaceView _backSurfaceView) {
@@ -61,8 +60,8 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         //ImageContext backImageContext = graphic.makeImageContext(graphic.searchBitmap("e51-0"),0,0,true);
         //backSurfaceView.drawBackGround(backImageContext);
 
-        //thread = new Thread(this);
-        //thread.start();
+        thread = new Thread(this);
+        thread.start();
 
         //activityChange = new ActivityChange(this, currentActivity);
     }
