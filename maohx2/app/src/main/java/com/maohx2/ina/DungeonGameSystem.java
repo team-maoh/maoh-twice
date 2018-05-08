@@ -111,7 +111,7 @@ public class DungeonGameSystem {
 
         backGround = graphic.searchBitmap("firstBackground");
         //デバッグ用。消すの忘れない
-        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
     }
 
     public void update() {

@@ -234,7 +234,7 @@ public class MapObjectAdmin {
 
     //by kmhanko
     public void battleStart() {
-        //dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+        dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
     }
 
     public void getMapAdmin(MapAdmin _map_admin) {

@@ -126,6 +126,13 @@ public class BattleUnitDataAdmin {
         List<Float> blindness = battle_unit_data_database.getFloat("battle_unit_data", "blindness", null);
         List<Float> curse = battle_unit_data_database.getFloat("battle_unit_data", "curse", null);
 
+        List<Integer> poison_time = battle_unit_data_database.getInt("battle_unit_data", "poison_time", null);
+        List<Integer> paralysis_time = battle_unit_data_database.getInt("battle_unit_data", "paralysis_time", null);
+        List<Integer> stop_time = battle_unit_data_database.getInt("battle_unit_data", "stop_time", null);
+        List<Integer> blindness_time = battle_unit_data_database.getInt("battle_unit_data", "blindness_time", null);
+        List<Integer> curse_time = battle_unit_data_database.getInt("battle_unit_data", "curse_time", null);
+
+
         for (int i = 0; i < drop_item.length; i++) {
             drop_item[i] = battle_unit_data_database.getString("battle_unit_data", "drop_item0" + String.valueOf(i + 1), null);
             drop_item_percent[i] = battle_unit_data_database.getDouble("battle_unit_data", "drop_item0" + String.valueOf(i + 1) + "_percent", null);
@@ -177,6 +184,12 @@ public class BattleUnitDataAdmin {
             tempBattleBaseUnitData.setActionRate(ActionID.STOP, stop.get(i));
             tempBattleBaseUnitData.setActionRate(ActionID.BLINDNESS, blindness.get(i));
             tempBattleBaseUnitData.setActionRate(ActionID.CURSE, curse.get(i));
+
+            tempBattleBaseUnitData.setAlimentTime(ActionID.POISON, poison_time.get(i));
+            tempBattleBaseUnitData.setAlimentTime(ActionID.PARALYSIS, paralysis_time.get(i));
+            tempBattleBaseUnitData.setAlimentTime(ActionID.STOP, stop_time.get(i));
+            tempBattleBaseUnitData.setAlimentTime(ActionID.BLINDNESS, blindness_time.get(i));
+            tempBattleBaseUnitData.setAlimentTime(ActionID.CURSE, curse_time.get(i));
 
             for (int j = 0; j < drop_item.length; j++ ) {
                 if (drop_item[j].get(i) == null) {
