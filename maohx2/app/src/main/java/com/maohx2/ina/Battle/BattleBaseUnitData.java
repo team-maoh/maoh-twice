@@ -40,6 +40,8 @@ public class BattleBaseUnitData {
     BitmapData bitmap_data;
     int radius;
 
+    int power;
+
     //by kmhank　ドロップアイテム種類
     EQUIPMENT_KIND[] dropItemEquipmentKind = new EQUIPMENT_KIND[Constants.Item.DROP_NUM];
     String[] dropItemName = new String[Constants.Item.DROP_NUM];
@@ -213,6 +215,9 @@ public class BattleBaseUnitData {
     public void setSpecialActionWidth(int _specialActionWidth) { specialActionWidth = _specialActionWidth; }
     public void setSpecialActionPeriod(int _specialActionPeriod) { specialActionPeriod = _specialActionPeriod; }
 
+    public void setPower(int _power) { power = _power; }
+
+    public int getPower() { return power; }
 
 
 }

@@ -165,8 +165,10 @@ public class BattleUnitDataAdmin {
             List<Integer> blindness_time = battle_unit_data_database.getInt(tableName, "blindness_time", null);
             List<Integer> curse_time = battle_unit_data_database.getInt(tableName, "curse_time", null);
 
+            List<Integer> power = battle_unit_data_database.getInt(tableName, "power", null);
 
-            for (int i = 0; i < drop_item.length; i++) {
+
+        for (int i = 0; i < drop_item.length; i++) {
                 drop_item[i] = battle_unit_data_database.getString(tableName, "drop_item0" + String.valueOf(i + 1), null);
                 drop_item_percent[i] = battle_unit_data_database.getDouble(tableName, "drop_item0" + String.valueOf(i + 1) + "_percent", null);
             }
@@ -223,6 +225,8 @@ public class BattleUnitDataAdmin {
                 tempBattleBaseUnitData.setAlimentTime(ActionID.STOP, stop_time.get(i));
                 tempBattleBaseUnitData.setAlimentTime(ActionID.BLINDNESS, blindness_time.get(i));
                 tempBattleBaseUnitData.setAlimentTime(ActionID.CURSE, curse_time.get(i));
+
+                tempBattleBaseUnitData.setPower(power.get(i));
 
                 for (int j = 0; j < drop_item.length; j++) {
                     if (drop_item[j].get(i) == null) {
