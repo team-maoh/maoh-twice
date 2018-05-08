@@ -97,7 +97,7 @@ public class BattleBaseUnitData {
     int bonus_status[] = new int[NUM_OF_BONUS_STATUS.ordinal()];
 
     float[] actionRate = new float[ActionID.ACTION_ID_NUM.ordinal()];
-    float[] alimentTime = new float[ActionID.ACTION_ID_NUM.ordinal()];
+    int[] alimentTime = new int[ActionID.ACTION_ID_NUM.ordinal()];
 
     public enum SpecialAction {
         NONE,
@@ -149,12 +149,12 @@ public class BattleBaseUnitData {
     public void setDropItemKind(int i, Constants.Item.ITEM_KIND _dropItemKind) { dropItemKind[i] = _dropItemKind; }
 
     public float[] getActionRate() { return actionRate; }
-    public void setActionRate(ActionID _actionRateID, float _actionRate) { actionRate[_actionRateID.ordinal()] = _actionRate; }
-    public float getActionRate(ActionID _actionRateID) { return actionRate[_actionRateID.ordinal()]; }
+    public void setActionRate(ActionID _alimentID, float _actionRate) { actionRate[_alimentID.ordinal()] = _actionRate; }
+    public float getActionRate(ActionID _alimentID) { return actionRate[_alimentID.ordinal()]; }
 
-    public float[] getAlimentTime() { return alimentTime; }
-    public void setAlimentTime(ActionID _alimentTimeID, int _alimentTime) { alimentTime[_alimentTimeID.ordinal()] = _alimentTime; }
-    public float getAlimentTime(ActionID _alimentTimeID) { return alimentTime[_alimentTimeID.ordinal()]; }
+    public int[] getAlimentTime() { return alimentTime; }
+    public void setAlimentTime(ActionID _alimentID, int _alimentTime) { alimentTime[_alimentID.ordinal()] = _alimentTime; }
+    public int getAlimentTime(ActionID _alimentID) { return alimentTime[_alimentID.ordinal()]; }
 
 
     public EQUIPMENT_KIND[] getDropItemEquipmentKinds() {

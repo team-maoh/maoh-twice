@@ -25,6 +25,7 @@ public class BattleEnemy extends BattleUnit {
     int specialActionCount;
 
     float[] actionRate = new float[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
+    int[] alimentTime = new int[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
     BattleBaseUnitData.SpecialAction specialAction;
     int specialActionPeriod;
     int specialActionWidth;
@@ -66,6 +67,7 @@ public class BattleEnemy extends BattleUnit {
         actionRate = getActionRate();
         specialActionPeriod = getSpecialActionPeriod();
         specialActionWidth = getSpecialActionWidth();
+        alimentTime = getAlimentTime();
 
         if (attack_frame > 0 ) {
             attackCount = rnd.nextInt((int) (getAttackFrame() / 2));
@@ -241,6 +243,7 @@ public class BattleEnemy extends BattleUnit {
     public int getSpecialActionPeriod() { return battleDungeonUnitData.getSpecialActionPeriod(); }
     public float[] getActionRate() { return battleDungeonUnitData.getActionRate(); }
     public float getActionRate(ActionID _actionRateID) { return battleDungeonUnitData.getActionRate(_actionRateID); }
+    public int[] getAlimentTime() { return battleDungeonUnitData.getAlimentTime(); }
 
     public ActionID checkActionID() {
 

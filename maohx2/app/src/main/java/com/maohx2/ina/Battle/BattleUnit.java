@@ -135,6 +135,7 @@ abstract public class BattleUnit {
         battleDungeonUnitData.setSpecialActionPeriod(_battleBaseUnitData.getSpecialActionPeriod());
         battleDungeonUnitData.setSpecialActionWidth(_battleBaseUnitData.getSpecialActionWidth());
 
+        battleDungeonUnitData.setAlimentTime(_battleBaseUnitData.getAlimentTime());
 
         setRadius(_battleBaseUnitData.getRadius());
 

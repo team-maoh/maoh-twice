@@ -27,6 +27,7 @@ import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 import com.maohx2.kmhanko.Arrange.InventryS;
+import com.maohx2.kmhanko.itemdata.MiningItemDataAdmin;
 
 /**
  * Created by ina on 2017/09/05.
@@ -49,6 +50,7 @@ public class DungeonGameSystem {
 
     // by kmhanko
     BattleUnitDataAdmin battleUnitDataAdmin;
+    MiningItemDataAdmin miningItemDataAdmin;
 
     Inventry inventry;
     EquipmentItemDataAdmin equipment_item_data_admin;
@@ -80,6 +82,8 @@ public class DungeonGameSystem {
         paint = new Paint();
         paint.setColor(Color.BLUE);
 
+
+
         battle_unit_admin = new BattleUnitAdmin();
         text_box_admin = new TextBoxAdmin(graphic);
         list_box_admin = new ListBoxAdmin();
@@ -92,7 +96,7 @@ public class DungeonGameSystem {
         text_box_admin.setTextBoxExists(0,false);
         text_box_admin.setTextBoxExists(1,false);
 
-        PaletteCenter.initStatic(graphic);
+        PaletteCenter.initStatic(graphic);miningItemDataAdmin = new MiningItemDataAdmin(graphic, my_database_admin);
         PaletteElement.initStatic(graphic);
 
         equipment_item_data_admin = new EquipmentItemDataAdmin(graphic, my_database_admin);
@@ -101,8 +105,11 @@ public class DungeonGameSystem {
         equipmentInventry = globalData.getEquipmentInventry();
         expendInventry = globalData.getExpendItemInventry();
 
+        miningItemDataAdmin = new MiningItemDataAdmin(graphic, my_database_admin);
+
         //palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipmentInventry, expendInventry);
         palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipment_item_data_admin);
+        palette_admin.setMiningItems(miningItemDataAdmin);//TODO コンストラクタに入れて居ないためよくない
 
 
         PlayerStatus playerStatus = globalData.getPlayerStatus();
@@ -111,7 +118,7 @@ public class DungeonGameSystem {
 
         backGround = graphic.searchBitmap("firstBackground");
         //デバッグ用。消すの忘れない
-        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
     }
 
     public void update() {

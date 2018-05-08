@@ -38,6 +38,7 @@ import android.graphics.Color;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Constants.POPUP_WINDOW;
+import com.maohx2.kmhanko.itemdata.MiningItemData;
 
 /**
  * Created by ina on 2017/09/21.
@@ -251,19 +252,29 @@ public class BattleUnitAdmin {
         if (palette_admin.doUsePalette() == false) {
             //プレイヤーの攻撃によるマーカーの設置
             if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
-                EquipmentItemData attack_equipment = palette_admin.getEquipmentItemData();
+
+                EquipmentItemData attack_equipment = null;
+                if (mode == MODE.BATTLE) {
+                    attack_equipment = palette_admin.getEquipmentItemData();
+                }
+                if (mode == MODE.MINING) {
+                    attack_equipment = palette_admin.getMiningItemData();
+                }
+
                 if (attack_equipment != null) {
                     if (attack_equipment.getDungeonUseNum() > 0) {
                         //最高攻撃頻度を上回っていないか
                         if ((first_attack_frag == false && attack_count >= attack_equipment.getTouchFrequency()) || (first_attack_frag == true && attack_count >= attack_equipment.getTouchFrequency() * attack_equipment.getAutoFrequencyRate())) {
-                            attack_equipment.setDungeonUseNum(attack_equipment.getDungeonUseNum() - 1);
+                            if (mode == MODE.BATTLE) {
+                                attack_equipment.setDungeonUseNum(attack_equipment.getDungeonUseNum() - 1);
+                            }
                             first_attack_frag = true;
                             marker_flag = true;
                             attack_count = 0;
                             for (int i = 0; i < MAKER_NUM; i++) {
                                 if (touch_markers[i].isExist() == false) {
                                     //todo:attackの計算
-                                    touch_markers[i].generate((int) touch_x, (int) touch_y, palette_admin.getEquipmentItemData().getRadius(), battle_units[0].getAttack() + palette_admin.getEquipmentItemData().getAttack(), palette_admin.getEquipmentItemData().getDecayRate());
+                                    touch_markers[i].generate((int) touch_x, (int) touch_y, attack_equipment.getRadius(), battle_units[0].getAttack() + attack_equipment.getAttack(), attack_equipment.getDecayRate());
                                     break;
                                 }
                             }
@@ -381,6 +392,13 @@ public class BattleUnitAdmin {
             // by kmhanko
             if (mode == MODE.BATTLE) {
                 getDropItem();
+                resultButtonGroup.setUpdateFlag(true);
+                resultButtonGroup.setDrawFlag(true);
+            }
+            if (mode == MODE.MINING) {
+                getDropItem();
+                resultButtonGroup.setUpdateFlag(true);
+                resultButtonGroup.setDrawFlag(true);
             }
 
             //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP); 戦闘終了はボタン押下時に変更
@@ -493,8 +511,6 @@ public class BattleUnitAdmin {
 
         // result関係
         resultTextBoxUpdate(dropItemNames);
-        resultButtonGroup.setUpdateFlag(true);
-        resultButtonGroup.setDrawFlag(true);
     }
 
     public BattleUnitAdmin() {}
