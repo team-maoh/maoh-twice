@@ -274,7 +274,6 @@ public class MapAdmin {
             auto_tile_admin.createAutoTile(at_wall[i]);
             auto_tile_admin.createAutoTile(at_side_wall[i]);
         }
-        //TODO:ここまではできていると思われる
 
         side_wall_4 = new BitmapData[animation_num][4];
         //横壁4種類作成
@@ -534,6 +533,19 @@ public class MapAdmin {
             }
         }
         return mid_boss;
+    }
+
+    //モンスターの名前を返す(最大50体 )
+    public String[] getMonsterName(int monster_kind){
+        int k = 0;
+        String monster_name[] = new String[50];//TODO:とりあえず50にしている
+        for(int i = 0;i < dungeon_monster_data.size();i++){
+            if(dungeon_monster_data.get(i).getType() == 1 && k < 50){
+                monster_name[k] = dungeon_monster_data.get(i).getMonsterName();
+                k++;
+            }
+        }
+        return monster_name;
     }
 
     //room_pointをset(magnificationをかけてない)
