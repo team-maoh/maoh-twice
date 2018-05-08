@@ -108,8 +108,8 @@ public class DungeonGameSystem {
         equipmentInventry = globalData.getEquipmentInventry();
         expendInventry = globalData.getExpendItemInventry();
 
-        palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipmentInventry, expendInventry);
-        //palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipment_item_data_admin);
+        //palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipmentInventry, expendInventry);
+        palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipment_item_data_admin);
 
 
         PlayerStatus playerStatus = globalData.getPlayerStatus();
