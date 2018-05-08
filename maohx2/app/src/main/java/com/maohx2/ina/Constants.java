@@ -197,6 +197,7 @@ public final class Constants {
             EXPEND,
             EQUIPMENT,
             GEO,
+            MINING,
         }
 
         public enum EQUIPMENT_KIND {

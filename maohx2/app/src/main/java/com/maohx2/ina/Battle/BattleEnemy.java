@@ -122,7 +122,13 @@ public class BattleEnemy extends BattleUnit {
     @Override
     public void draw(){
 
-        graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y);
+        if (unitKind == Constants.UnitKind.ENEMY) {
+            graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y);
+        }
+        if (unitKind == Constants.UnitKind.ROCK) {
+            graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, 8.0f, 8.0f, 0.0f, 255, false);
+        }
+
         //graphic.bookingDrawCircle(position_x, position_y, radius);
         graphic.bookingDrawText(String.valueOf(hit_point),(int)position_x,(int)position_y);
 

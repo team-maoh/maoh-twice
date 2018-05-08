@@ -265,6 +265,9 @@ public class Palette {
         if(paletteNum == 0 && _itemKind == Constants.Item.ITEM_KIND.EQUIPMENT) return true;
         if(paletteNum == 1 && _itemKind == Constants.Item.ITEM_KIND.EXPEND) return true;
 
+        //by kmhanko
+        if(paletteNum == 2 && _itemKind == Constants.Item.ITEM_KIND.MINING) return true;
+
         return false;
     }
 

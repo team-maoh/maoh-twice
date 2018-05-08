@@ -19,7 +19,11 @@ public class BattlePlayer extends BattleUnit {
     @Override
     public void draw(){
         //graphic.bookingDrawText(String.valueOf(hit_point),(int)position_x,(int)position_y);
+
+        // HPバーの表示
         graphic.bookingDrawRect(200,50, (int)(200+1200*((double)hit_point/(double)max_hit_point)), 80, paint);
+
+
     }
 
 

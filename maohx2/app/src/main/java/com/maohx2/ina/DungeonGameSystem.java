@@ -108,8 +108,9 @@ public class DungeonGameSystem {
         battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin, text_box_admin, playerStatus.getNowClearCount());
 
         backGround = graphic.searchBitmap("firstBackground");
+
         //デバッグ用。消すの忘れない
-        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
+        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
     }
 
     public void update() {
