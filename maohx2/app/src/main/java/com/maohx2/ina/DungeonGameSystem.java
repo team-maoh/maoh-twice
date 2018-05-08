@@ -64,6 +64,8 @@ public class DungeonGameSystem {
     InventryS expendInventry;
     BitmapData backGround;
 
+    //MiningItemDataAdmin miningItemDataAdmin;
+
     public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange activityChange, int _repeat_count) {
         dungeon_user_interface = _dungeon_user_interface;
         battle_user_interface = _battle_user_interface;
@@ -79,6 +81,8 @@ public class DungeonGameSystem {
         dragon = new DungeonMonsterDataAdmin(_myDatabaseAdmin, "DragonMonsterData");
         forest = new DungeonMonsterDataAdmin(_myDatabaseAdmin, "ForestMonsterData");
         haunted = new DungeonMonsterDataAdmin(_myDatabaseAdmin, "HauntedMonsterData");
+
+        //miningItemDataAdmin = new MiningItemDataAdmin(graphic, my_database_admin);
 
         map_size.set(dungeon_data_admin.getDungeon_data().get(0).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(0).getMap_size_y());
         //camera = new Camera(map_size, 64*4);
