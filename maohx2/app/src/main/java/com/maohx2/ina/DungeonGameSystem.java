@@ -74,8 +74,9 @@ public class DungeonGameSystem {
         dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
         map_size.set(dungeon_data_admin.getDungeon_data().get(2).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(2).getMap_size_y());
         //camera = new Camera(map_size, 64*4);
+
         map_admin = new MapAdmin(graphic, map_object_admin);
-        //map_object_admin.getCamera(map_admin.getCamera());
+
         //map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin,this, dungeonModeManage);
         paint = new Paint();
         paint.setColor(Color.BLUE);
@@ -85,8 +86,6 @@ public class DungeonGameSystem {
         list_box_admin = new ListBoxAdmin();
         text_box_admin.init(dungeon_user_interface);
         list_box_admin.init(dungeon_user_interface, graphic);
-        text_box_admin.setTextBoxExists(0,false);
-        text_box_admin.setTextBoxExists(1,false);
         //map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, this);
 
         text_box_admin.setTextBoxExists(0,false);
@@ -111,7 +110,6 @@ public class DungeonGameSystem {
 
         backGround = graphic.searchBitmap("firstBackground");
         //デバッグ用。消すの忘れない
-        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
     }
 
     public void update() {
