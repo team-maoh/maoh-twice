@@ -254,6 +254,7 @@ public class BattleEnemy extends BattleUnit {
     public float[] getActionRate() { return battleDungeonUnitData.getActionRate(); }
     public float getActionRate(ActionID _actionRateID) { return battleDungeonUnitData.getActionRate(_actionRateID); }
     public int[] getAlimentTime() { return battleDungeonUnitData.getAlimentTime(); }
+    public int getAlimentTime(ActionID _actionRateID) { return battleDungeonUnitData.getAlimentTime(_actionRateID); }
 
     public ActionID checkActionID() {
 
