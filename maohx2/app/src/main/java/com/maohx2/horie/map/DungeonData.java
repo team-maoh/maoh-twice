@@ -8,9 +8,6 @@ import android.graphics.Point;
 
 public class DungeonData {
     String dungeon_name;
-    String boss_name;
-    String mid_boss_name;
-    String monster_name;
     int mine_max_num;
     int mine_min_num;
     int floor_num;
@@ -23,15 +20,6 @@ public class DungeonData {
 
     public String getDungeon_name(){
         return dungeon_name;
-    }
-    public String getBoss_name(){
-        return boss_name;
-    }
-    public String getMid_boss_name(){
-        return mid_boss_name;
-    }
-    public String getMonster_name(){
-        return monster_name;
     }
     public int getMine_max_num(){
         return mine_max_num;
@@ -60,15 +48,6 @@ public class DungeonData {
 
     public void setDungeon_name(String _dungeon_name){
         dungeon_name = _dungeon_name;
-    }
-    public void setBoss_name(String _boss_name){
-        boss_name = _boss_name;
-    }
-    public void setMid_boss_name(String _mid_boss_name){
-        mid_boss_name = _mid_boss_name;
-    }
-    public void setMonster_name(String _monster_name){
-        monster_name = _monster_name;
     }
     public void setMine_max_num(int _mine_max_num){
         mine_max_num = _mine_max_num;

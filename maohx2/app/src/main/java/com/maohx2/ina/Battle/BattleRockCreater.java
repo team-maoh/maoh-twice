@@ -26,6 +26,8 @@ public class BattleRockCreater {
 
         tempBBUD.setBitmapData(graphic.searchBitmap("rock01"));//仮
 
+        tempBBUD.setRadius(70);
+
         //HP、defence格納。ボーナスや成長は0。ドロップアイテムは無しにしておく。
         //別途ドロップ設定が必要
         return tempBBUD;

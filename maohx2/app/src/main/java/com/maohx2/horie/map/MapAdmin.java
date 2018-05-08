@@ -12,9 +12,7 @@ import com.maohx2.fuusya.MapPlayer;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
-import java.util.List;
 import java.util.Random;
 
 import static android.content.Context.SYSTEM_HEALTH_SERVICE;
@@ -79,13 +77,11 @@ public class MapAdmin {
     //int magnification = 30;
     //drawMap2用
 //    Point map_size = new Point(80, 50);//x : 左右幅, y : 上下幅
-    Point map_size = new Point(0, 0);//60, 40
+    Point map_size = new Point(60, 40);//60, 40
     int magnification = 64*4;//倍率
     int time = 0;//アニメーションタイミング用
     int now_floor_num = 0;//現在のフロア階層
-    int boss_floor_num;//ボスフロアの階層
-    int mine_min_num;
-    int mine_max_num;
+    int boss_floor_num = 3;//ボスフロアの階層
 
     Point offset = new Point(0, 0);
     Point start_point = new Point(0, 0);
@@ -94,26 +90,25 @@ public class MapAdmin {
     Point map_offset = new Point(0, 0);
     Point room_point = new Point(0, 0);
     Point mine_point[];
-    Camera camera;// = new Camera(map_size, magnification);
+    Camera camera = new Camera(map_size, magnification);
     SectionAdmin section_admin;
     Canvas canvas;
     SurfaceHolder holder;
     MapPlayer map_player;
     MapObjectAdmin map_object_admin;
-    DungeonData dungeon_data;
 
     //auto_tile用
     AutoTile auto_tile_wall = new AutoTile();
     AutoTile auto_tile_side_wall = new AutoTile();
     AutoTile auto_tile_cave_hole[] = new AutoTile[3];
     AutoTileAdmin auto_tile_admin;
-    boolean is_map_data_wall[][];// = new boolean[map_size.x*2][map_size.y*2];//表示用に4分割されたmap_data
-    boolean is_map_data_sidewall[][];// = new boolean[map_size.x*2][map_size.y*2];
+    boolean is_map_data_wall[][] = new boolean[map_size.x*2][map_size.y*2];//表示用に4分割されたmap_data
+    boolean is_map_data_sidewall[][] = new boolean[map_size.x*2][map_size.y*2];
 
-    BitmapData map_tile_set[][];// = new BitmapData[map_size.x*2][map_size.y*2];//4分割されたmap画像
-    BitmapData map_tile_set_animation[][][];// = new BitmapData[3][map_size.x*2][map_size.y*2];
-    BitmapData map_tile[][];// = new BitmapData[map_size.x][map_size.y];//map_tile_set[][]を1つに纏めた画像
-    BitmapData map_tile_animation[][][];// = new BitmapData[3][map_size.x][map_size.y];//上のアニメション用
+    BitmapData map_tile_set[][] = new BitmapData[map_size.x*2][map_size.y*2];//4分割されたmap画像
+    BitmapData map_tile_set_animation[][][] = new BitmapData[3][map_size.x*2][map_size.y*2];
+    BitmapData map_tile[][] = new BitmapData[map_size.x][map_size.y];//map_tile_set[][]を1つに纏めた画像
+    BitmapData map_tile_animation[][][] = new BitmapData[3][map_size.x][map_size.y];//上のアニメション用
     BitmapData map_image;//mapを1つの画像にした物
     BitmapData side_wall[] = new BitmapData[4];//横壁4種類
 
@@ -153,39 +148,10 @@ public class MapAdmin {
         return magnification;
     }
 
-    //TODO：ダンジョンデータの受け渡しがちゃんと出来ているか確認する
-    public MapAdmin(Graphic m_graphic, MapObjectAdmin m_map_object_admin, DungeonData m_dungeon_data) {
+    public MapAdmin(Graphic m_graphic, MapObjectAdmin m_map_object_admin) {
         graphic = m_graphic;
         map_object_admin = m_map_object_admin;
         map_player = map_object_admin.getPlayer();
-        dungeon_data = m_dungeon_data;
-
-        //データベースからマップ情報の読み込み
-        map_size.set(dungeon_data.getMap_size_x(), dungeon_data.getMap_size_y());
-        boss_floor_num = dungeon_data.getFloor_num();
-        mine_min_num = dungeon_data.getMine_min_num();
-        mine_max_num = dungeon_data.getMine_max_num();
-        String floor_tile_name = dungeon_data.getFloor_tile_name();
-        String wall_tile_name = dungeon_data.getWall_tile_name();
-        String sidewall_tile_name = dungeon_data.getSidewall_tile_name();
-        /*デバッグ*/
-//        System.out.println("堀江　mapsize_x = "+dungeon_data.getMap_size_x());
-//        System.out.println("堀江　mapsize_y = "+dungeon_data.getMap_size_y());
-//        System.out.println("堀江　mine_max_num = "+dungeon_data.getMine_max_num());
-//        System.out.println("堀江　mine_min_num = "+dungeon_data.getMine_min_num());
-//        System.out.println("堀江　dungeon_name = "+dungeon_data.getDungeon_name());
-//        System.out.println("堀江　floortile_name = "+dungeon_data.getFloor_tile_name());
-
-        //マップ生成用変数初期化
-        camera = new Camera(map_size, magnification);
-        is_map_data_wall = new boolean[map_size.x*2][map_size.y*2];//表示用に4分割されたmap_data
-        is_map_data_sidewall = new boolean[map_size.x*2][map_size.y*2];
-        map_tile_set = new BitmapData[map_size.x*2][map_size.y*2];//4分割されたmap画像
-        map_tile_set_animation = new BitmapData[3][map_size.x*2][map_size.y*2];
-        map_tile = new BitmapData[map_size.x][map_size.y];//map_tile_set[][]を1つに纏めた画像
-        map_tile_animation = new BitmapData[3][map_size.x][map_size.y];//上のアニメション用
-
-        //map_dataを初期化
         map_data = new Chip[map_size.x][map_size.y];
         for (int i = 0; i < map_size.x; i++) {
             for (int j = 0; j < map_size.y; j++) {
@@ -193,7 +159,6 @@ public class MapAdmin {
             }
         }
 
-        //採掘場の場所を格納する配列
         mine_point = new Point[5];
         for(int i = 0;i < 5;i++){
             mine_point[i] = new Point(-1, -1);
@@ -356,7 +321,7 @@ public class MapAdmin {
     }
 
     //壁かどうかワールドマップで判定
-    public boolean isWallWorld(int world_x, int world_y) {
+    public boolean isWallWorld(int world_x, int world_y, int magnification_x, int magnification_y) {
         return map_data[worldToMap(world_x)][worldToMap(world_y)].isWall();
     }
 
@@ -376,7 +341,7 @@ public class MapAdmin {
         section_admin.updateMapData(map_data);
         section_admin.connectRooms(map_data);
         section_admin.makeStairs(map_data);
-        createMine(mine_min_num, mine_max_num);
+        createMine(3, 5);
         //map_object_adminに採掘場所の座標を渡す
 //        map_object_admin.getMinePoint(mine_point);
 
@@ -412,8 +377,11 @@ public class MapAdmin {
                 }
             }
         }
+
+        //20180508
         //map_object_admin初期化
-        map_object_admin.initObjectPosition(this);
+        map_object_admin.getMapAdmin(this);
+        map_object_admin.spawnMine(mine_point);
 //        map_object_admin.getCamera(camera);
         //System.out.println("map_create_finish");
         //sizeRect.set(0,0,map_tile[0][0].getBitmap().getWidth(),map_tile[0][0].getBitmap().getHeight());
@@ -612,7 +580,7 @@ public class MapAdmin {
             }
         }
         if(boss_floor_num == 1) {
-            map_object_admin.initObjectPosition(this);
+            map_object_admin.getMapAdmin(this);
         }
         camera.setCameraOffset(7.5*magnification, 9*magnification);
         map_player.putUnit(7.5*magnification, 9*magnification);
@@ -1586,6 +1554,9 @@ public class MapAdmin {
         }
         //画像表示デバッグ用
         //graphic.bookingDrawBitmapData(auto_tile_wall.big_auto_tile[46], 0, 0, 1, 1, 0, 255, true);
+        for(int i = 0;i < 5;i++) {
+            System.out.println("mine_point[" + i + "] = (" + mine_point[i].x+", "+mine_point[i].y+")");
+        }
     }
 
     public void drawMap_for_autotile_4div_combine_canvas() {
@@ -2292,7 +2263,7 @@ public class MapAdmin {
         if (map_data[worldToMap(x)][worldToMap(y)].isRoom()) {
             section_admin.getNowRoom(worldToMap(x), worldToMap(y)).setDispflag(true);
         }
-        blue_paint.setARGB(100, 0, 0, 255);
+        blue_paint.setARGB(200, 0, 0, 255);
         section_admin.drawAllRoom(graphic, blue_paint, small_map_mag);
         for (int i = 0; i < this.getMap_size_x(); i++) {
             for (int j = 0; j < this.getMap_size_y(); j++) {
@@ -2376,4 +2347,6 @@ public class MapAdmin {
     public void getMapPlayer(MapPlayer m_map_player){
         map_player = m_map_player;
     }
+
+
 }

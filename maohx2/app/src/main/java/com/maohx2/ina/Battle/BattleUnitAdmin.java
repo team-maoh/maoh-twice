@@ -157,10 +157,12 @@ public class BattleUnitAdmin {
         //TODO タッチマーカー残骸を消す
 
         if (mode == MODE.BATTLE) {
+            palette_admin.setPalettesFlags(new boolean[] { true, true, false });
             spawnEnemy();
         }
 
         if (mode == MODE.MINING) {
+            palette_admin.setPalettesFlags(new boolean[] { false, false, true });
             spawnRock();
         }
     }

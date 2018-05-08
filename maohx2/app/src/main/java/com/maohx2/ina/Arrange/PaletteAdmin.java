@@ -1,14 +1,14 @@
 package com.maohx2.ina.Arrange;
 
-        import com.maohx2.ina.Draw.Graphic;
-        import com.maohx2.ina.ItemData.EquipmentInventrySaver;
-        import com.maohx2.ina.ItemData.EquipmentItemData;
-        import com.maohx2.ina.ItemData.EquipmentItemDataAdmin;
-        import com.maohx2.ina.UI.BattleUserInterface;
-        import com.maohx2.kmhanko.Arrange.InventryS;
-        import com.maohx2.kmhanko.itemdata.ExpendItemData;
+import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.ItemData.EquipmentItemData;
+import com.maohx2.ina.ItemData.EquipmentItemDataAdmin;
+import com.maohx2.ina.UI.BattleUserInterface;
+import com.maohx2.kmhanko.Arrange.InventryS;
+import com.maohx2.kmhanko.itemdata.ExpendItemData;
+import com.maohx2.kmhanko.itemdata.MiningItemData;
 
-        import static com.maohx2.ina.Constants.Inventry.INVENTRY_DATA_MAX;
+import static com.maohx2.ina.Constants.Inventry.INVENTRY_DATA_MAX;
 
 /**
  * Created by ina on 2017/11/10.
@@ -16,18 +16,27 @@ package com.maohx2.ina.Arrange;
 
 public class PaletteAdmin {
 
-    Palette palettes[] = new Palette[2];
+    Palette palettes[] = new Palette[3]; // [0] = 武器パレット, [1] = 消費アイテムパレット, [2] = ジオ採掘パレット
+
+    //by kmhanko
+    boolean palettesFlag[] = new boolean[palettes.length]; //palettesより下に配置すること
+
     EquipmentItemDataAdmin equipmentItemDataAdmin;
 
     public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic){
         palettes[0] = new Palette(_battle_user_interface, _graphic, 1400,750,0);
         palettes[1] = new Palette(_battle_user_interface, _graphic,  200,750,1);
         //palettes[0].palette_elements[0].setItemData(EquipmentItemDataAdmin.getDebugItem());
+        //by kmhanko ジオ採掘パレット
+        palettes[2] = new Palette(_battle_user_interface, _graphic,  1400,750,2);
     }
 
     public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic, InventryS equipmentInventry, InventryS expendInventry){
         palettes[0] = new Palette(_battle_user_interface, _graphic, 1400,750,0);
         palettes[1] = new Palette(_battle_user_interface, _graphic,  200,750,1);
+
+        //by kmhanko ジオ採掘パレット
+        palettes[2] = new Palette(_battle_user_interface, _graphic,  1400,750,2);
 
         for(int i = 0; i < INVENTRY_DATA_MAX; i++){
             EquipmentItemData checkEquipmentItem = ((EquipmentItemData)(equipmentInventry.getItemData(i)));
@@ -70,6 +79,10 @@ public class PaletteAdmin {
     public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic, EquipmentItemDataAdmin equipmentItemDataAdmin){
         palettes[0] = new Palette(_battle_user_interface, _graphic, 1400,750,0);
         palettes[1] = new Palette(_battle_user_interface, _graphic,  200,750,1);
+
+        //by kmhanko ジオ採掘パレット
+        palettes[2] = new Palette(_battle_user_interface, _graphic,  1400,750,2);
+
         palettes[0].palette_elements[0].setItemData(equipmentItemDataAdmin.getOneDataByName("素手"));
         palettes[0].palette_elements[1].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグ剣"));
         palettes[0].palette_elements[2].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグ杖"));
@@ -82,25 +95,32 @@ public class PaletteAdmin {
 
     public void update(boolean battle_flag){
 
+        //by kmhanko for文へ。フラグによる確認
         if(battle_flag == true){
-            palettes[0].update();
-            palettes[1].update();
+            for (int i = 0; i < palettes.length; i++) {
+                if (palettesFlag[i]) { palettes[i].update(); }
+            }
         } else {
-            palettes[0].updateSetting();
-            palettes[1].updateSetting();
+            for (int i = 0; i < palettes.length; i++) {
+                if (palettesFlag[i]) { palettes[i].updateSetting(); }
+            }
         }
     }
 
+    //by kmhanko for文へ。フラグによる確認
     public void draw(){
-        palettes[0].draw();
-        palettes[1].draw();
+        for (int i = 0; i < palettes.length; i++) {
+            if (palettesFlag[i]) { palettes[i].draw(); }
+        }
     }
 
     //パレットを押せる状態かどうか
     public boolean doUsePalette(){
 
-        for(int i = 0; i < 2; i++) {
-            if (palettes[i].getPaletteMode() != 0) {
+        //by kmhanko 2→palettes.length
+        for(int i = 0; i < palettes.length; i++) {
+            //by kmhank　フラグ確認追加
+            if (palettes[i].getPaletteMode() != 0 && palettesFlag[i]) {
                 return true;
             }
         }
@@ -116,16 +136,28 @@ public class PaletteAdmin {
         return (ExpendItemData) palettes[1].getSelectedItemData();
     }
 
+    //by kmhanko
+    public MiningItemData checkSelectedMiningItemData(){
+        return (MiningItemData) palettes[2].getSelectedItemData();
+    }
+
     public void deleteExpendItemData(){
         palettes[1].setPaletteCenter(null);
     }
 
-    public void resetDungeonUseNum(){
-        for(int i = 0; i < 8; i++) {
-            if(palettes[0].getItemData(i) != null) {
-                ((EquipmentItemData) (palettes[0].getItemData(i))).setDungeonUseNum(((EquipmentItemData) (palettes[0].getItemData(i))).getUseNum());
-            }
-        }
+    //by kmhanko
+    // *** パレットのフラグ関係
+    public void setPalettesFlags(boolean[] _flags) {
+        palettesFlag = _flags;
+    }
+    public void setPalettesFlag(int i, boolean _flag) {
+        palettesFlag[i] = _flag;
+    }
+    public boolean[] getPalettesFlags() {
+        return palettesFlag;
+    }
+    public boolean getPalettesFlag(int i) {
+        return palettesFlag[i];
     }
 
 }

@@ -46,6 +46,7 @@ public class BattleUserInterface extends UserInterface {
 
         battle_palette_mode = 0;
 
+        //円について、中心位置となす角度を8つセット
         for (int i = -3; i <= 4; i++) {
             if (i < 0) {
                 direction_section_check[8 + i] = Math.PI * (2 * i - 1) / 8;

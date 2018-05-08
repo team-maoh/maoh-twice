@@ -43,8 +43,8 @@ public class BagItemAdmin {
         //コメントアウトするとアイテムが入手順で表示される
 
         for (int i = 0; i < num_of_kinds; i++) {
-            System.out.println("unique_id = " + bag_item[i].getUniqueId());
-            System.out.println("個数 = " + bag_item[i].getItemNum());
+//            System.out.println("unique_id = " + bag_item[i].getUniqueId());
+//            System.out.println("個数 = " + bag_item[i].getItemNum());
         }
 
     }

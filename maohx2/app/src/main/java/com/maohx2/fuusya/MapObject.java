@@ -73,12 +73,19 @@ abstract public class MapObject {
         return w_y;
     }
 
+//    public double getNormX() {
+//        return camera.convertToNormCoordinateX((int) w_x);
+//    }
     public double getNormX() {
-        return camera.convertToNormCoordinateX((int) w_x);
+        return camera.convertToNormCoordinateXForMap((int) w_x);
     }
 
+
+//    public double getNormY() {
+//        return camera.convertToNormCoordinateY((int) w_y);
+//    }
     public double getNormY() {
-        return camera.convertToNormCoordinateY((int) w_y);
+        return camera.convertToNormCoordinateYForMap((int) w_y);
     }
 
     public boolean exists() {
@@ -102,7 +109,7 @@ abstract public class MapObject {
     }
 
     //平均0, 分散1の標準正規分布 N(0, 1)
-    public double makeNormalDist() {
+    protected double makeNormalDist() {
         double seed1 = random.nextDouble();
         double seed2 = random.nextDouble();
 
@@ -113,15 +120,21 @@ abstract public class MapObject {
         return (pow(pow(x1 - x2, 2.0) + pow(y1 - y2, 2.0), 0.5));
     }
 
-    public void initPosition(MapAdmin _map_admin){
+
+    public void initClass(MapAdmin _map_admin) {
         map_admin = _map_admin;
-
         camera = map_admin.getCamera();
+    }
 
-        Point room_point = map_admin.getRoomPoint();
-        w_x = room_point.x;
-        w_y = room_point.y;
+    public void initClass(MapAdmin _map_admin, int shift){
+        initClass(_map_admin);
 
+
+    }
+
+    public void setPosition(int _w_x, int _w_y) {
+        w_x = _w_x;
+        w_y = _w_y;
 
     }
 

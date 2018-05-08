@@ -164,10 +164,6 @@ public class MapUnit extends MapObject {
         return (is_touching_x_wall || is_touching_y_wall);
     }
 
-    //0:壁なし, 1: －, 2: |
-    protected int detectWall(double x1, double y1, double x2, double y2) {
-        return map_admin.detectWallDirection(x1, y1, x2, y2);
-    }
 
     public double getStep() {
         return step;
@@ -231,7 +227,7 @@ public class MapUnit extends MapObject {
         }
     }
 
-    public double checkBadStatus(double raw_step) {
+    protected double checkBadStatus(double raw_step) {
 
         double residual_x = dst_w_x - w_x;
         double residual_y = dst_w_y - w_y;
@@ -321,8 +317,8 @@ public class MapUnit extends MapObject {
             pre_random_rad = random_rad;
 
             raw_step = max(raw_step / 2.0, 1);
-
-            System.out.println("drunk    " + frames_being_drunk);
+//
+//            System.out.println("drunk    " + frames_being_drunk);
             frames_being_drunk--;
         }//酔歩パートおわり
 
@@ -380,5 +376,11 @@ public class MapUnit extends MapObject {
         dst_w_x = put_w_x;
         dst_w_y = put_w_y;
     }
+
+    //0:壁なし, 1: －, 2: |
+    protected int detectWall(double x1, double y1, double x2, double y2) {
+        return map_admin.detectWallDirection(x1, y1, x2, y2);
+    }
+
 
 }

@@ -138,7 +138,7 @@ public class MapPlateAdmin {
         hitpoint.update();
         inventry.updata();
 
-        System.out.println("displaying_content_desu =   " + displaying_content);
+//        System.out.println("displaying_content_desu =   " + displaying_content);
 
         Constants.Touch.TouchState touch_state = dungeon_user_interface.getTouchState();
 
@@ -157,17 +157,17 @@ public class MapPlateAdmin {
 
                 switch (content) {
                     case 0://ステータス
-                        System.out.println("tatami ステータス");
+//                        System.out.println("tatami ステータス");
                         displaying_content = 1;
                         is_displaying_list = false;
                         break;
                     case 1://アイテム
-                        System.out.println("tatami アイテム");
+//                        System.out.println("tatami アイテム");
                         displaying_content = 2;
                         is_displaying_list = false;
                         break;
                     case 2://（ダンジョンを）リタイア
-                        System.out.println("tatami リタイア");
+//                        System.out.println("tatami リタイア");
                         displaying_content = 3;
                         is_displaying_list = false;
                         break;

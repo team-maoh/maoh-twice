@@ -91,9 +91,14 @@ class DungeonSurfaceView extends BaseSurfaceView{
         my_database_admin.addMyDatabase("DungeonDB", "LocalDungeonImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("DungeonDB"), "Dungeon");
 
+        my_database_admin.addMyDatabase("BattleDB", "LocalBattleImage.db", 1, "r");
+        graphic.loadLocalImages(my_database_admin.getMyDatabase("BattleDB"), "Battle");
+
         Intent intent = currentActivity.getIntent();
         DUNGEON_KIND dungeon_kind = (DUNGEON_KIND)intent.getSerializableExtra("DungeonKind");
 
+        //by kmhanko TODO GOKI固定にしてあります。外しても動くようにする必要あり(画像が見つからなくて落ちます)
+        dungeon_kind = DUNGEON_KIND.GOKI;
 
         switch (dungeon_kind){
             case CHESS:
