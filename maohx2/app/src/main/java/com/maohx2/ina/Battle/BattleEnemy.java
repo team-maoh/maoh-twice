@@ -24,6 +24,10 @@ public class BattleEnemy extends BattleUnit {
     int attack_frame;
     int specialActionCount;
 
+    float[] actionRate = new float[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
+    BattleBaseUnitData.SpecialAction specialAction;
+    int specialActionPeriod;
+    int specialActionWidth;
 
     public BattleEnemy(Graphic _graphic){
         super(_graphic);
@@ -57,6 +61,11 @@ public class BattleEnemy extends BattleUnit {
     protected void statusInit() {
         super.statusInit();
         attack_frame = battleDungeonUnitData.getStatus(ATTACK_FRAME);
+
+        specialAction = getSpecialAction();
+        actionRate = getActionRate();
+        specialActionPeriod = getSpecialActionPeriod();
+        specialActionWidth = getSpecialActionWidth();
 
         if (attack_frame > 0 ) {
             attackCount = rnd.nextInt((int) (getAttackFrame() / 2));
@@ -142,21 +151,21 @@ public class BattleEnemy extends BattleUnit {
 
             switch (specialAction) {
                 case BARRIER:
-                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y);
+                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1.0f,1.0f,0,254,false);
                     paint.setARGB(100,0,0,255);
                     graphic.bookingDrawCircle((int)position_x, (int)position_y, (int)radius, paint);
                     break;
                 case COUNTER:
-                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y);
+                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1.0f,1.0f,0,254,false);
                     paint.setARGB(100,255,100,0);
                     graphic.bookingDrawCircle((int)position_x, (int)position_y, (int)radius, paint);
                     break;
                 case STEALTH:
-                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1,1,0,100,false);
+                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1.0f,1.0f,0,100,false);
                     break;
             }
         }else{
-            graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y);
+            graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1.0f,1.0f,0,254,false);
         }
 
         paint.setARGB(255,0,255,0);
@@ -166,8 +175,8 @@ public class BattleEnemy extends BattleUnit {
             paint.setARGB(255, 255, 0, 0);
             graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 0.9), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) attackCount / (double) attack_frame))), (int) (position_y + radius * 1.0), paint);
         }
-
     }
+
 
     @Override
     public double getPositionX() {
@@ -232,5 +241,22 @@ public class BattleEnemy extends BattleUnit {
     public int getSpecialActionPeriod() { return battleDungeonUnitData.getSpecialActionPeriod(); }
     public float[] getActionRate() { return battleDungeonUnitData.getActionRate(); }
     public float getActionRate(ActionID _actionRateID) { return battleDungeonUnitData.getActionRate(_actionRateID); }
+
+    public ActionID checkActionID() {
+
+        double action_rnd = Math.random();
+
+        double store_action_rate = 0;
+        for (int i = 0; i < BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal(); i++) {
+            store_action_rate += actionRate[i];
+            if (store_action_rate >= action_rnd) {
+                if(ActionID.toEnum(i) != null) {
+                    return ActionID.toEnum(i);
+                }
+            }
+        }
+
+        return ActionID.NORMAL_ATTACK;
+    }
 
 }

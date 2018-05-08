@@ -16,10 +16,21 @@ public class BattlePlayer extends BattleUnit {
         exist = true; //todo::消す
     }
 
-    @Override
-    public void draw(){
-        //graphic.bookingDrawText(String.valueOf(hit_point),(int)position_x,(int)position_y);
+    //@Override
+    public void drawStatus(){
+        //HPバー
         graphic.bookingDrawRect(200,50, (int)(200+1200*((double)hit_point/(double)max_hit_point)), 80, paint);
+
+        for(int i = 0; i < BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal() -1; i++) {
+            if (alimentCounts[i] > 0) {
+                if(BattleBaseUnitData.ActionID.toEnum(i+1) == BattleBaseUnitData.ActionID.POISON){graphic.bookingDrawBitmapData(graphic.searchBitmap("Z2"),1400,50);}
+                if(BattleBaseUnitData.ActionID.toEnum(i+1) == BattleBaseUnitData.ActionID.PARALYSIS){graphic.bookingDrawBitmapData(graphic.searchBitmap("A6"),1430,50);}
+                if(BattleBaseUnitData.ActionID.toEnum(i+1) == BattleBaseUnitData.ActionID.BLINDNESS){graphic.bookingDrawBitmapData(graphic.searchBitmap("A1"),1460,50);}
+                if(BattleBaseUnitData.ActionID.toEnum(i+1) == BattleBaseUnitData.ActionID.CURSE){graphic.bookingDrawBitmapData(graphic.searchBitmap("Z9"),1490,50);}
+            }
+        }
+
+
     }
 
 

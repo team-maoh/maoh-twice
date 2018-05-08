@@ -77,7 +77,17 @@ public class BattleBaseUnitData {
         STOP,
         BLINDNESS,
         CURSE,
-        ACTION_ID_NUM
+        ACTION_ID_NUM;
+
+        //enumへのキャスト用
+        public static ActionID toEnum(int x) {
+            for(ActionID type : ActionID.values()) {
+                if (type.ordinal() == x) {
+                    return type;
+                }
+            }
+            return null;
+        }
     }
 
     int[] dbStatus = new int[DbStatusID.DbStatusNum.ordinal()];
@@ -196,6 +206,7 @@ public class BattleBaseUnitData {
     public int getSpecialActionPeriod() { return specialActionPeriod; }
     public void setSpecialActionWidth(int _specialActionWidth) { specialActionWidth = _specialActionWidth; }
     public void setSpecialActionPeriod(int _specialActionPeriod) { specialActionPeriod = _specialActionPeriod; }
+
 
 
 }

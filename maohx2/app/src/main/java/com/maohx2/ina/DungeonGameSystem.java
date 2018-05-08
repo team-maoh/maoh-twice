@@ -75,7 +75,7 @@ public class DungeonGameSystem {
         map_size.set(dungeon_data_admin.getDungeon_data().get(2).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(2).getMap_size_y());
         //camera = new Camera(map_size, 64*4);
         map_admin = new MapAdmin(graphic, map_object_admin, dungeon_data_admin.getDungeon_data().get(2));
-//        map_object_admin.getCamera(map_admin.getCamera());
+        //map_object_admin.getCamera(map_admin.getCamera());
         //map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin,this, dungeonModeManage);
         paint = new Paint();
         paint.setColor(Color.BLUE);
@@ -101,8 +101,8 @@ public class DungeonGameSystem {
         equipmentInventry = globalData.getEquipmentInventry();
         expendInventry = globalData.getExpendItemInventry();
 
-        palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipmentInventry, expendInventry);
-        //palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipment_item_data_admin);
+        //palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipmentInventry, expendInventry);
+        palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipment_item_data_admin);
 
 
         PlayerStatus playerStatus = globalData.getPlayerStatus();
@@ -111,7 +111,7 @@ public class DungeonGameSystem {
 
         backGround = graphic.searchBitmap("firstBackground");
         //デバッグ用。消すの忘れない
-        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
+        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
     }
 
     public void update() {

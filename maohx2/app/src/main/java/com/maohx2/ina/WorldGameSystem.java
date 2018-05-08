@@ -356,6 +356,10 @@ public class WorldGameSystem {
                                 /*worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
                                 */
+
+                                expendItemInventry.save();
+                                equipmentInventry.save();
+
                             }
                         }
                 }

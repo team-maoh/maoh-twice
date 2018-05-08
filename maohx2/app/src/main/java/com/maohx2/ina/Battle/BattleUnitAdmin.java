@@ -63,7 +63,6 @@ public class BattleUnitAdmin {
 
     //by kmhanko
     BattleUnitDataAdmin battleUnitDataAdmin;
-    int count = 0;
     Paint paint = new Paint();
     MyDatabaseAdmin databaseAdmin;
 
@@ -142,6 +141,8 @@ public class BattleUnitAdmin {
 
         palette_admin.resetDungeonUseNum();
 
+        paint.setARGB(230,0,0,0);
+
     }
 
     //by kmhanko
@@ -193,18 +194,18 @@ public class BattleUnitAdmin {
         //TODO 仮。本当はダンジョンのデータなどを引数にして出現する敵をランダムなどで決定する
 
         //一覧
-        // setBattleUnitData("m014", 0); //通常攻撃のみ
-        //setBattleUnitData("e54-3", 0); //毒攻撃のみ
+        //setBattleUnitData("m014", 0); //通常攻撃のみ
+        setBattleUnitData("e54-3", 0); //毒攻撃のみ
         //setBattleUnitData("e01-0", 0); //麻痺のみ
         //setBattleUnitData("e88-0", 0); //ストップのみ
-        //setBattleUnitData("e74-0", 0); //カウンター持ち　暗黒のみ
-        //setBattleUnitData("m003-2", 0); //呪いのみ
+        setBattleUnitData("e74-0", 0); //カウンター持ち　暗黒のみ
+        setBattleUnitData("m003-2", 0); //呪いのみ
         //setBattleUnitData("e96-0", 0); //ステルス持ち　行動いろいろ
         //setBattleUnitData("e27", 0); //バリア持ち　行動いろいろ
         //setBattleUnitData("m007", 0); //行動いろいろ
-        setBattleUnitData("e103-0", 0);//バリア持ち　行動いろいろ
-        setBattleUnitData("e83-1", 0);//カウンター持ち　行動いろいろ
-        setBattleUnitData("e94-3", 0);//ステルス持ち　行動いろいろ
+        //setBattleUnitData("e103-0", 0);//バリア持ち　行動いろいろ
+        //setBattleUnitData("e83-1", 0);//カウンター持ち　行動いろいろ
+        //setBattleUnitData("e94-3", 0);//ステルス持ち　行動いろいろ
 
     }
 
@@ -235,18 +236,22 @@ public class BattleUnitAdmin {
         double touch_y = battle_user_interface.getTouchY();
         TouchState touch_state = battle_user_interface.getTouchState();
 
-        attack_count++;
+        battle_units[0].update();
 
-        if(marker_flag == false) {
+        if(battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.PARALYSIS.ordinal()-1) == 0 || battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.PARALYSIS.ordinal()-1) %2 == 0) {
+            attack_count++;
+        }
+
+        if (marker_flag == false) {
             palette_admin.update(true);
         }
 
-        if(palette_admin.doUsePalette() == false) {
+        if (palette_admin.doUsePalette() == false) {
             //プレイヤーの攻撃によるマーカーの設置
             if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
                 EquipmentItemData attack_equipment = palette_admin.getEquipmentItemData();
-                if(attack_equipment != null) {
-                    if(attack_equipment.getDungeonUseNum() > 0) {
+                if (attack_equipment != null) {
+                    if (attack_equipment.getDungeonUseNum() > 0) {
                         //最高攻撃頻度を上回っていないか
                         if ((first_attack_frag == false && attack_count >= attack_equipment.getTouchFrequency()) || (first_attack_frag == true && attack_count >= attack_equipment.getTouchFrequency() * attack_equipment.getAutoFrequencyRate())) {
                             attack_equipment.setDungeonUseNum(attack_equipment.getDungeonUseNum() - 1);
@@ -271,7 +276,7 @@ public class BattleUnitAdmin {
             marker_flag = false;
         }
 
-            //マーカーの縮小
+        //マーカーの縮小
         for (int i = 0; i < MAKER_NUM; i++) {
             if (touch_markers[i].isExist() == true) {
                 touch_markers[i].update();
@@ -282,21 +287,44 @@ public class BattleUnitAdmin {
         //敵HP更新
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (battle_units[i].isExist() == true) {
-                int ex = (int)battle_units[i].getPositionX();
-                int ey = (int)battle_units[i].getPositionY();
-                int er = (int)battle_units[i].getRadius();
-                for(int j = 0; j< MAKER_NUM; j++) {
+                int ex = (int) battle_units[i].getPositionX();
+                int ey = (int) battle_units[i].getPositionY();
+                int er = (int) battle_units[i].getRadius();
+                for (int j = 0; j < MAKER_NUM; j++) {
                     if (touch_markers[j].isExist() == true) {
                         int cx = touch_markers[j].getPositionX();
                         int cy = touch_markers[j].getPositionY();
                         int cr = touch_markers[j].getRadius();
 
-                        if((ex-cx)*(ex-cx)+(ey-cy)*(ey-cy)<(er-cr)*(er-cr)){
-                            int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage();
-                            if(new_hp > 0) {
-                                battle_units[i].setHitPoint(new_hp);
-                            }else{
-                                battle_units[i].existIs(false);
+                        //マーカーが当たっている
+                        if ((ex - cx) * (ex - cx) + (ey - cy) * (ey - cy) < (er - cr) * (er - cr)) {
+
+                            if (((BattleEnemy) (battle_units[i])).isSpecialAction() == false) {
+
+                                int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage();
+                                if (new_hp > 0) {
+                                    battle_units[i].setHitPoint(new_hp);
+                                } else {
+                                    battle_units[i].existIs(false);
+                                }
+                            } else {
+                                //ダメージがゼロ
+                                if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.BARRIER) {
+                                } else if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.COUNTER) {
+                                    int new_hp = battle_units[0].getHitPoint() - touch_markers[j].getDamage();
+                                    if (new_hp > 0) {
+                                        battle_units[0].setHitPoint(new_hp);
+                                    } else {
+                                        battle_units[0].existIs(false);
+                                    }
+                                } else if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.STEALTH) {
+                                    int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage();
+                                    if (new_hp > 0) {
+                                        battle_units[i].setHitPoint(new_hp);
+                                    } else {
+                                        battle_units[i].existIs(false);
+                                    }
+                                }
                             }
                         }
                     }
@@ -306,9 +334,9 @@ public class BattleUnitAdmin {
 
         //敵の更新と攻撃処理
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
-            if (battle_units[i].isExist() == true ) {
+            if (battle_units[i].isExist() == true) {
                 int damage_to_player = battle_units[i].update();
-                if(damage_to_player > 0) {
+                if (damage_to_player > 0) {
                     EquipmentItemData defense_equipment = palette_admin.getEquipmentItemData();
                     float damage_rate = 1;
                     if (defense_equipment != null) {
@@ -316,13 +344,23 @@ public class BattleUnitAdmin {
                     }
 
                     int heel_to_player = 0;
-                    if(palette_admin.checkSelectedExpendItemData() != null) {
-                        heel_to_player = battle_units[0].getHitPoint()*palette_admin.checkSelectedExpendItemData().getHp();
+                    if (palette_admin.checkSelectedExpendItemData() != null) {
+                        heel_to_player = battle_units[0].getHitPoint() * palette_admin.checkSelectedExpendItemData().getHp();
                         palette_admin.deleteExpendItemData();
                     }
 
                     int new_hp = battle_units[0].getHitPoint() - (int) (damage_to_player * damage_rate) + heel_to_player;
-                    if(new_hp > battle_units[0].getMaxHitPoint()){new_hp = battle_units[0].getMaxHitPoint();}
+                    if (new_hp > battle_units[0].getMaxHitPoint()) {
+                        new_hp = battle_units[0].getMaxHitPoint();
+                    }
+
+
+                    //状態異常攻撃
+                    BattleBaseUnitData.ActionID actionID = ((BattleEnemy)(battle_units[i])).checkActionID();
+                    if(actionID != BattleBaseUnitData.ActionID.NORMAL_ATTACK){
+                        battle_units[0].setAilmentCounts(actionID.ordinal()-1, 20);
+                    }
+
                     if (new_hp <= 0) {
                         //ゲームオーバー
                     }
@@ -336,7 +374,7 @@ public class BattleUnitAdmin {
             result_flag = result_flag && !battle_units[i].isExist();
         }
 
-        if(result_flag == true){
+        if (result_flag == true) {
             //戦闘が終了した時
             // by kmhanko
             if (mode == MODE.BATTLE) {
@@ -358,20 +396,30 @@ public class BattleUnitAdmin {
     public void draw() {
 
 
-        for(int i = 0; i < MAKER_NUM; i++) {
-            if(touch_markers[i].isExist() == true ) {
-                touch_markers[i].draw();
-            }
-        }
 
-        for (int i = 0; i < BATTLE_UNIT_MAX; i++) {
-
+        for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (battle_units[i].isExist() == true ) {
                 if ( i == 0 && mode == MODE.MINING) {
                     continue;
                     //TODO HPゲージを非表示にしているが、あまりよく無い書き方
                 }
                 battle_units[i].draw();
+            }
+        }
+
+        //盲目だった場合の処理
+        if(battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.BLINDNESS.ordinal() -1) > 0){
+            graphic.bookingDrawRect(0,0,1000,300,paint);
+            graphic.bookingDrawRect(1000,0,1601,600,paint);
+            graphic.bookingDrawRect(600,600,1601,901,paint);
+            graphic.bookingDrawRect(0,300,600,901,paint);
+        }
+
+        ((BattlePlayer)(battle_units[0])).drawStatus();
+
+        for(int i = 0; i < MAKER_NUM; i++) {
+            if(touch_markers[i].isExist() == true ) {
+                touch_markers[i].draw();
             }
         }
 
