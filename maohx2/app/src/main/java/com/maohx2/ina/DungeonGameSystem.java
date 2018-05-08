@@ -28,6 +28,8 @@ import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.itemdata.MiningItemDataAdmin;
+import com.maohx2.fuusya.MapInventryAdmin;
+
 
 /**
  * Created by ina on 2017/09/05.
@@ -59,6 +61,7 @@ public class DungeonGameSystem {
     DungeonModeManage dungeonModeManage;
     boolean is_displaying_menu, is_touching_outside_menu;
     MapPlateAdmin map_plate_admin;
+    MapInventryAdmin map_inventry_admin;
 
     InventryS equipmentInventry;
     InventryS expendInventry;
@@ -69,9 +72,12 @@ public class DungeonGameSystem {
         battle_user_interface = _battle_user_interface;
         graphic = _graphic;
 
+        GlobalData globalData = (GlobalData) (dungeon_activity.getApplication());
+
         dungeonModeManage = new DungeonModeManage();
-        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange);
-        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_plate_admin, dungeonModeManage);
+        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange, globalData);
+        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_plate_admin, dungeonModeManage, globalData);
+        map_inventry_admin = new MapInventryAdmin(globalData, map_plate_admin.getInventry(), map_object_admin, map_plate_admin);
 
         dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
         map_size.set(dungeon_data_admin.getDungeon_data().get(2).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(2).getMap_size_y());
@@ -100,7 +106,6 @@ public class DungeonGameSystem {
 
         equipment_item_data_admin = new EquipmentItemDataAdmin(graphic, my_database_admin);
 
-        GlobalData globalData = (GlobalData)(dungeon_activity.getApplication());
         equipmentInventry = globalData.getEquipmentInventry();
         expendInventry = globalData.getExpendItemInventry();
 
@@ -118,7 +123,7 @@ public class DungeonGameSystem {
         backGround = graphic.searchBitmap("firstBackground");
         //デバッグ用。消すの忘れない
         
-        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
+        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
 
     }
 

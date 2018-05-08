@@ -33,7 +33,7 @@ public class MapEnemy extends MapUnit {
 
     double DEFAULT_STEP = 3;//プレイヤー未発見時の歩幅
     int chase_count;
-    double REACH_FOR_PLAYER = 50;
+    double REACH_FOR_PLAYER = 160;
     int total_dirs;//画像が1方位なのか、4方位なのか、8方位なのか(Playerの視界に入っているかどうかの判定に使う)
 
     int CHASE_STEPS = 6;//名前は仮 / EnemyはPlayerの{現在座標ではなく}CHASE_STEPS歩前の座標を追いかける

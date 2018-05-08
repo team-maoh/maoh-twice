@@ -9,11 +9,14 @@ import android.view.SurfaceHolder;
 import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.DungeonGameSystem;
 import com.maohx2.ina.DungeonModeManage;
+import com.maohx2.ina.GlobalData;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.UI.DungeonUserInterface;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 //import com.maohx2.ina.ImageAdmin;
 
@@ -29,7 +32,7 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 public class MapObjectAdmin {
 
     int NUM_OF_ENEMY = 10;
-//    int NUM_OF_ITEM = 10;// > 2
+    //    int NUM_OF_ITEM = 10;// > 2
     int NUM_OF_TRAP = 15;
     int NUM_OF_MINE = 5;
     int NUM_OF_BOSS = 1;
@@ -65,18 +68,23 @@ public class MapObjectAdmin {
     MapPlateAdmin map_plate_admin;
     MapAdmin map_admin;
     DungeonModeManage dungeon_mode_manage;
+    GlobalData globalData;
+    PlayerStatus playerStatus;
 
     Graphic graphic;
     Camera camera;
 
     boolean is_displaying_menu;
 
-    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage) {
+
+    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, GlobalData _globalData) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
         sound_admin = _sound_admin;
         map_plate_admin = _map_plate_admin;
         dungeon_mode_manage = _dungeon_mode_manage;
+        globalData = _globalData;
+        playerStatus = globalData.getPlayerStatus();
 
         is_displaying_menu = false;
 
@@ -87,23 +95,6 @@ public class MapObjectAdmin {
 
         player_x = map_player.getWorldX();
         player_y = map_player.getWorldY();
-
-//        for (int i = 0; i < NUM_OF_ITEM; i++) {
-//            map_item[i] = new MapItem(graphic, this, i % 2, camera);
-//            map_item[i].init();
-//
-//            switch (i % 2) {
-//                case 0:
-//                    map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "ハーピー");
-//                    break;
-//                case 1:
-//                    map_item_bitmap[i] = new MapObjectBitmap(8, graphic, "ドラゴン");
-//                    break;
-//                default:
-//                    break;
-//            }
-//            map_item_bitmap[i].init();
-//        }
 
         for (int i = 0; i < NUM_OF_TRAP; i++) {
 
@@ -141,6 +132,7 @@ public class MapObjectAdmin {
 
         bag_item_admin = new BagItemAdmin();
         bag_item_admin.init();
+
     }
 
     public void init() {
@@ -148,10 +140,13 @@ public class MapObjectAdmin {
 
     public void update() {
 
-        map_player.update();
-        map_player_bitmap.update();
-        player_x = map_player.getWorldX();
-        player_y = map_player.getWorldY();
+        //チュートリアル中は時が停止する
+        if (playerStatus.getTutorialInDungeon() == 1) {
+
+            map_player.update();
+            map_player_bitmap.update();
+            player_x = map_player.getWorldX();
+            player_y = map_player.getWorldY();
 //        System.out.println("player_x_desu" + player_x);
 //        System.out.println("player_y_desu" + player_y);
 
@@ -159,22 +154,22 @@ public class MapObjectAdmin {
 //            map_item[i].update();
 //            map_item_bitmap[i].update();
 //        }
-        for (int i = 0; i < NUM_OF_TRAP; i++) {
-            map_trap[i].update();
-            map_trap_bitmap[i].update();
-        }
-        for (int i = 0; i < NUM_OF_MINE; i++) {
-            map_mine[i].update();
-            map_mine_bitmap[i].update();
-        }
+            for (int i = 0; i < NUM_OF_TRAP; i++) {
+                map_trap[i].update();
+                map_trap_bitmap[i].update();
+            }
+            for (int i = 0; i < NUM_OF_MINE; i++) {
+                map_mine[i].update();
+                map_mine_bitmap[i].update();
+            }
+            for (int i = 0; i < NUM_OF_ENEMY; i++) {
+                map_enemy[i].update();
+                map_enemy_bitmap[i].update();
+            }
 
-        for (int i = 0; i < NUM_OF_ENEMY; i++) {
-            map_enemy[i].update();
-            map_enemy_bitmap[i].update();
+            map_boss.update();
+            map_boss_bitmap.update();
         }
-
-        map_boss.update();
-        map_boss_bitmap.update();
 
     }
 
@@ -210,6 +205,7 @@ public class MapObjectAdmin {
             map_player_bitmap.draw(map_player.getDirOnMap(), map_player.getNormX(), map_player.getNormY());
         }
 
+
     }
 
     public MapPlayer getPlayer() {
@@ -234,7 +230,7 @@ public class MapObjectAdmin {
 
     //by kmhanko
     public void battleStart() {
-        dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+        //dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
     }
     public void mineStart() {
         dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);

@@ -42,6 +42,8 @@ public class PlayerStatus {
     private int clearCount; //制覇回数
     private int nowClearCount; //現在の制覇回数時間軸
 
+    private int tutorialInDungeon; //by fuusya : ダンジョンでチュートリアルを表示中 = 0 (表示済み = 1)
+
     //Equip
 
 
@@ -123,6 +125,7 @@ public class PlayerStatus {
     public int getMaohWinCount() { return maohWinCount; }
     public int getClearCount() { return clearCount; }
     public int getNowClearCount() { return nowClearCount; }
+    public int getTutorialInDungeon() {return tutorialInDungeon; }
 
     public void setHP(int x) { hp = x; }
     public void setAttack(int x) { attack = x; }
@@ -132,6 +135,7 @@ public class PlayerStatus {
     public void setMoney(int x) { money = x; }
     public void setClearCount(int x) { clearCount = x; }
     public void setNowClearCount(int x) {  nowClearCount = x; }
+    public void setTutorialInDungeon(int x){  tutorialInDungeon = x;}
 
     public void setBaseHP(int x) { baseHp = x; }
     public void setBaseAttack(int x) { baseAttack = x; }
@@ -160,7 +164,8 @@ public class PlayerStatus {
                 money,
                 maohWinCount,
                 clearCount,
-                nowClearCount
+                nowClearCount,
+                tutorialInDungeon
         };
     }
 
