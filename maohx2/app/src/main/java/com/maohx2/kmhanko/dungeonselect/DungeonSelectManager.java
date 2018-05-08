@@ -446,14 +446,19 @@ public class DungeonSelectManager {
         if (buttonID == 0 ) { //侵入する
             initUIs();
 
-            //TODO 侵入処理におけるダンジョンデータによる分岐処理
-            /*
             MapIconPlate tmp = (MapIconPlate)mapIconPlateGroup.getPlate(focusDungeonButtonID);
+            String dungeonName = tmp.getMapIconName();
+            Constants.DungeonKind.DUNGEON_KIND dungeonKind;
 
-            tmp.getMapIconName()
-            */
+            switch(dungeonName) {
+                case "Chess": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.CHESS; break;
+                case "Dragon": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.DRAGON; break;
+                case "Haunted": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.HAUNTED; break;
+                case "Forest": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.FOREST; break;
+                default: dungeonKind = Constants.DungeonKind.DUNGEON_KIND.GOKI; break;
+            }
 
-            activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.GOKI);
+            activityChange.toDungeonActivity(dungeonKind);
         }
         if (buttonID == 1 ) { //やめる
             initUIs();
