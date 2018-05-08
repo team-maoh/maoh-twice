@@ -56,7 +56,7 @@ public class GlobalData extends Application {
 
         //by kmhanko
         playerStatus = new PlayerStatus(g_my_database_admin);
-        playerStatusSaver = new PlayerStatusSaver(g_my_database_admin, "PlayerStatusSave", "PlayerStatusSave.db", 1, "s", playerStatus);
+        playerStatusSaver = new PlayerStatusSaver(g_my_database_admin, "PlayerStatusSave", "PlayerStatusSave.db", 1, "ns", playerStatus);
         playerStatusSaver.load();
 
 
