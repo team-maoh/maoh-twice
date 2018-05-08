@@ -8,6 +8,8 @@ import com.maohx2.ina.Draw.Graphic;
 
 public class BattlePlayer extends BattleUnit {
 
+
+
     BattlePlayer(Graphic _graphic){
         super(_graphic);
         paint.setARGB(255,0,255,0);

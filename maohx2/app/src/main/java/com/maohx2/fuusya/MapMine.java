@@ -32,6 +32,7 @@ public class MapMine extends MapInanimate {
 
             if (player.isWithinReach(w_x, w_y, REACH_FOR_PLAYER) == true) {
                 System.out.println("採掘スポットに接触");
+                map_object_admin.mineStart();
 //                sound_admin.play("getItem");
 //                exists = false;
 //            bag_Item_admin.setItemIdToBagItem(map_Item[i].getId());//アイテムidを引き渡す

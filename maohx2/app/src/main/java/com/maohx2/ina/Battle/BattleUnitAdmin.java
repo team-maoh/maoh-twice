@@ -66,6 +66,7 @@ public class BattleUnitAdmin {
     BattleUnitDataAdmin battleUnitDataAdmin;
     Paint paint = new Paint();
     MyDatabaseAdmin databaseAdmin;
+    TimeLimitBar timeLimitBar;
 
     ExpendItemDataAdmin expendItemDataAdmin;
     EquipmentItemDataCreater equipmentItemDataCreater;
@@ -103,6 +104,8 @@ public class BattleUnitAdmin {
         repeat_count = _repeat_count;
 
         playerStatus = _playerStatus;
+
+        timeLimitBar = new TimeLimitBar(graphic);
 
         //by kmhanko
         // *** equipItemDataCreaterのインスタンス化 ***
@@ -165,6 +168,7 @@ public class BattleUnitAdmin {
         if (mode == MODE.MINING) {
             palette_admin.setPalettesFlags(new boolean[] { false, false, true });
             spawnRock();
+            timeLimitBar.reset(30 * 15);
         }
     }
 
@@ -189,6 +193,13 @@ public class BattleUnitAdmin {
     public void spawnEnemy(String[] monsters) {
         for (int i = 0; i < monsters.length; i++){
             setBattleUnitData(monsters[i],repeat_count);
+        }
+    }
+
+    public void deleteEnemy() {
+        for (int i = 0; i < battle_units.length; i++){
+            battle_units[i].existIs(false);
+            battle_units[i].dropFlagIs(false);
         }
     }
 
@@ -265,14 +276,16 @@ public class BattleUnitAdmin {
                         if (attack_equipment.getDungeonUseNum() > 0) {
                             //最高攻撃頻度を上回っていないか
                             if ((first_attack_frag == false && attack_count >= attack_equipment.getTouchFrequency()) || (first_attack_frag == true && attack_count >= attack_equipment.getTouchFrequency() * attack_equipment.getAutoFrequencyRate())) {
-                                attack_equipment.setDungeonUseNum(attack_equipment.getDungeonUseNum() - 1);
+                                if (mode == MODE.BATTLE) {
+                                    attack_equipment.setDungeonUseNum(attack_equipment.getDungeonUseNum() - 1);
+                                }
                                 first_attack_frag = true;
                                 marker_flag = true;
                                 attack_count = 0;
                                 for (int i = 0; i < MAKER_NUM; i++) {
                                     if (touch_markers[i].isExist() == false) {
                                         //todo:attackの計算
-                                        touch_markers[i].generate((int) touch_x, (int) touch_y, palette_admin.getEquipmentItemData().getRadius(), battle_units[0].getAttack() + palette_admin.getEquipmentItemData().getAttack(), palette_admin.getEquipmentItemData().getDecayRate());
+                                        touch_markers[i].generate((int) touch_x, (int) touch_y, attack_equipment.getRadius(), battle_units[0].getAttack() + attack_equipment.getAttack(), attack_equipment.getDecayRate());
                                         break;
                                     }
                                 }
@@ -386,7 +399,7 @@ public class BattleUnitAdmin {
             result_flag = result_flag && !battle_units[i].isExist();
         }
 
-        if (result_flag == true) {
+        if (result_flag == true || (timeLimitBar.isTimeUp() && timeLimitBar.isExist())) {
             //戦闘が終了した時
             // by kmhanko
             if (mode == MODE.BATTLE) {
@@ -395,6 +408,13 @@ public class BattleUnitAdmin {
                 resultButtonGroup.setDrawFlag(true);
             }
             if (mode == MODE.MINING) {
+                if (timeLimitBar.isTimeUp()) {
+                    //TODO 時間切れで終了した場合
+                    //resultTextBoxUpdate();
+                } else {
+                    //TODO ジオを掘り尽くした場合
+                    //resultTextBoxUpdate();
+                }
                 resultButtonGroup.setUpdateFlag(true);
                 resultButtonGroup.setDrawFlag(true);
             }
@@ -405,6 +425,11 @@ public class BattleUnitAdmin {
         //text関係
         resultButtonCheck();
         resultButtonGroup.update();
+
+        //timeLimit関係
+        if (mode == MODE.MINING) {
+            timeLimitBar.update();
+        }
     }
 
 
@@ -417,10 +442,6 @@ public class BattleUnitAdmin {
 
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (battle_units[i].isExist() == true ) {
-                if ( i == 0 && mode == MODE.MINING) {
-                    continue;
-                    //TODO HPゲージを非表示にしているが、あまりよく無い書き方
-                }
                 battle_units[i].draw();
             }
         }
@@ -432,8 +453,13 @@ public class BattleUnitAdmin {
             graphic.bookingDrawRect(600,600,1601,901,paint);
             graphic.bookingDrawRect(0,300,600,901,paint);
         }
-
-        ((BattlePlayer)(battle_units[0])).drawStatus();
+        if (mode == MODE.BATTLE) {
+            ((BattlePlayer)(battle_units[0])).drawStatus();
+        }
+        if (mode == MODE.MINING) {
+            //制限時間の表示
+            timeLimitBar.draw();
+        }
 
         for(int i = 0; i < MAKER_NUM; i++) {
             if(touch_markers[i].isExist() == true ) {
@@ -463,7 +489,6 @@ public class BattleUnitAdmin {
 
 
     //by kmhanko
-
     private void getDropItem() {
         List<String> dropItemNames = new ArrayList<String>();
         BattleBaseUnitData tempBattleBaseUnitData = null;
@@ -508,7 +533,7 @@ public class BattleUnitAdmin {
         }
 
         // result関係
-        resultTextBoxUpdate(dropItemNames);
+        resultTextBoxUpdateItems(dropItemNames);
     }
 
     public BattleUnitAdmin() {}
@@ -531,7 +556,9 @@ public class BattleUnitAdmin {
         resultTextPaint.setColor(Color.WHITE);
     }
 
-    private void resultTextBoxUpdate(List<String> itemNames) {
+    private void resultTextBoxUpdateItems(List<String> itemNames) {
+
+
         textBoxAdmin.setTextBoxExists(resultTextBoxID, true);
 
         String winMessage = "▽入手アイテム▽";
@@ -585,11 +612,17 @@ public class BattleUnitAdmin {
         int buttonID = resultButtonGroup.getTouchContentNum();
         if (buttonID == 0 ) { //OK
             //戦闘画面終了する
-            dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
-            resultButtonGroup.setUpdateFlag(false);
-            resultButtonGroup.setDrawFlag(false);
-            textBoxAdmin.setTextBoxExists(resultTextBoxID, false);
+            battleEnd();
         }
+    }
+
+    public void battleEnd() {
+        deleteEnemy();
+        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
+        resultButtonGroup.setUpdateFlag(false);
+        resultButtonGroup.setDrawFlag(false);
+        textBoxAdmin.setTextBoxExists(resultTextBoxID, false);
+        timeLimitBar.delete();
     }
 
     // *** リザルトメッセージ関係ここまで ***
