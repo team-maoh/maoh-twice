@@ -232,9 +232,6 @@ public class MapObjectAdmin {
     public void battleStart() {
         //dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
     }
-    public void mineStart() {
-        dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
-    }
 
 
     public void getMapAdmin(MapAdmin _map_admin) {

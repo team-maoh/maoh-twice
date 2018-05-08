@@ -97,11 +97,9 @@ class DungeonSurfaceView extends BaseSurfaceView{
         Intent intent = currentActivity.getIntent();
         DUNGEON_KIND dungeon_kind = (DUNGEON_KIND)intent.getSerializableExtra("DungeonKind");
 
-        //by kmhanko TODO GOKI固定にしてあります。外しても動くようにする必要あり(画像が見つからなくて落ちます)
-        //dungeon_kind = DUNGEON_KIND.GOKI;
-
-        //魔王と戦闘であるかどうか
-        boolean maohFlag = false;
+        //TODO バグらないようにとりあえず読んでる
+        my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
+        graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
 
         switch (dungeon_kind){
             case CHESS:
@@ -131,7 +129,6 @@ class DungeonSurfaceView extends BaseSurfaceView{
             case MAOH:
                 my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
                 graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
-                maohFlag = true;
                 break;
 
         }
@@ -150,7 +147,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
         global_data.getGeoInventry().init(battle_user_interface, graphic,1000,100,1400,508, 10);
         global_data.getExpendItemInventry().init(battle_user_interface, graphic,1000,100,1400,508, 10);
 
-        game_system.init(dungeon_user_interface, graphic, sound_admin, my_database_admin, battle_user_interface, dungeon_activity, my_database_admin, activityChange,1, maohFlag);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
+        game_system.init(dungeon_user_interface, graphic, sound_admin, my_database_admin, battle_user_interface, dungeon_activity, my_database_admin, activityChange,1, dungeon_kind);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
     }
 
     public void runGameSystem() {

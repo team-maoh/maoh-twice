@@ -70,9 +70,7 @@ public class DungeonGameSystem {
     ActivityChange activityChange;
     PlayerStatus playerStatus;
 
-    boolean maohFlag;
-
-    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange _activityChange, int _repeat_count, boolean _maohFlag) {
+    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange _activityChange, int _repeat_count, Constants.DungeonKind.DUNGEON_KIND dungeon_kind) {
         dungeon_user_interface = _dungeon_user_interface;
         battle_user_interface = _battle_user_interface;
         graphic = _graphic;
@@ -88,10 +86,8 @@ public class DungeonGameSystem {
         map_size.set(dungeon_data_admin.getDungeon_data().get(2).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(2).getMap_size_y());
         //camera = new Camera(map_size, 64*4);
 
-
-        maohFlag = _maohFlag;
         //kmhanko 魔王と戦闘しない場合のみ呼ぶものをこの中に
-        if (!maohFlag) {
+        if (!(dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH)) {
             map_admin = new MapAdmin(graphic, map_object_admin);
         }
 
@@ -128,12 +124,16 @@ public class DungeonGameSystem {
 
         playerStatus = globalData.getPlayerStatus();
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
+        battleUnitDataAdmin.loadBattleUnitData(dungeon_kind);//敵読み込み
+
+
+
         battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin, text_box_admin, playerStatus.getNowClearCount());
 
         backGround = graphic.searchBitmap("firstBackground");
 
         //by kmhanko即座に魔王との戦闘画面へ
-        if (maohFlag) {
+        if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH) {
             dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAOH_INIT);
         }
 

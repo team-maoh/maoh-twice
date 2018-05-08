@@ -26,6 +26,8 @@ public class BattleUnitDataAdmin {
     //List<BattleDungeonUnitData> battle_dungeon_unit_datas = new ArrayList<BattleDungeonUnitData>();
     Graphic graphic;
 
+    List<String> name;
+
     final String[] tableName = new String[] {
             "battle_unit_data", "maoh_unit_data"
     };
@@ -36,11 +38,38 @@ public class BattleUnitDataAdmin {
         databaseAdmin = _databaseAdmin;
         databaseAdmin.addMyDatabase("BattleUnitData","BattleUnitData.db",1,"r");
         battle_unit_data_database = databaseAdmin.getMyDatabase("BattleUnitData");
-        loadBattleUnitData();//必ず初めに呼ぶこと
     }
 
     //データベースを読み込んで画像をbitmap_dataに保存する
-    private void loadBattleUnitData() {
+    public void loadBattleUnitData(Constants.DungeonKind.DUNGEON_KIND dungeonKind) {
+        String tableName;
+        switch (dungeonKind) {
+            case FOREST:
+                tableName = "forest_unit_data";
+                break;
+            case HAUNTED:
+                tableName = "haunted_unit_data";
+                break;
+            case DRAGON:
+                tableName = "dragon_unit_data";
+                break;
+            case CHESS:
+                tableName = "chess_unit_data";
+                break;
+            case MAOH:
+                tableName = "maoh_unit_data";
+                break;
+            default:
+                throw new Error("☆BattleUnitDataAdmin: ダンジョンの種類が不適切");
+        }
+        loadBattleUnitData(tableName);
+
+        //デバッグ用
+        loadBattleUnitData("battle_unit_data");
+
+    }
+
+    public void loadBattleUnitData(String tableName) {
 
         /*
         //by kmhanko String → Integer
@@ -83,7 +112,7 @@ public class BattleUnitDataAdmin {
         List<Float> curse = new ArrayList<Float>();
         */
 
-        for(int k = 0; k < tableName.length; k++) {
+        //for(int k = 0; k < tableName.length; k++) {
 
             List<String>[] drop_item = new ArrayList[Constants.Item.DROP_NUM];
             for (int i = 0; i < drop_item.length; i++) {
@@ -94,52 +123,52 @@ public class BattleUnitDataAdmin {
                 drop_item_percent[i] = new ArrayList<Double>();
             }
 
-            List<String> name = battle_unit_data_database.getString(tableName[k], "name", null);
-            List<Integer> attack_frame = battle_unit_data_database.getInt(tableName[k], "attack_frame", null);
-            List<Integer> initial_hp = battle_unit_data_database.getInt(tableName[k], "initial_hp", null);
-            List<Integer> initial_attack = battle_unit_data_database.getInt(tableName[k], "initial_attack", null);
-            List<Integer> initial_defence = battle_unit_data_database.getInt(tableName[k], "initial_defence", null);
-            List<Integer> initial_luck = battle_unit_data_database.getInt(tableName[k], "initial_luck", null);
-            List<Integer> initial_speed = battle_unit_data_database.getInt(tableName[k], "initial_speed", null);
-            List<Integer> delta_hp = battle_unit_data_database.getInt(tableName[k], "delta_hp", null);
-            List<Integer> delta_attack = battle_unit_data_database.getInt(tableName[k], "delta_attack", null);
-            List<Integer> delta_defence = battle_unit_data_database.getInt(tableName[k], "delta_defence", null);
-            List<Integer> delta_luck = battle_unit_data_database.getInt(tableName[k], "delta_luck", null);
-            List<Integer> delta_speed = battle_unit_data_database.getInt(tableName[k], "delta_speed", null);
-            List<Integer> initial_bonus_hp = battle_unit_data_database.getInt(tableName[k], "initial_bonus_hp", null);
-            List<Integer> initial_bonus_attack = battle_unit_data_database.getInt(tableName[k], "initial_bonus_attack", null);
-            List<Integer> initial_bonus_defence = battle_unit_data_database.getInt(tableName[k], "initial_bonus_defence", null);
-            List<Integer> initial_bonus_speed = battle_unit_data_database.getInt(tableName[k], "initial_bonus_speed", null);
-            List<Integer> delta_bonus_hp = battle_unit_data_database.getInt(tableName[k], "delta_bonus_hp", null);
-            List<Integer> delta_bonus_attack = battle_unit_data_database.getInt(tableName[k], "delta_bonus_attack", null);
-            List<Integer> delta_bonus_defence = battle_unit_data_database.getInt(tableName[k], "delta_bonus_defence", null);
-            List<Integer> delta_bonus_speed = battle_unit_data_database.getInt(tableName[k], "delta_bonus_speed", null);
+            name = battle_unit_data_database.getString(tableName, "name", null);
+            List<Integer> attack_frame = battle_unit_data_database.getInt(tableName, "attack_frame", null);
+            List<Integer> initial_hp = battle_unit_data_database.getInt(tableName, "initial_hp", null);
+            List<Integer> initial_attack = battle_unit_data_database.getInt(tableName, "initial_attack", null);
+            List<Integer> initial_defence = battle_unit_data_database.getInt(tableName, "initial_defence", null);
+            List<Integer> initial_luck = battle_unit_data_database.getInt(tableName, "initial_luck", null);
+            List<Integer> initial_speed = battle_unit_data_database.getInt(tableName, "initial_speed", null);
+            List<Integer> delta_hp = battle_unit_data_database.getInt(tableName, "delta_hp", null);
+            List<Integer> delta_attack = battle_unit_data_database.getInt(tableName, "delta_attack", null);
+            List<Integer> delta_defence = battle_unit_data_database.getInt(tableName, "delta_defence", null);
+            List<Integer> delta_luck = battle_unit_data_database.getInt(tableName, "delta_luck", null);
+            List<Integer> delta_speed = battle_unit_data_database.getInt(tableName, "delta_speed", null);
+            List<Integer> initial_bonus_hp = battle_unit_data_database.getInt(tableName, "initial_bonus_hp", null);
+            List<Integer> initial_bonus_attack = battle_unit_data_database.getInt(tableName, "initial_bonus_attack", null);
+            List<Integer> initial_bonus_defence = battle_unit_data_database.getInt(tableName, "initial_bonus_defence", null);
+            List<Integer> initial_bonus_speed = battle_unit_data_database.getInt(tableName, "initial_bonus_speed", null);
+            List<Integer> delta_bonus_hp = battle_unit_data_database.getInt(tableName, "delta_bonus_hp", null);
+            List<Integer> delta_bonus_attack = battle_unit_data_database.getInt(tableName, "delta_bonus_attack", null);
+            List<Integer> delta_bonus_defence = battle_unit_data_database.getInt(tableName, "delta_bonus_defence", null);
+            List<Integer> delta_bonus_speed = battle_unit_data_database.getInt(tableName, "delta_bonus_speed", null);
 
-            List<Integer> hp_bar_offset = battle_unit_data_database.getInt(tableName[k], "hp_bar_offset", null);
-            List<Integer> hp_bar_length = battle_unit_data_database.getInt(tableName[k], "hp_bar_length", null);
-            List<Integer> radius = battle_unit_data_database.getInt(tableName[k], "hit_radius", null);
+            List<Integer> hp_bar_offset = battle_unit_data_database.getInt(tableName, "hp_bar_offset", null);
+            List<Integer> hp_bar_length = battle_unit_data_database.getInt(tableName, "hp_bar_length", null);
+            List<Integer> radius = battle_unit_data_database.getInt(tableName, "hit_radius", null);
 
-            List<String> special_action_name = battle_unit_data_database.getString(tableName[k], "special_action_name", null);
-            List<Integer> special_action_period = battle_unit_data_database.getInt(tableName[k], "special_action_period", null);
-            List<Integer> special_action_width = battle_unit_data_database.getInt(tableName[k], "special_action_width", null);
+            List<String> special_action_name = battle_unit_data_database.getString(tableName, "special_action_name", null);
+            List<Integer> special_action_period = battle_unit_data_database.getInt(tableName, "special_action_period", null);
+            List<Integer> special_action_width = battle_unit_data_database.getInt(tableName, "special_action_width", null);
 
-            List<Float> normal_attack = battle_unit_data_database.getFloat(tableName[k], "normal_attack", null);
-            List<Float> poison = battle_unit_data_database.getFloat(tableName[k], "poison", null);
-            List<Float> paralysis = battle_unit_data_database.getFloat(tableName[k], "paralysis", null);
-            List<Float> stop = battle_unit_data_database.getFloat(tableName[k], "stop", null);
-            List<Float> blindness = battle_unit_data_database.getFloat(tableName[k], "blindness", null);
-            List<Float> curse = battle_unit_data_database.getFloat(tableName[k], "curse", null);
+            List<Float> normal_attack = battle_unit_data_database.getFloat(tableName, "normal_attack", null);
+            List<Float> poison = battle_unit_data_database.getFloat(tableName, "poison", null);
+            List<Float> paralysis = battle_unit_data_database.getFloat(tableName, "paralysis", null);
+            List<Float> stop = battle_unit_data_database.getFloat(tableName, "stop", null);
+            List<Float> blindness = battle_unit_data_database.getFloat(tableName, "blindness", null);
+            List<Float> curse = battle_unit_data_database.getFloat(tableName, "curse", null);
 
-            List<Integer> poison_time = battle_unit_data_database.getInt(tableName[k], "poison_time", null);
-            List<Integer> paralysis_time = battle_unit_data_database.getInt(tableName[k], "paralysis_time", null);
-            List<Integer> stop_time = battle_unit_data_database.getInt(tableName[k], "stop_time", null);
-            List<Integer> blindness_time = battle_unit_data_database.getInt(tableName[k], "blindness_time", null);
-            List<Integer> curse_time = battle_unit_data_database.getInt(tableName[k], "curse_time", null);
+            List<Integer> poison_time = battle_unit_data_database.getInt(tableName, "poison_time", null);
+            List<Integer> paralysis_time = battle_unit_data_database.getInt(tableName, "paralysis_time", null);
+            List<Integer> stop_time = battle_unit_data_database.getInt(tableName, "stop_time", null);
+            List<Integer> blindness_time = battle_unit_data_database.getInt(tableName, "blindness_time", null);
+            List<Integer> curse_time = battle_unit_data_database.getInt(tableName, "curse_time", null);
 
 
             for (int i = 0; i < drop_item.length; i++) {
-                drop_item[i] = battle_unit_data_database.getString(tableName[k], "drop_item0" + String.valueOf(i + 1), null);
-                drop_item_percent[i] = battle_unit_data_database.getDouble(tableName[k], "drop_item0" + String.valueOf(i + 1) + "_percent", null);
+                drop_item[i] = battle_unit_data_database.getString(tableName, "drop_item0" + String.valueOf(i + 1), null);
+                drop_item_percent[i] = battle_unit_data_database.getDouble(tableName, "drop_item0" + String.valueOf(i + 1) + "_percent", null);
             }
 
             for (int i = 0; i < name.size(); i++) {
@@ -148,7 +177,7 @@ public class BattleUnitDataAdmin {
 
                 //by kmhanko
                 //DBから読み込んだデータを全てBattleBaseUnitDataに格納する
-                BattleBaseUnitData tempBattleBaseUnitData = battle_base_unit_datas.get(i);
+                BattleBaseUnitData tempBattleBaseUnitData = battle_base_unit_datas.get(battle_base_unit_datas.size() - 1);
 
                 tempBattleBaseUnitData.setName(name.get(i));
                 tempBattleBaseUnitData.setBitmapData(graphic.searchBitmap(name.get(i)));
@@ -253,7 +282,7 @@ public class BattleUnitDataAdmin {
                     }
                 }
             }
-        }
+       // }
 
     }
 
@@ -269,8 +298,11 @@ public class BattleUnitDataAdmin {
     }
 
     public List<String> getMaohUnitNames() {
-        //return battle_unit_data_database.getString("maoh_unit_names", "name");
-        return battle_unit_data_database.getString(tableName[1], "name");
+        return battle_unit_data_database.getString("maoh_unit_data", "name");
+    }
+
+    public List<String> getUnitNames() {
+        return name;
     }
 
     /*
