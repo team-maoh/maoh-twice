@@ -10,6 +10,7 @@ import com.maohx2.fuusya.MapPlateAdmin;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.DungeonDataAdmin;
+import com.maohx2.horie.map.DungeonMonsterDataAdmin;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
@@ -46,6 +47,7 @@ public class DungeonGameSystem {
     DungeonDataAdmin dungeon_data_admin;
     Camera camera;
     Point map_size = new Point(0, 0);//カメラのインスタンス化に必要
+    DungeonMonsterDataAdmin chess, dragon, forest, haunted;
 
     // by kmhanko
     BattleUnitDataAdmin battleUnitDataAdmin;
@@ -72,9 +74,15 @@ public class DungeonGameSystem {
         map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_plate_admin, dungeonModeManage);
 
         dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
-        map_size.set(dungeon_data_admin.getDungeon_data().get(2).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(2).getMap_size_y());
+
+        chess = new DungeonMonsterDataAdmin(_myDatabaseAdmin, "ChessMonsterData");
+        dragon = new DungeonMonsterDataAdmin(_myDatabaseAdmin, "DragonMonsterData");
+        forest = new DungeonMonsterDataAdmin(_myDatabaseAdmin, "ForestMonsterData");
+        haunted = new DungeonMonsterDataAdmin(_myDatabaseAdmin, "HauntedMonsterData");
+
+        map_size.set(dungeon_data_admin.getDungeon_data().get(0).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(0).getMap_size_y());
         //camera = new Camera(map_size, 64*4);
-        map_admin = new MapAdmin(graphic, map_object_admin, dungeon_data_admin.getDungeon_data().get(2));
+        map_admin = new MapAdmin(graphic, map_object_admin, dungeon_data_admin.getDungeon_data().get(0), chess.getDungeon_monster_data());
 //        map_object_admin.getCamera(map_admin.getCamera());
         //map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin,this, dungeonModeManage);
         paint = new Paint();

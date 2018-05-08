@@ -17,16 +17,13 @@ public class DungeonDataAdmin {
     public DungeonDataAdmin(MyDatabaseAdmin _database_admin){
         _database_admin.addMyDatabase("DungeonData", "DungeonData.db", 1, "r");
         dungeon_database = _database_admin.getMyDatabase("DungeonData");
-        loadItemData("DungeonData");
+        loadMapData("DungeonData");
     }
 
-    public void loadItemData(String tableName) {
+    public void loadMapData(String tableName) {
         int size = dungeon_database.getSize(tableName);
 
         List<String> dungeon_name = dungeon_database.getString(tableName, "dungeon_name");
-//        List<String> boss_name = dungeon_database.getString(tableName, "boss_name");
-//        List<String> mid_boss_name = dungeon_database.getString(tableName, "mid_boss_name");
-//        List<String> monster_name = dungeon_database.getString(tableName, "monster_name");
         List<Integer> mine_max_num = dungeon_database.getInt(tableName, "mine_max_num");
         List<Integer> mine_min_num = dungeon_database.getInt(tableName, "mine_min_num");
         List<Integer> floor_num = dungeon_database.getInt(tableName, "floor_num");
@@ -39,9 +36,6 @@ public class DungeonDataAdmin {
         for (int i = 0; i < size; i++) {
             dungeon_data.add(new DungeonData());
             dungeon_data.get(i).setDungeon_name(dungeon_name.get(i));
-//            dungeon_data.get(i).setBoss_name(boss_name.get(i));
-//            dungeon_data.get(i).setMid_boss_name(mid_boss_name.get(i));
-//            dungeon_data.get(i).setMonster_name(monster_name.get(i));
             dungeon_data.get(i).setMine_max_num(mine_max_num.get(i));
             dungeon_data.get(i).setMine_min_num(mine_min_num.get(i));
             dungeon_data.get(i).setFloor_num(floor_num.get(i));
