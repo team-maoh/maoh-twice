@@ -56,11 +56,11 @@ abstract public class BattleUnit {
         exist = false;
         dropFlag = false;
 
-        alimentCounts[BattleBaseUnitData.ActionID.POISON.ordinal()] = 0;
-        alimentCounts[BattleBaseUnitData.ActionID.PARALYSIS.ordinal()] = 0;
-        alimentCounts[BattleBaseUnitData.ActionID.STOP.ordinal()] = 0;
-        alimentCounts[BattleBaseUnitData.ActionID.BLINDNESS.ordinal()] = 0;
-        alimentCounts[BattleBaseUnitData.ActionID.CURSE.ordinal()] = -1;
+        alimentCounts[BattleBaseUnitData.ActionID.POISON.ordinal()-1] = 0;
+        alimentCounts[BattleBaseUnitData.ActionID.PARALYSIS.ordinal()-1] = 0;
+        alimentCounts[BattleBaseUnitData.ActionID.STOP.ordinal()-1] = 0;
+        alimentCounts[BattleBaseUnitData.ActionID.BLINDNESS.ordinal()-1] = 0;
+        alimentCounts[BattleBaseUnitData.ActionID.CURSE.ordinal()-1] = -1;
 
     }
 
@@ -83,8 +83,7 @@ abstract public class BattleUnit {
 
     public int update(){
 
-        //CURSEを除く
-        for(int i = 0; i < BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal() -1; i++) {
+        for(int i = 0; i < BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()-1; i++) {
             if (alimentCounts[i] > 0) {
                 alimentCounts[i]--;
 

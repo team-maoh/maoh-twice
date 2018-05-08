@@ -79,6 +79,7 @@ public class BattleEnemy extends BattleUnit {
     @Override
     public int update(){
 
+        super.update();
 
         //時間経過
         attackCount++;
@@ -173,13 +174,17 @@ public class BattleEnemy extends BattleUnit {
         paint.setARGB(255,0,255,0);
         graphic.bookingDrawRect((int)(position_x-radius*0.8), (int)(position_y+radius*0.8), (int)(((double)position_x-(double)radius*0.8+(double)radius*1.6*((double)hit_point/(double)max_hit_point))), (int)(position_y+radius*0.9),paint);
 
-        for(int i = 0; i < BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal() -1; i++) {
+        for(int i = 0; i < BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal(); i++) {
             if (actionRate[i] > 0) {
-                if(BattleBaseUnitData.ActionID.toEnum(i+1) == BattleBaseUnitData.ActionID.POISON){graphic.bookingDrawBitmapData(graphic.searchBitmap("Z2"),(int)(position_x+radius*0.8)-120, (int)(position_y+radius*0.6));}
-                if(BattleBaseUnitData.ActionID.toEnum(i+1) == BattleBaseUnitData.ActionID.PARALYSIS){graphic.bookingDrawBitmapData(graphic.searchBitmap("A6"),(int)(position_x+radius*0.8)-90, (int)(position_y+radius*0.6));}
-                if(BattleBaseUnitData.ActionID.toEnum(i+1) == BattleBaseUnitData.ActionID.STOP){graphic.bookingDrawBitmapData(graphic.searchBitmap("Z6"),(int)(position_x+radius*0.8)-60, (int)(position_y+radius*0.6));}
-                if(BattleBaseUnitData.ActionID.toEnum(i+1) == BattleBaseUnitData.ActionID.BLINDNESS){graphic.bookingDrawBitmapData(graphic.searchBitmap("A1"),(int)(position_x+radius*0.8)-30, (int)(position_y+radius*0.6));}
-                if(BattleBaseUnitData.ActionID.toEnum(i+1) == BattleBaseUnitData.ActionID.CURSE){graphic.bookingDrawBitmapData(graphic.searchBitmap("A9"),(int)(position_x+radius*0.8), (int)(position_y+radius*0.6));}
+                if(BattleBaseUnitData.ActionID.toEnum(i) == BattleBaseUnitData.ActionID.POISON){graphic.bookingDrawBitmapData(graphic.searchBitmap("Z2"),(int)(position_x+radius*0.8)-120, (int)(position_y+radius*0.6));}
+                if(BattleBaseUnitData.ActionID.toEnum(i) == BattleBaseUnitData.ActionID.PARALYSIS){graphic.bookingDrawBitmapData(graphic.searchBitmap("A6"),(int)(position_x+radius*0.8)-90, (int)(position_y+radius*0.6));}
+                if(BattleBaseUnitData.ActionID.toEnum(i) == BattleBaseUnitData.ActionID.STOP){graphic.bookingDrawBitmapData(graphic.searchBitmap("Z6"),(int)(position_x+radius*0.8)-60, (int)(position_y+radius*0.6));}
+                if(BattleBaseUnitData.ActionID.toEnum(i) == BattleBaseUnitData.ActionID.BLINDNESS){graphic.bookingDrawBitmapData(graphic.searchBitmap("A1"),(int)(position_x+radius*0.8)-30, (int)(position_y+radius*0.6));}
+                if(BattleBaseUnitData.ActionID.toEnum(i) == BattleBaseUnitData.ActionID.CURSE){
+                    paint.setARGB(255,100,50,50);
+                    graphic.bookingDrawBitmapData(graphic.searchBitmap("A9"),(int)(position_x+radius*0.8), (int)(position_y+radius*0.6));
+                    graphic.bookingDrawRect((int)(position_x+radius*0.9), (int)(position_y+radius*0.8), (int)(position_x+radius*1), (int)((position_y+radius*0.8-radius*1.6*((double)alimentCounts[BattleBaseUnitData.ActionID.CURSE.ordinal()-1]/(double)1000))),paint);
+                }
             }
         }
 
