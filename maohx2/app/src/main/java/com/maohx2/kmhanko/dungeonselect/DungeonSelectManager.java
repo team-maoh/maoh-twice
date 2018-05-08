@@ -39,9 +39,13 @@ public class DungeonSelectManager {
     //DungeonSelectButtonAdmin dungeonSelectButtonAdmin;
     //LoopSelectButtonAdmin loopSelectButtonAdmin;
 
-    static final float DUNGEON_SELECT_BUTTON_RATE_DEFAULT = 6.0f;
-    static final float DUNGEON_SELECT_BUTTON_RATE_FEEDBACK = 8.0f;
-    static final int DUNGEON_SELECT_BUTTON_RATE_TOURH_R = 120;
+    static final float DUNGEON_SELECT_BUTTON_RATE_DEFAULT = 4.0f;
+    static final float DUNGEON_SELECT_BUTTON_RATE_FEEDBACK = 5.0f;
+    static final int DUNGEON_SELECT_BUTTON_RATE_TOURH_R = 110;
+
+    static final String DUNGEON_SELECT_BUTTON_TABLE_NAME = "dungeon_select_button";
+    //static final String MENU_BUTTON_TABLE_NAME = "menu_button";
+
 
     private boolean isDungeonSelectActive = false;
 
@@ -63,16 +67,15 @@ public class DungeonSelectManager {
 
     PlateGroup<MapIconPlate> mapIconPlateGroup;
 
-    PlateGroup<BoxTextPlate> dungeonInformationPlate;
+    //PlateGroup<BoxTextPlate> dungeonInformationPlate;
     PlateGroup<BoxTextPlate> dungeonEnterSelectButtonGroup;
     PlateGroup<BoxTextPlate> maohEnterSelectButtonGroup;
 
-    PlateGroup<CircleImagePlate> menuButtonGroup;
+    //PlateGroup<CircleImagePlate> menuButtonGroup;
 
     static final String DB_NAME = "dungeonselectDB";
     static final String DB_ASSET = "dungeonselectDB.db";
 
-    String tableName = "dungeon_select_button";
 
     int focusDungeonButtonID;
 
@@ -103,7 +106,7 @@ public class DungeonSelectManager {
         initMapIconPlate();
         initDungeonEnterSelectButton();
         initMaohEnterSelectButton();
-        initModeSelectButton();
+        //initModeSelectButton();
         initTextBox();
         initUIs();
 
@@ -127,15 +130,15 @@ public class DungeonSelectManager {
 
     //***** Buttonのinit関係 *****
     private void initMapIconPlate(){
-        int size = database.getSize(tableName);
+        int size = database.getSize(DUNGEON_SELECT_BUTTON_TABLE_NAME);
 
-        dungeonName = database.getString(tableName, "name");
-        List<String> imageName = database.getString(tableName, "image_name");
-        List<Integer> x = database.getInt(tableName, "x");
-        List<Integer> y = database.getInt(tableName, "y");
-        List<Integer> scale = database.getInt(tableName, "scale");
-        List<Integer> scale_feed = database.getInt(tableName, "scale_feed");
-        event = database.getString(tableName, "event");
+        dungeonName = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "name");
+        List<String> imageName = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "image_name");
+        List<Integer> x = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "x");
+        List<Integer> y = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "y");
+        List<Integer> scale = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "scale");
+        List<Integer> scale_feed = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "scale_feed");
+        event = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "event");
 
         List<MapIconPlate> mapIconPlateList = new ArrayList<MapIconPlate>();
 
@@ -216,7 +219,45 @@ public class DungeonSelectManager {
         maohEnterSelectButtonGroup.setDrawFlag(false);
     }
 
+    /*
+    private void initModeSelectButton(){
+        int size = database.getSize(MENU_BUTTON_TABLE_NAME);
+
+        dungeonName = database.getString(MENU_BUTTON_TABLE_NAME, "name");
+        List<String> imageName = database.getString(MENU_BUTTON_TABLE_NAME, "image_name");
+        List<Integer> x = database.getInt(MENU_BUTTON_TABLE_NAME, "x");
+        List<Integer> y = database.getInt(MENU_BUTTON_TABLE_NAME, "y");
+        List<Integer> scale = database.getInt(MENU_BUTTON_TABLE_NAME, "scale");
+        List<Integer> scale_feed = database.getInt(MENU_BUTTON_TABLE_NAME, "scale_feed");
+        event = database.getString(MENU_BUTTON_TABLE_NAME, "event");
+
+        List<MapIconPlate> menuIconPlateList = new ArrayList<MapIconPlate>();
+
+        //インスタンス化
+        for (int i = 0; i < size; i++) {
+            menuIconPlateList.add(new MapIconPlate(
+                    graphic, userInterface,
+                    Constants.Touch.TouchWay.UP_MOMENT,
+                    Constants.Touch.TouchWay.MOVE,
+                    new int[] { x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_TOURH_R },
+                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale.get(i), scale.get(i), 0.0f, 255, false),
+                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale_feed.get(i), scale_feed.get(i), 0.0f, 255, false),
+                    dungeonName.get(i),
+                    event.get(i)
+
+            ));
+        }
+
+        MapIconPlate[] menuIconPlates = new MapIconPlate[menuIconPlateList.size()];
+        menuButtonGroup = new PlateGroup<CircleImagePlate>(menuIconPlateList.toArray(menuIconPlates));
+    }
+    */
+
+    /*
     private void initModeSelectButton() {
+
+
+
         int x = 1500;
         int y[] = { 100,300,500,700 };
 
@@ -275,7 +316,10 @@ public class DungeonSelectManager {
                         )
                 }
         );
-    }
+
+
+
+    }*/
 
     private void initTextBox() {
         enterTextBoxID = textBoxAdmin.createTextBox(SELECT_WINDOW.MESS_LEFT, SELECT_WINDOW.MESS_UP, SELECT_WINDOW.MESS_RIGHT, SELECT_WINDOW.MESS_BOTTOM, SELECT_WINDOW.MESS_ROW);
@@ -291,7 +335,7 @@ public class DungeonSelectManager {
         // ** Buttonの表示
         mapIconPlateGroup.draw();
         dungeonEnterSelectButtonGroup.draw();
-        menuButtonGroup.draw();
+        //menuButtonGroup.draw();
 
         maohEnterSelectButtonGroup.draw();
     }
@@ -321,8 +365,8 @@ public class DungeonSelectManager {
         mapIconPlateCheck();
         mapIconPlateGroup.update();
 
-        modeSelectButtonCheck();
-        menuButtonGroup.update();
+        //modeSelectButtonCheck();
+        //menuButtonGroup.update();
 
     }
 
@@ -331,7 +375,7 @@ public class DungeonSelectManager {
         int buttonID = mapIconPlateGroup.getTouchContentNum();
         if (buttonID != -1 ) {
             //この間、マップアイコンなどの操作を受け付けない
-            menuButtonGroup.setUpdateFlag(false);
+            //menuButtonGroup.setUpdateFlag(false);
             mapIconPlateGroup.setUpdateFlag(false);
 
             focusDungeonButtonID = buttonID;
@@ -366,9 +410,21 @@ public class DungeonSelectManager {
                 dungeonEnterSelectButtonGroup.setUpdateFlag(true);
                 dungeonEnterSelectButtonGroup.setDrawFlag(true);
             }
+            if (event.get(focusDungeonButtonID).equals("map")) {
+                switchSelectMode();
+                initUIs();
+            }
+            if (event.get(focusDungeonButtonID).equals("equip")) {
+                initUIs();
+                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.EQUIP);
+            }
+            if (event.get(focusDungeonButtonID).equals("option")) {
+                initUIs();
+            }
         }
     }
 
+    /*
     public void modeSelectButtonCheck() {
         int buttonID = menuButtonGroup.getTouchContentNum();
         if (buttonID == 0 ) { //Map
@@ -379,6 +435,7 @@ public class DungeonSelectManager {
             worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.EQUIP);
         }
     }
+    */
 
     public void dungeonEnterSelectButtonCheck() {
         if (!(dungeonEnterSelectButtonGroup.getUpdateFlag() && worldModeAdmin.getMode() == WORLD_MODE.DUNGEON_SELECT)) {
@@ -454,7 +511,7 @@ public class DungeonSelectManager {
         maohEnterSelectButtonGroup.setDrawFlag(false);
         textBoxAdmin.setTextBoxExists(enterTextBoxID, false);
 
-        menuButtonGroup.setUpdateFlag(true);
+        //menuButtonGroup.setUpdateFlag(true);
         mapIconPlateGroup.setUpdateFlag(true);
     }
 
