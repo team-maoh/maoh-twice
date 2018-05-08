@@ -48,7 +48,7 @@ import com.maohx2.kmhanko.itemdata.MiningItemData;
 public class BattleUnitAdmin {
 
     public enum MODE {
-            BATTLE, MINING
+            BATTLE, MINING, MAOH
     }
 
     MODE mode;
@@ -160,9 +160,9 @@ public class BattleUnitAdmin {
 
         //TODO タッチマーカー残骸を消す
 
-        if (mode == MODE.BATTLE) {
+        if (mode == MODE.BATTLE || mode == MODE.MAOH) {
             palette_admin.setPalettesFlags(new boolean[] { true, true, false });
-            spawnEnemy();
+            //spawnEnemy();
         }
 
         if (mode == MODE.MINING) {
@@ -266,7 +266,7 @@ public class BattleUnitAdmin {
                 //プレイヤーの攻撃によるマーカーの設置
                 if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
                     EquipmentItemData attack_equipment = null;
-                    if (mode == MODE.BATTLE) {
+                    if (mode == MODE.BATTLE || mode == MODE.MAOH) {
                         attack_equipment = palette_admin.getEquipmentItemData();
                     }
                     if (mode == MODE.MINING) {
@@ -276,7 +276,7 @@ public class BattleUnitAdmin {
                         if (attack_equipment.getDungeonUseNum() > 0) {
                             //最高攻撃頻度を上回っていないか
                             if ((first_attack_frag == false && attack_count >= attack_equipment.getTouchFrequency()) || (first_attack_frag == true && attack_count >= attack_equipment.getTouchFrequency() * attack_equipment.getAutoFrequencyRate())) {
-                                if (mode == MODE.BATTLE) {
+                                if (mode == MODE.BATTLE || mode == MODE.MAOH) {
                                     attack_equipment.setDungeonUseNum(attack_equipment.getDungeonUseNum() - 1);
                                 }
                                 first_attack_frag = true;
@@ -422,6 +422,10 @@ public class BattleUnitAdmin {
                 resultButtonGroup.setUpdateFlag(true);
                 resultButtonGroup.setDrawFlag(true);
             }
+            if (mode == MODE.MAOH) {
+                resultButtonGroup.setUpdateFlag(true);
+                resultButtonGroup.setDrawFlag(true);
+            }
             if (mode == MODE.MINING) {
                 if (timeLimitBar.isTimeUp()) {
                     //TODO 時間切れで終了した場合
@@ -468,7 +472,7 @@ public class BattleUnitAdmin {
             graphic.bookingDrawRect(600,600,1601,901,paint);
             graphic.bookingDrawRect(0,300,600,901,paint);
         }
-        if (mode == MODE.BATTLE) {
+        if (mode == MODE.BATTLE || mode == MODE.MAOH) {
             ((BattlePlayer)(battle_units[0])).drawStatus();
         }
         if (mode == MODE.MINING) {
@@ -633,7 +637,13 @@ public class BattleUnitAdmin {
 
     public void battleEnd() {
         deleteEnemy();
-        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
+        if (mode == MODE.BATTLE || mode == MODE.MINING) {
+            dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
+        }
+        if (mode == MODE.MAOH) {
+            playerStatus.addMaohWinCount();
+            dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TO_WORLD);
+        }
         resultButtonGroup.setUpdateFlag(false);
         resultButtonGroup.setDrawFlag(false);
         textBoxAdmin.setTextBoxExists(resultTextBoxID, false);

@@ -413,8 +413,8 @@ public class DungeonSelectManager {
             }
             if (event.get(focusDungeonButtonID).equals("maoh")) {
                 enterTextBoxUpdateMaoh();
-                dungeonEnterSelectButtonGroup.setUpdateFlag(true);
-                dungeonEnterSelectButtonGroup.setDrawFlag(true);
+                maohEnterSelectButtonGroup.setUpdateFlag(true);
+                maohEnterSelectButtonGroup.setDrawFlag(true);
             }
             if (event.get(focusDungeonButtonID).equals("map")) {
                 switchSelectMode();
@@ -471,7 +471,7 @@ public class DungeonSelectManager {
     }
 
     public void maohEnterSelectButtonCheck() {
-        if (!(maohEnterSelectButtonGroup.getUpdateFlag() && worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT)) {
+        if (!maohEnterSelectButtonGroup.getUpdateFlag() || !(worldModeAdmin.getMode() == WORLD_MODE.DUNGEON_SELECT)) {
             return;
         }
 
@@ -479,8 +479,9 @@ public class DungeonSelectManager {
         if (buttonID == 0 ) { //挑戦する
             initUIsFlag = true;
 
-            //TODO 魔王の画面へ行く
-            //activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.GOKI);
+            activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.MAOH);
+
+            //dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
         }
         if (buttonID == 1 ) { //やめる
             initUIsFlag = true;

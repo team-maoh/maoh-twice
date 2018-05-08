@@ -67,13 +67,18 @@ public class DungeonGameSystem {
     InventryS expendInventry;
     BitmapData backGround;
 
-    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange activityChange, int _repeat_count) {
+    ActivityChange activityChange;
+    PlayerStatus playerStatus;
+
+    boolean maohFlag;
+
+    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange _activityChange, int _repeat_count, boolean _maohFlag) {
         dungeon_user_interface = _dungeon_user_interface;
         battle_user_interface = _battle_user_interface;
         graphic = _graphic;
 
         GlobalData globalData = (GlobalData) (dungeon_activity.getApplication());
-
+        activityChange = _activityChange;
         dungeonModeManage = new DungeonModeManage();
         map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange, globalData);
         map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_plate_admin, dungeonModeManage, globalData);
@@ -83,7 +88,12 @@ public class DungeonGameSystem {
         map_size.set(dungeon_data_admin.getDungeon_data().get(2).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(2).getMap_size_y());
         //camera = new Camera(map_size, 64*4);
 
-        map_admin = new MapAdmin(graphic, map_object_admin);
+
+        maohFlag = _maohFlag;
+        //kmhanko 魔王と戦闘しない場合のみ呼ぶものをこの中に
+        if (!maohFlag) {
+            map_admin = new MapAdmin(graphic, map_object_admin);
+        }
 
         //map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin,this, dungeonModeManage);
         paint = new Paint();
@@ -116,14 +126,19 @@ public class DungeonGameSystem {
         palette_admin.setMiningItems(miningItemDataAdmin);//TODO コンストラクタに入れて居ないためよくない
 
 
-        PlayerStatus playerStatus = globalData.getPlayerStatus();
+        playerStatus = globalData.getPlayerStatus();
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
         battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin, text_box_admin, playerStatus.getNowClearCount());
 
         backGround = graphic.searchBitmap("firstBackground");
-        //デバッグ用。消すの忘れない
-        
-        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
+
+        //by kmhanko即座に魔王との戦闘画面へ
+        if (maohFlag) {
+            dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAOH_INIT);
+        }
+
+        //デバッグ用
+        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
 
     }
 
@@ -148,6 +163,20 @@ public class DungeonGameSystem {
                 battle_unit_admin.update();
                 break;
 
+            case MAOH_INIT:
+                battle_unit_admin.reset(BattleUnitAdmin.MODE.MAOH);
+                battle_unit_admin.spawnEnemy(
+                        new String[] {
+                                battleUnitDataAdmin.getMaohUnitNames().get(playerStatus.getMaohWinCount())
+                        }
+                );
+                dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAOH);
+
+            case MAOH:
+                battle_user_interface.update();
+                battle_unit_admin.update();
+                break;
+
             case GEO_MINING_INIT:
                 battle_unit_admin.reset(BattleUnitAdmin.MODE.MINING);
                 //battle_unit_admin.spawnRock();　reset内で呼んでいる
@@ -156,6 +185,9 @@ public class DungeonGameSystem {
             case GEO_MINING:
                 battle_user_interface.update();
                 battle_unit_admin.update();
+                break;
+            case TO_WORLD:
+                activityChange.toWorldActivity();
                 break;
         }
 
@@ -173,11 +205,13 @@ public class DungeonGameSystem {
                 break;
 
             case BUTTLE:
+            case MAOH:
                 graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
                 battle_unit_admin.draw();
                 break;
 
             case GEO_MINING:
+                graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
                 battle_unit_admin.draw();
                 break;
         }

@@ -39,6 +39,7 @@ public final class Constants {
             FOREST,
             GOKI,
             HAUNTED,
+            MAOH,
             DNGEON_KIND_NUM
         }
     }
@@ -136,8 +137,11 @@ public final class Constants {
             MAP,
             BUTTLE_INIT,
             BUTTLE,
+            MAOH_INIT,
+            MAOH,
             GEO_MINING_INIT,
             GEO_MINING,
+            TO_WORLD,
         }
 
         public enum WORLD_MODE {

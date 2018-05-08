@@ -144,6 +144,8 @@ public class PlayerStatus {
 
     public void setMaohWinCount(int _maohWinCount) { maohWinCount = _maohWinCount; }
 
+    public void addMaohWinCount() { maohWinCount++; }
+
     public int addMoney(int _money) {
         money += _money;
         return money;
@@ -152,7 +154,6 @@ public class PlayerStatus {
         money -= _money;
         return money;
     }
-
 
     public Integer[] getSaveStatuses() {
         return new Integer[] {
