@@ -212,8 +212,8 @@ public class BattleUnitAdmin {
         //setBattleUnitData("e54-3", 0); //毒攻撃のみ
         //setBattleUnitData("e01-0", 0); //麻痺のみ
         //setBattleUnitData("e88-0", 0); //ストップのみ
-        setBattleUnitData("e74-0", 0); //カウンター持ち　暗黒のみ
-        //setBattleUnitData("m003-2", 0); //呪いのみ
+        //setBattleUnitData("e74-0", 0); //カウンター持ち　暗黒のみ
+        setBattleUnitData("m003-2", 0); //呪いのみ
         //setBattleUnitData("e96-0", 0); //ステルス持ち　行動いろいろ
         //setBattleUnitData("e27", 0); //バリア持ち　行動いろいろ
         //setBattleUnitData("m007", 0); //行動いろいろ
@@ -385,19 +385,23 @@ public class BattleUnitAdmin {
                     if(actionID != BattleBaseUnitData.ActionID.NORMAL_ATTACK){
                         if(actionID != BattleBaseUnitData.ActionID.CURSE) {
                             //状態異常のカウントが長くなるようであれば，状態異常のカウントを更新
-                            if(battle_units[0].getAlimentCounts(actionID.ordinal() - 1) < battle_units[i].getAlimentTime(actionID.ordinal())) {
-                                battle_units[0].setAilmentCounts(actionID.ordinal() - 1, battle_units[i].getAlimentTime(actionID.ordinal()));
+                            if(battle_units[0].getAlimentCounts(actionID.ordinal() - 1) < ((BattleEnemy)(battle_units[i])).getAlimentTime(actionID)) {
+                                battle_units[0].setAilmentCounts(actionID.ordinal() - 1, ((BattleEnemy)(battle_units[i])).getAlimentTime(actionID));
                             }
                         }else{
                             //呪いに関してはカウントを自身につけて，誰か一人でもカウントが0になったら死亡とする
                             if(battle_units[i].getAlimentCounts(actionID.ordinal() - 1) < 0) {
-                                battle_units[i].setAilmentCounts(actionID.ordinal() - 1, battle_units[i].getAlimentTime(actionID.ordinal()));
+                                battle_units[i].setAilmentCounts(actionID.ordinal() - 1, ((BattleEnemy)(battle_units[i])).getAlimentTime(actionID));
                             }
                         }
                     }
 
 
-                    if (new_hp <= 0 || battle_units[i].getAlimentCounts(BattleBaseUnitData.ActionID.CURSE.ordinal() - 1) == 0) {
+                    if(battle_units[i].getAlimentCounts(BattleBaseUnitData.ActionID.CURSE.ordinal() - 1) == 0){
+                        new_hp = 0;
+                    }
+
+                    if (new_hp <= 0) {
                         //ゲームオーバー
                     }
                     battle_units[0].setHitPoint(new_hp);
