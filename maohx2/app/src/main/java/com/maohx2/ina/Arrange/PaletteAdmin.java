@@ -1,12 +1,15 @@
 package com.maohx2.ina.Arrange;
 
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.ItemData.EquipmentItemDataAdmin;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.itemdata.ExpendItemData;
 import com.maohx2.kmhanko.itemdata.MiningItemData;
+import com.maohx2.kmhanko.itemdata.MiningItemDataAdmin;
+import java.util.List;
 
 import static com.maohx2.ina.Constants.Inventry.INVENTRY_DATA_MAX;
 
@@ -60,6 +63,7 @@ public class PaletteAdmin {
             }
         }
 
+
         /*
         palettes[0].palette_elements[0].setItemData(equipmentItemDataAdmin.getOneDataByName("素手"));
         palettes[0].palette_elements[1].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグ剣"));
@@ -86,6 +90,15 @@ public class PaletteAdmin {
         palettes[0].palette_elements[5].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグ弓"));
         palettes[0].palette_elements[6].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグ銃"));
         palettes[0].palette_elements[7].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグナックル"));
+
+    }
+
+    public void setMiningItems(MiningItemDataAdmin miningItemDataAdmin) {
+        //by kmhanko 採掘パレットへ道具を格納
+        List<MiningItemData> tmpItemData = miningItemDataAdmin.getItemDatas();
+        for(int j = 0; j < 5; j++) {// まだ5種類しか用意して居ないため
+            palettes[2].palette_elements[j].setItemData(tmpItemData.get(j));
+        }
     }
 
     public void update(boolean battle_flag){
@@ -150,7 +163,7 @@ public class PaletteAdmin {
     }
 
     //by kmhanko
-    public MiningItemData checkSelectedMiningItemData(){
+    public MiningItemData getMiningItemData(){
         return (MiningItemData) palettes[2].getSelectedItemData();
     }
 
