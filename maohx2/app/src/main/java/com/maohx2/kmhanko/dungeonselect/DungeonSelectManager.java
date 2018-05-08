@@ -47,6 +47,8 @@ public class DungeonSelectManager {
     //static final String MENU_BUTTON_TABLE_NAME = "menu_button";
 
 
+    boolean initUIsFlag = false;
+
     private boolean isDungeonSelectActive = false;
 
     int enterTextBoxID;
@@ -368,6 +370,11 @@ public class DungeonSelectManager {
         //modeSelectButtonCheck();
         //menuButtonGroup.update();
 
+        if (initUIsFlag) {
+            initUIs();
+            initUIsFlag = false;
+        }
+
     }
 
     //注 : 紛らわしいが、DungeonSelectButtonはGeoMapSelectとDungeonSelectとで共通になっている
@@ -387,23 +394,22 @@ public class DungeonSelectManager {
                     enterTextBoxUpdateDungeon();
                     dungeonEnterSelectButtonGroup.setUpdateFlag(true);
                     dungeonEnterSelectButtonGroup.setDrawFlag(true);
-
                 }
                 if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
                     geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
                     worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
-                    initUIs();
+                    initUIsFlag = true;
                 }
             }
 
             if (event.get(focusDungeonButtonID).equals("shop")) {
                 worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.SHOP_INIT);
-                initUIs();
+                initUIsFlag = true;
 
             }
             if (event.get(focusDungeonButtonID).equals("present")) {
                 worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.PRESENT_INIT);
-                initUIs();
+                initUIsFlag = true;
             }
             if (event.get(focusDungeonButtonID).equals("maoh")) {
                 enterTextBoxUpdateMaoh();
@@ -412,14 +418,14 @@ public class DungeonSelectManager {
             }
             if (event.get(focusDungeonButtonID).equals("map")) {
                 switchSelectMode();
-                initUIs();
+                initUIsFlag = true;
             }
             if (event.get(focusDungeonButtonID).equals("equip")) {
-                initUIs();
+                initUIsFlag = true;
                 worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.EQUIP);
             }
             if (event.get(focusDungeonButtonID).equals("option")) {
-                initUIs();
+                initUIsFlag = true;
             }
         }
     }
@@ -444,8 +450,7 @@ public class DungeonSelectManager {
 
         int buttonID = dungeonEnterSelectButtonGroup.getTouchContentNum();
         if (buttonID == 0 ) { //侵入する
-            initUIs();
-
+            initUIsFlag = true;
             MapIconPlate tmp = (MapIconPlate)mapIconPlateGroup.getPlate(focusDungeonButtonID);
             String dungeonName = tmp.getMapIconName();
             Constants.DungeonKind.DUNGEON_KIND dungeonKind;
@@ -461,7 +466,7 @@ public class DungeonSelectManager {
             activityChange.toDungeonActivity(dungeonKind);
         }
         if (buttonID == 1 ) { //やめる
-            initUIs();
+            initUIsFlag = true;
         }
     }
 
@@ -472,13 +477,13 @@ public class DungeonSelectManager {
 
         int buttonID = maohEnterSelectButtonGroup.getTouchContentNum();
         if (buttonID == 0 ) { //挑戦する
-            initUIs();
+            initUIsFlag = true;
 
             //TODO 魔王の画面へ行く
             //activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.GOKI);
         }
         if (buttonID == 1 ) { //やめる
-            initUIs();
+            initUIsFlag = true;
         }
     }
 

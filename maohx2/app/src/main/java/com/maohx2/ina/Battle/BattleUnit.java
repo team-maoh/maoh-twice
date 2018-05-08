@@ -42,6 +42,9 @@ abstract public class BattleUnit {
 
     //by kmhanko
     protected BattleDungeonUnitData battleDungeonUnitData;
+    protected boolean specialActionFlag;
+    protected int[] alimentCounts = new int[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal() -1];
+
 
 
     //コンストラクタ
@@ -54,22 +57,7 @@ abstract public class BattleUnit {
         dropFlag = false;
     }
 
-    /*
-    //by kmhanko
-    public void init() {
-        rnd = new Random();
-    }
-*/
 
-    /* by kmhanko
-    public void initStatus(BattleDungeonUnitData _battleDungeonUnitData){
-        max_hit_point = 10;
-        hit_point = max_hit_point;
-        attack = 1;
-        attack_unit_num = -1;
-    }*/
-
-    //by kmhanko
     protected void setBattleDunogenUnitData(BattleDungeonUnitData _battleDungeonUnitData) {
         battleDungeonUnitData = _battleDungeonUnitData;
     }
@@ -84,6 +72,26 @@ abstract public class BattleUnit {
         speed = battleDungeonUnitData.getStatus(SPEED);
         attack_unit_num = -1; //TODO 不明
     }
+
+
+    public int update(){
+
+        for(int i = 0; i < BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal() -1; i++) {
+            if (alimentCounts[i] > 0) {
+                alimentCounts[i]--;
+
+                if(BattleBaseUnitData.ActionID.toEnum(i+1) == BattleBaseUnitData.ActionID.POISON){
+                    hit_point -= max_hit_point/1000;
+                }
+                if(BattleBaseUnitData.ActionID.toEnum(i+1) == BattleBaseUnitData.ActionID.PARALYSIS){}
+                if(BattleBaseUnitData.ActionID.toEnum(i+1) == BattleBaseUnitData.ActionID.BLINDNESS){}
+                if(BattleBaseUnitData.ActionID.toEnum(i+1) == BattleBaseUnitData.ActionID.CURSE){}
+            }
+        }
+        return 0;
+    }
+    public void draw(){};
+
 
     //player用
     public void setBattleUnitDataPlayer(BattleDungeonUnitData _battleDungeonUnitData) {
@@ -212,7 +220,34 @@ abstract public class BattleUnit {
     abstract public void setWaitFrame(int _wait_frame);
     abstract public double getAttackFrame();
     abstract public void setAttackFrame(int _attack_frame);
-    public int update(){return 0;}
-    public void draw(){};
+
+
+    public int[] getAlimentCounts() {return alimentCounts;}
+    public void setAlimentCounts(int[] alimentCounts) {this.alimentCounts = alimentCounts;}
+    public void setAilmentCounts(int _alimentNum, int _newCounts) {alimentCounts[_alimentNum] = _newCounts;}
+    public int getAlimentCounts(int _alimentNum) {return alimentCounts[_alimentNum];}
+
+    //** enemy用
+    /*
+    float[] actionRate = new float[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
+    BattleBaseUnitData.SpecialAction specialAction;
+    int specialActionPeriod;
+    int specialActionWidth;
+    public void setSpecialAction(BattleBaseUnitData.SpecialAction _specialAction) { specialAction = _specialAction; }
+    public BattleBaseUnitData.SpecialAction getSpecialAction() { return specialAction; }
+    public int getSpecialActionWidth() { return specialActionWidth; }
+    public int getSpecialActionPeriod() { return specialActionPeriod; }
+    public void setSpecialActionWidth(int _specialActionWidth) { specialActionWidth = _specialActionWidth; }
+    public void setSpecialActionPeriod(int _specialActionPeriod) { specialActionPeriod = _specialActionPeriod; }
+    public float[] getActionRate() { return actionRate; }
+    public void setActionRate(BattleBaseUnitData.ActionID _actionRateID, float _actionRate) { actionRate[_actionRateID.ordinal()] = _actionRate; }
+    public float getActionRate(BattleBaseUnitData.ActionID _actionRateID) { return actionRate[_actionRateID.ordinal()]; }
+
+    public boolean isSpecialAction(){return specialActionFlag;}
+    public void isSpecialAction(boolean _specialActionFlag){specialActionFlag = _specialActionFlag;}
+*/
+
+    public boolean isSpecialAction(){return specialActionFlag;}
+    public void isSpecialAction(boolean _specialActionFlag){specialActionFlag = _specialActionFlag;}
 
 }

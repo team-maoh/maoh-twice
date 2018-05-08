@@ -121,7 +121,6 @@ public class Palette {
                     palette_elements[select_circle_num].setItemData(null);
                 }
             }
-
         }
 
         if (touch_state == Constants.Touch.TouchState.UP) {
@@ -282,4 +281,9 @@ public class Palette {
     }
 
     public void setPaletteCenter(ItemData _item_data){palette_center.setItemData(_item_data);}
+
+    public ItemData getItemData(int _paletteIndex){
+        return palette_elements[_paletteIndex].getItemData();
+    }
+
 }

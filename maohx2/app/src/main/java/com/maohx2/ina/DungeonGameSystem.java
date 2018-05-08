@@ -10,7 +10,6 @@ import com.maohx2.fuusya.MapPlateAdmin;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.DungeonDataAdmin;
-import com.maohx2.horie.map.DungeonMonsterDataAdmin;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
@@ -47,7 +46,6 @@ public class DungeonGameSystem {
     DungeonDataAdmin dungeon_data_admin;
     Camera camera;
     Point map_size = new Point(0, 0);//カメラのインスタンス化に必要
-    DungeonMonsterDataAdmin chess, dragon, forest, haunted;
 
     // by kmhanko
     BattleUnitDataAdmin battleUnitDataAdmin;
@@ -64,8 +62,6 @@ public class DungeonGameSystem {
     InventryS expendInventry;
     BitmapData backGround;
 
-    //MiningItemDataAdmin miningItemDataAdmin;
-
     public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange activityChange, int _repeat_count) {
         dungeon_user_interface = _dungeon_user_interface;
         battle_user_interface = _battle_user_interface;
@@ -76,19 +72,10 @@ public class DungeonGameSystem {
         map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_plate_admin, dungeonModeManage);
 
         dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
-
-        chess = new DungeonMonsterDataAdmin(_myDatabaseAdmin, "ChessMonsterData");
-        dragon = new DungeonMonsterDataAdmin(_myDatabaseAdmin, "DragonMonsterData");
-        forest = new DungeonMonsterDataAdmin(_myDatabaseAdmin, "ForestMonsterData");
-        haunted = new DungeonMonsterDataAdmin(_myDatabaseAdmin, "HauntedMonsterData");
-
-        //miningItemDataAdmin = new MiningItemDataAdmin(graphic, my_database_admin);
-
-        map_size.set(dungeon_data_admin.getDungeon_data().get(0).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(0).getMap_size_y());
+        map_size.set(dungeon_data_admin.getDungeon_data().get(2).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(2).getMap_size_y());
         //camera = new Camera(map_size, 64*4);
-        //map_admin = new MapAdmin(graphic, map_object_admin, dungeon_data_admin.getDungeon_data().get(0), chess.getDungeon_monster_data());
         map_admin = new MapAdmin(graphic, map_object_admin);
-//        map_object_admin.getCamera(map_admin.getCamera());
+        //map_object_admin.getCamera(map_admin.getCamera());
         //map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin,this, dungeonModeManage);
         paint = new Paint();
         paint.setColor(Color.BLUE);
@@ -98,6 +85,8 @@ public class DungeonGameSystem {
         list_box_admin = new ListBoxAdmin();
         text_box_admin.init(dungeon_user_interface);
         list_box_admin.init(dungeon_user_interface, graphic);
+        text_box_admin.setTextBoxExists(0,false);
+        text_box_admin.setTextBoxExists(1,false);
         //map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, this);
 
         text_box_admin.setTextBoxExists(0,false);
@@ -112,8 +101,8 @@ public class DungeonGameSystem {
         equipmentInventry = globalData.getEquipmentInventry();
         expendInventry = globalData.getExpendItemInventry();
 
-        palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipmentInventry, expendInventry);
-        //palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipment_item_data_admin);
+        //palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipmentInventry, expendInventry);
+        palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipment_item_data_admin);
 
 
         PlayerStatus playerStatus = globalData.getPlayerStatus();
@@ -121,9 +110,8 @@ public class DungeonGameSystem {
         battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin, text_box_admin, playerStatus.getNowClearCount());
 
         backGround = graphic.searchBitmap("firstBackground");
-
         //デバッグ用。消すの忘れない
-        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
+        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
     }
 
     public void update() {
