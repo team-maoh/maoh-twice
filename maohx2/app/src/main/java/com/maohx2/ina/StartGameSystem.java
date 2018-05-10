@@ -74,7 +74,6 @@ public class StartGameSystem {
 
         backGround = graphic.searchBitmap("firstBackground");
 
-
         /*
         textBoxAdmin = new TextBoxAdmin(graphic);
         textBoxAdmin.init(start_user_interface);
@@ -87,7 +86,6 @@ public class StartGameSystem {
         textBoxAdmin.bookingDrawText(itemExplainTextBoxID, "MOP");
         textBoxAdmin.updateText(itemExplainTextBoxID);
         */
-
     }
 
 
@@ -96,6 +94,7 @@ public class StartGameSystem {
 
 
         if(n == 100) {
+            /*
             tmpEquipmentItemData = new EquipmentItemData();
 
             tmpEquipmentItemData.setItemKind(Constants.Item.ITEM_KIND.EQUIPMENT);
@@ -117,7 +116,7 @@ public class StartGameSystem {
 
             equipmentInventry.save();
             expendInventry.save();
-
+            */
 
             n = 0;
             m++;
