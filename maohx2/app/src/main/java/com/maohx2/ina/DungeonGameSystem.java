@@ -86,10 +86,14 @@ public class DungeonGameSystem {
         map_size.set(dungeon_data_admin.getDungeon_data().get(2).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(2).getMap_size_y());
         //camera = new Camera(map_size, 64*4);
 
-        //kmhanko 魔王と戦闘しない場合のみ呼ぶものをこの中に
+        int dungeon_num = 3;
+        map_size.set(dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_y());
+        //camera = new Camera(map_size, 64*4);
         if (!(dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH)) {
-            map_admin = new MapAdmin(graphic, map_object_admin);
+            map_admin = new MapAdmin(graphic, map_object_admin, dungeon_data_admin.getDungeon_data().get(dungeon_num), chess.getDungeon_monster_data());
+            map_admin.goNextFloor();
         }
+//        map_object_admin.getCamera(map_admin.getCamera());
 
         //map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin,this, dungeonModeManage);
         paint = new Paint();
@@ -198,7 +202,7 @@ public class DungeonGameSystem {
 
         switch (dungeonModeManage.getMode()) {
             case MAP:
-                map_admin.drawMap_for_autotile_light();
+                map_admin.drawMap_for_autotile_light_animation();
                 map_object_admin.draw();
                 map_plate_admin.draw();
                 //graphic.bookingDrawCircle(0,0,10,paint);

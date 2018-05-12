@@ -42,3 +42,18 @@ public class ActivityChange {
         currentActivity.startActivity(intent);
     }
 }
+
+//intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+/*
+ガーベッジコレクションでは、不必要と思われるメモリを解放する。
+解放する判断は参照がnullとなって居るか。よってnullにしる。
+上のやつを読んでdestroyでその処理をするとか。
+
+そもそもアクティビティチェンジすると、
+A→B→C→B
+時ても、新しくBが生成(少なくともメンバのクラスのインスタンスは別のメモリ領域に保存)されて居るように見える
+(参照が異なって居るため)
+これではメモリを食うばかり。FLAG_ACTIVITY_CLEAR_TOPで思い切って現在のアクティビティ以外を削除して、
+削除する時そのメンバを全てnullにしてやる(この場合毎回activityを作るので毎回newしたりDBから呼んだりはする)必要があるか
+
+ */

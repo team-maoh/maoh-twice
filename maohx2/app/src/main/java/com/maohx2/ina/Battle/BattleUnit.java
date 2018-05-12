@@ -46,7 +46,6 @@ abstract public class BattleUnit {
     protected int[] alimentCounts = new int[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal() -1];
 
 
-
     //コンストラクタ
     public BattleUnit(Graphic _graphic){
         graphic = _graphic;
