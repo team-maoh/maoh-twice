@@ -162,7 +162,7 @@ public class DungeonGameSystem {
         }
 
         //デバッグ用
-        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
+        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
 
     }
 
@@ -267,6 +267,10 @@ public class DungeonGameSystem {
     public void setIsTouchingOutsideMenu(boolean _is_touching_outside_menu){
         is_touching_outside_menu = _is_touching_outside_menu;
     }
+
+
+
+
 
     public DungeonGameSystem(){}
 

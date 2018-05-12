@@ -149,6 +149,22 @@ public class Palette {
             }
         }
 
+
+        //バトルパレットの大きさを設定する際の判定
+        select_circle_num = -1;
+        if (battle_user_interface.checkUI(palette_center.getTouchID(), Constants.Touch.TouchWay.MOVE) == true) {
+            battle_user_interface.setPaletteElement(palette_center);
+            select_circle_num = 0;
+        }
+
+        for (int i = 0; i < 8; i++) {
+            if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.MOVE) == true) {
+                battle_user_interface.setPaletteElement(palette_elements[i]);
+                select_circle_num = i+1;
+            }
+        }
+
+
         //指が離れた際のパレットのチェック(パレット間)
         if (battle_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
             InventryData inventry_data = null;
@@ -238,23 +254,23 @@ public class Palette {
         }else{
             if (battle_user_interface.getPaletteElement() != null) {
                 if (battle_user_interface.isUIPaletteDraw() == true && battle_user_interface.getPaletteElement().getElementNum() == 0 && checkPaletteNumAndItemKind(battle_user_interface.getPaletteElement().getItemData().getItemKind())) {
-                    palette_center.drawBig();
+                    palette_center.drawBig(select_circle_num);
                 } else {
-                    palette_center.drawBigAndItem();
+                    palette_center.drawBigAndItem(select_circle_num);
                 }
             } else {
-                palette_center.drawBigAndItem();
+                palette_center.drawBigAndItem(select_circle_num);
             }
 
             for (int i = 0; i < 8; i++) {
                 if (battle_user_interface.getPaletteElement() != null) {
                     if (battle_user_interface.isUIPaletteDraw() == true && battle_user_interface.getPaletteElement().getElementNum() == i + 1) {
-                        palette_elements[i].drawBig();
+                        palette_elements[i].drawBig(select_circle_num);
                     } else {
-                        palette_elements[i].drawBigAndItem();
+                        palette_elements[i].drawBigAndItem(select_circle_num);
                     }
                 } else {
-                    palette_elements[i].drawBigAndItem();
+                    palette_elements[i].drawBigAndItem(select_circle_num);
                 }
             }
         }
