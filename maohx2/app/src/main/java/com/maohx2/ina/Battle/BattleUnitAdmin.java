@@ -9,6 +9,9 @@ import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Constants;
 import static com.maohx2.ina.Constants.Item.EQUIPMENT_KIND;
 import static com.maohx2.ina.Constants.Item.ITEM_KIND;
+
+import static com.maohx2.ina.Constants.Item.GEO_PARAM_KIND_NORMAL;
+import static com.maohx2.ina.Constants.Item.GEO_PARAM_KIND_RATE;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.DungeonModeManage;
 import com.maohx2.ina.GlobalData;
@@ -23,6 +26,10 @@ import com.maohx2.ina.ItemData.ItemData;
 
 import static com.maohx2.ina.Constants.BattleUnit.BATTLE_UNIT_MAX;
 import static com.maohx2.ina.Constants.Touch.TouchState;
+import static com.maohx2.ina.Constants.UnitStatus.Status.ATTACK;
+import static com.maohx2.ina.Constants.UnitStatus.Status.DEFENSE;
+import static com.maohx2.ina.Constants.UnitStatus.Status.HP;
+import static com.maohx2.ina.Constants.UnitStatus.Status.LUCK;
 
 import com.maohx2.ina.Battle.*;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
@@ -30,6 +37,7 @@ import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.maohx2.ina.Battle.BattleRockCreater;
 
@@ -38,6 +46,8 @@ import android.graphics.Color;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Constants.POPUP_WINDOW;
+import com.maohx2.kmhanko.itemdata.GeoObjectData;
+import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 import com.maohx2.kmhanko.itemdata.MiningItemData;
 
 /**
@@ -82,6 +92,8 @@ public class BattleUnitAdmin {
     int repeat_count;
 
     PlayerStatus playerStatus;
+
+    boolean resultOperatedFlag;//リザルト関係の処理を一度だけ呼ぶためのフラグ
 
     //by kmhanko BattleUnitDataAdmin追加
     public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage, MyDatabaseAdmin _databaseAdmin, MapPlateAdmin _map_plate_admin, TextBoxAdmin _textBoxAdmin, int _repeat_count) {
@@ -152,6 +164,7 @@ public class BattleUnitAdmin {
     //by kmhanko
     public void reset(MODE _mode) {
         mode = _mode;
+        resultOperatedFlag = false;
 
         //毎戦闘開始時に、前回の戦闘でのゴミなどを消す処理を行う
 
@@ -168,7 +181,7 @@ public class BattleUnitAdmin {
         if (mode == MODE.MINING) {
             palette_admin.setPalettesFlags(new boolean[] { false, false, true });
             spawnRock();
-            timeLimitBar.reset(30 * 15);
+            timeLimitBar.reset(30 * 60);
         }
     }
 
@@ -227,7 +240,7 @@ public class BattleUnitAdmin {
         //GeoMining画面のスポーン用。岩を出現させる
 
         //岩に対応する敵を決定し、その対応する敵データからHPを決める
-        for (int i = 0 ; i < 5; i ++) {
+        for (int i = 0 ; i < 6; i ++) {
             setRockUnitData(
                     battleUnitDataAdmin.getRandomBattleBaseUnitData()
             );
@@ -238,10 +251,11 @@ public class BattleUnitAdmin {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (!battle_units[i].isExist()) {
                 BattleBaseUnitData tempBBUD = BattleRockCreater.getBattleBaseUnitData(
-                        bBUD.getDbStatus(BattleBaseUnitData.DbStatusID.InitialHP) * bBUD.getPower() * (repeat_count+1)^2,
+                        bBUD.getDbStatus(BattleBaseUnitData.DbStatusID.InitialHP) * bBUD.getPower(),
                         0
                 );
                 battle_units[i].setBattleUnitDataRock(tempBBUD);
+                ((BattleEnemy)battle_units[i]).setBattleBaseUnitDataForRock(bBUD);
                 return i;
             }
         }
@@ -257,7 +271,7 @@ public class BattleUnitAdmin {
 
         battle_units[0].update();
 
-        if(battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.PARALYSIS.ordinal()-1) == 0 || battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.PARALYSIS.ordinal()-1) %2 == 0) {
+        if (battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.PARALYSIS.ordinal() - 1) == 0 || battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.PARALYSIS.ordinal() - 1) % 2 == 0) {
             attack_count++;
         }
 
@@ -266,7 +280,7 @@ public class BattleUnitAdmin {
         }
 
         //ストップ状態ならば攻撃できない
-        if(battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.STOP.ordinal()-1) == 0) {
+        if (battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.STOP.ordinal() - 1) == 0) {
             if (palette_admin.doUsePalette() == false) {
                 //プレイヤーの攻撃によるマーカーの設置
                 if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
@@ -386,23 +400,23 @@ public class BattleUnitAdmin {
 
 
                     //状態異常攻撃
-                    BattleBaseUnitData.ActionID actionID = ((BattleEnemy)(battle_units[i])).checkActionID();
-                    if(actionID != BattleBaseUnitData.ActionID.NORMAL_ATTACK){
-                        if(actionID != BattleBaseUnitData.ActionID.CURSE) {
+                    BattleBaseUnitData.ActionID actionID = ((BattleEnemy) (battle_units[i])).checkActionID();
+                    if (actionID != BattleBaseUnitData.ActionID.NORMAL_ATTACK) {
+                        if (actionID != BattleBaseUnitData.ActionID.CURSE) {
                             //状態異常のカウントが長くなるようであれば，状態異常のカウントを更新
-                            if(battle_units[0].getAlimentCounts(actionID.ordinal() - 1) < ((BattleEnemy)(battle_units[i])).getAlimentTime(actionID)) {
-                                battle_units[0].setAilmentCounts(actionID.ordinal() - 1, ((BattleEnemy)(battle_units[i])).getAlimentTime(actionID));
+                            if (battle_units[0].getAlimentCounts(actionID.ordinal() - 1) < ((BattleEnemy) (battle_units[i])).getAlimentTime(actionID)) {
+                                battle_units[0].setAilmentCounts(actionID.ordinal() - 1, ((BattleEnemy) (battle_units[i])).getAlimentTime(actionID));
                             }
-                        }else{
+                        } else {
                             //呪いに関してはカウントを自身につけて，誰か一人でもカウントが0になったら死亡とする
-                            if(battle_units[i].getAlimentCounts(actionID.ordinal() - 1) < 0) {
-                                battle_units[i].setAilmentCounts(actionID.ordinal() - 1, ((BattleEnemy)(battle_units[i])).getAlimentTime(actionID));
+                            if (battle_units[i].getAlimentCounts(actionID.ordinal() - 1) < 0) {
+                                battle_units[i].setAilmentCounts(actionID.ordinal() - 1, ((BattleEnemy) (battle_units[i])).getAlimentTime(actionID));
                             }
                         }
                     }
 
 
-                    if(battle_units[i].getAlimentCounts(BattleBaseUnitData.ActionID.CURSE.ordinal() - 1) == 0){
+                    if (battle_units[i].getAlimentCounts(BattleBaseUnitData.ActionID.CURSE.ordinal() - 1) == 0) {
                         new_hp = 0;
                     }
 
@@ -419,8 +433,9 @@ public class BattleUnitAdmin {
             result_flag = result_flag && !battle_units[i].isExist();
         }
 
-        if (result_flag == true || (timeLimitBar.isTimeUp() && timeLimitBar.isExist())) {
+        if ((result_flag == true || (timeLimitBar.isTimeUp() && timeLimitBar.isExist())) && !resultOperatedFlag) {
             //戦闘が終了した時
+            resultOperatedFlag = true;
             // by kmhanko
             if (mode == MODE.BATTLE) {
                 getDropItem();
@@ -428,16 +443,22 @@ public class BattleUnitAdmin {
                 resultButtonGroup.setDrawFlag(true);
             }
             if (mode == MODE.MAOH) {
+                resultTextBoxUpdate(new String[]{
+                        "魔王を倒した！",
+                });
                 resultButtonGroup.setUpdateFlag(true);
                 resultButtonGroup.setDrawFlag(true);
             }
             if (mode == MODE.MINING) {
                 if (timeLimitBar.isTimeUp()) {
                     //TODO 時間切れで終了した場合
-                    //resultTextBoxUpdate();
+                    resultTextBoxUpdate(new String[]{
+                            "時間切れになってしまった！",
+                            "今回の獲得ジオはありません"
+                    });
                 } else {
-                    //TODO ジオを掘り尽くした場合
-                    //resultTextBoxUpdate();
+                    //ジオを掘り尽くした場合
+                    getDropGeo();
                 }
                 resultButtonGroup.setUpdateFlag(true);
                 resultButtonGroup.setDrawFlag(true);
@@ -447,11 +468,13 @@ public class BattleUnitAdmin {
         }
 
         //text関係
-        resultButtonCheck();
-        resultButtonGroup.update();
+        if (resultOperatedFlag) {
+            resultButtonCheck();
+            resultButtonGroup.update();
+        }
 
         //timeLimit関係
-        if (mode == MODE.MINING) {
+        if (mode == MODE.MINING && !result_flag) {
             timeLimitBar.update();
         }
     }
@@ -515,11 +538,58 @@ public class BattleUnitAdmin {
     //by kmhanko
     private void getDropGeo() {
         //岩からのジオドロップ
+        List<String> dropItemNames = new ArrayList<String>();
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (battle_units[i].getUnitKind() == Constants.UnitKind.ROCK && battle_units[i].isDropFlag()) {
-
+                BattleBaseUnitData bBUDforRock = ((BattleEnemy)battle_units[i]).getBattleBaseUnitDataForRock();
+                GeoObjectData geoObjectData = null;
+                int parameter = 0;
+                int[] status = bBUDforRock.getStatus(repeat_count);
+                //このジオは何ジオか決定する
+                if (Math.random() < 0.5) {
+                    //NormalGeo
+                    GEO_PARAM_KIND_NORMAL kindNormal = GeoObjectDataCreater.getRandKindNormal();
+                    switch (kindNormal) {
+                        case HP:
+                            parameter = status[HP.ordinal()] * bBUDforRock.getPower();
+                            break;
+                        case ATTACK:
+                            parameter = status[ATTACK.ordinal()] * bBUDforRock.getPower();
+                            break;
+                        case DEFENCE:
+                            parameter = status[DEFENSE.ordinal()] * bBUDforRock.getPower();
+                            break;
+                        case LUCK:
+                            parameter = status[LUCK.ordinal()] * bBUDforRock.getPower();
+                            break;
+                    }
+                    geoObjectData = GeoObjectDataCreater.getGeoObjectData(parameter, kindNormal);
+                } else {
+                    //RateGeo
+                    GEO_PARAM_KIND_RATE kindRate = GeoObjectDataCreater.getRandKindRate();
+                    switch (kindRate) {
+                        case HP_RATE:
+                            parameter = status[HP.ordinal()] * bBUDforRock.getPower();
+                            break;
+                        case ATTACK_RATE:
+                            parameter = status[ATTACK.ordinal()] * bBUDforRock.getPower();
+                            break;
+                        case DEFENCE_RATE:
+                            parameter = status[DEFENSE.ordinal()] * bBUDforRock.getPower();
+                            break;
+                        case LUCK_RATE:
+                            parameter = status[LUCK.ordinal()] * bBUDforRock.getPower();
+                            break;
+                    }
+                    geoObjectData = GeoObjectDataCreater.getGeoObjectData(parameter, kindRate);
+                }
+                if (geoObjectData != null) {
+                    mapPlateAdmin.getInventry().addItemData(geoObjectData);
+                    dropItemNames.add(geoObjectData.getName());
+                }
             }
         }
+        resultTextBoxUpdateItems(dropItemNames);
     }
 
 
@@ -591,6 +661,18 @@ public class BattleUnitAdmin {
         resultTextPaint.setColor(Color.WHITE);
     }
 
+    private void resultTextBoxUpdate(String[] messages) {
+        textBoxAdmin.setTextBoxExists(resultTextBoxID, true);
+        for(int i=0; i<messages.length; i++) {
+            textBoxAdmin.bookingDrawText(resultTextBoxID, messages[i], resultTextPaint);
+            if ( i == messages.length - 1) {
+                textBoxAdmin.bookingDrawText(resultTextBoxID, "MOP", resultTextPaint);
+            } else {
+                textBoxAdmin.bookingDrawText(resultTextBoxID, "\n", resultTextPaint);
+            }
+        }
+    }
+
     private void resultTextBoxUpdateItems(List<String> itemNames) {
 
 
@@ -600,7 +682,8 @@ public class BattleUnitAdmin {
 
         int row = 0;
 
-        for (int i = 0; i < itemNames.size(); i++) {
+        int i = 0;
+        while(i < itemNames.size()) {
             if (row == 0) {
                 textBoxAdmin.bookingDrawText(resultTextBoxID, winMessage, resultTextPaint);
                 textBoxAdmin.bookingDrawText(resultTextBoxID, "\n", resultTextPaint);
@@ -609,6 +692,7 @@ public class BattleUnitAdmin {
             }
 
             textBoxAdmin.bookingDrawText(resultTextBoxID, itemNames.get(i), resultTextPaint);
+            i++;
             row++;
 
             if (row == POPUP_WINDOW.MESS_ROW) {
