@@ -161,25 +161,20 @@ class DungeonSurfaceView extends BaseSurfaceView{
     }
 
 
+    boolean openningFlag = true;
+
     @Override
     public void gameLoop(){
 
         dungeon_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         battle_user_interface.updateTouchState(touch_x, touch_y, touch_state);
-        game_system.update();
-        /*
-        if(back_ground_flag == false){
-            drawBackGround();
-            back_ground_flag = true;
-        }
-        */
-        game_system.draw();
 
-//        if(touch_state == TouchState.DOWN) {
-//            thread = null;
-//            Intent intent = new Intent(dungeon_activity, BattleActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//            dungeon_activity.startActivity(intent);
-//        }
+        if(openningFlag == true) {
+            game_system.openningUpdate();
+            game_system.openningDraw();
+        }else{
+            game_system.update();
+            game_system.draw();
+        }
     }
 }

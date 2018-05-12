@@ -289,11 +289,67 @@ public class DungeonGameSystem {
         is_touching_outside_menu = _is_touching_outside_menu;
     }
 
+    int count = 0;
+    int openningTextBoxID;
+    boolean text_mode = false;
+
+    public void openningInit(){
+
+        openningTextBoxID = text_box_admin.createTextBox(200,500,1400,800,3);
+        text_box_admin.setTextBoxUpdateTextByTouching(openningTextBoxID, false);
+        text_box_admin.setTextBoxExists(openningTextBoxID, false);
+    }
+
+    public void openningUpdate(){
+
+        if(count == 100) {
+            text_box_admin.bookingDrawText(openningTextBoxID, "今日も平穏だなぁ");
+            text_box_admin.bookingDrawText(openningTextBoxID, "MOP");
+            text_box_admin.updateText(openningTextBoxID);
+            text_box_admin.setTextBoxExists(openningTextBoxID, true);
+            text_mode = true;
+        }
+
+        if(count == 100 && (battle_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN || battle_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN_MOVE || battle_user_interface.getTouchState() == Constants.Touch.TouchState.MOVE)){
+            text_box_admin.setTextBoxExists(openningTextBoxID, false);
+            text_mode = false;
+        }
 
 
+        //ここから先フジワラ，敵と衝突し，戦闘を行い，倒されるということを実現する
+        //ぶつかる直前に「うわ，なんだ!?」を入れる
+        
+
+
+
+
+
+
+        if(text_mode == false) {
+            map_object_admin.update();
+            map_plate_admin.update();
+            count++;
+        }
+
+        text_box_admin.update();
+
+
+    }
+
+    public void openningDraw(){
+
+        map_admin.drawMap_for_autotile_light_animation();
+        map_object_admin.draw();
+        map_plate_admin.draw();
+
+        text_box_admin.draw();
+        graphic.draw();
+
+    }
 
 
     public DungeonGameSystem(){}
+
 
 }
 
