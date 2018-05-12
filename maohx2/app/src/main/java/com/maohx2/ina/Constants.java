@@ -142,6 +142,8 @@ public final class Constants {
             GEO_MINING_INIT,
             GEO_MINING,
             TO_WORLD,
+            EQUIP_EXPEND,
+            GEO_MAP,
         }
 
         public enum WORLD_MODE {

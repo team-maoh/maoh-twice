@@ -179,7 +179,7 @@ public class DungeonGameSystem {
 
             case BUTTLE_INIT:
                 battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
-                //battle_unit_admin.spawnEnemy(); reset内で呼んでいる
+                battle_unit_admin.spawnEnemy();
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE);
 
             case BUTTLE:
@@ -210,9 +210,17 @@ public class DungeonGameSystem {
                 battle_user_interface.update();
                 battle_unit_admin.update();
                 break;
+
             case TO_WORLD:
                 activityChange.toWorldActivity();
                 break;
+
+            case EQUIP_EXPEND:
+                break;
+
+            case GEO_MAP:
+                break;
+
         }
 
         text_box_admin.update();
@@ -238,6 +246,13 @@ public class DungeonGameSystem {
                 graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
                 battle_unit_admin.draw();
                 break;
+
+            case EQUIP_EXPEND:
+                break;
+
+            case GEO_MAP:
+                break;
+
         }
         text_box_admin.draw();
         graphic.draw();

@@ -141,10 +141,12 @@ public class StartGameSystem {
 
     public void draw() {
         graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
+        /*
         equipmentInventry.draw();
         expendInventry.draw();
         palette_admin.draw();
         start_user_interface.draw();
+        */
         graphic.bookingDrawText("Please Touch!",550,750, paint);
         //textBoxAdmin.draw();
         graphic.draw();
