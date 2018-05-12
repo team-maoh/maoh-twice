@@ -12,6 +12,8 @@ import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.DungeonDataAdmin;
 import com.maohx2.horie.map.DungeonMonsterDataAdmin;
 import com.maohx2.horie.map.MapAdmin;
+import com.maohx2.horie.map.MapStatus;
+import com.maohx2.horie.map.MapStatusSaver;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
@@ -51,6 +53,11 @@ public class DungeonGameSystem {
     Camera camera;
     Point map_size = new Point(0, 0);//カメラのインスタンス化に必要
 
+    DungeonMonsterDataAdmin chess, dragon, forest, haunted;
+    MapStatus map_status;
+    MapStatusSaver map_status_saver;
+
+
     // by kmhanko
     BattleUnitDataAdmin battleUnitDataAdmin;
     MiningItemDataAdmin miningItemDataAdmin;
@@ -87,6 +94,7 @@ public class DungeonGameSystem {
         map_inventry_admin = new MapInventryAdmin(globalData, map_plate_admin.getInventry(), map_object_admin, map_plate_admin);
 
         dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
+
         map_size.set(dungeon_data_admin.getDungeon_data().get(2).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(2).getMap_size_y());
         //camera = new Camera(map_size, 64*4);
 
@@ -104,9 +112,16 @@ public class DungeonGameSystem {
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "HauntedMonsterData");
                 break;
         }
+        map_status = new MapStatus(4);
+        map_status_saver = new MapStatusSaver(_myDatabaseAdmin, "MapSaveData", "MapSaveData.db", 1, "s", map_status, 4);
+        map_status_saver.load();
+
+//        for(int i = 0;i < 4;i++){
+//            System.out.println("after:stage_num = "+i+", is_clear = "+map_status.getMapStatus(i));
+//        }
 
 
-        int dungeon_num = 3;
+        int dungeon_num = 0;
         map_size.set(dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_y());
         //camera = new Camera(map_size, 64*4);
         if (!(dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH)) {
@@ -148,7 +163,7 @@ public class DungeonGameSystem {
 
         playerStatus = globalData.getPlayerStatus();
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
-        battleUnitDataAdmin.loadBattleUnitData(dungeon_kind);//敵読み込み
+        battleUnitDataAdmin.loadBattleUnitData();//敵読み込み
 
 
 
@@ -164,6 +179,12 @@ public class DungeonGameSystem {
         //デバッグ用
         //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
 
+        battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin, text_box_admin, 1);
+    }
+
+    public void saveMapSaveData(){
+        map_status_saver.deleteAll();
+        map_status_saver.save();
     }
 
     public void update() {
@@ -190,11 +211,12 @@ public class DungeonGameSystem {
 
             case MAOH_INIT:
                 battle_unit_admin.reset(BattleUnitAdmin.MODE.MAOH);
+                /*
                 battle_unit_admin.spawnEnemy(
                         new String[] {
                                 battleUnitDataAdmin.getMaohUnitNames().get(playerStatus.getMaohWinCount())
                         }
-                );
+                );*/
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAOH);
 
             case MAOH:
