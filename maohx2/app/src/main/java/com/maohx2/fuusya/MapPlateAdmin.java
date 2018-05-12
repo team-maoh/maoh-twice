@@ -6,14 +6,18 @@ import android.graphics.Paint;
 import com.maohx2.ina.ActivityChange;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.DungeonGameSystem;
+import com.maohx2.ina.GlobalData;
 import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.StartGameSystem;
 import com.maohx2.ina.Text.BoxPlate;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.DungeonUserInterface;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.Saver.PlayerStatusSaver;
 import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 
 import com.maohx2.ina.Constants.Touch.TouchWay.*;
@@ -35,6 +39,9 @@ public class MapPlateAdmin {
     Inventry inventry;
     MapInventryAdmin map_inventry_admin;
     ActivityChange activityChange;
+    GlobalData globalData;
+    PlayerStatus playerStatus;
+    PlayerStatusSaver playerStatusSaver;
     boolean is_displaying_list;
 
     int displaying_content;
@@ -79,12 +86,19 @@ public class MapPlateAdmin {
     int obtained_item_num;
     boolean will_storage_inventry;
 
-    public MapPlateAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, ActivityChange _activityChange) {
+    int NUM_OF_TUTORIAL_BITMAP = 3;
+    int i_of_tutorial_bitmap;
+    String tutorial_name = "スライド";
+
+    public MapPlateAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, ActivityChange _activityChange, GlobalData _globalData) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
         activityChange = _activityChange;
+        globalData = _globalData;
+        playerStatus = globalData.getPlayerStatus();
+        playerStatusSaver = globalData.getPlayerStatusSaver();
+
         inventry = new Inventry();
-//        inventry.init(dungeon_user_interface, graphic, 1000, 100, 1400, 508, 10);
         inventry.init(dungeon_user_interface, graphic, ITEM_LEFT, ITEM_TOP, ITEM_RIGHT, ITEM_BOTTOM, ITEM_CONTENTS_NUM);
 
         Paint text_paint = new Paint();
@@ -95,9 +109,9 @@ public class MapPlateAdmin {
 //        GeoObjectDataCreater.setGraphic(graphic);
 //        inventry.addItemData(GeoObjectDataCreater.getGeoObjectData(2));
 
-        obtainDebugItem(1);
-        obtainDebugItem(1);
-        obtainDebugItem(3);
+//        obtainDebugItem(1);
+//        obtainDebugItem(1);
+//        obtainDebugItem(3);
 
         is_displaying_list = false;
 
@@ -130,6 +144,13 @@ public class MapPlateAdmin {
                 new BoxTextPlate(graphic, dungeon_user_interface, hp_paint, UP_MOMENT, MOVE, new int[]{HP_LEFT, hp_top, hp_cutting_x, hp_top + HP_HEIGHT}, " ", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, hp_hole_paint, UP_MOMENT, MOVE, new int[]{hp_cutting_x, hp_top, HP_RIGHT, hp_top + HP_HEIGHT}, " ", text_paint),
                 //↑　HPバー
                 new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_LEFT, hp_top + HP_HEIGHT, HP_BG_RIGHT, HP_BG_BOTTOM}, " ", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_LEFT, hp_top, HP_LEFT, hp_top + HP_HEIGHT}, " ", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_RIGHT, hp_top, HP_RIGHT, hp_top + HP_HEIGHT}, " ", text_paint)});
+
+        i_of_tutorial_bitmap = 1;
+
+    }
+
+    public void init() {
+
     }
 
     public void update() {
@@ -138,18 +159,7 @@ public class MapPlateAdmin {
         hitpoint.update();
         inventry.updata();
 
-        System.out.println("displaying_content_desu =   " + displaying_content);
-
         Constants.Touch.TouchState touch_state = dungeon_user_interface.getTouchState();
-
-//        if (touch_state != Constants.Touch.TouchState.AWAY) {
-
-//        double touch_n_x = dungeon_user_interface.getTouchX();
-//        double touch_n_y = dungeon_user_interface.getTouchY();
-
-        //Menuが表示されている && Menuの領域内に指がある
-//            if (isTouchingList(touch_n_x, touch_n_y) == true) {
-
         switch (displaying_content) {
             case 0://menu
 
@@ -157,17 +167,17 @@ public class MapPlateAdmin {
 
                 switch (content) {
                     case 0://ステータス
-                        System.out.println("tatami ステータス");
+//                        System.out.println("tatami ステータス");
                         displaying_content = 1;
                         is_displaying_list = false;
                         break;
                     case 1://アイテム
-                        System.out.println("tatami アイテム");
+//                        System.out.println("tatami アイテム");
                         displaying_content = 2;
                         is_displaying_list = false;
                         break;
                     case 2://（ダンジョンを）リタイア
-                        System.out.println("tatami リタイア");
+//                        System.out.println("tatami リタイア");
                         displaying_content = 3;
                         is_displaying_list = false;
                         break;
@@ -225,6 +235,9 @@ public class MapPlateAdmin {
         hitpoint.draw();
         hitpoint.draw();
         hitpoint.draw();
+
+        drawTutorialImage();
+
 
     }
 
@@ -288,20 +301,48 @@ public class MapPlateAdmin {
 
     }
 
-    public int getObtainedItemNum(){
+    public int getObtainedItemNum() {
         return obtained_item_num;
     }
 
-    public void setWillStorageInventry(boolean _will_storage_inventry){
+    public void setWillStorageInventry(boolean _will_storage_inventry) {
         will_storage_inventry = _will_storage_inventry;
     }
 
-    public boolean getWillStorageInventry(){
+    public boolean getWillStorageInventry() {
         return will_storage_inventry;
     }
 
-    public void setMapInventryAdmin(MapInventryAdmin _map_inventry_admin){
+    public void setMapInventryAdmin(MapInventryAdmin _map_inventry_admin) {
         map_inventry_admin = _map_inventry_admin;
     }
 
+    private void drawTutorialImage() {
+
+        if (playerStatus.getTutorialInDungeon() == 0) {
+
+            String bitmap_name = tutorial_name + String.valueOf(i_of_tutorial_bitmap);
+            BitmapData tutorial_bitmap = graphic.searchBitmap(bitmap_name);
+
+            if (tutorial_bitmap != null) {
+                graphic.bookingDrawBitmapData(tutorial_bitmap, 0, 0, 1, 1, 0, 255, true);
+            }
+
+            Constants.Touch.TouchState touch_state = dungeon_user_interface.getTouchState();
+
+            if (touch_state == Constants.Touch.TouchState.UP) {
+                i_of_tutorial_bitmap++;
+
+                if (i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP) {
+                    playerStatus.setTutorialInDungeon(1);
+                    int test = playerStatus.getTutorialInDungeon();
+                    playerStatusSaver.save();
+
+                    int test2 = playerStatus.getTutorialInDungeon();
+                    int test3 = 1;
+
+                }
+            }
+        }
+    }
 }

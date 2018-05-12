@@ -8,6 +8,7 @@ import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
+import com.maohx2.kmhanko.itemdata.ExpendItemData;
 
 import static com.maohx2.ina.Constants.Math.COS;
 import static com.maohx2.ina.Constants.Math.SIN;
@@ -35,12 +36,14 @@ public class Palette {
     Graphic graphic;
     int position_x;
     int position_y;
-    //Inventry inventry;
+    int paletteNum;
 
-    public Palette(BattleUserInterface _battle_user_interface, Graphic _graphic, int _position_x, int _position_y) {
+
+    public Palette(BattleUserInterface _battle_user_interface, Graphic _graphic, int _position_x, int _position_y, int _paletteNum) {
         graphic = _graphic;
         battle_user_interface = _battle_user_interface;
         paint = new Paint();
+        paletteNum = _paletteNum;
         //inventry = _inventry;
 
         position_x = _position_x;
@@ -64,14 +67,12 @@ public class Palette {
         palette_center = new PaletteCenter(position_x, position_y, 0, battle_user_interface.setCircleTouchUI(position_x, position_y, PALETTE_CENTER_RADIUS_BIG));
 
         //palette_center.setItemData();
-
-
     }
+
 
     public void update() {
 
         //小→展開、小さな円をタッチした
-
         Constants.Touch.TouchState touch_state = battle_user_interface.getTouchState();
         double touch_x = battle_user_interface.getTouchX();
         double touch_y = battle_user_interface.getTouchY();
@@ -113,7 +114,13 @@ public class Palette {
             }
 
             palette_center.changeElement(select_circle_num);
-            palette_center.setItemData(palette_elements[select_circle_num].getItemData());
+
+            if(palette_elements[select_circle_num].getItemData() != null) {
+                palette_center.setItemData(palette_elements[select_circle_num].getItemData(), select_circle_num);
+                if (palette_elements[select_circle_num].getItemData().getItemKind() == Constants.Item.ITEM_KIND.EXPEND) {
+                    palette_elements[select_circle_num].setItemData(null);
+                }
+            }
         }
 
         if (touch_state == Constants.Touch.TouchState.UP) {
@@ -123,14 +130,12 @@ public class Palette {
             }
             battle_palette_mode = 0;
         }
-
     }
 
-
+    public int getPalettePrePos(){return palette_center.getPrePos();}
 
 
     public void updateSetting() {
-
         battle_palette_mode = 1;
 
         //指がパレットの上に乗った際のチェック
@@ -145,47 +150,96 @@ public class Palette {
         }
 
 
+        //バトルパレットの大きさを設定する際の判定
+        select_circle_num = -1;
+        if (battle_user_interface.checkUI(palette_center.getTouchID(), Constants.Touch.TouchWay.MOVE) == true) {
+            battle_user_interface.setPaletteElement(palette_center);
+            select_circle_num = 0;
+        }
+
+        for (int i = 0; i < 8; i++) {
+            if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.MOVE) == true) {
+                battle_user_interface.setPaletteElement(palette_elements[i]);
+                select_circle_num = i+1;
+            }
+        }
+
+
         //指が離れた際のパレットのチェック(パレット間)
         if (battle_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
-            InventryData inventry_data = battle_user_interface.getInventryData();
+            InventryData inventry_data = null;
 
-            //アイテム移動中
+            if (battle_user_interface.getPaletteElement() != null) {
+                if (battle_user_interface.getPaletteElement().getItemData() != null) {
+                    if (checkPaletteNumAndItemKind(battle_user_interface.getPaletteElement().getItemData().getItemKind()) == false) {return;}
+                }
+            }
+
+
+            if(battle_user_interface.getPaletteElement() == null) {
+                if (battle_user_interface.getInventryData() != null) {
+                    inventry_data = battle_user_interface.getInventryData();
+
+                    if (inventry_data.getItemData() != null) {
+                        if (checkPaletteNumAndItemKind(inventry_data.getItemData().getItemKind()) == false) {return;}
+
+                        if(inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.EXPEND){
+                            ExpendItemData checkNumItemData = (ExpendItemData)(inventry_data.getItemData());
+                            if(inventry_data.getItemNum() - checkNumItemData.getPalettePositionNum() <= 0){return;}
+                        }
+                    }
+                }
+            }
+
+            //アイテム移動中だったら
             if (battle_user_interface.getPaletteElement() != null) {
 
 
                 if (battle_user_interface.checkUI(palette_center.getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
                     ItemData a = palette_center.getItemData();
-                    palette_center.setItemData(battle_user_interface.getPaletteElement().getItemData());
+                    //palette_center.setItemData(battle_user_interface.getPaletteElement().getItemData());
+                    palette_center.setItemData(battle_user_interface.getPaletteElement().getItemData(),battle_user_interface.getPaletteElement().getElementNum());
                     battle_user_interface.getPaletteElement().setItemData(a);
                     battle_user_interface.setPaletteElement(null);
                 }
 
                 for (int i = 0; i < 8; i++) {
-                    if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
+                    if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true){
                         ItemData a = palette_elements[i].getItemData();
-                        palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData());
+                        //palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData());
+                        palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData(),battle_user_interface.getPaletteElement().getElementNum());
                         battle_user_interface.getPaletteElement().setItemData(a);
                         battle_user_interface.setPaletteElement(null);
                     }
                 }
             }
 
+
             //指が離れた際のインベントリチェック
             if (inventry_data != null) {
                 palette_center.setItemData(inventry_data.getItemData());
             }
+
             if (battle_user_interface.getPaletteElement() != null) {
-                if(battle_user_interface.getPaletteElement().getItemData().getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT) {
-                    //todo
+                if (battle_user_interface.getPaletteElement().getItemData() != null) {
+                    if (battle_user_interface.getPaletteElement().getItemData().getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT) {
+                        EquipmentItemData putOffItem = (EquipmentItemData) (battle_user_interface.getPaletteElement().getItemData());
+                        putOffItem.setPalettePosition(0);
+                    }
+                    if (battle_user_interface.getPaletteElement().getItemData().getItemKind() == Constants.Item.ITEM_KIND.EXPEND) {
+                        ExpendItemData putOffItem = (ExpendItemData) (battle_user_interface.getPaletteElement().getItemData());
+                        putOffItem.setPalettePosition((int)Math.pow(2,battle_user_interface.getPaletteElement().getElementNum()-1),false);
+                    }
                 }
                 battle_user_interface.getPaletteElement().setItemData(null);
                 battle_user_interface.setPaletteElement(null);
             }
+
             if (battle_user_interface.getInventryData() != null) {
                 battle_user_interface.setInventryData(null);
             }
-
         }
+
     }
 
 
@@ -199,35 +253,40 @@ public class Palette {
             }
         }else{
             if (battle_user_interface.getPaletteElement() != null) {
-                if (battle_user_interface.isUIPaletteDraw() == true && battle_user_interface.getPaletteElement().getElementNum() == 0) {
-                    palette_center.drawBig();
+                if (battle_user_interface.isUIPaletteDraw() == true && battle_user_interface.getPaletteElement().getElementNum() == 0 && checkPaletteNumAndItemKind(battle_user_interface.getPaletteElement().getItemData().getItemKind())) {
+                    palette_center.drawBig(select_circle_num);
                 } else {
-                    palette_center.drawBigAndItem();
+                    palette_center.drawBigAndItem(select_circle_num);
                 }
             } else {
-                palette_center.drawBigAndItem();
+                palette_center.drawBigAndItem(select_circle_num);
             }
 
             for (int i = 0; i < 8; i++) {
                 if (battle_user_interface.getPaletteElement() != null) {
                     if (battle_user_interface.isUIPaletteDraw() == true && battle_user_interface.getPaletteElement().getElementNum() == i + 1) {
-                        palette_elements[i].drawBig();
+                        palette_elements[i].drawBig(select_circle_num);
                     } else {
-                        palette_elements[i].drawBigAndItem();
+                        palette_elements[i].drawBigAndItem(select_circle_num);
                     }
                 } else {
-                    palette_elements[i].drawBigAndItem();
+                    palette_elements[i].drawBigAndItem(select_circle_num);
                 }
             }
-
         }
     }
 
-    public void save(){
+    boolean checkPaletteNumAndItemKind(Constants.Item.ITEM_KIND _itemKind){
+        if(paletteNum == 0 && _itemKind == Constants.Item.ITEM_KIND.EQUIPMENT) return true;
+        if(paletteNum == 1 && _itemKind == Constants.Item.ITEM_KIND.EXPEND) return true;
 
+        //by kmhanko
+        if(paletteNum == 2 && _itemKind == Constants.Item.ITEM_KIND.MINING) return true;
 
-
+        return false;
     }
+
+    public void save(){}
 
     public int getPaletteMode() {
         return battle_palette_mode;
@@ -235,6 +294,12 @@ public class Palette {
 
     public ItemData getSelectedItemData() {
         return palette_center.getItemData();
+    }
+
+    public void setPaletteCenter(ItemData _item_data){palette_center.setItemData(_item_data);}
+
+    public ItemData getItemData(int _paletteIndex){
+        return palette_elements[_paletteIndex].getItemData();
     }
 
 }

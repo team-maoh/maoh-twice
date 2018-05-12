@@ -18,6 +18,8 @@ public class MapObjectBitmap {
     Graphic graphic;
     String object_name;
 
+    int DRAW_SCALE = 4;
+
     int unit_width, unit_height;
 
     int MAX_BITMAP_DIR = 8;//最大で8方位
@@ -31,6 +33,7 @@ public class MapObjectBitmap {
     boolean is_increasing_frame;//画像番号が増えている最中 or 減っている最中
     int frame;//いま表示しているフレームの番号（０～２）
     BitmapData raw_bitmap_data;
+    double shift_double = 1.0;
 
     public MapObjectBitmap(int _total_dirs, Graphic _graphic, String _object_name) {
 
@@ -42,8 +45,25 @@ public class MapObjectBitmap {
         object_name = _object_name;
 
         raw_bitmap_data = graphic.searchBitmap(object_name);
-        unit_width = raw_bitmap_data.getWidth() / 6;
-        unit_height = raw_bitmap_data.getHeight() / 4;
+        switch (total_dirs) {
+            case 1:
+                unit_width = raw_bitmap_data.getWidth();
+                unit_height = raw_bitmap_data.getHeight();
+                break;
+            case 8:
+                unit_width = raw_bitmap_data.getWidth() / 6;
+                unit_height = raw_bitmap_data.getHeight() / 4;
+                break;
+            default:
+                break;
+        }
+
+//        if(total_dirs == 1){
+//            unit_width = raw_bitmap_data.getWidth();
+//            unit_height = raw_bitmap_data.getHeight();
+//        }
+//        unit_width = raw_bitmap_data.getWidth() / 6;
+//        unit_height = raw_bitmap_data.getHeight() / 4;
 
         time_count = 0;
         is_increasing_frame = true;
@@ -68,6 +88,10 @@ public class MapObjectBitmap {
 
     public void init() {
 
+    }
+
+    public void init(double _shift_double) {
+        shift_double = _shift_double;
     }
 
     public void update() {
@@ -105,11 +129,16 @@ public class MapObjectBitmap {
         }
     }
 
+    // 引数のx, yは画面内の座標
     public void draw(double _dir_on_map, double x, double y) {
+
+        int shift_from_width = -unit_width * DRAW_SCALE / 2;
+        int shift_from_height = -unit_height * DRAW_SCALE / 2;
 
         switch (total_dirs) {
             case 1:
-                graphic.bookingDrawBitmapData(raw_bitmap_data, (int) x, (int) y);
+//                graphic.bookingDrawBitmapData(raw_bitmap_data, (int) x + shift_from_width, (int) y + shift_from_height, DRAW_SCALE, DRAW_SCALE, 0, 255, true);
+                graphic.bookingDrawBitmapData(raw_bitmap_data, (int) x, (int) y, DRAW_SCALE, DRAW_SCALE, 0, 255, true);
                 break;
 
             case 8:
@@ -118,10 +147,11 @@ public class MapObjectBitmap {
                 //[0 ~ 2*PI]を[0 ~ 7]に変換する
                 int int_dir_on_map = ((int) ((_dir_on_map + PI / total_dirs) / (2 * PI / total_dirs))) % total_dirs;
 
-                graphic.bookingDrawBitmapData(bitmap_data[int_dir_on_map][frame], (int) x, (int) y);
+                graphic.bookingDrawBitmapData(bitmap_data[int_dir_on_map][frame], (int) x + shift_from_width, (int) y + shift_from_height * (int) shift_double, DRAW_SCALE, DRAW_SCALE, 0, 255, true);
                 break;
 
             default:
+                break;
         }
 
     }

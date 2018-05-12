@@ -103,7 +103,7 @@ public class GeoObjectDataCreater {
 
         double calcParam;
         if (randFlag) {
-            calcParam = status2[parameterKind.ordinal()] = 1.0 + ((double)parameter/2 + (double)parameter * Math.random())/ 20.0;
+            calcParam = status2[parameterKind.ordinal()] = 1.0 + ((double)parameter/2 + (double)parameter * Math.random())/ 100.0;
         } else {
             calcParam = parameter;
         }
@@ -135,11 +135,11 @@ public class GeoObjectDataCreater {
         }
     }
 
-    private static GEO_PARAM_KIND_NORMAL getRandKindNormal() {
+    public static GEO_PARAM_KIND_NORMAL getRandKindNormal() {
         return GEO_PARAM_KIND_NORMAL.toEnum((int)(GEO_PARAM_KIND_NORMAL.NUM.ordinal() * Math.random()));
     }
 
-    private static GEO_PARAM_KIND_RATE getRandKindRate() {
+    public static GEO_PARAM_KIND_RATE getRandKindRate() {
         return GEO_PARAM_KIND_RATE.toEnum((int)(GEO_PARAM_KIND_RATE.NUM.ordinal() * Math.random()));
     }
 

@@ -39,6 +39,11 @@ public class PlayerStatus {
     private int maohWinCount;
     //TODO 今出てる魔王保存？
 
+    private int clearCount; //制覇回数
+    private int nowClearCount; //現在の制覇回数時間軸
+
+    private int tutorialInDungeon; //by fuusya : ダンジョンでチュートリアルを表示中 = 0 (表示済み = 1)
+
     //Equip
 
 
@@ -118,6 +123,9 @@ public class PlayerStatus {
     public int getLevel() { return level; }
     public int getMoney() { return money; }
     public int getMaohWinCount() { return maohWinCount; }
+    public int getClearCount() { return clearCount; }
+    public int getNowClearCount() { return nowClearCount; }
+    public int getTutorialInDungeon() {return tutorialInDungeon; }
 
     public void setHP(int x) { hp = x; }
     public void setAttack(int x) { attack = x; }
@@ -125,6 +133,9 @@ public class PlayerStatus {
     public void setLuck(int x) { luck = x; }
     public void setLevel(int x) { level = x; }
     public void setMoney(int x) { money = x; }
+    public void setClearCount(int x) { clearCount = x; }
+    public void setNowClearCount(int x) {  nowClearCount = x; }
+    public void setTutorialInDungeon(int x){  tutorialInDungeon = x;}
 
     public void setBaseHP(int x) { baseHp = x; }
     public void setBaseAttack(int x) { baseAttack = x; }
@@ -132,6 +143,8 @@ public class PlayerStatus {
     public void setBaseLuck(int x) { baseLuck = x; }
 
     public void setMaohWinCount(int _maohWinCount) { maohWinCount = _maohWinCount; }
+
+    public void addMaohWinCount() { maohWinCount++; }
 
     public int addMoney(int _money) {
         money += _money;
@@ -142,7 +155,6 @@ public class PlayerStatus {
         return money;
     }
 
-
     public Integer[] getSaveStatuses() {
         return new Integer[] {
                 level,
@@ -151,7 +163,10 @@ public class PlayerStatus {
                 baseDefence,
                 baseLuck,
                 money,
-                maohWinCount
+                maohWinCount,
+                clearCount,
+                nowClearCount,
+                tutorialInDungeon
         };
     }
 

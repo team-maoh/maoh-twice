@@ -47,14 +47,71 @@ public class TextBoxAdmin {
     public void init(UserInterface _user_interface) {
         user_interface = _user_interface;
 
-        createTextBox(100.0, 550.0, 800.0, 750.0, ROW_OF_BOX, true, true);
-        createTextBox(80.0, 150.0, 400.0, 350.0, 2, true, false);
+//        createTextBox(100.0, 550.0, 800.0, 750.0, ROW_OF_BOX, true, true);
+//        createTextBox(80.0, 150.0, 400.0, 350.0, 2, true, false);
 
-        frame_count = 0;
+//
+//        frame_count = 0;
+//
+//        //テスト用ここから
+//        Paint text_paint = new Paint();
+//        text_paint.setTextSize(40);
+//        text_paint.setColor(Color.GREEN);
+//
+//        Paint blue_paint = new Paint();
+//        blue_paint.setTextSize(40);
+//        blue_paint.setColor(Color.BLUE);
+//
+//        text_box[0].inputText("え、死んでまんの。ほら、また。", text_paint);
+//        text_box[0].inputText("\n", text_paint);
+//        text_box[0].inputText("見たとこ、", text_paint);
+//        text_box[0].inputText("毛並みといい、", blue_paint);
+//        text_box[0].inputText("\n", text_paint);
+//        text_box[0].inputText("体つきといい、", text_paint);
+//        text_box[0].inputText("\n", text_paint);
+//        text_box[0].inputText("えろうええ馬に見えますが。", blue_paint);
+//        text_box[0].inputText("MOP", blue_paint);
+//
+//        text_box[0].inputText(frame_count + "ダメージを受けた!!", text_paint);
+//        text_box[0].inputText("MOP", text_paint);
+//
+//        text_box[0].inputText("地球", blue_paint);
+//        text_box[0].inputText("をアイスピックでつついた", text_paint);
+//        text_box[0].inputText("\n", text_paint);
+//        text_box[0].inputText("としたら、ちょうど良い感じに", text_paint);
+//        text_box[0].inputText("\n", text_paint);
+//        text_box[0].inputText("カチ割れるんじゃないかという", text_paint);
+//        text_box[0].inputText("\n", text_paint);
+//        text_box[0].inputText("くらいに", text_paint);
+//        text_box[0].inputText("冷", blue_paint);
+//        text_box[0].inputText("えきった朝だった", text_paint);
+//        text_box[0].inputText("MOP", blue_paint);
+//        bookingDrawText(0, "え、死んでまんの。ほら、また。", text_paint);
+//        bookingDrawText(0, "\n", text_paint);
+//        bookingDrawText(0, "見たとこ、", text_paint);
+//        bookingDrawText(0, "毛並みといい、", blue_paint);
+//        bookingDrawText(0, "\n", text_paint);
+//        bookingDrawText(0, "体つきといい、", text_paint);
+//        bookingDrawText(0, "\n", text_paint);
+//        bookingDrawText(0, "えろうええ馬に見えますが。", blue_paint);
+//        bookingDrawText(0, "MOP", blue_paint);
 
     }
 
     public void update() {
+
+//        if(isLastSentence(0)){
+//            System.out.println("LastSentenceDesu");
+//        }else{
+//            System.out.println("LastSentenceDenai");
+//        }
+
+//        int debug_first = text_box[0].first;
+//        int debug_last = text_box[0].last;
+//        System.out.println("LastSentence TextFirst  " + debug_first);
+//        System.out.println("LastSentence TextLast  " + debug_last);
+//        System.out.println("isLastSentence  " + text_box[0].isLastSentence());
+
 
         //テスト用ここから
         Paint text_paint = new Paint();
@@ -162,7 +219,6 @@ public class TextBoxAdmin {
         for (int i = 0; i < box_count; i++) {
             text_box[i].update(user_interface.checkUI(text_box[i].getTouchID(), Constants.Touch.TouchWay.MOVE));
         }
-
     }
 
     public void draw() {
@@ -193,12 +249,16 @@ public class TextBoxAdmin {
 
     //TextBoxの表示・非表示を切り替える関数
     public void setTextBoxExists(int _box_id, boolean _exists) {
-        text_box[_box_id].setExists(_exists);
+        if(text_box[_box_id]!=null) {
+            text_box[_box_id].setExists(_exists);
+        }
     }
 
     //Textをタッチで切り替えるかどうか
     public void setTextBoxUpdateTextByTouching(int _box_id, boolean _update_text_by_touching) {
-        text_box[_box_id].setUpdateTextByTouching(_update_text_by_touching);
+        if(text_box[_box_id]!=null) {
+            text_box[_box_id].setUpdateTextByTouching(_update_text_by_touching);
+        }
     }
 
     //TextBoxのTextを更新する関数
@@ -250,6 +310,13 @@ public class TextBoxAdmin {
     public void bookingBreakingLine(int _box_id) {
         Paint default_paint = new Paint();
         text_box[_box_id].inputText("\n", default_paint);
+    }
+
+    //いま表示されている文章が最終文か否か
+    //（id指定しないモードで使用可能）
+    public boolean isLastSentence(int _box_id) {
+        return text_box[_box_id].isLastSentence();
+//        return true;
     }
 
 

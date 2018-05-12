@@ -9,6 +9,7 @@ import com.maohx2.ina.WorldModeAdmin;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+import com.maohx2.ina.Constants.GAMESYSTEN_MODE.WORLD_MODE;
 
 import com.maohx2.ina.Text.CircleImagePlate;
 import com.maohx2.ina.Text.BoxTextPlate;
@@ -38,9 +39,15 @@ public class DungeonSelectManager {
     //DungeonSelectButtonAdmin dungeonSelectButtonAdmin;
     //LoopSelectButtonAdmin loopSelectButtonAdmin;
 
-    static final float DUNGEON_SELECT_BUTTON_RATE_DEFAULT = 6.0f;
-    static final float DUNGEON_SELECT_BUTTON_RATE_FEEDBACK = 8.0f;
-    static final int DUNGEON_SELECT_BUTTON_RATE_TOURH_R = 120;
+    static final float DUNGEON_SELECT_BUTTON_RATE_DEFAULT = 4.0f;
+    static final float DUNGEON_SELECT_BUTTON_RATE_FEEDBACK = 5.0f;
+    static final int DUNGEON_SELECT_BUTTON_RATE_TOURH_R = 110;
+
+    static final String DUNGEON_SELECT_BUTTON_TABLE_NAME = "dungeon_select_button";
+    //static final String MENU_BUTTON_TABLE_NAME = "menu_button";
+
+
+    boolean initUIsFlag = false;
 
     private boolean isDungeonSelectActive = false;
 
@@ -62,20 +69,19 @@ public class DungeonSelectManager {
 
     PlateGroup<MapIconPlate> mapIconPlateGroup;
 
-    PlateGroup<BoxTextPlate> dungeonInformationPlate;
+    //PlateGroup<BoxTextPlate> dungeonInformationPlate;
     PlateGroup<BoxTextPlate> dungeonEnterSelectButtonGroup;
     PlateGroup<BoxTextPlate> maohEnterSelectButtonGroup;
 
-    PlateGroup<CircleImagePlate> menuButtonGroup;
+    //PlateGroup<CircleImagePlate> menuButtonGroup;
 
     static final String DB_NAME = "dungeonselectDB";
     static final String DB_ASSET = "dungeonselectDB.db";
 
-    String tableName = "dungeon_select_button";
 
     int focusDungeonButtonID;
 
-    SELECT_MODE selectMode = SELECT_MODE.DUNGEON_SELECT;
+    //SELECT_MODE selectMode = SELECT_MODE.DUNGEON_SELECT;
 
     Paint paint = new Paint(); //TODO GeoMapとDungeonSelectの切り替え表示用。いつか消える
 
@@ -102,7 +108,7 @@ public class DungeonSelectManager {
         initMapIconPlate();
         initDungeonEnterSelectButton();
         initMaohEnterSelectButton();
-        initModeSelectButton();
+        //initModeSelectButton();
         initTextBox();
         initUIs();
 
@@ -115,32 +121,26 @@ public class DungeonSelectManager {
     }
 
     //***** GeoMapとDungeonSelectMapの切り替え *****
+
     public void switchSelectMode() {
-        if (selectMode == SELECT_MODE.GEOMAP_SELECT) {
-            selectMode = SELECT_MODE.DUNGEON_SELECT;
+        if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
+            worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT_INIT);
         } else {
-            selectMode = SELECT_MODE.GEOMAP_SELECT;
+            worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT_INIT);
         }
     }
-    public void switchSelectModeDungeon() {
-        selectMode = SELECT_MODE.DUNGEON_SELECT;
-    }
-    public void switchSelectModeGeoMap() {
-        selectMode = SELECT_MODE.GEOMAP_SELECT;
-    }
-
 
     //***** Buttonのinit関係 *****
     private void initMapIconPlate(){
-        int size = database.getSize(tableName);
+        int size = database.getSize(DUNGEON_SELECT_BUTTON_TABLE_NAME);
 
-        dungeonName = database.getString(tableName, "name");
-        List<String> imageName = database.getString(tableName, "image_name");
-        List<Integer> x = database.getInt(tableName, "x");
-        List<Integer> y = database.getInt(tableName, "y");
-        List<Integer> scale = database.getInt(tableName, "scale");
-        List<Integer> scale_feed = database.getInt(tableName, "scale_feed");
-        event = database.getString(tableName, "event");
+        dungeonName = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "name");
+        List<String> imageName = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "image_name");
+        List<Integer> x = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "x");
+        List<Integer> y = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "y");
+        List<Integer> scale = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "scale");
+        List<Integer> scale_feed = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "scale_feed");
+        event = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "event");
 
         List<MapIconPlate> mapIconPlateList = new ArrayList<MapIconPlate>();
 
@@ -221,7 +221,45 @@ public class DungeonSelectManager {
         maohEnterSelectButtonGroup.setDrawFlag(false);
     }
 
+    /*
+    private void initModeSelectButton(){
+        int size = database.getSize(MENU_BUTTON_TABLE_NAME);
+
+        dungeonName = database.getString(MENU_BUTTON_TABLE_NAME, "name");
+        List<String> imageName = database.getString(MENU_BUTTON_TABLE_NAME, "image_name");
+        List<Integer> x = database.getInt(MENU_BUTTON_TABLE_NAME, "x");
+        List<Integer> y = database.getInt(MENU_BUTTON_TABLE_NAME, "y");
+        List<Integer> scale = database.getInt(MENU_BUTTON_TABLE_NAME, "scale");
+        List<Integer> scale_feed = database.getInt(MENU_BUTTON_TABLE_NAME, "scale_feed");
+        event = database.getString(MENU_BUTTON_TABLE_NAME, "event");
+
+        List<MapIconPlate> menuIconPlateList = new ArrayList<MapIconPlate>();
+
+        //インスタンス化
+        for (int i = 0; i < size; i++) {
+            menuIconPlateList.add(new MapIconPlate(
+                    graphic, userInterface,
+                    Constants.Touch.TouchWay.UP_MOMENT,
+                    Constants.Touch.TouchWay.MOVE,
+                    new int[] { x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_TOURH_R },
+                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale.get(i), scale.get(i), 0.0f, 255, false),
+                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale_feed.get(i), scale_feed.get(i), 0.0f, 255, false),
+                    dungeonName.get(i),
+                    event.get(i)
+
+            ));
+        }
+
+        MapIconPlate[] menuIconPlates = new MapIconPlate[menuIconPlateList.size()];
+        menuButtonGroup = new PlateGroup<CircleImagePlate>(menuIconPlateList.toArray(menuIconPlates));
+    }
+    */
+
+    /*
     private void initModeSelectButton() {
+
+
+
         int x = 1500;
         int y[] = { 100,300,500,700 };
 
@@ -280,7 +318,10 @@ public class DungeonSelectManager {
                         )
                 }
         );
-    }
+
+
+
+    }*/
 
     private void initTextBox() {
         enterTextBoxID = textBoxAdmin.createTextBox(SELECT_WINDOW.MESS_LEFT, SELECT_WINDOW.MESS_UP, SELECT_WINDOW.MESS_RIGHT, SELECT_WINDOW.MESS_BOTTOM, SELECT_WINDOW.MESS_ROW);
@@ -293,23 +334,12 @@ public class DungeonSelectManager {
 
     //***** draw関係 *****
     public void draw() {
-        // ** GeoMap / DungeonSelectの表示 **
-        if (selectMode == SELECT_MODE.DUNGEON_SELECT) {
-            paint.setARGB(255, 255, 255, 255);
-        }
-        if (selectMode == SELECT_MODE.GEOMAP_SELECT) {
-            paint.setARGB(255, 255, 255, 128);
-        }
-        graphic.bookingDrawRect(0, 0, 1600, 900, paint);
-
-
         // ** Buttonの表示
         mapIconPlateGroup.draw();
         dungeonEnterSelectButtonGroup.draw();
-        menuButtonGroup.draw();
+        //menuButtonGroup.draw();
 
         maohEnterSelectButtonGroup.draw();
-
     }
 
     //***** update関係 *****
@@ -337,8 +367,13 @@ public class DungeonSelectManager {
         mapIconPlateCheck();
         mapIconPlateGroup.update();
 
-        modeSelectButtonCheck();
-        menuButtonGroup.update();
+        //modeSelectButtonCheck();
+        //menuButtonGroup.update();
+
+        if (initUIsFlag) {
+            initUIs();
+            initUIsFlag = false;
+        }
 
     }
 
@@ -347,7 +382,7 @@ public class DungeonSelectManager {
         int buttonID = mapIconPlateGroup.getTouchContentNum();
         if (buttonID != -1 ) {
             //この間、マップアイコンなどの操作を受け付けない
-            menuButtonGroup.setUpdateFlag(false);
+            //menuButtonGroup.setUpdateFlag(false);
             mapIconPlateGroup.setUpdateFlag(false);
 
             focusDungeonButtonID = buttonID;
@@ -355,39 +390,47 @@ public class DungeonSelectManager {
             //if mapIconPlateGroup.
             //ボタンに登録されているイベント名を参照して、それそれの場合の結果を返す
             if (event.get(focusDungeonButtonID).equals("dungeon")) {
-                if (selectMode == SELECT_MODE.DUNGEON_SELECT) {
+                if (worldModeAdmin.getMode() == WORLD_MODE.DUNGEON_SELECT) {
                     enterTextBoxUpdateDungeon();
                     dungeonEnterSelectButtonGroup.setUpdateFlag(true);
                     dungeonEnterSelectButtonGroup.setDrawFlag(true);
-
                 }
-                if (selectMode == SELECT_MODE.GEOMAP_SELECT) {
+                if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
                     geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
-                    worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
-                    worldModeAdmin.setGeoSlotMap(Constants.Mode.ACTIVATE.ACTIVE);
-                    initUIs();
+                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
+                    initUIsFlag = true;
                 }
             }
 
             if (event.get(focusDungeonButtonID).equals("shop")) {
-                worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
-                worldModeAdmin.setShop(Constants.Mode.ACTIVATE.ACTIVE);
-                initUIs();
+                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.SHOP_INIT);
+                initUIsFlag = true;
 
             }
             if (event.get(focusDungeonButtonID).equals("present")) {
-                worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
-                worldModeAdmin.setPresent(Constants.Mode.ACTIVATE.ACTIVE);
-                initUIs();
+                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.PRESENT_INIT);
+                initUIsFlag = true;
             }
             if (event.get(focusDungeonButtonID).equals("maoh")) {
                 enterTextBoxUpdateMaoh();
-                dungeonEnterSelectButtonGroup.setUpdateFlag(true);
-                dungeonEnterSelectButtonGroup.setDrawFlag(true);
+                maohEnterSelectButtonGroup.setUpdateFlag(true);
+                maohEnterSelectButtonGroup.setDrawFlag(true);
+            }
+            if (event.get(focusDungeonButtonID).equals("map")) {
+                switchSelectMode();
+                initUIsFlag = true;
+            }
+            if (event.get(focusDungeonButtonID).equals("equip")) {
+                initUIsFlag = true;
+                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.EQUIP_INIT);
+            }
+            if (event.get(focusDungeonButtonID).equals("option")) {
+                initUIsFlag = true;
             }
         }
     }
 
+    /*
     public void modeSelectButtonCheck() {
         int buttonID = menuButtonGroup.getTouchContentNum();
         if (buttonID == 0 ) { //Map
@@ -395,48 +438,53 @@ public class DungeonSelectManager {
         }
         if (buttonID == 1 ) { //Equip
             initUIs();
-            worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.STOP);
-            worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.ACTIVE);
+            worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.EQUIP);
         }
     }
+    */
 
     public void dungeonEnterSelectButtonCheck() {
-        if (!(dungeonEnterSelectButtonGroup.getUpdateFlag() && selectMode == SELECT_MODE.DUNGEON_SELECT)) {
+        if (!(dungeonEnterSelectButtonGroup.getUpdateFlag() && worldModeAdmin.getMode() == WORLD_MODE.DUNGEON_SELECT)) {
             return;
         }
 
         int buttonID = dungeonEnterSelectButtonGroup.getTouchContentNum();
         if (buttonID == 0 ) { //侵入する
-            initUIs();
-
-            //TODO 侵入処理におけるダンジョンデータによる分岐処理
-            /*
+            initUIsFlag = true;
             MapIconPlate tmp = (MapIconPlate)mapIconPlateGroup.getPlate(focusDungeonButtonID);
+            String dungeonName = tmp.getMapIconName();
+            Constants.DungeonKind.DUNGEON_KIND dungeonKind;
 
-            tmp.getMapIconName()
-            */
+            switch(dungeonName) {
+                case "Chess": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.CHESS; break;
+                case "Dragon": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.DRAGON; break;
+                case "Haunted": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.HAUNTED; break;
+                case "Forest": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.FOREST; break;
+                default: dungeonKind = Constants.DungeonKind.DUNGEON_KIND.GOKI; break;
+            }
 
-            activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.GOKI);
+            activityChange.toDungeonActivity(dungeonKind);
         }
         if (buttonID == 1 ) { //やめる
-            initUIs();
+            initUIsFlag = true;
         }
     }
 
     public void maohEnterSelectButtonCheck() {
-        if (!(maohEnterSelectButtonGroup.getUpdateFlag() && selectMode == SELECT_MODE.DUNGEON_SELECT)) {
+        if (!maohEnterSelectButtonGroup.getUpdateFlag() || !(worldModeAdmin.getMode() == WORLD_MODE.DUNGEON_SELECT)) {
             return;
         }
 
         int buttonID = maohEnterSelectButtonGroup.getTouchContentNum();
         if (buttonID == 0 ) { //挑戦する
-            initUIs();
+            initUIsFlag = true;
 
-            //TODO 魔王の画面へ行く
-            //activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.GOKI);
+            activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.MAOH);
+
+            //dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
         }
         if (buttonID == 1 ) { //やめる
-            initUIs();
+            initUIsFlag = true;
         }
     }
 
@@ -474,7 +522,7 @@ public class DungeonSelectManager {
         maohEnterSelectButtonGroup.setDrawFlag(false);
         textBoxAdmin.setTextBoxExists(enterTextBoxID, false);
 
-        menuButtonGroup.setUpdateFlag(true);
+        //menuButtonGroup.setUpdateFlag(true);
         mapIconPlateGroup.setUpdateFlag(true);
     }
 

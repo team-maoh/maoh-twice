@@ -36,13 +36,13 @@ public class TextBox {
     Text queue[] = new Text[MAX_QUEUE_TEXT];//もらった文章を格納するキュー
     int last, first;//text_queueの末尾と先頭（末尾にテキストを追加する/先頭のテキストを表示する）
     //0■
-    //1■
-    //2□　←last（次にinputしたtextを格納する位置）
+    //1■  MOP
+    //2□　← last（次にinputしたtextを格納する位置）
     //3□
     //4□
-    //5■　←first（次に表示するtextの位置）
+    //5■　← first（次に表示するtextの位置） ←20180506 : いま表示しているTextの位置？
     //6■
-    //7■
+    //7■  MOP
 
     //firstの位置を記憶する
     //外の人がidを指定 → first = firsts[_sentence_id]
@@ -338,7 +338,7 @@ public class TextBox {
         for (int i = first; queue[i].isMOP() == false; i = (i + 1) % MAX_QUEUE_TEXT) {
             graphic.bookingDrawText(queue[i].getSentence(), box_left + 5 + queue[i].getBeginColumn(), box_top + 45 + 40 * queue[i].getNumOfLines(), queue[i].getPaint());
 //            graphic.bookingDrawText(queue[i].getSentence(), box_left + 5 + queue[i].getBeginColumn(), box_top + 45 + (int)(box_paint.getTextSize()) * queue[i].getNumOfLines(), queue[i].getPaint());
-            System.out.println("first");
+//            System.out.println("first");
         }
         //デバッグ用
 //        if (tmp_first != first) {
@@ -472,6 +472,22 @@ public class TextBox {
     }
 
     public void resetContent() {
+    }
+
+    public boolean isLastSentence() {
+
+        int tmp_first = first;
+
+        //次に表示する文章の冒頭まで first をずらす
+        while (!(queue[tmp_first].isMOP() == true && queue[(tmp_first - 1 + MAX_QUEUE_TEXT) % MAX_QUEUE_TEXT].isMOP() == false)) {
+            tmp_first = (tmp_first + 1) % MAX_QUEUE_TEXT;//firstを１個進める
+        }
+        while (!(queue[tmp_first].isMOP() == false && queue[(tmp_first - 1 + MAX_QUEUE_TEXT) % MAX_QUEUE_TEXT].isMOP() == true)) {
+            tmp_first = (tmp_first + 1) % MAX_QUEUE_TEXT;//firstを１個進める
+        }
+
+        return tmp_first == first;
+//        return tmp_first ;
     }
 
 }

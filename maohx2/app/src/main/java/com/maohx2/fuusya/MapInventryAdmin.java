@@ -77,8 +77,6 @@ public class MapInventryAdmin {
 
     public void storageMapInventry() {
 
-        System.out.println("sutoreigi");
-
         for (int i = 0; i < Constants.Inventry.INVENTRY_DATA_MAX; i++) {
             ItemData tmp_item_data = inventry.getItemData(i);
 
@@ -91,21 +89,17 @@ public class MapInventryAdmin {
                 switch (tmp_item_kind) {
                     case EXPEND:
                         expendItemInventry.addItemData(tmp_item_data);
-                        System.out.println("_sutoreigi   1");
 
                         break;
                     case GEO:
                         geoItemInventry.addItemData(tmp_item_data);
-                        System.out.println("_sutoreigi   2");
 
                         break;
                     case EQUIPMENT:
                         equipmentInventry.addItemData(tmp_item_data);
-                        System.out.println("_sutoreigi   3");
 
                         break;
                     default:
-                        System.out.println("_sutoreigi   default");
 
                         break;
                 }

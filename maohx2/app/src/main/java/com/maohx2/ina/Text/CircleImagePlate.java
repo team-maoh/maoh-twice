@@ -51,7 +51,7 @@ public class CircleImagePlate extends CirclePlate {
         if (draw_flag == false){
             return;
         }
-        drawCollisionRange();
+        //drawCollisionRange();
         graphic.bookingDrawBitmapData(draw_image_context);
     }
 }

@@ -13,7 +13,7 @@ import com.maohx2.ina.Draw.Graphic;
 public class MapItem extends MapInanimate {
 
     //Playerに対する当たり判定の半径
-    double REACH_FOR_PLAYER = 25;
+    double REACH_FOR_PLAYER = 50;
 
     public MapItem(Graphic graphic, MapObjectAdmin _map_object_admin, int _id, Camera _camera) {
         super(graphic, _map_object_admin, _id, _camera);
@@ -30,7 +30,7 @@ public class MapItem extends MapInanimate {
 
         if (exists == true) {
 
-            if(player.isWithinReach(w_x, w_y, REACH_FOR_PLAYER)==true){
+            if (player.isWithinReach(w_x, w_y, REACH_FOR_PLAYER) == true) {
                 System.out.println("アイテム獲得");
 //                sound_admin.play("getItem");
                 exists = false;

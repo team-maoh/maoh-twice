@@ -26,10 +26,10 @@ public class MapTrap extends MapInanimate {
     int CONST_FRAMES_ACTIVATING = 50;
     int frames_activating;
     MapPlayer player;
-    String status_name;
+    String name;
     boolean has_activated, is_visible;
 
-    public MapTrap(Graphic graphic, MapObjectAdmin _map_object_admin, int _id, Camera _camera, boolean _is_visible, String _status_name) {
+    public MapTrap(Graphic graphic, MapObjectAdmin _map_object_admin, int _id, Camera _camera, boolean _is_visible, String _name) {
         super(graphic, _map_object_admin, _id, _camera);
 
         has_activated = false;
@@ -37,10 +37,10 @@ public class MapTrap extends MapInanimate {
         player = map_object_admin.getPlayer();
         is_visible = _is_visible;
 
-        status_name = _status_name;
+        name = _name;
     }
 
-    public MapTrap(Graphic graphic, MapObjectAdmin _map_object_admin, int _id, Camera _camera, boolean _is_visible, String _status_name, int _frames_activating) {
+    public MapTrap(Graphic graphic, MapObjectAdmin _map_object_admin, int _id, Camera _camera, boolean _is_visible, String _name, int _frames_activating) {
         super(graphic, _map_object_admin, _id, _camera);
 
         has_activated = false;
@@ -48,7 +48,7 @@ public class MapTrap extends MapInanimate {
         player = map_object_admin.getPlayer();
         is_visible = _is_visible;
 
-        status_name = _status_name;
+        name = _name;
     }
 
     public void init() {
@@ -67,7 +67,7 @@ public class MapTrap extends MapInanimate {
                 has_activated = true;
                 is_visible = true;
 
-                player.setBadStatus(status_name, frames_activating);
+                player.setBadStatus(name, frames_activating);
             }
         }
 
@@ -88,4 +88,21 @@ public class MapTrap extends MapInanimate {
 
         id = _id;
     }
+
+    public void setName(String _name){
+
+        if(_name.equals("walking_slowly")||_name.equals("walking_inversely")||_name.equals("cannot_walk")||
+                _name.equals("being_drunk")||_name.equals("being_teleported")||_name.equals("cannot_exit_room")||
+                _name.equals("being_blown_away")||_name.equals("found_by_enemy")){
+
+            name = _name;
+
+        }else{
+
+            throw new Error("%☆◆フジワラ:spawnMapObject()で間違ったTrap名を渡している");//アプリを落とす
+
+        }
+
+    }
+
 }

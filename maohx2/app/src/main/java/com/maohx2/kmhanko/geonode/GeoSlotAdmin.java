@@ -192,8 +192,7 @@ public class GeoSlotAdmin {
                                 releasePlateGroup.setDrawFlag(false);
                                 releasePlateGroup.setUpdateFlag(false);
 
-                                worldModeAdmin.setGeoSlotMap(Constants.Mode.ACTIVATE.STOP);
-                                worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
+                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT_INIT);
                             }
                         }
                 }
@@ -257,7 +256,7 @@ public class GeoSlotAdmin {
 
         //textBoxAdmin.hideTextBox(releaseTextBoxID);
 
-        statusTextBoxID = textBoxAdmin.createTextBox(0,600,300,900,6);
+        statusTextBoxID = textBoxAdmin.createTextBox(0,600,300,900,7);
         textBoxAdmin.setTextBoxUpdateTextByTouching(statusTextBoxID, false);
         textBoxAdmin.setTextBoxExists(statusTextBoxID, false);
         statusTextBoxUpdate();
@@ -287,6 +286,8 @@ public class GeoSlotAdmin {
         textBoxAdmin.bookingDrawText(statusTextBoxID, "Luck " + playerStatus.getLuck());
         textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
         textBoxAdmin.bookingDrawText(statusTextBoxID, "所持金 " + playerStatus.getMoney());
+        textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
+        textBoxAdmin.bookingDrawText(statusTextBoxID, "クリア回数 " + playerStatus.getNowClearCount() + "/" + playerStatus.getClearCount());
         textBoxAdmin.bookingDrawText(statusTextBoxID, "MOP");
         textBoxAdmin.updateText(statusTextBoxID);
     }
@@ -354,7 +355,7 @@ public class GeoSlotAdmin {
         checkInventrySelect();
 
         backPlateGroup.update();
-        textBoxAdmin.setTextBoxExists(statusTextBoxID, worldModeAdmin.getIsDraw(worldModeAdmin.getGetSlotMap()));
+        textBoxAdmin.setTextBoxExists(statusTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.GEO_MAP_SELECT);
 
         //textBoxAdmin.update();
     }

@@ -47,7 +47,9 @@ public class MapPlayer extends MapUnit {
     DungeonUserInterface dungeon_user_interface;
     MapPlateAdmin map_plate_admin;
 
-    int PLAYER_STEP = 26;//プレイヤーの歩幅
+//        int PLAYER_STEP = 26;//プレイヤーの歩幅
+    int PLAYER_STEP = 100;//プレイヤーの歩幅 //デバッグ用
+
     double touch_w_x, touch_w_y, touch_n_x, touch_n_y, pre_w_x, pre_w_y;
     boolean is_moving;
 
@@ -107,7 +109,8 @@ public class MapPlayer extends MapUnit {
                 map_plate_admin.setDisplayingContent(-1);
 
                 //Player(画面中央)をタッチしたらMENUを表示する
-                if (touch_state != TouchState.MOVE) {
+//                if (touch_state != TouchState.MOVE) {
+                if (touch_state == TouchState.UP) {
                     if (isWithinReach(touch_w_x, touch_w_y, 80) == true) {
                         map_plate_admin.setDisplayingContent(0);
                     }

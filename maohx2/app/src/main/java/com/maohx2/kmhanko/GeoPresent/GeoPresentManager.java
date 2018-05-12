@@ -397,9 +397,12 @@ public class GeoPresentManager {
         backPlateGroup.update();
 
         //TODO TextBoxの一括ではないupdate
-        textBoxAdmin.setTextBoxExists(scoreTextBoxID, worldModeAdmin.getIsDraw(worldModeAdmin.getPresent()));
-        textBoxAdmin.setTextBoxExists(messageBoxID, worldModeAdmin.getIsDraw(worldModeAdmin.getPresent()));
+        textBoxAdmin.setTextBoxExists(scoreTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.PRESENT);
+        textBoxAdmin.setTextBoxExists(messageBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.PRESENT);
     }
+
+
+
 
     public void draw() {
         geoInventry.draw();
@@ -419,8 +422,7 @@ public class GeoPresentManager {
                                 holdGeoObbjectData = null;
                                 initUIs();
 
-                                worldModeAdmin.setPresent(Constants.Mode.ACTIVATE.STOP);
-                                worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
+                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT_INIT);
                             }
                         }
                 }

@@ -5,6 +5,9 @@ import com.maohx2.ina.Draw.Graphic;
 
 import static com.maohx2.ina.Constants.UnitStatus.Status.*;
 
+import static com.maohx2.ina.Battle.BattleBaseUnitData.SpecialAction;
+import static com.maohx2.ina.Battle.BattleBaseUnitData.ActionID;
+
 import java.util.Random;
 
 /**
@@ -17,14 +20,25 @@ public class BattleEnemy extends BattleUnit {
     double position_y;
     double radius;
     int uiid;
-    int wait_frame;
+    int attackCount;
     int attack_frame;
+    int specialActionCount;
+
+    float[] actionRate = new float[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
+    int[] alimentTime = new int[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
+    BattleBaseUnitData.SpecialAction specialAction;
+    int specialActionPeriod;
+    int specialActionWidth;
+
+    protected BattleBaseUnitData battleBaseUnitDataForRock;
 
     public BattleEnemy(Graphic _graphic){
         super(_graphic);
         position_x = 0;
         position_y = 0;
         radius = 0;
+        specialActionCount = 0;
+        specialActionFlag = false;
     }
 
     /*
@@ -50,15 +64,28 @@ public class BattleEnemy extends BattleUnit {
     protected void statusInit() {
         super.statusInit();
         attack_frame = battleDungeonUnitData.getStatus(ATTACK_FRAME);
-        wait_frame = rnd.nextInt((int)(getAttackFrame()/2));
+
+        specialAction = getSpecialAction();
+        actionRate = getActionRate();
+        specialActionPeriod = getSpecialActionPeriod();
+        specialActionWidth = getSpecialActionWidth();
+        alimentTime = getAlimentTime();
+
+        if (attack_frame > 0 ) {
+            attackCount = rnd.nextInt((int) (getAttackFrame() / 2));
+        } else {
+            attackCount = 0;
+        }
     }
 
     @Override
     public int update(){
 
+        super.update();
 
         //時間経過
-        wait_frame++;
+        attackCount++;
+        specialActionCount++;
         //attack_flag = false;
 
         position_x += dx*speed;
@@ -101,12 +128,21 @@ public class BattleEnemy extends BattleUnit {
             move_num = 0;
         }
 
-        //attackFlameに達したらUnitを対象として攻撃
-        if(wait_frame == attack_frame){
-            wait_frame = 0;
-            return attack;
+
+        if(specialActionCount == specialActionWidth){
+            specialActionFlag = false;
         }
 
+        if(specialActionCount == specialActionPeriod){
+            specialActionCount = 0;
+            specialActionFlag = true;
+        }
+
+        //attackFlameに達したらUnitを対象として攻撃
+        if(attackCount == attack_frame){
+            attackCount = 0;
+            return attack;
+        }
 
         return 0;
     }
@@ -114,16 +150,52 @@ public class BattleEnemy extends BattleUnit {
     @Override
     public void draw(){
 
-        graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y);
-        //graphic.bookingDrawCircle(position_x, position_y, radius);
-        graphic.bookingDrawText(String.valueOf(hit_point),(int)position_x,(int)position_y);
+        //graphic.bookingDrawText(String.valueOf(hit_point),(int)position_x,(int)position_y);
+
+        if(specialActionFlag == true) {
+
+            switch (specialAction) {
+                case BARRIER:
+                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1.0f,1.0f,0,254,false);
+                    paint.setARGB(100,0,0,255);
+                    graphic.bookingDrawCircle((int)position_x, (int)position_y, (int)radius, paint);
+                    break;
+                case COUNTER:
+                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1.0f,1.0f,0,254,false);
+                    paint.setARGB(100,255,100,0);
+                    graphic.bookingDrawCircle((int)position_x, (int)position_y, (int)radius, paint);
+                    break;
+                case STEALTH:
+                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1.0f,1.0f,0,100,false);
+                    break;
+            }
+        }else{
+            graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1.0f,1.0f,0,254,false);
+        }
 
         paint.setARGB(255,0,255,0);
         graphic.bookingDrawRect((int)(position_x-radius*0.8), (int)(position_y+radius*0.8), (int)(((double)position_x-(double)radius*0.8+(double)radius*1.6*((double)hit_point/(double)max_hit_point))), (int)(position_y+radius*0.9),paint);
-        paint.setARGB(255,255,0,0);
-        graphic.bookingDrawRect((int)(position_x-radius*0.8), (int)(position_y+radius*0.9), (int)(((double)position_x-(double)radius*0.8+(double)radius*1.6*((double)wait_frame/(double)attack_frame))), (int)(position_y+radius*1.0),paint);
 
+        for(int i = 0; i < BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal(); i++) {
+            if (actionRate[i] > 0) {
+                if(BattleBaseUnitData.ActionID.toEnum(i) == BattleBaseUnitData.ActionID.POISON){graphic.bookingDrawBitmapData(graphic.searchBitmap("Z2"),(int)(position_x+radius*0.8)-120, (int)(position_y+radius*0.6));}
+                if(BattleBaseUnitData.ActionID.toEnum(i) == BattleBaseUnitData.ActionID.PARALYSIS){graphic.bookingDrawBitmapData(graphic.searchBitmap("A6"),(int)(position_x+radius*0.8)-90, (int)(position_y+radius*0.6));}
+                if(BattleBaseUnitData.ActionID.toEnum(i) == BattleBaseUnitData.ActionID.STOP){graphic.bookingDrawBitmapData(graphic.searchBitmap("Z6"),(int)(position_x+radius*0.8)-60, (int)(position_y+radius*0.6));}
+                if(BattleBaseUnitData.ActionID.toEnum(i) == BattleBaseUnitData.ActionID.BLINDNESS){graphic.bookingDrawBitmapData(graphic.searchBitmap("A1"),(int)(position_x+radius*0.8)-30, (int)(position_y+radius*0.6));}
+                if(BattleBaseUnitData.ActionID.toEnum(i) == BattleBaseUnitData.ActionID.CURSE){
+                    paint.setARGB(255,100,50,50);
+                    graphic.bookingDrawBitmapData(graphic.searchBitmap("A9"),(int)(position_x+radius*0.8), (int)(position_y+radius*0.6));
+                    graphic.bookingDrawRect((int)(position_x+radius*0.9), (int)(position_y+radius*0.8), (int)(position_x+radius*1), (int)((position_y+radius*0.8-radius*1.6*((double)alimentCounts[BattleBaseUnitData.ActionID.CURSE.ordinal()-1]/(double)1000))),paint);
+                }
+            }
+        }
+
+        if (attack_frame > 0) {
+            paint.setARGB(255, 255, 0, 0);
+            graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 0.9), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) attackCount / (double) attack_frame))), (int) (position_y + radius * 1.0), paint);
+        }
     }
+
 
     @Override
     public double getPositionX() {
@@ -165,11 +237,11 @@ public class BattleEnemy extends BattleUnit {
 
     @Override
     public int getWaitFrame() {
-        return wait_frame;
+        return attackCount;
     }
     @Override
     public void setWaitFrame(int _wait_frame) {
-        wait_frame = _wait_frame;
+        attackCount = _wait_frame;
     }
     @Override
     public double getAttackFrame() {
@@ -180,4 +252,42 @@ public class BattleEnemy extends BattleUnit {
         attack_frame = _attack_frame;
     }
 
+
+
+    // enemy用
+    public SpecialAction getSpecialAction() { return battleDungeonUnitData.getSpecialAction(); }
+    public int getSpecialActionWidth() { return battleDungeonUnitData.getSpecialActionWidth(); }
+    public int getSpecialActionPeriod() { return battleDungeonUnitData.getSpecialActionPeriod(); }
+    public float[] getActionRate() { return battleDungeonUnitData.getActionRate(); }
+    public float getActionRate(ActionID _actionRateID) { return battleDungeonUnitData.getActionRate(_actionRateID); }
+    public int[] getAlimentTime() { return battleDungeonUnitData.getAlimentTime(); }
+    public int getAlimentTime(ActionID _actionRateID) { return battleDungeonUnitData.getAlimentTime(_actionRateID); }
+
+    public ActionID checkActionID() {
+
+        double action_rnd = Math.random();
+
+        double store_action_rate = 0;
+        for (int i = 0; i < BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal(); i++) {
+            store_action_rate += actionRate[i];
+            if (store_action_rate >= action_rnd) {
+                if(ActionID.toEnum(i) != null) {
+                    return ActionID.toEnum(i);
+                }
+            }
+        }
+
+        return ActionID.NORMAL_ATTACK;
+    }
+
+
+
+    // Rock用
+    public BattleBaseUnitData getBattleBaseUnitDataForRock() {
+        return battleBaseUnitDataForRock;
+    }
+
+    public void setBattleBaseUnitDataForRock(BattleBaseUnitData _battleBaseUnitDataForRock) {
+        battleBaseUnitDataForRock = _battleBaseUnitDataForRock;
+    }
 }

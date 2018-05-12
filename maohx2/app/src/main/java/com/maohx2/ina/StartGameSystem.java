@@ -5,11 +5,13 @@ import android.app.Activity;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
+import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
 import com.maohx2.ina.Arrange.PaletteElement;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.EquipmentInventrySaver;
 import com.maohx2.ina.ItemData.EquipmentItemData;
@@ -42,10 +44,14 @@ public class StartGameSystem {
     int alpha = 255;
     int up_down = 5;
 
-    EquipmentInventrySaver equipmentInventrySaver;
     InventryS equipmentInventry;
+    InventryS expendInventry;
 
     EquipmentItemData tmpEquipmentItemData;
+    TextBoxAdmin textBoxAdmin;
+    int itemExplainTextBoxID;
+
+    BitmapData backGround;
 
     public void init(SurfaceHolder _holder, Graphic _graphic, BattleUserInterface _start_user_interface, Activity start_activity, MyDatabaseAdmin my_database_admin) {
 
@@ -59,26 +65,36 @@ public class StartGameSystem {
 
         GlobalData globalData = (GlobalData)(start_activity.getApplication());
         equipmentInventry = globalData.getEquipmentInventry();
-        equipmentInventrySaver = globalData.getEquipmentInventrySaver();
+        expendInventry = globalData.getExpendItemInventry();
 
-
-        palette_admin = new PaletteAdmin(_start_user_interface, graphic);
-
-        //equipment_item_data_admin = new EquipmentItemDataAdmin(graphic, my_database_admin);
-        //palette_admin = new PaletteAdmin(start_user_interface, graphic, equipment_item_data_admin);
+        palette_admin = new PaletteAdmin(_start_user_interface, graphic, equipmentInventry, expendInventry);
 
         paint = new Paint();
         paint.setTextSize(70);
 
+        backGround = graphic.searchBitmap("firstBackground");
 
-
+        /*
+        textBoxAdmin = new TextBoxAdmin(graphic);
+        textBoxAdmin.init(start_user_interface);
+        textBoxAdmin.setTextBoxExists(0,false);
+        textBoxAdmin.setTextBoxExists(1,false);
+        itemExplainTextBoxID = textBoxAdmin.createTextBox(50,50,500,600,6);
+        textBoxAdmin.setTextBoxUpdateTextByTouching(itemExplainTextBoxID, false);
+        //textBoxAdmin.setTextBoxExists(itemExplainTextBoxID, false);
+        textBoxAdmin.bookingDrawText(itemExplainTextBoxID, "ジオオブジェクト");
+        textBoxAdmin.bookingDrawText(itemExplainTextBoxID, "MOP");
+        textBoxAdmin.updateText(itemExplainTextBoxID);
+        */
     }
 
 
     public void updata() {
         n++;
 
+
         if(n == 100) {
+            /*
             tmpEquipmentItemData = new EquipmentItemData();
 
             tmpEquipmentItemData.setItemKind(Constants.Item.ITEM_KIND.EQUIPMENT);
@@ -95,14 +111,17 @@ public class StartGameSystem {
             tmpEquipmentItemData.setAttack(100);
             tmpEquipmentItemData.setDefence(50);
 
-
             equipmentInventry.addItemData(tmpEquipmentItemData);
 
+
             equipmentInventry.save();
+            expendInventry.save();
+            */
 
             n = 0;
             m++;
         }
+
 
         paint.setARGB(alpha,255,255,255);
 
@@ -113,15 +132,23 @@ public class StartGameSystem {
         }
 
         equipmentInventry.updata();
+        expendInventry.updata();
         palette_admin.update(false);
+
+        //textBoxAdmin.update();
+
     }
 
-
     public void draw() {
+        graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
+        /*
         equipmentInventry.draw();
+        expendInventry.draw();
         palette_admin.draw();
         start_user_interface.draw();
+        */
         graphic.bookingDrawText("Please Touch!",550,750, paint);
+        //textBoxAdmin.draw();
         graphic.draw();
     }
 }

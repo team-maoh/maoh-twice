@@ -21,7 +21,7 @@
         </activity>
 
         <activity android:name="WorldActivity"></activity>
-        <activity android:name="BattleActivity"></activity>
+        <!--<activity android:name="BattleActivity"></activity>-->
         <activity android:name="DungeonActivity"></activity>
 
 <!--

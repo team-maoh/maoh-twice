@@ -39,6 +39,7 @@ public final class Constants {
             FOREST,
             GOKI,
             HAUNTED,
+            MAOH,
             DNGEON_KIND_NUM
         }
     }
@@ -103,6 +104,14 @@ public final class Constants {
         }
     }
 
+    public enum UnitKind {
+        PLAYER,
+        ENEMY,
+        ROCK,
+        UNIT_KIND_NUM,
+        NONE,
+    }
+
 
     public static class Draw {
 
@@ -128,7 +137,45 @@ public final class Constants {
             MAP,
             BUTTLE_INIT,
             BUTTLE,
+            MAOH_INIT,
+            MAOH,
+            GEO_MINING_INIT,
+            GEO_MINING,
+            TO_WORLD,
+            EQUIP_EXPEND,
+            GEO_MAP,
         }
+
+        public enum WORLD_MODE {
+            DUNGEON_SELECT,
+            GEO_MAP_SELECT,
+            SHOP,
+            GEO_MAP,
+            EQUIP,
+            PRESENT,
+
+            DUNGEON_SELECT_INIT,
+            GEO_MAP_SELECT_INIT,
+            SHOP_INIT,
+            GEO_MAP_INIT,
+            EQUIP_INIT,
+            PRESENT_INIT,
+        }
+    }
+
+    public static class POPUP_WINDOW {
+        public static final int MESS_LEFT = 400;
+        public static final int MESS_RIGHT = 1200;
+        public static final int MESS_UP = 300;
+        public static final int MESS_BOTTOM = 500;
+
+        public static final int OK_LEFT = 400;
+        public static final int OK_RIGHT = 1200;
+        public static final int OK_UP = 500;
+        public static final int OK_BOTTOM = 600;
+
+        public static final float TEXT_SIZE = 40f;
+        public static final int MESS_ROW = 5;
     }
 
     public static class SELECT_WINDOW {
@@ -148,7 +195,7 @@ public final class Constants {
         public static final int NO_BOTTOM = 600;
 
         public static final float TEXT_SIZE = 40f;
-        public static final int MESS_ROW = 4;
+        public static final int MESS_ROW = 5;
     }
 
     public static class Item {
@@ -156,6 +203,7 @@ public final class Constants {
             EXPEND,
             EQUIPMENT,
             GEO,
+            MINING,
         }
 
         public enum EQUIPMENT_KIND {
