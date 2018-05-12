@@ -12,6 +12,8 @@ import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.DungeonDataAdmin;
 import com.maohx2.horie.map.DungeonMonsterDataAdmin;
 import com.maohx2.horie.map.MapAdmin;
+import com.maohx2.horie.map.MapStatus;
+import com.maohx2.horie.map.MapStatusSaver;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
@@ -46,6 +48,8 @@ public class DungeonGameSystem {
     Camera camera;
     Point map_size = new Point(0, 0);//カメラのインスタンス化に必要
     DungeonMonsterDataAdmin chess, dragon, forest, haunted;
+    MapStatus map_status;
+    MapStatusSaver map_status_saver;
 
     // by kmhanko
     BattleUnitDataAdmin battleUnitDataAdmin;
@@ -68,13 +72,20 @@ public class DungeonGameSystem {
         map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_plate_admin, dungeonModeManage);
 
         dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
+        map_status = new MapStatus(4);
+        map_status_saver = new MapStatusSaver(_myDatabaseAdmin, "MapSaveData", "MapSaveData.db", 1, "s", map_status, 4);
+        map_status_saver.load();
+
+//        for(int i = 0;i < 4;i++){
+//            System.out.println("after:stage_num = "+i+", is_clear = "+map_status.getMapStatus(i));
+//        }
 
         chess = new DungeonMonsterDataAdmin(_myDatabaseAdmin, "ChessMonsterData");
         dragon = new DungeonMonsterDataAdmin(_myDatabaseAdmin, "DragonMonsterData");
         forest = new DungeonMonsterDataAdmin(_myDatabaseAdmin, "ForestMonsterData");
         haunted = new DungeonMonsterDataAdmin(_myDatabaseAdmin, "HauntedMonsterData");
 
-        int dungeon_num = 3;
+        int dungeon_num = 0;
         map_size.set(dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_y());
         //camera = new Camera(map_size, 64*4);
         map_admin = new MapAdmin(graphic, map_object_admin, dungeon_data_admin.getDungeon_data().get(dungeon_num), chess.getDungeon_monster_data());
@@ -105,8 +116,11 @@ public class DungeonGameSystem {
         PlayerStatus playerStatus = globalData.getPlayerStatus();
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
         battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin);
+    }
 
-
+    public void saveMapSaveData(){
+        map_status_saver.deleteAll();
+        map_status_saver.save();
     }
 
     public void update() {

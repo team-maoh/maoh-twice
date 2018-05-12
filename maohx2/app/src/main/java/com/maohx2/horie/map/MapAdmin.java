@@ -25,9 +25,7 @@ import static java.lang.Math.abs;
 /**
  * Created by horie on 2017/08/30.
  */
-
-//TODO:中ボスの名前を渡す関数をつくる(数は指定できるように，同じやつでもいい,配列で返す)
-
+//TODO:藤原に階層移動のタイミングを伝える，ゲートの実装(階段と同じ感じで外に出れるやつ)
 public class MapAdmin {
     int map_data_int[][] = {
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -83,7 +81,7 @@ public class MapAdmin {
     //drawMap2用
 //    Point map_size = new Point(80, 50);//x : 左右幅, y : 上下幅
     Point map_size = new Point(0, 0);//60, 40
-    int magnification = 64*4;//倍率
+    int magnification = 64 * 4;//倍率
     int time = 0;//アニメーションタイミング用
     int now_floor_num = 0;//現在のフロア階層
     int boss_floor_num;//ボスフロアの階層
@@ -91,6 +89,7 @@ public class MapAdmin {
     int mine_max_num;
     int animation_num;//アニメーション回数
 
+    String dungeon_name;
     String floor_tile_name;
     String wall_tile_name;
     String sidewall_tile_name;
@@ -116,6 +115,7 @@ public class MapAdmin {
     AutoTile auto_tile_side_wall = new AutoTile();
     AutoTile at_wall[];
     AutoTile at_side_wall[];
+    AutoTile at_floor = new AutoTile();
     AutoTile auto_tile_cave_hole[] = new AutoTile[3];
     AutoTileAdmin auto_tile_admin;
     boolean is_map_data_wall[][];// = new boolean[map_size.x*2][map_size.y*2];//表示用に4分割されたmap_data
@@ -157,12 +157,20 @@ public class MapAdmin {
         return camera.getCameraOffset().y;
     }
 
-    public Camera getCamera(){
+    public Camera getCamera() {
         return camera;
     }
 
-    public int getMagnification(){
+    public int getMagnification() {
         return magnification;
+    }
+
+    public int getNow_floor_num(){
+        return now_floor_num;
+    }
+
+    public int getBoss_floor_num(){
+        return boss_floor_num;
     }
 
     public MapAdmin(Graphic m_graphic, MapObjectAdmin m_map_object_admin, DungeonData m_dungeon_data, List<DungeonMonsterData> m_dungeon_monster_data) {
@@ -173,6 +181,7 @@ public class MapAdmin {
         dungeon_monster_data = m_dungeon_monster_data;
 
         //データベースからマップ情報の読み込み
+        dungeon_name = dungeon_data.getDungeon_name();
         map_size.set(dungeon_data.getMap_size_x(), dungeon_data.getMap_size_y());
         boss_floor_num = dungeon_data.getFloor_num();
         mine_min_num = dungeon_data.getMine_min_num();
@@ -180,24 +189,13 @@ public class MapAdmin {
         floor_tile_name = dungeon_data.getFloor_tile_name();
         wall_tile_name = dungeon_data.getWall_tile_name();
         sidewall_tile_name = dungeon_data.getSidewall_tile_name();
-        /*デバッグ*/
-//        System.out.println("堀江　mapsize_x = "+dungeon_data.getMap_size_x());
-//        System.out.println("堀江　mapsize_y = "+dungeon_data.getMap_size_y());
-//        System.out.println("堀江　mine_max_num = "+dungeon_data.getMine_max_num());
-//        System.out.println("堀江　mine_min_num = "+dungeon_data.getMine_min_num());
-//        System.out.println("堀江　dungeon_name = "+dungeon_data.getDungeon_name());
-//        System.out.println("堀江　floortile_name = "+dungeon_data.getFloor_tile_name());
-
-//        for(int i = 0;i < 10;i++) {
-//            System.out.println("horie monster_name = " + dungeon_monster_data.get(i).getMonsterName());
-//        }
 
         //マップ生成用変数初期化
         camera = new Camera(map_size, magnification);
-        is_map_data_wall = new boolean[map_size.x*2][map_size.y*2];//表示用に4分割されたmap_data
-        is_map_data_sidewall = new boolean[map_size.x*2][map_size.y*2];
-        map_tile_set = new BitmapData[map_size.x*2][map_size.y*2];//4分割されたmap画像
-        map_tile_set_animation = new BitmapData[3][map_size.x*2][map_size.y*2];
+        is_map_data_wall = new boolean[map_size.x * 2][map_size.y * 2];//表示用に4分割されたmap_data
+        is_map_data_sidewall = new boolean[map_size.x * 2][map_size.y * 2];
+        map_tile_set = new BitmapData[map_size.x * 2][map_size.y * 2];//4分割されたmap画像
+        map_tile_set_animation = new BitmapData[3][map_size.x * 2][map_size.y * 2];
         map_tile = new BitmapData[map_size.x][map_size.y];//map_tile_set[][]を1つに纏めた画像
         map_tile_animation = new BitmapData[3][map_size.x][map_size.y];//上のアニメション用
 
@@ -211,26 +209,31 @@ public class MapAdmin {
 
         //採掘場の場所を格納する配列
         mine_point = new Point[5];
-        for(int i = 0;i < 5;i++){
+        for (int i = 0; i < 5; i++) {
             mine_point[i] = new Point(-1, -1);
         }
 
-        sizeRect = new Rect();
-        posRect = new Rect();
+//        sizeRect = new Rect();
+//        posRect = new Rect();
 
         //オートタイル生成
         auto_tile_admin = new AutoTileAdmin(graphic);
-        createAutoTileImg();
+        //ドラゴンステージだけ場合分け
+        if (dungeon_name.equals("Dragon")) {
+            createFloorAutoTile();
+        } else {
+            createAutoTileImg();
+        }
 //        createAutoTileImg_old();
         getHolder();
     }
 
     //auto_tile生成
-    private void createAutoTileImg(){
+    private void createAutoTileImg() {
         //画像読込
         BitmapData auto_tile_block_wall = graphic.searchBitmap(wall_tile_name);//壁のauto_tile元データ
         BitmapData auto_tile_block_side_wall = graphic.searchBitmap(sidewall_tile_name);//側壁のauto_tileの元データ
-        BitmapData raw_floor_tile = graphic.searchBitmap(floor_tile_name);//TODO:ドラゴンステージだけfloorタイルがオートタイルになっていて対応していない
+        BitmapData raw_floor_tile = graphic.searchBitmap(floor_tile_name);
         floor_tile = auto_tile_admin.combineFourAutoTile(raw_floor_tile, raw_floor_tile, raw_floor_tile, raw_floor_tile);
 
 //        BitmapData cave_hole_raw = graphic.searchBitmap("cave_hole_01");//穴（アニメーション）
@@ -238,28 +241,28 @@ public class MapAdmin {
 
         //階段画像4分割
         stair_tile = graphic.searchBitmap("step");
-        stair_tile_div[0] = graphic.processTrimmingBitmapData(stair_tile, 0, 0, 32, 32);
-        stair_tile_div[1] = graphic.processTrimmingBitmapData(stair_tile, 32, 0, 32, 32);
-        stair_tile_div[2] = graphic.processTrimmingBitmapData(stair_tile, 0, 32, 32, 32);
-        stair_tile_div[3] = graphic.processTrimmingBitmapData(stair_tile, 32, 32, 32, 32);
+//        stair_tile_div[0] = graphic.processTrimmingBitmapData(stair_tile, 0, 0, 32, 32);
+//        stair_tile_div[1] = graphic.processTrimmingBitmapData(stair_tile, 32, 0, 32, 32);
+//        stair_tile_div[2] = graphic.processTrimmingBitmapData(stair_tile, 0, 32, 32, 32);
+//        stair_tile_div[3] = graphic.processTrimmingBitmapData(stair_tile, 32, 32, 32, 32);
 
         //縦分割、分割数可変
         //壁画像
-        animation_num = auto_tile_block_wall.getWidth()/32;
+        animation_num = auto_tile_block_wall.getWidth() / 32;
         BitmapData auto_tile_set_wall[] = new BitmapData[animation_num];
-        for(int i = 0;i < animation_num;i++){
-            auto_tile_set_wall[i] = graphic.processTrimmingBitmapData(auto_tile_block_wall,i*32, 0, 32, 32*5);
+        for (int i = 0; i < animation_num; i++) {
+            auto_tile_set_wall[i] = graphic.processTrimmingBitmapData(auto_tile_block_wall, i * 32, 0, 32, 32 * 5);
         }
         //横壁画像
 //        int side_wall_animation_num = auto_tile_block_side_wall.getWidth()/32;
         BitmapData auto_tile_set_side_wall[] = new BitmapData[animation_num];
-        for(int i = 0;i < animation_num;i++){
-            auto_tile_set_side_wall[i] = graphic.processTrimmingBitmapData(auto_tile_block_side_wall,i*32, 0, 32, 32*5);
+        for (int i = 0; i < animation_num; i++) {
+            auto_tile_set_side_wall[i] = graphic.processTrimmingBitmapData(auto_tile_block_side_wall, i * 32, 0, 32, 32 * 5);
         }
 
         at_wall = new AutoTile[animation_num];
         at_side_wall = new AutoTile[animation_num];
-        for(int i = 0;i < animation_num;i++){
+        for (int i = 0; i < animation_num; i++) {
             at_wall[i] = new AutoTile();
             at_side_wall[i] = new AutoTile();
         }
@@ -270,14 +273,14 @@ public class MapAdmin {
                 at_side_wall[j].setAuto_tile(graphic.processTrimmingBitmapData(auto_tile_set_side_wall[j], 0, 32 * i, 32, 32), i);
             }
         }
-        for(int i = 0;i < animation_num;i++){
+        for (int i = 0; i < animation_num; i++) {
             auto_tile_admin.createAutoTile(at_wall[i]);
             auto_tile_admin.createAutoTile(at_side_wall[i]);
         }
 
         side_wall_4 = new BitmapData[animation_num][4];
         //横壁4種類作成
-        for(int i = 0;i < animation_num;i++){
+        for (int i = 0; i < animation_num; i++) {
             auto_tile_admin.createAutoTileForSideWall(at_side_wall[i], side_wall_4[i]);
             auto_tile_admin.createBigAutoTile(at_wall[i], side_wall_4[i]);
         }
@@ -288,6 +291,17 @@ public class MapAdmin {
 //        for(int i = 0;i < 3;i++){
 //            auto_tile_admin.createAutoTile(auto_tile_cave_hole[i]);
 //        }
+    }
+
+    private void createFloorAutoTile() {
+        BitmapData auto_tile_set_floor = graphic.searchBitmap(floor_tile_name);
+        stair_tile = graphic.searchBitmap("step");
+        //auto_tileを5枚に切る
+        for(int i = 0;i < 5;i++) {
+            at_floor.setAuto_tile(graphic.processTrimmingBitmapData(auto_tile_set_floor, 0, 32 * i, 32, 32), i);
+        }
+        auto_tile_admin.createAutoTile(at_floor);
+        auto_tile_admin.createBigAutoTile_floor(at_floor);
     }
 
     //壁かどうかマップ座標で判定
@@ -313,7 +327,7 @@ public class MapAdmin {
     }
 
     //玄関かどうかマップ座標で判定
-    public boolean isEntrance(int x, int y){
+    public boolean isEntrance(int x, int y) {
         try {
             return map_data[x][y].isEntrance();
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -323,15 +337,15 @@ public class MapAdmin {
         }
     }
 
-    public boolean isRoom(int i, int j){
+    public boolean isRoom(int i, int j) {
         return map_data[i][j].isRoom();
     }
 
-    public boolean isDisp(int i, int j){
+    public boolean isDisp(int i, int j) {
         return map_data[i][j].isDisp();
     }
 
-    public boolean isMine(int i, int j){
+    public boolean isMine(int i, int j) {
         return map_data[i][j].isMine();
     }
 
@@ -363,27 +377,41 @@ public class MapAdmin {
         //section_admin.printNeighborLeafNum();
         //createMapTileData_old();//以前のバージョン
 
-        for(int i = 0;i < map_size.x;i++) {
-            for (int j = 0; j < map_size.y; j++) {
-                if (!isWall(i, j) && !isStairs(i, j)) {
-//                    map_tile[i][j] = floor_tile;
-                    //アニメーション用
-                    for(int k = 0;k < animation_num;k++) {
-                        map_tile_animation[k][i][j] = floor_tile;
+        if(dungeon_name.equals("Dragon")) {
+            for (int i = 0; i < map_size.x; i++) {
+                for (int j = 0; j < map_size.y; j++) {
+                    if (!isWall(i, j) && !isStairs(i, j)) {
+                        setAutoTile_light_floor(i, j, i, j);//TODO:ここがうまくいっていない(壁のやつを流用しているので周りの条件が間違っている可能性がある)
                     }
-                    //階段
-                } else if (isStairs(i, j)) {
-//                    map_tile[i][j] = stair_tile;
-                    //アニメーション用
-                    for (int k = 0; k < animation_num; k++) {
-                        map_tile_animation[k][i][j] = stair_tile;
+                    else if (isStairs(i, j)) {
+                        map_tile[i][j] = stair_tile;
                     }
-                }else {
-                    setAutoTile_lite_animation(i, j, i, j);
                 }
             }
         }
-        System.out.println("setAutoTile finished!");
+        else{
+            for (int i = 0; i < map_size.x; i++) {
+                for (int j = 0; j < map_size.y; j++) {
+                    if (!isWall(i, j) && !isStairs(i, j)) {
+//                    map_tile[i][j] = floor_tile;
+                        //アニメーション用
+                        for (int k = 0; k < animation_num; k++) {
+                            map_tile_animation[k][i][j] = floor_tile;
+                        }
+                        //階段
+                    } else if (isStairs(i, j)) {
+//                    map_tile[i][j] = stair_tile;
+                        //アニメーション用
+                        for (int k = 0; k < animation_num; k++) {
+                            map_tile_animation[k][i][j] = stair_tile;
+                        }
+                    } else {
+                        setAutoTile_light_animation(i, j, i, j);
+                    }
+                }
+            }
+        }
+//        System.out.println("setAutoTile finished!");
         //map_object_admin初期化
         //TODO:藤原変更適用後修正必要
         map_object_admin.initObjectPosition(this);//藤原変更を適用後要変更
@@ -394,20 +422,20 @@ public class MapAdmin {
         //sizeRect.set(0,0,map_tile[0][0].getBitmap().getWidth(),map_tile[0][0].getBitmap().getHeight());
     }
 
-    private void createMapTileData_old(){
+    private void createMapTileData_old() {
         createDispMapData();
-        for(int i = 0;i < map_size.x;i++) {
+        for (int i = 0; i < map_size.x; i++) {
             for (int j = 0; j < map_size.y; j++) {
                 if (!isWall(i, j) && !isStairs(i, j) && !isMine(i, j)) {
-                    map_tile_set[2*i][2*j] = floor_tile;
-                    map_tile_set[2*i+1][2*j] = floor_tile;
-                    map_tile_set[2*i][2*j+1] = floor_tile;
-                    map_tile_set[2*i+1][2*j+1] = floor_tile;
-                    for(int k = 0;k < 3;k++) {
-                        map_tile_set_animation[k][2*i][2*j] = floor_tile;
-                        map_tile_set_animation[k][2*i+1][2*j] = floor_tile;
-                        map_tile_set_animation[k][2*i][2*j+1] = floor_tile;
-                        map_tile_set_animation[k][2*i+1][2*j+1] = floor_tile;
+                    map_tile_set[2 * i][2 * j] = floor_tile;
+                    map_tile_set[2 * i + 1][2 * j] = floor_tile;
+                    map_tile_set[2 * i][2 * j + 1] = floor_tile;
+                    map_tile_set[2 * i + 1][2 * j + 1] = floor_tile;
+                    for (int k = 0; k < 3; k++) {
+                        map_tile_set_animation[k][2 * i][2 * j] = floor_tile;
+                        map_tile_set_animation[k][2 * i + 1][2 * j] = floor_tile;
+                        map_tile_set_animation[k][2 * i][2 * j + 1] = floor_tile;
+                        map_tile_set_animation[k][2 * i + 1][2 * j + 1] = floor_tile;
                     }
                     //階段
                 } else if (isStairs(i, j)) {
@@ -432,21 +460,21 @@ public class MapAdmin {
                         map_tile_set_animation[k][2 * i][2 * j + 1] = mine_tile;
                         map_tile_set_animation[k][2 * i + 1][2 * j + 1] = mine_tile;
                     }
-                } */else {
-                    setAutoTile(2 * i, 2 * j, 2*i, 2*j);
-                    setAutoTile(2 * i + 1, 2 * j, 2*i+1, 2*j);
-                    setAutoTile(2 * i, 2 * j + 1, 2*i, 2*j+1);
-                    setAutoTile(2 * i + 1, 2 * j + 1, 2*i+1, 2*j+1);
+                } */ else {
+                    setAutoTile(2 * i, 2 * j, 2 * i, 2 * j);
+                    setAutoTile(2 * i + 1, 2 * j, 2 * i + 1, 2 * j);
+                    setAutoTile(2 * i, 2 * j + 1, 2 * i, 2 * j + 1);
+                    setAutoTile(2 * i + 1, 2 * j + 1, 2 * i + 1, 2 * j + 1);
                 }
             }
         }
         System.out.println("map_create_finish");
         //4つを1つに
-        for(int i = 0;i < map_size.x;i++){
-            for(int j = 0;j < map_size.y;j++){
-                map_tile[i][j] = auto_tile_admin.combineFourAutoTile(map_tile_set[2*i][2*j], map_tile_set[2*i+1][2*j], map_tile_set[2*i][2*j+1], map_tile_set[2*i+1][2*j+1]);
-                for(int k = 0;k < 3;k++) {
-                    map_tile_animation[k][i][j] = auto_tile_admin.combineFourAutoTile(map_tile_set_animation[k][2*i][2*j], map_tile_set_animation[k][2*i+1][2*j], map_tile_set_animation[k][2*i][2*j+1], map_tile_set_animation[k][2*i+1][2*j+1]);
+        for (int i = 0; i < map_size.x; i++) {
+            for (int j = 0; j < map_size.y; j++) {
+                map_tile[i][j] = auto_tile_admin.combineFourAutoTile(map_tile_set[2 * i][2 * j], map_tile_set[2 * i + 1][2 * j], map_tile_set[2 * i][2 * j + 1], map_tile_set[2 * i + 1][2 * j + 1]);
+                for (int k = 0; k < 3; k++) {
+                    map_tile_animation[k][i][j] = auto_tile_admin.combineFourAutoTile(map_tile_set_animation[k][2 * i][2 * j], map_tile_set_animation[k][2 * i + 1][2 * j], map_tile_set_animation[k][2 * i][2 * j + 1], map_tile_set_animation[k][2 * i + 1][2 * j + 1]);
                 }
             }
         }
@@ -459,44 +487,43 @@ public class MapAdmin {
         map_image = graphic.processCombineBitmapData(wide_map_image, true);*/
     }
 
-    private void createDispMapData(){
-        for(int i = 0;i < map_size.x;i++){
-            for(int j = 0;j < map_size.y;j++){
-                if(map_data[i][j].isWall()){
-                    is_map_data_wall[2*i][2*j] = true;
-                    is_map_data_wall[2*i+1][2*j] = true;
-                    is_map_data_wall[2*i][2*j+1] = true;
-                    is_map_data_wall[2*i+1][2*j+1] = true;
-                }
-                else{
-                    is_map_data_wall[2*i][2*j] = false;
-                    is_map_data_wall[2*i+1][2*j] = false;
-                    is_map_data_wall[2*i][2*j+1] = false;
-                    is_map_data_wall[2*i+1][2*j+1] = false;
+    private void createDispMapData() {
+        for (int i = 0; i < map_size.x; i++) {
+            for (int j = 0; j < map_size.y; j++) {
+                if (map_data[i][j].isWall()) {
+                    is_map_data_wall[2 * i][2 * j] = true;
+                    is_map_data_wall[2 * i + 1][2 * j] = true;
+                    is_map_data_wall[2 * i][2 * j + 1] = true;
+                    is_map_data_wall[2 * i + 1][2 * j + 1] = true;
+                } else {
+                    is_map_data_wall[2 * i][2 * j] = false;
+                    is_map_data_wall[2 * i + 1][2 * j] = false;
+                    is_map_data_wall[2 * i][2 * j + 1] = false;
+                    is_map_data_wall[2 * i + 1][2 * j + 1] = false;
                 }
             }
         }
-        for(int i = 0;i < map_size.x*2;i++) {
-            for (int j = 0; j < map_size.y*2-1; j++) {
+        for (int i = 0; i < map_size.x * 2; i++) {
+            for (int j = 0; j < map_size.y * 2 - 1; j++) {
                 is_map_data_sidewall[i][j] = is_map_data_wall[i][j] && !is_map_data_wall[i][j + 1];
             }
         }
     }
 
     //スタート地点を探す
-    public void searchStartPoint(){
+    public void searchStartPoint() {
         Point point = getRoomPoint();
         start_point.set(point.x, point.y);
     }
 
     //部屋のある一点を返す(magnificationをかけてある)
-    public Point getRoomPoint(){
+    public Point getRoomPoint() {
         Point point = new Point(0, 0);
-        for(;;) {
+        for (; ; ) {
             Random rnd = new Random();
             int x = rnd.nextInt(map_size.x);
             int y = rnd.nextInt(map_size.y);
-            if(map_data[x][y].isRoom()){
+            if (map_data[x][y].isRoom()) {
                 point.set(x * magnification, y * magnification);
                 break;
             }
@@ -505,13 +532,13 @@ public class MapAdmin {
     }
 
     //部屋の端の座標を返す
-    private Point getRoomEdgePoint(){
+    private Point getRoomEdgePoint() {
         Point point = new Point(0, 0);
-        for(;;) {
+        for (; ; ) {
             Random rnd = new Random();
             int x = rnd.nextInt(map_size.x);
             int y = rnd.nextInt(map_size.y);
-            if(map_data[x][y].isRoom() && (map_data[x-1][y].isWall() || map_data[x+1][y].isWall() || map_data[x][y-1].isWall() || map_data[x][y+1].isWall())){
+            if (map_data[x][y].isRoom() && (map_data[x - 1][y].isWall() || map_data[x + 1][y].isWall() || map_data[x][y - 1].isWall() || map_data[x][y + 1].isWall())) {
                 point.set(x * magnification, y * magnification);
                 break;
             }
@@ -520,14 +547,14 @@ public class MapAdmin {
     }
 
     //中ボスを返す関数
-    public String[] getMidMonster(int mid_boss_num){
+    public String[] getMidMonster(int mid_boss_num) {
         int k = 0;
-        if(mid_boss_num > 3){
+        if (mid_boss_num > 3) {
             throw new Error("%☆ホリエ:mid_boss_num > 3 (MapAdmin:getMidMonster)");
         }
         String mid_boss[] = new String[5];
-        for(int i = 0;i < dungeon_monster_data.size();i++){
-            if(dungeon_monster_data.get(i).getType() == 1 && k < mid_boss_num){
+        for (int i = 0; i < dungeon_monster_data.size(); i++) {
+            if (dungeon_monster_data.get(i).getType() == 1 && k < mid_boss_num) {
                 mid_boss[k] = dungeon_monster_data.get(i).getMonsterName();
                 k++;
             }
@@ -535,12 +562,12 @@ public class MapAdmin {
         return mid_boss;
     }
 
-    //モンスターの名前を返す(最大50体 )
-    public String[] getMonsterName(int monster_kind){
+    //モンスターの名前を返す(最大50体, monster_kind 0:ザコ 1:中ボス 2:ボス)
+    public String[] getMonsterName(int monster_kind) {
         int k = 0;
         String monster_name[] = new String[50];//TODO:とりあえず50にしている
-        for(int i = 0;i < dungeon_monster_data.size();i++){
-            if(dungeon_monster_data.get(i).getType() == 1 && k < 50){
+        for (int i = 0; i < dungeon_monster_data.size(); i++) {
+            if (dungeon_monster_data.get(i).getType() == 1 && k < 50) {
                 monster_name[k] = dungeon_monster_data.get(i).getMonsterName();
                 k++;
             }
@@ -549,33 +576,32 @@ public class MapAdmin {
     }
 
     //room_pointをset(magnificationをかけてない)
-    public void setRoomPoint(){
+    public void setRoomPoint() {
         Point point = getRoomEdgePoint();
-        room_point.set(point.x/magnification, point.y/magnification);
+        room_point.set(point.x / magnification, point.y / magnification);
     }
 
     //playerの現在位置を返す
-    public Point getNowPoint(){
+    public Point getNowPoint() {
         return camera.getNowPoint();
     }
 
     //階層移動
-    public void goNextFloor(){
+    public void goNextFloor() {
         now_floor_num++;
-        if(now_floor_num < boss_floor_num) {
+        if (now_floor_num < boss_floor_num) {
             createMap();
             //スタート地点を探す
-                searchStartPoint();
-                camera.setCameraOffset(start_point.x, start_point.y);
-                map_player.putUnit(start_point.x, start_point.y);
-        }
-        else{
+            searchStartPoint();
+            camera.setCameraOffset(start_point.x, start_point.y);
+            map_player.putUnit(start_point.x, start_point.y);
+        } else {
             goBossFloor();
         }
     }
 
     //ボスフロアに移動
-    private void goBossFloor(){
+    private void goBossFloor() {
         //map_dataの初期化
         for (int i = 0; i < map_size.x; i++) {
             for (int j = 0; j < map_size.y; j++) {
@@ -589,7 +615,7 @@ public class MapAdmin {
                 map_data[i][j].setWallFlag(false);
             }
         }
-        for(int i = 0;i < map_size.x;i++) {
+        for (int i = 0; i < map_size.x; i++) {
             for (int j = 0; j < map_size.y; j++) {
                 if (!isWall(i, j) && !isStairs(i, j)) {
                     map_tile[i][j] = floor_tile;
@@ -615,19 +641,19 @@ public class MapAdmin {
                 }
             }
         }
-        if(boss_floor_num == 1) {
+        if (boss_floor_num == 1) {
             map_object_admin.initObjectPosition(this);
         }
-        camera.setCameraOffset(7.5*magnification, 9*magnification);
-        map_player.putUnit(7.5*magnification, 9*magnification);
+        camera.setCameraOffset(7.5 * magnification, 9 * magnification);
+        map_player.putUnit(7.5 * magnification, 9 * magnification);
     }
 
     //採掘場所を作る(部屋の淵のみに生成)
-    private void createMine(int min_num, int max_num){
+    private void createMine(int min_num, int max_num) {
         Random rnd = new Random();
         int mine_num = rnd.nextInt(max_num - min_num + 1) + min_num;
-        for(int i = 0;i < mine_num;i++){
-            while(true) {
+        for (int i = 0; i < mine_num; i++) {
+            while (true) {
                 setRoomPoint();
                 if (!map_data[room_point.x][room_point.y].isMine() && !map_data[room_point.x][room_point.y].isStairs()) {
                     map_data[room_point.x][room_point.y].setMineFlag(true);
@@ -770,18 +796,18 @@ public class MapAdmin {
         Room now_point_room = new Room();
         boolean is_debug_mode = false;
         time++;
-        int mx = worldToMap(camera.getCameraOffset().x+800);
-        int my = worldToMap(camera.getCameraOffset().y+450);
-        if(map_data[mx][my].isStairs()){
+        int mx = worldToMap(camera.getCameraOffset().x + 800);
+        int my = worldToMap(camera.getCameraOffset().y + 450);
+        if (map_data[mx][my].isStairs()) {
             goNextFloor();
         }
 
         //周りを黒くする
-        graphic.bookingDrawBitmapData(auto_tile_wall.raw_auto_tile[4], 0, 0, 1600/32, 900/32, 0, 255, true);
+        graphic.bookingDrawBitmapData(auto_tile_wall.raw_auto_tile[4], 0, 0, 1600 / 32, 900 / 32, 0, 255, true);
 
         int draw_mode = 2;
         //4分割のままで表示
-        if(draw_mode == 1) {
+        if (draw_mode == 1) {
             for (int i = 0; i < map_size.x; i++) {
                 for (int j = 0; j < map_size.y; j++) {
                     if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
@@ -795,23 +821,23 @@ public class MapAdmin {
         }
 
         //4つを1つに纏めて表示
-        else if(draw_mode == 2) {
+        else if (draw_mode == 2) {
             for (int i = 0; i < map_size.x; i++) {
                 for (int j = 0; j < map_size.y; j++) {
                     if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
-                        graphic.bookingDrawBitmapData(map_tile_animation[(time/3)%3][i][j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+                        graphic.bookingDrawBitmapData(map_tile_animation[(time / 3) % 3][i][j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
                     }
                 }
             }
         }
 
         //1つの画像で表示
-        else if(draw_mode == 3) {
+        else if (draw_mode == 3) {
             graphic.bookingDrawBitmapData(map_image, -1 * camera.camera_offset.x - magnification, -1 * camera.camera_offset.y, 1, 1, 0, 255, true);
         }
 
         //1つの画像を切り取って表示
-        else if(draw_mode == 4) {
+        else if (draw_mode == 4) {
             BitmapData trim_map_data;
             int l_x = map_size.x;
             int r_x = -1;
@@ -840,12 +866,12 @@ public class MapAdmin {
         }
 
         //中心点の表示
-        if(is_debug_mode) {
+        if (is_debug_mode) {
             paint.setColor(Color.RED);
             graphic.bookingDrawCircle(camera.convertToNormCoordinateX(offset.x), camera.convertToNormCoordinateY(offset.y), 20, paint);
         }
-        updateMiniMapDispState(worldToMap(camera.getCameraOffset().x+800), worldToMap(camera.getCameraOffset().y+450));
-        drawSmallMap3(camera.getCameraOffset().x+800, camera.getCameraOffset().y+450);
+        updateMiniMapDispState(worldToMap(camera.getCameraOffset().x + 800), worldToMap(camera.getCameraOffset().y + 450));
+        drawSmallMap3(camera.getCameraOffset().x + 800, camera.getCameraOffset().y + 450);
         //画像表示デバッグ用
         //graphic.bookingDrawBitmapData(auto_tile_cave_hole[(time/3)%3].raw_auto_tile[1], 0, 0, 5, 5, 0, 255, true);
     }
@@ -853,10 +879,10 @@ public class MapAdmin {
     //4分割した物を事前にくっつけて保存して表示
     public void drawMap_for_autotile_light() {
         boolean is_debug_mode = false;
-        int mx = worldToMap(camera.getCameraOffset().x+800);
-        int my = worldToMap(camera.getCameraOffset().y+450);
+        int mx = worldToMap(camera.getCameraOffset().x + 800);
+        int my = worldToMap(camera.getCameraOffset().y + 450);
         int count = 0;
-        if(map_data[mx][my].isStairs()){
+        if (map_data[mx][my].isStairs()) {
             goNextFloor();
         }
 
@@ -866,20 +892,24 @@ public class MapAdmin {
         //マップ表示
         for (int i = 0; i < map_size.x; i++) {
             for (int j = 0; j < map_size.y; j++) {
-                if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
+                if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification &&
+                        camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification &&
+                        camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification &&
+                        camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification &&
+                        map_tile[i][j] != null) {
                     graphic.bookingDrawBitmapData(map_tile[i][j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
                     count++;
                 }
             }
         }
-        System.out.println("draw count = "+count);
+        System.out.println("draw count = " + count);
 
         //中心点の表示
-        if(is_debug_mode) {
+        if (is_debug_mode) {
             paint.setColor(Color.RED);
             graphic.bookingDrawCircle(camera.convertToNormCoordinateX(offset.x), camera.convertToNormCoordinateY(offset.y), 20, paint);
         }
-        if(now_floor_num < boss_floor_num) {
+        if (now_floor_num < boss_floor_num) {
             //ミニマップの表示
             updateMiniMapDispState(worldToMap(camera.getNowPoint().x), worldToMap(camera.getNowPoint().y));
             //drawSmallMap3(camera.getCameraOffset().x+800, camera.getCameraOffset().y+450);
@@ -892,10 +922,10 @@ public class MapAdmin {
     //4分割した物を事前にくっつけて保存して表示,アニメーション(現行バージョン)
     public void drawMap_for_autotile_light_animation() {
         boolean is_debug_mode = false;
-        int mx = worldToMap(camera.getCameraOffset().x+800);
-        int my = worldToMap(camera.getCameraOffset().y+450);
+        int mx = worldToMap(camera.getCameraOffset().x + 800);
+        int my = worldToMap(camera.getCameraOffset().y + 450);
 //        int count = 0;
-        if(map_data[mx][my].isStairs()){
+        if (map_data[mx][my].isStairs()) {
             goNextFloor();
         }
 
@@ -903,381 +933,427 @@ public class MapAdmin {
 //        graphic.bookingDrawBitmapData(auto_tile_wall.raw_auto_tile[4], 0, 0, 1600/32, 900/32, 0, 255, true);
 
         //マップ表示
-        time++;
-        for (int i = 0; i < map_size.x; i++) {
-            for (int j = 0; j < map_size.y; j++) {
-                if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
-                    graphic.bookingDrawBitmapData(map_tile_animation[(time/3)%animation_num][i][j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+        if(dungeon_name.equals("Dragon")) {
+            drawMap_for_autotile_light();
+        }
+        else {
+            time++;
+            for (int i = 0; i < map_size.x; i++) {
+                for (int j = 0; j < map_size.y; j++) {
+                    if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
+                        graphic.bookingDrawBitmapData(map_tile_animation[(time / 3) % animation_num][i][j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+                    }
                 }
             }
-        }
 //        System.out.println("draw count = "+count);
 
-        if(now_floor_num < boss_floor_num) {
-            //ミニマップの表示
-            updateMiniMapDispState(worldToMap(camera.getNowPoint().x), worldToMap(camera.getNowPoint().y));
-            //drawSmallMap3(camera.getCameraOffset().x+800, camera.getCameraOffset().y+450);
-            drawSmallMap3(camera.getNowPoint().x, camera.getNowPoint().y);
+            if (now_floor_num < boss_floor_num) {
+                //ミニマップの表示
+                updateMiniMapDispState(worldToMap(camera.getNowPoint().x), worldToMap(camera.getNowPoint().y));
+                //drawSmallMap3(camera.getCameraOffset().x+800, camera.getCameraOffset().y+450);
+                drawSmallMap3(camera.getNowPoint().x, camera.getNowPoint().y);
+            }
         }
         //画像表示デバッグ用
         //graphic.bookingDrawBitmapData(auto_tile_wall.big_auto_tile[46], 0, 0, 1, 1, 0, 255, true);
     }
 
-    private void createMapTileSet(boolean lu, boolean u, boolean ru, boolean l, boolean r, boolean ld, boolean d, boolean rd, AutoTile m_auto_tile, int i, int j, BitmapData map_tile_set[][]){
-        if(lu && u && ru && l && r && ld && d && rd){
+    private void createMapTileSet(boolean lu, boolean u, boolean ru, boolean l, boolean r, boolean ld, boolean d, boolean rd, AutoTile m_auto_tile, int i, int j, BitmapData map_tile_set[][]) {
+        if (lu && u && ru && l && r && ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[0];
-        }
-        else if(!lu && u && ru && l && r && ld && d && rd){
+        } else if (!lu && u && ru && l && r && ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[1];
-        }
-        else if(lu && u && !ru && l && r && ld && d && rd){
+        } else if (lu && u && !ru && l && r && ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[2];
-        }
-        else if(lu && u && ru && l && r && ld && d && !rd){
+        } else if (lu && u && ru && l && r && ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[3];
-        }
-        else if(lu && u && ru && l && r && !ld && d && rd){
+        } else if (lu && u && ru && l && r && !ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[4];
         }
         //5
-        else if(!lu && u && !ru && l && r && ld && d && rd){
+        else if (!lu && u && !ru && l && r && ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[5];
-        }
-        else if(lu && u && !ru && l && r && ld && d && !rd){
+        } else if (lu && u && !ru && l && r && ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[6];
-        }
-        else if(lu && u && ru && l && r && !ld && d && !rd){
+        } else if (lu && u && ru && l && r && !ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[7];
-        }
-        else if(!lu && u && ru && l && r && !ld && d && rd){
+        } else if (!lu && u && ru && l && r && !ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[8];
-        }
-        else if(!lu && u && ru && l && r && ld && d && !rd){
+        } else if (!lu && u && ru && l && r && ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[9];
         }
         //10
-        else if(lu && u && !ru && l && r && !ld && d && rd){
+        else if (lu && u && !ru && l && r && !ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[10];
-        }
-        else if(lu && u && !ru && l && r && !ld && d && !rd){
+        } else if (lu && u && !ru && l && r && !ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[11];
-        }
-        else if(!lu && u && ru && l && r && !ld && d && !rd){
+        } else if (!lu && u && ru && l && r && !ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[12];
-        }
-        else if(!lu && u && !ru && l && r && !ld && d && rd){
+        } else if (!lu && u && !ru && l && r && !ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[13];
-        }
-        else if(!lu && u && !ru && l && r && ld && d && !rd){
+        } else if (!lu && u && !ru && l && r && ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[14];
         }
         //15
-        else if(!lu && u && !ru && l && r && !ld && d && !rd){
+        else if (!lu && u && !ru && l && r && !ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[15];
-        }
-        else if(u && ru && !l && r && d && rd){
+        } else if (u && ru && !l && r && d && rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[16];
-        }
-        else if(u && !ru && !l && r && d && rd){
+        } else if (u && !ru && !l && r && d && rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[17];
-        }
-        else if(u && ru && !l && r && d && !rd){
+        } else if (u && ru && !l && r && d && !rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[18];
-        }
-        else if(u && !ru && !l && r && d && !rd){
+        } else if (u && !ru && !l && r && d && !rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[19];
         }
         //20
-        else if(!u && l && r && ld && d && rd){
+        else if (!u && l && r && ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[20];
-        }
-        else if(!u && l && r && ld && d && !rd){
+        } else if (!u && l && r && ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[21];
-        }
-        else if(!u && l && r && !ld && d && rd){
+        } else if (!u && l && r && !ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[22];
-        }
-        else if(!u && l && r && !ld && d && !rd){
+        } else if (!u && l && r && !ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[23];
-        }
-        else if(lu && u && l && !r && ld && d){
+        } else if (lu && u && l && !r && ld && d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[24];
         }
         //25
-        else if(lu && u && l && !r && !ld && d){
+        else if (lu && u && l && !r && !ld && d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[25];
-        }
-        else if(!lu && u && l && !r && ld && d){
+        } else if (!lu && u && l && !r && ld && d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[26];
-        }
-        else if(!lu && u && l && !r && !ld && d){
+        } else if (!lu && u && l && !r && !ld && d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[27];
-        }
-        else if(lu && u && ru && l && r && !d){
+        } else if (lu && u && ru && l && r && !d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[28];
-        }
-        else if(!lu && u && ru && l && r && !d){
+        } else if (!lu && u && ru && l && r && !d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[29];
         }
         //30
-        else if(lu && u && !ru && l && r && !d){
+        else if (lu && u && !ru && l && r && !d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[30];
-        }
-        else if(!lu && u && !ru && l && r && !d){
+        } else if (!lu && u && !ru && l && r && !d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[31];
-        }
-        else if(u && !l && !r && d){
+        } else if (u && !l && !r && d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[32];
-        }
-        else if(!u && l && r && !d){
+        } else if (!u && l && r && !d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[33];
-        }
-        else if(!u && !l && r && d && rd){
+        } else if (!u && !l && r && d && rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[34];
         }
         //35
-        else if(!u && !l && r && d && !rd){
+        else if (!u && !l && r && d && !rd) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[35];
-        }
-        else if(!u && l && !r && ld && d){
+        } else if (!u && l && !r && ld && d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[36];
-        }
-        else if(!u && l && !r && !ld && d){
+        } else if (!u && l && !r && !ld && d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[37];
-        }
-        else if(lu && u && l && !r && !d){
+        } else if (lu && u && l && !r && !d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[38];
-        }
-        else if(!lu && u && l && !r && !d){
+        } else if (!lu && u && l && !r && !d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[39];
         }
         //40
-        else if(u && ru && !l && r && !d){
+        else if (u && ru && !l && r && !d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[40];
-        }
-        else if(u && !ru && !l && r && !d){
+        } else if (u && !ru && !l && r && !d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[41];
-        }
-        else if(!u && !l && !r && d){
+        } else if (!u && !l && !r && d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[42];
-        }
-        else if(!u && !l && r && !d){
+        } else if (!u && !l && r && !d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[43];
-        }
-        else if(u && !l && !r && !d){
+        } else if (u && !l && !r && !d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[44];
         }
         //45
-        else if(!u && l && !r && !d){
+        else if (!u && l && !r && !d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[45];
-        }
-        else if(!u && !l && !r && !d){
+        } else if (!u && !l && !r && !d) {
             map_tile_set[i][j] = m_auto_tile.auto_tile[46];
         }
     }
 
-    private void createMapTileSetForBitmap(boolean lu, boolean u, boolean ru, boolean l, boolean r, boolean ld, boolean d, boolean rd, BitmapData m_auto_tile[], int i, int j, BitmapData map_tile_set[][]){
-        if(lu && u && ru && l && r && ld && d && rd){
+    private void createMapTileSetForBitmap(boolean lu, boolean u, boolean ru, boolean l, boolean r, boolean ld, boolean d, boolean rd, BitmapData m_auto_tile[], int i, int j, BitmapData map_tile_set[][]) {
+        if (lu && u && ru && l && r && ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile[0];
-        }
-        else if(!lu && u && ru && l && r && ld && d && rd){
+        } else if (!lu && u && ru && l && r && ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile[1];
-        }
-        else if(lu && u && !ru && l && r && ld && d && rd){
+        } else if (lu && u && !ru && l && r && ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile[2];
-        }
-        else if(lu && u && ru && l && r && ld && d && !rd){
+        } else if (lu && u && ru && l && r && ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile[48];
-        }
-        else if(lu && u && ru && l && r && !ld && d && rd){
+        } else if (lu && u && ru && l && r && !ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile[47];
         }
         //5
-        else if(!lu && u && !ru && l && r && ld && d && rd){
+        else if (!lu && u && !ru && l && r && ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile[5];
-        }
-        else if(lu && u && !ru && l && r && ld && d && !rd){
+        } else if (lu && u && !ru && l && r && ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile[6];
-        }
-        else if(lu && u && ru && l && r && !ld && d && !rd){
+        } else if (lu && u && ru && l && r && !ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile[51];
-        }
-        else if(!lu && u && ru && l && r && !ld && d && rd){
+        } else if (!lu && u && ru && l && r && !ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile[8];
-        }
-        else if(!lu && u && ru && l && r && ld && d && !rd){
+        } else if (!lu && u && ru && l && r && ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile[9];
         }
         //10
-        else if(lu && u && !ru && l && r && !ld && d && rd){
+        else if (lu && u && !ru && l && r && !ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile[10];
-        }
-        else if(lu && u && !ru && l && r && !ld && d && !rd){
+        } else if (lu && u && !ru && l && r && !ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile[11];
-        }
-        else if(!lu && u && ru && l && r && !ld && d && !rd){
+        } else if (!lu && u && ru && l && r && !ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile[12];
-        }
-        else if(!lu && u && !ru && l && r && !ld && d && rd){
+        } else if (!lu && u && !ru && l && r && !ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile[13];
-        }
-        else if(!lu && u && !ru && l && r && ld && d && !rd){
+        } else if (!lu && u && !ru && l && r && ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile[14];
         }
         //15
-        else if(!lu && u && !ru && l && r && !ld && d && !rd){
+        else if (!lu && u && !ru && l && r && !ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile[15];
-        }
-        else if((u && ru && !l && r && d && rd)){
+        } else if ((u && ru && !l && r && d && rd)) {
             map_tile_set[i][j] = m_auto_tile[16];
-        }
-        else if(u && !ru && !l && r && d && rd){
+        } else if (u && !ru && !l && r && d && rd) {
             map_tile_set[i][j] = m_auto_tile[17];
-        }
-        else if(u && ru && !l && r && d && !rd){
+        } else if (u && ru && !l && r && d && !rd) {
             map_tile_set[i][j] = m_auto_tile[50];
-        }
-        else if(u && !ru && !l && r && d && !rd){
+        } else if (u && !ru && !l && r && d && !rd) {
             map_tile_set[i][j] = m_auto_tile[19];
         }
         //20
-        else if(!u && l && r && ld && d && rd){
+        else if (!u && l && r && ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile[20];
-        }
-        else if(!u && l && r && ld && d && !rd){
+        } else if (!u && l && r && ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile[21];
-        }
-        else if(!u && l && r && !ld && d && rd){
+        } else if (!u && l && r && !ld && d && rd) {
             map_tile_set[i][j] = m_auto_tile[22];
-        }
-        else if(!u && l && r && !ld && d && !rd){
+        } else if (!u && l && r && !ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile[23];
-        }
-        else if((lu && u && l && !r && ld && d)){
+        } else if ((lu && u && l && !r && ld && d)) {
             map_tile_set[i][j] = m_auto_tile[24];
         }
         //25
-        else if(lu && u && l && !r && !ld && d){
+        else if (lu && u && l && !r && !ld && d) {
             map_tile_set[i][j] = m_auto_tile[49];
-        }
-        else if(!lu && u && l && !r && ld && d){
+        } else if (!lu && u && l && !r && ld && d) {
             map_tile_set[i][j] = m_auto_tile[26];
-        }
-        else if(!lu && u && l && !r && !ld && d){
+        } else if (!lu && u && l && !r && !ld && d) {
             map_tile_set[i][j] = m_auto_tile[27];
-        }
-        else if(lu && u && ru && l && r && !d){
+        } else if (lu && u && ru && l && r && !d) {
             map_tile_set[i][j] = m_auto_tile[28];
-        }
-        else if(!lu && u && ru && l && r && !d){
+        } else if (!lu && u && ru && l && r && !d) {
             map_tile_set[i][j] = m_auto_tile[29];
         }
         //30
-        else if(lu && u && !ru && l && r && !d){
+        else if (lu && u && !ru && l && r && !d) {
             map_tile_set[i][j] = m_auto_tile[30];
-        }
-        else if(!lu && u && !ru && l && r && !d){
+        } else if (!lu && u && !ru && l && r && !d) {
             map_tile_set[i][j] = m_auto_tile[31];
-        }
-        else if(u && !l && !r && d){
+        } else if (u && !l && !r && d) {
             map_tile_set[i][j] = m_auto_tile[32];
-        }
-        else if(!u && l && r && !d){
+        } else if (!u && l && r && !d) {
             map_tile_set[i][j] = m_auto_tile[33];
-        }
-        else if(!u && !l && r && d && rd){
+        } else if (!u && !l && r && d && rd) {
             map_tile_set[i][j] = m_auto_tile[34];
         }
         //35
-        else if(!u && !l && r && d && !rd){
+        else if (!u && !l && r && d && !rd) {
             map_tile_set[i][j] = m_auto_tile[35];
-        }
-        else if(!u && l && !r && ld && d){
+        } else if (!u && l && !r && ld && d) {
             map_tile_set[i][j] = m_auto_tile[36];
-        }
-        else if(!u && l && !r && !ld && d){
+        } else if (!u && l && !r && !ld && d) {
             map_tile_set[i][j] = m_auto_tile[37];
-        }
-        else if(lu && u && l && !r && !d){
+        } else if (lu && u && l && !r && !d) {
             map_tile_set[i][j] = m_auto_tile[38];
-        }
-        else if(!lu && u && l && !r && !d){
+        } else if (!lu && u && l && !r && !d) {
             map_tile_set[i][j] = m_auto_tile[39];
         }
         //40
-        else if(u && ru && !l && r && !d){
+        else if (u && ru && !l && r && !d) {
             map_tile_set[i][j] = m_auto_tile[40];
-        }
-        else if(u && !ru && !l && r && !d){
+        } else if (u && !ru && !l && r && !d) {
             map_tile_set[i][j] = m_auto_tile[41];
-        }
-        else if(!u && !l && !r && d){
+        } else if (!u && !l && !r && d) {
             map_tile_set[i][j] = m_auto_tile[42];
-        }
-        else if(!u && !l && r && !d){
+        } else if (!u && !l && r && !d) {
             map_tile_set[i][j] = m_auto_tile[43];
-        }
-        else if(u && !l && !r && !d){
+        } else if (u && !l && !r && !d) {
             map_tile_set[i][j] = m_auto_tile[44];
         }
         //45
-        else if(!u && l && !r && !d){
+        else if (!u && l && !r && !d) {
             map_tile_set[i][j] = m_auto_tile[45];
+        } else if (!u && !l && !r && !d) {
+            map_tile_set[i][j] = m_auto_tile[46];
         }
-        else if(!u && !l && !r && !d){
+    }
+
+    private void createMapTileSetForBitmap_floor(boolean lu, boolean u, boolean ru, boolean l, boolean r, boolean ld, boolean d, boolean rd, BitmapData m_auto_tile[], int i, int j, BitmapData map_tile_set[][]) {
+        if (lu && u && ru && l && r && ld && d && rd) {
+            map_tile_set[i][j] = m_auto_tile[0];
+        } else if (!lu && u && ru && l && r && ld && d && rd) {
+            map_tile_set[i][j] = m_auto_tile[1];
+        } else if (lu && u && !ru && l && r && ld && d && rd) {
+            map_tile_set[i][j] = m_auto_tile[2];
+        } else if (lu && u && ru && l && r && ld && d && !rd) {
+            map_tile_set[i][j] = m_auto_tile[3];
+        } else if (lu && u && ru && l && r && !ld && d && rd) {
+            map_tile_set[i][j] = m_auto_tile[4];
+        }
+        //5
+        else if (!lu && u && !ru && l && r && ld && d && rd) {
+            map_tile_set[i][j] = m_auto_tile[5];
+        } else if (lu && u && !ru && l && r && ld && d && !rd) {
+            map_tile_set[i][j] = m_auto_tile[6];
+        } else if (lu && u && ru && l && r && !ld && d && !rd) {
+            map_tile_set[i][j] = m_auto_tile[7];
+        } else if (!lu && u && ru && l && r && !ld && d && rd) {
+            map_tile_set[i][j] = m_auto_tile[8];
+        } else if (!lu && u && ru && l && r && ld && d && !rd) {
+            map_tile_set[i][j] = m_auto_tile[9];
+        }
+        //10
+        else if (lu && u && !ru && l && r && !ld && d && rd) {
+            map_tile_set[i][j] = m_auto_tile[10];
+        } else if (lu && u && !ru && l && r && !ld && d && !rd) {
+            map_tile_set[i][j] = m_auto_tile[11];
+        } else if (!lu && u && ru && l && r && !ld && d && !rd) {
+            map_tile_set[i][j] = m_auto_tile[12];
+        } else if (!lu && u && !ru && l && r && !ld && d && rd) {
+            map_tile_set[i][j] = m_auto_tile[13];
+        } else if (!lu && u && !ru && l && r && ld && d && !rd) {
+            map_tile_set[i][j] = m_auto_tile[14];
+        }
+        //15
+        else if (!lu && u && !ru && l && r && !ld && d && !rd) {
+            map_tile_set[i][j] = m_auto_tile[15];
+        } else if ((u && ru && !l && r && d && rd)) {
+            map_tile_set[i][j] = m_auto_tile[16];
+        } else if (u && !ru && !l && r && d && rd) {
+            map_tile_set[i][j] = m_auto_tile[17];
+        } else if (u && ru && !l && r && d && !rd) {
+            map_tile_set[i][j] = m_auto_tile[18];
+        } else if (u && !ru && !l && r && d && !rd) {
+            map_tile_set[i][j] = m_auto_tile[19];
+        }
+        //20
+        else if (!u && l && r && ld && d && rd) {
+            map_tile_set[i][j] = m_auto_tile[20];
+        } else if (!u && l && r && ld && d && !rd) {
+            map_tile_set[i][j] = m_auto_tile[21];
+        } else if (!u && l && r && !ld && d && rd) {
+            map_tile_set[i][j] = m_auto_tile[22];
+        } else if (!u && l && r && !ld && d && !rd) {
+            map_tile_set[i][j] = m_auto_tile[23];
+        } else if ((lu && u && l && !r && ld && d)) {
+            map_tile_set[i][j] = m_auto_tile[24];
+        }
+        //25
+        else if (lu && u && l && !r && !ld && d) {
+            map_tile_set[i][j] = m_auto_tile[25];
+        } else if (!lu && u && l && !r && ld && d) {
+            map_tile_set[i][j] = m_auto_tile[26];
+        } else if (!lu && u && l && !r && !ld && d) {
+            map_tile_set[i][j] = m_auto_tile[27];
+        } else if (lu && u && ru && l && r && !d) {
+            map_tile_set[i][j] = m_auto_tile[28];
+        } else if (!lu && u && ru && l && r && !d) {
+            map_tile_set[i][j] = m_auto_tile[29];
+        }
+        //30
+        else if (lu && u && !ru && l && r && !d) {
+            map_tile_set[i][j] = m_auto_tile[30];
+        } else if (!lu && u && !ru && l && r && !d) {
+            map_tile_set[i][j] = m_auto_tile[31];
+        } else if (u && !l && !r && d) {
+            map_tile_set[i][j] = m_auto_tile[32];
+        } else if (!u && l && r && !d) {
+            map_tile_set[i][j] = m_auto_tile[33];
+        } else if (!u && !l && r && d && rd) {
+            map_tile_set[i][j] = m_auto_tile[34];
+        }
+        //35
+        else if (!u && !l && r && d && !rd) {
+            map_tile_set[i][j] = m_auto_tile[35];
+        } else if (!u && l && !r && ld && d) {
+            map_tile_set[i][j] = m_auto_tile[36];
+        } else if (!u && l && !r && !ld && d) {
+            map_tile_set[i][j] = m_auto_tile[37];
+        } else if (lu && u && l && !r && !d) {
+            map_tile_set[i][j] = m_auto_tile[38];
+        } else if (!lu && u && l && !r && !d) {
+            map_tile_set[i][j] = m_auto_tile[39];
+        }
+        //40
+        else if (u && ru && !l && r && !d) {
+            map_tile_set[i][j] = m_auto_tile[40];
+        } else if (u && !ru && !l && r && !d) {
+            map_tile_set[i][j] = m_auto_tile[41];
+        } else if (!u && !l && !r && d) {
+            map_tile_set[i][j] = m_auto_tile[42];
+        } else if (!u && !l && r && !d) {
+            map_tile_set[i][j] = m_auto_tile[43];
+        } else if (u && !l && !r && !d) {
+            map_tile_set[i][j] = m_auto_tile[44];
+        }
+        //45
+        else if (!u && l && !r && !d) {
+            map_tile_set[i][j] = m_auto_tile[45];
+        } else if (!u && !l && !r && !d) {
             map_tile_set[i][j] = m_auto_tile[46];
         }
     }
 
     //壁の表示
     //4分割しない
-    private void drawWall(int array_x, int array_y, int draw_point_x, int draw_point_y, float magnification){
+    private void drawWall(int array_x, int array_y, int draw_point_x, int draw_point_y, float magnification) {
         int before_array_x = array_x - 1;
         int after_array_x = array_x + 1;
         int before_array_y = array_y - 1;
         int after_array_y = array_y + 1;
-        if (before_array_x < 0){
+        if (before_array_x < 0) {
             before_array_x = 0;
         }
-        if (after_array_x > map_size.x-1){
-            after_array_x = map_size.x-1;
+        if (after_array_x > map_size.x - 1) {
+            after_array_x = map_size.x - 1;
         }
-        if (before_array_y < 0){
+        if (before_array_y < 0) {
             before_array_y = 0;
         }
-        if (after_array_y > map_size.y-1){
-            after_array_y = map_size.y-1;
+        if (after_array_y > map_size.y - 1) {
+            after_array_y = map_size.y - 1;
         }
         auto_tile_admin.drawAutoTile(map_data[before_array_x][before_array_y].isWall(), map_data[array_x][before_array_y].isWall(), map_data[after_array_x][before_array_y].isWall(), map_data[before_array_x][array_y].isWall(), map_data[after_array_x][array_y].isWall(), map_data[before_array_x][after_array_y].isWall(), map_data[array_x][after_array_y].isWall(), map_data[after_array_x][after_array_y].isWall(),
                 auto_tile_wall, draw_point_x, draw_point_y, magnification);
     }
 
     //4分割
-    private void drawWall2(int array_x, int array_y, int draw_point_x, int draw_point_y, float magnification){
+    private void drawWall2(int array_x, int array_y, int draw_point_x, int draw_point_y, float magnification) {
         int before_array_x = array_x - 1;
         int after_array_x = array_x + 1;
         int before_array_y = array_y - 1;
         int after_array_y = array_y + 1;
-        if (before_array_x < 0){
+        if (before_array_x < 0) {
             before_array_x = 0;
         }
-        if (after_array_x > map_size.x*2-1){
-            after_array_x = map_size.x*2-1;
+        if (after_array_x > map_size.x * 2 - 1) {
+            after_array_x = map_size.x * 2 - 1;
         }
-        if (before_array_y < 0){
+        if (before_array_y < 0) {
             before_array_y = 0;
         }
-        if (after_array_y > map_size.y*2-1){
-            after_array_y = map_size.y*2-1;
+        if (after_array_y > map_size.y * 2 - 1) {
+            after_array_y = map_size.y * 2 - 1;
         }
-        if(!is_map_data_sidewall[array_x][array_y]) {
+        if (!is_map_data_sidewall[array_x][array_y]) {
             auto_tile_admin.drawAutoTile(
                     is_map_data_wall[before_array_x][before_array_y] && !is_map_data_sidewall[before_array_x][before_array_y], is_map_data_wall[array_x][before_array_y] && !is_map_data_sidewall[array_x][before_array_y], is_map_data_wall[after_array_x][before_array_y] && !is_map_data_sidewall[after_array_x][before_array_y],
                     is_map_data_wall[before_array_x][array_y] && !is_map_data_sidewall[before_array_x][array_y], is_map_data_wall[after_array_x][array_y] && !is_map_data_sidewall[after_array_x][array_y],
                     is_map_data_wall[before_array_x][after_array_y] && !is_map_data_sidewall[before_array_x][after_array_y], is_map_data_wall[array_x][after_array_y] && !is_map_data_sidewall[array_x][after_array_y], is_map_data_wall[after_array_x][after_array_y] && !is_map_data_sidewall[after_array_x][after_array_y],
                     auto_tile_wall, draw_point_x, draw_point_y, magnification);
-        }
-        else{
+        } else {
             auto_tile_admin.drawAutoTile(
                     is_map_data_sidewall[before_array_x][before_array_y], is_map_data_sidewall[array_x][before_array_y], is_map_data_sidewall[after_array_x][before_array_y],
                     is_map_data_sidewall[before_array_x][array_y], is_map_data_sidewall[after_array_x][array_y],
@@ -1286,24 +1362,24 @@ public class MapAdmin {
         }
     }
 
-    private void setAutoTile(int array_x, int array_y, int i, int j){
+    private void setAutoTile(int array_x, int array_y, int i, int j) {
         int before_array_x = array_x - 1;
         int after_array_x = array_x + 1;
         int before_array_y = array_y - 1;
         int after_array_y = array_y + 1;
-        if (before_array_x < 0){
+        if (before_array_x < 0) {
             before_array_x = 0;
         }
-        if (after_array_x > map_size.x*2-1){
-            after_array_x = map_size.x*2-1;
+        if (after_array_x > map_size.x * 2 - 1) {
+            after_array_x = map_size.x * 2 - 1;
         }
-        if (before_array_y < 0){
+        if (before_array_y < 0) {
             before_array_y = 0;
         }
-        if (after_array_y > map_size.y*2-1){
-            after_array_y = map_size.y*2-1;
+        if (after_array_y > map_size.y * 2 - 1) {
+            after_array_y = map_size.y * 2 - 1;
         }
-        if(!is_map_data_sidewall[array_x][array_y]) {
+        if (!is_map_data_sidewall[array_x][array_y]) {
             createMapTileSet(
                     is_map_data_wall[before_array_x][before_array_y] && !is_map_data_sidewall[before_array_x][before_array_y], is_map_data_wall[array_x][before_array_y] && !is_map_data_sidewall[array_x][before_array_y], is_map_data_wall[after_array_x][before_array_y] && !is_map_data_sidewall[after_array_x][before_array_y],
                     is_map_data_wall[before_array_x][array_y] && !is_map_data_sidewall[before_array_x][array_y], is_map_data_wall[after_array_x][array_y] && !is_map_data_sidewall[after_array_x][array_y],
@@ -1324,8 +1400,7 @@ public class MapAdmin {
                     is_map_data_wall[before_array_x][array_y] && !is_map_data_sidewall[before_array_x][array_y], is_map_data_wall[after_array_x][array_y] && !is_map_data_sidewall[after_array_x][array_y],
                     is_map_data_wall[before_array_x][after_array_y] && !is_map_data_sidewall[before_array_x][after_array_y], is_map_data_wall[array_x][after_array_y] && !is_map_data_sidewall[array_x][after_array_y], is_map_data_wall[after_array_x][after_array_y] && !is_map_data_sidewall[after_array_x][after_array_y],
                     auto_tile_cave_hole[2], i, j, map_tile_set_animation[2]);
-        }
-        else{
+        } else {
             createMapTileSet(
                     is_map_data_sidewall[before_array_x][before_array_y], is_map_data_sidewall[array_x][before_array_y], is_map_data_sidewall[after_array_x][before_array_y],
                     is_map_data_sidewall[before_array_x][array_y], is_map_data_sidewall[after_array_x][array_y],
@@ -1349,22 +1424,22 @@ public class MapAdmin {
         }
     }
 
-    private void setAutoTile_light(int array_x, int array_y, int i, int j){
+    private void setAutoTile_light(int array_x, int array_y, int i, int j) {
         int before_array_x = array_x - 1;
         int after_array_x = array_x + 1;
         int before_array_y = array_y - 1;
         int after_array_y = array_y + 1;
-        if (before_array_x < 0){
+        if (before_array_x < 0) {
             before_array_x = 0;
         }
-        if (after_array_x > map_size.x-1){
-            after_array_x = map_size.x-1;
+        if (after_array_x > map_size.x - 1) {
+            after_array_x = map_size.x - 1;
         }
-        if (before_array_y < 0){
+        if (before_array_y < 0) {
             before_array_y = 0;
         }
-        if (after_array_y > map_size.y-1){
-            after_array_y = map_size.y-1;
+        if (after_array_y > map_size.y - 1) {
+            after_array_y = map_size.y - 1;
         }
         createMapTileSetForBitmap(
                 isWall(before_array_x, before_array_y), isWall(array_x, before_array_y), isWall(after_array_x, before_array_y),
@@ -1373,24 +1448,24 @@ public class MapAdmin {
                 auto_tile_wall.big_auto_tile, i, j, map_tile);
     }
 
-    private void setAutoTile_lite_animation(int array_x, int array_y, int i, int j){
+    private void setAutoTile_light_animation(int array_x, int array_y, int i, int j) {
         int before_array_x = array_x - 1;
         int after_array_x = array_x + 1;
         int before_array_y = array_y - 1;
         int after_array_y = array_y + 1;
-        if (before_array_x < 0){
+        if (before_array_x < 0) {
             before_array_x = 0;
         }
-        if (after_array_x > map_size.x-1){
-            after_array_x = map_size.x-1;
+        if (after_array_x > map_size.x - 1) {
+            after_array_x = map_size.x - 1;
         }
-        if (before_array_y < 0){
+        if (before_array_y < 0) {
             before_array_y = 0;
         }
-        if (after_array_y > map_size.y-1){
-            after_array_y = map_size.y-1;
+        if (after_array_y > map_size.y - 1) {
+            after_array_y = map_size.y - 1;
         }
-        for(int k = 0;k < animation_num;k++){
+        for (int k = 0; k < animation_num; k++) {
             createMapTileSetForBitmap(
                     isWall(before_array_x, before_array_y), isWall(array_x, before_array_y), isWall(after_array_x, before_array_y),
                     isWall(before_array_x, array_y), isWall(after_array_x, array_y),
@@ -1399,8 +1474,32 @@ public class MapAdmin {
         }
     }
 
+    private void setAutoTile_light_floor(int array_x, int array_y, int i, int j) {
+        int before_array_x = array_x - 1;
+        int after_array_x = array_x + 1;
+        int before_array_y = array_y - 1;
+        int after_array_y = array_y + 1;
+        if (before_array_x < 0) {
+            before_array_x = 0;
+        }
+        if (after_array_x > map_size.x - 1) {
+            after_array_x = map_size.x - 1;
+        }
+        if (before_array_y < 0) {
+            before_array_y = 0;
+        }
+        if (after_array_y > map_size.y - 1) {
+            after_array_y = map_size.y - 1;
+        }
+        createMapTileSetForBitmap_floor(
+                !isWall(before_array_x, before_array_y), !isWall(array_x, before_array_y), !isWall(after_array_x, before_array_y),
+                !isWall(before_array_x, array_y), !isWall(after_array_x, array_y),
+                !isWall(before_array_x, after_array_y), !isWall(array_x, after_array_y), !isWall(after_array_x, after_array_y),
+                at_floor.big_auto_tile, i, j, map_tile);//TODO:ここがおかしいっぽい
+    }
+
     //ミニマップ表示
-    public void drawSmallMap3(int x, int y){
+    public void drawSmallMap3(int x, int y) {
         Paint blue_paint = new Paint();
         Paint red_paint = new Paint();
         Paint green_paint = new Paint();
@@ -1417,44 +1516,44 @@ public class MapAdmin {
         for (int i = 0; i < this.getMap_size_x(); i++) {
             for (int j = 0; j < this.getMap_size_y(); j++) {
                 //通路
-                if(!isWall(i, j) && !isStairs(i, j) && !isRoom(i, j) && isDisp(i, j)){
-                    red_paint.setARGB(100,255,0,0);
-                    graphic.bookingDrawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, red_paint);
+                if (!isWall(i, j) && !isStairs(i, j) && !isRoom(i, j) && isDisp(i, j)) {
+                    red_paint.setARGB(100, 255, 0, 0);
+                    graphic.bookingDrawRect(small_map_mag * i + small_map_offset_x, small_map_mag * j + small_map_offset_y, small_map_mag * (i + 1) + small_map_offset_x, small_map_mag * (j + 1) + small_map_offset_y, red_paint);
 //                    countMiniDrawRect++;
                 }
                 //階段
                 else if (isStairs(i, j) && isDisp(i, j)) {
                     green_paint.setColor(Color.GREEN);
-                    graphic.bookingDrawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, green_paint);
+                    graphic.bookingDrawRect(small_map_mag * i + small_map_offset_x, small_map_mag * j + small_map_offset_y, small_map_mag * (i + 1) + small_map_offset_x, small_map_mag * (j + 1) + small_map_offset_y, green_paint);
 //                    countMiniDrawRect++;
                 }
             }
         }
 //        System.out.println("countMiniDrawRect = "+countMiniDrawRect);
         yellow_paint.setColor(Color.YELLOW);
-        graphic.bookingDrawCircle(small_map_offset_x + x*small_map_mag/magnification, small_map_offset_y + y*small_map_mag/magnification, 10, yellow_paint);
+        graphic.bookingDrawCircle(small_map_offset_x + x * small_map_mag / magnification, small_map_offset_y + y * small_map_mag / magnification, 10, yellow_paint);
     }
 
     //ミニマップの表示を状態を更新
-    public void updateMiniMapDispState(int x, int y){
-        if(!map_data[x][y].isWall()){
+    public void updateMiniMapDispState(int x, int y) {
+        if (!map_data[x][y].isWall()) {
             map_data[x][y].setDispFlag(true);
-            if(map_data[x][y].isRoom()){
-                if(!map_data[x-1][y].isDisp()){
-                    updateMiniMapDispState(x-1, y);
+            if (map_data[x][y].isRoom()) {
+                if (!map_data[x - 1][y].isDisp()) {
+                    updateMiniMapDispState(x - 1, y);
                 }
-                if(!map_data[x+1][y].isDisp()){
-                    updateMiniMapDispState(x+1, y);
+                if (!map_data[x + 1][y].isDisp()) {
+                    updateMiniMapDispState(x + 1, y);
                 }
-                if(!map_data[x][y-1].isDisp()){
-                    updateMiniMapDispState(x, y-1);
+                if (!map_data[x][y - 1].isDisp()) {
+                    updateMiniMapDispState(x, y - 1);
                 }
-                if(!map_data[x][y+1].isDisp()){
-                    updateMiniMapDispState(x, y+1);
+                if (!map_data[x][y + 1].isDisp()) {
+                    updateMiniMapDispState(x, y + 1);
                 }
             }
         }
-        if(isStairs(x, y)){
+        if (isStairs(x, y)) {
             map_data[x][y].setDispFlag(true);
         }
     }
@@ -1465,15 +1564,14 @@ public class MapAdmin {
     }
 
     //holder取得
-    public void getHolder(){
+    public void getHolder() {
         holder = graphic.getHolder();
     }
 
     //map_player取得
-    public void getMapPlayer(MapPlayer m_map_player){
+    public void getMapPlayer(MapPlayer m_map_player) {
         map_player = m_map_player;
     }
-
 
 
     //以下デバッグ用
@@ -1500,8 +1598,8 @@ public class MapAdmin {
     }
 
     //過去関数
-
-    private void createAutoTileImg_old(){
+/*
+    private void createAutoTileImg_old() {
         //画像読込
         BitmapData auto_tile_block_wall = graphic.searchBitmap("cave_wall_w_01");//壁のauto_tile元データ
         BitmapData auto_tile_block_side_wall = graphic.searchBitmap("cave_wall_f_01");//側壁のauto_tileの元データ
@@ -1532,16 +1630,16 @@ public class MapAdmin {
 //        cave_hole_div[1] = graphic.processTrimmingBitmapData(cave_hole_raw, 32, 0, 32, 32*5);
 //        cave_hole_div[2] = graphic.processTrimmingBitmapData(cave_hole_raw, 64, 0, 32, 32*5);
 
-        for(int j = 0;j < 3; j++) {
+        for (int j = 0; j < 3; j++) {
             auto_tile_cave_hole[j] = new AutoTile();
         }
 
         //autotileを元画像から5つに分割
-        for(int i = 0;i < 5;i++){
-            auto_tile_wall.setAuto_tile(graphic.processTrimmingBitmapData(auto_tile_block_wall, 0, 32*i, 32, 32), i);
-            auto_tile_side_wall.setAuto_tile(graphic.processTrimmingBitmapData(auto_tile_block_side_wall, 0, 32*i, 32, 32), i);
-            for(int j = 0;j < 3; j++){
-                auto_tile_cave_hole[j].setAuto_tile(graphic.processTrimmingBitmapData(cave_hole_div[j], 0, 32*i, 32, 32), i);
+        for (int i = 0; i < 5; i++) {
+            auto_tile_wall.setAuto_tile(graphic.processTrimmingBitmapData(auto_tile_block_wall, 0, 32 * i, 32, 32), i);
+            auto_tile_side_wall.setAuto_tile(graphic.processTrimmingBitmapData(auto_tile_block_side_wall, 0, 32 * i, 32, 32), i);
+            for (int j = 0; j < 3; j++) {
+                auto_tile_cave_hole[j].setAuto_tile(graphic.processTrimmingBitmapData(cave_hole_div[j], 0, 32 * i, 32, 32), i);
             }
         }
         auto_tile_admin.createAutoTile(auto_tile_wall);
@@ -1550,7 +1648,7 @@ public class MapAdmin {
         auto_tile_admin.createAutoTileForSideWall(auto_tile_side_wall, side_wall);
         auto_tile_admin.createBigAutoTile(auto_tile_wall, side_wall);
 
-        for(int i = 0;i < 3;i++){
+        for (int i = 0; i < 3; i++) {
             auto_tile_admin.createAutoTile(auto_tile_cave_hole[i]);
         }
 
@@ -1613,56 +1711,48 @@ public class MapAdmin {
         Paint green_paint = new Paint();
         Paint paint = new Paint();
         //右手法で動く点の表示
-        if(map_data[worldToMap(offset.x)][worldToMap(offset.y)].isWall()){
-            offset.x = offset.x+10;
-            offset.y = offset.y+10;
+        if (map_data[worldToMap(offset.x)][worldToMap(offset.y)].isWall()) {
+            offset.x = offset.x + 10;
+            offset.y = offset.y + 10;
             //System.out.println("wall");
-        }
-        else{
-            boolean up = !map_data[worldToMap(offset.x)][worldToMap(offset.y-10)].isWall();
-            boolean down = !map_data[worldToMap(offset.x)][worldToMap(offset.y+10)].isWall();
-            boolean left = !map_data[worldToMap(offset.x-10)][worldToMap(offset.y)].isWall();
-            boolean right = !map_data[worldToMap(offset.x+10)][worldToMap(offset.y)].isWall();
-            if(up&down&left&right){
-                boolean ul = !map_data[worldToMap(offset.x-10)][worldToMap(offset.y-10)].isWall();
-                boolean ur = !map_data[worldToMap(offset.x+10)][worldToMap(offset.y-10)].isWall();
-                boolean dl = !map_data[worldToMap(offset.x-10)][worldToMap(offset.y+10)].isWall();
-                boolean dr = !map_data[worldToMap(offset.x+10)][worldToMap(offset.y+10)].isWall();
-                if(!ul&ur&dl&dr){
-                    offset.x = offset.x-10;
-                    updateMiniMapDispState(offset.x/magnification, offset.y/magnification);
+        } else {
+            boolean up = !map_data[worldToMap(offset.x)][worldToMap(offset.y - 10)].isWall();
+            boolean down = !map_data[worldToMap(offset.x)][worldToMap(offset.y + 10)].isWall();
+            boolean left = !map_data[worldToMap(offset.x - 10)][worldToMap(offset.y)].isWall();
+            boolean right = !map_data[worldToMap(offset.x + 10)][worldToMap(offset.y)].isWall();
+            if (up & down & left & right) {
+                boolean ul = !map_data[worldToMap(offset.x - 10)][worldToMap(offset.y - 10)].isWall();
+                boolean ur = !map_data[worldToMap(offset.x + 10)][worldToMap(offset.y - 10)].isWall();
+                boolean dl = !map_data[worldToMap(offset.x - 10)][worldToMap(offset.y + 10)].isWall();
+                boolean dr = !map_data[worldToMap(offset.x + 10)][worldToMap(offset.y + 10)].isWall();
+                if (!ul & ur & dl & dr) {
+                    offset.x = offset.x - 10;
+                    updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+                } else if (ul & !ur & dl & dr) {
+                    offset.y = offset.y - 10;
+                    updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+                } else if (ul & ur & !dl & dr) {
+                    offset.y = offset.y + 10;
+                    updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+                } else {
+                    offset.x = offset.x + 10;
+                    updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
                 }
-                else if(ul&!ur&dl&dr){
-                    offset.y = offset.y-10;
-                    updateMiniMapDispState(offset.x/magnification, offset.y/magnification);
-                }
-                else if(ul&ur&!dl&dr){
-                    offset.y = offset.y+10;
-                    updateMiniMapDispState(offset.x/magnification, offset.y/magnification);
-                }
-                else{
-                    offset.x = offset.x+10;
-                    updateMiniMapDispState(offset.x/magnification, offset.y/magnification);
-                }
-            }
-            else if(!up&down&left&right|| !up&down&left&!right){
-                offset.x = offset.x-10;
-                updateMiniMapDispState(offset.x/magnification, offset.y/magnification);
+            } else if (!up & down & left & right || !up & down & left & !right) {
+                offset.x = offset.x - 10;
+                updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
                 //System.out.println("1");
-            }
-            else if(up&down&right || down&right){
-                offset.y = offset.y+10;
-                updateMiniMapDispState(offset.x/magnification, offset.y/magnification);
+            } else if (up & down & right || down & right) {
+                offset.y = offset.y + 10;
+                updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
                 //System.out.println("2");
-            }
-            else if(up&left&right || up&right){
-                offset.x = offset.x+10;
-                updateMiniMapDispState(offset.x/magnification, offset.y/magnification);
+            } else if (up & left & right || up & right) {
+                offset.x = offset.x + 10;
+                updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
                 //System.out.println("3");
-            }
-            else{
-                offset.y = offset.y-10;
-                updateMiniMapDispState(offset.x/magnification, offset.y/magnification);
+            } else {
+                offset.y = offset.y - 10;
+                updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
                 //System.out.println("4");
             }
         }
@@ -1682,7 +1772,7 @@ public class MapAdmin {
                         canvas.drawRect(camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), camera.convertToNormCoordinateXForMap((i + 1) * magnification), camera.convertToNormCoordinateYForMap((j + 1) * magnification), green_paint);
                         //System.out.println(camera.convertToNormCoordinateXForMap(i * magnification) + "," + camera.convertToNormCoordinateYForMap(j * magnification) + "," + camera.convertToNormCoordinateXForMap((i + 1) * magnification) + "," + camera.convertToNormCoordinateYForMap((j + 1) * magnification));
                     }
-                } else if(isEntrance(i, j)){
+                } else if (isEntrance(i, j)) {
                     paint.setColor(Color.YELLOW);
                     canvas.drawRect(camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), camera.convertToNormCoordinateXForMap((i + 1) * magnification), camera.convertToNormCoordinateYForMap((j + 1) * magnification), paint);
                 } else {
@@ -1697,12 +1787,12 @@ public class MapAdmin {
         paint.setColor(Color.RED);
         //canvas.drawLine(80, 0, 80, 1920, paint);
         //canvas.drawLine(0, 80, 1080, 80, paint);
-        /*
-        canvas.drawLine(900, 0, 900, 1920, paint);
-        canvas.drawLine(0, 1600, 1080, 1600, paint);
-        canvas.drawLine(980, 0, 980, 1920, paint);
-        canvas.drawLine(0, 1680, 1080, 1680, paint);
-        */
+
+//        canvas.drawLine(900, 0, 900, 1920, paint);
+//        canvas.drawLine(0, 1600, 1080, 1600, paint);
+//        canvas.drawLine(980, 0, 980, 1920, paint);
+//        canvas.drawLine(0, 1680, 1080, 1680, paint);
+
         canvas.drawCircle(camera.convertToNormCoordinateX(offset.x), camera.convertToNormCoordinateY(offset.y), 20, paint);
         drawSmallMapForCanvas();
         holder.unlockCanvasAndPost(canvas);
@@ -1732,61 +1822,53 @@ public class MapAdmin {
         //paint.setColor(Color.YELLOW);
         Paint test_paint = new Paint();
         test_paint.setColor(Color.YELLOW);
-        graphic.bookingDrawCircle(800,450,10,test_paint);
+        graphic.bookingDrawCircle(800, 450, 10, test_paint);
         drawSmallMap();
     }
 
     public void drawMap2() {
         //右手法で動く点の表示
-        if(map_data[worldToMap(offset.x)][worldToMap(offset.y)].isWall()){
-            offset.x = offset.x+10;
+        if (map_data[worldToMap(offset.x)][worldToMap(offset.y)].isWall()) {
+            offset.x = offset.x + 10;
             //System.out.println("wall");
-        }
-        else{
-            boolean up = !map_data[worldToMap(offset.x)][worldToMap(offset.y-10)].isWall();
-            boolean down = !map_data[worldToMap(offset.x)][worldToMap(offset.y+10)].isWall();
-            boolean left = !map_data[worldToMap(offset.x-10)][worldToMap(offset.y)].isWall();
-            boolean right = !map_data[worldToMap(offset.x+10)][worldToMap(offset.y)].isWall();
-            if(up&down&left&right){
-                boolean ul = !map_data[worldToMap(offset.x-10)][worldToMap(offset.y-10)].isWall();
-                boolean ur = !map_data[worldToMap(offset.x+10)][worldToMap(offset.y-10)].isWall();
-                boolean dl = !map_data[worldToMap(offset.x-10)][worldToMap(offset.y+10)].isWall();
-                boolean dr = !map_data[worldToMap(offset.x+10)][worldToMap(offset.y+10)].isWall();
-                if(!ul&ur&dl&dr){
-                    offset.x = offset.x-10;
-                    updateMiniMapDispState(offset.x/magnification, offset.y/magnification);
+        } else {
+            boolean up = !map_data[worldToMap(offset.x)][worldToMap(offset.y - 10)].isWall();
+            boolean down = !map_data[worldToMap(offset.x)][worldToMap(offset.y + 10)].isWall();
+            boolean left = !map_data[worldToMap(offset.x - 10)][worldToMap(offset.y)].isWall();
+            boolean right = !map_data[worldToMap(offset.x + 10)][worldToMap(offset.y)].isWall();
+            if (up & down & left & right) {
+                boolean ul = !map_data[worldToMap(offset.x - 10)][worldToMap(offset.y - 10)].isWall();
+                boolean ur = !map_data[worldToMap(offset.x + 10)][worldToMap(offset.y - 10)].isWall();
+                boolean dl = !map_data[worldToMap(offset.x - 10)][worldToMap(offset.y + 10)].isWall();
+                boolean dr = !map_data[worldToMap(offset.x + 10)][worldToMap(offset.y + 10)].isWall();
+                if (!ul & ur & dl & dr) {
+                    offset.x = offset.x - 10;
+                    updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+                } else if (ul & !ur & dl & dr) {
+                    offset.y = offset.y - 10;
+                    updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+                } else if (ul & ur & !dl & dr) {
+                    offset.y = offset.y + 10;
+                    updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+                } else {
+                    offset.x = offset.x + 10;
+                    updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
                 }
-                else if(ul&!ur&dl&dr){
-                    offset.y = offset.y-10;
-                    updateMiniMapDispState(offset.x/magnification, offset.y/magnification);
-                }
-                else if(ul&ur&!dl&dr){
-                    offset.y = offset.y+10;
-                    updateMiniMapDispState(offset.x/magnification, offset.y/magnification);
-                }
-                else{
-                    offset.x = offset.x+10;
-                    updateMiniMapDispState(offset.x/magnification, offset.y/magnification);
-                }
-            }
-            else if(!up&down&left&right|| !up&down&left&!right){
-                offset.x = offset.x-10;
-                updateMiniMapDispState(offset.x/magnification, offset.y/magnification);
+            } else if (!up & down & left & right || !up & down & left & !right) {
+                offset.x = offset.x - 10;
+                updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
                 //System.out.println("1");
-            }
-            else if(up&down&right || down&right){
-                offset.y = offset.y+10;
-                updateMiniMapDispState(offset.x/magnification, offset.y/magnification);
+            } else if (up & down & right || down & right) {
+                offset.y = offset.y + 10;
+                updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
                 //System.out.println("2");
-            }
-            else if(up&left&right || up&right){
-                offset.x = offset.x+10;
-                updateMiniMapDispState(offset.x/magnification, offset.y/magnification);
+            } else if (up & left & right || up & right) {
+                offset.x = offset.x + 10;
+                updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
                 //System.out.println("3");
-            }
-            else{
-                offset.y = offset.y-10;
-                updateMiniMapDispState(offset.x/magnification, offset.y/magnification);
+            } else {
+                offset.y = offset.y - 10;
+                updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
                 //System.out.println("4");
             }
         }
@@ -1810,12 +1892,12 @@ public class MapAdmin {
         paint.setColor(Color.RED);
         //canvas.drawLine(80, 0, 80, 1920, paint);
         //canvas.drawLine(0, 80, 1080, 80, paint);
-        /*
-        canvas.drawLine(900, 0, 900, 1920, paint);
-        canvas.drawLine(0, 1600, 1080, 1600, paint);
-        canvas.drawLine(980, 0, 980, 1920, paint);
-        canvas.drawLine(0, 1680, 1080, 1680, paint);
-        */
+
+//        canvas.drawLine(900, 0, 900, 1920, paint);
+//        canvas.drawLine(0, 1600, 1080, 1600, paint);
+//        canvas.drawLine(980, 0, 980, 1920, paint);
+//        canvas.drawLine(0, 1680, 1080, 1680, paint);
+
         graphic.bookingDrawCircle(camera.convertToNormCoordinateX(offset.x), camera.convertToNormCoordinateY(offset.y), 20, paint);
         drawSmallMap();
     }
@@ -1828,7 +1910,7 @@ public class MapAdmin {
         Room now_point_room = new Room();
         int step = 30;
         boolean go_stair_flag = false;
-        if(map_data[worldToMap(offset.x)][worldToMap(offset.y)].isStairs()){
+        if (map_data[worldToMap(offset.x)][worldToMap(offset.y)].isStairs()) {
             goNextFloor();
         }
         offset.set(500, 300);
@@ -1936,7 +2018,7 @@ public class MapAdmin {
                         //System.out.println(camera.convertToNormCoordinateXForMap(i * magnification) + "," + camera.convertToNormCoordinateYForMap(j * magnification) + "," + camera.convertToNormCoordinateXForMap((i + 1) * magnification) + "," + camera.convertToNormCoordinateYForMap((j + 1) * magnification));
                         //countDrawRect++;
                     }
-                } else if(isEntrance(i, j)){
+                } else if (isEntrance(i, j)) {
                     yellow_paint.setColor(Color.YELLOW);
                     if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
                         graphic.bookingDrawRect(camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), camera.convertToNormCoordinateXForMap((i + 1) * magnification), camera.convertToNormCoordinateYForMap((j + 1) * magnification), yellow_paint);
@@ -1956,12 +2038,12 @@ public class MapAdmin {
         paint.setColor(Color.RED);
         //canvas.drawLine(80, 0, 80, 1920, paint);
         //canvas.drawLine(0, 80, 1080, 80, paint);
-        /*
+
         canvas.drawLine(900, 0, 900, 1920, paint);
         canvas.drawLine(0, 1600, 1080, 1600, paint);
         canvas.drawLine(980, 0, 980, 1920, paint);
         canvas.drawLine(0, 1680, 1080, 1680, paint);
-        */
+
         graphic.bookingDrawCircle(camera.convertToNormCoordinateX(offset.x), camera.convertToNormCoordinateY(offset.y), 20, paint);
         drawSmallMap2(offset.x, offset.y);
 
@@ -1980,7 +2062,7 @@ public class MapAdmin {
         Room now_point_room = new Room();
         int step = 64;
         boolean go_stair_flag = false;
-        if(map_data[worldToMap(offset.x)][worldToMap(offset.y)].isStairs()){
+        if (map_data[worldToMap(offset.x)][worldToMap(offset.y)].isStairs()) {
             goNextFloor();
         }
         offset.set(1500, 1000);
@@ -2004,7 +2086,7 @@ public class MapAdmin {
                     }
                 } else {
                     if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
-                        drawWall(i, j, camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), magnification/32);
+                        drawWall(i, j, camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), magnification / 32);
                     }
                 }
             }
@@ -2013,12 +2095,12 @@ public class MapAdmin {
         paint.setColor(Color.RED);
         //canvas.drawLine(80, 0, 80, 1920, paint);
         //canvas.drawLine(0, 80, 1080, 80, paint);
-        /*
+
         canvas.drawLine(900, 0, 900, 1920, paint);
         canvas.drawLine(0, 1600, 1080, 1600, paint);
         canvas.drawLine(980, 0, 980, 1920, paint);
         canvas.drawLine(0, 1680, 1080, 1680, paint);
-        */
+
         graphic.bookingDrawCircle(camera.convertToNormCoordinateX(offset.x), camera.convertToNormCoordinateY(offset.y), 20, paint);
         drawSmallMap2(offset.x, offset.y);
 
@@ -2031,7 +2113,7 @@ public class MapAdmin {
         Room now_point_room = new Room();
         int step = 10;
         boolean go_stair_flag = false;
-        if(map_data[worldToMap(offset.x)][worldToMap(offset.y)].isStairs()){
+        if (map_data[worldToMap(offset.x)][worldToMap(offset.y)].isStairs()) {
             goNextFloor();
         }
         offset.set(800, 300);
@@ -2140,7 +2222,7 @@ public class MapAdmin {
         for (int i = 0; i < map_size.x; i++) {
             for (int j = 0; j < map_size.y; j++) {
                 if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
-                    graphic.bookingDrawBitmapData(map_tile[i][j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float)magnification / 64, (float)magnification / 64, 0, 255, true);
+                    graphic.bookingDrawBitmapData(map_tile[i][j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
                     //canvas.drawBitmap(map_tile[i][j].getBitmap(), camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), paint);
                     //posRect.set(camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification),(int)(camera.convertToNormCoordinateXForMap(i * magnification) + map_tile[i][j].getBitmap().getWidth()*1.2),(int)(camera.convertToNormCoordinateYForMap(j * magnification) + map_tile[i][j].getBitmap().getHeight()*1.2));
                     //canvas.drawBitmap(map_tile[i][j].getBitmap(),sizeRect, posRect,null);
@@ -2167,7 +2249,7 @@ public class MapAdmin {
         Room now_point_room = new Room();
         int step = 30;
         boolean go_stair_flag = false;
-        if(map_data[worldToMap(offset.x)][worldToMap(offset.y)].isStairs()){
+        if (map_data[worldToMap(offset.x)][worldToMap(offset.y)].isStairs()) {
             goNextFloor();
         }
         //offset.set(300, 500);
@@ -2236,10 +2318,10 @@ public class MapAdmin {
                     if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
                         //graphic.bookingDrawRect(camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), camera.convertToNormCoordinateXForMap((i + 1) * magnification), camera.convertToNormCoordinateYForMap((j + 1) * magnification), l_gray_paint);
                         //graphic.bookingDrawBitmapData(floor_tile,camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), 1, 1, 0, 255, true);
-                        graphic.bookingDrawBitmapData(floor_tile, camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float)magnification/64, (float)magnification/64, 0, 255, true);
-                        graphic.bookingDrawBitmapData(floor_tile, camera.convertToNormCoordinateXForMap(i * magnification)+magnification/2, camera.convertToNormCoordinateYForMap(j * magnification), (float)magnification/64, (float)magnification/64, 0, 255, true);
-                        graphic.bookingDrawBitmapData(floor_tile, camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification)+magnification/2, (float)magnification/64, (float)magnification/64, 0, 255, true);
-                        graphic.bookingDrawBitmapData(floor_tile, camera.convertToNormCoordinateXForMap(i * magnification)+magnification/2, camera.convertToNormCoordinateYForMap(j * magnification)+magnification/2, (float)magnification/64, (float)magnification/64, 0, 255, true);
+                        graphic.bookingDrawBitmapData(floor_tile, camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+                        graphic.bookingDrawBitmapData(floor_tile, camera.convertToNormCoordinateXForMap(i * magnification) + magnification / 2, camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+                        graphic.bookingDrawBitmapData(floor_tile, camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification) + magnification / 2, (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+                        graphic.bookingDrawBitmapData(floor_tile, camera.convertToNormCoordinateXForMap(i * magnification) + magnification / 2, camera.convertToNormCoordinateYForMap(j * magnification) + magnification / 2, (float) magnification / 64, (float) magnification / 64, 0, 255, true);
                     }
                     //階段
                 } else if (isStairs(i, j)) {
@@ -2249,10 +2331,10 @@ public class MapAdmin {
                     }
                 } else {
                     if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
-                        drawWall2(i*2, j*2, camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float)magnification/64);
-                        drawWall2(i*2+1, j*2, camera.convertToNormCoordinateXForMap(i * magnification)+magnification/2, camera.convertToNormCoordinateYForMap(j * magnification), (float)magnification/64);
-                        drawWall2(i*2, j*2+1, camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification)+magnification/2, (float)magnification/64);
-                        drawWall2(i*2+1, j*2+1, camera.convertToNormCoordinateXForMap(i * magnification)+magnification/2, camera.convertToNormCoordinateYForMap(j * magnification)+magnification/2, (float)magnification/64);
+                        drawWall2(i * 2, j * 2, camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64);
+                        drawWall2(i * 2 + 1, j * 2, camera.convertToNormCoordinateXForMap(i * magnification) + magnification / 2, camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64);
+                        drawWall2(i * 2, j * 2 + 1, camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification) + magnification / 2, (float) magnification / 64);
+                        drawWall2(i * 2 + 1, j * 2 + 1, camera.convertToNormCoordinateXForMap(i * magnification) + magnification / 2, camera.convertToNormCoordinateYForMap(j * magnification) + magnification / 2, (float) magnification / 64);
                     }
                 }
             }
@@ -2270,282 +2352,286 @@ public class MapAdmin {
         boolean is_debug_mode = false;
         int step = 10;
         boolean go_stair_flag = false;
-        int mx = worldToMap(camera.getCameraOffset().x+800);
-        int my = worldToMap(camera.getCameraOffset().y+450);
-        if(map_data[mx][my].isStairs()){
+        int mx = worldToMap(camera.getCameraOffset().x + 800);
+        int my = worldToMap(camera.getCameraOffset().y + 450);
+        if (map_data[mx][my].isStairs()) {
             goNextFloor();
         }
-/*
-        //右手法で動く点の表示
-        if(is_debug_mode) {
-            if (map_data[worldToMap(offset.x)][worldToMap(offset.y)].isWall()) {
-                offset.x = offset.x + step;
-                offset.y = offset.y + step;
-                //System.out.println("wall");
-            }
-            //階段へ向かう
-            else {
-                if (map_data[worldToMap(offset.x)][worldToMap(offset.y)].isRoom()) {
-                    now_point_room = section_admin.getNowRoom(worldToMap(offset.x), worldToMap(offset.y));
-                    if (now_point_room == null) {
-                        System.out.println("%☆roomがない");
-                    }
-                    if (now_point_room != null) {
-                        for (int i = now_point_room.getLeft(); i <= now_point_room.getRight(); i++) {
-                            for (int j = now_point_room.getTop(); j <= now_point_room.getBottom(); j++) {
-                                if (map_data[i][j].isStairs()) {
-                                    go_stair_flag = true;
-                                    int dst_x = i * magnification + magnification / 2;
-                                    int dst_y = j * magnification + magnification / 2;
-                                    if (abs(dst_x - offset.x) <= step) {
-                                        offset.x = dst_x;
-                                    } else if (abs(dst_y - offset.y) <= step) {
-                                        offset.y = dst_y;
-                                    }
-                                    if (dst_x != offset.x && dst_x > offset.x) {
-                                        offset.x = offset.x + step;
-                                        break;
-                                    } else if (dst_x != offset.x && dst_x < offset.x) {
-                                        offset.x = offset.x - step;
-                                        break;
-                                    } else if (dst_y != offset.y && dst_y > offset.y) {
-                                        offset.y = offset.y + step;
-                                        break;
-                                    } else {
-                                        offset.y = offset.y - step;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                if (!go_stair_flag) {
-                    boolean up = !map_data[worldToMap(offset.x)][worldToMap(offset.y - step)].isWall();
-                    boolean down = !map_data[worldToMap(offset.x)][worldToMap(offset.y + step)].isWall();
-                    boolean left = !map_data[worldToMap(offset.x - step)][worldToMap(offset.y)].isWall();
-                    boolean right = !map_data[worldToMap(offset.x + step)][worldToMap(offset.y)].isWall();
-                    if (up & down & left & right) {
-                        boolean ul = !map_data[worldToMap(offset.x - step)][worldToMap(offset.y - step)].isWall();
-                        boolean ur = !map_data[worldToMap(offset.x + step)][worldToMap(offset.y - step)].isWall();
-                        boolean dl = !map_data[worldToMap(offset.x - step)][worldToMap(offset.y + step)].isWall();
-                        boolean dr = !map_data[worldToMap(offset.x + step)][worldToMap(offset.y + step)].isWall();
-                        if (!ul & ur & dl & dr) {
-                            offset.x = offset.x - step;
-                            updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
-                        } else if (ul & !ur & dl & dr) {
-                            offset.y = offset.y - step;
-                            updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
-                        } else if (ul & ur & !dl & dr) {
-                            offset.y = offset.y + step;
-                            updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
-                        } else {
-                            offset.x = offset.x + step;
-                            updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
-                        }
-                    } else if (!up & down & left & right || !up & down & left & !right) {
-                        offset.x = offset.x - step;
-                        updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
-                        //System.out.println("1");
-                    } else if (up & down & right || down & right) {
-                        offset.y = offset.y + step;
-                        updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
-                        //System.out.println("2");
-                    } else if (up & left & right || up & right) {
-                        offset.x = offset.x + step;
-                        updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
-                        //System.out.println("3");
-                    } else {
-                        offset.y = offset.y - step;
-                        updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
-                        //System.out.println("4");
-                    }
-                }
-            }
-            camera.setCameraOffset(offset.x, offset.y);
-            map_offset.set(getOffset_x()+800, getOffset_y()+450);
-        }
-        else {
-//            offset.set(800, 1300);
+
+//        //右手法で動く点の表示
+//        if(is_debug_mode) {
+//            if (map_data[worldToMap(offset.x)][worldToMap(offset.y)].isWall()) {
+//                offset.x = offset.x + step;
+//                offset.y = offset.y + step;
+//                //System.out.println("wall");
+//            }
+//            //階段へ向かう
+//            else {
+//                if (map_data[worldToMap(offset.x)][worldToMap(offset.y)].isRoom()) {
+//                    now_point_room = section_admin.getNowRoom(worldToMap(offset.x), worldToMap(offset.y));
+//                    if (now_point_room == null) {
+//                        System.out.println("%☆roomがない");
+//                    }
+//                    if (now_point_room != null) {
+//                        for (int i = now_point_room.getLeft(); i <= now_point_room.getRight(); i++) {
+//                            for (int j = now_point_room.getTop(); j <= now_point_room.getBottom(); j++) {
+//                                if (map_data[i][j].isStairs()) {
+//                                    go_stair_flag = true;
+//                                    int dst_x = i * magnification + magnification / 2;
+//                                    int dst_y = j * magnification + magnification / 2;
+//                                    if (abs(dst_x - offset.x) <= step) {
+//                                        offset.x = dst_x;
+//                                    } else if (abs(dst_y - offset.y) <= step) {
+//                                        offset.y = dst_y;
+//                                    }
+//                                    if (dst_x != offset.x && dst_x > offset.x) {
+//                                        offset.x = offset.x + step;
+//                                        break;
+//                                    } else if (dst_x != offset.x && dst_x < offset.x) {
+//                                        offset.x = offset.x - step;
+//                                        break;
+//                                    } else if (dst_y != offset.y && dst_y > offset.y) {
+//                                        offset.y = offset.y + step;
+//                                        break;
+//                                    } else {
+//                                        offset.y = offset.y - step;
+//                                        break;
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//                if (!go_stair_flag) {
+//                    boolean up = !map_data[worldToMap(offset.x)][worldToMap(offset.y - step)].isWall();
+//                    boolean down = !map_data[worldToMap(offset.x)][worldToMap(offset.y + step)].isWall();
+//                    boolean left = !map_data[worldToMap(offset.x - step)][worldToMap(offset.y)].isWall();
+//                    boolean right = !map_data[worldToMap(offset.x + step)][worldToMap(offset.y)].isWall();
+//                    if (up & down & left & right) {
+//                        boolean ul = !map_data[worldToMap(offset.x - step)][worldToMap(offset.y - step)].isWall();
+//                        boolean ur = !map_data[worldToMap(offset.x + step)][worldToMap(offset.y - step)].isWall();
+//                        boolean dl = !map_data[worldToMap(offset.x - step)][worldToMap(offset.y + step)].isWall();
+//                        boolean dr = !map_data[worldToMap(offset.x + step)][worldToMap(offset.y + step)].isWall();
+//                        if (!ul & ur & dl & dr) {
+//                            offset.x = offset.x - step;
+//                            updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+//                        } else if (ul & !ur & dl & dr) {
+//                            offset.y = offset.y - step;
+//                            updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+//                        } else if (ul & ur & !dl & dr) {
+//                            offset.y = offset.y + step;
+//                            updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+//                        } else {
+//                            offset.x = offset.x + step;
+//                            updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+//                        }
+//                    } else if (!up & down & left & right || !up & down & left & !right) {
+//                        offset.x = offset.x - step;
+//                        updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+//                        //System.out.println("1");
+//                    } else if (up & down & right || down & right) {
+//                        offset.y = offset.y + step;
+//                        updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+//                        //System.out.println("2");
+//                    } else if (up & left & right || up & right) {
+//                        offset.x = offset.x + step;
+//                        updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+//                        //System.out.println("3");
+//                    } else {
+//                        offset.y = offset.y - step;
+//                        updateMiniMapDispState(offset.x / magnification, offset.y / magnification);
+//                        //System.out.println("4");
+//                    }
+//                }
+//            }
 //            camera.setCameraOffset(offset.x, offset.y);
-        }
-*/
-        //周りを黒くする
-//        graphic.bookingDrawBitmapData(auto_tile_wall.raw_auto_tile[4], 0, 0, 1600/32, 900/32, 0, 255, true);
-
-        int draw_mode = 2;
-        //4分割のままで表示
-        if(draw_mode == 1) {
-            for (int i = 0; i < map_size.x; i++) {
-                for (int j = 0; j < map_size.y; j++) {
-                    if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
-                        graphic.bookingDrawBitmapData(map_tile_set[2 * i][2 * j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
-                        graphic.bookingDrawBitmapData(map_tile_set[2 * i + 1][2 * j], camera.convertToNormCoordinateXForMap(i * magnification + magnification / 2), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
-                        graphic.bookingDrawBitmapData(map_tile_set[2 * i][2 * j + 1], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification + magnification / 2), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
-                        graphic.bookingDrawBitmapData(map_tile_set[2 * i + 1][2 * j + 1], camera.convertToNormCoordinateXForMap(i * magnification + magnification / 2), camera.convertToNormCoordinateYForMap(j * magnification + magnification / 2), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
-                    }
-                }
-            }
-        }
-
-        //4つを1つに纏めて表示
-        else if(draw_mode == 2) {
-            for (int i = 0; i < map_size.x; i++) {
-                for (int j = 0; j < map_size.y; j++) {
-                    if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
-                        graphic.bookingDrawBitmapData(map_tile[i][j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
-                    }
-                }
-            }
-        }
-
-        //1つの画像で表示
-        else if(draw_mode == 3) {
-            graphic.bookingDrawBitmapData(map_image, -1 * camera.camera_offset.x - magnification, -1 * camera.camera_offset.y, 1, 1, 0, 255, true);
-        }
-
-        //1つの画像を切り取って表示
-        else if(draw_mode == 4) {
-            BitmapData trim_map_data;
-            int l_x = map_size.x;
-            int r_x = -1;
-            int u_y = map_size.y;
-            int d_y = -1;
-            for (int i = 0; i < map_size.x; i++) {
-                for (int j = 0; j < map_size.y; j++) {
-                    if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
-                        if (i < l_x) {
-                            l_x = i;
-                        }
-                        if (r_x < i) {
-                            r_x = i;
-                        }
-                        if (j < u_y) {
-                            u_y = j;
-                        }
-                        if (d_y < j) {
-                            d_y = j;
-                        }
-                    }
-                }
-            }
-            trim_map_data = graphic.processTrimmingBitmapData(map_image, l_x * 64, u_y * 64, r_x * 64 - l_x * 64, d_y * 64 - u_y * 64);
-            graphic.bookingDrawBitmapData(trim_map_data, -64, -64, 1, 1, 0, 255, true);
-        }
-
-        //中心点の表示
-        if(is_debug_mode) {
-            paint.setColor(Color.RED);
-            graphic.bookingDrawCircle(camera.convertToNormCoordinateX(offset.x), camera.convertToNormCoordinateY(offset.y), 20, paint);
-        }
-        updateMiniMapDispState(worldToMap(camera.getCameraOffset().x+800), worldToMap(camera.getCameraOffset().y+450));
-        drawSmallMap3(camera.getCameraOffset().x+800, camera.getCameraOffset().y+450);
-        //画像表示デバッグ用
-        graphic.bookingDrawBitmapData(auto_tile_wall.big_auto_tile[46], 0, 0, 1, 1, 0, 255, true);
+//            map_offset.set(getOffset_x()+800, getOffset_y()+450);
+//        }
+//        else {
+////            offset.set(800, 1300);
+////            camera.setCameraOffset(offset.x, offset.y);
+//        }
+//
+//        //周りを黒くする
+////        graphic.bookingDrawBitmapData(auto_tile_wall.raw_auto_tile[4], 0, 0, 1600/32, 900/32, 0, 255, true);
+//
+//        int draw_mode = 2;
+//        //4分割のままで表示
+//        if(draw_mode == 1) {
+//            for (int i = 0; i < map_size.x; i++) {
+//                for (int j = 0; j < map_size.y; j++) {
+//                    if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
+//                        graphic.bookingDrawBitmapData(map_tile_set[2 * i][2 * j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+//                        graphic.bookingDrawBitmapData(map_tile_set[2 * i + 1][2 * j], camera.convertToNormCoordinateXForMap(i * magnification + magnification / 2), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+//                        graphic.bookingDrawBitmapData(map_tile_set[2 * i][2 * j + 1], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification + magnification / 2), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+//                        graphic.bookingDrawBitmapData(map_tile_set[2 * i + 1][2 * j + 1], camera.convertToNormCoordinateXForMap(i * magnification + magnification / 2), camera.convertToNormCoordinateYForMap(j * magnification + magnification / 2), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+//                    }
+//                }
+//            }
+//        }
+//
+//        //4つを1つに纏めて表示
+//        else if(draw_mode == 2) {
+//            for (int i = 0; i < map_size.x; i++) {
+//                for (int j = 0; j < map_size.y; j++) {
+//                    if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
+//                        graphic.bookingDrawBitmapData(map_tile[i][j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+//                    }
+//                }
+//            }
+//        }
+//
+//        //1つの画像で表示
+//        else if(draw_mode == 3) {
+//            graphic.bookingDrawBitmapData(map_image, -1 * camera.camera_offset.x - magnification, -1 * camera.camera_offset.y, 1, 1, 0, 255, true);
+//        }
+//
+//        //1つの画像を切り取って表示
+//        else if(draw_mode == 4) {
+//            BitmapData trim_map_data;
+//            int l_x = map_size.x;
+//            int r_x = -1;
+//            int u_y = map_size.y;
+//            int d_y = -1;
+//            for (int i = 0; i < map_size.x; i++) {
+//                for (int j = 0; j < map_size.y; j++) {
+//                    if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
+//                        if (i < l_x) {
+//                            l_x = i;
+//                        }
+//                        if (r_x < i) {
+//                            r_x = i;
+//                        }
+//                        if (j < u_y) {
+//                            u_y = j;
+//                        }
+//                        if (d_y < j) {
+//                            d_y = j;
+//                        }
+//                    }
+//                }
+//            }
+//            trim_map_data = graphic.processTrimmingBitmapData(map_image, l_x * 64, u_y * 64, r_x * 64 - l_x * 64, d_y * 64 - u_y * 64);
+//            graphic.bookingDrawBitmapData(trim_map_data, -64, -64, 1, 1, 0, 255, true);
+//        }
+//
+//        //中心点の表示
+//        if(is_debug_mode) {
+//            paint.setColor(Color.RED);
+//            graphic.bookingDrawCircle(camera.convertToNormCoordinateX(offset.x), camera.convertToNormCoordinateY(offset.y), 20, paint);
+//        }
+//        updateMiniMapDispState(worldToMap(camera.getCameraOffset().x+800), worldToMap(camera.getCameraOffset().y+450));
+//        drawSmallMap3(camera.getCameraOffset().x+800, camera.getCameraOffset().y+450);
+//        //画像表示デバッグ用
+//        graphic.bookingDrawBitmapData(auto_tile_wall.big_auto_tile[46], 0, 0, 1, 1, 0, 255, true);
+//    }
+//
+//    //四角たくさん
+//    public void drawSmallMap(){
+//        Paint blue_paint = new Paint();
+//        Paint red_paint = new Paint();
+//        Paint green_paint = new Paint();
+//        Paint yellow_paint = new Paint();
+//        int small_map_mag = 8;
+//        int small_map_offset_x = 0;
+//        int small_map_offset_y = 0;
+////        int countMiniDrawRect = 0;
+//        for (int i = 0; i < this.getMap_size_x(); i++) {
+//            for (int j = 0; j < this.getMap_size_y(); j++) {
+//                //部屋
+//                if (!isWall(i, j) && !isStairs(i, j) && isRoom(i, j) && isDisp(i, j)) {
+//                    blue_paint.setARGB(200,0,0,255);
+//                    graphic.bookingDrawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, blue_paint);
+////                    countMiniDrawRect++;
+//                }
+//                //通路
+//                else if(!isWall(i, j) && !isStairs(i, j) && !isRoom(i, j) && isDisp(i, j)){
+//                    red_paint.setARGB(100,255,0,0);
+//                    graphic.bookingDrawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, red_paint);
+////                    countMiniDrawRect++;
+//                }
+//                //階段
+//                else if (isStairs(i, j) && isDisp(i, j)) {
+//                    green_paint.setColor(Color.GREEN);
+//                    graphic.bookingDrawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, green_paint);
+////                    countMiniDrawRect++;
+//                }
+//            }
+//        }
+////        System.out.println("countMiniDrawRect = "+countMiniDrawRect);
+//        yellow_paint.setColor(Color.YELLOW);
+//        graphic.bookingDrawCircle(small_map_offset_x + offset.x*small_map_mag/magnification, small_map_offset_y + offset.y*small_map_mag/magnification, 10, yellow_paint);
+//    }
+//
+//    //canvas使用
+//    public void drawSmallMapForCanvas(){
+//        Paint blue_paint = new Paint();
+//        Paint red_paint = new Paint();
+//        Paint green_paint = new Paint();
+//        Paint yellow_paint = new Paint();
+//        int small_map_mag = 8;
+//        int small_map_offset_x = 0;
+//        int small_map_offset_y = 0;
+//        for (int i = 0; i < this.getMap_size_x(); i++) {
+//            for (int j = 0; j < this.getMap_size_y(); j++) {
+//                //部屋
+//                if (!isWall(i, j) && !isStairs(i, j) && isRoom(i, j) && isDisp(i, j)) {
+//                    blue_paint.setARGB(200,0,0,255);
+//                    canvas.drawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, blue_paint);
+//                }
+//                //通路
+//                else if(!isWall(i, j) && !isStairs(i, j) && !isRoom(i, j) && isDisp(i, j)){
+//                    red_paint.setARGB(100,255,0,0);
+//                    canvas.drawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, red_paint);
+//                }
+//                //階段
+//                else if (isStairs(i, j) && isDisp(i, j)) {
+//                    green_paint.setColor(Color.GREEN);
+//                    canvas.drawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, green_paint);
+//                }
+//            }
+//        }
+//        yellow_paint.setColor(Color.YELLOW);
+//        canvas.drawCircle(small_map_offset_x + offset.x*small_map_mag/magnification, small_map_offset_y + offset.y*small_map_mag/magnification, 10, yellow_paint);
+//    }
+//
+//    //部屋を1つの四角で表示
+//    public void drawSmallMap2(int x, int y){
+//        Paint blue_paint = new Paint();
+//        Paint red_paint = new Paint();
+//        Paint green_paint = new Paint();
+//        Paint yellow_paint = new Paint();
+//        int small_map_mag = 8;
+//        int small_map_offset_x = 0;
+//        int small_map_offset_y = 0;
+////        int countMiniDrawRect = 0;
+//        if (map_data[worldToMap(offset.x)][worldToMap(offset.y)].isRoom()) {
+//            section_admin.getNowRoom(worldToMap(offset.x), worldToMap(offset.y)).setDispflag(true);
+//        }
+//        blue_paint.setARGB(200, 0, 0, 255);
+//        section_admin.drawAllRoom(graphic, blue_paint, small_map_mag);
+//        for (int i = 0; i < this.getMap_size_x(); i++) {
+//            for (int j = 0; j < this.getMap_size_y(); j++) {
+//                //通路
+//                if(!isWall(i, j) && !isStairs(i, j) && !isRoom(i, j) && isDisp(i, j)){
+//                    red_paint.setARGB(100,255,0,0);
+//                    graphic.bookingDrawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, red_paint);
+////                    countMiniDrawRect++;
+//                }
+//                //階段
+//                else if (isStairs(i, j) && isDisp(i, j)) {
+//                    green_paint.setColor(Color.GREEN);
+//                    graphic.bookingDrawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, green_paint);
+////                    countMiniDrawRect++;
+//                }
+//            }
+//        }
+////        System.out.println("countMiniDrawRect = "+countMiniDrawRect);
+//        yellow_paint.setColor(Color.YELLOW);
+//        graphic.bookingDrawCircle(small_map_offset_x + offset.x*small_map_mag/magnification, small_map_offset_y + offset.y*small_map_mag/magnification, 10, yellow_paint);
+//    }
+//
+//    }
     }
-
-    //四角たくさん
-    public void drawSmallMap(){
-        Paint blue_paint = new Paint();
-        Paint red_paint = new Paint();
-        Paint green_paint = new Paint();
-        Paint yellow_paint = new Paint();
-        int small_map_mag = 8;
-        int small_map_offset_x = 0;
-        int small_map_offset_y = 0;
-//        int countMiniDrawRect = 0;
-        for (int i = 0; i < this.getMap_size_x(); i++) {
-            for (int j = 0; j < this.getMap_size_y(); j++) {
-                //部屋
-                if (!isWall(i, j) && !isStairs(i, j) && isRoom(i, j) && isDisp(i, j)) {
-                    blue_paint.setARGB(200,0,0,255);
-                    graphic.bookingDrawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, blue_paint);
-//                    countMiniDrawRect++;
-                }
-                //通路
-                else if(!isWall(i, j) && !isStairs(i, j) && !isRoom(i, j) && isDisp(i, j)){
-                    red_paint.setARGB(100,255,0,0);
-                    graphic.bookingDrawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, red_paint);
-//                    countMiniDrawRect++;
-                }
-                //階段
-                else if (isStairs(i, j) && isDisp(i, j)) {
-                    green_paint.setColor(Color.GREEN);
-                    graphic.bookingDrawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, green_paint);
-//                    countMiniDrawRect++;
-                }
-            }
-        }
-//        System.out.println("countMiniDrawRect = "+countMiniDrawRect);
-        yellow_paint.setColor(Color.YELLOW);
-        graphic.bookingDrawCircle(small_map_offset_x + offset.x*small_map_mag/magnification, small_map_offset_y + offset.y*small_map_mag/magnification, 10, yellow_paint);
-    }
-
-    //canvas使用
-    public void drawSmallMapForCanvas(){
-        Paint blue_paint = new Paint();
-        Paint red_paint = new Paint();
-        Paint green_paint = new Paint();
-        Paint yellow_paint = new Paint();
-        int small_map_mag = 8;
-        int small_map_offset_x = 0;
-        int small_map_offset_y = 0;
-        for (int i = 0; i < this.getMap_size_x(); i++) {
-            for (int j = 0; j < this.getMap_size_y(); j++) {
-                //部屋
-                if (!isWall(i, j) && !isStairs(i, j) && isRoom(i, j) && isDisp(i, j)) {
-                    blue_paint.setARGB(200,0,0,255);
-                    canvas.drawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, blue_paint);
-                }
-                //通路
-                else if(!isWall(i, j) && !isStairs(i, j) && !isRoom(i, j) && isDisp(i, j)){
-                    red_paint.setARGB(100,255,0,0);
-                    canvas.drawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, red_paint);
-                }
-                //階段
-                else if (isStairs(i, j) && isDisp(i, j)) {
-                    green_paint.setColor(Color.GREEN);
-                    canvas.drawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, green_paint);
-                }
-            }
-        }
-        yellow_paint.setColor(Color.YELLOW);
-        canvas.drawCircle(small_map_offset_x + offset.x*small_map_mag/magnification, small_map_offset_y + offset.y*small_map_mag/magnification, 10, yellow_paint);
-    }
-
-    //部屋を1つの四角で表示
-    public void drawSmallMap2(int x, int y){
-        Paint blue_paint = new Paint();
-        Paint red_paint = new Paint();
-        Paint green_paint = new Paint();
-        Paint yellow_paint = new Paint();
-        int small_map_mag = 8;
-        int small_map_offset_x = 0;
-        int small_map_offset_y = 0;
-//        int countMiniDrawRect = 0;
-        if (map_data[worldToMap(offset.x)][worldToMap(offset.y)].isRoom()) {
-            section_admin.getNowRoom(worldToMap(offset.x), worldToMap(offset.y)).setDispflag(true);
-        }
-        blue_paint.setARGB(200, 0, 0, 255);
-        section_admin.drawAllRoom(graphic, blue_paint, small_map_mag);
-        for (int i = 0; i < this.getMap_size_x(); i++) {
-            for (int j = 0; j < this.getMap_size_y(); j++) {
-                //通路
-                if(!isWall(i, j) && !isStairs(i, j) && !isRoom(i, j) && isDisp(i, j)){
-                    red_paint.setARGB(100,255,0,0);
-                    graphic.bookingDrawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, red_paint);
-//                    countMiniDrawRect++;
-                }
-                //階段
-                else if (isStairs(i, j) && isDisp(i, j)) {
-                    green_paint.setColor(Color.GREEN);
-                    graphic.bookingDrawRect(small_map_mag*i + small_map_offset_x, small_map_mag*j + small_map_offset_y, small_map_mag*(i + 1) + small_map_offset_x, small_map_mag*(j + 1) + small_map_offset_y, green_paint);
-//                    countMiniDrawRect++;
-                }
-            }
-        }
-//        System.out.println("countMiniDrawRect = "+countMiniDrawRect);
-        yellow_paint.setColor(Color.YELLOW);
-        graphic.bookingDrawCircle(small_map_offset_x + offset.x*small_map_mag/magnification, small_map_offset_y + offset.y*small_map_mag/magnification, 10, yellow_paint);
-    }
+    */
 }
