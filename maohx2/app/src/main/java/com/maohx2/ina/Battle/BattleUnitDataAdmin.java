@@ -112,11 +112,8 @@ public class BattleUnitDataAdmin {
 
             tempBattleBaseUnitData.setName(name.get(i));
             tempBattleBaseUnitData.setBitmapData(graphic.searchBitmap(name.get(i)));
-            if(radius.get(i) < 0) {
-                tempBattleBaseUnitData.setRadius(graphic.searchBitmap(name.get(i)).getHeight() > graphic.searchBitmap(name.get(i)).getWidth() ? graphic.searchBitmap(name.get(i)).getHeight() / 2 : graphic.searchBitmap(name.get(i)).getWidth() / 2);
-            }else{
-                tempBattleBaseUnitData.setRadius(radius.get(i));
-            }
+
+
 
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.AttackFlame, attack_frame.get(i));
             tempBattleBaseUnitData.setDbStatus(BattleBaseUnitData.DbStatusID.InitialHP, initial_hp.get(i));

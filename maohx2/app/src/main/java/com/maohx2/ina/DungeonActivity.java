@@ -80,7 +80,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
         Intent intent = currentActivity.getIntent();
         DUNGEON_KIND dungeon_kind = (DUNGEON_KIND)intent.getSerializableExtra("DungeonKind");
 
-
+        
         switch (dungeon_kind){
             case CHESS:
                 my_database_admin.addMyDatabase("ChessDB", "LocalChessImage.db", 1, "r");
