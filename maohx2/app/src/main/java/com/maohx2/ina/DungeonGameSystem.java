@@ -162,7 +162,7 @@ public class DungeonGameSystem {
         }
 
         //デバッグ用
-        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
+        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
 
     }
 
@@ -181,6 +181,7 @@ public class DungeonGameSystem {
                 battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
                 battle_unit_admin.spawnEnemy();
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE);
+                backGround = graphic.searchBitmap("firstBackground");
 
             case BUTTLE:
                 battle_user_interface.update();
@@ -205,6 +206,7 @@ public class DungeonGameSystem {
                 battle_unit_admin.reset(BattleUnitAdmin.MODE.MINING);
                 //battle_unit_admin.spawnRock();　reset内で呼んでいる
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING);
+                backGround = graphic.searchBitmap("miningBack");
 
             case GEO_MINING:
                 battle_user_interface.update();

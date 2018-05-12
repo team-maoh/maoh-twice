@@ -103,7 +103,7 @@ public class GeoObjectDataCreater {
 
         double calcParam;
         if (randFlag) {
-            calcParam = status2[parameterKind.ordinal()] = 1.0 + ((double)parameter/2 + (double)parameter * Math.random())/ 20.0;
+            calcParam = status2[parameterKind.ordinal()] = 1.0 + ((double)parameter/2 + (double)parameter * Math.random())/ 100.0;
         } else {
             calcParam = parameter;
         }

@@ -283,29 +283,31 @@ public class BattleUnitAdmin {
         if (battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.STOP.ordinal() - 1) == 0) {
             if (palette_admin.doUsePalette() == false) {
                 //プレイヤーの攻撃によるマーカーの設置
-                if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
-                    EquipmentItemData attack_equipment = null;
-                    if (mode == MODE.BATTLE || mode == MODE.MAOH) {
-                        attack_equipment = palette_admin.getEquipmentItemData();
-                    }
-                    if (mode == MODE.MINING) {
-                        attack_equipment = palette_admin.getMiningItemData();
-                    }
-                    if (attack_equipment != null) {
-                        if (attack_equipment.getDungeonUseNum() > 0) {
-                            //最高攻撃頻度を上回っていないか
-                            if ((first_attack_frag == false && attack_count >= attack_equipment.getTouchFrequency()) || (first_attack_frag == true && attack_count >= attack_equipment.getTouchFrequency() * attack_equipment.getAutoFrequencyRate())) {
-                                if (mode == MODE.BATTLE || mode == MODE.MAOH) {
-                                    attack_equipment.setDungeonUseNum(attack_equipment.getDungeonUseNum() - 1);
-                                }
-                                first_attack_frag = true;
-                                marker_flag = true;
-                                attack_count = 0;
-                                for (int i = 0; i < MAKER_NUM; i++) {
-                                    if (touch_markers[i].isExist() == false) {
-                                        //todo:attackの計算
-                                        touch_markers[i].generate((int) touch_x, (int) touch_y, attack_equipment.getRadius(), battle_units[0].getAttack() + attack_equipment.getAttack(), attack_equipment.getDecayRate());
-                                        break;
+                if (!resultOperatedFlag) {
+                    if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
+                        EquipmentItemData attack_equipment = null;
+                        if (mode == MODE.BATTLE || mode == MODE.MAOH) {
+                            attack_equipment = palette_admin.getEquipmentItemData();
+                        }
+                        if (mode == MODE.MINING) {
+                            attack_equipment = palette_admin.getMiningItemData();
+                        }
+                        if (attack_equipment != null) {
+                            if (attack_equipment.getDungeonUseNum() > 0) {
+                                //最高攻撃頻度を上回っていないか
+                                if ((first_attack_frag == false && attack_count >= attack_equipment.getTouchFrequency()) || (first_attack_frag == true && attack_count >= attack_equipment.getTouchFrequency() * attack_equipment.getAutoFrequencyRate())) {
+                                    if (mode == MODE.BATTLE || mode == MODE.MAOH) {
+                                        attack_equipment.setDungeonUseNum(attack_equipment.getDungeonUseNum() - 1);
+                                    }
+                                    first_attack_frag = true;
+                                    marker_flag = true;
+                                    attack_count = 0;
+                                    for (int i = 0; i < MAKER_NUM; i++) {
+                                        if (touch_markers[i].isExist() == false) {
+                                            //todo:attackの計算
+                                            touch_markers[i].generate((int) touch_x, (int) touch_y, attack_equipment.getRadius(), battle_units[0].getAttack() + attack_equipment.getAttack(), attack_equipment.getDecayRate());
+                                            break;
+                                        }
                                     }
                                 }
                             }
