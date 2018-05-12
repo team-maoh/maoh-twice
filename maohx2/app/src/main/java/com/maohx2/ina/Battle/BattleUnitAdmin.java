@@ -209,16 +209,16 @@ public class BattleUnitAdmin {
 
         //一覧
         //setBattleUnitData("m014", 0); //通常攻撃のみ
-        //setBattleUnitData("e54-3", 0); //毒攻撃のみ
+        setBattleUnitData("e54-3", 0); //毒攻撃のみ
         //setBattleUnitData("e01-0", 0); //麻痺のみ
         //setBattleUnitData("e88-0", 0); //ストップのみ
         //setBattleUnitData("e74-0", 0); //カウンター持ち　暗黒のみ
         setBattleUnitData("m003-2", 0); //呪いのみ
-        //setBattleUnitData("e96-0", 0); //ステルス持ち　行動いろいろ
-        //setBattleUnitData("e27", 0); //バリア持ち　行動いろいろ
+        setBattleUnitData("e96-0", 0); //ステルス持ち　行動いろいろ
+        setBattleUnitData("e27", 0); //バリア持ち　行動いろいろ
         //setBattleUnitData("m007", 0); //行動いろいろ
         //setBattleUnitData("e103-0", 0);//バリア持ち　行動いろいろ
-        //setBattleUnitData("e83-1", 0);//カウンター持ち　行動いろいろ
+        setBattleUnitData("e83-1", 0);//カウンター持ち　行動いろいろ
         //setBattleUnitData("e94-3", 0);//ステルス持ち　行動いろいろ
 
     }
@@ -466,12 +466,14 @@ public class BattleUnitAdmin {
         }
 
         //盲目だった場合の処理
+        /*
         if(battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.BLINDNESS.ordinal() -1) > 0){
             graphic.bookingDrawRect(0,0,1000,300,paint);
             graphic.bookingDrawRect(1000,0,1601,600,paint);
             graphic.bookingDrawRect(600,600,1601,901,paint);
             graphic.bookingDrawRect(0,300,600,901,paint);
         }
+        */
         if (mode == MODE.BATTLE || mode == MODE.MAOH) {
             ((BattlePlayer)(battle_units[0])).drawStatus();
         }

@@ -10,6 +10,7 @@ import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.itemdata.ExpendItemData;
+import com.maohx2.kmhanko.itemdata.GeoObjectData;
 
 import static com.maohx2.ina.Constants.Palette.CIRCLE_COLOR;
 
@@ -83,6 +84,11 @@ public class BoxInventryPlate extends BoxPlate {
                     if((inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT)) {
                         if(((EquipmentItemData)(inventry_data.getItemData())).getPalettePosition() != 0) {
                             text_paint.setColor(CIRCLE_COLOR[((EquipmentItemData)(inventry_data.getItemData())).getPalettePosition()-1]);
+                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1.7 + (int) ((down - up) * (1.0 / 5))) + 270, (int) (down - (down - up) * (1.0 / 5)), text_paint);
+                        }
+                    }else if(inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.GEO){
+                        if(((GeoObjectData)(inventry_data.getItemData())).getSlotSetName().equals("noSet") == false) {
+                            text_paint.setARGB(255,255,255,255);
                             graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1.7 + (int) ((down - up) * (1.0 / 5))) + 270, (int) (down - (down - up) * (1.0 / 5)), text_paint);
                         }
                     }
