@@ -23,6 +23,7 @@ public class ActivityChange {
         currentSurfaceView.stopThread();
         Intent intent = new Intent(currentActivity, StartActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        currentActivity.finish();
         currentActivity.startActivity(intent);
     }
 
@@ -30,6 +31,7 @@ public class ActivityChange {
         currentSurfaceView.stopThread();
         Intent intent = new Intent(currentActivity, WorldActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        currentActivity.finish();
         currentActivity.startActivity(intent);
     }
 
@@ -39,6 +41,7 @@ public class ActivityChange {
         Intent intent = new Intent(currentActivity, DungeonActivity.class);
         intent.putExtra("DungeonKind", dungeon_kind);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        currentActivity.finish();
         currentActivity.startActivity(intent);
     }
 }
