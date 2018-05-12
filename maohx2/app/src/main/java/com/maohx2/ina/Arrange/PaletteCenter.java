@@ -67,9 +67,36 @@ public class PaletteCenter extends PaletteElement{
         graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_BIG, paint);
         if(item_data != null) {
             //graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y);
-            graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y,2,2,0,255,false);
+            graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y,2.0f,2.0f,0,255,false);
         }
     }
+
+    @Override
+    public void drawBig(int _select_circle_num) {
+        if(_select_circle_num == element_num) {
+            graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_BIG + 10, paint);
+        }else{
+            graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_BIG, paint);
+
+        }
+    }
+
+    @Override
+    public void drawBigAndItem(int _select_circle_num){
+        if(_select_circle_num == element_num) {
+            graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_BIG+10, paint);
+            if (item_data != null) {
+                graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y, 2.0f, 2.0f, 0, 255, false);
+            }
+        }else{
+            graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_BIG, paint);
+            if (item_data != null) {
+                graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y, 2.0f, 2.0f, 0, 255, false);
+            }
+        }
+    }
+
+
 
     public int getPrePos(){return prePos;}
 

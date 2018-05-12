@@ -66,6 +66,31 @@ public class PaletteElement {
     }
 
 
+    public void drawBig(int _select_circle_num) {
+        if(_select_circle_num == element_num) {
+            graphic.bookingDrawCircle(x, y, PALETTE_ELEMENT_RADIUS_BIG+10, paint);
+        }else{
+            graphic.bookingDrawCircle(x, y, PALETTE_ELEMENT_RADIUS_BIG, paint);
+
+        }
+    }
+
+    public void drawBigAndItem(int _select_circle_num){
+        if(_select_circle_num == element_num) {
+            graphic.bookingDrawCircle(x, y, PALETTE_ELEMENT_RADIUS_BIG+10, paint);
+            if (item_data != null) {
+                graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y, 1.5f, 1.5f, 0, 255, false);
+            }
+        }else{
+            graphic.bookingDrawCircle(x, y, PALETTE_ELEMENT_RADIUS_BIG, paint);
+            if (item_data != null) {
+                graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y, 1.5f, 1.5f, 0, 255, false);
+            }
+        }
+    }
+
+
+
     public void setItemData(ItemData _item_data){
         item_data = _item_data;
         if(item_data != null) {
