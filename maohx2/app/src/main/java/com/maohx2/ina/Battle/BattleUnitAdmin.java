@@ -226,25 +226,19 @@ public class BattleUnitAdmin {
     public void spawnRock() {
         //GeoMining画面のスポーン用。岩を出現させる
 
-        //TODO:そのダンジョンに出現する敵のデータからジオを決める
-
-        //岩に対応する敵を決定する
-
-        //getBattleBaseUnitDataForRock
-
-        //その対応する敵データからHPを決める
+        //岩に対応する敵を決定し、その対応する敵データからHPを決める
         for (int i = 0 ; i < 5; i ++) {
-            //setRockUnitData(10000, 0);
+            setRockUnitData(
+                    battleUnitDataAdmin.getRandomBattleBaseUnitData()
+            );
         }
-
-        //その対応する敵データからドロップするジオを決める
     }
 
     public int setRockUnitData(BattleBaseUnitData bBUD) {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (!battle_units[i].isExist()) {
                 BattleBaseUnitData tempBBUD = BattleRockCreater.getBattleBaseUnitData(
-                        bBUD.getDbStatus(BattleBaseUnitData.DbStatusID.InitialHP) * bBUD.getPower(),
+                        bBUD.getDbStatus(BattleBaseUnitData.DbStatusID.InitialHP) * bBUD.getPower() * (repeat_count+1)^2,
                         0
                 );
                 battle_units[i].setBattleUnitDataRock(tempBBUD);
@@ -518,10 +512,12 @@ public class BattleUnitAdmin {
     }
     //by kmhanko
     private void getDropGeo() {
-        //BattleUnitDataAdminより現在のダンジョン種類からランダムに敵を選出して、
+        //岩からのジオドロップ
+        for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
+            if (battle_units[i].getUnitKind() == Constants.UnitKind.ROCK && battle_units[i].isDropFlag()) {
 
-
-
+            }
+        }
     }
 
 

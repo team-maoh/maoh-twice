@@ -10,6 +10,7 @@ import com.maohx2.ina.Battle.BattleBaseUnitData.ActionID;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by ina on 2017/10/29.
@@ -307,6 +308,12 @@ public class BattleUnitDataAdmin {
 
     public List<String> getUnitNames() {
         return name;
+    }
+
+    public BattleBaseUnitData getRandomBattleBaseUnitData() {
+        Random random = new Random();
+        int i = random.nextInt(battle_base_unit_datas.size() - 1);
+        return battle_base_unit_datas.get(i);
     }
 
     /*
