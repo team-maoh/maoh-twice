@@ -73,10 +73,13 @@ public class DungeonGameSystem {
 
     DungeonMonsterDataAdmin dungeonMonsterDataAdmin;
 
+    int repeat_count;
+
     public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange _activityChange, int _repeat_count, Constants.DungeonKind.DUNGEON_KIND dungeon_kind) {
         dungeon_user_interface = _dungeon_user_interface;
         battle_user_interface = _battle_user_interface;
         graphic = _graphic;
+        //repeat_count = _repeat_count;
 
 
         GlobalData globalData = (GlobalData) (dungeon_activity.getApplication());
@@ -87,7 +90,7 @@ public class DungeonGameSystem {
         map_inventry_admin = new MapInventryAdmin(globalData, map_plate_admin.getInventry(), map_object_admin, map_plate_admin);
 
         dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
-        map_size.set(dungeon_data_admin.getDungeon_data().get(2).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(2).getMap_size_y());
+        //map_size.set(dungeon_data_admin.getDungeon_data().get(2).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(2).getMap_size_y());
         //camera = new Camera(map_size, 64*4);
 
         switch(dungeon_kind) {
@@ -150,11 +153,28 @@ public class DungeonGameSystem {
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
         battleUnitDataAdmin.loadBattleUnitData(dungeon_kind);//敵読み込み
 
+        if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH) {
+            repeat_count = playerStatus.getMaohWinCount();
+        } else {
+            repeat_count = playerStatus.getNowClearCount();
+        }
 
-
-        battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin, text_box_admin, playerStatus.getNowClearCount());
+        battle_unit_admin.init(
+                graphic,
+                battle_user_interface,
+                dungeon_activity,
+                battleUnitDataAdmin,
+                playerStatus,
+                palette_admin,
+                dungeonModeManage,
+                my_database_admin,
+                map_plate_admin,
+                text_box_admin,
+                repeat_count
+        );
 
         backGround = graphic.searchBitmap("firstBackground");
+
 
         //by kmhanko即座に魔王との戦闘画面へ
         if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH) {
@@ -162,7 +182,7 @@ public class DungeonGameSystem {
         }
 
         //デバッグ用
-        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
+        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
 
     }
 

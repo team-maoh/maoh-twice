@@ -98,8 +98,8 @@ class DungeonSurfaceView extends BaseSurfaceView{
         DUNGEON_KIND dungeon_kind = (DUNGEON_KIND)intent.getSerializableExtra("DungeonKind");
 
         //TODO バグらないようにとりあえず読んでる
-        my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
-        graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
+        //my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
+        //graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
 
         switch (dungeon_kind){
             case CHESS:
