@@ -422,7 +422,7 @@ public class DungeonSelectManager {
             }
             if (event.get(focusDungeonButtonID).equals("equip")) {
                 initUIsFlag = true;
-                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.EQUIP);
+                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.EQUIP_INIT);
             }
             if (event.get(focusDungeonButtonID).equals("option")) {
                 initUIsFlag = true;
