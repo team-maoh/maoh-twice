@@ -227,15 +227,26 @@ public class BattleUnitAdmin {
         //GeoMining画面のスポーン用。岩を出現させる
 
         //TODO:そのダンジョンに出現する敵のデータからジオを決める
+
+        //岩に対応する敵を決定する
+
+        //getBattleBaseUnitDataForRock
+
+        //その対応する敵データからHPを決める
         for (int i = 0 ; i < 5; i ++) {
-            setRockUnitData(10000, 100);
+            //setRockUnitData(10000, 0);
         }
+
+        //その対応する敵データからドロップするジオを決める
     }
 
-    public int setRockUnitData(int hp, int defence) {
+    public int setRockUnitData(BattleBaseUnitData bBUD) {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (!battle_units[i].isExist()) {
-                BattleBaseUnitData tempBBUD = BattleRockCreater.getBattleBaseUnitData(hp, defence);
+                BattleBaseUnitData tempBBUD = BattleRockCreater.getBattleBaseUnitData(
+                        bBUD.getDbStatus(BattleBaseUnitData.DbStatusID.InitialHP) * bBUD.getPower(),
+                        0
+                );
                 battle_units[i].setBattleUnitDataRock(tempBBUD);
                 return i;
             }
@@ -506,6 +517,13 @@ public class BattleUnitAdmin {
         //graphic.bookingDrawText(""+ battle_units[0].getAttack(), 0, 150, playerStatusPaint);
         //graphic.bookingDrawText(""+battle_units[0].getDefence(), 0, 200, playerStatusPaint);
         //graphic.bookingDrawText(""+battle_units[0].getLuck(), 0, 250, playerStatusPaint);
+    }
+    //by kmhanko
+    private void getDropGeo() {
+        //BattleUnitDataAdminより現在のダンジョン種類からランダムに敵を選出して、
+
+
+
     }
 
 

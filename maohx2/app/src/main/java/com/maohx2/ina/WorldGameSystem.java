@@ -283,22 +283,27 @@ public class WorldGameSystem {
 
         switch (worldModeAdmin.getMode()) {
             case DUNGEON_SELECT_INIT:
+                break;
             case DUNGEON_SELECT:
                 dungeonSelectManager.draw();
                 break;
             case GEO_MAP_SELECT_INIT:
+                break;
             case GEO_MAP_SELECT:
                 dungeonSelectManager.draw();
                 break;
             case GEO_MAP_INIT:
+                break;
             case GEO_MAP:
                 geoSlotAdminManager.draw();
                 break;
             case SHOP_INIT:
+                break;
             case SHOP:
                 itemShopAdmin.draw();
                 break;
             case EQUIP_INIT:
+                break;
             case EQUIP:
                 equipmentInventry.draw();
                 expendItemInventry.draw();
@@ -307,6 +312,7 @@ public class WorldGameSystem {
                 backPlateGroup.draw();
                 break;
             case PRESENT_INIT:
+                break;
             case PRESENT:
                 geoPresentManager.draw();
                 break;

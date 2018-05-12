@@ -30,6 +30,8 @@ public class BattleEnemy extends BattleUnit {
     int specialActionPeriod;
     int specialActionWidth;
 
+    protected BattleBaseUnitData battleBaseUnitDataForRock;
+
     public BattleEnemy(Graphic _graphic){
         super(_graphic);
         position_x = 0;
@@ -278,4 +280,14 @@ public class BattleEnemy extends BattleUnit {
         return ActionID.NORMAL_ATTACK;
     }
 
+
+
+    // Rock用
+    public BattleBaseUnitData getBattleBaseUnitDataForRock() {
+        return battleBaseUnitDataForRock;
+    }
+
+    public void setBattleBaseUnitDataForRock(BattleBaseUnitData _battleBaseUnitDataForRock) {
+        battleBaseUnitDataForRock = _battleBaseUnitDataForRock;
+    }
 }
