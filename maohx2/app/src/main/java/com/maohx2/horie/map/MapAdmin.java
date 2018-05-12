@@ -661,9 +661,27 @@ public class MapAdmin {
         if (player_map_x == next_player_map_x && player_map_y == next_player_map_y) {
             direction = 0;
         }
+
+        if(next_player_map_x < 0){
+            next_player_map_x = 0;
+        }
+
+        if(next_player_map_y < 0){
+            next_player_map_y = 0;
+        }
+
+        if(player_map_x < -1){
+            player_map_x = 0;
+        }
+
+        if(player_map_y < -1){
+            player_map_y = 0;
+        }
+
         //左右のマスに移動
         else if (player_map_y == next_player_map_y) {
             //次の移動先のマスが壁である
+
             if (map_data[next_player_map_x][next_player_map_y].isWall()) {
                 direction = 2;
             }
@@ -671,10 +689,12 @@ public class MapAdmin {
             else {
                 direction = 0;
             }
+
         }
         //上下のマスに移動
         else if (player_map_x == next_player_map_x) {
             //移動先のマスが壁である
+
             if (map_data[next_player_map_x][next_player_map_y].isWall()) {
                 direction = 1;
             }
@@ -682,6 +702,7 @@ public class MapAdmin {
             else {
                 direction = 0;
             }
+
         }
         //斜めのマスに移動
         else {
