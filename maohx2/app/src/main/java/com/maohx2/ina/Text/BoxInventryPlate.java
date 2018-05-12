@@ -113,7 +113,9 @@ public class BoxInventryPlate extends BoxPlate {
         inventry_data = _inventry_data;
 
         if(inventry_data != null) {
-            image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left, up, 1.7f, 1.7f, 0, 255, true);
+            if(inventry_data.getItemData() != null) {
+                image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left, up, 1.7f, 1.7f, 0, 255, true);
+            }
         }
     }
 

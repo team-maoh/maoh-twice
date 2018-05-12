@@ -18,7 +18,7 @@ public class BoxImagePlate extends BoxPlate {
     protected ImageContext default_image_context;
     protected ImageContext feedback_image_context;
 
-    BoxImagePlate(Graphic _graphic, UserInterface _user_interface, Paint _paint, TouchWay _judge_way, TouchWay _feedback_way, int[] position, ImageContext _default_image_context, ImageContext _feedback_image_context){
+    public BoxImagePlate(Graphic _graphic, UserInterface _user_interface, Paint _paint, TouchWay _judge_way, TouchWay _feedback_way, int[] position, ImageContext _default_image_context, ImageContext _feedback_image_context){
         super(_graphic, _user_interface, _judge_way, _feedback_way, position[0], position[1], position[2], position[3]);
 
         default_image_context = _default_image_context;

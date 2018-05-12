@@ -61,6 +61,11 @@ public class PaletteAdmin {
                     }
                 }
             }
+
+            palettesFlag[0] = true;
+            palettesFlag[1] = true;
+            palettesFlag[2] = false;
+
         }
 
 
