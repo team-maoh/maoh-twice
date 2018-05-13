@@ -193,7 +193,7 @@ public class MapPlayer extends MapUnit {
 
             sound_steps = (sound_steps + 1) % SOUND_STEPS_PERIOD;
             if (sound_steps == 0) {
-                sound_admin.play("step00");//足音SE
+                sound_admin.play("step07");//足音SE
             }
 
         } else {//moving == false のとき

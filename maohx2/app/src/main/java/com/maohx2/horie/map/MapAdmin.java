@@ -617,6 +617,8 @@ public class MapAdmin {
         }
         for (int i = 0; i < map_size.x; i++) {
             for (int j = 0; j < map_size.y; j++) {
+
+                /* by kmhanko
                 if (!isWall(i, j) && !isStairs(i, j)) {
                     map_tile[i][j] = floor_tile;
                     //アニメーション用
@@ -638,6 +640,24 @@ public class MapAdmin {
 //                    }
                 } else {
                     setAutoTile_light(i, j, i, j);
+                }
+               */
+                //by kmhanko
+                if (!isWall(i, j) && !isStairs(i, j)) {
+//                    map_tile[i][j] = floor_tile;
+                    //アニメーション用
+                    for (int k = 0; k < animation_num; k++) {
+                        map_tile_animation[k][i][j] = floor_tile;
+                    }
+                    //階段
+                } else if (isStairs(i, j)) {
+//                    map_tile[i][j] = stair_tile;
+                    //アニメーション用
+                    for (int k = 0; k < animation_num; k++) {
+                        map_tile_animation[k][i][j] = stair_tile;
+                    }
+                } else {
+                    setAutoTile_light_animation(i, j, i, j);
                 }
             }
         }
