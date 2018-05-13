@@ -34,7 +34,7 @@ import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 public class SoundAdmin {
     //メンバ変数
     static final String DB_NAME = "soundDB";
-    static final String DB_ASSET = "soundDB.db";
+    static final String DB_ASSET = "sound.db";
     private final Context mContext;
     private final int SOUND_ACTIVE_NUM = 10;
     private final int SOUND_LOAD_NUM = 256;
@@ -108,6 +108,9 @@ public class SoundAdmin {
 
     public boolean play(String name, float leftVolume, float rightVolume, int priority, int loop, float rate) {
         //ロードしたID, 左音量, 右音量, 優先度, ループ,再生速度
+        if (name == null) {
+            return false;
+        }
         int id = getSoundID(name);
         int stid = sp.play(id, leftVolume, rightVolume, priority, loop, rate);
         stream_ID.add(id - 1, stid);
@@ -160,14 +163,14 @@ public class SoundAdmin {
         for (int i = 0; i < l_filename.size(); i++) {
             try {
                 //音声ファイル読み込み
-                AssetFileDescriptor fd = asm.openFd(FOLDER + "/" + l_filename.get(i));
+                AssetFileDescriptor fd = asm.openFd(FOLDER + "/" + soundpack_name +  "/" + l_filename.get(i));
                 sound_ID.add(i,sp.load(fd, 1));
                 stream_ID.add(i, 0);//これがないと後でOutOfになる
 
                 //System.out.println("dg_mes:" + " filename:" + l_filename.get(i) + " id:" + sound_ID.get(i));
             } catch (IOException e) {
                 e.printStackTrace();
-                throw new Error("SoundAdmin#loadSoundPack" + l_filename.get(i));
+                throw new Error("SoundAdmin#loadSoundPack " + l_filename.get(i));
             }
         }
 

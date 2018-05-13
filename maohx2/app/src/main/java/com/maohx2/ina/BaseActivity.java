@@ -23,7 +23,6 @@ public abstract class BaseActivity extends Activity {
     RelativeLayout layout;
     BackSurfaceView backSurfaceView;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

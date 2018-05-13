@@ -23,7 +23,7 @@ public class EffectData {
     List<Integer> time = new ArrayList<Integer>(); //そのステップの状態でどの程度待機するか.
     List<Boolean> switch_gr = new ArrayList<Boolean>(); //ステップが次のステップに変化する時、徐々に変化する場合はTRUE
     List<Boolean> upLeft = new ArrayList<Boolean>(); //BookingDrawになげるためのもの
-    List<Integer> soundID = new ArrayList<Integer>(); //登録されている鳴らす効果音番号
+    List<String> soundName = new ArrayList<String>(); //登録されている鳴らす効果音name
     List<Integer> nextID = new ArrayList<Integer>(); //次のIDを示す。-1の場合は現在のID+1,
 
     public EffectData(MyDatabase database, String t_name) {
@@ -44,7 +44,7 @@ public class EffectData {
         time = database.getInt(t_name, "time");
         switch_gr = database.getBoolean(t_name, "switch_gr");
         upLeft = database.getBoolean(t_name, "is_up_left");
-        soundID = database.getInt(t_name, "soundID");
+        soundName = database.getString(t_name, "soundName");
         steps = database.getSize(t_name);
     }
 
@@ -169,12 +169,15 @@ public class EffectData {
         }
     }
 
-    public int getSoundID(int i) {
+    public String getSoundName(int i) {
+        if (soundName == null) {
+            return null;
+        }
         try {
-            return soundID.get(i);
+            return soundName.get(i);
         } catch(IndexOutOfBoundsException e) {
             MyAvail.errorMes(e);
-            return -1;
+            return null;
         }
     }
 

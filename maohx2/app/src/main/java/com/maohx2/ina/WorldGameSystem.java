@@ -23,6 +23,7 @@ import com.maohx2.ina.Constants.GAMESYSTEN_MODE.WORLD_MODE;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.GeoPresent.GeoPresentManager;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatus;
 import com.maohx2.kmhanko.Saver.ExpendItemInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoSlotSaver;
@@ -77,6 +78,7 @@ public class WorldGameSystem {
     WorldActivity worldActivity;
 
     PlayerStatus playerStatus;
+    MaohMenosStatus maohMenosStatus;
 
     GeoInventrySaver geoInventrySaver;
     ExpendItemInventrySaver expendItemInventrySaver;
@@ -110,6 +112,7 @@ public class WorldGameSystem {
         worldActivity = _worldActivity;
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
         playerStatus = globalData.getPlayerStatus();
+        maohMenosStatus = globalData.getMaohMenosStatus();
         //GeoInventry = globalData.getGeoInventry();
 
         worldModeAdmin = new WorldModeAdmin();
@@ -119,10 +122,6 @@ public class WorldGameSystem {
 
         text_box_admin = new TextBoxAdmin(graphic);
         text_box_admin.init(world_user_interface);
-
-        text_box_admin.setTextBoxExists(0, false);
-        text_box_admin.setTextBoxExists(1, false);
-
 
         itemDataAdminManager = new ItemDataAdminManager();
         itemShopAdmin = new ItemShopAdmin();
@@ -137,7 +136,7 @@ public class WorldGameSystem {
         expendItemInventry = globalData.getExpendItemInventry();
 
         geoSlotSaver = new GeoSlotSaver(databaseAdmin, "GeoSlotSave", "GeoSlotSave.db", 1, "ns", graphic);
-        geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver);
+        geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver, maohMenosStatus);
 
 
         dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, activityChange);
@@ -191,6 +190,8 @@ public class WorldGameSystem {
 
         backGround = graphic.searchBitmap("firstBackground");
 
+        geoSlotAdminManager.calcPlayerStatus();
+
         //TODO かり。戻るボタン
         initBackPlate();
     }
@@ -198,21 +199,15 @@ public class WorldGameSystem {
 
     public void update() {
 
-        /*
-        if (map_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN) {
+/*
+        if (world_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN) {
             List<BitmapData> testBitmapData = new ArrayList<BitmapData>();
-            BitmapData _bitmapData = graphic.searchBitmap("打撃01");
-            for (int i = 0; i < 9; i ++ ) {
-                testBitmapData.add(graphic.processTrimmingBitmapData(_bitmapData, 120 * i, 0, 120, 120));
-                //testBitmapData.add(_bitmapData);
-            }
-            List<String> testSoundName = new ArrayList<String>();
-            testSoundName.add("bosu");
-            int testID = effectAdmin.createEffect("test2", testBitmapData, testSoundName);
-            effectAdmin.getEffect(testID).setPosition((int)map_user_interface.getTouchX(),(int)map_user_interface.getTouchY());
+            int testID = effectAdmin.createEffect("test2", "打撃01", 9,1);
+            effectAdmin.getEffect(testID).setPosition((int)world_user_interface.getTouchX(),(int)world_user_interface.getTouchY());
             effectAdmin.getEffect(testID).start();
         }
         */
+
 
         switch (worldModeAdmin.getMode()) {
             case DUNGEON_SELECT_INIT:
@@ -230,6 +225,7 @@ public class WorldGameSystem {
             case GEO_MAP_INIT:
                 backGround = graphic.searchBitmap("GeoMap");
                 worldModeAdmin.setMode(WORLD_MODE.GEO_MAP);
+                geoSlotAdminManager.start();
             case GEO_MAP:
                 geoSlotAdminManager.update();
                 break;

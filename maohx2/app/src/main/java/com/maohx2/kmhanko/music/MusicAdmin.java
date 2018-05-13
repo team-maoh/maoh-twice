@@ -3,6 +3,7 @@ package com.maohx2.kmhanko.music;
 import android.content.Context;
 
 import com.maohx2.kmhanko.database.MyDatabase;
+import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
@@ -33,6 +34,9 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
     //private final int AUDIO_LOAD_NUM = 256;
     private final String FOLDER = "music";
 
+    static final String DB_NAME = "musicDB";
+    static final String DB_ASSET = "music.db";
+
     private String table_name;
     private boolean is_load_completed = false;
 
@@ -41,15 +45,29 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
     private int option;
     private int loopstart;
     private int looplength;
+    private long setupTime;
 
     Thread thread;
 
     MediaPlayer media_player;
 
     private MyDatabase database;
+    private MyDatabaseAdmin databaseAdmin;
 
     public MusicAdmin(Context context) {
         mContext = context;
+        //myDatabaseAdmin.addMyDatabase("");
+    }
+
+    public MusicAdmin(Context context, MyDatabaseAdmin _databaseAdmin) {
+        mContext = context;
+        databaseAdmin = _databaseAdmin;
+        setDatabase(databaseAdmin);
+    }
+
+    public void setDatabase(MyDatabaseAdmin databaseAdmin) {
+        databaseAdmin.addMyDatabase(DB_NAME, DB_ASSET, 1, "r");
+        database = databaseAdmin.getMyDatabase(DB_NAME);
     }
 
     public void setDatabase(MyDatabase _database) {
@@ -79,6 +97,14 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
                     //TODO:結合部分に違和感
                 }
             }
+
+            if (loop_count_mode.equals("loop")) {
+                long playTime = System.currentTimeMillis() - setupTime;
+                if (playTime >= (long)(loopstart + looplength)) {
+                    media_player.seekTo(loopstart);
+                    setupTime = (long)loopstart + System.currentTimeMillis();
+                }
+            }
         }
 
     }
@@ -97,6 +123,7 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
             }
         }
         media_player.start();
+        setupTime = System.currentTimeMillis();
 
         thread = new Thread(this);
         thread.start();
@@ -112,7 +139,7 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
         threadStop();
     }
 
-    //getCurrentPosition：現在の再生位置をmsec単位で取得
+    //getCurrentPosition：現在の再生位置をmsec単位で取得(不安定)
     //toSeek：再生位置をmsec単位で指定
 
     public void loadMusic(String name, boolean _isstart) {
