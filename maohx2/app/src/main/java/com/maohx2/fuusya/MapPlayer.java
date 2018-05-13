@@ -7,9 +7,11 @@ import android.view.SurfaceHolder;
 
 import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.MapAdmin;
+import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.DungeonGameSystem;
+import com.maohx2.ina.DungeonModeManage;
 import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 //import com.maohx2.ina.MySprite;
@@ -46,32 +48,39 @@ public class MapPlayer extends MapUnit {
     SoundAdmin sound_admin;
     DungeonUserInterface dungeon_user_interface;
     MapPlateAdmin map_plate_admin;
+    BattleUnitAdmin battle_unit_admin;
+    DungeonModeManage dungeon_mode_manage;
 
-//        int PLAYER_STEP = 26;//プレイヤーの歩幅
+    //        int PLAYER_STEP = 26;//プレイヤーの歩幅
     int PLAYER_STEP = 100;//プレイヤーの歩幅 //デバッグ用
 
     double touch_w_x, touch_w_y, touch_n_x, touch_n_y, pre_w_x, pre_w_y;
     boolean is_moving;
 
     int touching_frame_count;
-    MapAdmin map_admin;
 
     TouchState touch_state;
 
-    public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, MapPlateAdmin _map_plate_admin) {
+
+    boolean debug_first = false;
+
+    public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, MapPlateAdmin _map_plate_admin, BattleUnitAdmin _battle_unit_admin, DungeonModeManage _dungeon_mode_manage) {
         super(graphic, _map_object_admin, _camera);
+
 
         dungeon_user_interface = _dungeon_user_interface;
         map_plate_admin = _map_plate_admin;
         //map_admin = _map_admin;
+        battle_unit_admin = _battle_unit_admin;
+        dungeon_mode_manage = _dungeon_mode_manage;
 
 
         touch_state = dungeon_user_interface.getTouchState();
 
         sound_admin = _sound_admin;
 
-        mean_encount_steps = 50;
-        var_encount_steps = 10;
+        mean_encount_steps = 30;
+        var_encount_steps = 0;
         th_encount_steps = makeThresholdEncountSteps();
 
         encount_steps = 0;
@@ -88,6 +97,24 @@ public class MapPlayer extends MapUnit {
 
     public void init() {
         super.init();
+    }
+
+
+    //実行すると右向きにちょっと移動する
+    public void openingUpdate(){
+
+        w_x += 25;
+
+//        dst_w_x = w_x + 200;
+//        dst_w_y = w_y;
+//        //Playerアイコンの向きを更新する
+//        updateDirOnMap(dst_w_x, dst_w_y);
+//
+//        //壁との衝突を考慮した上で、タッチ座標に向かって１歩進む
+//        walkOneStep(dst_w_x, dst_w_y, step);
+//
+        camera.setCameraOffset(w_x, w_y);
+
     }
 
     @Override
@@ -184,16 +211,48 @@ public class MapPlayer extends MapUnit {
             walkOneStep(dst_w_x, dst_w_y, step);
 
             encount_steps++;
+            System.out.println("encount_step_desudesu  " + (th_encount_steps - encount_steps));
             if (encount_steps >= th_encount_steps) {
                 System.out.println("◆一定歩数 歩いたので敵と遭遇");
                 encount_steps = 0;
                 //遭遇の瞬間に、次の遭遇までに要する歩数を乱数で決める
                 th_encount_steps = makeThresholdEncountSteps();
+
+//                int now_floor_num = map_admin.getNow_floor_num();//nullが返ってくる
+                int now_floor_num = 7;
+//                int boss_floor_num = map_admin.getBoss_floor_num();//nullが返ってくる
+                int boss_floor_num = 10;
+
+                int max_of_num_of_zako = 40;
+                int num_of_zako = max_of_num_of_zako * now_floor_num / boss_floor_num;
+//                int num_of_zako = (double) (now_floor_num / boss_floor_num) * max_of_num_of_zako;
+
+                System.out.println("num_of_zako____desudesu_______" + num_of_zako);
+
+                String[] tmp_zako = new String[num_of_zako];
+                int num_of_nonnull = 1;
+
+                for (int i = 0; i < num_of_zako; ) {
+                    if (map_admin.getMonsterName(0)[i % num_of_nonnull].equals("null")) {
+                        num_of_nonnull = i;
+                    } else {
+                        tmp_zako[i] = map_admin.getMonsterName(0)[i % num_of_nonnull];
+                        i++;
+                    }
+                }
+
+                //デバッグ時にエンカウントすると鬱陶しいのでコメントアウト
+//                battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
+//                battle_unit_admin.spawnEnemy(tmp_zako);//
+//                dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+
+                System.out.println("desudesudesu +++++");
+
             }
 
             sound_steps = (sound_steps + 1) % SOUND_STEPS_PERIOD;
             if (sound_steps == 0) {
-                sound_admin.play("walk");//足音SE
+                sound_admin.play("step07");//足音SE
             }
 
         } else {//moving == false のとき
@@ -209,6 +268,7 @@ public class MapPlayer extends MapUnit {
         }
         pre_w_x = w_x;
         pre_w_y = w_y;
+
     }
 
     public void setMeanEncountSteps(int _mean) {

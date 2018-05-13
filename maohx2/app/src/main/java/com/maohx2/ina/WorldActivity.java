@@ -48,7 +48,6 @@ public class WorldActivity extends BaseActivity {
         }
     }
 
-
 }
 
 
@@ -122,8 +121,11 @@ class WorldSurfaceView extends BaseSurfaceView {
         }
 
     }
+<<<<<<< HEAD
 
 
     public void setOpenningFlag(boolean _openningFlag) {openningFlag = _openningFlag;}
 
+=======
+>>>>>>> ef40fbda9496afcb7af52418e21463e8e58aff1e
 }

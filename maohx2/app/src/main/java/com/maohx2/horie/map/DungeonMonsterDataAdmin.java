@@ -16,7 +16,7 @@ public class DungeonMonsterDataAdmin {
 
     public DungeonMonsterDataAdmin(MyDatabaseAdmin _monster_database_admin, String table_name) {
         _monster_database_admin.addMyDatabase("DungeonMonsterData", "DungeonData.db", 1, "r");
-        dungeon_monster_database = _monster_database_admin.getMyDatabase("DungeonData");
+        dungeon_monster_database = _monster_database_admin.getMyDatabase("DungeonMonsterData");
         loadMonsterData(table_name);
     }
 

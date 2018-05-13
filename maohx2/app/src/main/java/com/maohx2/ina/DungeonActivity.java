@@ -58,8 +58,6 @@ public class DungeonActivity extends BaseActivity {
             game_system_flag = true;
         }
     }
-
-
 }
 
 class DungeonSurfaceView extends BaseSurfaceView{
@@ -84,10 +82,11 @@ class DungeonSurfaceView extends BaseSurfaceView{
         dungeon_user_interface = new DungeonUserInterface(((GlobalData) dungeon_activity.getApplication()).getGlobalConstants(), graphic);
         my_database_admin = new MyDatabaseAdmin(dungeon_activity);
         game_system = new DungeonGameSystem();
-        sound_admin = new SoundAdmin(dungeon_activity);
+        sound_admin = new SoundAdmin(dungeon_activity, my_database_admin);
 
 
         dungeon_user_interface.init();
+
 
 
 
@@ -101,8 +100,8 @@ class DungeonSurfaceView extends BaseSurfaceView{
         DUNGEON_KIND dungeon_kind = (DUNGEON_KIND)intent.getSerializableExtra("DungeonKind");
 
         //TODO バグらないようにとりあえず読んでる
-        my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
-        graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
+        //my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
+        //graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
 
         switch (dungeon_kind){
             case CHESS:
@@ -133,14 +132,19 @@ class DungeonSurfaceView extends BaseSurfaceView{
                 my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
                 graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
                 break;
+            case OPENING:
+                break;
 
         }
 
 
+        openingFlag = false;
+        if (openingFlag) {
+        }
 
-        my_database_admin.addMyDatabase("soundDB", "soundDB.db", 1, "r");//データベースのコピーしMySQLiteのdbを扱いやすいMyDataBase型にしている
-        sound_admin.setDatabase(my_database_admin.getMyDatabase("soundDB"));//扱いやすいやつをセットしている
-        sound_admin.loadSoundPack("sound_pack_map");
+
+
+        sound_admin.loadSoundPack("map");
 
 
         battle_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
@@ -168,15 +172,18 @@ class DungeonSurfaceView extends BaseSurfaceView{
         backSurfaceView.drawBackGround(backImageContext);
     }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> ef40fbda9496afcb7af52418e21463e8e58aff1e
     @Override
     public void gameLoop(){
 
         dungeon_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         battle_user_interface.updateTouchState(touch_x, touch_y, touch_state);
 
-        if(openningFlag == true) {
+        if(openingFlag == true) {
             game_system.openningUpdate();
             game_system.openningDraw();
         }else{

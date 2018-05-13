@@ -412,9 +412,16 @@ public class DungeonSelectManager {
                 initUIsFlag = true;
             }
             if (event.get(focusDungeonButtonID).equals("maoh")) {
-                enterTextBoxUpdateMaoh();
-                maohEnterSelectButtonGroup.setUpdateFlag(true);
-                maohEnterSelectButtonGroup.setDrawFlag(true);
+                if (worldModeAdmin.getMode() == WORLD_MODE.DUNGEON_SELECT) {
+                    enterTextBoxUpdateMaoh();
+                    maohEnterSelectButtonGroup.setUpdateFlag(true);
+                    maohEnterSelectButtonGroup.setDrawFlag(true);
+                }
+                if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
+                    geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
+                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
+                    initUIsFlag = true;
+                }
             }
             if (event.get(focusDungeonButtonID).equals("map")) {
                 switchSelectMode();

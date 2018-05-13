@@ -76,7 +76,7 @@ public class GeoSlotAdmin {
     WorldModeAdmin worldModeAdmin;
     GeoSlotAdminManager geoSlotAdminManager;
 
-    int statusTextBoxID;
+    //int statusTextBoxID;
 
     PlateGroup<GeoSlot> geoSlotGroup;
     PlateGroup<BoxTextPlate> releasePlateGroup;//解放する/やめる　の選択
@@ -181,13 +181,12 @@ public class GeoSlotAdmin {
                             @Override
                             public void callBackEvent() {
                                 //戻るボタンが押された時の処理
-                                geoSlotAdminManager.calcPlayerStatus();
+                                geoSlotAdminManager.calcStatus();
                                 geoSlotAdminManager.saveGeoInventry();
 
                                 geoSlotAdminManager.saveGeoSlot();
 
                                 textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
-                                textBoxAdmin.setTextBoxExists(statusTextBoxID, false);
 
                                 releasePlateGroup.setDrawFlag(false);
                                 releasePlateGroup.setUpdateFlag(false);
@@ -256,10 +255,12 @@ public class GeoSlotAdmin {
 
         //textBoxAdmin.hideTextBox(releaseTextBoxID);
 
+        /*
         statusTextBoxID = textBoxAdmin.createTextBox(0,600,300,900,7);
         textBoxAdmin.setTextBoxUpdateTextByTouching(statusTextBoxID, false);
         textBoxAdmin.setTextBoxExists(statusTextBoxID, false);
         statusTextBoxUpdate();
+        */
     }
 
     //***** GeoObjectステータス計算関係 *****
@@ -274,6 +275,7 @@ public class GeoSlotAdmin {
         return false;
     }
 
+    /*
     public void statusTextBoxUpdate() {
         textBoxAdmin.bookingDrawText(statusTextBoxID, "Status");
         textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
@@ -290,7 +292,7 @@ public class GeoSlotAdmin {
         textBoxAdmin.bookingDrawText(statusTextBoxID, "クリア回数 " + playerStatus.getNowClearCount() + "/" + playerStatus.getClearCount());
         textBoxAdmin.bookingDrawText(statusTextBoxID, "MOP");
         textBoxAdmin.updateText(statusTextBoxID);
-    }
+    }*/
 
     // ***** GeoObject計算関係ここまで　*****
 
@@ -355,7 +357,7 @@ public class GeoSlotAdmin {
         checkInventrySelect();
 
         backPlateGroup.update();
-        textBoxAdmin.setTextBoxExists(statusTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.GEO_MAP_SELECT);
+        //textBoxAdmin.setTextBoxExists(statusTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.GEO_MAP_SELECT);
 
         //textBoxAdmin.update();
     }
@@ -422,8 +424,8 @@ public class GeoSlotAdmin {
         geoObjectData.setSlotSetName("noSet");
     }
 
-    public void calcPlayerStatus() {
-        geoSlotAdminManager.calcPlayerStatus();
+    public void calcStatus() {
+        geoSlotAdminManager.calcStatus();
     }
 
     // ***** Getter *****

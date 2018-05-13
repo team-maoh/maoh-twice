@@ -12,6 +12,7 @@ import com.maohx2.ina.ItemData.EquipmentInventrySaver;
 import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
 import com.maohx2.kmhanko.Arrange.InventryS;
+import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatus;
 import com.maohx2.kmhanko.Saver.ExpendItemInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoPresentSaver;
@@ -34,6 +35,7 @@ public class GlobalData extends Application {
     //by kmhanko
     PlayerStatus playerStatus;
     PlayerStatusSaver playerStatusSaver;
+    MaohMenosStatus maohMenosStatus;
 
     EquipmentInventrySaver equipmentInventrySaver;
     InventryS equipmentInventry;
@@ -58,6 +60,7 @@ public class GlobalData extends Application {
         playerStatus = new PlayerStatus(g_my_database_admin);
         playerStatusSaver = new PlayerStatusSaver(g_my_database_admin, "PlayerStatusSave", "PlayerStatusSave.db", 1, "ns", playerStatus);
         playerStatusSaver.load();
+        maohMenosStatus = new MaohMenosStatus();
 
 
         equipmentInventrySaver = new EquipmentInventrySaver(g_my_database_admin, "EquipmentInventrySave", "EquipmentInventrySave.db", 1, "ns");
@@ -91,4 +94,5 @@ public class GlobalData extends Application {
     // by kmhanko
     public PlayerStatus getPlayerStatus() { return playerStatus; }
     public PlayerStatusSaver getPlayerStatusSaver() { return playerStatusSaver; }
+    public MaohMenosStatus getMaohMenosStatus() { return maohMenosStatus; }
 }

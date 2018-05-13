@@ -414,7 +414,8 @@ public class MapAdmin {
 //        System.out.println("setAutoTile finished!");
         //map_object_admin初期化
         //TODO:藤原変更適用後修正必要
-        map_object_admin.getMapAdmin(this);//藤原変更を適用後要変更
+        map_object_admin.setMapAdmin(this);//藤原変更を適用後要変更
+        map_object_admin.spawnMine(mine_point);
 //        map_object_admin.getMapAdmin(this);//藤原変更を適用していないため今はコメントアウトしている
 //        map_object_admin.getMinePoint(mine_point);//藤原変更を適用していないため今はコメントアウトしている
 //        map_object_admin.getCamera(camera);
@@ -567,7 +568,7 @@ public class MapAdmin {
         int k = 0;
         String monster_name[] = new String[50];//TODO:とりあえず50にしている
         for (int i = 0; i < dungeon_monster_data.size(); i++) {
-            if (dungeon_monster_data.get(i).getType() == 1 && k < 50) {
+            if (dungeon_monster_data.get(i).getType() == monster_kind && k < 50) {
                 monster_name[k] = dungeon_monster_data.get(i).getMonsterName();
                 k++;
             }
@@ -617,6 +618,8 @@ public class MapAdmin {
         }
         for (int i = 0; i < map_size.x; i++) {
             for (int j = 0; j < map_size.y; j++) {
+
+                /* by kmhanko
                 if (!isWall(i, j) && !isStairs(i, j)) {
                     map_tile[i][j] = floor_tile;
                     //アニメーション用
@@ -639,12 +642,30 @@ public class MapAdmin {
                 } else {
                     setAutoTile_light(i, j, i, j);
                 }
+               */
+                //by kmhanko
+                if (!isWall(i, j) && !isStairs(i, j)) {
+//                    map_tile[i][j] = floor_tile;
+                    //アニメーション用
+                    for (int k = 0; k < animation_num; k++) {
+                        map_tile_animation[k][i][j] = floor_tile;
+                    }
+                    //階段
+                } else if (isStairs(i, j)) {
+//                    map_tile[i][j] = stair_tile;
+                    //アニメーション用
+                    for (int k = 0; k < animation_num; k++) {
+                        map_tile_animation[k][i][j] = stair_tile;
+                    }
+                } else {
+                    setAutoTile_light_animation(i, j, i, j);
+                }
             }
         }
 
-        if(boss_floor_num == 1) {
-            map_object_admin.getMapAdmin(this);
-        }
+        //if(boss_floor_num == 1) {
+            map_object_admin.setMapAdmin(this);
+        //}
         camera.setCameraOffset(7.5 * magnification, 9 * magnification);
         map_player.putUnit(7.5 * magnification, 9 * magnification);
     }
