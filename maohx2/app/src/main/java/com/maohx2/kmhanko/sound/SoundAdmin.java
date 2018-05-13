@@ -160,14 +160,14 @@ public class SoundAdmin {
         for (int i = 0; i < l_filename.size(); i++) {
             try {
                 //音声ファイル読み込み
-                AssetFileDescriptor fd = asm.openFd(FOLDER + "/" + l_filename.get(i));
+                AssetFileDescriptor fd = asm.openFd(FOLDER + "/" + soundpack_name +  "/" + l_filename.get(i));
                 sound_ID.add(i,sp.load(fd, 1));
                 stream_ID.add(i, 0);//これがないと後でOutOfになる
 
                 //System.out.println("dg_mes:" + " filename:" + l_filename.get(i) + " id:" + sound_ID.get(i));
             } catch (IOException e) {
                 e.printStackTrace();
-                throw new Error("SoundAdmin#loadSoundPack" + l_filename.get(i));
+                throw new Error("SoundAdmin#loadSoundPack " + l_filename.get(i));
             }
         }
 

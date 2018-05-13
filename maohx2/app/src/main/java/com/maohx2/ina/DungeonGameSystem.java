@@ -12,6 +12,8 @@ import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.DungeonDataAdmin;
 import com.maohx2.horie.map.DungeonMonsterDataAdmin;
 import com.maohx2.horie.map.MapAdmin;
+import com.maohx2.horie.map.MapStatus;
+import com.maohx2.horie.map.MapStatusSaver;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
@@ -51,6 +53,9 @@ public class DungeonGameSystem {
     Camera camera;
     Point map_size = new Point(0, 0);//カメラのインスタンス化に必要
 
+    MapStatus map_status;
+    MapStatusSaver map_status_saver;
+
     // by kmhanko
     BattleUnitDataAdmin battleUnitDataAdmin;
     MiningItemDataAdmin miningItemDataAdmin;
@@ -81,20 +86,6 @@ public class DungeonGameSystem {
         graphic = _graphic;
         //repeat_count = _repeat_count;
 
-        battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
-        battleUnitDataAdmin.loadBattleUnitData(dungeon_kind);//敵読み込み
-
-
-        GlobalData globalData = (GlobalData) (dungeon_activity.getApplication());
-        activityChange = _activityChange;
-        dungeonModeManage = new DungeonModeManage();
-        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange, globalData);
-        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_plate_admin, dungeonModeManage, globalData);
-        map_inventry_admin = new MapInventryAdmin(globalData, map_plate_admin.getInventry(), map_object_admin, map_plate_admin);
-
-        dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
-        //map_size.set(dungeon_data_admin.getDungeon_data().get(2).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(2).getMap_size_y());
-        //camera = new Camera(map_size, 64*4);
 
         int dungeon_num = -1;
         switch(dungeon_kind) {
@@ -115,6 +106,31 @@ public class DungeonGameSystem {
                 dungeon_num = 3;
                 break;
         }
+
+
+
+        battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
+        battleUnitDataAdmin.loadBattleUnitData(dungeon_kind);//敵読み込み
+
+
+        GlobalData globalData = (GlobalData) (dungeon_activity.getApplication());
+        activityChange = _activityChange;
+        dungeonModeManage = new DungeonModeManage();
+        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange, globalData);
+        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_plate_admin, dungeonModeManage, globalData);
+        map_inventry_admin = new MapInventryAdmin(globalData, map_plate_admin.getInventry(), map_object_admin, map_plate_admin);
+
+        dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
+
+        map_status = new MapStatus(4);
+        map_status_saver = new MapStatusSaver(_myDatabaseAdmin, "MapSaveData", "MapSaveData.db", 1, "s", map_status, 4);
+        map_status_saver.load();
+
+//        for(int i = 0;i < 4;i++){
+//            System.out.println("after:stage_num = "+i+", is_clear = "+map_status.getMapStatus(i));
+//        }
+//      camera = new Camera(map_size, 64*4);
+
 
         map_size.set(dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_y());
         //camera = new Camera(map_size, 64*4);
@@ -137,9 +153,6 @@ public class DungeonGameSystem {
         list_box_admin.init(dungeon_user_interface, graphic);
         //map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, this);
 
-        text_box_admin.setTextBoxExists(0,false);
-        text_box_admin.setTextBoxExists(1,false);
-
         PaletteCenter.initStatic(graphic);miningItemDataAdmin = new MiningItemDataAdmin(graphic, my_database_admin);
         PaletteElement.initStatic(graphic);
 
@@ -156,6 +169,8 @@ public class DungeonGameSystem {
 
 
         playerStatus = globalData.getPlayerStatus();
+
+        battle_unit_admin.init(graphic, battle_user_interface, dungeon_activity, battleUnitDataAdmin, playerStatus, palette_admin, dungeonModeManage, my_database_admin, map_plate_admin, text_box_admin, 1);
 
         if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH) {
             repeat_count = playerStatus.getMaohWinCount();
@@ -189,6 +204,12 @@ public class DungeonGameSystem {
         //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
 
     }
+
+    public void saveMapSaveData() {
+        map_status_saver.deleteAll();
+        map_status_saver.save();
+    }
+
 
     public void update() {
 
@@ -292,7 +313,67 @@ public class DungeonGameSystem {
         is_touching_outside_menu = _is_touching_outside_menu;
     }
 
+    int count = 0;
+    int openningTextBoxID;
+    boolean text_mode = false;
+
+    public void openningInit(){
+
+        openningTextBoxID = text_box_admin.createTextBox(200,500,1400,800,3);
+        text_box_admin.setTextBoxUpdateTextByTouching(openningTextBoxID, false);
+        text_box_admin.setTextBoxExists(openningTextBoxID, false);
+    }
+
+    public void openningUpdate(){
+
+        if(count == 100) {
+            text_box_admin.bookingDrawText(openningTextBoxID, "今日も平穏だなぁ");
+            text_box_admin.bookingDrawText(openningTextBoxID, "MOP");
+            text_box_admin.updateText(openningTextBoxID);
+            text_box_admin.setTextBoxExists(openningTextBoxID, true);
+            text_mode = true;
+        }
+
+        if(count == 100 && (battle_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN || battle_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN_MOVE || battle_user_interface.getTouchState() == Constants.Touch.TouchState.MOVE)){
+            text_box_admin.setTextBoxExists(openningTextBoxID, false);
+            text_mode = false;
+        }
+
+
+        //ここから先フジワラ，敵と衝突し，戦闘を行い，倒されるということを実現する
+        //ぶつかる直前に「うわ，なんだ!?」を入れる
+        
+
+
+
+
+
+
+        if(text_mode == false) {
+            map_object_admin.update();
+            map_plate_admin.update();
+            count++;
+        }
+
+        text_box_admin.update();
+
+
+    }
+
+    public void openningDraw(){
+
+        map_admin.drawMap_for_autotile_light_animation();
+        map_object_admin.draw();
+        map_plate_admin.draw();
+
+        text_box_admin.draw();
+        graphic.draw();
+
+    }
+
+
     public DungeonGameSystem(){}
+
 
 }
 

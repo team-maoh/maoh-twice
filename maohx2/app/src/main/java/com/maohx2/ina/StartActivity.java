@@ -24,6 +24,7 @@ import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.Saver.ExpendItemInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+import com.maohx2.kmhanko.music.MusicAdmin;
 
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
@@ -78,6 +79,7 @@ class StartSurfaceView extends BaseSurfaceView {
 
     PlateGroup<CircleImagePlate> image_list;
 
+    MusicAdmin musicAdmin;
 
     public StartSurfaceView(Activity _start_activity, BackSurfaceView _backSurfaceView) {
         super(_start_activity, _backSurfaceView);
@@ -141,10 +143,20 @@ class StartSurfaceView extends BaseSurfaceView {
         start_game_system = new StartGameSystem();
         start_game_system.init(holder, graphic, start_user_interface, start_activity, my_database_admin);
 
+        /*
+        musicAdmin = new MusicAdmin(currentActivity);
+        my_database_admin.addMyDatabase("musicDB", "musicDB.db", 1, "r");
+        musicAdmin.setTableName("music_pack");
+
+        musicAdmin.setDatabase(my_database_admin.getMyDatabase("musicDB"));
+
+        musicAdmin.loadMusic("title", true);
+        */
 
         //todo:こいつは一番下
         thread = new Thread(this);
         thread.start();
+
     }
 
     public void drawBackGround(){
@@ -160,7 +172,7 @@ class StartSurfaceView extends BaseSurfaceView {
 
        if(touch_state == TouchState.DOWN){
 
-            //activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.GOKI);
+            //activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.CHESS);
             activityChange.toWorldActivity();
         }
 

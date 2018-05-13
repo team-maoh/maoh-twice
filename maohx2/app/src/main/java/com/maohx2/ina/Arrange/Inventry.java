@@ -253,4 +253,13 @@ public class Inventry {
 
     }
 
+/*
+    public void sort(){
+
+        for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
+            inventry_datas
+        }
+
+    }
+*/
 }

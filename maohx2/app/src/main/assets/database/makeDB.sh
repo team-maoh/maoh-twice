@@ -38,7 +38,7 @@ done
 
 #一時ファイルの削除(~~Tempの削除)
 for tempFile in `find . -maxdepth 4 -type f -name "*Temp"`; do
-  #rm $tempFile
+  rm $tempFile
 done
 
 
