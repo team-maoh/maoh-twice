@@ -642,9 +642,9 @@ public class MapAdmin {
             }
         }
 
-        if(boss_floor_num == 1) {
+        //if(boss_floor_num == 1) {
             map_object_admin.getMapAdmin(this);
-        }
+        //}
         camera.setCameraOffset(7.5 * magnification, 9 * magnification);
         map_player.putUnit(7.5 * magnification, 9 * magnification);
     }

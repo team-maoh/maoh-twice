@@ -17,18 +17,60 @@ public class EffectAdmin {
 
     private List<Effect> effect = new ArrayList<Effect>();
     private EffectDataAdmin effectDataAdmin;
+    private Graphic graphic;
+
+    public EffectAdmin(Graphic _graphic) {
+        graphic = _graphic;
+    }
 
     public EffectAdmin(Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin) {
+        this(_graphic);
         Effect.staticInit(_graphic, _soundAdmin);
         effectDataAdmin = new EffectDataAdmin(_databaseAdmin);
     }
 
     public EffectAdmin(Graphic _graphic, EffectDataAdmin _effectDataAdmin, SoundAdmin _soundAdmin) {
+        this(_graphic);
         Effect.staticInit(_graphic, _soundAdmin);
         effectDataAdmin = _effectDataAdmin;
     }
 
-    public int createEffect(String _name, List<BitmapData> _bitmapData, List<String> _soundName) {
+    public int createEffect(String _name, String _imageName, int widthNum, int heightNum) {
+
+        List<BitmapData> tempBitmapData = new ArrayList<BitmapData>();
+        BitmapData _bitmapData = graphic.searchBitmap(_imageName);
+        int x = _bitmapData.getWidth();
+        int y = _bitmapData.getHeight();
+
+        for (int i = 0; i < heightNum; i++ ) {
+            for (int j = 0; j < widthNum; j++ ) {
+                tempBitmapData.add(graphic.processTrimmingBitmapData(_bitmapData, x/widthNum * j, y/heightNum * i, x/widthNum, y/heightNum));
+            }
+        }
+
+        return createEffect(_name, tempBitmapData);
+    }
+
+    public int createEffect(String _name, String _imageName, int widthNum) {
+        return createEffect(_name, _imageName, widthNum, 1);
+    }
+
+/*
+    public int createEffect(String _name, String _imageName, int widthNum) {
+
+        List<BitmapData> tempBitmapData = new ArrayList<BitmapData>();
+        BitmapData _bitmapData = graphic.searchBitmap(_imageName);
+        int x = _bitmapData.getWidth();
+        int y = _bitmapData.getHeight();
+
+        for (int i = 0; i < widthNum; i ++ ) {
+            tempBitmapData.add(graphic.processTrimmingBitmapData(_bitmapData, x/widthNum * i, 0, x/widthNum, y));
+        }
+        return createEffect(_name, tempBitmapData);
+    }
+    */
+
+    public int createEffect(String _name, List<BitmapData> _bitmapData) {
         Effect _effect = null;
         int effectID = -1;
 
@@ -47,7 +89,6 @@ public class EffectAdmin {
 
         _effect.create(effectDataAdmin.getEffectData(_name));
         _effect.setBitmapData(_bitmapData);
-        _effect.setSoundName(_soundName);
 
         return effectID;
     }

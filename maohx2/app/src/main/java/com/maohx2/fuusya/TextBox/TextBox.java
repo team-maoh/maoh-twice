@@ -101,7 +101,7 @@ public class TextBox {
         box_paint.setColor(Color.argb(100, 0, 0, 0));
 
         touch_id = _touch_id;
-        has_updated_text = false;
+        has_updated_text = true;
 
         first = 0;
         last = 0;

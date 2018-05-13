@@ -19,7 +19,7 @@ public class Effect {
     static private Graphic graphic;
     static private SoundAdmin soundAdmin;
 
-    private List<String> soundName = new ArrayList<String>();
+    //private List<String> soundName = new ArrayList<String>();
     private List<BitmapData> bitmapData = new ArrayList<BitmapData>();
 
     private int steps;
@@ -31,7 +31,7 @@ public class Effect {
     private int original_y;
 
     private int imageID;
-    private int soundID;
+    private String soundName;
     private int x;
     private int y;
     private float extend_x;
@@ -180,14 +180,12 @@ public class Effect {
 
         isUpLeft = effectData.isUpLeft(_step);
         imageID = effectData.getImageID(_step);
-        soundID = effectData.getSoundID(_step);
+        soundName = effectData.getSoundName(_step);
     }
 
     //効果音を鳴らすメソッド
     private void sound() {
-        if (soundID != -1) {
-            soundAdmin.play(soundName.get(soundID));
-        }
+        soundAdmin.play(soundName);
     }
 
     private int calcGraduallyInt(int pre_param, int param, int time, int step) {
@@ -200,6 +198,7 @@ public class Effect {
         return (param - pre_param)*(float)time/(float)time_max + pre_param;
     }
 
+    /*
     public boolean setSoundName(int i, String _soundName) {
         if (i > 0 && i < soundName.size()) {
             soundName.set(i, _soundName);
@@ -207,6 +206,8 @@ public class Effect {
         }
         return false;
     }
+    */
+    /*
     public boolean addSoundName(String _soundName) {
         return soundName.add(_soundName);
     }
@@ -214,6 +215,7 @@ public class Effect {
         soundName = _soundName;
         return true;
     }
+    */
     public boolean setBitmapData(int i, BitmapData _bitmapData) {
         bitmapData.set(i, _bitmapData);
         if (i > 0 && i < bitmapData.size()) {
@@ -230,9 +232,12 @@ public class Effect {
         return true;
     }
 
+    /*
     public List<String> getSoundName() {
         return soundName;
     }
+*/
+    public String getSoundName() { return soundName; }
 
     public List<BitmapData> getBitmapData() {
         return bitmapData;

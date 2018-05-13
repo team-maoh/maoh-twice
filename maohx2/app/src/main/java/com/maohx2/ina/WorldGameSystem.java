@@ -194,21 +194,15 @@ public class WorldGameSystem {
 
     public void updata() {
 
-        /*
-        if (map_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN) {
+/*
+        if (world_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN) {
             List<BitmapData> testBitmapData = new ArrayList<BitmapData>();
-            BitmapData _bitmapData = graphic.searchBitmap("打撃01");
-            for (int i = 0; i < 9; i ++ ) {
-                testBitmapData.add(graphic.processTrimmingBitmapData(_bitmapData, 120 * i, 0, 120, 120));
-                //testBitmapData.add(_bitmapData);
-            }
-            List<String> testSoundName = new ArrayList<String>();
-            testSoundName.add("bosu");
-            int testID = effectAdmin.createEffect("test2", testBitmapData, testSoundName);
-            effectAdmin.getEffect(testID).setPosition((int)map_user_interface.getTouchX(),(int)map_user_interface.getTouchY());
+            int testID = effectAdmin.createEffect("test2", "打撃01", 9,1);
+            effectAdmin.getEffect(testID).setPosition((int)world_user_interface.getTouchX(),(int)world_user_interface.getTouchY());
             effectAdmin.getEffect(testID).start();
         }
         */
+
 
         switch (worldModeAdmin.getMode()) {
             case DUNGEON_SELECT_INIT:

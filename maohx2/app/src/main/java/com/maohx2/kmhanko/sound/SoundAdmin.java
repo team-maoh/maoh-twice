@@ -108,6 +108,9 @@ public class SoundAdmin {
 
     public boolean play(String name, float leftVolume, float rightVolume, int priority, int loop, float rate) {
         //ロードしたID, 左音量, 右音量, 優先度, ループ,再生速度
+        if (name == null) {
+            return false;
+        }
         int id = getSoundID(name);
         int stid = sp.play(id, leftVolume, rightVolume, priority, loop, rate);
         stream_ID.add(id - 1, stid);
