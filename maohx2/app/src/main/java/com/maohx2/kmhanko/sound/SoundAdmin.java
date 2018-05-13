@@ -34,7 +34,7 @@ import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 public class SoundAdmin {
     //メンバ変数
     static final String DB_NAME = "soundDB";
-    static final String DB_ASSET = "soundDB.db";
+    static final String DB_ASSET = "sound.db";
     private final Context mContext;
     private final int SOUND_ACTIVE_NUM = 10;
     private final int SOUND_LOAD_NUM = 256;

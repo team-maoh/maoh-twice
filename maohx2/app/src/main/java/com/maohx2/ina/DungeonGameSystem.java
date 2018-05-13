@@ -81,6 +81,9 @@ public class DungeonGameSystem {
         graphic = _graphic;
         //repeat_count = _repeat_count;
 
+        battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
+        battleUnitDataAdmin.loadBattleUnitData(dungeon_kind);//敵読み込み
+
 
         GlobalData globalData = (GlobalData) (dungeon_activity.getApplication());
         activityChange = _activityChange;
@@ -93,23 +96,26 @@ public class DungeonGameSystem {
         //map_size.set(dungeon_data_admin.getDungeon_data().get(2).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(2).getMap_size_y());
         //camera = new Camera(map_size, 64*4);
 
+        int dungeon_num = -1;
         switch(dungeon_kind) {
             case CHESS:
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "ChessMonsterData");
+                dungeon_num = 0;
                 break;
             case DRAGON:
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "DragonMonsterData");
+                dungeon_num = 1;
                 break;
             case FOREST:
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "ForestMonsterData");
+                dungeon_num = 2;
                 break;
             case HAUNTED:
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "HauntedMonsterData");
+                dungeon_num = 3;
                 break;
         }
 
-
-        int dungeon_num = 3;
         map_size.set(dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_y());
         //camera = new Camera(map_size, 64*4);
         if (!(dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH)) {
@@ -150,8 +156,6 @@ public class DungeonGameSystem {
 
 
         playerStatus = globalData.getPlayerStatus();
-        battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
-        battleUnitDataAdmin.loadBattleUnitData(dungeon_kind);//敵読み込み
 
         if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH) {
             repeat_count = playerStatus.getMaohWinCount();

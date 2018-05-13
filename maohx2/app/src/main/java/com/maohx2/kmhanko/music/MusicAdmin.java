@@ -3,6 +3,7 @@ package com.maohx2.kmhanko.music;
 import android.content.Context;
 
 import com.maohx2.kmhanko.database.MyDatabase;
+import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
@@ -33,6 +34,9 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
     //private final int AUDIO_LOAD_NUM = 256;
     private final String FOLDER = "music";
 
+    static final String DB_NAME = "musicDB";
+    static final String DB_ASSET = "music.db";
+
     private String table_name;
     private boolean is_load_completed = false;
 
@@ -47,9 +51,22 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
     MediaPlayer media_player;
 
     private MyDatabase database;
+    private MyDatabaseAdmin databaseAdmin;
 
     public MusicAdmin(Context context) {
         mContext = context;
+        //myDatabaseAdmin.addMyDatabase("");
+    }
+
+    public MusicAdmin(Context context, MyDatabaseAdmin _databaseAdmin) {
+        mContext = context;
+        databaseAdmin = _databaseAdmin;
+        setDatabase(databaseAdmin);
+    }
+
+    public void setDatabase(MyDatabaseAdmin databaseAdmin) {
+        databaseAdmin.addMyDatabase(DB_NAME, DB_ASSET, 1, "r");
+        database = databaseAdmin.getMyDatabase(DB_NAME);
     }
 
     public void setDatabase(MyDatabase _database) {

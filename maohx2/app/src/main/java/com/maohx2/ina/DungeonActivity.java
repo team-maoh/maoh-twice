@@ -137,7 +137,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
 
         my_database_admin.addMyDatabase("soundDB", "soundDB.db", 1, "r");//データベースのコピーしMySQLiteのdbを扱いやすいMyDataBase型にしている
         sound_admin.setDatabase(my_database_admin.getMyDatabase("soundDB"));//扱いやすいやつをセットしている
-        sound_admin.loadSoundPack("sound_pack_map");
+        sound_admin.loadSoundPack("map");
 
 
         battle_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
