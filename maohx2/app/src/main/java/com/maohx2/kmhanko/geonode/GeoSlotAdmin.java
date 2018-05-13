@@ -181,7 +181,7 @@ public class GeoSlotAdmin {
                             @Override
                             public void callBackEvent() {
                                 //戻るボタンが押された時の処理
-                                geoSlotAdminManager.calcPlayerStatus();
+                                geoSlotAdminManager.calcStatus();
                                 geoSlotAdminManager.saveGeoInventry();
 
                                 geoSlotAdminManager.saveGeoSlot();
@@ -422,8 +422,8 @@ public class GeoSlotAdmin {
         geoObjectData.setSlotSetName("noSet");
     }
 
-    public void calcPlayerStatus() {
-        geoSlotAdminManager.calcPlayerStatus();
+    public void calcStatus() {
+        geoSlotAdminManager.calcStatus();
     }
 
     // ***** Getter *****

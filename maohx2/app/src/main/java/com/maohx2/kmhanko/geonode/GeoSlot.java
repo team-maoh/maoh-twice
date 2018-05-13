@@ -302,7 +302,7 @@ public class GeoSlot extends CircleImagePlate {
         geoSlotAdmin.geoSlotReleaseChoice();
         if (isEventClearAll()) {
             setGeoObjectFromHold();
-            geoSlotAdmin.calcPlayerStatus();
+            geoSlotAdmin.calcStatus();
         }
     }
 

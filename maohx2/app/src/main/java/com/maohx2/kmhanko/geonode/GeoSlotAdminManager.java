@@ -17,6 +17,7 @@ import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatus;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
@@ -41,13 +42,14 @@ public class GeoSlotAdminManager {
     WorldModeAdmin worldModeAdmin;
 
     PlayerStatus playerStatus;
+    MaohMenosStatus maohMenosStatus;
     InventryS geoInventry;
 
     GeoSlotSaver geoSlotSaver;
 
     boolean is_load_database;
 
-    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver) {
+    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver, MaohMenosStatus _maohMenosStatus) {
         graphic = _graphic;
         userInterface = _userInterface;
         databaseAdmin = _databaseAdmin;
@@ -56,6 +58,7 @@ public class GeoSlotAdminManager {
         playerStatus = _playerStatus;
         geoInventry = _geoInventry;
         geoSlotSaver = _geoSlotSaver;
+        maohMenosStatus = _maohMenosStatus;
         addDatabase();
         this.loadGeoSlotDatabase();
 
@@ -135,18 +138,46 @@ public class GeoSlotAdminManager {
         geoInventry.subItemData(geoObjectData);
     }
 
+    public void calcStatus() {
+        if (activeGeoSlotAdmin != null) {
+            if (activeGeoSlotAdmin.getName().equals("Maoh")) {
+                calcMaohMenosStatus();
+            } else {
+                calcPlayerStatus();
+            }
+        }
+    }
+
     public void calcPlayerStatus() {
         playerStatus.initGeoStatus();
         for(int i = 0; i < geoSlotAdmins.size(); i++) {
-            if (geoSlotAdmins.get(i) != null) {
-                geoSlotAdmins.get(i).calcGeoSlot();
-                GeoCalcSaverAdmin geoCSA = geoSlotAdmins.get(i).getGeoCalcSaverAdmin();
-                if (geoCSA != null) {
-                    playerStatus.calcGeoStatus(geoCSA);
+            if (!geoSlotAdmins.get(i).getName().equals("Maoh")) {
+                if (geoSlotAdmins.get(i) != null) {
+                    geoSlotAdmins.get(i).calcGeoSlot();
+                    GeoCalcSaverAdmin geoCSA = geoSlotAdmins.get(i).getGeoCalcSaverAdmin();
+                    if (geoCSA != null) {
+                        playerStatus.calcGeoStatus(geoCSA);
+                    }
                 }
             }
         }
         playerStatus.calcStatus();
+        activeGeoSlotAdmin.statusTextBoxUpdate();
+    }
+
+    public void calcMaohMenosStatus() {
+        maohMenosStatus.initGeoStatus();
+        for(int i = 0; i < geoSlotAdmins.size(); i++) {
+            if (geoSlotAdmins.get(i).getName().equals("Maoh")) {
+                if (geoSlotAdmins.get(i) != null) {
+                    geoSlotAdmins.get(i).calcGeoSlot();
+                    GeoCalcSaverAdmin geoCSA = geoSlotAdmins.get(i).getGeoCalcSaverAdmin();
+                    if (geoCSA != null) {
+                        maohMenosStatus.calcGeoStatus(geoCSA);
+                    }
+                }
+            }
+        }
         activeGeoSlotAdmin.statusTextBoxUpdate();
     }
 
