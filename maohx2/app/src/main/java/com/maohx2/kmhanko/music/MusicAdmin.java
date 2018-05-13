@@ -45,6 +45,7 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
     private int option;
     private int loopstart;
     private int looplength;
+    private long setupTime;
 
     Thread thread;
 
@@ -96,6 +97,14 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
                     //TODO:結合部分に違和感
                 }
             }
+
+            if (loop_count_mode.equals("loop")) {
+                long playTime = System.currentTimeMillis() - setupTime;
+                if (playTime >= (long)(loopstart + looplength)) {
+                    media_player.seekTo(loopstart);
+                    setupTime = (long)loopstart + System.currentTimeMillis();
+                }
+            }
         }
 
     }
@@ -114,6 +123,7 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
             }
         }
         media_player.start();
+        setupTime = System.currentTimeMillis();
 
         thread = new Thread(this);
         thread.start();
@@ -129,7 +139,7 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
         threadStop();
     }
 
-    //getCurrentPosition：現在の再生位置をmsec単位で取得
+    //getCurrentPosition：現在の再生位置をmsec単位で取得(不安定)
     //toSeek：再生位置をmsec単位で指定
 
     public void loadMusic(String name, boolean _isstart) {
