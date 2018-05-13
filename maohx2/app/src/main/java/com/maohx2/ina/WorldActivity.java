@@ -48,7 +48,6 @@ public class WorldActivity extends BaseActivity {
         }
     }
 
-
 }
 
 
@@ -125,5 +124,4 @@ class WorldSurfaceView extends BaseSurfaceView {
         */
 
     }
-
 }

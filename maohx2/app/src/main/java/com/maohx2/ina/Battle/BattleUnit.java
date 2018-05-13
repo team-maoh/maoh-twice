@@ -213,6 +213,8 @@ abstract public class BattleUnit {
     public void setMaxHitPoint(int _max_hit_point){ max_hit_point = _max_hit_point; }
     public void setHitPoint(int _hit_point) { hit_point = _hit_point; }
     public void setAttack(int _attack) { attack = _attack; }
+    public void setDefence(int _defence) { defence = _defence; }
+    public void setLuck(int _luck) { luck = _luck; }
     public void setName(String _name) { name = _name; }
 
     // *** Override用 ***

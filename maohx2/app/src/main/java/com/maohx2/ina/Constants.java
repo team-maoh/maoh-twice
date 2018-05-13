@@ -40,6 +40,7 @@ public final class Constants {
             GOKI,
             HAUNTED,
             MAOH,
+            OPENING,
             DNGEON_KIND_NUM
         }
     }

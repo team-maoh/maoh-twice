@@ -38,4 +38,17 @@ public class MaohMenosStatus {
         };
     }
 
+    public int getGeoHP() {
+        return geoHP;
+    }
+    public int getGeoAttack() {
+        return geoAttack;
+    }
+    public int getGeoDefence() {
+        return geoDefence;
+    }
+    public int getGeoLuck() {
+        return geoLuck;
+    }
+
 }

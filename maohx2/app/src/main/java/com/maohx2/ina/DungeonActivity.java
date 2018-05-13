@@ -58,8 +58,6 @@ public class DungeonActivity extends BaseActivity {
             game_system_flag = true;
         }
     }
-
-
 }
 
 class DungeonSurfaceView extends BaseSurfaceView{
@@ -85,6 +83,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
 
 
         dungeon_user_interface.init();
+
 
 
 
@@ -130,7 +129,14 @@ class DungeonSurfaceView extends BaseSurfaceView{
                 my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
                 graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
                 break;
+            case OPENING:
+                break;
 
+        }
+
+
+        openingFlag = false;
+        if (openingFlag) {
         }
 
 
@@ -158,16 +164,13 @@ class DungeonSurfaceView extends BaseSurfaceView{
         backSurfaceView.drawBackGround(backImageContext);
     }
 
-
-    boolean openningFlag = true;
-
     @Override
     public void gameLoop(){
 
         dungeon_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         battle_user_interface.updateTouchState(touch_x, touch_y, touch_state);
 
-        if(openningFlag == true) {
+        if(openingFlag == true) {
             game_system.openningUpdate();
             game_system.openningDraw();
         }else{

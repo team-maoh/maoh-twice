@@ -382,7 +382,8 @@ public class GeoSlot extends CircleImagePlate {
                 if (geoSlotAdmin.getPlayerStatus().getMoney() >= money) {
                     geoSlotAdmin.getPlayerStatus().subMoney(money);
                     isReleased = true;
-                    geoSlotAdmin.statusTextBoxUpdate();
+                    geoSlotAdmin.calcStatus();
+
 
                     System.out.println("GeoSlot#geoSlotRelease　金を支払う　" + release_event);
                     return true;
