@@ -186,6 +186,8 @@ public class WorldGameSystem {
 
         backGround = graphic.searchBitmap("firstBackground");
 
+        geoSlotAdminManager.calcPlayerStatus();
+
         //TODO かり。戻るボタン
         initBackPlate();
     }

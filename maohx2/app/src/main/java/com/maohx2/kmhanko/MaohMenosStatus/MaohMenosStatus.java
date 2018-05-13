@@ -23,6 +23,7 @@ public class MaohMenosStatus {
         geoLuck = 0;
     }
     public void calcGeoStatus(GeoCalcSaverAdmin geoCalcSaverAdmin) {
+        initGeoStatus();
         geoHP += geoCalcSaverAdmin.getParam("HP");
         geoAttack += geoCalcSaverAdmin.getParam("Attack");
         geoDefence += geoCalcSaverAdmin.getParam("Defence");

@@ -200,10 +200,27 @@ public class BattleUnitAdmin {
                 battle_units[i].setBattleUnitDataEnemy(tempBattleBaseUnitData, repeatCount);
                 if (mode == MODE.MAOH) {
                     //魔王の弱体化
+
                     battle_units[i].setMaxHitPoint(battle_units[i].getMaxHitPoint() - maohMenosStatus.getGeoHP());
-                    battle_units[i].setAttack(battle_units[i].getMaxHitPoint() - maohMenosStatus.getGeoAttack());
+                    if (battle_units[i].getMaxHitPoint() <= 0) {
+                        battle_units[i].setMaxHitPoint(1);
+                    }
+                    battle_units[i].setHitPoint(battle_units[i].getMaxHitPoint());
+                    battle_units[i].setAttack(battle_units[i].getAttack() - maohMenosStatus.getGeoAttack());
+                    if (battle_units[i].getAttack() < 0) {
+                        battle_units[i].setAttack(0);
+                    }
+
                     battle_units[i].setDefence(battle_units[i].getDefence()- maohMenosStatus.getGeoDefence());
+                    if (battle_units[i].getDefence() < 0) {
+                        battle_units[i].setDefence(0);
+                    }
+
                     battle_units[i].setLuck(battle_units[i].getLuck() - maohMenosStatus.getGeoLuck());
+                    if (battle_units[i].getLuck() < 0) {
+                        battle_units[i].setLuck(0);
+                    }
+
                 }
                 return i;
             }
@@ -213,7 +230,7 @@ public class BattleUnitAdmin {
 
     public void setPlayer(PlayerStatus playerStatus) {
         playerStatus.calcStatus();
-        //battle_units[0].setBattleUnitDataPlayer(playerStatus.makeBattleDungeonUnitData());//TODO なぜかコメントアウトされてた
+        battle_units[0].setBattleUnitDataPlayer(playerStatus.makeBattleDungeonUnitData());//TODO なぜかコメントアウトされてた
     }
 
     public void spawnEnemy(String[] monsters) {

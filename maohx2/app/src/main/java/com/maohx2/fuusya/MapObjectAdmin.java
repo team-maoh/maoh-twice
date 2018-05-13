@@ -192,6 +192,10 @@ public class MapObjectAdmin {
             }
         }
 
+
+
+        //int test1 = map_admin.getNow_floor_num();
+        //int test2 = map_admin.getBoss_floor_num();
     }
 
     public void draw() {
