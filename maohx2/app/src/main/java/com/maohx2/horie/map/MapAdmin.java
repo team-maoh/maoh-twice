@@ -567,7 +567,7 @@ public class MapAdmin {
         int k = 0;
         String monster_name[] = new String[50];//TODO:とりあえず50にしている
         for (int i = 0; i < dungeon_monster_data.size(); i++) {
-            if (dungeon_monster_data.get(i).getType() == 1 && k < 50) {
+            if (dungeon_monster_data.get(i).getType() == monster_kind && k < 50) {
                 monster_name[k] = dungeon_monster_data.get(i).getMonsterName();
                 k++;
             }
