@@ -370,6 +370,11 @@ public class DungeonGameSystem {
             boss_is_running = true;
         }
 
+
+        //ここから先フジワラ，敵と衝突し，戦闘を行い，倒されるということを実現する．
+        //主に，プレイヤーが右に進み続ける，と，敵をちゃんとプレイヤーにぶつけて戦闘に入る，というところをちゃんと実装する．
+        //ぶつかる直前に「うわ，なんだ!?」を入れる．
+
         //count = 180 でboss_is_running = true としたとすると、
         //うわ、なんだ、で画面を止めるのは count = 191
         if (map_object_admin.bossIsHitPlayer()) {

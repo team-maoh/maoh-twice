@@ -70,6 +70,9 @@ class DungeonSurfaceView extends BaseSurfaceView{
     Activity dungeon_activity;
     BattleUserInterface battle_user_interface;
 
+    boolean openningFlag = true;
+
+
     public DungeonSurfaceView(Activity _dungeon_activity, BackSurfaceView _backSurfaceView) {
         super(_dungeon_activity, _backSurfaceView);
         dungeon_activity = _dungeon_activity;
@@ -152,6 +155,11 @@ class DungeonSurfaceView extends BaseSurfaceView{
         global_data.getExpendItemInventry().init(battle_user_interface, graphic,1000,100,1400,508, 10);
 
         game_system.init(dungeon_user_interface, graphic, sound_admin, my_database_admin, battle_user_interface, dungeon_activity, my_database_admin, activityChange,1, dungeon_kind);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
+
+        if(openningFlag == true){
+            game_system.openningInit();
+        }
+
     }
 
     public void runGameSystem() {
@@ -163,6 +171,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
         ImageContext backImageContext = graphic.makeImageContext(graphic.searchBitmap("e51-0"),0,0,true);
         backSurfaceView.drawBackGround(backImageContext);
     }
+
 
     @Override
     public void gameLoop(){
