@@ -650,7 +650,7 @@ public class MapAdmin {
                         map_tile_animation[k][i][j] = stair_tile;
                     }
                 } else {
-                    setAutoTile_light_animation(i, j, i, j);
+                    setAutoTile_light_animation(i, j, i, j, map_tile_animation);
                 }
             }
         }
