@@ -368,11 +368,13 @@ public class BattleUnitAdmin {
 
 
         //敵HP更新
+        boolean markHitFlag;
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (battle_units[i].isExist() == true) {
                 int ex = (int) battle_units[i].getPositionX();
                 int ey = (int) battle_units[i].getPositionY();
                 int er = (int) battle_units[i].getRadius();
+                markHitFlag = false;
                 for (int j = 0; j < MAKER_NUM; j++) {
                     if (touch_markers[j].isExist() == true) {
                         int cx = touch_markers[j].getPositionX();
@@ -381,6 +383,7 @@ public class BattleUnitAdmin {
 
                         //マーカーが当たっている
                         if ((ex - cx) * (ex - cx) + (ey - cy) * (ey - cy) < (er - cr) * (er - cr)) {
+                            markHitFlag = true;
                             if (((BattleEnemy) (battle_units[i])).isSpecialAction() == false) {
                                 //敵が特殊行動していないなら
 
@@ -418,14 +421,17 @@ public class BattleUnitAdmin {
                                     }
                                 }
                             }
-                        } else {
-                            //岩の場合の死亡タイミング(マーカーが当たっておらず、HPが負のとき)
-                            if (battle_units[i].getUnitKind() == Constants.UnitKind.ROCK && battle_units[i].getHitPoint() <= 0) {
-                                battle_units[i].existIs(false);
-                            }
                         }
                     }
                 }
+                if (!markHitFlag) {
+                    //岩の場合の死亡タイミング(いかなるマーカーにも当たっておらず、HPが負のとき)
+                    if (battle_units[i].getUnitKind() == Constants.UnitKind.ROCK && battle_units[i].getHitPoint() <= 0) {
+                        battle_units[i].existIs(false);
+                        //HPがマイナスになっているはずなので、マイナス分をジオ計算時に反映する
+                    }
+                }
+
             }
         }
 
@@ -660,7 +666,12 @@ public class BattleUnitAdmin {
                             parameter = status[LUCK.ordinal()] * bBUDforRock.getPower();
                             break;
                     }
-                    geoObjectData = GeoObjectDataCreater.getGeoObjectData(parameter, kindNormal);
+                    if (battle_units[i].getHitPoint() < 0) {
+                        parameter = (int) ((float) parameter * (float)(battle_units[i].getHitPoint() + battle_units[i].getMaxHitPoint()) / (float)battle_units[i].getMaxHitPoint());
+                    }
+                    if (parameter > 0) {
+                        geoObjectData = GeoObjectDataCreater.getGeoObjectData(parameter, kindNormal);
+                    }
                 } else {
                     //RateGeo
                     GEO_PARAM_KIND_RATE kindRate = GeoObjectDataCreater.getRandKindRate();
@@ -678,7 +689,12 @@ public class BattleUnitAdmin {
                             parameter = status[LUCK.ordinal()] * bBUDforRock.getPower();
                             break;
                     }
-                    geoObjectData = GeoObjectDataCreater.getGeoObjectData(parameter, kindRate);
+                    if (battle_units[i].getHitPoint() < 0) {
+                        parameter = (int) ((float) parameter * (float)(battle_units[i].getHitPoint() + battle_units[i].getMaxHitPoint()) / (float)battle_units[i].getMaxHitPoint());
+                    }
+                    if (parameter > 0) {
+                        geoObjectData = GeoObjectDataCreater.getGeoObjectData(parameter, kindRate);
+                    }
                 }
                 if (geoObjectData != null) {
                     mapPlateAdmin.getInventry().addItemData(geoObjectData);
