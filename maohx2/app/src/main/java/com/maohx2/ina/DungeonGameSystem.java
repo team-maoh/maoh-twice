@@ -177,6 +177,7 @@ public class DungeonGameSystem {
             map_size.set(dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_y());
             map_admin = new MapAdmin(graphic, map_object_admin, dungeon_data_admin.getDungeon_data().get(dungeon_num), dungeonMonsterDataAdmin.getDungeon_monster_data());
             map_admin.goNextFloor();
+            map_admin.createOpeningMap();
         }
 //        map_object_admin.getCamera(map_admin.getCamera());
 
@@ -310,7 +311,8 @@ public class DungeonGameSystem {
 
         switch (dungeonModeManage.getMode()) {
             case MAP:
-                map_admin.drawMap_for_autotile_light_animation();
+                map_admin.drawOpeningMap();
+//                map_admin.drawMap_for_autotile_light_animation();
                 map_object_admin.draw();
                 map_plate_admin.draw();
                 //graphic.bookingDrawCircle(0,0,10,paint);
@@ -438,7 +440,7 @@ public class DungeonGameSystem {
 
     public void openningDraw() {
 
-        map_admin.drawMap_for_autotile_light_animation();
+        map_admin.drawOpeningMap();
         map_object_admin.draw();
         map_plate_admin.draw();
 
