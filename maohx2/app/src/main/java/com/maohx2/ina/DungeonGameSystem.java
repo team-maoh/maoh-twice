@@ -334,6 +334,7 @@ public class DungeonGameSystem {
                 break;
 
         }
+
         text_box_admin.draw();
         graphic.draw();
     }
@@ -394,7 +395,7 @@ public class DungeonGameSystem {
 
         //count = 180 でboss_is_running = true としたとすると、
         //うわ、なんだ、で画面を止めるのは count = 191
-        if (map_object_admin.bossIsHitPlayer()) {
+        if (map_object_admin.bossIsHitPlayer()){
             boss_is_running = false;
             text_box_admin.bookingDrawText(openningTextBoxID, "うわ，なんだ!?");
             text_box_admin.bookingDrawText(openningTextBoxID, "MOP");
@@ -402,7 +403,7 @@ public class DungeonGameSystem {
             text_box_admin.setTextBoxExists(openningTextBoxID, true);
             text_mode = true;
 
-//            System.out.println("count_desudesudesu"+count);
+            //System.out.println("count_desudesudesu"+count);
         }
 
         if (count == 191 && (battle_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN || battle_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN_MOVE || battle_user_interface.getTouchState() == Constants.Touch.TouchState.MOVE)) {
@@ -420,8 +421,7 @@ public class DungeonGameSystem {
             );
             ((DungeonActivity)dungeonActivity).dungeon_surface_view.setOpeningFlag(false);////////
             dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
-
-
+            text_box_admin.setTextBoxExists(openningTextBoxID, false);
         }
 
 
