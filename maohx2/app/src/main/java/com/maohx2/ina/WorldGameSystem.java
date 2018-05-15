@@ -393,13 +393,13 @@ public class WorldGameSystem {
 
 
         talkContent[0] = new String[2];
-        talkChara[0] = graphic.makeImageContext(graphic.searchBitmap("e54-1"), 300, 300, 3.0f, 3.0f, 0, 255, false);
+        talkChara[0] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 300, 3.0f, 3.0f, 0, 255, false);
         talkContent[0][0] = "あいたた，なんだあいつ，ひどい目にあったな・・・．";
         talkContent[0][1] = "MOP";
 
 
         talkContent[1] = new String[4];
-        talkChara[1] = graphic.makeImageContext(graphic.searchBitmap("e19"), 1100, 300, 3.0f, 3.0f, 0, 255, false);
+        talkChara[1] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1100, 300, 3.0f, 3.0f, 0, 255, false);
         talkContent[1][0] = "あらら，やられちゃったかぁ．";
         talkContent[1][1] = "\n";
         talkContent[1][2] = "もしかしたらうまくやってくれると思ったのに・・・．";
