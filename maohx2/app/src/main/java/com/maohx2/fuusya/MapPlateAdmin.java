@@ -9,6 +9,7 @@ import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.DungeonGameSystem;
+import com.maohx2.ina.DungeonModeManage;
 import com.maohx2.ina.GlobalData;
 import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.StartGameSystem;
@@ -21,6 +22,7 @@ import com.maohx2.kmhanko.Saver.PlayerStatusSaver;
 import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 
 import com.maohx2.ina.Constants.Touch.TouchWay.*;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import static com.maohx2.ina.Constants.Touch.TouchWay.MOVE;
 import static com.maohx2.ina.Constants.Touch.TouchWay.UP_MOMENT;
@@ -85,18 +87,22 @@ public class MapPlateAdmin {
     EquipmentItemData tmpEquipmentItemData;
     int obtained_item_num;
     boolean will_storage_inventry;
+    DungeonModeManage dungeon_mode_manage;
+    SoundAdmin sound_admin;
 
     int NUM_OF_TUTORIAL_BITMAP = 3;
     int i_of_tutorial_bitmap;
     String tutorial_name = "スライド";
 
-    public MapPlateAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, ActivityChange _activityChange, GlobalData _globalData) {
+    public MapPlateAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, ActivityChange _activityChange, GlobalData _globalData, DungeonModeManage _dungeon_mode_manage, SoundAdmin _sound_admin) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
         activityChange = _activityChange;
         globalData = _globalData;
         playerStatus = globalData.getPlayerStatus();
         playerStatusSaver = globalData.getPlayerStatusSaver();
+        dungeon_mode_manage = _dungeon_mode_manage;
+        sound_admin = _sound_admin;
 
         inventry = new Inventry();
         inventry.init(dungeon_user_interface, graphic, ITEM_LEFT, ITEM_TOP, ITEM_RIGHT, ITEM_BOTTOM, ITEM_CONTENTS_NUM);
@@ -159,6 +165,8 @@ public class MapPlateAdmin {
         hitpoint.update();
         inventry.updata();
 
+        int pre_displaying_content = displaying_content;
+
         Constants.Touch.TouchState touch_state = dungeon_user_interface.getTouchState();
         switch (displaying_content) {
             case 0://menu
@@ -190,7 +198,7 @@ public class MapPlateAdmin {
                 break;
 
             case 1://[ステータス]
-
+                dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.EQUIP_EXPEND_INIT);
                 break;
 
             case 2://[アイテム]
@@ -208,6 +216,9 @@ public class MapPlateAdmin {
 //                }
         }
 
+        if(displaying_content!=pre_displaying_content){
+            sound_admin.play("cursor00");
+        }
 //        }
 
     }
@@ -237,7 +248,6 @@ public class MapPlateAdmin {
         hitpoint.draw();
 
         drawTutorialImage();
-
 
     }
 
@@ -335,18 +345,21 @@ public class MapPlateAdmin {
 
                 if (i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP) {
                     playerStatus.setTutorialInDungeon(1);
-                    int test = playerStatus.getTutorialInDungeon();
                     playerStatusSaver.save();
-
-                    int test2 = playerStatus.getTutorialInDungeon();
-                    int test3 = 1;
 
                 }
             }
         }
     }
 
+
     public MapInventryAdmin getMapInventryAdmin() {
         return map_inventry_admin;
+    }
+
+    public void initMenu(){
+        displaying_content = -1;
+//        frame_count = 0;
+
     }
 }

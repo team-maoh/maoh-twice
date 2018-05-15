@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -83,7 +84,9 @@ public class TextBox {
     //trueだとqueueが代謝するので次から次へと新しいsentenceを受け取れる（キャラの台詞などに向いている）
     //falseだと同じsentenceを二度も三度も表示することができる（アイテムの詳細表示などに向いている）
 
-    public TextBox(Graphic _graphic, int _touch_id, int _box_id, boolean _update_text_by_touching, boolean _assign_sentence_id, double _box_left, double _box_top, double _box_right, double _box_down, int _row_of_box) {
+    SoundAdmin sound_admin;
+
+    public TextBox(Graphic _graphic, int _touch_id, int _box_id, boolean _update_text_by_touching, boolean _assign_sentence_id, double _box_left, double _box_top, double _box_right, double _box_down, int _row_of_box, SoundAdmin _sound_admin) {
         graphic = _graphic;
         box_id = _box_id;
         update_text_by_touching = _update_text_by_touching;
@@ -130,6 +133,8 @@ public class TextBox {
         for (int i = 0; i < MAX_QUEUE_TEXT; i++) {
             sentence_firsts[i] = 0;
         }
+
+        sound_admin = _sound_admin;
 
     }
 
@@ -371,6 +376,10 @@ public class TextBox {
             }
             while (!(queue[first].isMOP() == false && queue[(first - 1 + MAX_QUEUE_TEXT) % MAX_QUEUE_TEXT].isMOP() == true)) {
                 first = (first + 1) % MAX_QUEUE_TEXT;//firstを１個進める
+            }
+
+            if (pre_first == first) {
+                sound_admin.play("textenter00");//テキストが切り替わるときにSEが鳴る
             }
 
             if (assign_sentence_id == true) {

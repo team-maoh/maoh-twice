@@ -8,6 +8,7 @@ import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import static android.graphics.Color.RED;
 import static android.graphics.Color.WHITE;
@@ -29,12 +30,13 @@ public class TextBoxAdmin {
     int box_count;
     UserInterface user_interface;
     Graphic graphic;
+    SoundAdmin sound_admin;
 
     int debug_int;
     int debug_damage_int;
     int debug_i;
 
-    public TextBoxAdmin(Graphic _graphic) {
+    public TextBoxAdmin(Graphic _graphic, SoundAdmin _sound_admin) {
         graphic = _graphic;
         box_count = 0;
 
@@ -42,6 +44,8 @@ public class TextBoxAdmin {
 
         debug_int = 0;
         debug_damage_int = 0;
+
+        sound_admin = _sound_admin;
     }
 
     public void init(UserInterface _user_interface) {
@@ -234,7 +238,7 @@ public class TextBoxAdmin {
 
         int touch_id = user_interface.setBoxTouchUI(_box_left, _box_top, _box_right, _box_down);
 
-        text_box[box_count] = new TextBox(graphic, touch_id, box_count, _update_text_by_touching, _assign_sentence_id, _box_left, _box_top, _box_right, _box_down, _row_of_box);
+        text_box[box_count] = new TextBox(graphic, touch_id, box_count, _update_text_by_touching, _assign_sentence_id, _box_left, _box_top, _box_right, _box_down, _row_of_box, sound_admin);
 //        text_box[box_count] = new TextBox(graphic, touch_id, (int) (_box_right - _box_left), _row_of_box, box_count);
         text_box[box_count].init();
 

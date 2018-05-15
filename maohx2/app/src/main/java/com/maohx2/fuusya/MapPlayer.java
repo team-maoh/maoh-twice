@@ -39,7 +39,7 @@ public class MapPlayer extends MapUnit {
 
     int th_encount_steps;
     int mean_encount_steps, var_encount_steps;
-    int SOUND_STEPS_PERIOD = 20;//この歩数ごとに足音SEが鳴る
+    int SOUND_STEPS_PERIOD = 7;//この歩数ごとに足音SEが鳴る
     int TOUCHING_FRAME_NUM = 10;
     //
     int encount_steps;
@@ -51,7 +51,7 @@ public class MapPlayer extends MapUnit {
     BattleUnitAdmin battle_unit_admin;
     DungeonModeManage dungeon_mode_manage;
 
-    //        int PLAYER_STEP = 26;//プレイヤーの歩幅
+    //    int PLAYER_STEP = 26;//プレイヤーの歩幅
     int PLAYER_STEP = 100;//プレイヤーの歩幅 //デバッグ用
 
     double touch_w_x, touch_w_y, touch_n_x, touch_n_y, pre_w_x, pre_w_y;
@@ -60,11 +60,13 @@ public class MapPlayer extends MapUnit {
     int touching_frame_count;
 
     TouchState touch_state;
+    boolean avoid_battle_for_debug;
 
+    boolean will_cancel_step_sound;
 
     boolean debug_first = false;
 
-    public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, MapPlateAdmin _map_plate_admin, BattleUnitAdmin _battle_unit_admin, DungeonModeManage _dungeon_mode_manage) {
+    public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, MapPlateAdmin _map_plate_admin, BattleUnitAdmin _battle_unit_admin, DungeonModeManage _dungeon_mode_manage, boolean _avoid_battle_for_debug) {
         super(graphic, _map_object_admin, _camera);
 
 
@@ -93,6 +95,10 @@ public class MapPlayer extends MapUnit {
         is_moving = false;
 
         can_exit_room = true;
+
+        avoid_battle_for_debug = _avoid_battle_for_debug;
+
+        will_cancel_step_sound = false;
     }
 
     public void init() {
@@ -101,18 +107,9 @@ public class MapPlayer extends MapUnit {
 
 
     //実行すると右向きにちょっと移動する
-    public void openingUpdate(){
+    public void openingUpdate() {
 
         w_x += 25;
-
-//        dst_w_x = w_x + 200;
-//        dst_w_y = w_y;
-//        //Playerアイコンの向きを更新する
-//        updateDirOnMap(dst_w_x, dst_w_y);
-//
-//        //壁との衝突を考慮した上で、タッチ座標に向かって１歩進む
-//        walkOneStep(dst_w_x, dst_w_y, step);
-//
         camera.setCameraOffset(w_x, w_y);
 
     }
@@ -120,6 +117,8 @@ public class MapPlayer extends MapUnit {
     @Override
     public void update() {
         super.update();
+
+        will_cancel_step_sound = false;
 
         touch_state = dungeon_user_interface.getTouchState();
 
@@ -140,6 +139,7 @@ public class MapPlayer extends MapUnit {
                 if (touch_state == TouchState.UP) {
                     if (isWithinReach(touch_w_x, touch_w_y, 80) == true) {
                         map_plate_admin.setDisplayingContent(0);
+                        sound_admin.play("cursor00");
                     }
 
                 }
@@ -150,6 +150,8 @@ public class MapPlayer extends MapUnit {
                 if (isWithinReach(touch_w_x, touch_w_y, step * 2) == false) {
                     dst_w_x = touch_w_x;
                     dst_w_y = touch_w_y;
+                }else{
+                    will_cancel_step_sound = true;
                 }
 
                 touching_frame_count++;
@@ -219,15 +221,13 @@ public class MapPlayer extends MapUnit {
                 th_encount_steps = makeThresholdEncountSteps();
 
                 int now_floor_num = map_admin.getNow_floor_num();//nullが返ってくる
-//                int now_floor_num = 7;
                 int boss_floor_num = map_admin.getBoss_floor_num();//nullが返ってくる
-//                int boss_floor_num = 10;
 
                 int max_of_num_of_zako = 10;
                 int num_of_zako = max_of_num_of_zako * now_floor_num / boss_floor_num;
 //                int num_of_zako = (double) (now_floor_num / boss_floor_num) * max_of_num_of_zako;
 
-                System.out.println("num_of_zako____desudesu_______" + num_of_zako);
+//                System.out.println("num_of_zako____desudesu_______" + num_of_zako);
 
                 String[] tmp_zako = new String[num_of_zako];
                 int num_of_nonnull = 1;
@@ -242,15 +242,17 @@ public class MapPlayer extends MapUnit {
                 }
 
                 //デバッグ時にエンカウントすると鬱陶しいのでコメントアウト
-//                battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
-//                battle_unit_admin.spawnEnemy(tmp_zako);//
-//                dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
-
-//                System.out.println("desudesudesu +++++");
+                if (avoid_battle_for_debug == false) {
+                    battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
+                    battle_unit_admin.spawnEnemy(tmp_zako);//
+                    dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+                }
 
             }
 
-            sound_steps = (sound_steps + 1) % SOUND_STEPS_PERIOD;
+            if(will_cancel_step_sound==false) {
+                sound_steps = (sound_steps + 1) % SOUND_STEPS_PERIOD;
+            }
             if (sound_steps == 0) {
                 sound_admin.play("step07");//足音SE
             }

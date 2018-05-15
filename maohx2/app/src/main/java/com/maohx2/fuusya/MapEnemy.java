@@ -51,8 +51,9 @@ public class MapEnemy extends MapUnit {
     double incremental_step;//Playerを発見して時間が経つとstepが徐々に増えていく（= 足が速くなっていく）
     BattleUnitAdmin battle_unit_admin;
     DungeonModeManage dungeon_mode_manage;
+    boolean avoid_battle_for_debug;
 
-    public MapEnemy(Graphic graphic, MapObjectAdmin map_object_admin, Camera _camera, int _total_dirs, boolean _detect_player, boolean _has_blind_spot, BattleUnitAdmin _battle_unit_admin, DungeonModeManage _dungeon_mode_manage) {
+    public MapEnemy(Graphic graphic, MapObjectAdmin map_object_admin, Camera _camera, int _total_dirs, boolean _detect_player, boolean _has_blind_spot, BattleUnitAdmin _battle_unit_admin, DungeonModeManage _dungeon_mode_manage, boolean _avoid_battle_for_debug) {
         super(graphic, map_object_admin, _camera);
 
         total_dirs = _total_dirs;
@@ -85,6 +86,7 @@ public class MapEnemy extends MapUnit {
 
         battle_unit_admin = _battle_unit_admin;
         dungeon_mode_manage = _dungeon_mode_manage;
+        avoid_battle_for_debug = _avoid_battle_for_debug;
     }
 
     public void init() {
@@ -201,9 +203,11 @@ public class MapEnemy extends MapUnit {
             exists = false;
 
             //デバッグ時に鬱陶しいのでコメントアウト
-//            battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
-//            battle_unit_admin.spawnEnemy(name);//歩行エンカウントでは引数なし
-//            dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+            if(avoid_battle_for_debug == false) {
+                battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
+                battle_unit_admin.spawnEnemy(name);//歩行エンカウントでは引数なし
+                dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+            }
         }
 
     }

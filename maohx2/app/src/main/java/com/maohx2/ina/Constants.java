@@ -148,6 +148,7 @@ public final class Constants {
             GEO_MINING,
             TO_WORLD,
             EQUIP_EXPEND,
+            EQUIP_EXPEND_INIT,
             GEO_MAP,
         }
 
