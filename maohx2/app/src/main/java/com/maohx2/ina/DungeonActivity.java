@@ -103,6 +103,12 @@ class DungeonSurfaceView extends BaseSurfaceView{
         //my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
         //graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
 
+        //TODO openingFlagをもらってくる
+        openingFlag = true;
+        if (openingFlag) {
+            dungeon_kind = DUNGEON_KIND.OPENING;
+        }
+
         switch (dungeon_kind){
             case CHESS:
                 my_database_admin.addMyDatabase("ChessDB", "LocalChessImage.db", 1, "r");
@@ -145,18 +151,15 @@ class DungeonSurfaceView extends BaseSurfaceView{
                 graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
                 break;
             case OPENING:
+                //とりあえずチェスを読み込んでおく
+                my_database_admin.addMyDatabase("ChessDB", "LocalChessImage.db", 1, "r");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("ChessDB"), "Chess");
+                //dungeon_kind = DUNGEON_KIND.CHESS;
                 break;
 
         }
 
-
-        openingFlag = false;
-        if (openingFlag) {
-        }
-
-
-
-        sound_admin.loadSoundPack("map");
+        sound_admin.loadSoundPack("basic");
 
 
         battle_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);

@@ -99,6 +99,7 @@ public class BattleUnitAdmin {
     MaohMenosStatus maohMenosStatus;
 
     boolean resultOperatedFlag;//リザルト関係の処理を一度だけ呼ぶためのフラグ
+    boolean battleEndFlag;//戦闘が終わったかどうか
 
     //by kmhanko BattleUnitDataAdmin追加
     public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage, MyDatabaseAdmin _databaseAdmin, MapPlateAdmin _map_plate_admin, TextBoxAdmin _textBoxAdmin, int _repeat_count, MaohMenosStatus _maohMenosStatus) {
@@ -171,6 +172,7 @@ public class BattleUnitAdmin {
     public void reset(MODE _mode) {
         mode = _mode;
         resultOperatedFlag = false;
+        battleEndFlag = false;
 
         //毎戦闘開始時に、前回の戦闘でのゴミなどを消す処理を行う
 
@@ -306,44 +308,47 @@ public class BattleUnitAdmin {
         double touch_y = battle_user_interface.getTouchY();
         TouchState touch_state = battle_user_interface.getTouchState();
 
-        battle_units[0].update();
+        if (!battleEndFlag) {
 
-        if (battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.PARALYSIS.ordinal() - 1) == 0 || battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.PARALYSIS.ordinal() - 1) % 2 == 0) {
-            attack_count++;
-        }
+            battle_units[0].update();
 
-        if (marker_flag == false) {
-            palette_admin.update(true);
-        }
+            if (battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.PARALYSIS.ordinal() - 1) == 0 || battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.PARALYSIS.ordinal() - 1) % 2 == 0) {
+                attack_count++;
+            }
 
-        //ストップ状態ならば攻撃できない
-        if (battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.STOP.ordinal() - 1) == 0) {
-            if (palette_admin.doUsePalette() == false) {
-                //プレイヤーの攻撃によるマーカーの設置
-                if (!resultOperatedFlag) {
-                    if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
-                        EquipmentItemData attack_equipment = null;
-                        if (mode == MODE.BATTLE || mode == MODE.MAOH || mode == MODE.BOSS || mode == MODE.OPENING) {
-                            attack_equipment = palette_admin.getEquipmentItemData();
-                        }
-                        if (mode == MODE.MINING) {
-                            attack_equipment = palette_admin.getMiningItemData();
-                        }
-                        if (attack_equipment != null) {
-                            if (attack_equipment.getDungeonUseNum() > 0) {
-                                //最高攻撃頻度を上回っていないか
-                                if ((first_attack_frag == false && attack_count >= attack_equipment.getTouchFrequency()) || (first_attack_frag == true && attack_count >= attack_equipment.getTouchFrequency() * attack_equipment.getAutoFrequencyRate())) {
-                                    if (mode == MODE.BATTLE || mode == MODE.MAOH || mode == MODE.BOSS || mode == MODE.OPENING) {
-                                        attack_equipment.setDungeonUseNum(attack_equipment.getDungeonUseNum() - 1);
-                                    }
-                                    first_attack_frag = true;
-                                    marker_flag = true;
-                                    attack_count = 0;
-                                    for (int i = 0; i < MAKER_NUM; i++) {
-                                        if (touch_markers[i].isExist() == false) {
-                                            //todo:attackの計算
-                                            touch_markers[i].generate((int) touch_x, (int) touch_y, attack_equipment.getRadius(), battle_units[0].getAttack() + attack_equipment.getAttack(), attack_equipment.getDecayRate());
-                                            break;
+            if (marker_flag == false) {
+                palette_admin.update(true);
+            }
+
+            //ストップ状態ならば攻撃できない
+            if (battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.STOP.ordinal() - 1) == 0) {
+                if (palette_admin.doUsePalette() == false) {
+                    //プレイヤーの攻撃によるマーカーの設置
+                    if (!resultOperatedFlag) {
+                        if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
+                            EquipmentItemData attack_equipment = null;
+                            if (mode == MODE.BATTLE || mode == MODE.MAOH || mode == MODE.BOSS || mode == MODE.OPENING) {
+                                attack_equipment = palette_admin.getEquipmentItemData();
+                            }
+                            if (mode == MODE.MINING) {
+                                attack_equipment = palette_admin.getMiningItemData();
+                            }
+                            if (attack_equipment != null) {
+                                if (attack_equipment.getDungeonUseNum() > 0) {
+                                    //最高攻撃頻度を上回っていないか
+                                    if ((first_attack_frag == false && attack_count >= attack_equipment.getTouchFrequency()) || (first_attack_frag == true && attack_count >= attack_equipment.getTouchFrequency() * attack_equipment.getAutoFrequencyRate())) {
+                                        if (mode == MODE.BATTLE || mode == MODE.MAOH || mode == MODE.BOSS || mode == MODE.OPENING) {
+                                            attack_equipment.setDungeonUseNum(attack_equipment.getDungeonUseNum() - 1);
+                                        }
+                                        first_attack_frag = true;
+                                        marker_flag = true;
+                                        attack_count = 0;
+                                        for (int i = 0; i < MAKER_NUM; i++) {
+                                            if (touch_markers[i].isExist() == false) {
+                                                //todo:attackの計算
+                                                touch_markers[i].generate((int) touch_x, (int) touch_y, attack_equipment.getRadius(), battle_units[0].getAttack() + attack_equipment.getAttack(), attack_equipment.getDecayRate());
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -352,137 +357,141 @@ public class BattleUnitAdmin {
                     }
                 }
             }
-        }
 
-        if ((touch_state == TouchState.UP) || (touch_state == TouchState.AWAY)) {
-            first_attack_frag = false;
-            marker_flag = false;
-        }
-
-        //マーカーの縮小
-        for (int i = 0; i < MAKER_NUM; i++) {
-            if (touch_markers[i].isExist() == true) {
-                touch_markers[i].update();
+            if ((touch_state == TouchState.UP) || (touch_state == TouchState.AWAY)) {
+                first_attack_frag = false;
+                marker_flag = false;
             }
-        }
+
+            //マーカーの縮小
+            for (int i = 0; i < MAKER_NUM; i++) {
+                if (touch_markers[i].isExist() == true) {
+                    touch_markers[i].update();
+                }
+            }
 
 
-        //敵HP更新
-        boolean markHitFlag;
-        for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
-            if (battle_units[i].isExist() == true) {
-                int ex = (int) battle_units[i].getPositionX();
-                int ey = (int) battle_units[i].getPositionY();
-                int er = (int) battle_units[i].getRadius();
-                markHitFlag = false;
-                for (int j = 0; j < MAKER_NUM; j++) {
-                    if (touch_markers[j].isExist() == true) {
-                        int cx = touch_markers[j].getPositionX();
-                        int cy = touch_markers[j].getPositionY();
-                        int cr = touch_markers[j].getRadius();
+            //敵HP更新
+            boolean markHitFlag;
+            for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
+                if (battle_units[i].isExist() == true) {
+                    int ex = (int) battle_units[i].getPositionX();
+                    int ey = (int) battle_units[i].getPositionY();
+                    int er = (int) battle_units[i].getRadius();
+                    markHitFlag = false;
+                    for (int j = 0; j < MAKER_NUM; j++) {
+                        if (touch_markers[j].isExist() == true) {
+                            int cx = touch_markers[j].getPositionX();
+                            int cy = touch_markers[j].getPositionY();
+                            int cr = touch_markers[j].getRadius();
 
-                        //マーカーが当たっている
-                        if ((ex - cx) * (ex - cx) + (ey - cy) * (ey - cy) < (er - cr) * (er - cr)) {
-                            markHitFlag = true;
-                            if (((BattleEnemy) (battle_units[i])).isSpecialAction() == false) {
-                                //敵が特殊行動していないなら
+                            //マーカーが当たっている
+                            if ((ex - cx) * (ex - cx) + (ey - cy) * (ey - cy) < (er - cr) * (er - cr)) {
+                                markHitFlag = true;
+                                if (((BattleEnemy) (battle_units[i])).isSpecialAction() == false) {
+                                    //敵が特殊行動していないなら
 
-                                int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage();
-                                if (new_hp > 0) {
-                                    battle_units[i].setHitPoint(new_hp);
-                                } else {
-                                    //by kmhanko
-                                    //岩は特殊行動しないため、死亡判定についてこの位置のみに記述すれば良い。
-                                    //岩はマーカーが当たっているときはマーカーが当たっている間は死亡しない
-                                    if (battle_units[i].getUnitKind() != Constants.UnitKind.ROCK) {
-                                        battle_units[i].existIs(false);
-                                    } else {
-                                        //岩の場合はHPが負であってもHPにセットする
-                                        battle_units[i].setHitPoint(new_hp);
-                                    }
-                                }
-                            } else {
-
-                                if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.BARRIER) {
-                                    //敵がバリアを張っているなら(ダメージを受けない)
-                                } else if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.COUNTER) {
-                                    int new_hp = battle_units[0].getHitPoint() - touch_markers[j].getDamage();
-                                    if (new_hp > 0) {
-                                        battle_units[0].setHitPoint(new_hp);
-                                    } else {
-                                        battle_units[0].existIs(false);
-                                    }
-                                } else if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.STEALTH) {
                                     int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage();
                                     if (new_hp > 0) {
                                         battle_units[i].setHitPoint(new_hp);
                                     } else {
-                                        battle_units[i].existIs(false);
+                                        //by kmhanko
+                                        //岩は特殊行動しないため、死亡判定についてこの位置のみに記述すれば良い。
+                                        //岩はマーカーが当たっているときはマーカーが当たっている間は死亡しない
+                                        if (battle_units[i].getUnitKind() != Constants.UnitKind.ROCK) {
+                                            battle_units[i].existIs(false);
+                                        } else {
+                                            //岩の場合はHPが負であってもHPにセットする
+                                            battle_units[i].setHitPoint(new_hp);
+                                        }
+                                    }
+                                } else {
+
+                                    if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.BARRIER) {
+                                        //敵がバリアを張っているなら(ダメージを受けない)
+                                    } else if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.COUNTER) {
+                                        int new_hp = battle_units[0].getHitPoint() - touch_markers[j].getDamage();
+                                        if (new_hp > 0) {
+                                            battle_units[0].setHitPoint(new_hp);
+                                        } else {
+                                            battle_units[0].existIs(false);
+                                        }
+                                    } else if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.STEALTH) {
+                                        int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage();
+                                        if (new_hp > 0) {
+                                            battle_units[i].setHitPoint(new_hp);
+                                        } else {
+                                            battle_units[i].existIs(false);
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
-                if (!markHitFlag) {
-                    //岩の場合の死亡タイミング(いかなるマーカーにも当たっておらず、HPが負のとき)
-                    if (battle_units[i].getUnitKind() == Constants.UnitKind.ROCK && battle_units[i].getHitPoint() <= 0) {
-                        battle_units[i].existIs(false);
-                        //HPがマイナスになっているはずなので、マイナス分をジオ計算時に反映する
-                    }
-                }
-
-            }
-        }
-
-        //敵の更新と攻撃処理
-        for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
-            if (battle_units[i].isExist() == true) {
-                int damage_to_player = battle_units[i].update();
-                if (damage_to_player > 0) {
-                    EquipmentItemData defense_equipment = palette_admin.getEquipmentItemData();
-                    float damage_rate = 1;
-                    if (defense_equipment != null) {
-                        damage_rate = (1 - (float) defense_equipment.getDefence() / 100.0f);
-                    }
-
-                    int heel_to_player = 0;
-                    if (palette_admin.checkSelectedExpendItemData() != null) {
-                        heel_to_player = battle_units[0].getHitPoint() * palette_admin.checkSelectedExpendItemData().getHp();
-                        palette_admin.deleteExpendItemData();
-                    }
-
-                    int new_hp = battle_units[0].getHitPoint() - (int) (damage_to_player * damage_rate) + heel_to_player;
-                    if (new_hp > battle_units[0].getMaxHitPoint()) {
-                        new_hp = battle_units[0].getMaxHitPoint();
-                    }
-
-
-                    //状態異常攻撃
-                    BattleBaseUnitData.ActionID actionID = ((BattleEnemy) (battle_units[i])).checkActionID();
-                    if (actionID != BattleBaseUnitData.ActionID.NORMAL_ATTACK) {
-                        if (actionID != BattleBaseUnitData.ActionID.CURSE) {
-                            //状態異常のカウントが長くなるようであれば，状態異常のカウントを更新
-                            if (battle_units[0].getAlimentCounts(actionID.ordinal() - 1) < ((BattleEnemy) (battle_units[i])).getAlimentTime(actionID)) {
-                                battle_units[0].setAilmentCounts(actionID.ordinal() - 1, ((BattleEnemy) (battle_units[i])).getAlimentTime(actionID));
-                            }
-                        } else {
-                            //呪いに関してはカウントを自身につけて，誰か一人でもカウントが0になったら死亡とする
-                            if (battle_units[i].getAlimentCounts(actionID.ordinal() - 1) < 0) {
-                                battle_units[i].setAilmentCounts(actionID.ordinal() - 1, ((BattleEnemy) (battle_units[i])).getAlimentTime(actionID));
-                            }
+                    if (!markHitFlag) {
+                        //岩の場合の死亡タイミング(いかなるマーカーにも当たっておらず、HPが負のとき)
+                        if (battle_units[i].getUnitKind() == Constants.UnitKind.ROCK && battle_units[i].getHitPoint() <= 0) {
+                            battle_units[i].existIs(false);
+                            //HPがマイナスになっているはずなので、マイナス分をジオ計算時に反映する
                         }
                     }
 
+                }
+            }
 
-                    if (battle_units[i].getAlimentCounts(BattleBaseUnitData.ActionID.CURSE.ordinal() - 1) == 0) {
-                        new_hp = 0;
-                    }
+            //敵の更新と攻撃処理
+            for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
+                if (battle_units[i].isExist() == true) {
+                    int damage_to_player = battle_units[i].update();
+                    if (damage_to_player > 0) {
+                        EquipmentItemData defense_equipment = palette_admin.getEquipmentItemData();
+                        float damage_rate = 1;
+                        if (defense_equipment != null) {
+                            damage_rate = (1 - (float) defense_equipment.getDefence() / 100.0f);
+                        }
 
-                    if (new_hp <= 0) {
-                        gameOver();
+                        int heel_to_player = 0;
+                        if (palette_admin.checkSelectedExpendItemData() != null) {
+                            heel_to_player = battle_units[0].getHitPoint() * palette_admin.checkSelectedExpendItemData().getHp();
+                            palette_admin.deleteExpendItemData();
+                        }
+
+                        int new_hp = battle_units[0].getHitPoint() - (int) (damage_to_player * damage_rate) + heel_to_player;
+                        if (new_hp > battle_units[0].getMaxHitPoint()) {
+                            new_hp = battle_units[0].getMaxHitPoint();
+                        }
+
+
+                        //状態異常攻撃
+                        BattleBaseUnitData.ActionID actionID = ((BattleEnemy) (battle_units[i])).checkActionID();
+                        if (actionID != BattleBaseUnitData.ActionID.NORMAL_ATTACK) {
+                            if (actionID != BattleBaseUnitData.ActionID.CURSE) {
+                                //状態異常のカウントが長くなるようであれば，状態異常のカウントを更新
+                                if (battle_units[0].getAlimentCounts(actionID.ordinal() - 1) < ((BattleEnemy) (battle_units[i])).getAlimentTime(actionID)) {
+                                    battle_units[0].setAilmentCounts(actionID.ordinal() - 1, ((BattleEnemy) (battle_units[i])).getAlimentTime(actionID));
+                                }
+                            } else {
+                                //呪いに関してはカウントを自身につけて，誰か一人でもカウントが0になったら死亡とする
+                                if (battle_units[i].getAlimentCounts(actionID.ordinal() - 1) < 0) {
+                                    battle_units[i].setAilmentCounts(actionID.ordinal() - 1, ((BattleEnemy) (battle_units[i])).getAlimentTime(actionID));
+                                }
+                            }
+                        }
+
+
+                        if (battle_units[i].getAlimentCounts(BattleBaseUnitData.ActionID.CURSE.ordinal() - 1) == 0) {
+                            new_hp = 0;
+                        }
+
+                        if (new_hp <= 0) {
+                            //負けたとき
+                            gameOver();
+                            resultOperatedFlag = true;
+                            battleEndFlag = true;
+                            new_hp = 0;
+                        }
+                        battle_units[0].setHitPoint(new_hp);
                     }
-                    battle_units[0].setHitPoint(new_hp);
                 }
             }
         }
@@ -492,51 +501,29 @@ public class BattleUnitAdmin {
             result_flag = result_flag && !battle_units[i].isExist();
         }
 
-        if ((result_flag == true || (timeLimitBar.isTimeUp() && timeLimitBar.isExist())) && !resultOperatedFlag) {
+        if ( battle_units[0].getHitPoint() > 0 && ((result_flag == true || (timeLimitBar.isTimeUp() && timeLimitBar.isExist())) && !resultOperatedFlag)) {
             //戦闘が終了した時
             resultOperatedFlag = true;
+            battleEndFlag = true;
             // by kmhanko
             win();
-
-            /*
-            if (mode == MODE.BATTLE || mode == MODE.BOSS) {
-                getDropItem();
-                resultButtonGroup.setUpdateFlag(true);
-                resultButtonGroup.setDrawFlag(true);
-            }
-            if (mode == MODE.MAOH) {
-                resultTextBoxUpdate(new String[]{"魔王を倒した！",});
-                resultButtonGroup.setUpdateFlag(true);
-                resultButtonGroup.setDrawFlag(true);
-            }
-            if (mode == MODE.MINING) {
-                if (timeLimitBar.isTimeUp()) {
-                    //TODO 時間切れで終了した場合
-                    resultTextBoxUpdate(new String[]{"時間切れになってしまった！", "今回の獲得ジオはありません"});
-                } else {
-                    //ジオを掘り尽くした場合
-                    getDropGeo();
-                }
-                resultButtonGroup.setUpdateFlag(true);
-                resultButtonGroup.setDrawFlag(true);
-            }*/
-
-            //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP); 戦闘終了はボタン押下時に変更
         }
 
         //text関係
-        if (resultOperatedFlag) {
+        if (resultOperatedFlag && battleEndFlag) {
             resultButtonCheck();
             resultButtonGroup.update();
         }
 
         //timeLimit関係
-        if (mode == MODE.MINING && !result_flag) {
+        if (mode == MODE.MINING && !battleEndFlag) {
             timeLimitBar.update();
         }
     }
 
+    //TODO ゲームオーバー処理
     public void gameOver() {
+        winFlag = false;
         switch(mode) {
             case BATTLE:
                 battleEnd();
@@ -551,12 +538,15 @@ public class BattleUnitAdmin {
                 battleEnd();
                 break;
             case OPENING:
-                battleEnd();
+                resultTextBoxUpdate(new String[]{"うわあああああああああ！",});
+                resultButtonGroup.setUpdateFlag(true);
+                resultButtonGroup.setDrawFlag(true);
                 break;
         }
     }
 
     public void win() {
+        winFlag = true;
         switch(mode) {
             case BATTLE:
             case BOSS:
@@ -581,6 +571,10 @@ public class BattleUnitAdmin {
                 resultButtonGroup.setDrawFlag(true);
                 break;
             case OPENING:
+                //本来来ない場所
+                resultTextBoxUpdate(new String[]{"あれ？なんか！",});
+                resultButtonGroup.setUpdateFlag(true);
+                resultButtonGroup.setDrawFlag(true);
                 break;
         }
     }
@@ -839,21 +833,35 @@ public class BattleUnitAdmin {
         }
     }
 
+    boolean winFlag;
+
     public void battleEnd() {
         deleteEnemy();
-        if (mode == MODE.BATTLE || mode == MODE.MINING) {
-            dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
-        }
-        if (mode == MODE.MAOH) {
-            playerStatus.addMaohWinCount();
-            dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TO_WORLD);
-        }
-        if (mode == MODE.BOSS){
-            mapPlateAdmin.getMapInventryAdmin().storageMapInventry(); //アイテムを格納
-            dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TO_WORLD);
-        }
-        if (mode == MODE.OPENING){
-            dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TO_WORLD);
+        if (winFlag) {
+            switch(mode) {
+                case BATTLE:
+                case BOSS:
+                case MINING:
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
+                    break;
+                case MAOH:
+                    playerStatus.addMaohWinCount();
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TO_WORLD);
+                    break;
+                case OPENING:
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TO_WORLD);
+                    break;
+            }
+        } else {
+            switch(mode) {
+                case BATTLE:
+                case BOSS:
+                case MINING:
+                case MAOH:
+                case OPENING:
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TO_WORLD);
+                    break;
+            }
         }
         resultButtonGroup.setUpdateFlag(false);
         resultButtonGroup.setDrawFlag(false);

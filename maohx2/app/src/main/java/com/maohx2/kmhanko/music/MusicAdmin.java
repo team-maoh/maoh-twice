@@ -1,7 +1,7 @@
 package com.maohx2.kmhanko.music;
 
 import android.content.Context;
-
+import android.app.Activity;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
@@ -11,6 +11,8 @@ import android.content.res.AssetManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.media.session.MediaController;
+
+import android.media.AudioManager;
 
 import java.io.IOException;
 
@@ -47,25 +49,36 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
     private int looplength;
     private long setupTime;
 
+    private int vol;
+
     Thread thread;
 
-    MediaPlayer media_player;
+    static MediaPlayer media_player;
 
     private MyDatabase database;
     private MyDatabaseAdmin databaseAdmin;
 
+    static private AudioManager manager;
+
+    /*
     public MusicAdmin(Context context) {
         mContext = context;
         //myDatabaseAdmin.addMyDatabase("");
     }
+    */
 
     public MusicAdmin(Context context, MyDatabaseAdmin _databaseAdmin) {
         mContext = context;
         databaseAdmin = _databaseAdmin;
         setDatabase(databaseAdmin);
+        this.setTableName("music_pack");
     }
 
-    public void setDatabase(MyDatabaseAdmin databaseAdmin) {
+    static public void setAudioService(Activity _activity){
+        manager = (AudioManager)(_activity.getSystemService(Context.AUDIO_SERVICE));
+    }
+
+    private void setDatabase(MyDatabaseAdmin databaseAdmin) {
         databaseAdmin.addMyDatabase(DB_NAME, DB_ASSET, 1, "r");
         database = databaseAdmin.getMyDatabase(DB_NAME);
     }
@@ -111,6 +124,13 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
 
     public void threadStop() {
         thread = null;
+    }
+
+    public void update() {
+        // 最大音量値を取得
+        vol = manager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        // 音量を設定
+        manager.setStreamVolume(AudioManager.STREAM_MUSIC, (int)(vol/2), 0);
     }
 
     public boolean play() {
