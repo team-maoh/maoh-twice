@@ -1622,6 +1622,7 @@ public class MapAdmin {
         opening_map_size.set(map_data_int.length, map_data_int[0].length);
         for (int i = 0; i < opening_map_size.x; i++) {
             for (int j = 0; j < opening_map_size.y; j++) {
+                //TODO:isWallが参照してるところが違うからおかしい
                 if (!isWall(i, j) && !isStairs(i, j)) {
 //                    map_tile[i][j] = floor_tile;
                     //アニメーション用
@@ -1636,10 +1637,11 @@ public class MapAdmin {
                         op_map_tile[k][i][j] = stair_tile;
                     }
                 } else {
-                    setAutoTile_light_animation(i, j, i, j, op_map_tile);
+                    //setAutoTile_light_animation(i, j, i, j, op_map_tile);
                 }
             }
         }
+        camera.setCameraOffset(100, 100);
     }
 
     public void openingDraw(){
