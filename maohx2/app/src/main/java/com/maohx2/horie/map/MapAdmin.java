@@ -397,7 +397,7 @@ public class MapAdmin {
         //map_object_admin初期化
         //TODO:藤原変更適用後修正必要
         map_object_admin.setMapAdmin(this);//藤原変更を適用後要変更
-        map_object_admin.spawnMine(mine_point);
+        map_object_admin.spawnMapObject(mine_point);
 //        map_object_admin.getMapAdmin(this);//藤原変更を適用していないため今はコメントアウトしている
 //        map_object_admin.getMinePoint(mine_point);//藤原変更を適用していないため今はコメントアウトしている
 //        map_object_admin.getCamera(camera);
@@ -657,6 +657,7 @@ public class MapAdmin {
 
         //if(boss_floor_num == 1) {
             map_object_admin.setMapAdmin(this);
+            map_object_admin.spawnMapObject(mine_point);
         //}
         camera.setCameraOffset(7.5 * magnification, 9 * magnification);
         map_player.putUnit(7.5 * magnification, 9 * magnification);

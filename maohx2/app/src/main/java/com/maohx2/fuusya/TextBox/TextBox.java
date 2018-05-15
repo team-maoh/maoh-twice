@@ -138,7 +138,7 @@ public class TextBox {
 
     public void update(boolean touch_state) {
 
-        if (!touch_state) {//タッチしていない
+        if (touch_state == false) {//タッチしていない
             box_paint.setColor(Color.argb(100, 0, 0, 0));
 
             if (has_updated_text == false) {

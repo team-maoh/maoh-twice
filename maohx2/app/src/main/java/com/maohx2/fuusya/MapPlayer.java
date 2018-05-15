@@ -79,7 +79,7 @@ public class MapPlayer extends MapUnit {
 
         sound_admin = _sound_admin;
 
-        mean_encount_steps = 30;
+        mean_encount_steps = 300;
         var_encount_steps = 0;
         th_encount_steps = makeThresholdEncountSteps();
 
@@ -218,12 +218,12 @@ public class MapPlayer extends MapUnit {
                 //遭遇の瞬間に、次の遭遇までに要する歩数を乱数で決める
                 th_encount_steps = makeThresholdEncountSteps();
 
-//                int now_floor_num = map_admin.getNow_floor_num();//nullが返ってくる
-                int now_floor_num = 7;
-//                int boss_floor_num = map_admin.getBoss_floor_num();//nullが返ってくる
-                int boss_floor_num = 10;
+                int now_floor_num = map_admin.getNow_floor_num();//nullが返ってくる
+//                int now_floor_num = 7;
+                int boss_floor_num = map_admin.getBoss_floor_num();//nullが返ってくる
+//                int boss_floor_num = 10;
 
-                int max_of_num_of_zako = 40;
+                int max_of_num_of_zako = 10;
                 int num_of_zako = max_of_num_of_zako * now_floor_num / boss_floor_num;
 //                int num_of_zako = (double) (now_floor_num / boss_floor_num) * max_of_num_of_zako;
 
@@ -242,11 +242,11 @@ public class MapPlayer extends MapUnit {
                 }
 
                 //デバッグ時にエンカウントすると鬱陶しいのでコメントアウト
-//                battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
-//                battle_unit_admin.spawnEnemy(tmp_zako);//
-//                dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+                battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
+                battle_unit_admin.spawnEnemy(tmp_zako);//
+                dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
 
-                System.out.println("desudesudesu +++++");
+//                System.out.println("desudesudesu +++++");
 
             }
 
