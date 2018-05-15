@@ -55,6 +55,12 @@ public abstract class BaseActivity extends Activity {
         //graphic.setImage(name, x, y, layerName);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();  // Always call the superclass method first
+        MusicAdmin.stop();
+    }
+
     //void draw() {
       //  graphic.draw();
    // }

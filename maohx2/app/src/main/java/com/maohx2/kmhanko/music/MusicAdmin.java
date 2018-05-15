@@ -51,7 +51,7 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
 
     private int vol;
 
-    Thread thread;
+    static Thread thread;
 
     static MediaPlayer media_player;
 
@@ -122,7 +122,7 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
 
     }
 
-    public void threadStop() {
+    static public void threadStop() {
         thread = null;
     }
 
@@ -150,7 +150,7 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
         return true;
     }
 
-    public void stop() {
+    static public void stop() {
         if (media_player != null) {
             if (media_player.isPlaying()) {
                 media_player.stop();
@@ -212,7 +212,6 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
             this.play();
         }
     }
-
     //ActivityのonPause()で呼ぶこと
     public void close() {
         if (media_player != null) {
