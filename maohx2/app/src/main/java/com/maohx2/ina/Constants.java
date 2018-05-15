@@ -138,6 +138,7 @@ public final class Constants {
     public static class GAMESYSTEN_MODE {
 
         public enum DUNGEON_MODE {
+            MAP_INIT,
             MAP,
             BUTTLE_INIT,
             BUTTLE,
@@ -164,6 +165,8 @@ public final class Constants {
             GEO_MAP_INIT,
             EQUIP_INIT,
             PRESENT_INIT,
+
+            DUNGEON_SELECT_INIT_START,
         }
     }
 
