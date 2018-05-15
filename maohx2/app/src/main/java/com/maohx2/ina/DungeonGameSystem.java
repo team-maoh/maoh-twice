@@ -32,6 +32,7 @@ import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.itemdata.MiningItemDataAdmin;
+import com.maohx2.kmhanko.music.MusicAdmin;
 import com.maohx2.fuusya.MapInventryAdmin;
 
 
@@ -82,19 +83,27 @@ public class DungeonGameSystem {
 
     Activity dungeonActivity;
 
+    MusicAdmin musicAdmin;
+
+    Constants.DungeonKind.DUNGEON_KIND dungeon_kind;
+
     int repeat_count;
 
-    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange _activityChange, int _repeat_count, Constants.DungeonKind.DUNGEON_KIND dungeon_kind) {
+    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange _activityChange, int _repeat_count, Constants.DungeonKind.DUNGEON_KIND _dungeon_kind) {
         dungeon_user_interface = _dungeon_user_interface;
         battle_user_interface = _battle_user_interface;
         dungeonActivity = dungeon_activity;
         graphic = _graphic;
+        dungeon_kind = _dungeon_kind;
 
         battle_unit_admin = new BattleUnitAdmin();
         text_box_admin = new TextBoxAdmin(graphic);
         list_box_admin = new ListBoxAdmin();
         text_box_admin.init(dungeon_user_interface);
         list_box_admin.init(dungeon_user_interface, graphic);
+
+        GlobalData globalData = (GlobalData)(dungeon_activity.getApplication());
+        musicAdmin = globalData.getMusicAdmin();
 
         //repeat_count = _repeat_count;
 
@@ -154,8 +163,6 @@ public class DungeonGameSystem {
         battleUnitDataAdmin.loadBattleUnitData(dungeon_kind);//敵読み込み
 
 
-
-        GlobalData globalData = (GlobalData) (dungeon_activity.getApplication());
         activityChange = _activityChange;
         dungeonModeManage = new DungeonModeManage();
         map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange, globalData);
@@ -237,6 +244,8 @@ public class DungeonGameSystem {
         //デバッグ用
         //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
 
+
+        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
     }
 
     public void saveMapSaveData() {
@@ -248,7 +257,9 @@ public class DungeonGameSystem {
     public void update() {
 
         switch (dungeonModeManage.getMode()) {
-
+            case MAP_INIT:
+                playMapBGM();
+                dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
             case MAP:
                 //map_object_admin.update(is_displaying_menu, is_touching_outside_menu);
                 //map_plate_admin.update(is_displaying_menu);
@@ -261,6 +272,7 @@ public class DungeonGameSystem {
                 //battle_unit_admin.spawnEnemy();
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE);
                 backGround = graphic.searchBitmap("firstBackground");
+                musicAdmin.loadMusic("battle00",true);
 
             case BUTTLE:
                 battle_user_interface.update();
@@ -275,6 +287,7 @@ public class DungeonGameSystem {
                         }
                 );
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAOH);
+                musicAdmin.loadMusic("battle00",true);
 
             case MAOH:
                 battle_user_interface.update();
@@ -286,6 +299,7 @@ public class DungeonGameSystem {
                 //battle_unit_admin.spawnRock();　reset内で呼んでいる
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING);
                 backGround = graphic.searchBitmap("miningBack");
+                musicAdmin.loadMusic("battle00",true);
 
             case GEO_MINING:
                 battle_user_interface.update();
@@ -305,6 +319,7 @@ public class DungeonGameSystem {
         }
 
         text_box_admin.update();
+        //musicAdmin.update();
     }
 
     public void draw() {
@@ -350,6 +365,37 @@ public class DungeonGameSystem {
 
 
 
+    private void playMapBGM() {
+        switch(dungeon_kind) {
+            case CHESS:
+                musicAdmin.loadMusic("chess00",true);
+                break;
+            case DRAGON:
+                musicAdmin.loadMusic("dragon00",true);
+                break;
+            case FOREST:
+                musicAdmin.loadMusic("forest00",true);
+                break;
+            case HAUNTED:
+                break;
+            case SEA:
+                break;
+            case SWAMP:
+                break;
+            case LAVA:
+                musicAdmin.loadMusic("lava00",true);
+                break;
+            case MAOH:
+                break;
+            case OPENING:
+                musicAdmin.loadMusic("forest00",true);
+                break;
+            default:
+                break;
+        }
+    }
+
+
     //オープニング関係
     int count = 0;
     int openningTextBoxID;
@@ -357,14 +403,13 @@ public class DungeonGameSystem {
     boolean boss_is_running = false;
 
     public void openningInit() {
-
+        playMapBGM();
         openningTextBoxID = text_box_admin.createTextBox(200, 500, 1400, 800, 3);
         text_box_admin.setTextBoxUpdateTextByTouching(openningTextBoxID, false);
         text_box_admin.setTextBoxExists(openningTextBoxID, false);
     }
 
     public void openningUpdate() {
-
 
         if(count == 1){
             map_object_admin.putPlayer();

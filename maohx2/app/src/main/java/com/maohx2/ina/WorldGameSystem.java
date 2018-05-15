@@ -19,7 +19,7 @@ import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
-import com.maohx2.ina.Constants.GAMESYSTEN_MODE.WORLD_MODE;
+import static com.maohx2.ina.Constants.GAMESYSTEN_MODE.WORLD_MODE;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.GeoPresent.GeoPresentManager;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
@@ -40,6 +40,7 @@ import com.maohx2.kmhanko.itemshop.ItemShopAdmin;
 import com.maohx2.kmhanko.effect.*;
 import com.maohx2.kmhanko.plate.BackPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
+import com.maohx2.kmhanko.music.MusicAdmin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,6 +101,7 @@ public class WorldGameSystem {
     String talkContent[][] = new String[100][];
     ImageContext talkChara[] = new ImageContext[100];
 
+    MusicAdmin musicAdmin;
 
     public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
         graphic = _graphic;
@@ -114,6 +116,7 @@ public class WorldGameSystem {
         playerStatus = globalData.getPlayerStatus();
         maohMenosStatus = globalData.getMaohMenosStatus();
         //GeoInventry = globalData.getGeoInventry();
+        musicAdmin = globalData.getMusicAdmin();
 
         worldModeAdmin = new WorldModeAdmin();
         worldModeAdmin.initWorld();
@@ -193,6 +196,8 @@ public class WorldGameSystem {
 
         geoSlotAdminManager.calcPlayerStatus();
 
+        worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT_INIT_START);
+
         //TODO かり。戻るボタン
         initBackPlate();
     }
@@ -211,6 +216,8 @@ public class WorldGameSystem {
 
 
         switch (worldModeAdmin.getMode()) {
+            case DUNGEON_SELECT_INIT_START:
+                musicAdmin.loadMusic("world00",true);
             case DUNGEON_SELECT_INIT:
                 backGround = graphic.searchBitmap("firstBackground");
                 worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT);
@@ -275,6 +282,7 @@ public class WorldGameSystem {
 
         text_box_admin.update();
         effectAdmin.update();
+        //musicAdmin.update();
     }
 
 
@@ -380,6 +388,8 @@ public class WorldGameSystem {
     boolean text_mode = false;
 
     public void openningInit() {
+
+        musicAdmin.loadMusic("world00",true);
 
         openningTextBoxID = text_box_admin.createTextBox(50, 700, 1550, 880, 4);
         text_box_admin.setTextBoxUpdateTextByTouching(openningTextBoxID, true);
@@ -863,6 +873,7 @@ public class WorldGameSystem {
 
         text_box_admin.update();
         text_box_admin.draw();
+        //musicAdmin.update();
     }
 
 

@@ -9,9 +9,9 @@ import android.view.SurfaceHolder;
 
 import android.view.SurfaceView;
 import android.widget.RelativeLayout;
-
+import com.maohx2.kmhanko.music.MusicAdmin;
 import com.maohx2.ina.Draw.Graphic;
-
+import android.media.AudioManager;
 import static com.maohx2.ina.Constants.Bitmap.*;
 
 /**
@@ -31,6 +31,9 @@ public abstract class BaseActivity extends Activity {
         layout = new RelativeLayout(this);
         setContentView(layout);
 
+        //音量調整ボタンを使用できるようにする
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        //MusicAdmin.setAudioService(this);
 
         /*
         backSurfaceView = new BackSurfaceView(this);

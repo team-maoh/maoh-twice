@@ -18,6 +18,7 @@ import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoPresentSaver;
 import com.maohx2.kmhanko.Saver.GeoSlotSaver;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+import com.maohx2.kmhanko.music.MusicAdmin;
 
 //by kmhanko
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
@@ -48,6 +49,8 @@ public class GlobalData extends Application {
 
     ItemDataAdminManager itemDataAdminManager;
 
+    MusicAdmin musicAdmin;
+
     public void init(int disp_x, int disp_y) {
         g_my_database_admin = new MyDatabaseAdmin(this);
         g_my_database_admin.addMyDatabase("globalImageDB", "globalImage.db", 1, "r");
@@ -62,6 +65,7 @@ public class GlobalData extends Application {
         playerStatusSaver.load();
         maohMenosStatus = new MaohMenosStatus();
 
+        musicAdmin = new MusicAdmin(this, g_my_database_admin);
 
         equipmentInventrySaver = new EquipmentInventrySaver(g_my_database_admin, "EquipmentInventrySave", "EquipmentInventrySave.db", 1, "ns");
         equipmentInventry = new InventryS(equipmentInventrySaver);
@@ -95,4 +99,6 @@ public class GlobalData extends Application {
     public PlayerStatus getPlayerStatus() { return playerStatus; }
     public PlayerStatusSaver getPlayerStatusSaver() { return playerStatusSaver; }
     public MaohMenosStatus getMaohMenosStatus() { return maohMenosStatus; }
+
+    public MusicAdmin getMusicAdmin() { return musicAdmin; }
 }

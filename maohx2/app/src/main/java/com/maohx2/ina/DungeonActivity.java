@@ -159,7 +159,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
 
         }
 
-        sound_admin.loadSoundPack("map");
+        sound_admin.loadSoundPack("basic");
 
 
         battle_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
