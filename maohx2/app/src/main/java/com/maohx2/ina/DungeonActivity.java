@@ -98,16 +98,6 @@ class DungeonSurfaceView extends BaseSurfaceView{
         Intent intent = currentActivity.getIntent();
         DUNGEON_KIND dungeon_kind = (DUNGEON_KIND)intent.getSerializableExtra("DungeonKind");
 
-        //TODO バグらないようにとりあえず読んでる
-        //my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
-        //graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
-
-        //TODO openingFlagをもらってくる
-        openingFlag = true;
-        if (openingFlag) {
-            dungeon_kind = DUNGEON_KIND.OPENING;
-        }
-
         switch (dungeon_kind){
             case CHESS:
                 my_database_admin.addMyDatabase("ChessDB", "LocalChessImage.db", 1, "r");
@@ -153,6 +143,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
                 my_database_admin.addMyDatabase("ChessDB", "LocalChessImage.db", 1, "r");
                 graphic.loadLocalImages(my_database_admin.getMyDatabase("ChessDB"), "Chess");
                 //dungeon_kind = DUNGEON_KIND.CHESS;
+                openingFlag = true;
                 break;
 
         }
