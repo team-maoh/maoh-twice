@@ -242,9 +242,9 @@ public class MapPlayer extends MapUnit {
                 }
 
                 //デバッグ時にエンカウントすると鬱陶しいのでコメントアウト
-                battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
-                battle_unit_admin.spawnEnemy(tmp_zako);//
-                dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+//                battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
+//                battle_unit_admin.spawnEnemy(tmp_zako);//
+//                dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
 
 //                System.out.println("desudesudesu +++++");
 

@@ -201,9 +201,9 @@ public class MapEnemy extends MapUnit {
             exists = false;
 
             //デバッグ時に鬱陶しいのでコメントアウト
-            battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
-            battle_unit_admin.spawnEnemy(name);//歩行エンカウントでは引数なし
-            dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+//            battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
+//            battle_unit_admin.spawnEnemy(name);//歩行エンカウントでは引数なし
+//            dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
         }
 
     }

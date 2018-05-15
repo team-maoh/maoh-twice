@@ -29,7 +29,7 @@ import static java.lang.Math.abs;
 public class MapAdmin {
     int map_data_int[][] = {
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+            {1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -83,6 +83,8 @@ public class MapAdmin {
     Point map_offset = new Point(0, 0);
     Point room_point = new Point(0, 0);
     Point mine_point[];//採掘場所の座標
+    Point opening_map_size = new Point (0, 0);
+
     Camera camera;// = new Camera(map_size, magnification);
     SectionAdmin section_admin;
     Canvas canvas;
@@ -389,7 +391,7 @@ public class MapAdmin {
                             map_tile_animation[k][i][j] = stair_tile;
                         }
                     } else {
-                        setAutoTile_light_animation(i, j, i, j, map_tile_animation);
+                        setAutoTile_light_animation(i, j, i, j, map_tile_animation, false);
                     }
                 }
             }
@@ -651,7 +653,7 @@ public class MapAdmin {
                         map_tile_animation[k][i][j] = stair_tile;
                     }
                 } else {
-                    setAutoTile_light_animation(i, j, i, j, map_tile_animation);
+                    setAutoTile_light_animation(i, j, i, j, map_tile_animation, false);
                 }
             }
         }
@@ -1485,29 +1487,53 @@ public class MapAdmin {
                 auto_tile_wall.big_auto_tile, i, j, map_tile);
     }
 
-    private void setAutoTile_light_animation(int array_x, int array_y, int i, int j, BitmapData _map_data[][][]) {
+    private void setAutoTile_light_animation(int array_x, int array_y, int i, int j, BitmapData _map_data[][][], boolean isOpening) {
         int before_array_x = array_x - 1;
         int after_array_x = array_x + 1;
         int before_array_y = array_y - 1;
         int after_array_y = array_y + 1;
-        if (before_array_x < 0) {
-            before_array_x = 0;
+
+        if(isOpening) {
+            if (before_array_x < 0) {
+                before_array_x = 0;
+            }
+            if (after_array_x > opening_map_size.x - 1) {
+                after_array_x = opening_map_size.x - 1;
+            }
+            if (before_array_y < 0) {
+                before_array_y = 0;
+            }
+            if (after_array_y > opening_map_size.y - 1) {
+                after_array_y = opening_map_size.y - 1;
+            }
+            for (int k = 0; k < animation_num; k++) {
+                createMapTileSetForBitmap(
+                        isWall_op(before_array_x, before_array_y), isWall_op(array_x, before_array_y), isWall_op(after_array_x, before_array_y),
+                        isWall_op(before_array_x, array_y), isWall_op(after_array_x, array_y),
+                        isWall_op(before_array_x, after_array_y), isWall_op(array_x, after_array_y), isWall_op(after_array_x, after_array_y),
+                        at_wall[k].big_auto_tile, i, j, _map_data[k]);
+            }
         }
-        if (after_array_x > map_size.x - 1) {
-            after_array_x = map_size.x - 1;
-        }
-        if (before_array_y < 0) {
-            before_array_y = 0;
-        }
-        if (after_array_y > map_size.y - 1) {
-            after_array_y = map_size.y - 1;
-        }
-        for (int k = 0; k < animation_num; k++) {
-            createMapTileSetForBitmap(
-                    isWall(before_array_x, before_array_y), isWall(array_x, before_array_y), isWall(after_array_x, before_array_y),
-                    isWall(before_array_x, array_y), isWall(after_array_x, array_y),
-                    isWall(before_array_x, after_array_y), isWall(array_x, after_array_y), isWall(after_array_x, after_array_y),
-                    at_wall[k].big_auto_tile, i, j, _map_data[k]);
+        else{
+            if (before_array_x < 0) {
+                before_array_x = 0;
+            }
+            if (after_array_x > map_size.x - 1) {
+                after_array_x = map_size.x - 1;
+            }
+            if (before_array_y < 0) {
+                before_array_y = 0;
+            }
+            if (after_array_y > map_size.y - 1) {
+                after_array_y = map_size.y - 1;
+            }
+            for (int k = 0; k < animation_num; k++) {
+                createMapTileSetForBitmap(
+                        isWall(before_array_x, before_array_y), isWall(array_x, before_array_y), isWall(after_array_x, before_array_y),
+                        isWall(before_array_x, array_y), isWall(after_array_x, array_y),
+                        isWall(before_array_x, after_array_y), isWall(array_x, after_array_y), isWall(after_array_x, after_array_y),
+                        at_wall[k].big_auto_tile, i, j, _map_data[k]);
+            }
         }
     }
 
@@ -1646,10 +1672,9 @@ public class MapAdmin {
     }
 
     public void createOpeningMap(){
-        Point opening_map_size = new Point (0, 0);
-//        transportMatrix();
-        intToChip(map_data_int);
-        opening_map_size.set(map_data_int.length, map_data_int[0].length);
+        transportMatrix();
+        intToChip(t_map_data_int);
+        opening_map_size.set(opening_map_data.length, opening_map_data[0].length);
         op_map_tile = new BitmapData[animation_num][opening_map_size.x][opening_map_size.y];
         for (int i = 0; i < opening_map_size.x; i++) {
             for (int j = 0; j < opening_map_size.y; j++) {
@@ -1668,17 +1693,17 @@ public class MapAdmin {
                         op_map_tile[k][i][j] = stair_tile;
                     }
                 } else {
-                    //setAutoTile_light_animation(i, j, i, j, op_map_tile);
+                    setAutoTile_light_animation(i, j, i, j, op_map_tile, true);
                 }
             }
         }
-        camera.setCameraOffset(100, 100);
+        //camera.setCameraOffset(500, 500);
     }
 
     public void drawOpeningMap(){
         time++;
-        for (int i = 0; i < map_size.x; i++) {
-            for (int j = 0; j < map_size.y; j++) {
+        for (int i = 0; i < opening_map_size.x; i++) {
+            for (int j = 0; j < opening_map_size.y; j++) {
                 if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification &&
                         camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification &&
                         camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification &&
