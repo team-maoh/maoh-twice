@@ -842,7 +842,7 @@ public class BattleUnitAdmin {
                 case BATTLE:
                 case BOSS:
                 case MINING:
-                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
                     break;
                 case MAOH:
                     playerStatus.addMaohWinCount();
