@@ -381,18 +381,27 @@ public class BattleUnitAdmin {
 
                         //マーカーが当たっている
                         if ((ex - cx) * (ex - cx) + (ey - cy) * (ey - cy) < (er - cr) * (er - cr)) {
-
                             if (((BattleEnemy) (battle_units[i])).isSpecialAction() == false) {
+                                //敵が特殊行動していないなら
 
                                 int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage();
                                 if (new_hp > 0) {
                                     battle_units[i].setHitPoint(new_hp);
                                 } else {
-                                    battle_units[i].existIs(false);
+                                    //by kmhanko
+                                    //岩は特殊行動しないため、死亡判定についてこの位置のみに記述すれば良い。
+                                    //岩はマーカーが当たっているときはマーカーが当たっている間は死亡しない
+                                    if (battle_units[i].getUnitKind() != Constants.UnitKind.ROCK) {
+                                        battle_units[i].existIs(false);
+                                    } else {
+                                        //岩の場合はHPが負であってもHPにセットする
+                                        battle_units[i].setHitPoint(new_hp);
+                                    }
                                 }
                             } else {
-                                //ダメージがゼロ
+
                                 if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.BARRIER) {
+                                    //敵がバリアを張っているなら(ダメージを受けない)
                                 } else if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.COUNTER) {
                                     int new_hp = battle_units[0].getHitPoint() - touch_markers[j].getDamage();
                                     if (new_hp > 0) {
@@ -408,6 +417,11 @@ public class BattleUnitAdmin {
                                         battle_units[i].existIs(false);
                                     }
                                 }
+                            }
+                        } else {
+                            //岩の場合の死亡タイミング(マーカーが当たっておらず、HPが負のとき)
+                            if (battle_units[i].getUnitKind() == Constants.UnitKind.ROCK && battle_units[i].getHitPoint() <= 0) {
+                                battle_units[i].existIs(false);
                             }
                         }
                     }
