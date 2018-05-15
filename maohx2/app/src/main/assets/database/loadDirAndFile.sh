@@ -16,9 +16,7 @@ for dirPath in `find ${parentDir} -mindepth 1 -maxdepth 1 -type d`; do #parentDi
     imagename=${filename%.*}
 
     echo "$imagename|$filename" >> ${grandparentDirName}${parentDirName}${dirName}FilenameTemp
-
-    #ファイル名を挿入する
-    #echo "insert into ${dirName} values('${imagename}','${filename}');" >> ${grandparentDirName}${parentDirName}DBCommandTemp
+    
   done
 
   iconv -f UTF-8-MAC -t UTF-8 ${grandparentDirName}${parentDirName}${dirName}FilenameTemp  > UTF8${grandparentDirName}${parentDirName}${dirName}FilenameTemp

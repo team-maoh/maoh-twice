@@ -20,6 +20,7 @@ import com.maohx2.ina.Constants.WorldMap.SELECT_MODE;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import com.maohx2.kmhanko.sound.SoundAdmin;
 /**
  * Created by user on 2017/11/24.
  */
@@ -63,6 +64,8 @@ public class DungeonSelectManager {
 
     MyDatabase database;
 
+    SoundAdmin soundAdmin;
+
     //TODO いなの関数待ち
     List<String> dungeonName;
     List<String> event;
@@ -93,7 +96,7 @@ public class DungeonSelectManager {
     //いなの実装までの仮置き
     //boolean enterSelectFlag = false;
 
-    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, ActivityChange _activityChange) {
+    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, ActivityChange _activityChange, SoundAdmin _soundAdmin) {
         graphic = _graphic;
         userInterface = _userInterface;
         textBoxAdmin = _textBoxAdmin;
@@ -103,6 +106,7 @@ public class DungeonSelectManager {
         //worldActivity = _worldActivity;
         activityChange = _activityChange;
         playerStatus = _playerStatus;
+        soundAdmin = _soundAdmin;
 
         setDatabase(databaseAdmin);
         initMapIconPlate();
@@ -391,11 +395,13 @@ public class DungeonSelectManager {
             //ボタンに登録されているイベント名を参照して、それそれの場合の結果を返す
             if (event.get(focusDungeonButtonID).equals("dungeon")) {
                 if (worldModeAdmin.getMode() == WORLD_MODE.DUNGEON_SELECT) {
+                    soundAdmin.play("enter00");
                     enterTextBoxUpdateDungeon();
                     dungeonEnterSelectButtonGroup.setUpdateFlag(true);
                     dungeonEnterSelectButtonGroup.setDrawFlag(true);
                 }
                 if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
+                    soundAdmin.play("enter00");
                     geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
                     worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
                     initUIsFlag = true;
@@ -403,28 +409,41 @@ public class DungeonSelectManager {
             }
 
             if (event.get(focusDungeonButtonID).equals("shop")) {
+                soundAdmin.play("enter00");
                 worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.SHOP_INIT);
                 initUIsFlag = true;
 
             }
             if (event.get(focusDungeonButtonID).equals("present")) {
+                soundAdmin.play("enter00");
                 worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.PRESENT_INIT);
                 initUIsFlag = true;
             }
             if (event.get(focusDungeonButtonID).equals("maoh")) {
-                enterTextBoxUpdateMaoh();
-                maohEnterSelectButtonGroup.setUpdateFlag(true);
-                maohEnterSelectButtonGroup.setDrawFlag(true);
+                soundAdmin.play("enter00");
+                if (worldModeAdmin.getMode() == WORLD_MODE.DUNGEON_SELECT) {
+                    enterTextBoxUpdateMaoh();
+                    maohEnterSelectButtonGroup.setUpdateFlag(true);
+                    maohEnterSelectButtonGroup.setDrawFlag(true);
+                }
+                if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
+                    geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
+                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
+                    initUIsFlag = true;
+                }
             }
             if (event.get(focusDungeonButtonID).equals("map")) {
+                soundAdmin.play("enter00");
                 switchSelectMode();
                 initUIsFlag = true;
             }
             if (event.get(focusDungeonButtonID).equals("equip")) {
+                soundAdmin.play("enter00");
                 initUIsFlag = true;
                 worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.EQUIP_INIT);
             }
             if (event.get(focusDungeonButtonID).equals("option")) {
+                soundAdmin.play("enter00");
                 initUIsFlag = true;
             }
         }
@@ -450,6 +469,7 @@ public class DungeonSelectManager {
 
         int buttonID = dungeonEnterSelectButtonGroup.getTouchContentNum();
         if (buttonID == 0 ) { //侵入する
+            soundAdmin.play("enter00");
             initUIsFlag = true;
             MapIconPlate tmp = (MapIconPlate)mapIconPlateGroup.getPlate(focusDungeonButtonID);
             String dungeonName = tmp.getMapIconName();
@@ -460,12 +480,16 @@ public class DungeonSelectManager {
                 case "Dragon": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.DRAGON; break;
                 case "Haunted": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.HAUNTED; break;
                 case "Forest": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.FOREST; break;
+                case "Lava": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.LAVA; break;
+                case "Swamp": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.SWAMP; break;
+                case "Sea": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.SEA; break;
                 default: dungeonKind = Constants.DungeonKind.DUNGEON_KIND.GOKI; break;
             }
 
             activityChange.toDungeonActivity(dungeonKind);
         }
         if (buttonID == 1 ) { //やめる
+            soundAdmin.play("cancel00");
             initUIsFlag = true;
         }
     }
@@ -477,6 +501,7 @@ public class DungeonSelectManager {
 
         int buttonID = maohEnterSelectButtonGroup.getTouchContentNum();
         if (buttonID == 0 ) { //挑戦する
+            soundAdmin.play("enter00");
             initUIsFlag = true;
 
             activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.MAOH);
@@ -484,6 +509,7 @@ public class DungeonSelectManager {
             //dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
         }
         if (buttonID == 1 ) { //やめる
+            soundAdmin.play("cancel00");
             initUIsFlag = true;
         }
     }

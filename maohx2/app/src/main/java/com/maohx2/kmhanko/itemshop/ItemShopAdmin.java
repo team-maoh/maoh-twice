@@ -13,7 +13,7 @@ import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
-
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 /**
  * Created by user on 2017/11/19.
@@ -59,6 +59,8 @@ public class ItemShopAdmin {
 
     PlayerStatus playerStatus;
 
+    SoundAdmin soundAdmin;
+
     int moneyTextBoxID;
 
     public enum ITEM_KIND {
@@ -67,7 +69,7 @@ public class ItemShopAdmin {
         ITEM_KIND_NUM
     }
 
-    public void init(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, ItemDataAdminManager itemDataAdminManager, InventryS _expendItemInventry, InventryS _geoInventry, PlayerStatus _playerStatus) {
+    public void init(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, ItemDataAdminManager itemDataAdminManager, InventryS _expendItemInventry, InventryS _geoInventry, PlayerStatus _playerStatus, SoundAdmin _soundAdmin) {
         userInterface = _userInterface;
         graphic = _graphic;
         textBoxAdmin = _textBoxAdmin;
@@ -76,6 +78,7 @@ public class ItemShopAdmin {
         geoInventry = _geoInventry;
         databaseAdmin = _databaseAdmin;
         playerStatus = _playerStatus;
+        soundAdmin = _soundAdmin;
 
         expendItemShopData = new ExpendItemShopData(graphic, databaseAdmin);
         expendItemShopData.setExpendItemDataAdmin(itemDataAdminManager.getExpendItemDataAdmin());
@@ -90,12 +93,12 @@ public class ItemShopAdmin {
         boolean itemKindFlag = false;
 
         if (_itemKind == ITEM_KIND.EXPEND) {
-            itemShop = new ExpendItemShop(userInterface, graphic, databaseAdmin, textBoxAdmin, worldModeAdmin, expendItemInventry, playerStatus, this);
+            itemShop = new ExpendItemShop(userInterface, graphic, databaseAdmin, textBoxAdmin, worldModeAdmin, expendItemInventry, playerStatus, this, soundAdmin);
             itemShop.setItemShopData(expendItemShopData);
             itemKindFlag = true;
         }
         if (_itemKind == ITEM_KIND.GEO_OBJECT) {
-            itemShop = new GeoObjectShop(userInterface, graphic, databaseAdmin, textBoxAdmin, worldModeAdmin, geoInventry, playerStatus, this);
+            itemShop = new GeoObjectShop(userInterface, graphic, databaseAdmin, textBoxAdmin, worldModeAdmin, geoInventry, playerStatus, this, soundAdmin);
             itemShop.setItemShopData(geoObjectShopData);
             itemKindFlag = true;
         }

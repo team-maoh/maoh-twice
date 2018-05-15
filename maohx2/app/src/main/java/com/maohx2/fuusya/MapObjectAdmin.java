@@ -1,5 +1,7 @@
 package com.maohx2.fuusya;
 
+
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -8,6 +10,7 @@ import android.view.SurfaceHolder;
 
 import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.MapAdmin;
+import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
@@ -19,6 +22,8 @@ import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 //import com.maohx2.ina.ImageAdmin;
+
+import java.util.Random;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -33,7 +38,7 @@ public class MapObjectAdmin {
 
     int NUM_OF_ENEMY = 10;
     //    int NUM_OF_ITEM = 10;// > 2
-    int NUM_OF_TRAP = 15;
+    int NUM_OF_TRAP = 10;
     int NUM_OF_MINE = 5;
     int NUM_OF_BOSS = 1;
 
@@ -46,6 +51,7 @@ public class MapObjectAdmin {
     MapPlayer map_player;
     MapObjectBitmap map_player_bitmap;
     double player_x, player_y;
+    Random random;
 
     //    MapItem[] map_item = new MapItem[NUM_OF_ITEM];
 //    MapObjectBitmap[] map_item_bitmap = new MapObjectBitmap[NUM_OF_ITEM];
@@ -54,8 +60,8 @@ public class MapObjectAdmin {
     MapMine[] map_mine = new MapMine[NUM_OF_MINE];
     MapObjectBitmap[] map_mine_bitmap = new MapObjectBitmap[NUM_OF_MINE];
 
-    MapBoss map_boss;
-    MapObjectBitmap map_boss_bitmap;
+    MapBoss[] map_boss = new MapBoss[NUM_OF_BOSS];
+    MapObjectBitmap[] map_boss_bitmap = new MapObjectBitmap[NUM_OF_BOSS];
 
     MapEnemy[] map_enemy = new MapEnemy[NUM_OF_ENEMY];
     MapObjectBitmap[] map_enemy_bitmap = new MapObjectBitmap[NUM_OF_ENEMY];
@@ -70,6 +76,7 @@ public class MapObjectAdmin {
     DungeonModeManage dungeon_mode_manage;
     GlobalData globalData;
     PlayerStatus playerStatus;
+    BattleUnitAdmin battle_unit_admin;
 
     Graphic graphic;
     Camera camera;
@@ -77,7 +84,7 @@ public class MapObjectAdmin {
     boolean is_displaying_menu;
 
 
-    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, GlobalData _globalData) {
+    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, GlobalData _globalData, BattleUnitAdmin _battle_unit_admin) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
         sound_admin = _sound_admin;
@@ -85,10 +92,12 @@ public class MapObjectAdmin {
         dungeon_mode_manage = _dungeon_mode_manage;
         globalData = _globalData;
         playerStatus = globalData.getPlayerStatus();
+        battle_unit_admin = _battle_unit_admin;
 
         is_displaying_menu = false;
+        random = new Random();
 
-        map_player = new MapPlayer(graphic, this, dungeon_user_interface, _sound_admin, camera, map_plate_admin);
+        map_player = new MapPlayer(graphic, this, dungeon_user_interface, _sound_admin, camera, map_plate_admin, battle_unit_admin, dungeon_mode_manage);
         map_player.init();
         map_player_bitmap = new MapObjectBitmap(PLAYER_DIR, graphic, "主人公");
         map_player_bitmap.init(3 / 2);
@@ -97,6 +106,8 @@ public class MapObjectAdmin {
         player_y = map_player.getWorldY();
 
         for (int i = 0; i < NUM_OF_TRAP; i++) {
+
+            String name_of_trap = randomTrapName();
 
             map_trap[i] = new MapTrap(graphic, this, i % 4, camera, false, "being_teleported");
             map_trap[i].init();
@@ -116,16 +127,19 @@ public class MapObjectAdmin {
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
 
-            map_enemy[i] = new MapEnemy(graphic, this, camera, ENEMY_DIR, true, true);
+
+            map_enemy[i] = new MapEnemy(graphic, this, camera, ENEMY_DIR, true, true, battle_unit_admin, dungeon_mode_manage);
             map_enemy[i].init();
             map_enemy_bitmap[i] = new MapObjectBitmap(ENEMY_DIR, graphic, "ジオイーター");
             map_enemy_bitmap[i].init(3 / 2);
         }
 
-        map_boss = new MapBoss(graphic, this, 0, camera);
-        map_boss.init();
-        map_boss_bitmap = new MapObjectBitmap(BOSS_DIR, graphic, "ボス");
-        map_boss_bitmap.init();
+        for (int i = 0; i < NUM_OF_BOSS; i++) {
+            map_boss[i] = new MapBoss(graphic, this, 0, camera, battle_unit_admin, dungeon_mode_manage);
+            map_boss[i].init();
+            map_boss_bitmap[i] = new MapObjectBitmap(BOSS_DIR, graphic, "ボス");
+            map_boss_bitmap[i].init();
+        }
 
 //        item_distance = 0;
         enemy_distance = 0;
@@ -133,9 +147,23 @@ public class MapObjectAdmin {
         bag_item_admin = new BagItemAdmin();
         bag_item_admin.init();
 
+
     }
 
     public void init() {
+    }
+
+    public void openingUpdate(boolean boss_is_running) {
+
+        map_player.openingUpdate();
+        map_player_bitmap.update();
+
+        if (boss_is_running) {
+
+            map_boss[0].openingUpdate();
+            map_boss_bitmap[0].update();
+
+        }
     }
 
     public void update() {
@@ -167,8 +195,10 @@ public class MapObjectAdmin {
                 map_enemy_bitmap[i].update();
             }
 
-            map_boss.update();
-            map_boss_bitmap.update();
+            for (int i = 0; i < NUM_OF_BOSS; i++) {
+                map_boss[i].update();
+                map_boss_bitmap[i].update();
+            }
         }
 
     }
@@ -198,8 +228,10 @@ public class MapObjectAdmin {
             }
         }
 
-        if (map_boss.exists() == true) {
-            map_boss_bitmap.draw(map_boss.getDirOnMap(), map_boss.getNormX(), map_boss.getNormY());
+        for (int i = 0; i < NUM_OF_BOSS; i++) {
+            if (map_boss[i].exists() == true) {
+                map_boss_bitmap[i].draw(map_boss[i].getDirOnMap(), map_boss[i].getNormX(), map_boss[i].getNormY());
+            }
         }
         if (map_player.exists() == true) {
             map_player_bitmap.draw(map_player.getDirOnMap(), map_player.getNormX(), map_player.getNormY());
@@ -230,11 +262,10 @@ public class MapObjectAdmin {
 
     //by kmhanko
     public void battleStart() {
-        dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+        //dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
     }
 
-
-    public void getMapAdmin(MapAdmin _map_admin) {
+    public void setMapAdmin(MapAdmin _map_admin) {
 
         map_admin = _map_admin;
         magnification = map_admin.getMagnification();
@@ -253,40 +284,40 @@ public class MapObjectAdmin {
             map_enemy[i].initClass(map_admin);
         }
 
-        map_boss.initClass(map_admin);
+        for (int i = 0; i < NUM_OF_BOSS; i++) {
+            map_boss[i].initClass(map_admin);
+        }
 
     }
 
     //リスポーン関数
-    public void spawnMapObject(Point[] mine_point, Point boss_point, String[] names_of_enemys, String[] names_of_traps) {
-
+    //Mineの後でEnemyをspawnしないとEnemyをMineの近くで発生させることができない
+//    public void spawnMapObject(Point[] mine_point) {
+//
 //        spawnMine(mine_point);
-        spawnBoss(boss_point);
-        spawnEnemy(names_of_enemys);
-        spawnTrap(names_of_traps);
+//
+//    }
 
-    }
-
-    public void spawnMine(Point[] mine_point) {
-
-        for (int i = 0; i < NUM_OF_MINE; i++) {
-
-            if (mine_point[i].x > 0) {
-                map_mine[i].generatePosition(mine_point[i].x * magnification + magnification / 2, mine_point[i].y * magnification + magnification / 2, magnification);
-                map_mine[i].setExists(true);
-            } else {
-                map_mine[i].setPosition(1, 1);
-                map_mine[i].setExists(false);
-            }
-
-        }
+    public void spawnMapObject(Point[] mine_point) {
 
         //本当はmap_adminで実行してもらう
         //堀江さんと二人がかりでデバッグするのも何なので、今はここに書く
-        String[] debug_enemy_name = new String[NUM_OF_ENEMY];
-        for (int i = 0; i < NUM_OF_ENEMY; i++) {
-            debug_enemy_name[i] = "中ボス(デバッグ用の仮名)";
-        }
+//        String[] debug_enemy_name = new String[NUM_OF_ENEMY];
+//        String mid_monster_name[] = map_admin.getMidMonster(1);
+        String[] tmp_enemy_name = new String[1];
+        tmp_enemy_name[0] = map_admin.getMonsterName(2)[0];
+//            map_enemy[i].setName(tmp_enemy_name);
+//            map_enemy[i].setExists(true);
+
+
+//        for (int i = 0; i < NUM_OF_BOSS; i++) {
+//            String[] tmp_boss = new String[1];
+//            tmp_boss[0] = map_admin.getMonsterName(2)[0];
+//            map_boss[i].setName(tmp_boss);
+//            map_boss[i].setExists(true);
+//
+//        }
+
         String[] debug_trap_name = new String[NUM_OF_TRAP];
         for (int i = 0; i < NUM_OF_TRAP; i++) {
             debug_trap_name[i] = "being_teleported";
@@ -296,61 +327,163 @@ public class MapObjectAdmin {
             debug_mine_point[i] = new Point(-1, -1);
         }
         //
-        spawnMapObject(debug_mine_point, debug_mine_point[0], debug_enemy_name, debug_trap_name);
+        Point[] debug_boss_point = new Point[NUM_OF_BOSS];
 
-    }
+        for (int i = 0; i < NUM_OF_BOSS; i++) {
+            Point room_point = new Point(1, 1);
+            debug_boss_point[i] = room_point;
+            debug_boss_point[i].set((int) (magnification * 7.5), (int) (magnification * 7.5));
+        }
 
-    private void spawnBoss(Point boss_point) {
-
-        if (boss_point.x > 0) {
-            map_boss.setPosition(boss_point.x, boss_point.y);
-            map_boss.setExists(true);
+        if (map_admin.getBoss_floor_num() != map_admin.getNow_floor_num()) {
+//            System.out.println("haidesu_FutsuFloor");
+//            System.out.println("haidesu___________" + map_admin.getNow_floor_num());
+//            System.out.println("haidesu___________" + map_admin.getBoss_floor_num());
+            spawnMine(debug_mine_point);
+            spawnEnemy(tmp_enemy_name);
+            spawnTrap(debug_trap_name);
         } else {
-            map_boss.setPosition(1, 1);
-            map_boss.setExists(false);
+//            System.out.println("haidesu_BossFloor");
+//            System.out.println("haidesu___________" + map_admin.getNow_floor_num());
+//            System.out.println("haidesu___________" + map_admin.getBoss_floor_num());
+            spawnBoss(debug_boss_point);
         }
 
     }
 
-    private void spawnEnemy(String[] names_of_enemys) {
+    public void spawnMine(Point[] mine_point) {
+
+        for (int i = 0; i < NUM_OF_MINE; i++) {
+            map_mine[i].setExists(false);
+        }
+
+        if (map_admin.getNow_floor_num() != map_admin.getBoss_floor_num()) {
+
+            for (int i = 0; i < NUM_OF_MINE; i++) {
+
+                if (mine_point[i].x > 0) {
+                    map_mine[i].generatePosition(mine_point[i].x * magnification + magnification / 2, mine_point[i].y * magnification + magnification / 2, magnification);
+                    map_mine[i].setExists(true);
+                } else {
+                    map_mine[i].setPosition(1, 1);
+                    map_mine[i].setExists(false);
+                }
+            }
+        }
+    }
+
+    public void spawnBoss(Point[] boss_point) {
+
+        for (int i = 0; i < NUM_OF_BOSS; i++) {
+            map_boss[i].setExists(false);
+        }
+
+        int a = map_admin.getNow_floor_num();
+        int b = map_admin.getBoss_floor_num();
+        if (map_admin.getNow_floor_num() == map_admin.getBoss_floor_num()) {
+
+            for (int i = 0; i < NUM_OF_BOSS; i++) {
+                map_boss[i].setPosition(boss_point[i].x, boss_point[i].y);
+//            map_boss[i].setPosition(boss_point[i].x, boss_point[i].y);
+                String[] tmp_boss = new String[1];
+
+                tmp_boss[0] = map_admin.getMonsterName(2)[0];
+
+//            name[0] = names;
+                map_boss[i].setName(tmp_boss);
+                map_boss[i].setExists(true);
+//            System.out.println("boss_point.x ___ " + boss_point.x);
+//            System.out.println("boss_point.y ___ " + boss_point.y);
+                System.out.println("boss_point.x ___ " + boss_point[i].x);
+                System.out.println("boss_point.y ___ " + boss_point[i].y);
+            }
+        }
+
+    }
+
+    public void spawnEnemy(String[] names_of_enemys) {
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
             map_enemy[i].setExists(false);
         }
 
-        for (int i = 0; i < NUM_OF_ENEMY; i++) {
+        if (map_admin.getNow_floor_num() != map_admin.getBoss_floor_num()) {
 
-            if (names_of_enemys[i].equals("null")) {
-                break;
-            }
+            for (int i = 0; i < NUM_OF_ENEMY; i++) {
 
-            if (i == 2 && map_mine[0].exists() == true) {
-                map_enemy[i].setPosition((int) map_mine[0].getWorldX(), (int) map_mine[0].getWorldY());//採掘スポットの近く
-            } else {
-                Point room_point = map_admin.getRoomPoint();
-                map_enemy[i].setPosition(room_point.x + magnification / 2, room_point.y + magnification / 2);
+                if (i == 2 && map_mine[0].exists() == true) {
+                    map_enemy[i].setPosition((int) map_mine[0].getWorldX(), (int) map_mine[0].getWorldY());//採掘スポットの近く
+                } else {
+                    Point room_point = map_admin.getRoomPoint();
+                    map_enemy[i].setPosition(room_point.x + magnification / 2, room_point.y + magnification / 2);
+                }
+                map_enemy[i].setExists(true);
+                map_enemy[i].setName(names_of_enemys);
             }
-            map_enemy[i].setExists(true);
-            map_enemy[i].setName(names_of_enemys[i]);
         }
     }
 
-    private void spawnTrap(String[] names_of_traps) {
+    public void spawnTrap(String[] names_of_traps) {
 
-        for (int i = 0; i < NUM_OF_TRAP; i++) {
-            map_trap[i].setExists(false);
-        }
 
-        for (int i = 0; i < NUM_OF_TRAP; i++) {
+        if (map_admin.getNow_floor_num() != map_admin.getBoss_floor_num()) {
 
-            if (names_of_traps[i].equals("null")) {
-                break;
+            for (int i = 0; i < NUM_OF_TRAP; i++) {
+                map_trap[i].setExists(false);
             }
 
-            Point room_point = map_admin.getRoomPoint();
-            map_trap[i].setPosition(room_point.x + magnification / 2, room_point.y + magnification / 2);
-            map_trap[i].setExists(true);
-            map_trap[i].setName(names_of_traps[i]);
+            for (int i = 0; i < NUM_OF_TRAP; i++) {
+
+                if (names_of_traps[i].equals("null")) {
+                    break;
+                }
+
+                Point room_point = map_admin.getRoomPoint();
+                map_trap[i].setPosition(room_point.x + magnification / 2, room_point.y + magnification / 2);
+                map_trap[i].setExists(true);
+                map_trap[i].setName(names_of_traps[i]);
+            }
+        }
+
+    }
+
+    public void putBoss() {
+        map_boss[0].setExists(true);
+//        map_boss[0].putBoss(map_player.getWorldX() + 10 + (140 + map_player.getStep()) * 10, map_player.getWorldY());
+        map_boss[0].putBoss(map_player.getWorldX() + 170 + (150 + 25) * 10, map_player.getWorldY());
+
+    }
+
+    public void putPlayer() {
+        map_player.setExists(true);
+        map_player.putUnit(20, 350);
+    }
+
+    public boolean bossIsHitPlayer() {
+        return map_player.isWithinReach(map_boss[0].getWorldX(), map_boss[0].getWorldY(), 20);
+    }
+
+    private String randomTrapName() {
+
+        double random_double = 8 * random.nextDouble();
+        int kind_of_trap = (int) (random_double);
+        switch (kind_of_trap) {
+            case 0:
+                return "walking_slowly";
+            case 1:
+                return "walking_inversely";
+            case 2:
+                return "cannot_walk";
+            case 3:
+                return "being_drunk";
+            case 4:
+                return "being_teleported";
+            case 5:
+                return "cannot_exit_room";
+            case 6:
+                return "found_by_enemy";
+            default:
+                return "being_blown_away";
         }
 
     }

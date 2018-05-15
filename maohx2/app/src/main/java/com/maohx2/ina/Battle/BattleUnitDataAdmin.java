@@ -60,6 +60,18 @@ public class BattleUnitDataAdmin {
             case MAOH:
                 tableName = "maoh_unit_data";
                 break;
+            case OPENING:
+                tableName = "opening_unit_data";
+                break;
+            case SEA:
+                tableName = "sea_unit_data";
+                break;
+            case SWAMP:
+                tableName = "swamp_unit_data";
+                break;
+            case LAVA:
+                tableName = "lava_unit_data";
+                break;
             default:
                 throw new Error("☆BattleUnitDataAdmin: ダンジョンの種類が不適切");
         }

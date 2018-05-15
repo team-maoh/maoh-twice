@@ -39,7 +39,11 @@ public final class Constants {
             FOREST,
             GOKI,
             HAUNTED,
+            LAVA,
+            SWAMP,
+            SEA,
             MAOH,
+            OPENING,
             DNGEON_KIND_NUM
         }
     }

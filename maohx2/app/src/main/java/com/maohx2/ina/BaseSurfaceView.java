@@ -22,6 +22,8 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     ActivityChange activityChange;
     Activity currentActivity;
 
+    boolean openingFlag;
+
     double touch_x = 0;
     double touch_y = 0;
 
@@ -129,5 +131,14 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
                 break;
         }
         return true;
+    }
+
+
+    public boolean getOpeningFlag() {
+        return openingFlag;
+    }
+
+    public void setOpeningFlag(boolean _openingFlag) {
+        openingFlag = _openingFlag;
     }
 }

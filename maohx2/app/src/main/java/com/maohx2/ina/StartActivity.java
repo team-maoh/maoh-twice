@@ -99,8 +99,9 @@ class StartSurfaceView extends BaseSurfaceView {
         my_database_admin.addMyDatabase("StartDB", "LocalStartImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("StartDB"), "Start");
 
-
-
+        MusicAdmin musicAdmin = new MusicAdmin(currentActivity, my_database_admin);
+        musicAdmin.setTableName("music_pack");
+        //musicAdmin.loadMusic("title", true);
 
 
         start_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);

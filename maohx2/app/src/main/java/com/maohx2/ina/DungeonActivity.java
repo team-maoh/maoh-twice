@@ -58,8 +58,6 @@ public class DungeonActivity extends BaseActivity {
             game_system_flag = true;
         }
     }
-
-
 }
 
 class DungeonSurfaceView extends BaseSurfaceView{
@@ -72,6 +70,9 @@ class DungeonSurfaceView extends BaseSurfaceView{
     Activity dungeon_activity;
     BattleUserInterface battle_user_interface;
 
+    boolean openningFlag = true;
+
+
     public DungeonSurfaceView(Activity _dungeon_activity, BackSurfaceView _backSurfaceView) {
         super(_dungeon_activity, _backSurfaceView);
         dungeon_activity = _dungeon_activity;
@@ -81,10 +82,11 @@ class DungeonSurfaceView extends BaseSurfaceView{
         dungeon_user_interface = new DungeonUserInterface(((GlobalData) dungeon_activity.getApplication()).getGlobalConstants(), graphic);
         my_database_admin = new MyDatabaseAdmin(dungeon_activity);
         game_system = new DungeonGameSystem();
-        sound_admin = new SoundAdmin(dungeon_activity);
+        sound_admin = new SoundAdmin(dungeon_activity, my_database_admin);
 
 
         dungeon_user_interface.init();
+
 
 
 
@@ -98,8 +100,8 @@ class DungeonSurfaceView extends BaseSurfaceView{
         DUNGEON_KIND dungeon_kind = (DUNGEON_KIND)intent.getSerializableExtra("DungeonKind");
 
         //TODO バグらないようにとりあえず読んでる
-        my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
-        graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
+        //my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
+        //graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
 
         switch (dungeon_kind){
             case CHESS:
@@ -126,18 +128,35 @@ class DungeonSurfaceView extends BaseSurfaceView{
                 my_database_admin.addMyDatabase("HauntedDB", "LocalHauntedImage.db", 1, "r");
                 graphic.loadLocalImages(my_database_admin.getMyDatabase("HauntedDB"), "Haunted");
                 break;
+            case SEA:
+                my_database_admin.addMyDatabase("SeaDB", "LocalSeaImage.db", 1, "r");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("SeaDB"), "SeaDB");
+                break;
+            case SWAMP:
+                my_database_admin.addMyDatabase("SwampDB", "LocalSwampImage.db", 1, "r");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("SwampDB"), "SwampDB");
+                break;
+            case LAVA:
+                my_database_admin.addMyDatabase("LavaDB", "LocalLavaImage.db", 1, "r");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("LavaDB"), "LavaDB");
+                break;
             case MAOH:
                 my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
                 graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
+                break;
+            case OPENING:
                 break;
 
         }
 
 
+        openingFlag = false;
+        if (openingFlag) {
+        }
 
-        my_database_admin.addMyDatabase("soundDB", "soundDB.db", 1, "r");//データベースのコピーしMySQLiteのdbを扱いやすいMyDataBase型にしている
-        sound_admin.setDatabase(my_database_admin.getMyDatabase("soundDB"));//扱いやすいやつをセットしている
-        sound_admin.loadSoundPack("sound_pack_map");
+
+
+        sound_admin.loadSoundPack("map");
 
 
         battle_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
@@ -148,6 +167,11 @@ class DungeonSurfaceView extends BaseSurfaceView{
         global_data.getExpendItemInventry().init(battle_user_interface, graphic,1000,100,1400,508, 10);
 
         game_system.init(dungeon_user_interface, graphic, sound_admin, my_database_admin, battle_user_interface, dungeon_activity, my_database_admin, activityChange,1, dungeon_kind);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
+
+        if(openningFlag == true){
+            game_system.openningInit();
+        }
+
     }
 
     public void runGameSystem() {
@@ -161,15 +185,13 @@ class DungeonSurfaceView extends BaseSurfaceView{
     }
 
 
-    boolean openningFlag = true;
-
     @Override
     public void gameLoop(){
 
         dungeon_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         battle_user_interface.updateTouchState(touch_x, touch_y, touch_state);
 
-        if(openningFlag == true) {
+        if(openingFlag == true) {
             game_system.openningUpdate();
             game_system.openningDraw();
         }else{

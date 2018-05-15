@@ -48,7 +48,6 @@ public class WorldActivity extends BaseActivity {
         }
     }
 
-
 }
 
 
@@ -60,6 +59,8 @@ class WorldSurfaceView extends BaseSurfaceView {
     MyDatabaseAdmin my_database_admin;
     Graphic graphic;
     SoundAdmin soundAdmin;
+
+    boolean openningFlag = true;
 
     public WorldSurfaceView(WorldActivity _map_activity, BackSurfaceView _backSurfaceView) {
         super(_map_activity, _backSurfaceView);
@@ -83,11 +84,17 @@ class WorldSurfaceView extends BaseSurfaceView {
         map_user_interface.init();
 
         global_data.getEquipmentInventry().init(map_user_interface, graphic, 1000,100,1400,508, 10);
-        global_data.getGeoInventry().init(map_user_interface, graphic,1200,100,1600,900, 10);
+        global_data.getGeoInventry().init(map_user_interface, graphic,1200,100,1600,700, 10);
         global_data.getExpendItemInventry().init(map_user_interface, graphic,200,100,600,508, 10);
 
 
+
         world_game_system.init(map_user_interface, graphic, my_database_admin, soundAdmin, _map_activity, activityChange);
+
+        if(openningFlag == true){
+            world_game_system.openningInit();
+        }
+
     }
 
     public void runGameSystem() {
@@ -105,25 +112,17 @@ class WorldSurfaceView extends BaseSurfaceView {
     public void gameLoop() {
 
         map_user_interface.updateTouchState(touch_x, touch_y, touch_state);
-        world_game_system.updata();
-        /*
-        if (back_ground_flag == false) {
-            drawBackGround();
-            back_ground_flag = true;
-        }
-        */
-        world_game_system.draw();
 
-
-        /*
-        if (touch_state == TouchState.DOWN) {
-            thread = null;
-            Intent intent = new Intent(map_activity, DungeonActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            map_activity.startActivity(intent);
+        if(openningFlag == true) {
+            world_game_system.openningUpdate();
+            world_game_system.openningDraw();
+        }else{
+            world_game_system.update();
+            world_game_system.draw();
         }
-        */
 
     }
+
+    public void setOpenningFlag(boolean _openningFlag) {openningFlag = _openningFlag;}
 
 }

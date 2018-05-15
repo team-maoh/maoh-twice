@@ -25,6 +25,7 @@ import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.plate.BackPlate;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -91,7 +92,9 @@ public class GeoPresentManager {
 
     GeoPresentSaver geoPresentSaver;
 
-    public GeoPresentManager(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, InventryS _geoInventry, InventryS _expendItemInventry, ExpendItemDataAdmin _expendItemDataAdmin, PlayerStatus _playerStatus) {
+    SoundAdmin soundAdmin;
+
+    public GeoPresentManager(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, InventryS _geoInventry, InventryS _expendItemInventry, ExpendItemDataAdmin _expendItemDataAdmin, PlayerStatus _playerStatus, SoundAdmin _soundAdmin) {
         userInterface = _user_interface;
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
@@ -102,6 +105,7 @@ public class GeoPresentManager {
         expendItemDataAdmin = _expendItemDataAdmin;
         playerStatus = _playerStatus;
         worldModeAdmin = _worldModeAdmin;
+        soundAdmin = _soundAdmin;
 
         initTextBox();
         initPlateGroup();
@@ -377,12 +381,14 @@ public class GeoPresentManager {
             int content = presentSelectPlateGroup.getTouchContentNum();
             switch(content) {
                 case(0) ://献上する
+                    soundAdmin.play("levelup00");
                     presentAndCheck(holdGeoObbjectData);
                     holdGeoObbjectData = null;
                     scoreTextBoxUpdate();
                     initUIs();
                     break;
                 case(1) ://キャンセル
+                    soundAdmin.play("cancel00");
                     holdGeoObbjectData = null;
                     initUIs();
                     break;
@@ -419,6 +425,8 @@ public class GeoPresentManager {
                             @Override
                             public void callBackEvent() {
                                 //戻るボタンが押された時の処理
+                                soundAdmin.play("cancel00");
+
                                 holdGeoObbjectData = null;
                                 initUIs();
 

@@ -17,9 +17,11 @@ import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatus;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 //GeoSlotAdminの実体を持つクラス
 //GeoSlotMapButtonの実体も持つ。
@@ -41,13 +43,16 @@ public class GeoSlotAdminManager {
     WorldModeAdmin worldModeAdmin;
 
     PlayerStatus playerStatus;
+    MaohMenosStatus maohMenosStatus;
     InventryS geoInventry;
 
     GeoSlotSaver geoSlotSaver;
 
+    SoundAdmin soundAdmin;
+
     boolean is_load_database;
 
-    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver) {
+    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver, MaohMenosStatus _maohMenosStatus, SoundAdmin _soundAdmin) {
         graphic = _graphic;
         userInterface = _userInterface;
         databaseAdmin = _databaseAdmin;
@@ -56,15 +61,21 @@ public class GeoSlotAdminManager {
         playerStatus = _playerStatus;
         geoInventry = _geoInventry;
         geoSlotSaver = _geoSlotSaver;
+        maohMenosStatus = _maohMenosStatus;
+        soundAdmin = _soundAdmin;
+
         addDatabase();
         this.loadGeoSlotDatabase();
 
         geoSlotSaver.setGeoSlotAdminManager(this);
         setSlot();
+
+        initStatusTextBox();
     }
 
     public void start() {
         //activeGeoSlotAdmin.start();
+        initStatusTextBox();
     }
 
     public void update() {
@@ -72,6 +83,8 @@ public class GeoSlotAdminManager {
         if (activeGeoSlotAdmin != null) {
             activeGeoSlotAdmin.update();
         }
+
+        textBoxAdmin.setTextBoxExists(statusTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.GEO_MAP);
     }
 
     public void draw() {
@@ -82,7 +95,7 @@ public class GeoSlotAdminManager {
     }
 
     public void setActiveGeoSlotAdmin(String name) {
-        for(int i = 0; i < geoSlotAdmins.size(); i++) {
+        for (int i = 0; i < geoSlotAdmins.size(); i++) {
             if (geoSlotAdmins.get(i) != null) {
                 if (geoSlotAdmins.get(i).getName().equals(name)) {
                     activeGeoSlotAdmin = geoSlotAdmins.get(i);
@@ -90,12 +103,13 @@ public class GeoSlotAdminManager {
                 }
             }
         }
-        throw new Error("☆タカノ:GeoSlotAdminManager#setActiveGeoSlotAdmin : There is no GeoSlotAdmin you request by name : "+name);
+        throw new Error("☆タカノ:GeoSlotAdminManager#setActiveGeoSlotAdmin : There is no GeoSlotAdmin you request by name : " + name);
     }
 
     public void setNullToActiveGeoSlotAdmin() {
         activeGeoSlotAdmin = null;
     }
+
     public void closeGeoSlotAdmin() {
         activeGeoSlotAdmin = null;
     }
@@ -119,8 +133,8 @@ public class GeoSlotAdminManager {
         GeoSlotAdmin.setGeoSlotMapDB(geoSlotMapDB);
         GeoSlotAdmin.setGeoSlotEventDB(geoSlotEventDB);
 
-        for(int i = 0; i < t_names.size(); i++) {
-            GeoSlotAdmin new_geo_slot_admin = new GeoSlotAdmin(graphic, userInterface, worldModeAdmin, textBoxAdmin, this, playerStatus, geoInventry);
+        for (int i = 0; i < t_names.size(); i++) {
+            GeoSlotAdmin new_geo_slot_admin = new GeoSlotAdmin(graphic, userInterface, worldModeAdmin, textBoxAdmin, this, playerStatus, geoInventry, soundAdmin);
             new_geo_slot_admin.loadDatabase(t_names.get(i));
             geoSlotAdmins.add(new_geo_slot_admin);
         }
@@ -135,19 +149,49 @@ public class GeoSlotAdminManager {
         geoInventry.subItemData(geoObjectData);
     }
 
+    public void calcStatus() {
+        if (activeGeoSlotAdmin != null) {
+            if (activeGeoSlotAdmin.getName().equals("Maoh")) {
+                calcMaohMenosStatus();
+            } else {
+                calcPlayerStatus();
+            }
+        }
+    }
+
     public void calcPlayerStatus() {
         playerStatus.initGeoStatus();
-        for(int i = 0; i < geoSlotAdmins.size(); i++) {
-            if (geoSlotAdmins.get(i) != null) {
-                geoSlotAdmins.get(i).calcGeoSlot();
-                GeoCalcSaverAdmin geoCSA = geoSlotAdmins.get(i).getGeoCalcSaverAdmin();
-                if (geoCSA != null) {
-                    playerStatus.calcGeoStatus(geoCSA);
+        for (int i = 0; i < geoSlotAdmins.size(); i++) {
+            if (!geoSlotAdmins.get(i).getName().equals("Maoh")) {
+                if (geoSlotAdmins.get(i) != null) {
+                    geoSlotAdmins.get(i).calcGeoSlot();
+                    GeoCalcSaverAdmin geoCSA = geoSlotAdmins.get(i).getGeoCalcSaverAdmin();
+                    if (geoCSA != null) {
+                        playerStatus.calcGeoStatus(geoCSA);
+                    }
                 }
             }
         }
         playerStatus.calcStatus();
-        activeGeoSlotAdmin.statusTextBoxUpdate();
+        statusTextBoxUpdate();
+        //activeGeoSlotAdmin.statusTextBoxUpdate();
+    }
+
+    public void calcMaohMenosStatus() {
+        maohMenosStatus.initGeoStatus();
+        for (int i = 0; i < geoSlotAdmins.size(); i++) {
+            if (geoSlotAdmins.get(i).getName().equals("Maoh")) {
+                if (geoSlotAdmins.get(i) != null) {
+                    geoSlotAdmins.get(i).calcGeoSlot();
+                    GeoCalcSaverAdmin geoCSA = geoSlotAdmins.get(i).getGeoCalcSaverAdmin();
+                    if (geoCSA != null) {
+                        maohMenosStatus.calcGeoStatus(geoCSA);
+                    }
+                }
+            }
+        }
+        statusTextBoxUpdate();
+        //activeGeoSlotAdmin.statusTextBoxUpdate();
     }
 
     public void saveGeoInventry() {
@@ -177,10 +221,10 @@ public class GeoSlotAdminManager {
     //この関数はManagerが作られたあとであって、かつGeoInventryが読まれた後に一度だけ実行する
     public void setSlot() {
         GeoObjectData geoObjectData;
-        for(int i = 0; i < Constants.Inventry.INVENTRY_DATA_MAX; i++) {
-            geoObjectData = (GeoObjectData)geoInventry.getItemData(i);
+        for (int i = 0; i < Constants.Inventry.INVENTRY_DATA_MAX; i++) {
+            geoObjectData = (GeoObjectData) geoInventry.getItemData(i);
             if (geoObjectData != null) {
-                for (int j = 0; j < geoSlotAdmins.size(); j++ ) {
+                for (int j = 0; j < geoSlotAdmins.size(); j++) {
                     if (geoObjectData.getSlotSetName() != null) {
                         if (geoObjectData.getSlotSetName().equals(getGeoSlotAdminNames().get(j))) {
                             geoSlotAdmins.get(j).getGeoSlots().get(geoObjectData.getSlotSetID()).pushGeoObject(geoObjectData);
@@ -193,6 +237,52 @@ public class GeoSlotAdminManager {
         }
 
     }
+
+    //ステータス表示関係
+
+    int statusTextBoxID;
+
+    public void initStatusTextBox() {
+        statusTextBoxID = textBoxAdmin.createTextBox(0,600,300,900,7);
+        textBoxAdmin.setTextBoxUpdateTextByTouching(statusTextBoxID,false);
+        textBoxAdmin.setTextBoxExists(statusTextBoxID,false);
+        statusTextBoxUpdate();
+    }
+
+    public void statusTextBoxUpdate() {
+        if (activeGeoSlotAdmin == null) {
+            return;
+        }
+        if (activeGeoSlotAdmin.getName().equals("Maoh")) {
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "Maoh Weaken");
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "HP " + maohMenosStatus.getGeoHP());
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "Attack " + maohMenosStatus.getGeoAttack());
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "Deffence " + maohMenosStatus.getGeoDefence());
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "Luck " + maohMenosStatus.getGeoLuck());
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "MOP");
+        } else {
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "Status");
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "HP " + playerStatus.getHP());
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "Attack " + playerStatus.getAttack());
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "Deffence " + playerStatus.getDefence());
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "Luck " + playerStatus.getLuck());
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "所持金 " + playerStatus.getMoney());
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "クリア回数 " + playerStatus.getNowClearCount() + "/" + playerStatus.getClearCount());
+            textBoxAdmin.bookingDrawText(statusTextBoxID, "MOP");
+        }
+        textBoxAdmin.updateText(statusTextBoxID);
+    }
+
 }
 
 /*

@@ -173,8 +173,17 @@ public class BattleEnemy extends BattleUnit {
             graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1.0f,1.0f,0,254,false);
         }
 
-        paint.setARGB(255,0,255,0);
-        graphic.bookingDrawRect((int)(position_x-radius*0.8), (int)(position_y+radius*0.8), (int)(((double)position_x-(double)radius*0.8+(double)radius*1.6*((double)hit_point/(double)max_hit_point))), (int)(position_y+radius*0.9),paint);
+        //HP表示
+        if (hit_point > 0) {
+            paint.setARGB(255, 0, 255, 0);
+            graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 0.8), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) hit_point / (double) max_hit_point))), (int) (position_y + radius * 0.9), paint);
+        } else {
+            if (unitKind == Constants.UnitKind.ROCK) {
+                //オーバーキルゲージの表示
+                paint.setARGB(255, 255, 0, 0);
+                graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 0.8), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) -hit_point / (double) max_hit_point))), (int) (position_y + radius * 0.9), paint);
+            }
+        }
 
         for(int i = 0; i < BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal(); i++) {
             if (actionRate[i] > 0) {

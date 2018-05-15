@@ -12,6 +12,7 @@ import static java.lang.Math.cos;
 import static java.lang.Math.pow;
 import static java.lang.Math.sin;
 
+import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.DungeonModeManage;
 
 //import com.maohx2.ina.MySprite;
@@ -48,10 +49,10 @@ public class MapEnemy extends MapUnit {
     boolean has_found_player;//プレイヤーを発見しているかどうか
     boolean detect_player, has_blind_spot;//Playerを発見するか否か, 全方位が見えているか否か
     double incremental_step;//Playerを発見して時間が経つとstepが徐々に増えていく（= 足が速くなっていく）
+    BattleUnitAdmin battle_unit_admin;
+    DungeonModeManage dungeon_mode_manage;
 
-    String name;
-
-    public MapEnemy(Graphic graphic, MapObjectAdmin map_object_admin, Camera _camera, int _total_dirs, boolean _detect_player, boolean _has_blind_spot) {
+    public MapEnemy(Graphic graphic, MapObjectAdmin map_object_admin, Camera _camera, int _total_dirs, boolean _detect_player, boolean _has_blind_spot, BattleUnitAdmin _battle_unit_admin, DungeonModeManage _dungeon_mode_manage) {
         super(graphic, map_object_admin, _camera);
 
         total_dirs = _total_dirs;
@@ -81,6 +82,9 @@ public class MapEnemy extends MapUnit {
         incremental_step = 0;
 
         can_exit_room = false;
+
+        battle_unit_admin = _battle_unit_admin;
+        dungeon_mode_manage = _dungeon_mode_manage;
     }
 
     public void init() {
@@ -177,7 +181,6 @@ public class MapEnemy extends MapUnit {
 //            dst_y = player.getWorldY();
 //        }
 
-
                 }
 
             }
@@ -193,8 +196,14 @@ public class MapEnemy extends MapUnit {
         if (player.isWithinReach(w_x, w_y, REACH_FOR_PLAYER) == true && exists == true && player.getFramesWaitingTeleported() == 0) {
             System.out.println("敵と接触");
             //デバッグのためにコメントアウト
-            map_object_admin.battleStart();
+//            map_object_admin.battleStart();//中身が空なので呼んでも無意味
+
             exists = false;
+
+            //デバッグ時に鬱陶しいのでコメントアウト
+            battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
+            battle_unit_admin.spawnEnemy(name);//歩行エンカウントでは引数なし
+            dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
         }
 
     }
@@ -277,9 +286,6 @@ public class MapEnemy extends MapUnit {
         has_found_player = _has_found_player;
     }
 
-    public void setName(String _name){
-        name = _name;
-    }
 }
 
 

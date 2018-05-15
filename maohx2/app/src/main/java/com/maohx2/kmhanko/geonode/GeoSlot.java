@@ -4,6 +4,7 @@ package com.maohx2.kmhanko.geonode;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.graphics.Paint;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Constants;
@@ -19,6 +20,8 @@ import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
+import com.maohx2.kmhanko.myavail.MyAvail;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 /**
  * Created by ina on 2017/10/08.
@@ -45,6 +48,7 @@ public class GeoSlot extends CircleImagePlate {
     static TextBoxAdmin textBoxAdmin;
     static MyDatabase geoSlotEventDB;
     static InventryS geoInventry;
+    static SoundAdmin soundAdmin;
 
     List<GeoSlot> children_slot = new ArrayList<GeoSlot>(GEO_SLOT_CHILDREN_MAX);
     GeoSlot parent_slot;
@@ -65,6 +69,8 @@ public class GeoSlot extends CircleImagePlate {
 
     //TODO:デバッグ用。セーブデータの用意が必要
     boolean isReleased = false;
+
+    GeoCalcSaverAdmin thisGeoCalcSaverAdmin;
 
     /*
     public GeoSlot(GeoSlotAdmin _geoSlotAdmin) {
@@ -87,10 +93,11 @@ public class GeoSlot extends CircleImagePlate {
 
 
 
-    static public void staticInit(TextBoxAdmin _textBoxAdmin, MyDatabase _geoSlotEventDB, InventryS _geoInventry) {
+    static public void staticInit(TextBoxAdmin _textBoxAdmin, MyDatabase _geoSlotEventDB, InventryS _geoInventry, SoundAdmin _soundAdmin) {
         textBoxAdmin = _textBoxAdmin;
         geoSlotEventDB = _geoSlotEventDB;
         geoInventry = _geoInventry;
+        soundAdmin = _soundAdmin;
     }
 
     //GeoSlotのツリーコードを元に、GeoSlotのインスタンス化を行う。再帰ライクに生成する。
@@ -202,10 +209,12 @@ public class GeoSlot extends CircleImagePlate {
         if (child_num == 0) {
             GeoCalcSaverAdmin new_geo_calc_saver_admin = new GeoCalcSaverAdmin();
             calc(new_geo_calc_saver_admin);
+            thisGeoCalcSaverAdmin = new_geo_calc_saver_admin;
             return new_geo_calc_saver_admin;
         }
         if (child_num == 1) {
             calc(geo_calc_saver_admin_temp);
+            thisGeoCalcSaverAdmin = geo_calc_saver_admin_temp;
             return geo_calc_saver_admin_temp;
         }
         if (child_num > 1) {
@@ -217,6 +226,7 @@ public class GeoSlot extends CircleImagePlate {
                 }
             }
             calc(new_geo_calc_saver_admin);
+            thisGeoCalcSaverAdmin = new_geo_calc_saver_admin;
             return new_geo_calc_saver_admin;
         }
         return null;
@@ -231,31 +241,45 @@ public class GeoSlot extends CircleImagePlate {
         geo_calc_saver_admin.getGeoCalcSaver("Luck").calc(geoObjectData.getLuck(),geoObjectData.getLuckRate());
     }
 
+    Paint dotPaint = new Paint();
+
     public void drawLine() {
         //子に対しての線を書く
 
-        /*
-
         int c_x = 0;
         int c_y = 0;
-        int degree = 0;
-        float scale = 0.0f;
+        double radian = 0.0f;
+        double distance = 0.0f;
+
+
+        dotPaint.setARGB(255,255,255,255);
 
         for (int i = 0; i<children_slot.size(); i++) {
             if (children_slot.get(i) != null) {
                 if (children_slot.get(i).isExist()) {
-                    c_x = children_slot.get(i).getPositionX();
-                    c_y = children_slot.get(i).getPositionY();
 
-                    degree = (int)Math.toDegrees(Math.atan2(position_y - c_y, position_x - c_x));
-                    scale = (float)MyAvail.distance(position_x, position_y, c_x, c_y) / 24.0f;
 
-                    graphic.drawBooking("watermelon.png", (position_x + c_x)/2, (position_y + c_y)/2, scale , 5.0f, degree, 255, true);
+                    c_x = children_slot.get(i).getX();
+                    c_y = children_slot.get(i).getY();
+
+                    radian = Math.atan2(y - c_y, x - c_x);
+                    distance = (float)MyAvail.distance(x, y, c_x, c_y);
+
+                    int dotNum = 8;
+                    for(int j = 0; j < dotNum; j++) {
+                        graphic.bookingDrawCircle(
+                                (int)(x - (distance * (double)j) * Math.cos(radian) / (double)dotNum),
+                                (int)(y - (distance * (double)j) * Math.sin(radian) / (double)dotNum),
+                                10,
+                                dotPaint
+                        );
+                    }
+                    //graphic.drawBooking("watermelon.png", (position_x + c_x)/2, (position_y + c_y)/2, scale , 5.0f, degree, 255, true);
                 }
             }
         }
 
-        */
+
     }
 
 
@@ -302,7 +326,7 @@ public class GeoSlot extends CircleImagePlate {
         geoSlotAdmin.geoSlotReleaseChoice();
         if (isEventClearAll()) {
             setGeoObjectFromHold();
-            geoSlotAdmin.calcPlayerStatus();
+            geoSlotAdmin.calcStatus();
         }
     }
 
@@ -325,6 +349,7 @@ public class GeoSlot extends CircleImagePlate {
                     geoSlotAdmin.setHoldGeoObject(null);
 
                 } else {
+
                     //Holdしており、Geoが入っている時　→　入れ替え
                     GeoObjectData tempGeoObjectData = geoSlotAdmin.getHoldGeoObject();
 
@@ -339,6 +364,7 @@ public class GeoSlot extends CircleImagePlate {
                     //geoSlotAdmin.deleteFromInventry(tempGeoObjectData);
                     geoSlotAdmin.setSlotData(geoObjectData, id);
                 }
+                soundAdmin.play("equip00");
                 geoSlotAdmin.calcGeoSlot();
             } else {
                 if (!isInGeoObject()) {
@@ -382,7 +408,8 @@ public class GeoSlot extends CircleImagePlate {
                 if (geoSlotAdmin.getPlayerStatus().getMoney() >= money) {
                     geoSlotAdmin.getPlayerStatus().subMoney(money);
                     isReleased = true;
-                    geoSlotAdmin.statusTextBoxUpdate();
+                    geoSlotAdmin.calcStatus();
+
 
                     System.out.println("GeoSlot#geoSlotRelease　金を支払う　" + release_event);
                     return true;
@@ -448,6 +475,13 @@ public class GeoSlot extends CircleImagePlate {
     public void setRestriction(String _restriction) { restriction = _restriction; }
     public void setReleased(Boolean _isReleased) { isReleased = _isReleased; }
     public void setID(int _id) { id = _id; }
+
+    public int getX() {
+        return x;
+    }
+    public int getY() {
+        return y;
+    }
 
     //TODO: inaの関数ができたら消す
     public void setParam(int _x, int _y, int _r) {

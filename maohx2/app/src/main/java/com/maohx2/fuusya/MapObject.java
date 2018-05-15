@@ -43,6 +43,9 @@ abstract public class MapObject {
     MapPlayer player;
     MapAdmin map_admin;
 
+    String[] name = new String[1];
+
+
     public MapObject(Graphic _graphic, MapObjectAdmin _map_object_admin, Camera _camera) {
 
         graphic = _graphic;
@@ -129,13 +132,16 @@ abstract public class MapObject {
     public void initClass(MapAdmin _map_admin, int shift){
         initClass(_map_admin);
 
-
     }
 
     public void setPosition(int _w_x, int _w_y) {
         w_x = _w_x;
         w_y = _w_y;
 
+    }
+
+    public void setName(String[] _name) {
+        name = _name;
     }
 
 //    public void setCamera(Camera _camera){

@@ -345,4 +345,8 @@ public class MapPlateAdmin {
             }
         }
     }
+
+    public MapInventryAdmin getMapInventryAdmin() {
+        return map_inventry_admin;
+    }
 }
