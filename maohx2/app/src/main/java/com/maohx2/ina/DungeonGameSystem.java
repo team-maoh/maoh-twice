@@ -485,7 +485,7 @@ public class DungeonGameSystem {
 
     public void openningDraw() {
 
-        map_admin.drawMap_for_autotile_light_animation();
+        map_admin.drawOpeningMap();
         map_object_admin.draw();
         map_plate_admin.draw();
 
