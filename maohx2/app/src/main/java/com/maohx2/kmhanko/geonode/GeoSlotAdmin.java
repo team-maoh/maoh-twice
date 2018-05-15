@@ -21,6 +21,7 @@ import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.myavail.MyAvail;
 import com.maohx2.kmhanko.plate.BackPlate;
 import com.maohx2.kmhanko.Arrange.InventryS;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 // *** Graphic関係 ***
 import android.graphics.Color;
@@ -95,8 +96,10 @@ public class GeoSlotAdmin {
 
     PlayerStatus playerStatus;
 
+    SoundAdmin soundAdmin;
+
     //Rewrite by kmhanko
-    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, TextBoxAdmin _textBoxAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, InventryS _geoInventry) {
+    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, TextBoxAdmin _textBoxAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, InventryS _geoInventry, SoundAdmin _soundAdmin) {
         graphic = _graphic;
         userInterface = _user_interface;
         textBoxAdmin = _textBoxAdmin;
@@ -104,6 +107,7 @@ public class GeoSlotAdmin {
         geoSlotAdminManager = _geoSlotAdminManager;
         playerStatus = _playerStatus;
         geoInventry = _geoInventry;
+        soundAdmin = _soundAdmin;
 
         //初期化
         initTextBox();
@@ -155,7 +159,7 @@ public class GeoSlotAdmin {
         //GeoSlotの管理のため、GeoSlotのインスタンスをコピーしてくるメソッド。
         geoSlots = grand_geo_slot.getGeoSlots();
 
-        GeoSlot.staticInit(textBoxAdmin, geoSlotEventDB, geoInventry);
+        GeoSlot.staticInit(textBoxAdmin, geoSlotEventDB, geoInventry, soundAdmin);
 
         for(int i = 0; i < geoSlots.size(); i++) {
             geoSlots.get(i).setParam(xs.get(i), ys.get(i), TOUCH_R);
@@ -181,6 +185,8 @@ public class GeoSlotAdmin {
                             @Override
                             public void callBackEvent() {
                                 //戻るボタンが押された時の処理
+                                soundAdmin.play("cancel00");
+
                                 geoSlotAdminManager.calcStatus();
                                 geoSlotAdminManager.saveGeoInventry();
 
@@ -336,8 +342,10 @@ public class GeoSlotAdmin {
                     //解放するための色々な処理
                     if (focusGeoSlot.geoSlotRelease()) {
                         //TODO 解放したことを通知
+                        soundAdmin.play("levelup00");
                     } else {
                         //TODO 条件を満たしていないことを通知
+                        soundAdmin.play("cancel00");
                     }
                     releasePlateGroup.setDrawFlag(false);
                     releasePlateGroup.setUpdateFlag(false);
@@ -346,6 +354,7 @@ public class GeoSlotAdmin {
 
                     break;
                 case (1)://やめる
+                    soundAdmin.play("cancel00");
                     releasePlateGroup.setDrawFlag(false);
                     releasePlateGroup.setUpdateFlag(false);
                     textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);

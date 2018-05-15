@@ -17,6 +17,7 @@ import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 import com.maohx2.kmhanko.plate.BackPlate;
 
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -61,13 +62,15 @@ public abstract class ItemShop {
     ItemShopAdmin itemShopAdmin;
     PlayerStatus playerStatus;
 
+    SoundAdmin soundAdmin;
+
     ItemData focusItemData;//現在選択しているItem
 
     InventryS itemInventry;
 
     ExpendItemDataAdmin expendItemDataAdmin;
 
-    public ItemShop(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, InventryS _itemInventry, PlayerStatus _playerStatus, ItemShopAdmin _itemShopAdmin) {
+    public ItemShop(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, InventryS _itemInventry, PlayerStatus _playerStatus, ItemShopAdmin _itemShopAdmin, SoundAdmin _soundAdmin) {
         userInterface = _userInterface;
         graphic = _graphic;
         textBoxAdmin = _textBoxAdmin;
@@ -76,6 +79,7 @@ public abstract class ItemShop {
         databaseAdmin = _databaseAdmin;
         itemShopAdmin = _itemShopAdmin;
         playerStatus = _playerStatus;
+        soundAdmin = _soundAdmin;
     }
 
 
@@ -162,6 +166,7 @@ public abstract class ItemShop {
                             @Override
                             public void callBackEvent() {
                                 //戻るボタンが押された時の処理
+                                soundAdmin.play("cancel00");
                                 productPlateGroup.setUpdateFlag(true);
                                 buySelectPlateGroup.setUpdateFlag(false);
                                 buySelectPlateGroup.setDrawFlag(false);
@@ -232,6 +237,7 @@ public abstract class ItemShop {
             if (content != -1) {
                 //何かの商品をタッチした
                 focusItemData = productPlateGroup.getContentItem(content);
+                soundAdmin.play("enter00");
 
                 //TODO アイテムの詳細を表示するぷれーとか何か
                 productPlateGroup.setUpdateFlag(false);
@@ -249,11 +255,13 @@ public abstract class ItemShop {
             switch(content) {
                 case(0) ://購入する
                     //itemData = (ItemData)itemShopData.getOneDataByName(buyItemName);
+                    soundAdmin.play("shop00");
                     buyItem(focusItemData);
                     initUIs();
 
                     break;
                 case(1) ://キャンセル
+                    soundAdmin.play("cancel00");
                     initUIs();
                     break;
             }

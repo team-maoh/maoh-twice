@@ -10,6 +10,7 @@ import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.itemdata.ExpendItemData;
 import com.maohx2.kmhanko.Arrange.InventryS;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 /**
  * Created by user on 2017/11/12.
@@ -17,8 +18,8 @@ import com.maohx2.kmhanko.Arrange.InventryS;
 
 public class ExpendItemShop extends ItemShop {
 
-    public ExpendItemShop(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, InventryS _itemInventry, PlayerStatus _playerStatus, ItemShopAdmin _itemShopAdmin) {
-        super(_userInterface, _graphic, _databaseAdmin, _textBoxAdmin, _worldModeAdmin, _itemInventry, _playerStatus, _itemShopAdmin);
+    public ExpendItemShop(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, InventryS _itemInventry, PlayerStatus _playerStatus, ItemShopAdmin _itemShopAdmin, SoundAdmin _soundAdmin) {
+        super(_userInterface, _graphic, _databaseAdmin, _textBoxAdmin, _worldModeAdmin, _itemInventry, _playerStatus, _itemShopAdmin, _soundAdmin);
     }
 
     @Override

@@ -21,6 +21,7 @@ import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 import com.maohx2.kmhanko.myavail.MyAvail;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 /**
  * Created by ina on 2017/10/08.
@@ -47,6 +48,7 @@ public class GeoSlot extends CircleImagePlate {
     static TextBoxAdmin textBoxAdmin;
     static MyDatabase geoSlotEventDB;
     static InventryS geoInventry;
+    static SoundAdmin soundAdmin;
 
     List<GeoSlot> children_slot = new ArrayList<GeoSlot>(GEO_SLOT_CHILDREN_MAX);
     GeoSlot parent_slot;
@@ -91,10 +93,11 @@ public class GeoSlot extends CircleImagePlate {
 
 
 
-    static public void staticInit(TextBoxAdmin _textBoxAdmin, MyDatabase _geoSlotEventDB, InventryS _geoInventry) {
+    static public void staticInit(TextBoxAdmin _textBoxAdmin, MyDatabase _geoSlotEventDB, InventryS _geoInventry, SoundAdmin _soundAdmin) {
         textBoxAdmin = _textBoxAdmin;
         geoSlotEventDB = _geoSlotEventDB;
         geoInventry = _geoInventry;
+        soundAdmin = _soundAdmin;
     }
 
     //GeoSlotのツリーコードを元に、GeoSlotのインスタンス化を行う。再帰ライクに生成する。
@@ -346,6 +349,7 @@ public class GeoSlot extends CircleImagePlate {
                     geoSlotAdmin.setHoldGeoObject(null);
 
                 } else {
+
                     //Holdしており、Geoが入っている時　→　入れ替え
                     GeoObjectData tempGeoObjectData = geoSlotAdmin.getHoldGeoObject();
 
@@ -360,6 +364,7 @@ public class GeoSlot extends CircleImagePlate {
                     //geoSlotAdmin.deleteFromInventry(tempGeoObjectData);
                     geoSlotAdmin.setSlotData(geoObjectData, id);
                 }
+                soundAdmin.play("equip00");
                 geoSlotAdmin.calcGeoSlot();
             } else {
                 if (!isInGeoObject()) {

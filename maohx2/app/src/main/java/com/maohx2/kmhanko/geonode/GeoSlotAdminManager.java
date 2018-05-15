@@ -21,6 +21,7 @@ import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatus;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 //GeoSlotAdminの実体を持つクラス
 //GeoSlotMapButtonの実体も持つ。
@@ -47,9 +48,11 @@ public class GeoSlotAdminManager {
 
     GeoSlotSaver geoSlotSaver;
 
+    SoundAdmin soundAdmin;
+
     boolean is_load_database;
 
-    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver, MaohMenosStatus _maohMenosStatus) {
+    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver, MaohMenosStatus _maohMenosStatus, SoundAdmin _soundAdmin) {
         graphic = _graphic;
         userInterface = _userInterface;
         databaseAdmin = _databaseAdmin;
@@ -59,6 +62,8 @@ public class GeoSlotAdminManager {
         geoInventry = _geoInventry;
         geoSlotSaver = _geoSlotSaver;
         maohMenosStatus = _maohMenosStatus;
+        soundAdmin = _soundAdmin;
+
         addDatabase();
         this.loadGeoSlotDatabase();
 
@@ -129,7 +134,7 @@ public class GeoSlotAdminManager {
         GeoSlotAdmin.setGeoSlotEventDB(geoSlotEventDB);
 
         for (int i = 0; i < t_names.size(); i++) {
-            GeoSlotAdmin new_geo_slot_admin = new GeoSlotAdmin(graphic, userInterface, worldModeAdmin, textBoxAdmin, this, playerStatus, geoInventry);
+            GeoSlotAdmin new_geo_slot_admin = new GeoSlotAdmin(graphic, userInterface, worldModeAdmin, textBoxAdmin, this, playerStatus, geoInventry, soundAdmin);
             new_geo_slot_admin.loadDatabase(t_names.get(i));
             geoSlotAdmins.add(new_geo_slot_admin);
         }
