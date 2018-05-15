@@ -581,6 +581,9 @@ public class BattleUnitAdmin {
                 resultButtonGroup.setDrawFlag(true);
                 break;
             case OPENING:
+                resultTextBoxUpdate(new String[]{"うわあああああああああ！",});
+                resultButtonGroup.setUpdateFlag(true);
+                resultButtonGroup.setDrawFlag(true);
                 break;
         }
     }
@@ -853,6 +856,7 @@ public class BattleUnitAdmin {
             dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TO_WORLD);
         }
         if (mode == MODE.OPENING){
+            //Opening終了時
             dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TO_WORLD);
         }
         resultButtonGroup.setUpdateFlag(false);
