@@ -71,7 +71,7 @@ public class StartActivity extends BaseActivity {
 
 class StartSurfaceView extends BaseSurfaceView {
 
-    Activity start_activity;
+    StartActivity start_activity;
     MyDatabaseAdmin my_database_admin;
     Graphic graphic;
     StartGameSystem start_game_system;
@@ -81,7 +81,7 @@ class StartSurfaceView extends BaseSurfaceView {
 
     MusicAdmin musicAdmin;
 
-    public StartSurfaceView(Activity _start_activity, BackSurfaceView _backSurfaceView) {
+    public StartSurfaceView(StartActivity _start_activity, BackSurfaceView _backSurfaceView) {
         super(_start_activity, _backSurfaceView);
         start_activity = _start_activity;
 
@@ -158,6 +158,7 @@ class StartSurfaceView extends BaseSurfaceView {
         thread = new Thread(this);
         thread.start();
 
+
     }
 
     public void drawBackGround(){
@@ -165,24 +166,38 @@ class StartSurfaceView extends BaseSurfaceView {
         backSurfaceView.drawBackGround(backImageContext);
     }
 
+    int downCount = 0;
 
     @Override
     public void gameLoop(){
-        //paint.setColor(Color.BLUE);
 
+        start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
 
        if(touch_state == TouchState.DOWN){
-
-            //activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.CHESS);
-            activityChange.toWorldActivity();
+            downCount++;
         }
 
 
-        start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
-        start_game_system.updata();
-        start_game_system.draw();
+        switch (downCount) {
+            case 0:
+                start_game_system.openingUpdate();
+                //start_game_system.openingdraw();
+                break;
+            case 1:
+                start_game_system.updata();
+                start_game_system.draw();
+                break;
+            case 2:
+                if(global_data.getPlayerStatus().getTutorialInDungeon() == 1) {
+                    activityChange.toWorldActivity();
+                }else{
+                    activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.OPENING);
+                }
+                break;
+        }
     }
 
-
-
+    public void setDownCount(int _downCount) {
+        downCount = _downCount;
+    }
 }

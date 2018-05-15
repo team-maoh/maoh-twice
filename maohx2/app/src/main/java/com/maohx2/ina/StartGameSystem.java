@@ -41,7 +41,7 @@ public class StartGameSystem {
     int n = 0;
     int m = 0;
     Paint paint;
-    int alpha = 255;
+    int alpha = 0;
     int up_down = 5;
 
     InventryS equipmentInventry;
@@ -53,11 +53,16 @@ public class StartGameSystem {
 
     BitmapData backGround;
 
-    public void init(SurfaceHolder _holder, Graphic _graphic, BattleUserInterface _start_user_interface, Activity start_activity, MyDatabaseAdmin my_database_admin) {
+    int count = 0;
+    int messageNum = 0;
+    StartActivity start_activity;
+
+    public void init(SurfaceHolder _holder, Graphic _graphic, BattleUserInterface _start_user_interface, StartActivity _start_activity, MyDatabaseAdmin my_database_admin) {
 
         holder = _holder;
         graphic = _graphic;
         start_user_interface = _start_user_interface;
+        start_activity = _start_activity;
 
         PaletteCenter.initStatic(graphic);
         PaletteElement.initStatic(graphic);
@@ -86,6 +91,7 @@ public class StartGameSystem {
         textBoxAdmin.bookingDrawText(itemExplainTextBoxID, "MOP");
         textBoxAdmin.updateText(itemExplainTextBoxID);
         */
+
     }
 
 
@@ -124,7 +130,6 @@ public class StartGameSystem {
 
 
         paint.setARGB(alpha,255,255,255);
-
         alpha += up_down;
         if(alpha < 0 || alpha > 255){
             up_down *= -1;
@@ -149,6 +154,50 @@ public class StartGameSystem {
         */
         graphic.bookingDrawText("Please Touch!",550,750, paint);
         //textBoxAdmin.draw();
+        graphic.draw();
+    }
+
+    public void openingUpdate(){
+
+        paint.setARGB(255,0,0,0);
+        graphic.bookingDrawRect(0,0,1600,900,paint);
+
+
+        paint.setARGB(alpha,255,255,255);
+        alpha += up_down;
+        if(alpha < 0 || alpha > 255){
+            if(alpha < 0){
+                messageNum++;
+                if(messageNum == 6){
+                    start_activity.start_surface_view.setDownCount(1);
+                }
+            }
+            up_down *= -1;
+            alpha += up_down*2;
+        }
+        count++;
+
+        switch (messageNum) {
+            case 0:
+                graphic.bookingDrawText("地脈を流れるエネルギー，ジオエネルギー．",100,480, paint);
+                break;
+            case 1:
+                graphic.bookingDrawText("その加護を受ける者がいた．",350,480, paint);
+                break;
+            case 2:
+                graphic.bookingDrawText("いま，地上は異次元からやってくる",100,440, paint);
+                graphic.bookingDrawText("魔王によって平穏が脅かされていた．",350,520, paint);
+                break;
+            case 3:
+                graphic.bookingDrawText("際限なく強くなって地上を支配しにくる魔王．",75,480, paint);
+                break;
+            case 4:
+                graphic.bookingDrawText("これは，ジオをつかさどる女神",30,320, paint);
+                graphic.bookingDrawText("ガイアと結託し，魔王の脅威を退け，",55,480, paint);
+                graphic.bookingDrawText("平穏を取り戻すことを決意した者の物語である．",80,640, paint);
+                break;
+        }
+
         graphic.draw();
     }
 }
