@@ -17,6 +17,7 @@ import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 import com.maohx2.ina.Constants.DungeonKind.*;
 
+import static com.maohx2.ina.Constants.DungeonKind.DUNGEON_KIND.CHESS;
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
 
@@ -69,8 +70,6 @@ class DungeonSurfaceView extends BaseSurfaceView{
     Graphic graphic;
     Activity dungeon_activity;
     BattleUserInterface battle_user_interface;
-
-    boolean openningFlag = true;
 
 
     public DungeonSurfaceView(Activity _dungeon_activity, BackSurfaceView _backSurfaceView) {
@@ -145,15 +144,13 @@ class DungeonSurfaceView extends BaseSurfaceView{
                 graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
                 break;
             case OPENING:
+                my_database_admin.addMyDatabase("ChessDB", "LocalChessImage.db", 1, "r");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("ChessDB"), "Chess");
+                openingFlag = true;
+                dungeon_kind = CHESS;
                 break;
 
         }
-
-
-        openingFlag = true;
-        if (openingFlag) {
-        }
-
 
 
         sound_admin.loadSoundPack("map");
@@ -168,7 +165,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
 
         game_system.init(dungeon_user_interface, graphic, sound_admin, my_database_admin, battle_user_interface, dungeon_activity, my_database_admin, activityChange,1, dungeon_kind);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
 
-        if(openningFlag == true){
+        if(openingFlag == true){
             game_system.openningInit();
         }
 

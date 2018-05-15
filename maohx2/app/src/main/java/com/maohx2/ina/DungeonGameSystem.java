@@ -357,12 +357,15 @@ public class DungeonGameSystem {
 
     public void openningInit() {
 
-        openningTextBoxID = text_box_admin.createTextBox(200, 500, 1400, 800, 3);
+        openningTextBoxID = text_box_admin.createTextBox(50, 700, 1550, 880, 4);
         text_box_admin.setTextBoxUpdateTextByTouching(openningTextBoxID, false);
         text_box_admin.setTextBoxExists(openningTextBoxID, false);
     }
 
     public void openningUpdate() {
+
+        paint.setTextSize(35);
+        paint.setARGB(255, 255, 255, 255);
 
 
         if(count == 1){
@@ -370,7 +373,7 @@ public class DungeonGameSystem {
         }
 
         if (count == 100) {
-            text_box_admin.bookingDrawText(openningTextBoxID, "今日も平穏だなぁ");
+            text_box_admin.bookingDrawText(openningTextBoxID, "今日も平穏だなぁ", paint);
             text_box_admin.bookingDrawText(openningTextBoxID, "MOP");
             text_box_admin.updateText(openningTextBoxID);
             text_box_admin.setTextBoxExists(openningTextBoxID, true);
@@ -397,7 +400,7 @@ public class DungeonGameSystem {
         //うわ、なんだ、で画面を止めるのは count = 191
         if (map_object_admin.bossIsHitPlayer()){
             boss_is_running = false;
-            text_box_admin.bookingDrawText(openningTextBoxID, "うわ，なんだ!?");
+            text_box_admin.bookingDrawText(openningTextBoxID, "うわ，なんだ!?", paint);
             text_box_admin.bookingDrawText(openningTextBoxID, "MOP");
             text_box_admin.updateText(openningTextBoxID);
             text_box_admin.setTextBoxExists(openningTextBoxID, true);
@@ -428,7 +431,7 @@ public class DungeonGameSystem {
 
         if (text_mode == false) {
             map_object_admin.openingUpdate(boss_is_running);
-            map_plate_admin.update();
+            //map_plate_admin.update();
             count++;
         }
 
@@ -441,7 +444,7 @@ public class DungeonGameSystem {
 
         map_admin.drawMap_for_autotile_light_animation();
         map_object_admin.draw();
-        map_plate_admin.draw();
+        //map_plate_admin.draw();
 
         text_box_admin.draw();
         graphic.draw();

@@ -60,7 +60,6 @@ class WorldSurfaceView extends BaseSurfaceView {
     Graphic graphic;
     SoundAdmin soundAdmin;
 
-    boolean openningFlag = true;
 
     public WorldSurfaceView(WorldActivity _map_activity, BackSurfaceView _backSurfaceView) {
         super(_map_activity, _backSurfaceView);
@@ -87,11 +86,14 @@ class WorldSurfaceView extends BaseSurfaceView {
         global_data.getGeoInventry().init(map_user_interface, graphic,1200,100,1600,700, 10);
         global_data.getExpendItemInventry().init(map_user_interface, graphic,200,100,600,508, 10);
 
+        if(global_data.getPlayerStatus().getTutorialInDungeon() == 0) {
+            openingFlag = true;
+        }
 
 
         world_game_system.init(map_user_interface, graphic, my_database_admin, soundAdmin, _map_activity, activityChange);
 
-        if(openningFlag == true){
+        if(openingFlag == true){
             world_game_system.openningInit();
         }
 
@@ -113,7 +115,7 @@ class WorldSurfaceView extends BaseSurfaceView {
 
         map_user_interface.updateTouchState(touch_x, touch_y, touch_state);
 
-        if(openningFlag == true) {
+        if(openingFlag == true) {
             world_game_system.openningUpdate();
             world_game_system.openningDraw();
         }else{
@@ -123,6 +125,6 @@ class WorldSurfaceView extends BaseSurfaceView {
 
     }
 
-    public void setOpenningFlag(boolean _openningFlag) {openningFlag = _openningFlag;}
+    public void setOpenningFlag(boolean _openningFlag) {openingFlag = _openningFlag;}
 
 }
