@@ -17,6 +17,7 @@ import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 import com.maohx2.ina.Constants.DungeonKind.*;
 
+import static com.maohx2.ina.Constants.DungeonKind.DUNGEON_KIND.CHESS;
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
 
@@ -70,8 +71,6 @@ class DungeonSurfaceView extends BaseSurfaceView{
     Activity dungeon_activity;
     BattleUserInterface battle_user_interface;
 
-    boolean openningFlag = true;
-
 
     public DungeonSurfaceView(Activity _dungeon_activity, BackSurfaceView _backSurfaceView) {
         super(_dungeon_activity, _backSurfaceView);
@@ -98,16 +97,6 @@ class DungeonSurfaceView extends BaseSurfaceView{
 
         Intent intent = currentActivity.getIntent();
         DUNGEON_KIND dungeon_kind = (DUNGEON_KIND)intent.getSerializableExtra("DungeonKind");
-
-        //TODO バグらないようにとりあえず読んでる
-        //my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
-        //graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
-
-        //TODO openingFlagをもらってくる
-        openingFlag = true;
-        if (openingFlag) {
-            dungeon_kind = DUNGEON_KIND.OPENING;
-        }
 
         switch (dungeon_kind){
             case CHESS:
@@ -151,10 +140,10 @@ class DungeonSurfaceView extends BaseSurfaceView{
                 graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
                 break;
             case OPENING:
-                //とりあえずチェスを読み込んでおく
                 my_database_admin.addMyDatabase("ChessDB", "LocalChessImage.db", 1, "r");
                 graphic.loadLocalImages(my_database_admin.getMyDatabase("ChessDB"), "Chess");
                 //dungeon_kind = DUNGEON_KIND.CHESS;
+                openingFlag = true;
                 break;
 
         }
@@ -171,7 +160,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
 
         game_system.init(dungeon_user_interface, graphic, sound_admin, my_database_admin, battle_user_interface, dungeon_activity, my_database_admin, activityChange,1, dungeon_kind);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
 
-        if(openningFlag == true){
+        if(openingFlag == true){
             game_system.openningInit();
         }
 
