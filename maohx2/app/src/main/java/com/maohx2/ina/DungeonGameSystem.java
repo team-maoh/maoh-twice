@@ -407,6 +407,7 @@ public class DungeonGameSystem {
         openningTextBoxID = text_box_admin.createTextBox(200, 500, 1400, 800, 3);
         text_box_admin.setTextBoxUpdateTextByTouching(openningTextBoxID, false);
         text_box_admin.setTextBoxExists(openningTextBoxID, false);
+        map_admin.createOpeningMap();
     }
 
     public void openningUpdate() {
