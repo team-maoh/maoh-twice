@@ -411,6 +411,7 @@ public class DungeonGameSystem {
             System.out.println("茶番：ボスとの戦闘");
 
             //by kmhanko
+            text_box_admin.setTextBoxExists(openningTextBoxID, false);
 
             battle_unit_admin.reset(BattleUnitAdmin.MODE.OPENING);
             battle_unit_admin.spawnEnemy(

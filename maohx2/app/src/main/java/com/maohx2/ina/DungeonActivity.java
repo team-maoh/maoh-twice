@@ -150,7 +150,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
         }
 
 
-        openingFlag = false;
+        openingFlag = true;
         if (openingFlag) {
         }
 
