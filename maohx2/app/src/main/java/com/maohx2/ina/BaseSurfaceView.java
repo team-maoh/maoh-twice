@@ -22,7 +22,7 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     ActivityChange activityChange;
     Activity currentActivity;
 
-    boolean openingFlag;
+    boolean openingFlag = false;
 
     double touch_x = 0;
     double touch_y = 0;
