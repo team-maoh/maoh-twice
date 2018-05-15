@@ -941,7 +941,7 @@ public class MapAdmin {
                 }
             }
         }
-        System.out.println("draw count = " + count);
+//        System.out.println("draw count = " + count);
 
         //中心点の表示
         if (is_debug_mode) {
@@ -994,7 +994,7 @@ public class MapAdmin {
             }
         }
         //画像表示デバッグ用
-        //graphic.bookingDrawBitmapData(auto_tile_wall.big_auto_tile[46], 0, 0, 1, 1, 0, 255, true);
+//        graphic.bookingDrawBitmapData(at_floor.big_auto_tile[34], 0, 0, 1, 1, 0, 255, true);
     }
 
     private void createMapTileSet(boolean lu, boolean u, boolean ru, boolean l, boolean r, boolean ld, boolean d, boolean rd, AutoTile m_auto_tile, int i, int j, BitmapData map_tile_set[][]) {
@@ -1268,7 +1268,7 @@ public class MapAdmin {
         //15
         else if (!lu && u && !ru && l && r && !ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile[15];
-        } else if ((u && ru && !l && r && d && rd)) {
+        } else if (u && ru && !l && r && d && rd) {
             map_tile_set[i][j] = m_auto_tile[16];
         } else if (u && !ru && !l && r && d && rd) {
             map_tile_set[i][j] = m_auto_tile[17];
@@ -1286,7 +1286,7 @@ public class MapAdmin {
             map_tile_set[i][j] = m_auto_tile[22];
         } else if (!u && l && r && !ld && d && !rd) {
             map_tile_set[i][j] = m_auto_tile[23];
-        } else if ((lu && u && l && !r && ld && d)) {
+        } else if (lu && u && l && !r && ld && d) {
             map_tile_set[i][j] = m_auto_tile[24];
         }
         //25

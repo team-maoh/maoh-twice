@@ -198,6 +198,7 @@ public class AutoTileAdmin {
 
     public void createBigAutoTile_floor(AutoTile m_source_auto_tile_wall) {
         //0〜48は壁,49〜52は横壁
+        //TODO:場合分けが横壁用になっているのでそこを直す
         createBigAutoTileParts_floor(m_source_auto_tile_wall, 0, 0, 0, 0, 0);
         createBigAutoTileParts_floor(m_source_auto_tile_wall, 1, 1, 0, 0, 0);
         createBigAutoTileParts_floor(m_source_auto_tile_wall, 2, 0, 2, 0, 0);
