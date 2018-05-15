@@ -123,7 +123,7 @@ public class WorldGameSystem {
 
         soundAdmin.loadSoundPack("basic");
 
-        text_box_admin = new TextBoxAdmin(graphic);
+        text_box_admin = new TextBoxAdmin(graphic, soundAdmin);
         text_box_admin.init(world_user_interface);
 
         itemDataAdminManager = new ItemDataAdminManager();

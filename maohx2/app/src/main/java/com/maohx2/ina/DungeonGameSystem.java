@@ -26,6 +26,7 @@ import com.maohx2.ina.ItemData.EquipmentItemDataAdmin;
 import com.maohx2.ina.Text.ListBoxAdmin;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.DungeonUserInterface;
+import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatus;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
@@ -33,6 +34,7 @@ import com.maohx2.kmhanko.sound.SoundAdmin;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.itemdata.MiningItemDataAdmin;
 import com.maohx2.kmhanko.music.MusicAdmin;
+import com.maohx2.kmhanko.plate.BackPlate;
 import com.maohx2.fuusya.MapInventryAdmin;
 
 
@@ -97,7 +99,7 @@ public class DungeonGameSystem {
         dungeon_kind = _dungeon_kind;
 
         battle_unit_admin = new BattleUnitAdmin();
-        text_box_admin = new TextBoxAdmin(graphic);
+        text_box_admin = new TextBoxAdmin(graphic, sound_admin);
         list_box_admin = new ListBoxAdmin();
         text_box_admin.init(dungeon_user_interface);
         list_box_admin.init(dungeon_user_interface, graphic);
@@ -165,7 +167,7 @@ public class DungeonGameSystem {
 
         activityChange = _activityChange;
         dungeonModeManage = new DungeonModeManage();
-        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange, globalData);
+        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange, globalData, dungeonModeManage, sound_admin);
         map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_plate_admin, dungeonModeManage, globalData, battle_unit_admin);
         map_inventry_admin = new MapInventryAdmin(globalData, map_plate_admin.getInventry(), map_object_admin, map_plate_admin);
 
@@ -201,6 +203,7 @@ public class DungeonGameSystem {
 
         equipmentInventry = globalData.getEquipmentInventry();
         expendInventry = globalData.getExpendItemInventry();
+
 
         miningItemDataAdmin = new MiningItemDataAdmin(graphic, my_database_admin);
 
@@ -310,9 +313,17 @@ public class DungeonGameSystem {
                 activityChange.toWorldActivity();
                 break;
 
-            case EQUIP_EXPEND:
-                break;
+            case EQUIP_EXPEND_INIT:
+                initBackPlate();
+                dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.EQUIP_EXPEND);
 
+            case EQUIP_EXPEND:
+                equipmentInventry.updata();
+                expendInventry.updata();
+                palette_admin.update(false);
+                backPlateGroup.update();
+//                backPlateGroup.update();
+                break;
             case GEO_MAP:
                 break;
 
@@ -343,7 +354,16 @@ public class DungeonGameSystem {
                 battle_unit_admin.draw();
                 break;
 
+            case EQUIP_EXPEND_INIT:
+                break;
+
             case EQUIP_EXPEND:
+                equipmentInventry.draw();
+                expendInventry.draw();
+                palette_admin.draw();
+                dungeon_user_interface.draw();
+                backPlateGroup.draw();
+//                backPlateGroup.draw();
                 break;
 
             case GEO_MAP:
@@ -499,6 +519,28 @@ public class DungeonGameSystem {
 
     }
 
+    PlateGroup<BackPlate> backPlateGroup;
+
+    private void initBackPlate() {
+        backPlateGroup = new PlateGroup<BackPlate>(
+                new BackPlate[]{
+                        new BackPlate(
+                                graphic, dungeon_user_interface, null
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //戻るボタンが押された時の処理
+                                dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
+                                map_plate_admin.initMenu();
+                                /*worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.STOP);
+                                worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
+                                */
+
+                            }
+                        }
+                }
+        );
+    }
 
     public DungeonGameSystem() {
     }

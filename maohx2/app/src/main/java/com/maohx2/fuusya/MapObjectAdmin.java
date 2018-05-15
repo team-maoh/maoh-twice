@@ -1,7 +1,6 @@
 package com.maohx2.fuusya;
 
 
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -83,6 +82,9 @@ public class MapObjectAdmin {
 
     boolean is_displaying_menu;
 
+    //リリース時にはfalse
+    //trueにすると敵との戦闘を回避できる(デバッグ用)
+    boolean avoid_battle_for_debug = false;
 
     public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, GlobalData _globalData, BattleUnitAdmin _battle_unit_admin) {
         graphic = _graphic;
@@ -97,7 +99,7 @@ public class MapObjectAdmin {
         is_displaying_menu = false;
         random = new Random();
 
-        map_player = new MapPlayer(graphic, this, dungeon_user_interface, _sound_admin, camera, map_plate_admin, battle_unit_admin, dungeon_mode_manage);
+        map_player = new MapPlayer(graphic, this, dungeon_user_interface, _sound_admin, camera, map_plate_admin, battle_unit_admin, dungeon_mode_manage, avoid_battle_for_debug);
         map_player.init();
         map_player_bitmap = new MapObjectBitmap(PLAYER_DIR, graphic, "主人公");
         map_player_bitmap.init(3 / 2);
@@ -117,7 +119,7 @@ public class MapObjectAdmin {
         }
 
         for (int i = 0; i < NUM_OF_MINE; i++) {
-            map_mine[i] = new MapMine(graphic, this, i % 4, camera);
+            map_mine[i] = new MapMine(graphic, this, i % 4, camera, dungeon_mode_manage);
             map_mine[i].init();
 
             map_mine_bitmap[i] = new MapObjectBitmap(8, graphic, "発掘ポイント黄");
@@ -127,8 +129,7 @@ public class MapObjectAdmin {
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
 
-
-            map_enemy[i] = new MapEnemy(graphic, this, camera, ENEMY_DIR, true, true, battle_unit_admin, dungeon_mode_manage);
+            map_enemy[i] = new MapEnemy(graphic, this, camera, ENEMY_DIR, true, true, battle_unit_admin, dungeon_mode_manage, avoid_battle_for_debug);
             map_enemy[i].init();
             map_enemy_bitmap[i] = new MapObjectBitmap(ENEMY_DIR, graphic, "ジオイーター");
             map_enemy_bitmap[i].init(3 / 2);
@@ -146,7 +147,6 @@ public class MapObjectAdmin {
 
         bag_item_admin = new BagItemAdmin();
         bag_item_admin.init();
-
 
     }
 
@@ -335,19 +335,16 @@ public class MapObjectAdmin {
             debug_boss_point[i].set((int) (magnification * 7.5), (int) (magnification * 7.5));
         }
 
-        if (map_admin.getBoss_floor_num() != map_admin.getNow_floor_num()) {
 //            System.out.println("haidesu_FutsuFloor");
 //            System.out.println("haidesu___________" + map_admin.getNow_floor_num());
 //            System.out.println("haidesu___________" + map_admin.getBoss_floor_num());
-            spawnMine(debug_mine_point);
-            spawnEnemy(tmp_enemy_name);
-            spawnTrap(debug_trap_name);
-        } else {
+        spawnMine(mine_point);
+        spawnEnemy(tmp_enemy_name);
+        spawnTrap(debug_trap_name);
 //            System.out.println("haidesu_BossFloor");
 //            System.out.println("haidesu___________" + map_admin.getNow_floor_num());
 //            System.out.println("haidesu___________" + map_admin.getBoss_floor_num());
-            spawnBoss(debug_boss_point);
-        }
+        spawnBoss(debug_boss_point);
 
     }
 
@@ -359,7 +356,11 @@ public class MapObjectAdmin {
 
         if (map_admin.getNow_floor_num() != map_admin.getBoss_floor_num()) {
 
+//            System.out.println("MinePointが設置されました");
+
             for (int i = 0; i < NUM_OF_MINE; i++) {
+
+                System.out.println("MinePointが設置されました" + mine_point[i].x);
 
                 if (mine_point[i].x > 0) {
                     map_mine[i].generatePosition(mine_point[i].x * magnification + magnification / 2, mine_point[i].y * magnification + magnification / 2, magnification);
@@ -378,8 +379,8 @@ public class MapObjectAdmin {
             map_boss[i].setExists(false);
         }
 
-        int a = map_admin.getNow_floor_num();
-        int b = map_admin.getBoss_floor_num();
+//        int a = map_admin.getNow_floor_num();
+//        int b = map_admin.getBoss_floor_num();
         if (map_admin.getNow_floor_num() == map_admin.getBoss_floor_num()) {
 
             for (int i = 0; i < NUM_OF_BOSS; i++) {
