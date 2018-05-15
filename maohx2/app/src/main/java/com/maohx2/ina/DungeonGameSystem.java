@@ -105,6 +105,7 @@ public class DungeonGameSystem {
         */
 
         int dungeon_num = 0;
+        //TODO 先輩にお願いしてダンジョンのデータ増やしてもらう
         switch(dungeon_kind) {
             case CHESS:
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "ChessMonsterData");
@@ -122,12 +123,28 @@ public class DungeonGameSystem {
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "HauntedMonsterData");
                 dungeon_num = 3;
                 break;
+                /*
+            case SEA:
+                dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "SeaMonsterData");
+                dungeon_num = 4;
+                break;
+            case SWAMP:
+                dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "SwampMonsterData");
+                dungeon_num = 5;
+                break;
+            case LAVA:
+                dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "LavaMonsterData");
+                dungeon_num = 6;
+                break;
+                 */
             case MAOH:
                 dungeon_num = 0;
                 break;
             case OPENING:
                 dungeon_num = 0;
                 break;
+            default:
+                dungeon_num = 0;
         }
 
 

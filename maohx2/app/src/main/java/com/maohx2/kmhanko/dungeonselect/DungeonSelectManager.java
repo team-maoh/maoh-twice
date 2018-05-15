@@ -480,6 +480,9 @@ public class DungeonSelectManager {
                 case "Dragon": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.DRAGON; break;
                 case "Haunted": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.HAUNTED; break;
                 case "Forest": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.FOREST; break;
+                case "Lava": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.LAVA; break;
+                case "Swamp": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.SWAMP; break;
+                case "Sea": dungeonKind = Constants.DungeonKind.DUNGEON_KIND.SEA; break;
                 default: dungeonKind = Constants.DungeonKind.DUNGEON_KIND.GOKI; break;
             }
 
