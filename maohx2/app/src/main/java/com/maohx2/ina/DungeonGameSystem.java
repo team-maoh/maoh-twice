@@ -151,7 +151,7 @@ public class DungeonGameSystem {
                 break;
             case OPENING:
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "OpeningMonsterData");
-                dungeon_num = 0;
+                dungeon_num = 2;
                 break;
             default:
                 dungeon_num = 0;
