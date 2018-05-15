@@ -103,6 +103,12 @@ class DungeonSurfaceView extends BaseSurfaceView{
         //my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");
         //graphic.loadLocalImages(my_database_admin.getMyDatabase("GokiDB"), "Goki");
 
+        //TODO openingFlagをもらってくる
+        openingFlag = true;
+        if (openingFlag) {
+            dungeon_kind = DUNGEON_KIND.OPENING;
+        }
+
         switch (dungeon_kind){
             case CHESS:
                 my_database_admin.addMyDatabase("ChessDB", "LocalChessImage.db", 1, "r");
@@ -147,11 +153,6 @@ class DungeonSurfaceView extends BaseSurfaceView{
             case OPENING:
                 break;
 
-        }
-
-
-        openingFlag = true;
-        if (openingFlag) {
         }
 
 
