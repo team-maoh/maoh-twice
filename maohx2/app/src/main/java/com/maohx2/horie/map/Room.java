@@ -1,6 +1,7 @@
 package com.maohx2.horie.map;
 
 import android.graphics.Paint;
+import android.graphics.Point;
 
 import com.maohx2.ina.Draw.Graphic;
 
@@ -54,9 +55,9 @@ public class Room {
         area = height * width;
     }
 
-    public void drawRoom(Graphic graphic, Paint paint, int magnification){
+    public void drawRoom(Graphic graphic, Paint paint, int magnification, Point small_map_offset){
         if(isDisp) {
-            graphic.bookingDrawRect(left*magnification, top*magnification, (right+1)*magnification, (bottom+1)*magnification, paint);
+            graphic.bookingDrawRect(left*magnification+small_map_offset.x, top*magnification+small_map_offset.y, (right+1)*magnification+small_map_offset.x, (bottom+1)*magnification+small_map_offset.y, paint);
         }
     }
 }

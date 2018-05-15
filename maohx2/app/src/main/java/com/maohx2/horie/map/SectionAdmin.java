@@ -597,9 +597,9 @@ public class SectionAdmin {
     }
 
     //部屋の描画(ミニマップ用)
-    public void drawAllRoom(Graphic graphic, Paint paint, int small_map_mag){
+    public void drawAllRoom(Graphic graphic, Paint paint, int small_map_mag, Point small_map_offset){
         for(int i = 0;i <= now_leaves_number;i++){
-            leaves[i].getRoom().drawRoom(graphic, paint, small_map_mag);
+            leaves[i].getRoom().drawRoom(graphic, paint, small_map_mag, small_map_offset);
         }
     }
 

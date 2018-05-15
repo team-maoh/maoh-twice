@@ -1568,33 +1568,32 @@ public class MapAdmin {
         Paint green_paint = new Paint();
         Paint yellow_paint = new Paint();
         int small_map_mag = 8;
-        int small_map_offset_x = 0;
-        int small_map_offset_y = 0;
+        Point small_map_offset = new Point(0, 40);
 //        int countMiniDrawRect = 0;
         if (map_data[worldToMap(x)][worldToMap(y)].isRoom()) {
             section_admin.getNowRoom(worldToMap(x), worldToMap(y)).setDispflag(true);
         }
         blue_paint.setARGB(100, 0, 0, 255);
-        section_admin.drawAllRoom(graphic, blue_paint, small_map_mag);
+        section_admin.drawAllRoom(graphic, blue_paint, small_map_mag, small_map_offset);
         for (int i = 0; i < this.getMap_size_x(); i++) {
             for (int j = 0; j < this.getMap_size_y(); j++) {
                 //通路
                 if (!isWall(i, j) && !isStairs(i, j) && !isRoom(i, j) && isDisp(i, j)) {
                     red_paint.setARGB(100, 255, 0, 0);
-                    graphic.bookingDrawRect(small_map_mag * i + small_map_offset_x, small_map_mag * j + small_map_offset_y, small_map_mag * (i + 1) + small_map_offset_x, small_map_mag * (j + 1) + small_map_offset_y, red_paint);
+                    graphic.bookingDrawRect(small_map_mag * i + small_map_offset.x, small_map_mag * j + small_map_offset.y, small_map_mag * (i + 1) + small_map_offset.x, small_map_mag * (j + 1) + small_map_offset.y, red_paint);
 //                    countMiniDrawRect++;
                 }
                 //階段
                 else if (isStairs(i, j) && isDisp(i, j)) {
                     green_paint.setColor(Color.GREEN);
-                    graphic.bookingDrawRect(small_map_mag * i + small_map_offset_x, small_map_mag * j + small_map_offset_y, small_map_mag * (i + 1) + small_map_offset_x, small_map_mag * (j + 1) + small_map_offset_y, green_paint);
+                    graphic.bookingDrawRect(small_map_mag * i + small_map_offset.x, small_map_mag * j + small_map_offset.y, small_map_mag * (i + 1) + small_map_offset.x, small_map_mag * (j + 1) + small_map_offset.y, green_paint);
 //                    countMiniDrawRect++;
                 }
             }
         }
 //        System.out.println("countMiniDrawRect = "+countMiniDrawRect);
         yellow_paint.setColor(Color.YELLOW);
-        graphic.bookingDrawCircle(small_map_offset_x + x * small_map_mag / magnification, small_map_offset_y + y * small_map_mag / magnification, 10, yellow_paint);
+        graphic.bookingDrawCircle(small_map_offset.x + x * small_map_mag / magnification, small_map_offset.y + y * small_map_mag / magnification, 10, yellow_paint);
     }
 
     //ミニマップの表示を状態を更新
