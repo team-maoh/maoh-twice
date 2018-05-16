@@ -457,7 +457,7 @@ public class MapObjectAdmin {
 
     public void putPlayer() {
         map_player.setExists(true);
-        map_player.putUnit(20, 350);
+        map_player.putUnit(1200, 650);
     }
 
     public boolean bossIsHitPlayer() {

@@ -142,7 +142,6 @@ class DungeonSurfaceView extends BaseSurfaceView{
             case OPENING:
                 my_database_admin.addMyDatabase("ForestDB", "LocalForestImage.db", 1, "r");
                 graphic.loadLocalImages(my_database_admin.getMyDatabase("ForestDB"), "Forest");
-                //dungeon_kind = DUNGEON_KIND.CHESS;
                 openingFlag = true;
                 break;
 
