@@ -15,6 +15,7 @@ import static com.maohx2.ina.Constants.Item.GEO_PARAM_KIND_NORMAL;
 import static com.maohx2.ina.Constants.Item.GEO_PARAM_KIND_RATE;
 
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.Draw.ImageContext;
 import com.maohx2.ina.DungeonModeManage;
 import com.maohx2.ina.GlobalData;
 import com.maohx2.ina.ItemData.EquipmentItemBaseData;
@@ -871,4 +872,36 @@ public class BattleUnitAdmin {
 
     // *** リザルトメッセージ関係ここまで ***
 
+    // *** オープニング戦闘の会話文関係
+
+    int openingTextBoxID;
+    Paint openingPaint;
+
+    String talkContent[][] = new String[100][];
+    ImageContext talkChara[] = new ImageContext[100];
+
+    public void openingTextInit() {
+
+        openingTextBoxID = textBoxAdmin.createTextBox(50, 700, 1550, 880, 4);
+        textBoxAdmin.setTextBoxUpdateTextByTouching(openingTextBoxID, true);
+        openingPaint.setTextSize(35);
+        openingPaint.setARGB(255, 255, 255, 255);
+        int i = 0;
+
+        talkContent[i] = new String[2];
+        talkChara[i] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkContent[i][0] = "痛い痛い痛いいたい！";
+        talkContent[i][1] = "MOP";
+        i++;
+        /*
+        モンスターだ
+
+                なんだこいつすごく強いぞ
+
+                やばい、どんどんHPバーか削られていく
+                このままじゃやられちゃうよ
+                */
+    }
+
 }
+

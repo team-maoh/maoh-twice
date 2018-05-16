@@ -80,6 +80,9 @@ public class TextBox {
     boolean exists;//自分自身が画面に表示されているかどうか
     boolean sentence_exists;//textが画面に表示されているかどうか
 
+    //by kmhanko
+    boolean drawedFlag;//一度でもdrawが呼ばれたか。これが　trueになってからタッチを許可する
+
     boolean assign_sentence_id;//sentenceをupdateした後で「今まで表示していたsentence」をqueueから抹消するかどうか
     //trueだとqueueが代謝するので次から次へと新しいsentenceを受け取れる（キャラの台詞などに向いている）
     //falseだと同じsentenceを二度も三度も表示することができる（アイテムの詳細表示などに向いている）
@@ -129,6 +132,9 @@ public class TextBox {
         exists = true;
         sentence_exists = true;
 
+        //by kmhanko
+        drawedFlag = false;
+
         sentence_count = 0;
         for (int i = 0; i < MAX_QUEUE_TEXT; i++) {
             sentence_firsts[i] = 0;
@@ -172,9 +178,11 @@ public class TextBox {
 
             }
         } else {//タッチしている
-            box_paint.setColor(Color.argb(100, 100, 0, 0));
-            has_updated_text = false;
-
+            //by kmhank　一度でも描画されたら
+            if (drawedFlag) {
+                box_paint.setColor(Color.argb(100, 100, 0, 0));
+                has_updated_text = false;
+            }
         }
     }
 
@@ -182,6 +190,7 @@ public class TextBox {
 
         //箱が存在する場合、
         if (exists == true) {
+            drawedFlag = true;
 
             //上のupdateで設定したpaintを使って箱を描画
 //        Rect rect = new Rect(box_left, box_top, box_right, box_down);
@@ -367,23 +376,25 @@ public class TextBox {
 
     public void updateText() {
         if (first != last) {//文章キューが空でなかったら、
+            if (drawedFlag) { //by kmhanko　一度でも描画されていたら
 
-            int pre_first = first;
+                int pre_first = first;
 
-            //次に表示する文章の冒頭まで first をずらす
-            while (!(queue[first].isMOP() == true && queue[(first - 1 + MAX_QUEUE_TEXT) % MAX_QUEUE_TEXT].isMOP() == false)) {
-                first = (first + 1) % MAX_QUEUE_TEXT;//firstを１個進める
-            }
-            while (!(queue[first].isMOP() == false && queue[(first - 1 + MAX_QUEUE_TEXT) % MAX_QUEUE_TEXT].isMOP() == true)) {
-                first = (first + 1) % MAX_QUEUE_TEXT;//firstを１個進める
-            }
+                //次に表示する文章の冒頭まで first をずらす
+                while (!(queue[first].isMOP() == true && queue[(first - 1 + MAX_QUEUE_TEXT) % MAX_QUEUE_TEXT].isMOP() == false)) {
+                    first = (first + 1) % MAX_QUEUE_TEXT;//firstを１個進める
+                }
+                while (!(queue[first].isMOP() == false && queue[(first - 1 + MAX_QUEUE_TEXT) % MAX_QUEUE_TEXT].isMOP() == true)) {
+                    first = (first + 1) % MAX_QUEUE_TEXT;//firstを１個進める
+                }
 
-            if (pre_first == first) {
-                sound_admin.play("textenter00");//テキストが切り替わるときにSEが鳴る
-            }
+                if (pre_first == first && exists) {
+                    sound_admin.play("textenter00");//テキストが切り替わるときにSEが鳴る
+                }
 
-            if (assign_sentence_id == true) {
-                erasePreQueue(pre_first);
+                if (assign_sentence_id == true) {
+                    erasePreQueue(pre_first);
+                }
             }
         }
     }
