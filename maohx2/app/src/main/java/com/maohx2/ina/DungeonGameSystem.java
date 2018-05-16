@@ -22,6 +22,7 @@ import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Battle.BattleUnitDataAdmin;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.Draw.ImageContext;
 import com.maohx2.ina.ItemData.EquipmentItemDataAdmin;
 import com.maohx2.ina.Text.ListBoxAdmin;
 import com.maohx2.ina.UI.BattleUserInterface;
@@ -421,6 +422,10 @@ public class DungeonGameSystem {
     int openningTextBoxID;
     boolean text_mode = false;
     boolean boss_is_running = false;
+    boolean flag1 = false;
+    boolean charaFlag;
+
+    ImageContext talkChara;
 
     public void openningInit() {
 
@@ -431,6 +436,18 @@ public class DungeonGameSystem {
         map_admin.createOpeningMap();
     }
 
+    public void drawCharaAndTouchCheck(ImageContext _imageContext){
+        if (_imageContext != null) {
+            charaFlag = true;
+        }
+        if (battle_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
+            text_box_admin.setTextBoxExists(openningTextBoxID, false);
+            text_mode = false;
+        }
+    }
+
+
+
     public void openningUpdate() {
 
         paint.setTextSize(35);
@@ -440,25 +457,37 @@ public class DungeonGameSystem {
             map_object_admin.putPlayer();
         }
 
-        if (count == 100) {
-            text_box_admin.bookingDrawText(openningTextBoxID, "今日も平穏だなぁ", paint);
+        if (count == 40) {
+            talkChara = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+            text_box_admin.bookingDrawText(openningTextBoxID, "今日も平和だなぁ", paint);
             text_box_admin.bookingDrawText(openningTextBoxID, "MOP");
             text_box_admin.updateText(openningTextBoxID);
             text_box_admin.setTextBoxExists(openningTextBoxID, true);
             text_mode = true;
         }
 
-        if (count == 100 && (battle_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN || battle_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN_MOVE || battle_user_interface.getTouchState() == Constants.Touch.TouchState.MOVE)) {
-            text_box_admin.setTextBoxExists(openningTextBoxID, false);
-            text_mode = false;
-
+        if (count == 80) {
+            talkChara = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+            text_box_admin.bookingDrawText(openningTextBoxID, "暇だなぁ，何か面白いことないかなぁ．", paint);
+            text_box_admin.bookingDrawText(openningTextBoxID, "MOP");
+            text_box_admin.updateText(openningTextBoxID);
+            text_box_admin.setTextBoxExists(openningTextBoxID, true);
+            text_mode = true;
         }
 
-        if (count == 180) {
+        if (count == 120) {
+            talkChara = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+            text_box_admin.bookingDrawText(openningTextBoxID, "ん？何か向こうから向かってくるぞ？", paint);
+            text_box_admin.bookingDrawText(openningTextBoxID, "MOP");
+            text_box_admin.updateText(openningTextBoxID);
+            text_box_admin.setTextBoxExists(openningTextBoxID, true);
+            text_mode = true;
+        }
+
+        if (count == 121) {
             map_object_admin.putBoss();
             boss_is_running = true;
         }
-
 
         //ここから先フジワラ，敵と衝突し，戦闘を行い，倒されるということを実現する．
         //主に，プレイヤーが右に進み続ける，と，敵をちゃんとプレイヤーにぶつけて戦闘に入る，というところをちゃんと実装する．
@@ -466,8 +495,9 @@ public class DungeonGameSystem {
 
         //count = 180 でboss_is_running = true としたとすると、
         //うわ、なんだ、で画面を止めるのは count = 191
-        if (map_object_admin.bossIsHitPlayer()){
-            boss_is_running = false;
+        if (!flag1 && map_object_admin.bossIsHitPlayer(400)){
+            flag1 = true;
+            talkChara = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
             text_box_admin.bookingDrawText(openningTextBoxID, "うわ，なんだ!?", paint);
             text_box_admin.bookingDrawText(openningTextBoxID, "MOP");
             text_box_admin.updateText(openningTextBoxID);
@@ -477,8 +507,8 @@ public class DungeonGameSystem {
             //System.out.println("count_desudesudesu"+count);
         }
 
-        if (count == 191 && (battle_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN || battle_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN_MOVE || battle_user_interface.getTouchState() == Constants.Touch.TouchState.MOVE)) {
-
+        if (map_object_admin.bossIsHitPlayer(160)) {
+            boss_is_running = false;
             //ボスとの戦闘
             System.out.println("茶番：ボスとの戦闘");
 
@@ -496,15 +526,17 @@ public class DungeonGameSystem {
             text_box_admin.setTextBoxExists(openningTextBoxID, false);
         }
 
+        charaFlag = false;
+        if (text_mode) {
+            drawCharaAndTouchCheck(talkChara);
+        }//elseにしてはいけない
 
-        if (text_mode == false) {
+        if (!text_mode) {
             map_object_admin.openingUpdate(boss_is_running);
-            //map_plate_admin.update();
             count++;
         }
 
         text_box_admin.update();
-
 
     }
 
@@ -512,6 +544,10 @@ public class DungeonGameSystem {
 
         map_admin.drawOpeningMap();
         map_object_admin.draw();
+        if (charaFlag) {
+            graphic.bookingDrawBitmapData(talkChara);
+        }
+
         //map_plate_admin.draw();
 
         text_box_admin.draw();

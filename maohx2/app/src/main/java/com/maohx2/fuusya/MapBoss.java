@@ -38,7 +38,7 @@ public class MapBoss extends MapInanimate {
 
     public void openingUpdate(){
 
-        w_x -= 150;
+        w_x -= 80;
 
     }
 

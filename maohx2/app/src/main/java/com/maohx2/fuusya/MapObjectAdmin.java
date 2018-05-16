@@ -460,9 +460,10 @@ public class MapObjectAdmin {
         map_player.putUnit(1200, 650);
     }
 
-    public boolean bossIsHitPlayer() {
-        return map_player.isWithinReach(map_boss[0].getWorldX(), map_boss[0].getWorldY(), 20);
+    public boolean bossIsHitPlayer(int r) {
+        return map_player.isWithinReach(map_boss[0].getWorldX(), map_boss[0].getWorldY(), r);
     }
+
 
     private String randomTrapName() {
 
