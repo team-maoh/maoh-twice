@@ -39,6 +39,8 @@ import com.maohx2.ina.Battle.*;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 
+import com.maohx2.kmhanko.sound.SoundAdmin;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -98,12 +100,13 @@ public class BattleUnitAdmin {
 
     PlayerStatus playerStatus;
     MaohMenosStatus maohMenosStatus;
+    SoundAdmin soundAdmin;
 
     boolean resultOperatedFlag;//リザルト関係の処理を一度だけ呼ぶためのフラグ
     boolean battleEndFlag;//戦闘が終わったかどうか
 
     //by kmhanko BattleUnitDataAdmin追加
-    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage, MyDatabaseAdmin _databaseAdmin, MapPlateAdmin _map_plate_admin, TextBoxAdmin _textBoxAdmin, int _repeat_count, MaohMenosStatus _maohMenosStatus) {
+    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage, MyDatabaseAdmin _databaseAdmin, MapPlateAdmin _map_plate_admin, TextBoxAdmin _textBoxAdmin, int _repeat_count, MaohMenosStatus _maohMenosStatus, SoundAdmin _soundAdmin) {
         //引数の代入
         graphic = _graphic;
         BattleRockCreater.setGraphic(graphic);
@@ -112,6 +115,7 @@ public class BattleUnitAdmin {
         battleUnitDataAdmin = _battleUnitDataAdmin;
         palette_admin = _palette_admin;
         maohMenosStatus = _maohMenosStatus;
+        soundAdmin = _soundAdmin;
 
         dungeonModeManage = _dungeonModeManage;
         databaseAdmin = _databaseAdmin;
@@ -185,6 +189,9 @@ public class BattleUnitAdmin {
         if (mode == MODE.BATTLE || mode == MODE.MAOH || mode == MODE.BOSS || mode == MODE.OPENING) {
             palette_admin.setPalettesFlags(new boolean[]{true, true, false});
             //spawnEnemy();
+        }
+        if (mode == MODE.OPENING) {
+            openingTextInit();
         }
 
         if (mode == MODE.MINING) {
@@ -309,7 +316,7 @@ public class BattleUnitAdmin {
         double touch_y = battle_user_interface.getTouchY();
         TouchState touch_state = battle_user_interface.getTouchState();
 
-        if (!battleEndFlag) {
+        if (!battleEndFlag && !(mode == MODE.OPENING && text_mode)) {
 
             battle_units[0].update();
 
@@ -497,6 +504,11 @@ public class BattleUnitAdmin {
             }
         }
 
+        //Opening時用のアップデート
+        if (mode == MODE.OPENING) {
+            openingUpdate();
+        }
+
         boolean result_flag = true;
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             result_flag = result_flag && !battle_units[i].isExist();
@@ -539,9 +551,12 @@ public class BattleUnitAdmin {
                 battleEnd();
                 break;
             case OPENING:
+                /*
                 resultTextBoxUpdate(new String[]{"うわあああああああああ！",});
                 resultButtonGroup.setUpdateFlag(true);
                 resultButtonGroup.setDrawFlag(true);
+                */
+                //battleEnd();
                 break;
         }
     }
@@ -615,6 +630,10 @@ public class BattleUnitAdmin {
         //デバッグ用 プレイヤーのステータスを表示
         //debugPlayerStatusDraw();
         palette_admin.draw();
+
+        if (talkCharaFlag && text_mode) {
+            graphic.bookingDrawBitmapData(talkChara[count]);
+        }
 
         //text
         resultButtonGroup.draw();
@@ -877,13 +896,27 @@ public class BattleUnitAdmin {
     int openingTextBoxID;
     Paint openingPaint;
 
-    String talkContent[][] = new String[100][];
-    ImageContext talkChara[] = new ImageContext[100];
+    boolean text_mode;//trueならばテキストを表示中のため、本updateを呼ばない。
+    boolean talkCharaFlag;
+    int count; //現在何番目のテキストを表示しているか。
+
+    String talkContent[][] = new String[10][];
+    ImageContext talkChara[] = new ImageContext[10];
+    boolean talkFlag[] = new boolean[10];
+    float talkHpRate[] = new float[] {
+            0.8f, 0.6f, 0.4f, 0.2f, 0.0f
+    };
 
     public void openingTextInit() {
-
+        text_mode = false;
+        count = 0;
+        for (int i = 0; i < talkFlag.length; i++) {
+            talkFlag[i] = false;
+        }
+        openingPaint = new Paint();
         openingTextBoxID = textBoxAdmin.createTextBox(50, 700, 1550, 880, 4);
         textBoxAdmin.setTextBoxUpdateTextByTouching(openingTextBoxID, true);
+        textBoxAdmin.setTextBoxExists(openingTextBoxID, false);
         openingPaint.setTextSize(35);
         openingPaint.setARGB(255, 255, 255, 255);
         int i = 0;
@@ -893,14 +926,74 @@ public class BattleUnitAdmin {
         talkContent[i][0] = "痛い痛い痛いいたい！";
         talkContent[i][1] = "MOP";
         i++;
-        /*
-        モンスターだ
 
-                なんだこいつすごく強いぞ
+        talkContent[i] = new String[2];
+        talkChara[i] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkContent[i][0] = "なんだこいつ，凄く強いぞ！";
+        talkContent[i][1] = "MOP";
+        i++;
 
-                やばい、どんどんHPバーか削られていく
-                このままじゃやられちゃうよ
-                */
+        talkContent[i] = new String[2];
+        talkChara[i] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkContent[i][0] = "やばい，どんどんHPバーが削られていく！";
+        talkContent[i][1] = "MOP";
+        i++;
+
+        talkContent[i] = new String[2];
+        talkChara[i] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkContent[i][0] = "このままじゃ，やられちゃうよ！";
+        talkContent[i][1] = "MOP";
+        i++;
+
+        talkContent[i] = new String[2];
+        talkChara[i] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkContent[i][0] = "うわあああああああ！";
+        talkContent[i][1] = "MOP";
+        i++;
+    }
+
+    public void openingUpdate() {
+        //HPの状況に応じてテキストを進行させる。
+        //テキスト進行中は本updateを実行しない。
+
+        if (text_mode) {
+            if (talkContent[count] != null) {
+                talkCharaFlag = false;
+                drawCharaAndTouchCheck(talkChara[count]);
+                if (count >= 5) {
+                    battleEnd();
+                }
+            }
+        }
+
+        if (text_mode == false) {
+            if(talkContent[count] != null) {
+                if (!talkFlag[count] && ((float)battle_units[0].getHitPoint()/(float)battle_units[0].getMaxHitPoint()) <= talkHpRate[count]) {
+                    talk(talkContent[count]);
+                    talkFlag[count] = true;
+                }
+            }
+        }
+    }
+    public void talk(String[] talkContent) {
+
+        for(int i = 0; i < talkContent.length; i++){
+            textBoxAdmin.bookingDrawText(openingTextBoxID,talkContent[i], openingPaint);
+        }
+        textBoxAdmin.updateText(openingTextBoxID);
+        textBoxAdmin.setTextBoxExists(openingTextBoxID, true);
+        text_mode = true;
+    }
+    public void drawCharaAndTouchCheck(ImageContext _imageContext){
+        if (_imageContext != null) {
+            talkCharaFlag = true;
+        }
+        if (battle_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
+            textBoxAdmin.setTextBoxExists(openingTextBoxID, false);
+            soundAdmin.play("textenter00");
+            text_mode = false;
+            count++;
+        }
     }
 
 }

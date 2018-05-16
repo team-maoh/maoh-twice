@@ -87,6 +87,7 @@ public class DungeonGameSystem {
     Activity dungeonActivity;
 
     MusicAdmin musicAdmin;
+    SoundAdmin soundAdmin;
 
     Constants.DungeonKind.DUNGEON_KIND dungeon_kind;
 
@@ -98,6 +99,8 @@ public class DungeonGameSystem {
         dungeonActivity = dungeon_activity;
         graphic = _graphic;
         dungeon_kind = _dungeon_kind;
+
+        soundAdmin = sound_admin;
 
         battle_unit_admin = new BattleUnitAdmin();
         text_box_admin = new TextBoxAdmin(graphic, sound_admin);
@@ -234,7 +237,8 @@ public class DungeonGameSystem {
                 map_plate_admin,
                 text_box_admin,
                 repeat_count,
-                maohMenosStatus
+                maohMenosStatus,
+                soundAdmin
         );
 
         backGround = graphic.searchBitmap("firstBackground");
@@ -374,6 +378,11 @@ public class DungeonGameSystem {
 
         text_box_admin.draw();
         graphic.draw();
+
+        if (resetBossImage) {
+            resetBossImage = false;
+            map_object_admin.setBossBitmap("ボス");
+        }
     }
 
     public void setIsDisplayingMenu(boolean _is_displaying_menu){
@@ -424,6 +433,7 @@ public class DungeonGameSystem {
     boolean boss_is_running = false;
     boolean flag1 = false;
     boolean charaFlag;
+    boolean resetBossImage = false;
 
     ImageContext talkChara;
 
@@ -442,6 +452,7 @@ public class DungeonGameSystem {
         }
         if (battle_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
             text_box_admin.setTextBoxExists(openningTextBoxID, false);
+            soundAdmin.play("textenter00");
             text_mode = false;
         }
     }
@@ -484,7 +495,7 @@ public class DungeonGameSystem {
             text_mode = true;
         }
 
-        if (count == 121) {
+        if (count == 120) {
             map_object_admin.putBoss();
             boss_is_running = true;
         }
@@ -524,6 +535,7 @@ public class DungeonGameSystem {
             ((DungeonActivity)dungeonActivity).dungeon_surface_view.setOpeningFlag(false);////////
             dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
             text_box_admin.setTextBoxExists(openningTextBoxID, false);
+            resetBossImage = true;
         }
 
         charaFlag = false;

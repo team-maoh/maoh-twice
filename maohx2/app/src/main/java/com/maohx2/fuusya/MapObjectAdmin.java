@@ -39,7 +39,7 @@ public class MapObjectAdmin {
     //    int NUM_OF_ITEM = 10;// > 2
     int NUM_OF_TRAP = 10;
     int NUM_OF_MINE = 5;
-    int NUM_OF_BOSS = 1;
+    int NUM_OF_BOSS = 2;
 
     int PLAYER_DIR = 8;
     int ENEMY_DIR = 8;
@@ -451,8 +451,13 @@ public class MapObjectAdmin {
     public void putBoss() {
         map_boss[0].setExists(true);
 //        map_boss[0].putBoss(map_player.getWorldX() + 10 + (140 + map_player.getStep()) * 10, map_player.getWorldY());
+        setBossBitmap("maoh_walk");
         map_boss[0].putBoss(map_player.getWorldX() + 170 + (150 + 25) * 10, map_player.getWorldY());
 
+    }
+
+    public void setBossBitmap(String name) {
+        map_boss_bitmap[0] = new MapObjectBitmap(BOSS_DIR, graphic, name);
     }
 
     public void putPlayer() {
