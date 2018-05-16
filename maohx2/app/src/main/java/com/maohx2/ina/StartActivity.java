@@ -25,7 +25,7 @@ import com.maohx2.kmhanko.Saver.ExpendItemInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.music.MusicAdmin;
-
+import com.maohx2.kmhanko.sound.SoundAdmin;
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
 
@@ -80,6 +80,7 @@ class StartSurfaceView extends BaseSurfaceView {
     PlateGroup<CircleImagePlate> image_list;
 
     MusicAdmin musicAdmin;
+    SoundAdmin soundAdmin;
 
     public StartSurfaceView(StartActivity _start_activity, BackSurfaceView _backSurfaceView) {
         super(_start_activity, _backSurfaceView);
@@ -92,15 +93,17 @@ class StartSurfaceView extends BaseSurfaceView {
 
     public void runGameSystem() {
 
-
         graphic = new Graphic(start_activity, holder);
         my_database_admin = new MyDatabaseAdmin(start_activity);
 
         my_database_admin.addMyDatabase("StartDB", "LocalStartImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("StartDB"), "Start");
 
-        MusicAdmin musicAdmin = new MusicAdmin(currentActivity, my_database_admin);
-        musicAdmin.setTableName("music_pack");
+        soundAdmin = new SoundAdmin(start_activity, my_database_admin);
+        soundAdmin.loadSoundPack("opening");
+
+        //MusicAdmin musicAdmin = new MusicAdmin(currentActivity, my_database_admin);
+        //musicAdmin.setTableName("music_pack");
         //musicAdmin.loadMusic("title", true);
 
 
@@ -167,15 +170,18 @@ class StartSurfaceView extends BaseSurfaceView {
     }
 
     int downCount = 0;
+    int touchWaitcount = 0;
 
     @Override
     public void gameLoop(){
 
         start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
 
-       if(touch_state == TouchState.DOWN){
+       if(touch_state == TouchState.DOWN && touchWaitcount > 15){
             downCount++;
-        }
+           touchWaitcount = 0;
+       }
+        touchWaitcount++;
 
 
         switch (downCount) {
@@ -188,6 +194,7 @@ class StartSurfaceView extends BaseSurfaceView {
                 start_game_system.draw();
                 break;
             case 2:
+                soundAdmin.play("opening00");
                 if(global_data.getPlayerStatus().getTutorialInDungeon() == 1) {
                     activityChange.toWorldActivity();
                 }else{

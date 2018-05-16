@@ -929,7 +929,7 @@ public class BattleUnitAdmin {
 
         talkContent[i] = new String[2];
         talkChara[i] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
-        talkContent[i][0] = "なんだこいつ，凄く強いぞ！";
+        talkContent[i][0] = "なんだこのモンスター，すごく強いぞ！";
         talkContent[i][1] = "MOP";
         i++;
 
