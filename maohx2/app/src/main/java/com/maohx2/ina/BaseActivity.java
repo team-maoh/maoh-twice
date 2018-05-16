@@ -34,7 +34,6 @@ public abstract class BaseActivity extends Activity {
         //音量調整ボタンを使用できるようにする
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         //MusicAdmin.setAudioService(this);
-
         /*
         backSurfaceView = new BackSurfaceView(this);
         layout.addView(backSurfaceView);
@@ -59,6 +58,12 @@ public abstract class BaseActivity extends Activity {
     public void onPause() {
         super.onPause();  // Always call the superclass method first
         MusicAdmin.stop();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);//遷移時のアニメを無効に
     }
 
     //void draw() {
