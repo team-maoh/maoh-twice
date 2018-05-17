@@ -30,7 +30,7 @@ public class DungeonActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        System.out.println("DungeonActivity : onCreate ");
         dungeon_surface_view = new DungeonSurfaceView(this, backSurfaceView);
         layout.addView(dungeon_surface_view);
 

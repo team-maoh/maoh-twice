@@ -25,6 +25,7 @@ public class ActivityChange {
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         currentActivity.finish();
         currentActivity.startActivity(intent);
+        currentActivity.overridePendingTransition(0, 0);
     }
 
     public void toWorldActivity() {
@@ -33,6 +34,7 @@ public class ActivityChange {
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         currentActivity.finish();
         currentActivity.startActivity(intent);
+        currentActivity.overridePendingTransition(0, 0);
     }
 
     public void toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND dungeon_kind) {
@@ -43,6 +45,7 @@ public class ActivityChange {
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         currentActivity.finish();
         currentActivity.startActivity(intent);
+        currentActivity.overridePendingTransition(0, 0);
     }
 }
 
