@@ -39,7 +39,7 @@ public class MapPlayer extends MapUnit {
 
     int th_encount_steps;
     int mean_encount_steps, var_encount_steps;
-    int SOUND_STEPS_PERIOD = 7;//この歩数ごとに足音SEが鳴る
+    int SOUND_STEPS_PERIOD = 10;//この歩数ごとに足音SEが鳴る
     int TOUCHING_FRAME_NUM = 10;
     //
     int encount_steps;
