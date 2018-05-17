@@ -13,7 +13,7 @@ import com.maohx2.ina.DungeonModeManage;
 public class MapMine extends MapInanimate {
 
     //Playerに対する当たり判定の半径
-    double REACH_FOR_PLAYER = 75;
+    double REACH_FOR_PLAYER = 150;
     DungeonModeManage dungeon_mode_manage;
 
     public MapMine(Graphic graphic, MapObjectAdmin _map_object_admin, int _id, Camera _camera, DungeonModeManage _dungeon_mode_manage) {

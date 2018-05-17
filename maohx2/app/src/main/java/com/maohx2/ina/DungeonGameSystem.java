@@ -274,6 +274,13 @@ public class DungeonGameSystem {
                 map_object_admin.update();
                 map_plate_admin.update();
                 break;
+            case OPENING_BATTLE_INIT:
+                dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE);
+                backGround = graphic.searchBitmap("firstBackground");
+                musicAdmin.loadMusic("boss00",true);
+                battle_user_interface.update();
+                battle_unit_admin.update();
+                break;
 
             case BUTTLE_INIT:
                 //battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
@@ -295,7 +302,7 @@ public class DungeonGameSystem {
                         }
                 );
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAOH);
-                musicAdmin.loadMusic("battle00",true);
+                musicAdmin.loadMusic("boss00",true);
 
             case MAOH:
                 battle_user_interface.update();
@@ -533,7 +540,7 @@ public class DungeonGameSystem {
                     }
             );
             ((DungeonActivity)dungeonActivity).dungeon_surface_view.setOpeningFlag(false);////////
-            dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+            dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.OPENING_BATTLE_INIT);
             text_box_admin.setTextBoxExists(openningTextBoxID, false);
             resetBossImage = true;
         }

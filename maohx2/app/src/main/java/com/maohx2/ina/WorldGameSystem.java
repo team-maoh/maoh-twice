@@ -863,6 +863,7 @@ public class WorldGameSystem {
             drawCharaAndTouchCheck(talkChara[count]);
         }else{
             worldActivity.worldSurfaceView.setOpenningFlag(false);
+            worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT_INIT);//startではない。音楽を再び鳴らさないため
         }
 
         if (text_mode == false) {
