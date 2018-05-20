@@ -41,6 +41,7 @@ import com.maohx2.kmhanko.effect.*;
 import com.maohx2.kmhanko.plate.BackPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 import com.maohx2.kmhanko.music.MusicAdmin;
+import com.maohx2.kmhanko.itemshop.ItemSell;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +69,7 @@ public class WorldGameSystem {
     ItemShopAdmin itemShopAdmin;
     ItemDataAdminManager itemDataAdminManager;
     GeoPresentManager geoPresentManager;
+    ItemSell itemSell;
 
     EffectAdmin effectAdmin;
     SoundAdmin soundAdmin;
@@ -148,6 +150,8 @@ public class WorldGameSystem {
 
         itemShopAdmin.init(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager, expendItemInventry, geoInventry, playerStatus, soundAdmin);
         itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "debug");
+
+        itemSell = new ItemSell(graphic, world_user_interface, worldActivity, text_box_admin, worldModeAdmin, soundAdmin);
 
         canvas = null;
 
@@ -258,6 +262,14 @@ public class WorldGameSystem {
             case PRESENT:
                 geoPresentManager.update();
                 break;
+            case SELL_INIT:
+                backGround = graphic.searchBitmap("City");
+                worldModeAdmin.setMode(WORLD_MODE.SELL);
+            case SELL:
+                itemSell.update();
+                break;
+            default:
+                break;
         }
 /*
         if (worldModeAdmin.getIsUpdate(worldModeAdmin.getGetSlotMap())) {
@@ -324,6 +336,13 @@ public class WorldGameSystem {
                 break;
             case PRESENT:
                 geoPresentManager.draw();
+                break;
+            case SELL_INIT:
+                break;
+            case SELL:
+                itemSell.draw();
+                break;
+            default:
                 break;
         }
         /*

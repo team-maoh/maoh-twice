@@ -6,6 +6,8 @@ import android.graphics.Paint;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.Text.BoxTextPlate;
+import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.WorldModeAdmin;
 import com.maohx2.kmhanko.Arrange.InventryS;
@@ -130,6 +132,8 @@ public class ItemShopAdmin {
         if (itemShopActive) {
             itemShop.update();
         }
+        textBoxAdmin.setTextBoxExists(moneyTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.SHOP);
+
     }
 
     public void draw() {
@@ -155,6 +159,9 @@ public class ItemShopAdmin {
         textBoxAdmin.setTextBoxExists(moneyTextBoxID, false);
         moneyTextBoxUpdate();
     }
+
+
+
 
     public int getMoneyTextBoxID() {
         return moneyTextBoxID;

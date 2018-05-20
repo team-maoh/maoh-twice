@@ -88,6 +88,7 @@ public abstract class ItemShop {
         initBuySelectPlate();
         initBackPlate();
         initTextBox();
+        initSwitchPlate();
         initUIs();
     }
 
@@ -182,6 +183,36 @@ public abstract class ItemShop {
         backPlateGroup.setDrawFlag(true);
     }
 
+    PlateGroup<BoxTextPlate> switchPlateGroup;
+    private void initSwitchPlate() {
+        Paint textPaint = new Paint();
+        textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
+        textPaint.setARGB(255,255,255,255);
+
+        switchPlateGroup = new PlateGroup<BoxTextPlate>(
+                new BoxTextPlate[]{
+                        new BoxTextPlate(
+                                graphic, userInterface, new Paint(),
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{ 1300, 700, 1500, 800 },
+                                "売却画面へ",
+                                textPaint
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //売却画面へが押された時の処理
+                                soundAdmin.play("enter00");
+                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.SELL_INIT);
+                                initUIs();
+                            }
+                        }
+                }
+        );
+        switchPlateGroup.setUpdateFlag(true);
+        switchPlateGroup.setDrawFlag(true);
+    }
+
     public void setTextBox() {
         //textBoxID = textBoxAdmin.createTextBox(100.0, 300.0, 500.0, 500, 5);
     }
@@ -190,7 +221,9 @@ public abstract class ItemShop {
         productUpdate();
         buySelectUpdate();
         backPlateGroup.update();
+        switchPlateGroup.update();
         itemInventry.updata();
+
 
         /*
         if (isListBoxItemActive) {
@@ -297,6 +330,7 @@ public abstract class ItemShop {
         buySelectPlateGroup.draw();
         productPlateGroup.draw();
         backPlateGroup.draw();
+        switchPlateGroup.draw();
         itemInventry.draw();
     }
 

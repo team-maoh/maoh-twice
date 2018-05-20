@@ -17,18 +17,20 @@ public class UserInterface {
 
     Graphic graphic;
 
+    static final int LIST_MAX = 300;
+
     double touch_x;
     double touch_y;
     TouchState touch_state;
     int circle_touch_index_num;
     int box_touch_index_num;
-    double circle_center_list_x[] = new double[100];
-    double circle_center_list_y[] = new double[100];
-    double circle_radius_list[] = new double[100];
-    double box_left_list[] =  new double[100];
-    double box_top_list[] =  new double[100];
-    double box_right_list[] =  new double[100];
-    double box_down_list[] =  new double[100];
+    double circle_center_list_x[] = new double[LIST_MAX];
+    double circle_center_list_y[] = new double[LIST_MAX];
+    double circle_radius_list[] = new double[LIST_MAX];
+    double box_left_list[] =  new double[LIST_MAX];
+    double box_top_list[] =  new double[LIST_MAX];
+    double box_right_list[] =  new double[LIST_MAX];
+    double box_down_list[] =  new double[LIST_MAX];
 
     int item_id;
 
@@ -199,7 +201,7 @@ public class UserInterface {
 
     public void resetCircleUI() {
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < LIST_MAX; i++) {
             circle_center_list_x[i] = 0;
             circle_center_list_y[i] = 0;
             circle_radius_list[i] = 0;
@@ -210,7 +212,7 @@ public class UserInterface {
 
     public void resetBoxUI() {
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < LIST_MAX; i++) {
             box_left_list[i] = 0;
             box_top_list[i] =  0;
             box_right_list[i] = 0;

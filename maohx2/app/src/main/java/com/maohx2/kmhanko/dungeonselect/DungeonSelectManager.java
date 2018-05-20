@@ -4,12 +4,12 @@ import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.ActivityChange;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Constants.SELECT_WINDOW;
+import com.maohx2.ina.Constants.GAMESYSTEN_MODE.WORLD_MODE;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.WorldModeAdmin;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
-import com.maohx2.ina.Constants.GAMESYSTEN_MODE.WORLD_MODE;
 
 import com.maohx2.ina.Text.CircleImagePlate;
 import com.maohx2.ina.Text.BoxTextPlate;

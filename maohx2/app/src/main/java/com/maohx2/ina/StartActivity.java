@@ -183,6 +183,8 @@ class StartSurfaceView extends BaseSurfaceView {
        }
         touchWaitcount++;
 
+       //by kmhanko デバッグ用
+        global_data.getPlayerStatus().setTutorialInDungeon(1);
 
         switch (downCount) {
             case 0:
