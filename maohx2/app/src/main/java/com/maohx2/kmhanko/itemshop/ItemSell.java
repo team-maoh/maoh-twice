@@ -144,33 +144,50 @@ public class ItemSell {
     private void checkInventry() {
         InventryData tempInventryData = userInterface.getInventryData();
 
-        if (tempInventryData != null) {
-            if (tempInventryData.getParentInventry() == sellItemInventry) {//参照が等しいかどうかを確認したいので==を使用している
-                //売却インベントリからの場合。そのInventryDataを売却インベントリから1つ削除する
-                //さらに、同一ItemDataを各種インベントリから探し、その売却個数に-1する
-                if (tempInventryData.getItemNum() > 0) {
-                    tempInventryData.setItemNum(tempInventryData.getItemNum() - 1);
-                    switch (tempInventryData.getItemData().getItemKind()) {
-                        case GEO:
-                            geoInventry.searchInventryData(tempInventryData.getItemData()).subSoldNum();
-                            break;
-                        case EQUIPMENT:
-                            equipmentInventry.searchInventryData(tempInventryData.getItemData()).subSoldNum();
-                            break;
-                        case EXPEND:
-                            //ExpendItemData tempExpend = (ExpendItemData)(tempInventryData.getItemData());
-                            //if (tempExpend.getPalettePositionNum() - tempInventryData.getItemNum();
-
-                            expendItemInventry.searchInventryData(tempInventryData.getItemData()).subSoldNum();
-                            break;
-                        default:
-                            throw new Error("☆タカノ: 不適切なアイテムの売却個数を減らそうとしました" + tempInventryData.getItemData().getName());
-                    }
+        if (tempInventryData == null) {
+            return;
+        }
+        if (tempInventryData.getItemData() == null) {
+            return;
+        }
+        if (tempInventryData.getParentInventry() == sellItemInventry) {//参照が等しいかどうかを確認したいので==を使用している
+            //売却インベントリからの場合。そのInventryDataを売却インベントリから1つ削除する
+            //さらに、同一ItemDataを各種インベントリから探し、その売却個数に-1する
+            if (tempInventryData.getItemNum() > 0) {
+                tempInventryData.setItemNum(tempInventryData.getItemNum() - 1);
+                switch (tempInventryData.getItemData().getItemKind()) {
+                    case GEO:
+                        geoInventry.searchInventryData(tempInventryData.getItemData()).subSoldNum();
+                        break;
+                    case EQUIPMENT:
+                        equipmentInventry.searchInventryData(tempInventryData.getItemData()).subSoldNum();
+                        break;
+                    case EXPEND:
+                        expendItemInventry.searchInventryData(tempInventryData.getItemData()).subSoldNum();
+                        break;
+                    default:
+                        throw new Error("☆タカノ: 不適切なアイテムの売却個数を減らそうとしました" + tempInventryData.getItemData().getName());
                 }
-            } else {
-                //所持インベントリからの場合。そのInventryDataのコピーを作成し、売却インベントリに格納する。
-                //さらに元のInventryDataの売却個数を+1する。ただし、売却個数が所持個数を上回るような場合には全ての処理を行わない。
+            }
+        } else {
+            //所持インベントリからの場合。そのInventryDataのコピーを作成し、売却インベントリに格納する。
+            //さらに元のInventryDataの売却個数を+1する。ただし、売却個数が所持個数を上回るような場合には全ての処理を行わない。
+            if (tempInventryData.getParentInventry() == geoInventry) {
                 if (tempInventryData.getItemNum() > tempInventryData.getSoldNum()) {
+                    sellItemInventry.addItemData(tempInventryData.getItemData());
+                    tempInventryData.addSoldNum();
+                }
+            }
+            if (tempInventryData.getParentInventry() == expendItemInventry) {
+                ExpendItemData tempExpend = (ExpendItemData) (tempInventryData.getItemData());
+                if (tempInventryData.getItemNum() - tempExpend.getPalettePositionNum() > tempInventryData.getSoldNum()) {
+                    sellItemInventry.addItemData(tempInventryData.getItemData());
+                    tempInventryData.addSoldNum();
+                }
+            }
+            if (tempInventryData.getParentInventry() == equipmentInventry) {
+                EquipmentItemData tempEquip = (EquipmentItemData) (tempInventryData.getItemData());
+                if (tempInventryData.getItemNum() > tempInventryData.getSoldNum() && tempEquip.getPalettePosition() == 0) {
                     sellItemInventry.addItemData(tempInventryData.getItemData());
                     tempInventryData.addSoldNum();
                 }
