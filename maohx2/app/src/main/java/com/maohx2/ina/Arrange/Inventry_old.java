@@ -46,9 +46,9 @@ public class Inventry_old {
 
         for(int i = 0; i< INVENTRY_DATA_MAX; i++){
             if(i%2 == 0) {
-                inventry_datas[i] = new InventryData((ItemData) equipment_item_data_admin.getOneDataByName("破壊の剣"), 90);
+                inventry_datas[i] = new InventryData((ItemData) equipment_item_data_admin.getOneDataByName("破壊の剣"), 90, null);
             }else{
-                inventry_datas[i] = new InventryData((ItemData) equipment_item_data_admin.getOneDataByName("水の弓"), 25);
+                inventry_datas[i] = new InventryData((ItemData) equipment_item_data_admin.getOneDataByName("水の弓"), 25, null);
             }
         }
 

@@ -52,7 +52,8 @@ public class Inventry {
     public Inventry(){
 
         for(int i = 0; i< INVENTRY_DATA_MAX; i++){
-            inventry_datas[i] = new InventryData(null, 0);
+            //by kmhank　インスタンス引数追加
+            inventry_datas[i] = new InventryData(null, 0, this);
         }
     }
 

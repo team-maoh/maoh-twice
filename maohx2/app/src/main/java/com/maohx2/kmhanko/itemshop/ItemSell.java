@@ -13,6 +13,7 @@ import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.WorldActivity;
 import com.maohx2.ina.WorldModeAdmin;
 import com.maohx2.ina.Arrange.Inventry;
+import com.maohx2.ina.Arrange.InventryData;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.Saver.PlayerStatusSaver;
@@ -120,6 +121,35 @@ public class ItemSell {
         geoInventry.save();
     }
 
+    private void checkInventry() {
+        InventryData tempInventryData = userInterface.getInventryData();
+
+        //switch使用できないためやむなし
+        if (tempInventryData.getParentInventry() == sellItemInventry) {
+            //売却インベントリからの場合。そのInventryDataを売却インベントリから1つ削除する
+            //さらに、同一ItemDataを各種インベントリから探し、その売却個数に-1する
+            sellItemInventry.subItemData(tempInventryData.getItemData());
+            switch(tempInventryData.getItemData().getItemKind()) {
+                case GEO:
+                    break;
+                case EQUIPMENT:
+                    break;
+                case EXPEND:
+                    break;
+                default:
+                    throw new Error("☆タカノ: 不適切なアイテムの売却個数を減らそうとしました" + tempInventryData.getItemData().getName());
+            }
+
+        } else {
+            //所持インベントリからの場合。そのInventryDataのコピーを作成し、売却インベントリに格納する。
+            //さらに元のInventryDataの売却個数を+1する。ただし、売却個数が所持個数を上回るような場合には全ての処理を行わない。
+            if (tempInventryData.getItemNum() < tempInventryData.getSoldNum()) {
+                sellItemInventry.addItemData(tempInventryData.getItemData());
+                tempInventryData.addSoldNum();
+            }
+        }
+    }
+
     //***** draw関係 *****
     public void draw() {
         geoInventry.draw();
@@ -135,6 +165,11 @@ public class ItemSell {
 
     //***** update関係 *****
     public void update() {
+
+        // インベントリにおけるアイテムのタッチ
+        checkInventry();
+
+
 
         geoInventry.updata();
         expendItemInventry.updata();

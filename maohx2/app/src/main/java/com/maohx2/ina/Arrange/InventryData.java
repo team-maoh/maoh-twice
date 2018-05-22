@@ -13,10 +13,14 @@ public class InventryData {
 
     //by kmhanko 売却画面で使用。このアイテムをいくつ売るかを格納する
     int sold_num;
+    //by kmhanko UI取得したinventryDataが、どのインベントリに属するかを判定するために使用
+    //(1画面に同時に、同じアイテム種を取り扱う二つのインベントリを設置するため)
+    Inventry parentInventry;
 
-    public InventryData(ItemData _item_data, int _item_num){
+    public InventryData(ItemData _item_data, int _item_num, Inventry _parentInventry){
         item_data = _item_data;
         item_num = _item_num;
+        parentInventry = _parentInventry;
     }
 
     public int getItemNum(){return item_num;}
@@ -34,6 +38,8 @@ public class InventryData {
     }
     public void addSoldNum(){ if (sold_num < item_num) { sold_num++; };}
     public void subSoldNum(){ if (sold_num >= 1) { sold_num--; }}
+
+    public Inventry getParentInventry() {return parentInventry;}
 
     //by kmhanko
     public void delete() {
