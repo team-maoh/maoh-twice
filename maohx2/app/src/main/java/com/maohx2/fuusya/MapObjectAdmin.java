@@ -9,6 +9,7 @@ import android.view.SurfaceHolder;
 
 import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.MapAdmin;
+import com.maohx2.ina.ActivityChange;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
@@ -86,6 +87,9 @@ public class MapObjectAdmin {
     //trueにすると敵との戦闘を回避できる(デバッグ用)
     boolean avoid_battle_for_debug = false;
 
+    MapInventryAdmin map_inventry_admin;
+    ActivityChange activityChange;
+
     public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, GlobalData _globalData, BattleUnitAdmin _battle_unit_admin) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
@@ -147,6 +151,9 @@ public class MapObjectAdmin {
 
         bag_item_admin = new BagItemAdmin();
         bag_item_admin.init();
+
+        map_inventry_admin = map_plate_admin.getMapInventryAdmin();
+        activityChange = map_plate_admin.getActivityChange();
 
     }
 
@@ -335,15 +342,9 @@ public class MapObjectAdmin {
             debug_boss_point[i].set((int) (magnification * 7.5), (int) (magnification * 7.5));
         }
 
-//            System.out.println("haidesu_FutsuFloor");
-//            System.out.println("haidesu___________" + map_admin.getNow_floor_num());
-//            System.out.println("haidesu___________" + map_admin.getBoss_floor_num());
         spawnMine(mine_point);
         spawnEnemy(tmp_enemy_name);
         spawnTrap(debug_trap_name);
-//            System.out.println("haidesu_BossFloor");
-//            System.out.println("haidesu___________" + map_admin.getNow_floor_num());
-//            System.out.println("haidesu___________" + map_admin.getBoss_floor_num());
         spawnBoss(debug_boss_point);
 
     }
@@ -493,6 +494,11 @@ public class MapObjectAdmin {
                 return "being_blown_away";
         }
 
+    }
+
+    public void escapeDungeon(){
+        map_inventry_admin.storageMapInventry();
+        activityChange.toWorldActivity();
     }
 
 }

@@ -109,10 +109,10 @@ public class MapInventryAdmin {
 
         equipmentInventry.save();
         equipmentInventrySaver.save();
-
-        int i = 0;
-        i = 0;
-        i = 0;
+        geoItemInventry.save();
+        geoItemInventrySaver.save();
+        expendItemInventry.save();
+        expendItemInventrySaver.save();
 
     }
 

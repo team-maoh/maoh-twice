@@ -406,6 +406,17 @@ public class TextBox {
         }
     }
 
+    //TextBoxをリセットする
+    public void reset() {
+
+        for (int i = 0; i < MAX_QUEUE_TEXT; i++) {
+            queue[i].initSentence();
+        }
+        first = 0;
+        last = 0;
+
+    }
+
     public void changeText(int _sentence_id) {
 
         if (assign_sentence_id == false) {

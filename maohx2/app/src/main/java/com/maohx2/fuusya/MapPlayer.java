@@ -141,7 +141,6 @@ public class MapPlayer extends MapUnit {
                         map_plate_admin.setDisplayingContent(0);
                         sound_admin.play("cursor00");
                     }
-
                 }
 
                 //タッチ座標が現在位置からある程度離れていたら、その座標を目標座標とする
@@ -150,7 +149,7 @@ public class MapPlayer extends MapUnit {
                 if (isWithinReach(touch_w_x, touch_w_y, step * 2) == false) {
                     dst_w_x = touch_w_x;
                     dst_w_y = touch_w_y;
-                }else{
+                } else {
                     will_cancel_step_sound = true;
                 }
 
@@ -225,9 +224,6 @@ public class MapPlayer extends MapUnit {
 
                 int max_of_num_of_zako = 10;
                 int num_of_zako = max_of_num_of_zako * now_floor_num / boss_floor_num;
-//                int num_of_zako = (double) (now_floor_num / boss_floor_num) * max_of_num_of_zako;
-
-//                System.out.println("num_of_zako____desudesu_______" + num_of_zako);
 
                 String[] tmp_zako = new String[num_of_zako];
                 int num_of_nonnull = 1;
@@ -250,11 +246,13 @@ public class MapPlayer extends MapUnit {
 
             }
 
-            if(will_cancel_step_sound==false) {
+            if (will_cancel_step_sound == false) {
                 sound_steps = (sound_steps + 1) % SOUND_STEPS_PERIOD;
-            }
-            if (sound_steps == 0) {
-                sound_admin.play("step07");//足音SE
+                //壁にぶつかり続けてるときに音がなり続けるのはおかしいので、
+                //if(will_cancel_step_sound == false) の中に入れる
+                if (sound_steps == 0) {
+                    sound_admin.play("step07");//足音SE
+                }
             }
 
         } else {//moving == false のとき
@@ -308,6 +306,17 @@ public class MapPlayer extends MapUnit {
         } else {
             return true;
         }
+
+    }
+
+    public void checkIfTouchingGate() {
+
+//        double gate_w_x = map_admin.getGate();
+//        double gate_w_y = map_admin.getGate();
+
+//        if (isWithinReach(gate_w_x, gate_w_y, 150) == true) {
+//            map_object_admin.escapeDungeon();
+//        }
 
     }
 

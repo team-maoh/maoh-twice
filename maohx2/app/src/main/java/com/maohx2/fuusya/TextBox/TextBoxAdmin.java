@@ -251,16 +251,23 @@ public class TextBoxAdmin {
         return createTextBox(_box_left, _box_top, _box_right, _box_down, _row_of_box, true, true);
     }
 
-    //TextBoxの表示・非表示を切り替える関数
+    //TextBoxの表示・非表示を切り替える
     public void setTextBoxExists(int _box_id, boolean _exists) {
-        if(text_box[_box_id]!=null) {
+        if (text_box[_box_id] != null) {
             text_box[_box_id].setExists(_exists);
+        }
+    }
+
+    //Textをすべて初期化して、first = last = 0 とする
+    public void resetTextBox(int _box_id) {
+        if (text_box[_box_id] != null) {
+            text_box[_box_id].reset();
         }
     }
 
     //Textをタッチで切り替えるかどうか
     public void setTextBoxUpdateTextByTouching(int _box_id, boolean _update_text_by_touching) {
-        if(text_box[_box_id]!=null) {
+        if (text_box[_box_id] != null) {
             text_box[_box_id].setUpdateTextByTouching(_update_text_by_touching);
         }
     }
