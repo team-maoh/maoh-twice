@@ -857,6 +857,8 @@ public class BattleUnitAdmin {
 
     public void battleEnd() {
         deleteEnemy();
+        playerStatus.setNowHP(battle_units[0].getHitPoint());
+
         if (winFlag) {
             switch(mode) {
                 case BATTLE:

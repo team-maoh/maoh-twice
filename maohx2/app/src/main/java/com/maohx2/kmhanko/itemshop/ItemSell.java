@@ -19,6 +19,8 @@ import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.Saver.PlayerStatusSaver;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.dungeonselect.MapIconPlate;
+import com.maohx2.kmhanko.itemdata.ExpendItemData;
+import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.kmhanko.plate.BackPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 import com.maohx2.ina.Constants;
@@ -156,6 +158,9 @@ public class ItemSell {
                             equipmentInventry.searchInventryData(tempInventryData.getItemData()).subSoldNum();
                             break;
                         case EXPEND:
+                            //ExpendItemData tempExpend = (ExpendItemData)(tempInventryData.getItemData());
+                            //tempExpend.getPalettePosition()
+
                             expendItemInventry.searchInventryData(tempInventryData.getItemData()).subSoldNum();
                             break;
                         default:

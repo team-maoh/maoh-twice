@@ -470,6 +470,7 @@ public class DungeonSelectManager {
         int buttonID = dungeonEnterSelectButtonGroup.getTouchContentNum();
         if (buttonID == 0 ) { //侵入する
             soundAdmin.play("enter00");
+            playerStatus.setNowHPMax();
             initUIsFlag = true;
             MapIconPlate tmp = (MapIconPlate)mapIconPlateGroup.getPlate(focusDungeonButtonID);
             String dungeonName = tmp.getMapIconName();
