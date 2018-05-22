@@ -366,7 +366,7 @@ public class MapAdmin {
             for (int i = 0; i < map_size.x; i++) {
                 for (int j = 0; j < map_size.y; j++) {
                     if (!isWall(i, j) && !isStairs(i, j)) {
-                        setAutoTile_light_floor(i, j, i, j);//TODO:ここがうまくいっていない(壁のやつを流用しているので周りの条件が間違っている可能性がある)
+                        setAutoTile_light_floor(i, j, i, j);
                     }
                     else if (isStairs(i, j)) {
                         map_tile[i][j] = stair_tile;
@@ -1558,7 +1558,7 @@ public class MapAdmin {
                 !isWall(before_array_x, before_array_y), !isWall(array_x, before_array_y), !isWall(after_array_x, before_array_y),
                 !isWall(before_array_x, array_y), !isWall(after_array_x, array_y),
                 !isWall(before_array_x, after_array_y), !isWall(array_x, after_array_y), !isWall(after_array_x, after_array_y),
-                at_floor.big_auto_tile, i, j, map_tile);//TODO:ここがおかしいっぽい
+                at_floor.big_auto_tile, i, j, map_tile);
     }
 
     //ミニマップ表示
@@ -1677,7 +1677,6 @@ public class MapAdmin {
         op_map_tile = new BitmapData[animation_num][opening_map_size.x][opening_map_size.y];
         for (int i = 0; i < opening_map_size.x; i++) {
             for (int j = 0; j < opening_map_size.y; j++) {
-                //TODO:isWallが参照してるところが違うからおかしい
                 if (!isWall_op(i, j) && !isStairs_op(i, j)) {
 //                    map_tile[i][j] = floor_tile;
                     //アニメーション用
