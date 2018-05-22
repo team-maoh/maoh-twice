@@ -116,11 +116,8 @@ public class MapAdmin {
 
     BitmapData floor_tile;
     BitmapData stair_tile;
-    BitmapData mine_tile;
-    BitmapData mine_tile4;
+    BitmapData gate_tile;
     BitmapData stair_tile_div[] = new BitmapData[4];//階段の画像を4分割
-    BitmapData mine_tile_div[] = new BitmapData[4];
-    BitmapData cave_hole_div[] = new BitmapData[3];
 
     Rect sizeRect;
     Rect posRect;
@@ -198,8 +195,12 @@ public class MapAdmin {
             mine_point[i] = new Point(-1, -1);
         }
 
-//        sizeRect = new Rect();
-//        posRect = new Rect();
+        //階段画像読み込み
+        stair_tile = graphic.searchBitmap("step");
+
+        //ゲート画像読み込み
+        BitmapData gate_tile_tmp = graphic.searchBitmap("Gate03");
+        gate_tile = graphic.processTrimmingBitmapData(gate_tile_tmp, 0, 64*2, 64, 64);
 
         //オートタイル生成
         auto_tile_admin = new AutoTileAdmin(graphic);
@@ -225,7 +226,7 @@ public class MapAdmin {
         //BitmapData dragon_hole_raw = graphic.searchBitmap("Dragon_hole_f_01");//穴（アニメーション）
 
         //階段画像4分割
-        stair_tile = graphic.searchBitmap("step");
+//        stair_tile = graphic.searchBitmap("step");
 //        stair_tile_div[0] = graphic.processTrimmingBitmapData(stair_tile, 0, 0, 32, 32);
 //        stair_tile_div[1] = graphic.processTrimmingBitmapData(stair_tile, 32, 0, 32, 32);
 //        stair_tile_div[2] = graphic.processTrimmingBitmapData(stair_tile, 0, 32, 32, 32);
@@ -278,9 +279,10 @@ public class MapAdmin {
 //        }
     }
 
+    //フロアタイル用auto_tile生成
     private void createFloorAutoTile() {
         BitmapData auto_tile_set_floor = graphic.searchBitmap(floor_tile_name);
-        stair_tile = graphic.searchBitmap("step");
+//        stair_tile = graphic.searchBitmap("step");
         //auto_tileを5枚に切る
         for(int i = 0;i < 5;i++) {
             at_floor.setAuto_tile(graphic.processTrimmingBitmapData(auto_tile_set_floor, 0, 32 * i, 32, 32), i);
@@ -304,6 +306,17 @@ public class MapAdmin {
     public boolean isStairs(int x, int y) {
         try {
             return map_data[x][y].isStairs();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("配列の要素数をこえています。");
+            System.out.println(e + "クラスの例外が発生しました。");
+            return false;
+        }
+    }
+
+    //ゲートかどうか
+    public boolean isGate(int x, int y){
+        try {
+            return map_data[x][y].isGate();
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("配列の要素数をこえています。");
             System.out.println(e + "クラスの例外が発生しました。");
@@ -355,6 +368,7 @@ public class MapAdmin {
         section_admin.updateMapData(map_data);
         section_admin.connectRooms(map_data);
         section_admin.makeStairs(map_data);
+        section_admin.makeGate(map_data);
         createMine(mine_min_num, mine_max_num);
         //map_object_adminに採掘場所の座標を渡す
 
@@ -367,9 +381,13 @@ public class MapAdmin {
                 for (int j = 0; j < map_size.y; j++) {
                     if (!isWall(i, j) && !isStairs(i, j)) {
                         setAutoTile_light_floor(i, j, i, j);
-                    }
-                    else if (isStairs(i, j)) {
+                    } else if (isStairs(i, j) && !isGate(i, j)) {
                         map_tile[i][j] = stair_tile;
+                    }
+                    if(isGate(i, j)){
+                        for (int k = 0; k < animation_num; k++) {
+                            map_tile_animation[k][i][j] = gate_tile;
+                        }
                     }
                 }
             }
@@ -384,7 +402,7 @@ public class MapAdmin {
                             map_tile_animation[k][i][j] = floor_tile;
                         }
                         //階段
-                    } else if (isStairs(i, j)) {
+                    } else if (isStairs(i, j) && !isGate(i, j)) {
 //                    map_tile[i][j] = stair_tile;
                         //アニメーション用
                         for (int k = 0; k < animation_num; k++) {
@@ -392,6 +410,11 @@ public class MapAdmin {
                         }
                     } else {
                         setAutoTile_light_animation(i, j, i, j, map_tile_animation, false);
+                    }
+                    if(isGate(i, j)) {
+                        for (int k = 0; k < animation_num; k++) {
+                            map_tile_animation[k][i][j] = gate_tile;
+                        }
                     }
                 }
             }
@@ -1566,6 +1589,7 @@ public class MapAdmin {
         Paint blue_paint = new Paint();
         Paint red_paint = new Paint();
         Paint green_paint = new Paint();
+        Paint l_glay_paint = new Paint();
         Paint yellow_paint = new Paint();
         int small_map_mag = 8;
         Point small_map_offset = new Point(0, 40);
@@ -1578,16 +1602,21 @@ public class MapAdmin {
         for (int i = 0; i < this.getMap_size_x(); i++) {
             for (int j = 0; j < this.getMap_size_y(); j++) {
                 //通路
-                if (!isWall(i, j) && !isStairs(i, j) && !isRoom(i, j) && isDisp(i, j)) {
+                if (!isWall(i, j) && !isStairs(i, j) && !isRoom(i, j) && !isGate(i, j) && isDisp(i, j)) {
                     red_paint.setARGB(100, 255, 0, 0);
                     graphic.bookingDrawRect(small_map_mag * i + small_map_offset.x, small_map_mag * j + small_map_offset.y, small_map_mag * (i + 1) + small_map_offset.x, small_map_mag * (j + 1) + small_map_offset.y, red_paint);
 //                    countMiniDrawRect++;
                 }
                 //階段
-                else if (isStairs(i, j) && isDisp(i, j)) {
+                else if (isStairs(i, j) && !isGate(i, j) && isDisp(i, j)) {
                     green_paint.setColor(Color.GREEN);
                     graphic.bookingDrawRect(small_map_mag * i + small_map_offset.x, small_map_mag * j + small_map_offset.y, small_map_mag * (i + 1) + small_map_offset.x, small_map_mag * (j + 1) + small_map_offset.y, green_paint);
 //                    countMiniDrawRect++;
+                }
+                //ゲート
+                else if(isGate(i, j) && isDisp(i, j)){
+                    l_glay_paint.setColor(Color.LTGRAY);
+                    graphic.bookingDrawRect(small_map_mag * i + small_map_offset.x, small_map_mag * j + small_map_offset.y, small_map_mag * (i + 1) + small_map_offset.x, small_map_mag * (j + 1) + small_map_offset.y, l_glay_paint);
                 }
             }
         }
@@ -1616,6 +1645,9 @@ public class MapAdmin {
             }
         }
         if (isStairs(x, y)) {
+            map_data[x][y].setDispFlag(true);
+        }
+        if(isGate(x, y)){
             map_data[x][y].setDispFlag(true);
         }
     }
