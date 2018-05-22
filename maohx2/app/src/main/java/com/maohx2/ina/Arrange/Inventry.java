@@ -52,7 +52,8 @@ public class Inventry {
     public Inventry(){
 
         for(int i = 0; i< INVENTRY_DATA_MAX; i++){
-            inventry_datas[i] = new InventryData(null, 0);
+            //by kmhank　インスタンス引数追加
+            inventry_datas[i] = new InventryData(null, 0, this);
         }
     }
 
@@ -213,7 +214,7 @@ public class Inventry {
         }
     }
 
-    //by takano
+    //by kmhanko
     public ItemData getItemData(int i) {
         return inventry_datas[i].getItemData();
     }
@@ -234,6 +235,18 @@ public class Inventry {
             }
         }
     }
+    public InventryData searchInventryData(ItemData _itemData) {
+        for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
+            if(inventry_datas[i].getItemData().equals(_itemData)) {
+                return inventry_datas[i];
+            }
+        }
+        return null;
+    }
+    public InventryData getInventryData(int i) {
+        return inventry_datas[i];
+    }
+
 
     public void setPosition(int left, int top, int right, int bottom){
 

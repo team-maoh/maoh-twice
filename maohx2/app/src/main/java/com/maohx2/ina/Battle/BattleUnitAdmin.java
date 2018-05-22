@@ -857,10 +857,17 @@ public class BattleUnitAdmin {
 
     public void battleEnd() {
         deleteEnemy();
+        playerStatus.setNowHP(battle_units[0].getHitPoint());
+
         if (winFlag) {
             switch(mode) {
                 case BATTLE:
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
+                    break;
                 case BOSS:
+                    mapPlateAdmin.getMapInventryAdmin().storageMapInventry();//TODO:この中でSaveが呼ばれているが、Geoだけ呼ばれてないのを藤原に頼んで直してもらう
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TO_WORLD);
+                    break;
                 case MINING:
                     dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
                     break;

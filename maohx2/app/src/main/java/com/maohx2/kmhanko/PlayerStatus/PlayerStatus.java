@@ -21,6 +21,7 @@ public class PlayerStatus {
     private int attack;
     private int defence;
     private int luck;
+    private int nowHp;
 
     private int baseHp;
     private int baseAttack;
@@ -117,6 +118,7 @@ public class PlayerStatus {
     }
 
     public int getHP() { return hp; }
+    public int getNowHP() { return nowHp; }
     public int getAttack() { return attack; }
     public int getDefence() { return defence; }
     public int getLuck() { return luck; }
@@ -128,6 +130,7 @@ public class PlayerStatus {
     public int getTutorialInDungeon() {return tutorialInDungeon; }
 
     public void setHP(int x) { hp = x; }
+    public void setNowHP(int x) { nowHp = x; }
     public void setAttack(int x) { attack = x; }
     public void setDefence(int x) { defence = x; }
     public void setLuck(int x) { luck = x; }
@@ -141,6 +144,10 @@ public class PlayerStatus {
     public void setBaseAttack(int x) { baseAttack = x; }
     public void setBaseDefence(int x) { baseDefence = x; }
     public void setBaseLuck(int x) { baseLuck = x; }
+
+    public void setNowHPMax() {
+        nowHp = hp;
+    }
 
     public void setMaohWinCount(int _maohWinCount) { maohWinCount = _maohWinCount; }
 
