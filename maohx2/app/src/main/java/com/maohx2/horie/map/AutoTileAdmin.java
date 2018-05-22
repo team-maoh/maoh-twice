@@ -198,7 +198,6 @@ public class AutoTileAdmin {
 
     public void createBigAutoTile_floor(AutoTile m_source_auto_tile_wall) {
         //0〜48は壁,49〜52は横壁
-        //TODO:場合分けが横壁用になっているのでそこを直す
         createBigAutoTileParts_floor(m_source_auto_tile_wall, 0, 0, 0, 0, 0);
         createBigAutoTileParts_floor(m_source_auto_tile_wall, 1, 1, 0, 0, 0);
         createBigAutoTileParts_floor(m_source_auto_tile_wall, 2, 0, 2, 0, 0);
@@ -227,25 +226,25 @@ public class AutoTileAdmin {
         createBigAutoTileParts_floor(m_source_auto_tile_wall, 25, 0, 24, 4, 24);
         createBigAutoTileParts_floor(m_source_auto_tile_wall, 26, 1, 24, 0, 24);
         createBigAutoTileParts_floor(m_source_auto_tile_wall, 27, 1, 24, 4, 24);
-        createBigAutoTileParts_floor(m_source_auto_tile_wall, 28, 28, 28, 50, 50);
-        createBigAutoTileParts_floor(m_source_auto_tile_wall, 29, 29, 28, 50, 50);
-        createBigAutoTileParts_floor(m_source_auto_tile_wall, 30, 28, 30, 50, 50);
-        createBigAutoTileParts_floor(m_source_auto_tile_wall, 31, 29, 30, 50, 50);
+        createBigAutoTileParts_floor(m_source_auto_tile_wall, 28, 0, 0, 28, 28);
+        createBigAutoTileParts_floor(m_source_auto_tile_wall, 29, 1, 0, 28, 28);
+        createBigAutoTileParts_floor(m_source_auto_tile_wall, 30, 0, 2, 28, 28);
+        createBigAutoTileParts_floor(m_source_auto_tile_wall, 31, 1, 2, 28, 28);
         createBigAutoTileParts_floor(m_source_auto_tile_wall, 32, 16, 24, 16, 24);
-        createBigAutoTileParts_floor(m_source_auto_tile_wall, 33, 33, 33, 50, 50);
+        createBigAutoTileParts_floor(m_source_auto_tile_wall, 33, 20, 20, 28, 28);
         createBigAutoTileParts_floor(m_source_auto_tile_wall, 34, 34, 20, 16, 0);
         createBigAutoTileParts_floor(m_source_auto_tile_wall, 35, 34, 20, 16, 3);
         createBigAutoTileParts_floor(m_source_auto_tile_wall, 36, 20, 36, 0, 24);
         createBigAutoTileParts_floor(m_source_auto_tile_wall, 37, 20, 36, 4, 24);
-        createBigAutoTileParts_floor(m_source_auto_tile_wall, 38, 28, 38, 50, 49);
-        createBigAutoTileParts_floor(m_source_auto_tile_wall, 39, 29, 38, 50, 49);
-        createBigAutoTileParts_floor(m_source_auto_tile_wall, 40, 40, 28, 48, 50);
-        createBigAutoTileParts_floor(m_source_auto_tile_wall, 41, 40, 30, 48, 50);
+        createBigAutoTileParts_floor(m_source_auto_tile_wall, 38, 0, 24, 28, 38);
+        createBigAutoTileParts_floor(m_source_auto_tile_wall, 39, 1, 24, 28, 38);
+        createBigAutoTileParts_floor(m_source_auto_tile_wall, 40, 16, 0, 40, 28);
+        createBigAutoTileParts_floor(m_source_auto_tile_wall, 41, 16, 2, 40, 28);
         createBigAutoTileParts_floor(m_source_auto_tile_wall, 42, 34, 36, 16, 24);
-        createBigAutoTileParts_floor(m_source_auto_tile_wall, 43, 43, 33, 48, 50);
-        createBigAutoTileParts_floor(m_source_auto_tile_wall, 44, 40, 38, 48, 49);
-        createBigAutoTileParts_floor(m_source_auto_tile_wall, 45, 33, 45, 50, 49);
-        createBigAutoTileParts_floor(m_source_auto_tile_wall, 46, 43, 45, 50, 49);
+        createBigAutoTileParts_floor(m_source_auto_tile_wall, 43, 34, 20, 40, 28);
+        createBigAutoTileParts_floor(m_source_auto_tile_wall, 44, 16, 24, 40, 38);
+        createBigAutoTileParts_floor(m_source_auto_tile_wall, 45, 20, 36, 28, 38);
+        createBigAutoTileParts_floor(m_source_auto_tile_wall, 46, 34, 36, 40, 38);
 //        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 47, 4, 0, 16, 0);//左下半分部屋
 //        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 48, 0, 3, 0, 24);//右下半分部屋
 //        createBigAutoTileParts(m_source_auto_tile_wall, m_source_side_wall, 49, 4, 24, 16, 24);//左下半分部屋右部屋

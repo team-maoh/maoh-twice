@@ -584,7 +584,29 @@ public class SectionAdmin {
                 break;
             }
         }
+    }
 
+    //ゲートを作る
+    public void makeGate(Chip[][] map_data) {
+        int ul, u, ur, l, r, dl, d, dr;
+        Random rnd = new Random();
+        for (; ; ) {
+            int leaves_num = rnd.nextInt(now_leaves_number);
+            int x = rnd.nextInt(leaves[leaves_num].room.getRight() - leaves[leaves_num].room.getLeft() + 1) + leaves[leaves_num].room.getLeft();
+            int y = rnd.nextInt(leaves[leaves_num].room.getBottom() - leaves[leaves_num].room.getTop() + 1) + leaves[leaves_num].room.getTop();
+            ul = boolToInt(map_data[x - 1][y - 1].isWall());
+            u = boolToInt(map_data[x][y - 1].isWall());
+            ur = boolToInt(map_data[x + 1][y - 1].isWall());
+            l = boolToInt(map_data[x - 1][y].isWall());
+            r = boolToInt(map_data[x + 1][y].isWall());
+            dl = boolToInt(map_data[x - 1][y + 1].isWall());
+            d = boolToInt(map_data[x][y + 1].isWall());
+            dr = boolToInt(map_data[x + 1][y + 1].isWall());
+            if (ul + u + ur != 2 && ul + l + dl != 2 && dl + d + dr != 2 && ur + r + dr != 2 && !map_data[x][y].isStairs()) {
+                map_data[x][y].setGateFlag(true);
+                break;
+            }
+        }
     }
 
     //boolean->int
