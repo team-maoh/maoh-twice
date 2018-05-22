@@ -17,6 +17,8 @@ import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.PlateGroup;
+import com.maohx2.kmhanko.effect.Effect;
+import com.maohx2.kmhanko.effect.EffectAdmin;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.myavail.MyAvail;
 import com.maohx2.kmhanko.plate.BackPlate;
@@ -98,8 +100,10 @@ public class GeoSlotAdmin {
 
     SoundAdmin soundAdmin;
 
+    EffectAdmin effectAdmin;
+
     //Rewrite by kmhanko
-    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, TextBoxAdmin _textBoxAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, InventryS _geoInventry, SoundAdmin _soundAdmin) {
+    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, TextBoxAdmin _textBoxAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, InventryS _geoInventry, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin) {
         graphic = _graphic;
         userInterface = _user_interface;
         textBoxAdmin = _textBoxAdmin;
@@ -108,6 +112,7 @@ public class GeoSlotAdmin {
         playerStatus = _playerStatus;
         geoInventry = _geoInventry;
         soundAdmin = _soundAdmin;
+        effectAdmin = _effectAdmin;
 
         //初期化
         initTextBox();
@@ -159,7 +164,7 @@ public class GeoSlotAdmin {
         //GeoSlotの管理のため、GeoSlotのインスタンスをコピーしてくるメソッド。
         geoSlots = grand_geo_slot.getGeoSlots();
 
-        GeoSlot.staticInit(textBoxAdmin, geoSlotEventDB, geoInventry, soundAdmin);
+        GeoSlot.staticInit(textBoxAdmin, geoSlotEventDB, geoInventry, soundAdmin, effectAdmin);
 
         for(int i = 0; i < geoSlots.size(); i++) {
             geoSlots.get(i).setParam(xs.get(i), ys.get(i), TOUCH_R);

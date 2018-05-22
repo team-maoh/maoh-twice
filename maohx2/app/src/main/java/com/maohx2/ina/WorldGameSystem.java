@@ -141,7 +141,7 @@ public class WorldGameSystem {
         expendItemInventry = globalData.getExpendItemInventry();
 
         geoSlotSaver = new GeoSlotSaver(databaseAdmin, "GeoSlotSave", "GeoSlotSave.db", 1, "ns", graphic);
-        geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver, maohMenosStatus, soundAdmin);
+        geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin);
 
 
         dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, activityChange, soundAdmin);
@@ -250,6 +250,9 @@ public class WorldGameSystem {
             case EQUIP_INIT:
                 backGround = graphic.searchBitmap("firstBackground");//仮
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
+                equipmentInventry.init(world_user_interface, graphic,1000,100,1400,508, 10);
+                expendItemInventry.init(world_user_interface, graphic,200,100,600,508, 10);
+
             case EQUIP:
                 equipmentInventry.updata();
                 expendItemInventry.updata();

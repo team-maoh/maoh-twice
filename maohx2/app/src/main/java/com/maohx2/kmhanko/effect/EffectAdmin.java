@@ -136,6 +136,22 @@ public class EffectAdmin {
         }
     }
 
+    public void startEffect(int i) {
+        effect.get(i).start();
+    }
+    public void hideEffect(int i) {
+        effect.get(i).hide();
+    }
+    public void pauseEffect(int i) {
+        effect.get(i).setPause(true);
+    }
+    public void restartEffect(int i) {
+        effect.get(i).setPause(false);
+    }
+    public void setPosition(int i, int x, int y) {
+        effect.get(i).setPosition(x, y);
+    }
+
     public EffectDataAdmin getEffectDataAdmin() {
         return effectDataAdmin;
     }

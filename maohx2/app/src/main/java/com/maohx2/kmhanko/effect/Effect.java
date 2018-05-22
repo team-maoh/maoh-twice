@@ -44,10 +44,13 @@ public class Effect {
     private boolean is_pause;
 
     private boolean exist;
+    private boolean isDraw;
 
 
     public Effect() {
         exist = false;
+        isDraw = false;
+        is_pause = false;
     }
 
     public static void staticInit(Graphic _graphic, SoundAdmin _soundAdmin) {
@@ -57,11 +60,15 @@ public class Effect {
 
     public void create(EffectData _effectData) {
         exist = true;
+        isDraw = false;
+        is_pause = false;
         effectData = _effectData;
     }
 
     public void clear() {
         exist = false;
+        isDraw = false;
+        is_pause = false;
         EffectData effectData = null;
     }
 
@@ -69,8 +76,14 @@ public class Effect {
         time = 0;
         step = 0;
         is_start = true;
+        isDraw = true;
+        is_pause = false;
         steps = effectData.getSteps();
         toStep(0);
+    }
+    public void hide() {
+        isDraw = false;
+        is_pause = true;
     }
 
     public void setPosition(int _original_x, int _original_y) {
@@ -149,7 +162,7 @@ public class Effect {
     }
 
     public void draw() {
-        if (!exist) {
+        if (!exist || !isDraw) {
             return;
         }
         //Graphicに描画を依頼
@@ -257,5 +270,7 @@ public class Effect {
     public void restart() {
         is_pause = false;
     }
+    public boolean isDraw() { return isDraw; }
+    public void drawIs(boolean _isDraw) { isDraw = _isDraw; }
 
 }
