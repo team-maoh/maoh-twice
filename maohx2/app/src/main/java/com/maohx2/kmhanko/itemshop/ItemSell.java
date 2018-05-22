@@ -98,10 +98,17 @@ public class ItemSell {
         sellFromInventry(equipmentInventry);
         sellFromInventry(expendItemInventry);
         addMoneyToPlayerStatus(tempSellMoney);
+        reset();
+        inventrysSave();
+    }
+
+    public void reset() {
         for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
             sellItemInventry.getInventryData(i).delete();
+            geoInventry.getInventryData(i).setSoldNum(0);
+            expendItemInventry.getInventryData(i).setSoldNum(0);
+            equipmentInventry.getInventryData(i).setSoldNum(0);
         }
-        inventrysSave();
     }
 
     private void sellFromInventry(Inventry inventry) {
@@ -288,6 +295,7 @@ public class ItemSell {
                                 //戻るボタンが押された時の処理
                                 soundAdmin.play("cancel00");
                                 initUIs();
+                                reset();
                                 worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT_INIT);
                             }
                         }

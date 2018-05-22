@@ -46,6 +46,8 @@ public class MapPlateAdmin {
     PlayerStatusSaver playerStatusSaver;
     boolean is_displaying_list;
 
+    double max_hp;
+
     int displaying_content;
     // -1 : 何も表示していない
     // 0  : [ステータス][アイテム][リタイア]というmenu
@@ -72,6 +74,12 @@ public class MapPlateAdmin {
     int HP_RIGHT = 160;
     int HP_LEFT = 1560;
     int HP_HEIGHT = 15;
+    int HP_TOP = HP_BG_TOP + ((HP_BG_BOTTOM - HP_BG_TOP) - HP_HEIGHT) / 2;
+
+    Paint blue_paint = new Paint();
+    Paint green_paint = new Paint();
+    Paint red_paint = new Paint();
+
     //
     int RETIRE_TOP = 200;
     int RETIRE_RIGHT = 400;
@@ -111,14 +119,6 @@ public class MapPlateAdmin {
         text_paint.setTextSize(30f);
         text_paint.setARGB(255, 255, 255, 255);
 
-        //Worldじゃないと使えない
-//        GeoObjectDataCreater.setGraphic(graphic);
-//        inventry.addItemData(GeoObjectDataCreater.getGeoObjectData(2));
-
-//        obtainDebugItem(1);
-//        obtainDebugItem(1);
-//        obtainDebugItem(3);
-
         is_displaying_list = false;
 
         displaying_content = -1;
@@ -131,27 +131,23 @@ public class MapPlateAdmin {
 //本当にダンジョンをリタイアしますか？[はい][いいえ]
 //        confirmRetireGroup = new PlateGroup<BoxTextPlate>(new BoxTextPlate[]{new BoxTextPlate(graphic, dungeon_user_interface, new Paint(), UP_MOMENT, MOVE, new int[]{RETIRE_LEFT, RETIRE_TOP, RETIRE_RIGHT, RETIRE_BOTTOM}, "はい", text_paint)});
 
-        Paint hp_bg_paint = new Paint();
-//        hp_bg_paint.setARGB(255,0,0,255);
-        hp_bg_paint.setColor(Color.BLUE);
-        Paint hp_paint = new Paint();
-//        hp_paint.setARGB(255,0,255,0);
-        hp_paint.setColor(Color.GREEN);
-        Paint hp_hole_paint = new Paint();
-//        hp_hole_paint.setARGB(255,255,0,0);
-        hp_hole_paint.setColor(Color.RED);
-        int hp_top = HP_BG_TOP + ((HP_BG_BOTTOM - HP_BG_TOP) - HP_HEIGHT) / 2;
+
         int hp_cutting_x = (int) ((HP_RIGHT - HP_LEFT) * hp_ratio) + HP_LEFT;
 
         obtained_item_num = 0;
 
-        hitpoint = new PlateGroup<BoxPlate>(new BoxTextPlate[]{new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_LEFT, HP_BG_TOP, HP_BG_RIGHT, hp_top}, " ", text_paint),
-                //↓　HPバー
-                new BoxTextPlate(graphic, dungeon_user_interface, hp_paint, UP_MOMENT, MOVE, new int[]{HP_LEFT, hp_top, hp_cutting_x, hp_top + HP_HEIGHT}, " ", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, hp_hole_paint, UP_MOMENT, MOVE, new int[]{hp_cutting_x, hp_top, HP_RIGHT, hp_top + HP_HEIGHT}, " ", text_paint),
-                //↑　HPバー
-                new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_LEFT, hp_top + HP_HEIGHT, HP_BG_RIGHT, HP_BG_BOTTOM}, " ", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_LEFT, hp_top, HP_LEFT, hp_top + HP_HEIGHT}, " ", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_RIGHT, hp_top, HP_RIGHT, hp_top + HP_HEIGHT}, " ", text_paint)});
+//        hitpoint = new PlateGroup<BoxPlate>(new BoxTextPlate[]{new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_LEFT, HP_BG_TOP, HP_BG_RIGHT, hp_top}, " ", text_paint),
+//                //↓　HPバー
+//                new BoxTextPlate(graphic, dungeon_user_interface, hp_paint, UP_MOMENT, MOVE, new int[]{HP_LEFT, hp_top, hp_cutting_x, hp_top + HP_HEIGHT}, " ", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, hp_hole_paint, UP_MOMENT, MOVE, new int[]{hp_cutting_x, hp_top, HP_RIGHT, hp_top + HP_HEIGHT}, " ", text_paint),
+//                //↑　HPバー
+//                new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_LEFT, hp_top + HP_HEIGHT, HP_BG_RIGHT, HP_BG_BOTTOM}, " ", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_LEFT, hp_top, HP_LEFT, hp_top + HP_HEIGHT}, " ", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_RIGHT, hp_top, HP_RIGHT, hp_top + HP_HEIGHT}, " ", text_paint)});
 
         i_of_tutorial_bitmap = 1;
+
+        max_hp = playerStatus.getHP();
+        blue_paint.setColor(Color.BLUE);
+        red_paint.setColor(Color.RED);
+        green_paint.setColor(Color.GREEN);
 
     }
 
@@ -162,7 +158,7 @@ public class MapPlateAdmin {
     public void update() {
 
         menuGroup.update();
-        hitpoint.update();
+//        hitpoint.update();
         inventry.updata();
 
         int pre_displaying_content = displaying_content;
@@ -190,7 +186,7 @@ public class MapPlateAdmin {
                         is_displaying_list = false;
                         break;
                     default:
-//                            System.out.println("tatami content = "+content);
+
                         break;
 
                 }
@@ -202,11 +198,10 @@ public class MapPlateAdmin {
                 break;
 
             case 2://[アイテム]
-
                 break;
 
             case 3://[リタイア]
-                map_inventry_admin.storageMapInventry();
+//                map_inventry_admin.storageMapInventry();
                 activityChange.toWorldActivity();
 
                 break;
@@ -216,7 +211,7 @@ public class MapPlateAdmin {
 //                }
         }
 
-        if(displaying_content!=pre_displaying_content){
+        if (displaying_content != pre_displaying_content) {
             sound_admin.play("cursor00");
         }
 //        }
@@ -243,11 +238,13 @@ public class MapPlateAdmin {
 //        if(displaying_content == 0) {
 //            menuGroup.draw();
 //        }
-        hitpoint.draw();
-        hitpoint.draw();
-        hitpoint.draw();
+//        hitpoint.draw();
+//        hitpoint.draw();
+//        hitpoint.draw();
 
         drawTutorialImage();
+
+        drawHP();
 
     }
 
@@ -357,9 +354,27 @@ public class MapPlateAdmin {
         return map_inventry_admin;
     }
 
-    public void initMenu(){
+    public void initMenu() {
         displaying_content = -1;
 //        frame_count = 0;
 
     }
+
+    public ActivityChange getActivityChange() {
+        return activityChange;
+    }
+
+    private void drawHP() {
+
+        double now_hp = playerStatus.getNowHP();
+        double hp_ratio = now_hp / max_hp;
+//        double hp_ratio = 0.7;
+        int right_of_green = HP_RIGHT - (int) (hp_ratio * (HP_RIGHT - HP_LEFT));
+
+        graphic.bookingDrawRect(HP_BG_LEFT, HP_BG_TOP, HP_BG_RIGHT, HP_BG_BOTTOM, blue_paint);
+        graphic.bookingDrawRect(HP_LEFT, HP_TOP, right_of_green, HP_TOP + HP_HEIGHT, red_paint);
+        graphic.bookingDrawRect(right_of_green, HP_TOP, HP_RIGHT, HP_TOP + HP_HEIGHT, green_paint);
+
+    }
+
 }

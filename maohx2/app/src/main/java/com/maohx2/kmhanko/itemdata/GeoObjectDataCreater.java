@@ -70,6 +70,7 @@ public class GeoObjectDataCreater {
 
         GeoObjectData newGeoObjectData = new GeoObjectData(name,graphic.searchBitmap(imageName),status1, status2);
         newGeoObjectData.setImageName(imageName);
+        newGeoObjectData.setPrice(parameter);
         //newGeoObjectData.setItemKind(Constants.Item.ITEM_KIND.GEO);
         //newGeoObjectData.setPrice(parameter);
 
@@ -114,6 +115,7 @@ public class GeoObjectDataCreater {
 
         GeoObjectData newGeoObjectData = new GeoObjectData(name,graphic.searchBitmap(imageName),status1, status2);
         newGeoObjectData.setImageName(imageName);
+        newGeoObjectData.setPrice((int)parameter);
         //newGeoObjectData.setItemKind(Constants.Item.ITEM_KIND.GEO);
         //newGeoObjectData.setPrice(parameter);
 

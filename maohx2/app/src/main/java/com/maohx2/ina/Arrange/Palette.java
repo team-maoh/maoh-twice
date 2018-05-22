@@ -253,10 +253,12 @@ public class Palette {
             }
         }else{
             if (battle_user_interface.getPaletteElement() != null) {
-                if (battle_user_interface.isUIPaletteDraw() == true && battle_user_interface.getPaletteElement().getElementNum() == 0 && checkPaletteNumAndItemKind(battle_user_interface.getPaletteElement().getItemData().getItemKind())) {
-                    palette_center.drawBig(select_circle_num);
-                } else {
-                    palette_center.drawBigAndItem(select_circle_num);
+                if (battle_user_interface.getPaletteElement().getItemData() != null) {
+                    if (battle_user_interface.isUIPaletteDraw() == true && battle_user_interface.getPaletteElement().getElementNum() == 0 && checkPaletteNumAndItemKind(battle_user_interface.getPaletteElement().getItemData().getItemKind())) {
+                        palette_center.drawBig(select_circle_num);
+                    } else {
+                        palette_center.drawBigAndItem(select_circle_num);
+                    }
                 }
             } else {
                 palette_center.drawBigAndItem(select_circle_num);
