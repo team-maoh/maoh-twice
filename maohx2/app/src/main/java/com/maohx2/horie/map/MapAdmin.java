@@ -991,6 +991,11 @@ public class MapAdmin {
             goNextFloor();
         }
 
+        //ゲート脱出
+        if (map_data[mx][my].isGate()) {
+            map_object_admin.escapeDungeon();
+        }
+
         //周りを黒くする
 //        graphic.bookingDrawBitmapData(auto_tile_wall.raw_auto_tile[4], 0, 0, 1600/32, 900/32, 0, 255, true);
 
