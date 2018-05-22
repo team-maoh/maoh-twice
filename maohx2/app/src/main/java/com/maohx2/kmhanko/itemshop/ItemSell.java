@@ -21,6 +21,7 @@ import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.dungeonselect.MapIconPlate;
 import com.maohx2.kmhanko.itemdata.ExpendItemData;
 import com.maohx2.ina.ItemData.EquipmentItemData;
+import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.plate.BackPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 import com.maohx2.ina.Constants;
@@ -180,7 +181,8 @@ public class ItemSell {
             //所持インベントリからの場合。そのInventryDataのコピーを作成し、売却インベントリに格納する。
             //さらに元のInventryDataの売却個数を+1する。ただし、売却個数が所持個数を上回るような場合には全ての処理を行わない。
             if (tempInventryData.getParentInventry() == geoInventry) {
-                if (tempInventryData.getItemNum() > tempInventryData.getSoldNum()) {
+                GeoObjectData tempGeo = (GeoObjectData) (tempInventryData.getItemData());
+                if (tempInventryData.getItemNum() > tempInventryData.getSoldNum() && tempGeo.getSlotSetName() == "noSet") {
                     sellItemInventry.addItemData(tempInventryData.getItemData());
                     tempInventryData.addSoldNum();
                 }

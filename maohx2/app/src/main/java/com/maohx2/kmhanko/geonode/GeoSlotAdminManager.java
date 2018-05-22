@@ -20,6 +20,7 @@ import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatus;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.kmhanko.Arrange.InventryS;
+import com.maohx2.kmhanko.effect.EffectAdmin;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
@@ -50,9 +51,11 @@ public class GeoSlotAdminManager {
 
     SoundAdmin soundAdmin;
 
+    EffectAdmin effectAdmin;
+
     boolean is_load_database;
 
-    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver, MaohMenosStatus _maohMenosStatus, SoundAdmin _soundAdmin) {
+    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver, MaohMenosStatus _maohMenosStatus, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin) {
         graphic = _graphic;
         userInterface = _userInterface;
         databaseAdmin = _databaseAdmin;
@@ -63,6 +66,7 @@ public class GeoSlotAdminManager {
         geoSlotSaver = _geoSlotSaver;
         maohMenosStatus = _maohMenosStatus;
         soundAdmin = _soundAdmin;
+        effectAdmin = _effectAdmin;
 
         addDatabase();
         this.loadGeoSlotDatabase();
@@ -71,11 +75,28 @@ public class GeoSlotAdminManager {
         setSlot();
 
         initStatusTextBox();
+        //initEffect();
+    }
+
+    int[] geoSlotLineEffect;
+
+    public void initEffect() {
+        /*
+        geoSlotLineEffect = new int[]{
+                effectAdmin.createEffect("geoSlotLine", "geoEffectYellow", 3, 1),
+                effectAdmin.createEffect("geoSlotLine", "geoEffectRed", 3, 1),
+                effectAdmin.createEffect("geoSlotLine", "geoEffectBlue", 3, 1),
+                effectAdmin.createEffect("geoSlotLine", "geoEffectGreen", 3, 1),
+                effectAdmin.createEffect("geoSlotLine", "geoEffectViolet", 3, 1),
+        };
+        GeoSlot.setGeoSlotLineEffect(geoSlotLineEffect);
+        */
     }
 
     public void start() {
         //activeGeoSlotAdmin.start();
         initStatusTextBox();
+        geoInventry.init(userInterface,graphic,1400, 100, 1600, 700, 10);
     }
 
     public void update() {
@@ -134,7 +155,7 @@ public class GeoSlotAdminManager {
         GeoSlotAdmin.setGeoSlotEventDB(geoSlotEventDB);
 
         for (int i = 0; i < t_names.size(); i++) {
-            GeoSlotAdmin new_geo_slot_admin = new GeoSlotAdmin(graphic, userInterface, worldModeAdmin, textBoxAdmin, this, playerStatus, geoInventry, soundAdmin);
+            GeoSlotAdmin new_geo_slot_admin = new GeoSlotAdmin(graphic, userInterface, worldModeAdmin, textBoxAdmin, this, playerStatus, geoInventry, soundAdmin, effectAdmin);
             new_geo_slot_admin.loadDatabase(t_names.get(i));
             geoSlotAdmins.add(new_geo_slot_admin);
         }

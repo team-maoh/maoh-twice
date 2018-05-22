@@ -18,6 +18,7 @@ import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.database.MyDatabase;
+import com.maohx2.kmhanko.effect.EffectAdmin;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 import com.maohx2.kmhanko.myavail.MyAvail;
@@ -72,6 +73,9 @@ public class GeoSlot extends CircleImagePlate {
 
     GeoCalcSaverAdmin thisGeoCalcSaverAdmin;
 
+    static EffectAdmin effectAdmin;
+    //static int[] geoSlotLineEffect;
+
     /*
     public GeoSlot(GeoSlotAdmin _geoSlotAdmin) {
         item_id = -1;
@@ -93,12 +97,19 @@ public class GeoSlot extends CircleImagePlate {
 
 
 
-    static public void staticInit(TextBoxAdmin _textBoxAdmin, MyDatabase _geoSlotEventDB, InventryS _geoInventry, SoundAdmin _soundAdmin) {
+    static public void staticInit(TextBoxAdmin _textBoxAdmin, MyDatabase _geoSlotEventDB, InventryS _geoInventry, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin) {
         textBoxAdmin = _textBoxAdmin;
         geoSlotEventDB = _geoSlotEventDB;
         geoInventry = _geoInventry;
         soundAdmin = _soundAdmin;
+        effectAdmin = _effectAdmin;
     }
+
+    /*
+    static public void setGeoSlotLineEffect(int[] _geoSlotLineEffect) {
+        geoSlotLineEffect = _geoSlotLineEffect;
+    }
+    */
 
     //GeoSlotのツリーコードを元に、GeoSlotのインスタンス化を行う。再帰ライクに生成する。
     public List<Integer> makeGeoSlotInstance(List<Integer> tree_code, GeoSlot _parent_slot) {
@@ -243,6 +254,8 @@ public class GeoSlot extends CircleImagePlate {
 
     Paint dotPaint = new Paint();
 
+    List<Integer> geoSlotLineEffect = new ArrayList<Integer>();
+
     public void drawLine() {
         //子に対しての線を書く
 
@@ -265,14 +278,37 @@ public class GeoSlot extends CircleImagePlate {
                     radian = Math.atan2(y - c_y, x - c_x);
                     distance = (float)MyAvail.distance(x, y, c_x, c_y);
 
+                    /*
+                    effectAdmin.createEffect("geoSlotLine", "geoEffectYellow", 3, 1),
+                            effectAdmin.createEffect("geoSlotLine", "geoEffectRed", 3, 1),
+                            effectAdmin.createEffect("geoSlotLine", "geoEffectBlue", 3, 1),
+                            effectAdmin.createEffect("geoSlotLine", "geoEffectGreen", 3, 1),
+                            effectAdmin.createEffect("geoSlotLine", "geoEffectViolet", 3, 1),
+                    */
+
                     int dotNum = 8;
                     for(int j = 0; j < dotNum; j++) {
+                        //geoSlotLineEffect.add(i);
+
+                        /*
+                        geoSlotLineEffecteffectAdmin.createEffect("geoSlotLine", "geoEffectYellow", 3, 1);
+                        effectAdmin.setPosition(
+                                geoSlotLineEffect[0],
+                                (int)(x - (distance * (double)j) * Math.cos(radian) / (double)dotNum),
+                                (int)(y - (distance * (double)j) * Math.sin(radian) / (double)dotNum)
+                        );
+                        effectAdmin.startEffect(
+                                geoSlotLineEffect[0]
+                        );
+
+                        /*
                         graphic.bookingDrawCircle(
                                 (int)(x - (distance * (double)j) * Math.cos(radian) / (double)dotNum),
                                 (int)(y - (distance * (double)j) * Math.sin(radian) / (double)dotNum),
                                 10,
                                 dotPaint
                         );
+                        */
                     }
                     //graphic.drawBooking("watermelon.png", (position_x + c_x)/2, (position_y + c_y)/2, scale , 5.0f, degree, 255, true);
                 }
