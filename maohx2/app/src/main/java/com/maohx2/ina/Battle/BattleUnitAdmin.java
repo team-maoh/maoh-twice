@@ -860,7 +860,12 @@ public class BattleUnitAdmin {
         if (winFlag) {
             switch(mode) {
                 case BATTLE:
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
+                    break;
                 case BOSS:
+                    mapPlateAdmin.getMapInventryAdmin().storageMapInventry();
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
+                    break;
                 case MINING:
                     dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
                     break;

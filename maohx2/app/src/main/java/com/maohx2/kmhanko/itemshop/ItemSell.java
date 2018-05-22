@@ -91,19 +91,37 @@ public class ItemSell {
     }
 
     public void sellInventryAll() {
-        int tempSellMoney = calcSellMoney(sellItemInventry);
-        //TODO:sellItemInventry.deleteAll();
+        int tempSellMoney = calcSellMoney();
+        sellFromInventry(geoInventry);
+        sellFromInventry(equipmentInventry);
+        sellFromInventry(expendItemInventry);
         addMoneyToPlayerStatus(tempSellMoney);
+        for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
+            sellItemInventry.getInventryData(i).delete();
+        }
         inventrysSave();
     }
 
-    public int calcSellMoney(Inventry inventry) {
+    private void sellFromInventry(Inventry inventry) {
+        for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
+            if (inventry.getItemData(i) != null) {
+                if (inventry.getInventryData(i).getSoldNum() > 0) {
+                    inventry.getInventryData(i).setItemNum(
+                        inventry.getInventryData(i).getItemNum() - inventry.getInventryData(i).getSoldNum()
+                    );
+                    inventry.getInventryData(i).setSoldNum(0);
+                }
+            }
+        }
+    }
+
+    public int calcSellMoney() {
         //ItemInventryの中のアイテムの売却合計金額を得る関数
         int tempSellMoney = 0;
         for (int i = 0; i < INVENTRY_DATA_MAX; i++) {
-            if (inventry.getItemData(i) != null) {
-                if (inventry.getItemData(i).getPrice() > 0 && inventry.getItemNum(i) > 0) {
-                    tempSellMoney += inventry.getItemData(i).getPrice() * inventry.getItemNum(i) / 2;
+            if (sellItemInventry.getItemData(i) != null) {
+                if (sellItemInventry.getItemData(i).getPrice() > 0 && sellItemInventry.getItemNum(i) > 0) {
+                    tempSellMoney += sellItemInventry.getItemData(i).getPrice() * sellItemInventry.getItemNum(i);
                 }
             }
         }
@@ -124,28 +142,33 @@ public class ItemSell {
     private void checkInventry() {
         InventryData tempInventryData = userInterface.getInventryData();
 
-        //switch使用できないためやむなし
-        if (tempInventryData.getParentInventry() == sellItemInventry) {
-            //売却インベントリからの場合。そのInventryDataを売却インベントリから1つ削除する
-            //さらに、同一ItemDataを各種インベントリから探し、その売却個数に-1する
-            sellItemInventry.subItemData(tempInventryData.getItemData());
-            switch(tempInventryData.getItemData().getItemKind()) {
-                case GEO:
-                    break;
-                case EQUIPMENT:
-                    break;
-                case EXPEND:
-                    break;
-                default:
-                    throw new Error("☆タカノ: 不適切なアイテムの売却個数を減らそうとしました" + tempInventryData.getItemData().getName());
-            }
-
-        } else {
-            //所持インベントリからの場合。そのInventryDataのコピーを作成し、売却インベントリに格納する。
-            //さらに元のInventryDataの売却個数を+1する。ただし、売却個数が所持個数を上回るような場合には全ての処理を行わない。
-            if (tempInventryData.getItemNum() < tempInventryData.getSoldNum()) {
-                sellItemInventry.addItemData(tempInventryData.getItemData());
-                tempInventryData.addSoldNum();
+        if (tempInventryData != null) {
+            if (tempInventryData.getParentInventry() == sellItemInventry) {//参照が等しいかどうかを確認したいので==を使用している
+                //売却インベントリからの場合。そのInventryDataを売却インベントリから1つ削除する
+                //さらに、同一ItemDataを各種インベントリから探し、その売却個数に-1する
+                if (tempInventryData.getItemNum() > 0) {
+                    tempInventryData.setItemNum(tempInventryData.getItemNum() - 1);
+                    switch (tempInventryData.getItemData().getItemKind()) {
+                        case GEO:
+                            geoInventry.searchInventryData(tempInventryData.getItemData()).subSoldNum();
+                            break;
+                        case EQUIPMENT:
+                            equipmentInventry.searchInventryData(tempInventryData.getItemData()).subSoldNum();
+                            break;
+                        case EXPEND:
+                            expendItemInventry.searchInventryData(tempInventryData.getItemData()).subSoldNum();
+                            break;
+                        default:
+                            throw new Error("☆タカノ: 不適切なアイテムの売却個数を減らそうとしました" + tempInventryData.getItemData().getName());
+                    }
+                }
+            } else {
+                //所持インベントリからの場合。そのInventryDataのコピーを作成し、売却インベントリに格納する。
+                //さらに元のInventryDataの売却個数を+1する。ただし、売却個数が所持個数を上回るような場合には全ての処理を行わない。
+                if (tempInventryData.getItemNum() > tempInventryData.getSoldNum()) {
+                    sellItemInventry.addItemData(tempInventryData.getItemData());
+                    tempInventryData.addSoldNum();
+                }
             }
         }
     }
@@ -346,8 +369,8 @@ public class ItemSell {
                             @Override
                             public void callBackEvent() {
                                 //売却ボタンが押された時の処理
-                                soundAdmin.play("cancel00");
-                                updateSellConformTextBox(calcSellMoney(sellItemInventry));
+                                soundAdmin.play("enter00");
+                                updateSellConformTextBox(calcSellMoney());
                                 sellSelectButtonGroup.setUpdateFlag(true);
                                 sellSelectButtonGroup.setDrawFlag(true);
                                 sellEnterPlateGroup.setUpdateFlag(false);
