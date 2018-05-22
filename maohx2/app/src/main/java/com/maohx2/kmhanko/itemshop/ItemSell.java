@@ -159,7 +159,7 @@ public class ItemSell {
                             break;
                         case EXPEND:
                             //ExpendItemData tempExpend = (ExpendItemData)(tempInventryData.getItemData());
-                            //tempExpend.getPalettePosition()
+                            //if (tempExpend.getPalettePositionNum() - tempInventryData.getItemNum();
 
                             expendItemInventry.searchInventryData(tempInventryData.getItemData()).subSoldNum();
                             break;
