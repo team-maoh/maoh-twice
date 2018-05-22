@@ -138,20 +138,20 @@ public class DungeonGameSystem {
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "HauntedMonsterData");
                 dungeon_num = 3;
                 break;
-                /*
+
             case SEA:
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "SeaMonsterData");
-                dungeon_num = 4;
+                dungeon_num = 5;
                 break;
             case SWAMP:
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "SwampMonsterData");
-                dungeon_num = 5;
+                dungeon_num = 6;
                 break;
             case LAVA:
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "LavaMonsterData");
-                dungeon_num = 6;
+                dungeon_num = 4;
                 break;
-                 */
+
             case MAOH:
                 dungeon_num = 0;
                 break;

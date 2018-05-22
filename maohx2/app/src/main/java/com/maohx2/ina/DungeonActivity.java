@@ -125,15 +125,15 @@ class DungeonSurfaceView extends BaseSurfaceView{
                 break;
             case SEA:
                 my_database_admin.addMyDatabase("SeaDB", "LocalSeaImage.db", 1, "r");
-                graphic.loadLocalImages(my_database_admin.getMyDatabase("SeaDB"), "SeaDB");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("SeaDB"), "Sea");
                 break;
             case SWAMP:
                 my_database_admin.addMyDatabase("SwampDB", "LocalSwampImage.db", 1, "r");
-                graphic.loadLocalImages(my_database_admin.getMyDatabase("SwampDB"), "SwampDB");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("SwampDB"), "Swamp");
                 break;
             case LAVA:
                 my_database_admin.addMyDatabase("LavaDB", "LocalLavaImage.db", 1, "r");
-                graphic.loadLocalImages(my_database_admin.getMyDatabase("LavaDB"), "LavaDB");
+                graphic.loadLocalImages(my_database_admin.getMyDatabase("LavaDB"), "Lava");
                 break;
             case MAOH:
                 my_database_admin.addMyDatabase("GokiDB", "LocalGokiImage.db", 1, "r");

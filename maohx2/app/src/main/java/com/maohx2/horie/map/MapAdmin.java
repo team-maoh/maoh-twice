@@ -217,8 +217,8 @@ public class MapAdmin {
     //auto_tile生成
     private void createAutoTileImg() {
         //画像読込
-        BitmapData auto_tile_block_wall = graphic.searchBitmap(wall_tile_name);//壁のauto_tile元データ
         BitmapData auto_tile_block_side_wall = graphic.searchBitmap(sidewall_tile_name);//側壁のauto_tileの元データ
+        BitmapData auto_tile_block_wall = graphic.searchBitmap(wall_tile_name);//壁のauto_tile元データ
         BitmapData raw_floor_tile = graphic.searchBitmap(floor_tile_name);
         floor_tile = auto_tile_admin.combineFourAutoTile(raw_floor_tile, raw_floor_tile, raw_floor_tile, raw_floor_tile);
 
