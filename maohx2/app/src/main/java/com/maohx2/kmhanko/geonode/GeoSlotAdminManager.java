@@ -96,7 +96,11 @@ public class GeoSlotAdminManager {
     public void start() {
         //activeGeoSlotAdmin.start();
         initStatusTextBox();
-        geoInventry.init(userInterface,graphic,1400, 100, 1600, 700, 10);
+        geoInventry.init(userInterface,graphic,1200, 100, 1600, 700, 10);
+
+
+
+
     }
 
     public void update() {
@@ -109,6 +113,7 @@ public class GeoSlotAdminManager {
     }
 
     public void draw() {
+        effectAdmin.draw();
         geoInventry.draw();
         if (activeGeoSlotAdmin != null) {
             activeGeoSlotAdmin.draw();

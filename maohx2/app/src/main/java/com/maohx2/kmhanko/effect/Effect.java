@@ -69,7 +69,7 @@ public class Effect {
         exist = false;
         isDraw = false;
         is_pause = false;
-        EffectData effectData = null;
+        effectData = null;
     }
 
     public void start() {

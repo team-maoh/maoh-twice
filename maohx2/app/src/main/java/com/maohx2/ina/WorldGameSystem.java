@@ -158,7 +158,7 @@ public class WorldGameSystem {
         GeoObjectDataCreater.setGraphic(graphic);
         // 仮。適当にGeo入れる GEO1が上がる能力は単一
         //TODO 同じの追加されたら個数とかないのに2とかになりそう
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 15; i++) {
             geoInventry.addItemData(GeoObjectDataCreater.getGeoObjectData(100));
         }
 
@@ -373,7 +373,7 @@ public class WorldGameSystem {
         */
 
         text_box_admin.draw();
-        effectAdmin.draw();
+        //effectAdmin.draw();
 
         graphic.draw();
     }

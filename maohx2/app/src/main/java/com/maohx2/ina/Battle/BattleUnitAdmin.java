@@ -199,6 +199,8 @@ public class BattleUnitAdmin {
             spawnRock();
             timeLimitBar.reset(30 * 60);
         }
+
+        textBoxAdmin.resetTextBox(resultTextBoxID);
     }
 
     //by kmhanko

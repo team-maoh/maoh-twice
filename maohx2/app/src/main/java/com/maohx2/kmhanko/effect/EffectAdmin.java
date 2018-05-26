@@ -151,6 +151,9 @@ public class EffectAdmin {
     public void setPosition(int i, int x, int y) {
         effect.get(i).setPosition(x, y);
     }
+    public void clearEffect(int i) {
+        effect.get(i).clear();
+    }
 
     public EffectDataAdmin getEffectDataAdmin() {
         return effectDataAdmin;
