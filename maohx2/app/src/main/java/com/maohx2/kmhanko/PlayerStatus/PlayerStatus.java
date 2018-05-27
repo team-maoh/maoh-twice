@@ -35,6 +35,10 @@ public class PlayerStatus {
 
     private int money;
 
+    private int geoInventryMaxNum;
+    private int expendInvetryMaxNum;
+    private int equipmentInventryMaxNum;
+
     //Record
 
     private int maohWinCount;
@@ -131,6 +135,9 @@ public class PlayerStatus {
     public int getClearCount() { return clearCount; }
     public int getNowClearCount() { return nowClearCount; }
     public int getTutorialInDungeon() {return tutorialInDungeon; }
+    public int getGeoInventryMaxNum() { return geoInventryMaxNum; }
+    public int getExpendInvetryMaxNum() { return expendInvetryMaxNum; }
+    public int getEquipmentInventryMaxNum() { return equipmentInventryMaxNum; }
 
     public void setHP(int x) { hp = x; }
     public void setNowHP(int x) { nowHp = x; }
@@ -142,6 +149,9 @@ public class PlayerStatus {
     public void setClearCount(int x) { clearCount = x; }
     public void setNowClearCount(int x) {  nowClearCount = x; }
     public void setTutorialInDungeon(int x){  tutorialInDungeon = x;}
+    public void setGeoInventryMaxNum(int x) { geoInventryMaxNum = x; }
+    public void setExpendInvetryMaxNum(int x) {  expendInvetryMaxNum = x; }
+    public void setEquipmentInventryMaxNum(int x){  equipmentInventryMaxNum = x;}
 
     public void setBaseHP(int x) { baseHp = x; }
     public void setBaseAttack(int x) { baseAttack = x; }
@@ -187,7 +197,10 @@ public class PlayerStatus {
                 maohWinCount,
                 clearCount,
                 nowClearCount,
-                tutorialInDungeon
+                tutorialInDungeon,
+                geoInventryMaxNum,
+                expendInvetryMaxNum,
+                equipmentInventryMaxNum
         };
     }
 
