@@ -30,4 +30,17 @@ public class MapIconPlate extends CircleImagePlate {
         return mapIconName;
     }
 
+    public void setImageContext(String imageName, int x, int y, float scaleX, float scaleY, float scaleFeedX, float scaleFeedY, boolean alphaFlag) {
+        int alpha;
+        if (alphaFlag) {
+            alpha = 128;
+        } else {
+            alpha = 255;
+        }
+        default_image_context = graphic.makeImageContext(graphic.searchBitmap(imageName),x, y, scaleX, scaleY, 0.0f, alpha, false);
+        feedback_image_context = graphic.makeImageContext(graphic.searchBitmap(imageName),x, y, scaleFeedX, scaleFeedY, 0.0f, alpha, false);
+
+        draw_image_context = default_image_context;
+    }
+
 }

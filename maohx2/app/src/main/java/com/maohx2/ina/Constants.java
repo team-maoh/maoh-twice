@@ -34,19 +34,21 @@ public final class Constants {
 
     public static class DungeonKind {
         public enum DUNGEON_KIND {
-            CHESS,
-            DRAGON,
             FOREST,
-            GOKI,
-            HAUNTED,
             LAVA,
-            SWAMP,
             SEA,
+            CHESS,
+            HAUNTED,
+            SWAMP,
+            DRAGON,
             MAOH,
             OPENING,
-            DNGEON_KIND_NUM
+            GOKI,
+            DUNGEON_KIND_NUM
         }
     }
+
+    public static final int STAGE_NUM = 7;
 
 
     public static class Touch {
@@ -209,6 +211,26 @@ public final class Constants {
         public static final float TEXT_SIZE = 40f;
         public static final float TEXT_SIZE_BIG = 80f;
         public static final int MESS_ROW = 5;
+    }
+
+    public static class LOOP_WINDOW {
+        public static final int COUNT_LEFT = 600;
+        public static final int COUNT_RIGHT = 1000;
+        public static final int COUNT_UP = 200;
+        public static final int COUNT_BOTTOM = 400;
+
+        public static final int MENOS_LEFT = 200;
+        public static final int MENOS_RIGHT = 400;
+        public static final int MENOS_UP = 200;
+        public static final int MENOS_BOTTOM = 400;
+
+        public static final int PLUS_LEFT = 1200;
+        public static final int PLUS_RIGHT = 1400;
+        public static final int PLUS_UP = 200;
+        public static final int PLUS_BOTTOM = 400;
+
+        public static final float TEXT_SIZE = 80f;
+        public static final int MESS_ROW = 1;
     }
 
     public static class Item {

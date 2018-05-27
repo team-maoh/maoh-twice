@@ -124,44 +124,34 @@ public class DungeonGameSystem {
         switch(dungeon_kind) {
             case CHESS:
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "ChessMonsterData");
-                dungeon_num = 0;
                 break;
             case DRAGON:
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "DragonMonsterData");
-                dungeon_num = 1;
                 break;
             case FOREST:
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "ForestMonsterData");
-                dungeon_num = 2;
                 break;
             case HAUNTED:
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "HauntedMonsterData");
-                dungeon_num = 3;
                 break;
-
             case SEA:
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "SeaMonsterData");
-                dungeon_num = 5;
                 break;
             case SWAMP:
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "SwampMonsterData");
-                dungeon_num = 6;
                 break;
             case LAVA:
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "LavaMonsterData");
-                dungeon_num = 4;
                 break;
-
             case MAOH:
-                dungeon_num = 0;
                 break;
             case OPENING:
                 dungeonMonsterDataAdmin = new DungeonMonsterDataAdmin(my_database_admin, "OpeningMonsterData");
-                dungeon_num = 2;
                 break;
             default:
-                dungeon_num = 0;
+                break;
         }
+        dungeon_num = dungeon_kind.ordinal();
 
 
 
@@ -177,14 +167,14 @@ public class DungeonGameSystem {
 
         dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
 
-        map_status = new MapStatus(7);//mapのクリア状況,チュートリアルを見たかどうかを記憶しておく
-        map_status_saver = new MapStatusSaver(_myDatabaseAdmin, "MapSaveData", "MapSaveData.db", 1, "ns", map_status, 4);
+        map_status = new MapStatus(Constants.STAGE_NUM);//mapのクリア状況,チュートリアルを見たかどうかを記憶しておく
+        map_status_saver = new MapStatusSaver(_myDatabaseAdmin, "MapSaveData", "MapSaveData.db", 1, "ns", map_status, Constants.STAGE_NUM);
         map_status_saver.load();
 //        for(int i = 0;i < 4;i++){
 //            System.out.println("before:stage_num = "+i+", is_clear = "+map_status.getTutorialFinishStatus(i));
 //        }
         map_status.setTutorialFinishStatus(1, 0);
-        saveMapSaveData();
+        //saveMapSaveData();
         map_status_saver.load();
 
 //        for(int i = 0;i < 4;i++){
@@ -244,7 +234,9 @@ public class DungeonGameSystem {
                 text_box_admin,
                 repeat_count,
                 maohMenosStatus,
-                soundAdmin
+                soundAdmin,
+                map_status,
+                map_status_saver
         );
 
         backGround = graphic.searchBitmap("firstBackground");
