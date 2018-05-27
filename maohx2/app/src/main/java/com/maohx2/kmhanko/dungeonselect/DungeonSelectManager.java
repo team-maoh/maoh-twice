@@ -219,25 +219,28 @@ public class DungeonSelectManager {
         for (int i = 0; i < mapIconPlates.length; i++) {
             switch (mapIconPlates[i].getMapIconName()) {
                 case "Forest":
-                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.FOREST.ordinal());
+                    clear = 1;//mapStatus.getMapClearStatus(DUNGEON_KIND.FOREST.ordinal());
                     break;
                 case "Lava":
-                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.LAVA.ordinal());
+                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.FOREST.ordinal());
                     break;
                 case "Sea":
-                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.SEA.ordinal());
+                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.LAVA.ordinal());
                     break;
                 case "Chess":
-                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.CHESS.ordinal());
+                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.SEA.ordinal());
                     break;
                 case "Swamp":
-                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.SWAMP.ordinal());
+                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.CHESS.ordinal());
                     break;
                 case "Haunted":
-                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.HAUNTED.ordinal());
+                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.SWAMP.ordinal());
                     break;
                 case "Dragon":
-                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.DRAGON.ordinal());
+                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.HAUNTED.ordinal());
+                    break;
+                case "Maoh":
+                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.FOREST.ordinal());
                     break;
                 default:
                     clear = 1;
@@ -542,8 +545,12 @@ public class DungeonSelectManager {
             return false;
         }
 
-
-        
+        if (!mapIconPlateGroup.getPlates(focusDungeonButtonID).getEnterFlag()) {
+            enterTextBoxUpdateNotAccept();
+            OkButtonGroup.setUpdateFlag(true);
+            OkButtonGroup.setDrawFlag(true);
+            return false;
+        }
         return true;
     }
 
@@ -605,7 +612,7 @@ public class DungeonSelectManager {
     //TExtBox
     public void enterTextBoxUpdateMaoh() {
         textBoxAdmin.setTextBoxExists(enterTextBoxID, true);
-
+        textBoxAdmin.resetTextBox(enterTextBoxID);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "魔王に挑戦しますか？", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "現在の討伐回数 : ", enterTextPaint);
@@ -619,11 +626,25 @@ public class DungeonSelectManager {
         MapIconPlate tmp = (MapIconPlate)mapIconPlateGroup.getPlate(focusDungeonButtonID);
 
         textBoxAdmin.setTextBoxExists(enterTextBoxID, true);
-
+        textBoxAdmin.resetTextBox(enterTextBoxID);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "ダンジョン名 : ", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, tmp.getMapIconName(), enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "このダンジョンに入りますか？", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "MOP", enterTextPaint);
+
+        textBoxAdmin.updateText(enterTextBoxID);
+    }
+
+    public void enterTextBoxUpdateNotAccept() {
+        MapIconPlate tmp = (MapIconPlate)mapIconPlateGroup.getPlate(focusDungeonButtonID);
+
+        textBoxAdmin.setTextBoxExists(enterTextBoxID, true);
+        textBoxAdmin.resetTextBox(enterTextBoxID);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "ダンジョン名 : ", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, tmp.getMapIconName(), enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "このダンジョンにはまだ侵入できません", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "MOP", enterTextPaint);
 
         textBoxAdmin.updateText(enterTextBoxID);
