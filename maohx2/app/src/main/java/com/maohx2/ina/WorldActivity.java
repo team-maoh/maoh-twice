@@ -86,6 +86,13 @@ class WorldSurfaceView extends BaseSurfaceView {
         global_data.getGeoInventry().init(map_user_interface, graphic,1200,100,1600,700, 10);
         global_data.getExpendItemInventry().init(map_user_interface, graphic,200,100,600,508, 10);
 
+        global_data.getEquipmentInventry().sortItemData();
+        global_data.getEquipmentInventry().sortItemDatabyKind();
+        global_data.getGeoInventry().sortItemData();
+        global_data.getGeoInventry().sortItemDatabyKind();
+        global_data.getExpendItemInventry().sortItemData();
+
+
         if(global_data.getPlayerStatus().getTutorialInDungeon() == 0) {
             openingFlag = true;
         }

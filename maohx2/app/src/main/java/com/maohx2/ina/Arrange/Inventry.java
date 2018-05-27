@@ -6,6 +6,7 @@ import android.provider.Settings;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Draw.ImageContext;
+import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.ItemData.EquipmentItemDataAdmin;
 import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.Text.BoxImagePlate;
@@ -13,6 +14,9 @@ import com.maohx2.ina.Text.BoxInventryPlate;
 import com.maohx2.ina.Text.BoxItemPlate;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.UserInterface;
+import com.maohx2.kmhanko.itemdata.ExpendItemData;
+import com.maohx2.kmhanko.itemdata.GeoObjectData;
+
 import static com.maohx2.ina.Constants.Touch.TouchWay.*;
 import static com.maohx2.ina.Constants.Inventry.*;
 
@@ -49,30 +53,30 @@ public class Inventry {
     int page;
 
 
-    public Inventry(){
+    public Inventry() {
 
-        for(int i = 0; i< INVENTRY_DATA_MAX; i++){
+        for(int i = 0; i< INVENTRY_DATA_MAX; i++) {
             //by kmhank　インスタンス引数追加
             inventry_datas[i] = new InventryData(null, 0, this);
         }
     }
 
-    public void init(UserInterface _user_interface, Graphic _graphic, int left, int top, int right, int bottom, int _contentNum){
+    public void init(UserInterface _user_interface, Graphic _graphic, int left, int top, int right, int bottom, int _contentNum) {
         user_interface = _user_interface;
         contentNum = _contentNum;
         graphic = _graphic;
 
         paint = new Paint();
 
-        paint.setARGB(255,0,0,0);
+        paint.setARGB(255, 0, 0, 0);
         paint.setTextSize(30);
 
 
         for (int i = 0; i < contentNum; i++) {
             position[i][0] = left;
-            position[i][1] = top + (i*(bottom-top)/contentNum);
+            position[i][1] = top + (i * (bottom - top) / contentNum);
             position[i][2] = right;
-            position[i][3] = top + ((i+1)*(bottom-top)/contentNum);
+            position[i][3] = top + ((i + 1) * (bottom - top) / contentNum);
             //inventry_item_plates[i] = new BoxItemPlate(graphic, user_interface, paint, UP_MOMENT, MOVE, position[i], test_item);
             inventry_item_plates[i] = new BoxInventryPlate(graphic, user_interface, paint, UP_MOMENT, MOVE, position[i], inventry_datas[i]);
         }
@@ -80,26 +84,26 @@ public class Inventry {
         operate_inventry_list_box = new PlateGroup<BoxInventryPlate>(inventry_item_plates);
 
 
-        paint.setARGB(255,0,255,0);
+        paint.setARGB(255, 0, 255, 0);
 
-        left_triangle = graphic.makeImageContext(graphic.searchBitmap("apple"),left,top + (10*(bottom-top)/contentNum));
+        left_triangle = graphic.makeImageContext(graphic.searchBitmap("apple"), left, top + (10 * (bottom - top) / contentNum));
 
         leftTrianglePosition[0] = left;
-        leftTrianglePosition[1] = top + (10*(bottom-top)/contentNum);
-        leftTrianglePosition[2] = left + (right-left)/2;
+        leftTrianglePosition[1] = top + (10 * (bottom - top) / contentNum);
+        leftTrianglePosition[2] = left + (right - left) / 2;
         leftTrianglePosition[3] = leftTrianglePosition[1] + 100;
 
-        leftPlate = new BoxImagePlate(graphic,user_interface,paint,UP_MOMENT,MOVE,leftTrianglePosition,left_triangle,left_triangle);
+        leftPlate = new BoxImagePlate(graphic, user_interface, paint, UP_MOMENT, MOVE, leftTrianglePosition, left_triangle, left_triangle);
 
 
-        right_triangle = graphic.makeImageContext(graphic.searchBitmap("apple"),left + (right-left)/2,top + (10*(bottom-top)/contentNum));
+        right_triangle = graphic.makeImageContext(graphic.searchBitmap("apple"), left + (right - left) / 2, top + (10 * (bottom - top) / contentNum));
 
-        rightTrianglePosition[0] = left + (right-left)/2;
-        rightTrianglePosition[1] = top + (10*(bottom-top)/contentNum);
+        rightTrianglePosition[0] = left + (right - left) / 2;
+        rightTrianglePosition[1] = top + (10 * (bottom - top) / contentNum);
         rightTrianglePosition[2] = right;
         rightTrianglePosition[3] = rightTrianglePosition[1] + 100;
 
-        rightPlate = new BoxImagePlate(graphic,user_interface,paint,UP_MOMENT,MOVE,rightTrianglePosition,right_triangle,right_triangle);
+        rightPlate = new BoxImagePlate(graphic, user_interface, paint, UP_MOMENT, MOVE, rightTrianglePosition, right_triangle, right_triangle);
 
         page = 0;
     }
@@ -164,7 +168,7 @@ public class Inventry {
         }
     }
 
-    public void draw(){
+    public void draw() {
         operate_inventry_list_box.draw();
         leftPlate.drawCollisionRange();
         rightPlate.drawCollisionRange();
@@ -172,12 +176,12 @@ public class Inventry {
         leftPlate.draw();
     }
 
-    public void addItemData(ItemData _item_data){
+    public void addItemData(ItemData _item_data) {
         int i = 0;
 
-        if(_item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT || _item_data.getItemKind() == Constants.Item.ITEM_KIND.GEO) {
+        if (_item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT || _item_data.getItemKind() == Constants.Item.ITEM_KIND.GEO) {
             i = INVENTRY_DATA_MAX;
-        }else{
+        } else {
             for (i = 0; i < INVENTRY_DATA_MAX; i++) {
                 if (inventry_datas[i].getItemData() != null) {
                     if (inventry_datas[i].getItemData().getName().equals(_item_data.getName())) {
@@ -188,13 +192,13 @@ public class Inventry {
             }
         }
 
-        if(i==INVENTRY_DATA_MAX){
+        if (i == INVENTRY_DATA_MAX) {
             i = 0;
-            for(i = 0; i < INVENTRY_DATA_MAX; i++) {
-                if(inventry_datas[i].getItemNum() == 0){
+            for (i = 0; i < INVENTRY_DATA_MAX; i++) {
+                if (inventry_datas[i].getItemNum() == 0) {
                     inventry_datas[i].setItemData(_item_data);
                     inventry_datas[i].setItemNum(1);
-                    if(i < contentNum) {
+                    if (i < contentNum) {
                         operate_inventry_list_box.getPlate(i).changeInventryData();
                     }
                     break;
@@ -203,10 +207,10 @@ public class Inventry {
         }
     }
 
-    public void subItemData(ItemData _item_data){
+    public void subItemData(ItemData _item_data) {
         int i = 0;
-        for(i = 0; i < INVENTRY_DATA_MAX; i++) {
-            if(inventry_datas[i].getItemData() != null) {
+        for (i = 0; i < INVENTRY_DATA_MAX; i++) {
+            if (inventry_datas[i].getItemData() != null) {
                 if (inventry_datas[i].getItemData().getName().equals(_item_data.getName())) {
                     inventry_datas[i].setItemNum(inventry_datas[i].getItemNum() - 1);
                 }
@@ -218,17 +222,19 @@ public class Inventry {
     public ItemData getItemData(int i) {
         return inventry_datas[i].getItemData();
     }
+
     public int getItemNum(int i) {
         return inventry_datas[i].getItemNum();
     }
+
     /*
     public void deleteItemData(int i) {
         inventry_datas[i].delete();
     }
     */
     public void deleteItemData(String name) {
-        for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
-            if(inventry_datas[i].getItemData() != null) {
+        for (int i = 0; i < INVENTRY_DATA_MAX; i++) {
+            if (inventry_datas[i].getItemData() != null) {
                 if (inventry_datas[i].getItemData().getName().equals(name)) {
                     inventry_datas[i].delete();
                 }
@@ -248,17 +254,17 @@ public class Inventry {
     }
 
 
-    public void setPosition(int left, int top, int right, int bottom){
+    public void setPosition(int left, int top, int right, int bottom) {
 
-        paint.setARGB(255,0,0,0);
+        paint.setARGB(255, 0, 0, 0);
         paint.setTextSize(30);
 
 
         for (int i = 0; i < contentNum; i++) {
             position[i][0] = left;
-            position[i][1] = top + (i*(bottom-top)/contentNum);
+            position[i][1] = top + (i * (bottom - top) / contentNum);
             position[i][2] = right;
-            position[i][3] = top + ((i+1)*(bottom-top)/contentNum);
+            position[i][3] = top + ((i + 1) * (bottom - top) / contentNum);
             inventry_item_plates[i] = new BoxInventryPlate(graphic, user_interface, paint, UP_MOMENT, MOVE, position[i], inventry_datas[i]);
         }
 
@@ -276,13 +282,46 @@ public class Inventry {
         return num;
     }
 
-/*
-    public void sort(){
+    public void sortItemData() {
 
-        for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
-            inventry_datas
+        page = 0;
+
+        for (int i = 0; i < INVENTRY_DATA_MAX - 1; i++) {
+            for (int j = 1; j < INVENTRY_DATA_MAX - i; j++) {
+                if (inventry_datas[j].getItemData() != null && inventry_datas[j-1].getItemData() != null) {
+                    if (inventry_datas[j].getItemData().getPrice() > inventry_datas[j - 1].getItemData().getPrice()) {
+                        InventryData tmpInventryData = inventry_datas[j];
+                        inventry_datas[j] = inventry_datas[j-1];
+                        inventry_datas[j-1] = tmpInventryData;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < contentNum; i++) {
+            operate_inventry_list_box.setInventryData(inventry_datas[page * contentNum + i], i);
         }
 
     }
-*/
+
+    public void sortItemDatabyKind() {
+        page = 0;
+        for (int i = 0; i < INVENTRY_DATA_MAX - 1; i++) {
+            for (int j = 1; j < INVENTRY_DATA_MAX - i; j++) {
+                if (inventry_datas[j].getItemData() != null && inventry_datas[j-1].getItemData() != null) {
+                    if(inventry_datas[j].getItemData().getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT) {
+                        if (((EquipmentItemData)(inventry_datas[j].getItemData())).getEquipmentKind().ordinal() > ((EquipmentItemData)(inventry_datas[j - 1].getItemData())).getEquipmentKind().ordinal()) {
+                            InventryData tmpInventryData = inventry_datas[j];
+                            inventry_datas[j] = inventry_datas[j-1];
+                            inventry_datas[j-1] = tmpInventryData;
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < contentNum; i++) {
+            operate_inventry_list_box.setInventryData(inventry_datas[page * contentNum + i], i);
+        }
+    }
 }
