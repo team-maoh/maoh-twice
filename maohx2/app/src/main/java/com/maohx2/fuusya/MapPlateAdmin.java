@@ -201,7 +201,7 @@ public class MapPlateAdmin {
                 break;
 
             case 3://[リタイア]
-//                map_inventry_admin.storageMapInventry();
+                map_inventry_admin.storageMapInventry();
                 activityChange.toWorldActivity();
 
                 break;

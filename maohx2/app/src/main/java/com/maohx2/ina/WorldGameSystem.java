@@ -14,6 +14,7 @@ import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Draw.ImageContext;
 import com.maohx2.ina.ItemData.EquipmentInventrySaver;
+import com.maohx2.ina.ItemData.EquipmentItemDataAdmin;
 import com.maohx2.ina.Text.ListBoxAdmin;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.BattleUserInterface;
@@ -112,6 +113,7 @@ public class WorldGameSystem {
 
 
     MusicAdmin musicAdmin;
+    EquipmentItemDataAdmin equipment_item_data_admin;
 
     public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
         graphic = _graphic;
@@ -205,8 +207,9 @@ public class WorldGameSystem {
         //palette_admin = new PaletteAdmin(world_user_interface, graphic);
         equipmentInventry = globalData.getEquipmentInventry();
         equipmentInventrySaver = globalData.getEquipmentInventrySaver();
+        equipment_item_data_admin = new EquipmentItemDataAdmin(graphic, databaseAdmin);
 
-        palette_admin = new PaletteAdmin(world_user_interface, graphic, equipmentInventry, expendItemInventry);
+        palette_admin = new PaletteAdmin(world_user_interface, graphic, equipmentInventry, expendItemInventry, equipment_item_data_admin);
 
         backGround = graphic.searchBitmap("firstBackground");
 
