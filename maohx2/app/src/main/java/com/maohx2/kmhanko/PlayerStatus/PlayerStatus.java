@@ -153,6 +153,19 @@ public class PlayerStatus {
     public void setExpendInvetryMaxNum(int x) {  expendInvetryMaxNum = x; }
     public void setEquipmentInventryMaxNum(int x){  equipmentInventryMaxNum = x;}
 
+    public void addClearCount() {
+        clearCount++;
+        if (clearCount > nowClearCount) {
+            clearCount = 0;
+        }
+    }
+    public void subClearCount() {
+        clearCount--;
+        if (clearCount < 0) {
+            clearCount = nowClearCount;
+        }
+    }
+
     public void setBaseHP(int x) { baseHp = x; }
     public void setBaseAttack(int x) { baseAttack = x; }
     public void setBaseDefence(int x) { baseDefence = x; }

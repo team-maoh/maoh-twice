@@ -82,6 +82,9 @@ public class DungeonSelectManager {
     //PlateGroup<BoxTextPlate> dungeonInformationPlate;
     PlateGroup<BoxTextPlate> dungeonEnterSelectButtonGroup;
     PlateGroup<BoxTextPlate> maohEnterSelectButtonGroup;
+    PlateGroup<BoxTextPlate> loopCountSelectButtonGroup;
+
+
 
     //PlateGroup<CircleImagePlate> menuButtonGroup;
 
@@ -134,6 +137,7 @@ public class DungeonSelectManager {
         //initModeSelectButton();
         initTextBox();
         initOkButton();
+        initLoopCountSelectButton();
         initUIs();
 
         //TODO : Loopselect
@@ -245,107 +249,48 @@ public class DungeonSelectManager {
         maohEnterSelectButtonGroup.setDrawFlag(false);
     }
 
-    /*
-    private void initModeSelectButton(){
-        int size = database.getSize(MENU_BUTTON_TABLE_NAME);
+    private void initLoopCountSelectButton(){
+        Paint textPaint = new Paint();
+        textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE_BIG);
+        textPaint.setARGB(255,255,255,255);
 
-        dungeonName = database.getString(MENU_BUTTON_TABLE_NAME, "name");
-        List<String> imageName = database.getString(MENU_BUTTON_TABLE_NAME, "image_name");
-        List<Integer> x = database.getInt(MENU_BUTTON_TABLE_NAME, "x");
-        List<Integer> y = database.getInt(MENU_BUTTON_TABLE_NAME, "y");
-        List<Integer> scale = database.getInt(MENU_BUTTON_TABLE_NAME, "scale");
-        List<Integer> scale_feed = database.getInt(MENU_BUTTON_TABLE_NAME, "scale_feed");
-        event = database.getString(MENU_BUTTON_TABLE_NAME, "event");
-
-        List<MapIconPlate> menuIconPlateList = new ArrayList<MapIconPlate>();
-
-        //インスタンス化
-        for (int i = 0; i < size; i++) {
-            menuIconPlateList.add(new MapIconPlate(
-                    graphic, userInterface,
-                    Constants.Touch.TouchWay.UP_MOMENT,
-                    Constants.Touch.TouchWay.MOVE,
-                    new int[] { x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_TOURH_R },
-                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale.get(i), scale.get(i), 0.0f, 255, false),
-                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale_feed.get(i), scale_feed.get(i), 0.0f, 255, false),
-                    dungeonName.get(i),
-                    event.get(i)
-
-            ));
-        }
-
-        MapIconPlate[] menuIconPlates = new MapIconPlate[menuIconPlateList.size()];
-        menuButtonGroup = new PlateGroup<CircleImagePlate>(menuIconPlateList.toArray(menuIconPlates));
-    }
-    */
-
-    /*
-    private void initModeSelectButton() {
-
-
-
-        int x = 1500;
-        int y[] = { 100,300,500,700 };
-
-        float defaultRate = DUNGEON_SELECT_BUTTON_RATE_DEFAULT;
-        float feedbackRate = DUNGEON_SELECT_BUTTON_RATE_FEEDBACK;
-
-        menuButtonGroup = new PlateGroup<CircleImagePlate>(
-                new CircleImagePlate[]{
-                        new CircleImagePlate(
-                                graphic, userInterface,
+        loopCountSelectButtonGroup = new PlateGroup<BoxTextPlate>(
+                new BoxTextPlate[]{
+                        new BoxTextPlate(
+                                graphic, userInterface, new Paint(),
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
-                                new int[]{ x, y[0], 100 },
-                                graphic.makeImageContext(
-                                        graphic.searchBitmap("マップ"),
-                                        x, y[0],
-                                        defaultRate, feedbackRate,
-                                        0.0f, 255, false),
-                                graphic.makeImageContext(
-                                        graphic.searchBitmap("マップ"),
-                                        x, y[0],
-                                        defaultRate, feedbackRate,
-                                        0.0f, 255, false)
-                        ),
-                        new CircleImagePlate(
-                                graphic, userInterface,
+                                new int[]{ 400, 200, 600, 400 },
+                                "-",
+                                textPaint
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //-ボタンが押された時の処理
+                                soundAdmin.play("cancel00");
+                                playerStatus.subClearCount();
+                            }
+                        },
+                        new BoxTextPlate(
+                                graphic, userInterface, new Paint(),
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
-                                new int[]{ x, y[1], 100 },
-                                graphic.makeImageContext(
-                                        graphic.searchBitmap("武器"),
-                                        x, y[1],
-                                        defaultRate, feedbackRate,
-                                        0.0f, 255, false),
-                                graphic.makeImageContext(
-                                        graphic.searchBitmap("武器"),
-                                        x, y[1],
-                                        defaultRate, feedbackRate,
-                                        0.0f, 255, false)
-                        ),
-                        new CircleImagePlate(
-                                graphic, userInterface,
-                                Constants.Touch.TouchWay.UP_MOMENT,
-                                Constants.Touch.TouchWay.MOVE,
-                                new int[]{ x, y[2], 100 },
-                                graphic.makeImageContext(
-                                        graphic.searchBitmap("オプション"),
-                                        x, y[2],
-                                        defaultRate, feedbackRate,
-                                        0.0f, 255, false),
-                                graphic.makeImageContext(
-                                        graphic.searchBitmap("オプション"),
-                                        x, y[2],
-                                        defaultRate, feedbackRate,
-                                        0.0f, 255, false)
-                        )
+                                new int[]{ 1000, 200, 1200, 400 },
+                                "+",
+                                textPaint
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //-ボタンが押された時の処理
+                                soundAdmin.play("cancel00");
+                                playerStatus.addClearCount();
+                            }
+                        }
                 }
         );
-
-
-
-    }*/
+        loopCountSelectButtonGroup.setUpdateFlag(false);
+        loopCountSelectButtonGroup.setDrawFlag(false);
+    }
 
     private void initTextBox() {
         enterTextBoxID = textBoxAdmin.createTextBox(SELECT_WINDOW.MESS_LEFT, SELECT_WINDOW.MESS_UP, SELECT_WINDOW.MESS_RIGHT, SELECT_WINDOW.MESS_BOTTOM, SELECT_WINDOW.MESS_ROW);
@@ -364,6 +309,8 @@ public class DungeonSelectManager {
         //menuButtonGroup.draw();
 
         maohEnterSelectButtonGroup.draw();
+        loopCountSelectButtonGroup.draw();
+
         OkButtonGroup.draw();
     }
 
@@ -392,6 +339,7 @@ public class DungeonSelectManager {
         mapIconPlateCheck();
         mapIconPlateGroup.update();
 
+        loopCountSelectButtonGroup.update();
         OkButtonGroup.update();
 
         //modeSelectButtonCheck();
@@ -419,8 +367,11 @@ public class DungeonSelectManager {
             if (event.get(focusDungeonButtonID).equals("dungeon")) {
                 if (worldModeAdmin.getMode() == WORLD_MODE.DUNGEON_SELECT) {
                     soundAdmin.play("enter00");
-                    //TODO アイテムボックス容量が最大を超えているなら
-                    dungeonEnterCheck();
+                    if (dungeonEnterCheck()) {
+                        enterTextBoxUpdateDungeon();
+                        dungeonEnterSelectButtonGroup.setUpdateFlag(true);
+                        dungeonEnterSelectButtonGroup.setDrawFlag(true);
+                    };
                 }
                 if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
                     soundAdmin.play("enter00");
@@ -444,9 +395,11 @@ public class DungeonSelectManager {
             if (event.get(focusDungeonButtonID).equals("maoh")) {
                 soundAdmin.play("enter00");
                 if (worldModeAdmin.getMode() == WORLD_MODE.DUNGEON_SELECT) {
-                    enterTextBoxUpdateMaoh();
-                    maohEnterSelectButtonGroup.setUpdateFlag(true);
-                    maohEnterSelectButtonGroup.setDrawFlag(true);
+                    if (dungeonEnterCheck()) {
+                        enterTextBoxUpdateMaoh();
+                        maohEnterSelectButtonGroup.setUpdateFlag(true);
+                        maohEnterSelectButtonGroup.setDrawFlag(true);
+                    }
                 }
                 if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
                     geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
@@ -468,6 +421,15 @@ public class DungeonSelectManager {
                 soundAdmin.play("enter00");
                 initUIsFlag = true;
             }
+            if (event.get(focusDungeonButtonID).equals("loop")) {
+                soundAdmin.play("enter00");
+                //ループ回数セッティング
+                loopCountSelectButtonGroup.setDrawFlag(true);
+                loopCountSelectButtonGroup.setUpdateFlag(true);
+                OkButtonGroup.setDrawFlag(true);
+                OkButtonGroup.setUpdateFlag(true);
+                //initUIsFlag = true;
+            }
         }
     }
 
@@ -484,33 +446,32 @@ public class DungeonSelectManager {
     }
     */
 
-    private void dungeonEnterCheck() {
+    private boolean dungeonEnterCheck() {
         System.out.println("takano geo : " + geoInventry.getInventryNum());
         if (geoInventry.getInventryNum() > playerStatus.getGeoInventryMaxNum()) {
             enterTextBoxUpdateInventryMax(Constants.Item.ITEM_KIND.GEO);
             OkButtonGroup.setUpdateFlag(true);
             OkButtonGroup.setDrawFlag(true);
-            return;
+            return false;
         }
         System.out.println("takano expend : " + expendItemInventry.getInventryNum());
         if (expendItemInventry.getInventryNum() > playerStatus.getExpendInvetryMaxNum()) {
             enterTextBoxUpdateInventryMax(Constants.Item.ITEM_KIND.EXPEND);
             OkButtonGroup.setUpdateFlag(true);
             OkButtonGroup.setDrawFlag(true);
-            return;
+            return false;
         }
         System.out.println("takano equipment : " + equipmentInventry.getInventryNum());
         if (equipmentInventry.getInventryNum() > playerStatus.getEquipmentInventryMaxNum()) {
             enterTextBoxUpdateInventryMax(Constants.Item.ITEM_KIND.EQUIPMENT);
             OkButtonGroup.setUpdateFlag(true);
             OkButtonGroup.setDrawFlag(true);
-            return;
+            return false;
         }
-
-        enterTextBoxUpdateDungeon();
-        dungeonEnterSelectButtonGroup.setUpdateFlag(true);
-        dungeonEnterSelectButtonGroup.setDrawFlag(true);
+        return true;
     }
+
+
 
     public void dungeonEnterSelectButtonCheck() {
         if (!(dungeonEnterSelectButtonGroup.getUpdateFlag() && worldModeAdmin.getMode() == WORLD_MODE.DUNGEON_SELECT)) {
@@ -618,6 +579,8 @@ public class DungeonSelectManager {
         dungeonEnterSelectButtonGroup.setDrawFlag(false);
         maohEnterSelectButtonGroup.setUpdateFlag(false);
         maohEnterSelectButtonGroup.setDrawFlag(false);
+        loopCountSelectButtonGroup.setUpdateFlag(false);
+        loopCountSelectButtonGroup.setDrawFlag(false);
         OkButtonGroup.setUpdateFlag(false);
         OkButtonGroup.setDrawFlag(false);
         textBoxAdmin.setTextBoxExists(enterTextBoxID, false);
