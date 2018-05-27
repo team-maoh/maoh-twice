@@ -5,6 +5,8 @@ import android.graphics.Paint;
 
 import com.maohx2.fuusya.MapPlateAdmin;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.horie.map.MapStatus;
+import com.maohx2.horie.map.MapStatusSaver;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Constants;
 
@@ -35,6 +37,7 @@ import static com.maohx2.ina.Constants.UnitStatus.Status.DEFENSE;
 import static com.maohx2.ina.Constants.UnitStatus.Status.HP;
 import static com.maohx2.ina.Constants.UnitStatus.Status.LUCK;
 import static com.maohx2.ina.Constants.UnitStatus.BonusStatus;
+import static com.maohx2.ina.Constants.DungeonKind.DUNGEON_KIND;
 
 import com.maohx2.ina.Battle.*;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
@@ -103,11 +106,30 @@ public class BattleUnitAdmin {
     MaohMenosStatus maohMenosStatus;
     SoundAdmin soundAdmin;
 
+    MapStatus mapStatus;
+    MapStatusSaver mapStatusSaver;
+
     boolean resultOperatedFlag;//リザルト関係の処理を一度だけ呼ぶためのフラグ
     boolean battleEndFlag;//戦闘が終わったかどうか
 
     //by kmhanko BattleUnitDataAdmin追加
-    public void init(Graphic _graphic, BattleUserInterface _battle_user_interface, Activity _battle_activity, BattleUnitDataAdmin _battleUnitDataAdmin, PlayerStatus _playerStatus, PaletteAdmin _palette_admin, DungeonModeManage _dungeonModeManage, MyDatabaseAdmin _databaseAdmin, MapPlateAdmin _map_plate_admin, TextBoxAdmin _textBoxAdmin, int _repeat_count, MaohMenosStatus _maohMenosStatus, SoundAdmin _soundAdmin) {
+    public void init(
+            Graphic _graphic,
+            BattleUserInterface _battle_user_interface,
+            Activity _battle_activity,
+            BattleUnitDataAdmin _battleUnitDataAdmin,
+            PlayerStatus _playerStatus,
+            PaletteAdmin _palette_admin,
+            DungeonModeManage _dungeonModeManage,
+            MyDatabaseAdmin _databaseAdmin,
+            MapPlateAdmin _map_plate_admin,
+            TextBoxAdmin _textBoxAdmin,
+            int _repeat_count,
+            MaohMenosStatus _maohMenosStatus,
+            SoundAdmin _soundAdmin,
+            MapStatus _mapStatus,
+            MapStatusSaver _mapStatusSaver
+    ) {
         //引数の代入
         graphic = _graphic;
         BattleRockCreater.setGraphic(graphic);
@@ -117,6 +139,8 @@ public class BattleUnitAdmin {
         palette_admin = _palette_admin;
         maohMenosStatus = _maohMenosStatus;
         soundAdmin = _soundAdmin;
+        mapStatus = _mapStatus;
+        mapStatusSaver = _mapStatusSaver;
 
         dungeonModeManage = _dungeonModeManage;
         databaseAdmin = _databaseAdmin;
@@ -886,7 +910,9 @@ public class BattleUnitAdmin {
                     dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
                     break;
                 case BOSS:
-                    mapPlateAdmin.getMapInventryAdmin().storageMapInventry();//TODO:この中でSaveが呼ばれているが、Geoだけ呼ばれてないのを藤原に頼んで直してもらう
+                    mapPlateAdmin.getMapInventryAdmin().storageMapInventry();
+                    mapStatus.setMapClearStatus(1, DUNGEON_KIND.CHESS.ordinal());
+                    mapStatusSaver.save();
                     dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TO_WORLD);
                     break;
                 case MINING:

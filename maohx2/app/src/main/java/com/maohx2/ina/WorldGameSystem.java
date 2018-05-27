@@ -19,6 +19,7 @@ import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
+import com.maohx2.ina.Constants;
 import static com.maohx2.ina.Constants.GAMESYSTEN_MODE.WORLD_MODE;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.GeoPresent.GeoPresentManager;
@@ -42,6 +43,9 @@ import com.maohx2.kmhanko.plate.BackPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 import com.maohx2.kmhanko.music.MusicAdmin;
 import com.maohx2.kmhanko.itemshop.ItemSell;
+import com.maohx2.horie.map.MapStatus;
+import com.maohx2.horie.map.MapStatusSaver;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +107,10 @@ public class WorldGameSystem {
     String talkContent[][] = new String[100][];
     ImageContext talkChara[] = new ImageContext[100];
 
+    MapStatus map_status;
+    MapStatusSaver map_status_saver;
+
+
     MusicAdmin musicAdmin;
 
     public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
@@ -112,6 +120,10 @@ public class WorldGameSystem {
         world_user_interface = _world_user_interface;
         activityChange = _activityChange;
 
+
+        map_status = new MapStatus(Constants.STAGE_NUM);
+        map_status_saver = new MapStatusSaver(databaseAdmin, "MapSaveData", "MapSaveData.db", 1, "ns", map_status, 7);
+        map_status_saver.load();
 
         worldActivity = _worldActivity;
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
@@ -144,7 +156,7 @@ public class WorldGameSystem {
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin);
 
 
-        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, activityChange, soundAdmin, worldActivity);
+        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, activityChange, soundAdmin, worldActivity, map_status);
 
         geoSlotAdminManager.loadGeoSlot();
 
@@ -200,7 +212,11 @@ public class WorldGameSystem {
 
         geoSlotAdminManager.calcPlayerStatus();
 
+
         worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT_INIT_START);
+
+
+
 
         //TODO かり。戻るボタン
         initBackPlate();
