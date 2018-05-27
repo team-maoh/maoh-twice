@@ -358,6 +358,8 @@ public class BattleUnitAdmin {
                                             if (touch_markers[i].isExist() == false) {
                                                 //todo:attackの計算
                                                 touch_markers[i].generate((int) touch_x, (int) touch_y, attack_equipment.getRadius(), battle_units[0].getAttack() + attack_equipment.getAttack(), attack_equipment.getDecayRate());
+                                                //エフェクト
+                                                attack_equipment.getEquipmentKind();
                                                 break;
                                             }
                                         }
