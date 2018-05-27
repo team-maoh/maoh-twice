@@ -215,7 +215,7 @@ public class DungeonSelectManager {
 
         MapIconPlate mapIconPlates[] = mapIconPlateGroup.getPlates();
         boolean alphaFlag;
-        int clear;
+        int clear = 0;
         for (int i = 0; i < mapIconPlates.length; i++) {
             switch (mapIconPlates[i].getMapIconName()) {
                 case "Forest":
@@ -239,18 +239,16 @@ public class DungeonSelectManager {
                 case "Dragon":
                     clear = mapStatus.getMapClearStatus(DUNGEON_KIND.DRAGON.ordinal());
                     break;
-
+                default:
+                    clear = 1;
+                    break;
             }
-            /*
-            if (mapStatus.getMapClearStatus()) {
+            alphaFlag = (clear != 1) && (playerStatus.getNowClearCount() == playerStatus.getClearCount());
 
-
-            }*/
-/*
             mapIconPlates[i].setImageContext(
                     imageName.get(i),x.get(i), y.get(i), scale.get(i), scale.get(i), scale_feed.get(i), scale_feed.get(i), alphaFlag
             );
-            */
+            mapIconPlates[i].setEnterFlag(!alphaFlag);
         }
     }
 
@@ -333,6 +331,7 @@ public class DungeonSelectManager {
                                 soundAdmin.play("enter00");
                                 playerStatus.subClearCount();
                                 loopCountTextBoxUpdate();
+                                mapIconPlateListUpdate();
                             }
                         },
                         new BoxTextPlate(
@@ -349,6 +348,7 @@ public class DungeonSelectManager {
                                 soundAdmin.play("enter00");
                                 playerStatus.addClearCount();
                                 loopCountTextBoxUpdate();
+                                mapIconPlateListUpdate();
                             }
                         }
                 }
@@ -541,6 +541,9 @@ public class DungeonSelectManager {
             OkButtonGroup.setDrawFlag(true);
             return false;
         }
+
+
+        
         return true;
     }
 

@@ -17,6 +17,8 @@ public class MapIconPlate extends CircleImagePlate {
     String mapIconName;
     String event;
 
+    boolean enterFlag;
+
     public MapIconPlate(Graphic _graphic, UserInterface _user_interface, Constants.Touch.TouchWay _judge_way, Constants.Touch.TouchWay _feedback_way, int[] _position, ImageContext _default_image_context, ImageContext _feedback_image_context, String _mapIconName, String _event) {
         super(_graphic, _user_interface, _judge_way, _feedback_way, _position, _default_image_context, _feedback_image_context);
         mapIconName = _mapIconName;
@@ -41,6 +43,12 @@ public class MapIconPlate extends CircleImagePlate {
         feedback_image_context = graphic.makeImageContext(graphic.searchBitmap(imageName),x, y, scaleFeedX, scaleFeedY, 0.0f, alpha, false);
 
         draw_image_context = default_image_context;
+    }
+    public void setEnterFlag(boolean _enterFlag) {
+        enterFlag = _enterFlag;
+    }
+    public boolean getEnterFlag() {
+        return enterFlag;
     }
 
 }
