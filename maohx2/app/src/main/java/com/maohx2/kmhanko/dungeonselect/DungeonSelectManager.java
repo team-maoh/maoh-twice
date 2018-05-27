@@ -195,10 +195,11 @@ public class DungeonSelectManager {
 
             ));
         }
-        mapIconPlateListUpdate();
+
 
         MapIconPlate[] mapIconPlates = new MapIconPlate[mapIconPlateList.size()];
         mapIconPlateGroup = new PlateGroup<MapIconPlate>(mapIconPlateList.toArray(mapIconPlates));
+        mapIconPlateListUpdate();
     }
 
     public void mapIconPlateListUpdate() {
