@@ -236,7 +236,8 @@ public class DungeonGameSystem {
                 maohMenosStatus,
                 soundAdmin,
                 map_status,
-                map_status_saver
+                map_status_saver,
+                dungeon_kind
         );
 
         backGround = graphic.searchBitmap("firstBackground");

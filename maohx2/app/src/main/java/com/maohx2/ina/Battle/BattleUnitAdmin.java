@@ -109,6 +109,8 @@ public class BattleUnitAdmin {
     MapStatus mapStatus;
     MapStatusSaver mapStatusSaver;
 
+    DUNGEON_KIND dungeonKind;
+
     boolean resultOperatedFlag;//リザルト関係の処理を一度だけ呼ぶためのフラグ
     boolean battleEndFlag;//戦闘が終わったかどうか
 
@@ -128,7 +130,8 @@ public class BattleUnitAdmin {
             MaohMenosStatus _maohMenosStatus,
             SoundAdmin _soundAdmin,
             MapStatus _mapStatus,
-            MapStatusSaver _mapStatusSaver
+            MapStatusSaver _mapStatusSaver,
+            DUNGEON_KIND _dungeonKind
     ) {
         //引数の代入
         graphic = _graphic;
@@ -145,6 +148,8 @@ public class BattleUnitAdmin {
         dungeonModeManage = _dungeonModeManage;
         databaseAdmin = _databaseAdmin;
         mapPlateAdmin = _map_plate_admin;
+
+        dungeonKind = _dungeonKind;
 
         textBoxAdmin = _textBoxAdmin;
         initResultTextBox();
@@ -913,8 +918,10 @@ public class BattleUnitAdmin {
                     break;
                 case BOSS:
                     mapPlateAdmin.getMapInventryAdmin().storageMapInventry();
-                    mapStatus.setMapClearStatus(1, DUNGEON_KIND.CHESS.ordinal());
-                    mapStatusSaver.save();
+                    if (playerStatus.getClearCount() == playerStatus.getNowClearCount()) {
+                        mapStatus.setMapClearStatus(1, dungeonKind.ordinal());
+                        mapStatusSaver.save();
+                    }
                     dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TO_WORLD);
                     break;
                 case MINING:
