@@ -177,12 +177,18 @@ public class DungeonGameSystem {
 
         dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
 
-        map_status = new MapStatus(4);
-        map_status_saver = new MapStatusSaver(_myDatabaseAdmin, "MapSaveData", "MapSaveData.db", 1, "s", map_status, 4);
+        map_status = new MapStatus(7);//mapのクリア状況,チュートリアルを見たかどうかを記憶しておく
+        map_status_saver = new MapStatusSaver(_myDatabaseAdmin, "MapSaveData", "MapSaveData.db", 1, "ns", map_status, 4);
+        map_status_saver.load();
+//        for(int i = 0;i < 4;i++){
+//            System.out.println("before:stage_num = "+i+", is_clear = "+map_status.getTutorialFinishStatus(i));
+//        }
+        map_status.setTutorialFinishStatus(1, 0);
+        saveMapSaveData();
         map_status_saver.load();
 
 //        for(int i = 0;i < 4;i++){
-//            System.out.println("after:stage_num = "+i+", is_clear = "+map_status.getMapStatus(i));
+//            System.out.println("after:stage_num = "+i+", is_clear = "+map_status.getTutorialFinishStatus(i));
 //        }
 //      camera = new Camera(map_size, 64*4);
 

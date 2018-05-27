@@ -26,17 +26,20 @@ public class MapStatusSaver extends SaveManager {
     @Override
     public void load() {
         List<Integer> is_clear = database.getInt("MapStatus", "is_clear");
+        List<Integer> is_tutorial_finish = database.getInt("MapStatus", "is_tf");
         for(int i = 0;i < stage_num;i++) {
-            map_status.setMapStatus(is_clear.get(i), i);
+            map_status.setMapClearStatus(is_clear.get(i), i);
+            map_status.setTutorialFinishStatus(is_tutorial_finish.get(i), i);
         }
     }
 
     @Override
     public void save() {
+        deleteAll();
         for (int i = 0; i < stage_num; i++) {
             database.insertLineByArray(
                     "MapStatus",
-                    new String[]{"is_clear"},
+                    new String[]{"is_clear", "is_tf"},
                     map_status.getSaveStatus(i)
             );
         }
