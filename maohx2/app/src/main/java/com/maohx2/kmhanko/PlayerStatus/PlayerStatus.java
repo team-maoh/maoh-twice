@@ -4,7 +4,7 @@ import com.maohx2.ina.Battle.BattleDungeonUnitData;
 import com.maohx2.ina.Constants.UnitStatus.Status;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.geonode.GeoCalcSaverAdmin;
-
+import com.maohx2.kmhanko.Saver.PlayerStatusSaver;
 
 /**
  * Created by user on 2018/02/23.
@@ -47,10 +47,13 @@ public class PlayerStatus {
 
     //Equip
 
+    PlayerStatusSaver playerStatusSaver;
 
 
 
-    public PlayerStatus(MyDatabaseAdmin _myDatabaseAdmin) {
+
+    public PlayerStatus(MyDatabaseAdmin _myDatabaseAdmin, PlayerStatusSaver _playerStatusSaver) {
+        playerStatusSaver = _playerStatusSaver;
         initStatus();
         initGeoStatus();
     }
@@ -145,6 +148,17 @@ public class PlayerStatus {
     public void setBaseDefence(int x) { baseDefence = x; }
     public void setBaseLuck(int x) { baseLuck = x; }
 
+    public void addBaseHP(int x) { baseHp += x; }
+    public void addBaseAttack(int x) { baseAttack += x; }
+    public void addBaseDefence(int x) { baseDefence += x; }
+    public void addBaseLuck(int x) { baseLuck += x; }
+
+    public int getBaseHP() { return baseHp; }
+    public int getBaseAttack() { return baseAttack; }
+    public int getBaseDefence() { return baseDefence; }
+    public int getBaseLuck() { return baseLuck; }
+
+
     public void setNowHPMax() {
         nowHp = hp;
     }
@@ -175,6 +189,14 @@ public class PlayerStatus {
                 nowClearCount,
                 tutorialInDungeon
         };
+    }
+
+    public void save() {
+        playerStatusSaver.save();
+    }
+
+    public void load() {
+        playerStatusSaver.load();
     }
 
 

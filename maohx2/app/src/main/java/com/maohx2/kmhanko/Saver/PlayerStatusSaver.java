@@ -12,10 +12,14 @@ public class PlayerStatusSaver extends SaveManager {
 
     PlayerStatus playerStatus;
 
-    public PlayerStatusSaver(MyDatabaseAdmin _databaseAdmin, String dbName, String dbAsset, int version, String _loadMode, PlayerStatus _playerStatus) {
+    public PlayerStatusSaver(MyDatabaseAdmin _databaseAdmin, String dbName, String dbAsset, int version, String _loadMode) {
         super(_databaseAdmin, dbName, dbAsset, version, _loadMode);
+    }
+
+    public void setPlayerStatus(PlayerStatus _playerStatus) {
         playerStatus = _playerStatus;
     }
+
     @Override
     public void dbinit() {
         //特にすることなし

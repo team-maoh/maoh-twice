@@ -34,6 +34,7 @@ import static com.maohx2.ina.Constants.UnitStatus.Status.ATTACK;
 import static com.maohx2.ina.Constants.UnitStatus.Status.DEFENSE;
 import static com.maohx2.ina.Constants.UnitStatus.Status.HP;
 import static com.maohx2.ina.Constants.UnitStatus.Status.LUCK;
+import static com.maohx2.ina.Constants.UnitStatus.BonusStatus;
 
 import com.maohx2.ina.Battle.*;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
@@ -539,6 +540,8 @@ public class BattleUnitAdmin {
     //TODO ゲームオーバー処理
     public void gameOver() {
         winFlag = false;
+        //死んだらお金を半分にする
+        playerStatus.setMoney(playerStatus.getMoney()/2);
         switch(mode) {
             case BATTLE:
                 battleEnd();
@@ -547,6 +550,7 @@ public class BattleUnitAdmin {
                 battleEnd();
                 break;
             case MINING:
+                //ここには来ない
                 battleEnd();
                 break;
             case MAOH:
@@ -569,6 +573,7 @@ public class BattleUnitAdmin {
             case BATTLE:
             case BOSS:
                 getDropItem();
+                growUp();
                 resultButtonGroup.setUpdateFlag(true);
                 resultButtonGroup.setDrawFlag(true);
                 break;
@@ -584,6 +589,7 @@ public class BattleUnitAdmin {
                 resultButtonGroup.setDrawFlag(true);
                 break;
             case MAOH:
+                growUp();
                 resultTextBoxUpdate(new String[]{"魔王を倒した！",});
                 resultButtonGroup.setUpdateFlag(true);
                 resultButtonGroup.setDrawFlag(true);
@@ -721,6 +727,20 @@ public class BattleUnitAdmin {
         resultTextBoxUpdateItems(dropItemNames);
     }
 
+    //敵を倒したら成長する処理
+    private void growUp() {
+        for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
+            if (battle_units[i].isDropFlag()) {
+                playerStatus.addBaseHP(battle_units[i].getBattleDungeonUnitData().getBonusStatus(BonusStatus.BONUS_HP));
+                playerStatus.addBaseAttack(battle_units[i].getBattleDungeonUnitData().getBonusStatus(BonusStatus.BONUS_ATTACK));
+                playerStatus.addBaseDefence(battle_units[i].getBattleDungeonUnitData().getBonusStatus(BonusStatus.BONUS_DEFENSE));
+                playerStatus.addBaseLuck(battle_units[i].getBattleDungeonUnitData().getBonusStatus(BonusStatus.BONUS_SPEED));
+                //System.out.println("testtt" + battle_units[i].getBattleDungeonUnitData().getBonusStatus(BonusStatus.BONUS_HP));
+            }
+        }
+        playerStatus.calcStatus();
+        playerStatus.save();
+    }
 
     //by kmhanko
     private void getDropItem() {
@@ -728,7 +748,6 @@ public class BattleUnitAdmin {
         BattleBaseUnitData tempBattleBaseUnitData = null;
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (battle_units[i].isDropFlag()) {
-                battle_units[i].dropFlagIs(false);
                 tempBattleBaseUnitData = battleUnitDataAdmin.getBattleUnitDataNum(battle_units[i].getName());
 
                 EQUIPMENT_KIND[] dropItemEquipmentKind = tempBattleBaseUnitData.getDropItemEquipmentKinds();
