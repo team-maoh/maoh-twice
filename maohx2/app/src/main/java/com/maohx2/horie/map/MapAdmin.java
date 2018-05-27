@@ -521,7 +521,7 @@ public class MapAdmin {
 
     //スタート地点を探す
     public void searchStartPoint() {
-        Point point = getRoomPoint();
+        Point point = getRoomNotEdgePoint();
         start_point.set(point.x, point.y);
     }
 
@@ -540,7 +540,7 @@ public class MapAdmin {
         return point;
     }
 
-    //部屋の端の座標を返す
+    //部屋の壁際の座標を返す
     private Point getRoomEdgePoint() {
         Point point = new Point(0, 0);
         for (; ; ) {
@@ -548,6 +548,21 @@ public class MapAdmin {
             int x = rnd.nextInt(map_size.x);
             int y = rnd.nextInt(map_size.y);
             if (map_data[x][y].isRoom() && (map_data[x - 1][y].isWall() || map_data[x + 1][y].isWall() || map_data[x][y - 1].isWall() || map_data[x][y + 1].isWall())) {
+                point.set(x * magnification, y * magnification);
+                break;
+            }
+        }
+        return point;
+    }
+
+    //部屋の壁際以外の座標を返す
+    private Point getRoomNotEdgePoint() {
+        Point point = new Point(0, 0);
+        for (; ; ) {
+            Random rnd = new Random();
+            int x = rnd.nextInt(map_size.x);
+            int y = rnd.nextInt(map_size.y);
+            if (map_data[x][y].isRoom() && (!map_data[x - 1][y].isWall() && !map_data[x + 1][y].isWall() && !map_data[x][y - 1].isWall() && !map_data[x][y + 1].isWall())) {
                 point.set(x * magnification, y * magnification);
                 break;
             }
