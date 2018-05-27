@@ -211,8 +211,8 @@ public class DungeonGameSystem {
 
         miningItemDataAdmin = new MiningItemDataAdmin(graphic, my_database_admin);
 
-        //palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipmentInventry, expendInventry);
-        palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipment_item_data_admin);
+        palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipmentInventry, expendInventry);
+        //palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipment_item_data_admin);
         palette_admin.setMiningItems(miningItemDataAdmin);//TODO コンストラクタに入れて居ないためよくない
 
 
