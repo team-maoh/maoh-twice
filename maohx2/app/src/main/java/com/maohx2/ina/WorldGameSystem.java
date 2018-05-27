@@ -144,7 +144,7 @@ public class WorldGameSystem {
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin);
 
 
-        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, activityChange, soundAdmin);
+        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, activityChange, soundAdmin, worldActivity);
 
         geoSlotAdminManager.loadGeoSlot();
 
@@ -158,7 +158,7 @@ public class WorldGameSystem {
         GeoObjectDataCreater.setGraphic(graphic);
         // 仮。適当にGeo入れる GEO1が上がる能力は単一
         //TODO 同じの追加されたら個数とかないのに2とかになりそう
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 15; i++) {
             geoInventry.addItemData(GeoObjectDataCreater.getGeoObjectData(100));
         }
 
@@ -209,14 +209,14 @@ public class WorldGameSystem {
 
     public void update() {
 
-
+/*
         if (world_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN) {
             List<BitmapData> testBitmapData = new ArrayList<BitmapData>();
             int testID = effectAdmin.createEffect("test2", "打撃01", 9,1);
             effectAdmin.getEffect(testID).setPosition((int)world_user_interface.getTouchX(),(int)world_user_interface.getTouchY());
             effectAdmin.getEffect(testID).start();
         }
-
+*/
 
 
         switch (worldModeAdmin.getMode()) {
@@ -373,7 +373,7 @@ public class WorldGameSystem {
         */
 
         text_box_admin.draw();
-        effectAdmin.draw();
+        //effectAdmin.draw();
 
         graphic.draw();
     }

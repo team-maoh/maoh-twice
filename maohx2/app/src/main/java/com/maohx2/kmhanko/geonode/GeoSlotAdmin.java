@@ -192,6 +192,11 @@ public class GeoSlotAdmin {
                                 //戻るボタンが押された時の処理
                                 soundAdmin.play("cancel00");
 
+
+                                for (int i = 0; i < geoSlots.size(); i++) {
+                                    getGeoSlots().get(i).clearGeoSlotLineEffect();
+                                }
+
                                 geoSlotAdminManager.calcStatus();
                                 geoSlotAdminManager.saveGeoInventry();
 
@@ -272,6 +277,14 @@ public class GeoSlotAdmin {
         textBoxAdmin.setTextBoxExists(statusTextBoxID, false);
         statusTextBoxUpdate();
         */
+    }
+
+
+    public void geoUpdate() {
+        calcGeoSlot();
+        for(int i = 0; i < geoSlots.size(); i++) {
+            geoSlots.get(i).drawLine();
+        }
     }
 
     //***** GeoObjectステータス計算関係 *****
@@ -379,9 +392,9 @@ public class GeoSlotAdmin {
     public void draw() {
         //GeoSlot
         //線とスロットの描画は2つのfor文に分けなければならない(描画順の問題)
-        for(int i = 0; i < geoSlots.size(); i++) {
-            geoSlots.get(i).drawLine();
-        }
+        //for(int i = 0; i < geoSlots.size(); i++) {
+            //geoSlots.get(i).drawLine();
+        //}
         /*
         for(int i = 0; i < geoSlots.size(); i++) {
             /oolean f = geoSlots.get(i).equals(focusGeoSlot);

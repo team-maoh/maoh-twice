@@ -175,17 +175,18 @@ public final class Constants {
     }
 
     public static class POPUP_WINDOW {
-        public static final int MESS_LEFT = 400;
-        public static final int MESS_RIGHT = 1200;
+        public static final int MESS_LEFT = 200;
+        public static final int MESS_RIGHT = 1400;
         public static final int MESS_UP = 300;
         public static final int MESS_BOTTOM = 500;
 
-        public static final int OK_LEFT = 400;
-        public static final int OK_RIGHT = 1200;
+        public static final int OK_LEFT = 200;
+        public static final int OK_RIGHT = 1400;
         public static final int OK_UP = 500;
         public static final int OK_BOTTOM = 600;
 
         public static final float TEXT_SIZE = 40f;
+        public static final float TEXT_SIZE_BIG = 80f;
         public static final int MESS_ROW = 5;
     }
 
@@ -206,6 +207,7 @@ public final class Constants {
         public static final int NO_BOTTOM = 600;
 
         public static final float TEXT_SIZE = 40f;
+        public static final float TEXT_SIZE_BIG = 80f;
         public static final int MESS_ROW = 5;
     }
 
@@ -269,6 +271,19 @@ public final class Constants {
                 }
                 return null;
             }
+        }
+
+
+        public enum GEO_KIND_ALL {
+            HP,
+            HP_RATE,
+            ATTACK,
+            ATTACK_RATE,
+            DEFENCE,
+            DEFENCE_RATE,
+            LUCK,
+            LUCK_RATE,
+            NUM
         }
 
         public static final int DROP_NUM = 3;

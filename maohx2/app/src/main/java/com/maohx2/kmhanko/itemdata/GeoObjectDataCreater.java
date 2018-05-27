@@ -68,9 +68,26 @@ public class GeoObjectDataCreater {
         String name = names[0];
         String imageName = names[1];
 
+        Constants.Item.GEO_KIND_ALL geoKind = null;
+        switch (parameterKind) {
+            case HP:
+                geoKind = Constants.Item.GEO_KIND_ALL.HP;
+                break;
+            case ATTACK:
+                geoKind = Constants.Item.GEO_KIND_ALL.ATTACK;
+                break;
+            case DEFENCE:
+                geoKind = Constants.Item.GEO_KIND_ALL.DEFENCE;
+                break;
+            case LUCK:
+                geoKind = Constants.Item.GEO_KIND_ALL.LUCK;
+                break;
+        }
+
         GeoObjectData newGeoObjectData = new GeoObjectData(name,graphic.searchBitmap(imageName),status1, status2);
         newGeoObjectData.setImageName(imageName);
         newGeoObjectData.setPrice(parameter);
+        newGeoObjectData.setGeoKind(geoKind);
         //newGeoObjectData.setItemKind(Constants.Item.ITEM_KIND.GEO);
         //newGeoObjectData.setPrice(parameter);
 
@@ -113,9 +130,26 @@ public class GeoObjectDataCreater {
         String name = names[0];
         String imageName = names[1];
 
+        Constants.Item.GEO_KIND_ALL geoKind = null;
+        switch (parameterKind) {
+            case HP_RATE:
+                geoKind = Constants.Item.GEO_KIND_ALL.HP_RATE;
+                break;
+            case ATTACK_RATE:
+                geoKind = Constants.Item.GEO_KIND_ALL.ATTACK_RATE;
+                break;
+            case DEFENCE_RATE:
+                geoKind = Constants.Item.GEO_KIND_ALL.DEFENCE_RATE;
+                break;
+            case LUCK_RATE:
+                geoKind = Constants.Item.GEO_KIND_ALL.LUCK_RATE;
+                break;
+        }
+
         GeoObjectData newGeoObjectData = new GeoObjectData(name,graphic.searchBitmap(imageName),status1, status2);
         newGeoObjectData.setImageName(imageName);
         newGeoObjectData.setPrice((int)parameter);
+        newGeoObjectData.setGeoKind(geoKind);
         //newGeoObjectData.setItemKind(Constants.Item.ITEM_KIND.GEO);
         //newGeoObjectData.setPrice(parameter);
 

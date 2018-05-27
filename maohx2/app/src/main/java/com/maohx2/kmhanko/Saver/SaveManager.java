@@ -26,6 +26,8 @@ public abstract class SaveManager {
         }
         if (database.isNew()) {
             dbinit();
+            //
+            System.out.println("SaveManager : " + database.getDbName() + " tables:" + database.getTables());
         }
     }
 

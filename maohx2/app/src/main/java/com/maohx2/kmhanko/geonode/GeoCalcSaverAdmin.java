@@ -59,10 +59,36 @@ public class GeoCalcSaverAdmin {
         }
     }
 
+    public int[] getTestFinalCalc() {
+        int[] temp = new int[geo_calc_saver.size()];
+
+        for(int i = 0; i<geo_calc_saver.size(); i++) {
+            if(geo_calc_saver.get(i) != null) {
+                temp[i] = geo_calc_saver.get(i).testFinalCalc();
+            }
+        }
+
+        return temp;
+    }
+
     //public String getParam(String name) { return name + " : " + getGeoCalcSaver(name).getParam(); }
 
     public int getParam(String name) {
-        return getGeoCalcSaver(name).getParam();
+        GeoCalcSaver geoCalcSaver = getGeoCalcSaver(name);
+        if (geoCalcSaver == null) {
+            System.out.println("geoCalcSaver = null");
+            return 0;
+        }
+        return geoCalcSaver.getParam();
+    }
+
+    public boolean isAllZero() {
+        for(int i = 0; i<geo_calc_saver.size(); i++) {
+            if(geo_calc_saver.get(i).getParam() != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

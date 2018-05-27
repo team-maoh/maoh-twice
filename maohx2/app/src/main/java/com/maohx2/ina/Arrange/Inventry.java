@@ -266,6 +266,16 @@ public class Inventry {
 
     }
 
+    public int getInventryNum(){
+        int num = 0;
+        for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
+            if (inventry_datas[i].getItemData() != null) {
+                num++;
+            }
+        }
+        return num;
+    }
+
 /*
     public void sort(){
 

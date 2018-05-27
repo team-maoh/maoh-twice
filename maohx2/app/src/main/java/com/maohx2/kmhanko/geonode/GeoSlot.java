@@ -71,7 +71,7 @@ public class GeoSlot extends CircleImagePlate {
     //TODO:デバッグ用。セーブデータの用意が必要
     boolean isReleased = false;
 
-    GeoCalcSaverAdmin thisGeoCalcSaverAdmin;
+    //GeoCalcSaverAdmin thisGeoCalcSaverAdmin;
 
     static EffectAdmin effectAdmin;
     //static int[] geoSlotLineEffect;
@@ -198,6 +198,7 @@ public class GeoSlot extends CircleImagePlate {
 
     //GeoSlotの計算を行うメソッド。再帰ライクに計算する。
     public GeoCalcSaverAdmin calcPass() {
+
         if (!is_exist || !is_in_geoObjectData) {
             return null;
         }
@@ -216,16 +217,17 @@ public class GeoSlot extends CircleImagePlate {
                 }
             }
         }
+        geoSlotLineColor = 4;
         //この時点でこのNodeより子供は全て計算された状態にある
         if (child_num == 0) {
             GeoCalcSaverAdmin new_geo_calc_saver_admin = new GeoCalcSaverAdmin();
             calc(new_geo_calc_saver_admin);
-            thisGeoCalcSaverAdmin = new_geo_calc_saver_admin;
+            getGeoSlotLineColorFromGeoCalcSaverAdmin(new_geo_calc_saver_admin.getTestFinalCalc());
             return new_geo_calc_saver_admin;
         }
         if (child_num == 1) {
             calc(geo_calc_saver_admin_temp);
-            thisGeoCalcSaverAdmin = geo_calc_saver_admin_temp;
+            getGeoSlotLineColorFromGeoCalcSaverAdmin(geo_calc_saver_admin_temp.getTestFinalCalc());
             return geo_calc_saver_admin_temp;
         }
         if (child_num > 1) {
@@ -237,10 +239,27 @@ public class GeoSlot extends CircleImagePlate {
                 }
             }
             calc(new_geo_calc_saver_admin);
-            thisGeoCalcSaverAdmin = new_geo_calc_saver_admin;
+            getGeoSlotLineColorFromGeoCalcSaverAdmin(new_geo_calc_saver_admin.getTestFinalCalc());
             return new_geo_calc_saver_admin;
         }
         return null;
+    }
+
+
+    private void getGeoSlotLineColorFromGeoCalcSaverAdmin(int[] params) {
+
+        boolean flag = false;
+        for(int i = 0 ; i < params.length; i++) {
+            if (params[i] != 0) {
+                flag = true;
+            }
+        }
+        if (flag == false) {
+            geoSlotLineColor = 4;
+            return;
+        }
+
+        geoSlotLineColor = MyAvail.maxFromIntArrays(params);
     }
 
     //GeoSlotの計算を行うメソッド。再帰ライクの終着点に該当する。
@@ -252,31 +271,51 @@ public class GeoSlot extends CircleImagePlate {
         geo_calc_saver_admin.getGeoCalcSaver("Luck").calc(geoObjectData.getLuck(),geoObjectData.getLuckRate());
     }
 
-    Paint dotPaint = new Paint();
-
     List<Integer> geoSlotLineEffect = new ArrayList<Integer>();
+    int geoSlotLineColor;//0 = HP 1 = Attack 2 = defence 3 = Luck 4 = none;
+
+    public void clearGeoSlotLineEffect() {
+        for (int i = 0; i < geoSlotLineEffect.size(); i++) {
+            effectAdmin.clearEffect(
+                    geoSlotLineEffect.get(i)
+            );
+        }
+        geoSlotLineEffect.clear();
+    }
 
     public void drawLine() {
-        //子に対しての線を書く
+        if (!isInGeoObject()) {
+            return;
+        }
+        //子に対しての線
+        clearGeoSlotLineEffect();
 
         int c_x = 0;
         int c_y = 0;
         double radian = 0.0f;
         double distance = 0.0f;
+        double distanceRate = 1.0f;
 
-
-        dotPaint.setARGB(255,255,255,255);
+        //dotPaint.setARGB(255,255,255,255);
 
         for (int i = 0; i<children_slot.size(); i++) {
             if (children_slot.get(i) != null) {
-                if (children_slot.get(i).isExist()) {
-
+                if (children_slot.get(i).isExist() && children_slot.get(i).isInGeoObject()) {
+                    /*
+                    GeoCalcSaverAdmin tempGeoCalcSaverAdmin= children_slot.get(i).getThisGeoCalcSaverAdmin();
+                    if (tempGeoCalcSaverAdmin == null) {
+                        continue;
+                    }
+                    if (tempGeoCalcSaverAdmin.isAllZero()) {
+                        continue;
+                    }
+                    */
 
                     c_x = children_slot.get(i).getX();
                     c_y = children_slot.get(i).getY();
-
                     radian = Math.atan2(y - c_y, x - c_x);
                     distance = (float)MyAvail.distance(x, y, c_x, c_y);
+                    int childGeoSlotLineColor = children_slot.get(i).getGeoSlotLineColor();
 
                     /*
                     effectAdmin.createEffect("geoSlotLine", "geoEffectYellow", 3, 1),
@@ -286,8 +325,51 @@ public class GeoSlot extends CircleImagePlate {
                             effectAdmin.createEffect("geoSlotLine", "geoEffectViolet", 3, 1),
                     */
 
-                    int dotNum = 8;
+
+                    /*
+                    int maxParam = MyAvail.maxFromIntArrays(new int[] {
+                            tempGeoCalcSaverAdmin.getParam("HP"),
+                            tempGeoCalcSaverAdmin.getParam("Attack"),
+                            tempGeoCalcSaverAdmin.getParam("Defence"),
+                            tempGeoCalcSaverAdmin.getParam("Luck")
+                            }
+                    );
+                    */
+                    String effectImageName = "";
+                    switch (childGeoSlotLineColor) {
+                        case 0:
+                            effectImageName = "geoEffectYellow";
+                            break;
+                        case 1:
+                            effectImageName = "geoEffectRed";
+                            break;
+                        case 2:
+                            effectImageName = "geoEffectBlue";
+                            break;
+                        case 3:
+                            effectImageName = "geoEffectViolet";
+                            break;
+                        default:
+                            continue;
+
+                    }
+
+                    int dotNum = 6;
+                    int id = 0;
                     for(int j = 0; j < dotNum; j++) {
+
+                        geoSlotLineEffect.add(
+                                effectAdmin.createEffect("geoSlotLine", effectImageName, 3, 1)
+                        );
+                        id = geoSlotLineEffect.get(geoSlotLineEffect.size() - 1);
+                        effectAdmin.setPosition(
+                                id,
+                                (int)(x - distance * (1.0f - distanceRate)/2.0f * Math.cos(radian) - (distance * distanceRate * (double)j) * Math.cos(radian) / (double)dotNum),
+                                (int)(y - distance * (1.0f - distanceRate)/2.0f * Math.sin(radian) - (distance * distanceRate * (double)j) * Math.sin(radian) / (double)dotNum)
+                        );
+                        effectAdmin.startEffect(id);
+
+
                         //geoSlotLineEffect.add(i);
 
                         /*
@@ -401,7 +483,7 @@ public class GeoSlot extends CircleImagePlate {
                     geoSlotAdmin.setSlotData(geoObjectData, id);
                 }
                 soundAdmin.play("equip00");
-                geoSlotAdmin.calcGeoSlot();
+                geoSlotAdmin.geoUpdate();
             } else {
                 if (!isInGeoObject()) {
                     //Holdしておらず、Geoも入っていない時　→　何もしない
@@ -412,8 +494,8 @@ public class GeoSlot extends CircleImagePlate {
 
                     geoSlotAdmin.setHoldGeoObject(geoObjectData);
                     popGeoObject();
+                    geoSlotAdmin.geoUpdate();
                 }
-
             }
         }
     }
@@ -504,6 +586,7 @@ public class GeoSlot extends CircleImagePlate {
     //public int getPositionY() { eturn position_y; }
 
 
+    public int getGeoSlotLineColor() { return geoSlotLineColor; }
     public GeoObjectData getGeoObjectData() { return geoObjectData; }
     public String getReleaseEvent() { return release_event; }
     public String getRestriction() { return restriction; }

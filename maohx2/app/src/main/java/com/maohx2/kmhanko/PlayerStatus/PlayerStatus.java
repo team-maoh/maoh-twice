@@ -4,7 +4,7 @@ import com.maohx2.ina.Battle.BattleDungeonUnitData;
 import com.maohx2.ina.Constants.UnitStatus.Status;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.geonode.GeoCalcSaverAdmin;
-
+import com.maohx2.kmhanko.Saver.PlayerStatusSaver;
 
 /**
  * Created by user on 2018/02/23.
@@ -35,6 +35,10 @@ public class PlayerStatus {
 
     private int money;
 
+    private int geoInventryMaxNum;
+    private int expendInvetryMaxNum;
+    private int equipmentInventryMaxNum;
+
     //Record
 
     private int maohWinCount;
@@ -47,10 +51,13 @@ public class PlayerStatus {
 
     //Equip
 
+    PlayerStatusSaver playerStatusSaver;
 
 
 
-    public PlayerStatus(MyDatabaseAdmin _myDatabaseAdmin) {
+
+    public PlayerStatus(MyDatabaseAdmin _myDatabaseAdmin, PlayerStatusSaver _playerStatusSaver) {
+        playerStatusSaver = _playerStatusSaver;
         initStatus();
         initGeoStatus();
     }
@@ -128,6 +135,9 @@ public class PlayerStatus {
     public int getClearCount() { return clearCount; }
     public int getNowClearCount() { return nowClearCount; }
     public int getTutorialInDungeon() {return tutorialInDungeon; }
+    public int getGeoInventryMaxNum() { return geoInventryMaxNum; }
+    public int getExpendInvetryMaxNum() { return expendInvetryMaxNum; }
+    public int getEquipmentInventryMaxNum() { return equipmentInventryMaxNum; }
 
     public void setHP(int x) { hp = x; }
     public void setNowHP(int x) { nowHp = x; }
@@ -139,11 +149,38 @@ public class PlayerStatus {
     public void setClearCount(int x) { clearCount = x; }
     public void setNowClearCount(int x) {  nowClearCount = x; }
     public void setTutorialInDungeon(int x){  tutorialInDungeon = x;}
+    public void setGeoInventryMaxNum(int x) { geoInventryMaxNum = x; }
+    public void setExpendInvetryMaxNum(int x) {  expendInvetryMaxNum = x; }
+    public void setEquipmentInventryMaxNum(int x){  equipmentInventryMaxNum = x;}
+
+    public void addClearCount() {
+        clearCount++;
+        if (clearCount > nowClearCount) {
+            clearCount = 0;
+        }
+    }
+    public void subClearCount() {
+        clearCount--;
+        if (clearCount < 0) {
+            clearCount = nowClearCount;
+        }
+    }
 
     public void setBaseHP(int x) { baseHp = x; }
     public void setBaseAttack(int x) { baseAttack = x; }
     public void setBaseDefence(int x) { baseDefence = x; }
     public void setBaseLuck(int x) { baseLuck = x; }
+
+    public void addBaseHP(int x) { baseHp += x; }
+    public void addBaseAttack(int x) { baseAttack += x; }
+    public void addBaseDefence(int x) { baseDefence += x; }
+    public void addBaseLuck(int x) { baseLuck += x; }
+
+    public int getBaseHP() { return baseHp; }
+    public int getBaseAttack() { return baseAttack; }
+    public int getBaseDefence() { return baseDefence; }
+    public int getBaseLuck() { return baseLuck; }
+
 
     public void setNowHPMax() {
         nowHp = hp;
@@ -173,8 +210,19 @@ public class PlayerStatus {
                 maohWinCount,
                 clearCount,
                 nowClearCount,
-                tutorialInDungeon
+                tutorialInDungeon,
+                geoInventryMaxNum,
+                expendInvetryMaxNum,
+                equipmentInventryMaxNum
         };
+    }
+
+    public void save() {
+        playerStatusSaver.save();
+    }
+
+    public void load() {
+        playerStatusSaver.load();
     }
 
 

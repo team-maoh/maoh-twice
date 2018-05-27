@@ -117,6 +117,13 @@ public class GeoCalcSaver {
         addParamRate(1.0);
     }
 
+    public int testFinalCalc() {
+        int tempParam;
+        tempParam = getTempParam();
+        tempParam = (int)((double)tempParam * getParamRateEnd());
+        return tempParam + param;
+    }
+
 
 }
 

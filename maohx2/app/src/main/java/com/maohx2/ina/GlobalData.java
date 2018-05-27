@@ -60,8 +60,9 @@ public class GlobalData extends Application {
         g_constants = new GlobalConstants(disp_x, disp_y);
 
         //by kmhanko
-        playerStatus = new PlayerStatus(g_my_database_admin);
-        playerStatusSaver = new PlayerStatusSaver(g_my_database_admin, "PlayerStatusSave", "PlayerStatusSave.db", 1, "ns", playerStatus);
+        playerStatusSaver = new PlayerStatusSaver(g_my_database_admin, "PlayerStatusSave", "PlayerStatusSave.db", 1, "ns");
+        playerStatus = new PlayerStatus(g_my_database_admin, playerStatusSaver);
+        playerStatusSaver.setPlayerStatus(playerStatus);
         playerStatusSaver.load();
         maohMenosStatus = new MaohMenosStatus();
 
