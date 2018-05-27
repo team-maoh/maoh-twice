@@ -33,7 +33,7 @@ public class PaletteAdmin {
         palettes[2] = new Palette(_battle_user_interface, _graphic,  1400,750,2);
     }
 
-    public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic, InventryS equipmentInventry, InventryS expendInventry){
+    public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic, InventryS equipmentInventry, InventryS expendInventry, EquipmentItemDataAdmin _equipmentItemDataAdmin){
         palettes[0] = new Palette(_battle_user_interface, _graphic, 1400,750,0);
         palettes[1] = new Palette(_battle_user_interface, _graphic,  200,750,1);
         //by kmhanko ジオ採掘パレット
@@ -67,6 +67,10 @@ public class PaletteAdmin {
             palettesFlag[2] = false;
 
         }
+
+        palettes[0].palette_elements[7].setItemData(_equipmentItemDataAdmin.getOneDataByName("素手"));
+        palettes[0].palette_elements[6].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ盾"));
+
 
 
         /*
@@ -128,12 +132,14 @@ public class PaletteAdmin {
     }
 
     public void draw(){
-        /*
-        palettes[0].draw();
-        palettes[1].draw();
-        */
         for (int i = 0; i < palettes.length; i++) {
             if (palettesFlag[i]) { palettes[i].draw(); }
+        }
+    }
+
+    public void drawOnly(){
+        for (int i = 0; i < palettes.length; i++) {
+            if (palettesFlag[i]) { palettes[i].drawOnly(); }
         }
     }
 
