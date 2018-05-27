@@ -209,14 +209,14 @@ public class WorldGameSystem {
 
     public void update() {
 
-
+/*
         if (world_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN) {
             List<BitmapData> testBitmapData = new ArrayList<BitmapData>();
             int testID = effectAdmin.createEffect("test2", "打撃01", 9,1);
             effectAdmin.getEffect(testID).setPosition((int)world_user_interface.getTouchX(),(int)world_user_interface.getTouchY());
             effectAdmin.getEffect(testID).start();
         }
-
+*/
 
 
         switch (worldModeAdmin.getMode()) {

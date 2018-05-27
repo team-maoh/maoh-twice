@@ -1,6 +1,7 @@
 package com.maohx2.kmhanko.itemdata;
 
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Constants.Item.GEO_KIND_ALL;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.Draw.Graphic;
@@ -20,6 +21,8 @@ public class GeoObjectData extends ItemData {
     double attack_rate;
     double defence_rate;
     double luck_rate;
+
+    GEO_KIND_ALL geoKind;
 
     String slotSetName = "noSet";
     int slotSetID;
@@ -136,6 +139,10 @@ public class GeoObjectData extends ItemData {
     }
     */
 
+    public GEO_KIND_ALL geoKind() {
+        return geoKind;
+    }
+
     public int getHp() {
         return hp;
     }
@@ -198,5 +205,9 @@ public class GeoObjectData extends ItemData {
 
     public void setLuckRate(double _luck_rate) {
         luck_rate = _luck_rate;
+    }
+
+    public void setGeoKind(GEO_KIND_ALL _geoKind) {
+        geoKind = _geoKind;
     }
 }

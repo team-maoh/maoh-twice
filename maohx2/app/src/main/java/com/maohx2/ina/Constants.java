@@ -273,6 +273,19 @@ public final class Constants {
             }
         }
 
+
+        public enum GEO_KIND_ALL {
+            HP,
+            HP_RATE,
+            ATTACK,
+            ATTACK_RATE,
+            DEFENCE,
+            DEFENCE_RATE,
+            LUCK,
+            LUCK_RATE,
+            NUM
+        }
+
         public static final int DROP_NUM = 3;
 
     }
