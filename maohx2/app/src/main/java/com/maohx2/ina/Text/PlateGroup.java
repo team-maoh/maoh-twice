@@ -106,4 +106,9 @@ public class PlateGroup<T extends Plate> {
         update_flag = _update_flag;
     }
 
+    //by kmhanko
+    public T[] getPlates() {
+        return plates;
+    }
+
 }

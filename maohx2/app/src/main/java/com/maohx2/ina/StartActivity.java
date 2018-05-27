@@ -157,6 +157,8 @@ class StartSurfaceView extends BaseSurfaceView {
         musicAdmin.loadMusic("title", true);
         */
 
+        global_data.getPlayerStatus().setTutorialInDungeon(1);
+
         //todo:こいつは一番下
         thread = new Thread(this);
         thread.start();
