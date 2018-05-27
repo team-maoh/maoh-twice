@@ -176,6 +176,10 @@ public class Inventry {
         leftPlate.draw();
     }
 
+    public void drawOnly() {
+        operate_inventry_list_box.draw();
+    }
+
     public void addItemData(ItemData _item_data) {
         int i = 0;
 

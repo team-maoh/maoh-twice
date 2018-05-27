@@ -207,7 +207,7 @@ public class DungeonGameSystem {
 
         miningItemDataAdmin = new MiningItemDataAdmin(graphic, my_database_admin);
 
-        palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipmentInventry, expendInventry);
+        palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipmentInventry, expendInventry, equipment_item_data_admin);
         //palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipment_item_data_admin);
         palette_admin.setMiningItems(miningItemDataAdmin);//TODO コンストラクタに入れて居ないためよくない
 
@@ -328,11 +328,10 @@ public class DungeonGameSystem {
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.EQUIP_EXPEND);
 
             case EQUIP_EXPEND:
-                equipmentInventry.updata();
-                expendInventry.updata();
-                palette_admin.update(false);
+                //equipmentInventry.updata();
+                //expendInventry.updata();
+                //palette_admin.update(false);
                 backPlateGroup.update();
-//                backPlateGroup.update();
                 break;
             case GEO_MAP:
                 break;
@@ -368,12 +367,12 @@ public class DungeonGameSystem {
                 break;
 
             case EQUIP_EXPEND:
-                equipmentInventry.draw();
-                expendInventry.draw();
-                palette_admin.draw();
-                dungeon_user_interface.draw();
+                //equipmentInventry.drawOnly();
+                //expendInventry.drawOnly();
+                palette_admin.drawOnly();
+                //dungeon_user_interface.draw();
                 backPlateGroup.draw();
-//                backPlateGroup.draw();
+                //backPlateGroup.draw();
                 break;
 
             case GEO_MAP:
