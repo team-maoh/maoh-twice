@@ -28,14 +28,15 @@ public class GeoPresentSaver extends SaveManager {
 
 
     @Override
+    //無限対応
     public void dbinit() {
         deleteAll();
         int size = geoPresentManager.getPresentListSize();
         for (int i = 1; i < size + 1; i++) {
             database.insertLineByArrayString(
                     "GeoPresentSave",
-                    new String[] { "id", "flag" },
-                    new String[] { String.valueOf(i), "false" }
+                    new String[] { "id", "count" },
+                    new String[] { String.valueOf(i), String.valueOf(0) }
             );
         }
 
@@ -49,23 +50,17 @@ public class GeoPresentSaver extends SaveManager {
     }
 
     @Override
+    //無限対応
     public void save() {
         deleteAll();
-        List<Boolean> alreadyPresentGet = geoPresentManager.getAlreadyPresentGetFlags();
+        //List<Boolean> alreadyPresentGet = geoPresentManager.getAlreadyPresentGetFlags();
+        List<Integer> presentGetCount = geoPresentManager.getPresentGetCounts();
 
-        String flag;
-        for(int i = 0; i < alreadyPresentGet.size(); i++) {
-            flag = null;
-            if (alreadyPresentGet.get(i)) {
-                flag = "true";
-            } else {
-                flag = "false";
-            }
-
+        for(int i = 0; i < presentGetCount.size(); i++) {
             database.insertLineByArrayString(
                     "GeoPresentSave",
-                    new String[] { "id", "flag" },
-                    new String[] { String.valueOf(i + 1), flag }
+                    new String[] { "id", "count" },
+                    new String[] { String.valueOf(i + 1), String.valueOf(presentGetCount.get(i)) }
             );
         }
 
@@ -82,11 +77,14 @@ public class GeoPresentSaver extends SaveManager {
     }
 
     @Override
+    //無限対応
     public void load() {
         List<Integer> id = database.getInt("GeoPresentSave", "id");
-        List<Boolean> flag = database.getBoolean("GeoPresentSave", "flag");
+        //List<Boolean> flag = database.getBoolean("GeoPresentSave", "flag");
+        List<Integer> count = database.getInt("GeoPresentSave", "count");
 
-        List<Boolean> alreadyPresentGet = new ArrayList<>();
+        //List<Boolean> alreadyPresentGet = new ArrayList<>();
+        /*
         for (int i = 0; i < id.size(); i++) {
             if (id.get(i) > alreadyPresentGet.size()) {
                 int beforeSize = alreadyPresentGet.size();
@@ -96,7 +94,9 @@ public class GeoPresentSaver extends SaveManager {
             }
             alreadyPresentGet.set(id.get(i) - 1, flag.get(i));
         }
-        geoPresentManager.setAlreadyPresentGetFlags(alreadyPresentGet);
+        */
+
+        geoPresentManager.setPresentGetCounts(count);
 
         geoPresentManager.setScores(
                 new int[] {

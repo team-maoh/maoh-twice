@@ -94,6 +94,7 @@ public class ItemShopAdmin {
     public void start() {
         expendItemInventry.init(userInterface, graphic, 1200, 100 , 1600, 600,10);
         geoInventry.init(userInterface, graphic, 1200, 100 , 1600, 600,10);
+        moneyTextBoxUpdate();
     }
 
 

@@ -81,7 +81,7 @@ public class GeoSlotAdminManager {
 
     public void start() {
         //activeGeoSlotAdmin.start();
-        initStatusTextBox();
+        statusTextBoxUpdate();
         geoInventry.init(userInterface,graphic,1200, 100, 1600, 700, 10);
     }
 

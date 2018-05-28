@@ -78,7 +78,9 @@ public class GeoPresentManager {
     int specialScore;
     int sumScore;
 
-    List<Boolean> alreadyPresentGetFlags = new ArrayList<>();
+    //List<Boolean> alreadyPresentGetFlags = new ArrayList<>();
+    List<Integer> presentGetCounts = new ArrayList<>();
+    //[0] id = 1, [1] id=2, であることに注意
 
     InventryS geoInventry;
     InventryS expendItemInventry;
@@ -116,6 +118,7 @@ public class GeoPresentManager {
 
     public void start() {
         geoInventry.init(userInterface, graphic, 1200, 100 , 1600, 600,10);
+        scoreTextBoxUpdate();
     }
 
     private void initPresentTextBox() {
@@ -188,6 +191,7 @@ public class GeoPresentManager {
 
 
     private void scoreTextBoxUpdate() {
+        textBoxAdmin.resetTextBox(scoreTextBoxID);
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "献上ポイント");
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "\n");
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "HP " + hpScore);
@@ -223,7 +227,7 @@ public class GeoPresentManager {
     //プレゼント処理まとめ
     public void presentAndCheck(GeoObjectData geoObjectData) {
         presentGeoObject(geoObjectData);
-        presentToInventry(getNewPresentCheckFlags(getCheckFlag()));
+        presentToInventry(getCheckFlag());
     }
 
     private void presentGeoObject(GeoObjectData geoObjectData) {
@@ -242,42 +246,49 @@ public class GeoPresentManager {
         geoInventry.deleteItemData(holdGeoObbjectData.getName());
         holdGeoObbjectData = null;
 
+        textBoxAdmin.resetTextBox(messageBoxID);
         textBoxAdmin.bookingDrawText(messageBoxID, "ありがたくいただくとするわ");
         textBoxAdmin.bookingDrawText(messageBoxID, "MOP");
         textBoxAdmin.updateText(messageBoxID);
     }
 
-    //プレゼントリストのDBをチェックして、どのプレゼントの取得条件を満たしているかを返す
-    private List<Boolean> getCheckFlag() {
-        List<Boolean> checkFlag = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            checkFlag.add(false);
-        }
+    //プレゼントリストのDBをチェックして、プレゼントを受け取るIDを返す。過去に受け取った回数なども考慮。
+    private List<Integer> getCheckFlag() {
+        List<Integer> newPresentNumber = new ArrayList<Integer>();
 
-        List<Integer> id = database.getInt(presentListTableName, "id");
         List<Integer> hp = database.getInt(presentListTableName, "hp");
         List<Integer> attack = database.getInt(presentListTableName, "attack");
         List<Integer> defence = database.getInt(presentListTableName, "defence");
         List<Integer> luck = database.getInt(presentListTableName, "luck");
         List<Integer> special = database.getInt(presentListTableName, "special");
         List<Integer> sum = database.getInt(presentListTableName, "sum");
+        List<Boolean> infinityFlag = database.getBoolean(presentListTableName, "infinityFlag");
 
-        for(int i = 0; i < size; i++) {
-            if (
-                    hpScore >= hp.get(i) &&
-                    attackScore >= attack.get(i) &&
-                    defenceScore >= defence.get(i) &&
-                    luckScore >= luck.get(i) &&
-                    specialScore >= special.get(i) &&
-                    sumScore >= sum.get(i)
-                    ) {
-                    checkFlag.set(id.get(i) - 1, true);
+        boolean flag = true;
+        int j = 0;
+        while(flag) {
+            flag = false;
+            for (int i = 0; i < size; i++) {
+                if (
+                                hpScore >= hp.get(i) * Math.pow(2, presentGetCounts.get(i) + j) &&
+                                attackScore >= attack.get(i) * Math.pow(2, presentGetCounts.get(i) + j) &&
+                                defenceScore >= defence.get(i) * Math.pow(2, presentGetCounts.get(i) + j) &&
+                                luckScore >= luck.get(i) * Math.pow(2, presentGetCounts.get(i) + j) &&
+                                specialScore >= special.get(i) * Math.pow(2, presentGetCounts.get(i) + j) &&
+                                sumScore >= sum.get(i) * Math.pow(2, presentGetCounts.get(i) + j) &&
+                                (infinityFlag.get(i) || (!infinityFlag.get(i) && (presentGetCounts.get(i) + j) == 0))
+                        ) {
+                    newPresentNumber.add(i);
+                    flag = true;
+                }
             }
+            j++;
         }
-        return checkFlag;
+        return newPresentNumber;
     }
 
     //まだ入手していない且つ入手条件を満たしているPresentのリストを返す
+    /*
     private List<Integer> getNewPresentCheckFlags(List<Boolean> checkFlag) {
         List<Integer> newPresentNumber = new ArrayList<Integer>();
         String tableName;
@@ -292,6 +303,8 @@ public class GeoPresentManager {
         }
         return newPresentNumber;
     }
+    */
+
 
     //入手するプレゼント処理
     private void presentToInventry(List<Integer> newPresentNumber) {
@@ -306,40 +319,25 @@ public class GeoPresentManager {
         String presentName;
 
         for(int i = 0; i < newPresentNumber.size();i++) {
-            w_script = "id = " + newPresentNumber.get(i);
+            w_script = "id = " + (newPresentNumber.get(i) + 1);
             tableName = database.getOneString(presentListTableName, "table_name", w_script);
             presentName = database.getOneString(presentListTableName, "present_name", w_script);
 
             if (tableName.equals("GeoObject")) {
                 w_script = "name = " + MyDatabase.s_quo(presentName);
 
-                /*
-                GeoObjectData bufGeoObjectData = new GeoObjectData(
-                        MyDatabase.s_quo(presentName),
-                       graphic.searchBitmap("DefenceGeo01"),//TODO ちゃんと検索。直す
-                        database.getOneInt(tableName, "hp", w_script),
-                        database.getOneInt(tableName, "attack", w_script),
-                        database.getOneInt(tableName, "defence", w_script),
-                        database.getOneInt(tableName, "luck", w_script),
-                        database.getOneDouble(tableName, "hp_rate", w_script),
-                        database.getOneDouble(tableName, "attack_rate", w_script),
-                        database.getOneDouble(tableName, "defence_rate", w_script),
-                        database.getOneDouble(tableName, "luck_rate", w_script)
-                );
-                */
-
                 GeoObjectData bufGeoObjectData = GeoObjectDataCreater.getGeoObjectData(
                         new int[] {
-                                database.getOneInt(tableName, "hp", w_script),
-                                database.getOneInt(tableName, "attack", w_script),
-                                database.getOneInt(tableName, "defence", w_script),
-                                database.getOneInt(tableName, "luck", w_script),
+                                database.getOneInt(tableName, "hp", w_script) * (int)Math.pow(2, presentGetCounts.get(newPresentNumber.get(i))),
+                                database.getOneInt(tableName, "attack", w_script) * (int)Math.pow(2, presentGetCounts.get(newPresentNumber.get(i))),
+                                database.getOneInt(tableName, "defence", w_script) * (int)Math.pow(2, presentGetCounts.get(newPresentNumber.get(i))),
+                                database.getOneInt(tableName, "luck", w_script) * (int)Math.pow(2, presentGetCounts.get(newPresentNumber.get(i))),
                         },
                         new double[] {
-                                database.getOneDouble(tableName, "hp_rate", w_script),
-                                database.getOneDouble(tableName, "attack_rate", w_script),
-                                database.getOneDouble(tableName, "defence_rate", w_script),
-                                database.getOneDouble(tableName, "luck_rate", w_script)
+                                1.0 + (database.getOneDouble(tableName, "hp_rate", w_script) - 1.0) * Math.pow(2, presentGetCounts.get(newPresentNumber.get(i))),
+                                1.0 + (database.getOneDouble(tableName, "attack_rate", w_script) - 1.0) * Math.pow(2, presentGetCounts.get(newPresentNumber.get(i))),
+                                1.0 + (database.getOneDouble(tableName, "defence_rate", w_script) - 1.0) * Math.pow(2, presentGetCounts.get(newPresentNumber.get(i))),
+                                1.0 + (database.getOneDouble(tableName, "luck_rate", w_script) - 1.0) * Math.pow(2, presentGetCounts.get(newPresentNumber.get(i)))
                         }
                 );
 
@@ -348,7 +346,7 @@ public class GeoPresentManager {
             }
             if (tableName.equals("Money")) {
                 w_script = "name = " + MyDatabase.s_quo(presentName);
-                int bufMoney = database.getOneInt(tableName, "price", w_script);
+                int bufMoney = database.getOneInt(tableName, "price", w_script) * (int)Math.pow(2, presentGetCounts.get(newPresentNumber.get(i)));
                 playerStatus.addMoney(bufMoney);
                 name = bufMoney + "G";
             }
@@ -363,7 +361,8 @@ public class GeoPresentManager {
             System.out.println("takano:GeoPresentManager#presentToInventry : 献上により獲得 : " + name);
 
             //セーブのために格納
-            alreadyPresentGetFlags.set(newPresentNumber.get(i) - 1, true);
+            presentGetCounts.set(newPresentNumber.get(i), presentGetCounts.get(newPresentNumber.get(i)) + 1);
+            //alreadyPresentGetFlags.set(newPresentNumber.get(i) - 1, true);
         }
         //セーブ
         geoPresentSaver.save();
@@ -403,7 +402,6 @@ public class GeoPresentManager {
     public void update() {
         geoInventryUpdate();
         presentSelectUpdate();
-        scoreTextBoxUpdate();
         backPlateGroup.update();
 
         //TODO TextBoxの一括ではないupdate
@@ -444,16 +442,28 @@ public class GeoPresentManager {
     }
 
 
+    /*
     public void setAlreadyPresentGetFlags(List<Boolean> _alreadyPresentGetFlags) {
         alreadyPresentGetFlags = _alreadyPresentGetFlags;
     }
     public List<Boolean> getAlreadyPresentGetFlags() {
         return alreadyPresentGetFlags;
     }
+    */
+
+    public void setPresentGetCounts(List<Integer> temp) {
+        presentGetCounts = temp;
+
+    }
+    public List<Integer> getPresentGetCounts() {
+        return presentGetCounts;
+    }
+
 
     public int getPresentListSize() {
         return size;
     }
+
 
     public Integer[] getScores() {
         return new Integer[] {
@@ -476,7 +486,7 @@ public class GeoPresentManager {
 
     public void presentTextBoxUpdate() {
         textBoxAdmin.setTextBoxExists(presentTextBoxID, true);
-
+        textBoxAdmin.resetTextBox(presentTextBoxID);
         textBoxAdmin.bookingDrawText(presentTextBoxID, "ジオ名 : ", presentTextPaint);
         textBoxAdmin.bookingDrawText(presentTextBoxID, holdGeoObbjectData.getName(), presentTextPaint);
         textBoxAdmin.bookingDrawText(presentTextBoxID, "\n", presentTextPaint);
