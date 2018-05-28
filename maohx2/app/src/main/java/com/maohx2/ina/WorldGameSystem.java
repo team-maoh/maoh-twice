@@ -262,6 +262,7 @@ public class WorldGameSystem {
                 geoSlotAdminManager.update();
                 break;
             case SHOP_INIT:
+                itemShopAdmin.start();
                 backGround = graphic.searchBitmap("City");
                 worldModeAdmin.setMode(WORLD_MODE.SHOP);
             case SHOP:
@@ -280,12 +281,14 @@ public class WorldGameSystem {
                 backPlateGroup.update();
                 break;
             case PRESENT_INIT:
+                geoPresentManager.start();
                 backGround = graphic.searchBitmap("firstBackground");//TODO 仮
                 worldModeAdmin.setMode(WORLD_MODE.PRESENT);
             case PRESENT:
                 geoPresentManager.update();
                 break;
             case SELL_INIT:
+                itemSell.start();
                 backGround = graphic.searchBitmap("City");
                 worldModeAdmin.setMode(WORLD_MODE.SELL);
             case SELL:

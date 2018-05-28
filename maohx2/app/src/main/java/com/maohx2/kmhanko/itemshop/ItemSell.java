@@ -81,12 +81,15 @@ public class ItemSell {
         initSellItemInventry();
         initSellConformTextBox();
         initsellEnterPlate();
-        initInventrys();
         initUIs();
         initSwitchPlate();
     }
 
     //**** 処理関係
+
+    public void start() {
+        initInventrys();
+    }
 
     public void initSellItemInventry() {
         sellItemInventry = new Inventry();

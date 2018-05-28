@@ -114,6 +114,10 @@ public class GeoPresentManager {
 
     }
 
+    public void start() {
+        geoInventry.init(userInterface, graphic, 1200, 100 , 1600, 600,10);
+    }
+
     private void initPresentTextBox() {
         presentTextBoxID = textBoxAdmin.createTextBox(SELECT_WINDOW.MESS_LEFT, SELECT_WINDOW.MESS_UP, SELECT_WINDOW.MESS_RIGHT, SELECT_WINDOW.MESS_BOTTOM, Constants.SELECT_WINDOW.MESS_ROW);
         textBoxAdmin.setTextBoxUpdateTextByTouching(presentTextBoxID, false);

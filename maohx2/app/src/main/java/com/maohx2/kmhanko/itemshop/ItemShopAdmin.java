@@ -91,6 +91,12 @@ public class ItemShopAdmin {
         initTextBox();
     }
 
+    public void start() {
+        expendItemInventry.init(userInterface, graphic, 1200, 100 , 1600, 600,10);
+        geoInventry.init(userInterface, graphic, 1200, 100 , 1600, 600,10);
+    }
+
+
     public void makeItemShop(ITEM_KIND _itemKind, String _tableName) {
         boolean itemKindFlag = false;
 
