@@ -121,20 +121,35 @@ public class BattleBaseUnitData {
     // *** setter & getter ***
     public int[] getStatus(int repeat_count) {
         status[ATTACK_FRAME.ordinal()] = dbStatus[DbStatusID.AttackFlame.ordinal()];
-        status[HP.ordinal()] = (int) (dbStatus[DbStatusID.InitialHP.ordinal()] + (dbStatus[DbStatusID.DeltaHP.ordinal()] * Math.pow(2, repeat_count)));
-        status[ATTACK.ordinal()] = (int)(dbStatus[DbStatusID.InitialAttack.ordinal()] + dbStatus[DbStatusID.DeltaAttack.ordinal()] * Math.pow(2,repeat_count));
-        status[DEFENSE.ordinal()] = (int)(dbStatus[DbStatusID.InitialDefence.ordinal()] + dbStatus[DbStatusID.DeltaDefence.ordinal()] * Math.pow(2,repeat_count));
-        status[LUCK.ordinal()] = (int)(dbStatus[DbStatusID.InitialLuck.ordinal()] + dbStatus[DbStatusID.DeltaLuck.ordinal()] * Math.pow(2,repeat_count));
-        status[SPEED.ordinal()] = (int)(dbStatus[DbStatusID.InitialSpeed.ordinal()] + dbStatus[DbStatusID.DeltaSpeed.ordinal()] * Math.pow(2,repeat_count));
+        if (repeat_count <= 0) {
+            status[HP.ordinal()] = (int) (dbStatus[DbStatusID.InitialHP.ordinal()]);
+            status[ATTACK.ordinal()] = (int) (dbStatus[DbStatusID.InitialAttack.ordinal()]);
+            status[DEFENSE.ordinal()] = (int) (dbStatus[DbStatusID.InitialDefence.ordinal()]);
+            status[LUCK.ordinal()] = (int) (dbStatus[DbStatusID.InitialLuck.ordinal()]);
+            status[SPEED.ordinal()] = (int) (dbStatus[DbStatusID.InitialSpeed.ordinal()]);
+        } else {
+            status[HP.ordinal()] = (int) (dbStatus[DbStatusID.InitialHP.ordinal()] + (dbStatus[DbStatusID.DeltaHP.ordinal()] * Math.pow(2, repeat_count)));
+            status[ATTACK.ordinal()] = (int) (dbStatus[DbStatusID.InitialAttack.ordinal()] + dbStatus[DbStatusID.DeltaAttack.ordinal()] * Math.pow(2, repeat_count));
+            status[DEFENSE.ordinal()] = (int) (dbStatus[DbStatusID.InitialDefence.ordinal()] + dbStatus[DbStatusID.DeltaDefence.ordinal()] * Math.pow(2, repeat_count));
+            status[LUCK.ordinal()] = (int) (dbStatus[DbStatusID.InitialLuck.ordinal()] + dbStatus[DbStatusID.DeltaLuck.ordinal()] * Math.pow(2, repeat_count));
+            status[SPEED.ordinal()] = (int) (dbStatus[DbStatusID.InitialSpeed.ordinal()] + dbStatus[DbStatusID.DeltaSpeed.ordinal()] * Math.pow(2, repeat_count));
+        }
         return status;
     }
 
     //プレイヤーの成長するステータス量を、initialX + deltaX * 2^repeat_countで算出する関数
     public int[] getBonusStatus(int repeat_count) {
-        bonus_status[BONUS_HP.ordinal()] = (int) (dbStatus[DbStatusID.InitialBonusHP.ordinal()] + (dbStatus[DbStatusID.DeltaBonusHP.ordinal()] * Math.pow(2, repeat_count)));
-        bonus_status[BONUS_ATTACK.ordinal()] = (int)(dbStatus[DbStatusID.InitialBonusAttack.ordinal()] + dbStatus[DbStatusID.DeltaBonusAttack.ordinal()] * Math.pow(2,repeat_count));
-        bonus_status[BONUS_DEFENSE.ordinal()] = (int)(dbStatus[DbStatusID.InitialBonusDefence.ordinal()] + dbStatus[DbStatusID.DeltaBonusDefence.ordinal()] * Math.pow(2,repeat_count));
-        bonus_status[BONUS_SPEED.ordinal()] = (int)(dbStatus[DbStatusID.InitialBonusSpeed.ordinal()] + dbStatus[DbStatusID.DeltaBonusSpeed.ordinal()] * Math.pow(2,repeat_count));
+        if (repeat_count <= 0) {
+            bonus_status[BONUS_HP.ordinal()] = (int) (dbStatus[DbStatusID.InitialBonusHP.ordinal()]);
+            bonus_status[BONUS_ATTACK.ordinal()] = (int) (dbStatus[DbStatusID.InitialBonusAttack.ordinal()]);
+            bonus_status[BONUS_DEFENSE.ordinal()] = (int) (dbStatus[DbStatusID.InitialBonusDefence.ordinal()]);
+            bonus_status[BONUS_SPEED.ordinal()] = (int) (dbStatus[DbStatusID.InitialBonusSpeed.ordinal()]);
+        } else {
+            bonus_status[BONUS_HP.ordinal()] = (int) (dbStatus[DbStatusID.InitialBonusHP.ordinal()] + (dbStatus[DbStatusID.DeltaBonusHP.ordinal()] * Math.pow(2, repeat_count)));
+            bonus_status[BONUS_ATTACK.ordinal()] = (int) (dbStatus[DbStatusID.InitialBonusAttack.ordinal()] + dbStatus[DbStatusID.DeltaBonusAttack.ordinal()] * Math.pow(2, repeat_count));
+            bonus_status[BONUS_DEFENSE.ordinal()] = (int) (dbStatus[DbStatusID.InitialBonusDefence.ordinal()] + dbStatus[DbStatusID.DeltaBonusDefence.ordinal()] * Math.pow(2, repeat_count));
+            bonus_status[BONUS_SPEED.ordinal()] = (int) (dbStatus[DbStatusID.InitialBonusSpeed.ordinal()] + dbStatus[DbStatusID.DeltaBonusSpeed.ordinal()] * Math.pow(2, repeat_count));
+        }
         return bonus_status;
     }
 
