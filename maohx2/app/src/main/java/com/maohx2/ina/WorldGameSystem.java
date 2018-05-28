@@ -158,7 +158,7 @@ public class WorldGameSystem {
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin);
 
 
-        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, activityChange, soundAdmin, worldActivity, map_status);
+        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, activityChange, soundAdmin, worldActivity, map_status,map_status_saver);
 
         geoSlotAdminManager.loadGeoSlot();
 
@@ -244,6 +244,7 @@ public class WorldGameSystem {
             case DUNGEON_SELECT_INIT:
                 backGround = graphic.searchBitmap("firstBackground");
                 worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT);
+                dungeonSelectManager.start();
             case DUNGEON_SELECT:
                 dungeonSelectManager.update();
                 break;

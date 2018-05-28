@@ -2,6 +2,7 @@ package com.maohx2.kmhanko.dungeonselect;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.horie.map.MapStatus;
+import com.maohx2.horie.map.MapStatusSaver;
 import com.maohx2.ina.ActivityChange;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Constants.SELECT_WINDOW;
@@ -117,8 +118,9 @@ public class DungeonSelectManager {
     InventryS equipmentInventry;
 
     MapStatus mapStatus;
+    MapStatusSaver mapStatusSaver;
 
-    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, ActivityChange _activityChange, SoundAdmin _soundAdmin, WorldActivity _worldActivity, MapStatus _mapStatus) {
+    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, ActivityChange _activityChange, SoundAdmin _soundAdmin, WorldActivity _worldActivity, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver) {
         graphic = _graphic;
         userInterface = _userInterface;
         textBoxAdmin = _textBoxAdmin;
@@ -130,6 +132,7 @@ public class DungeonSelectManager {
         //playerStatus = _playerStatus;
         soundAdmin = _soundAdmin;
         mapStatus = _mapStatus;
+        mapStatusSaver = _mapStatusSaver;
 
         worldActivity = _worldActivity;
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
@@ -150,6 +153,34 @@ public class DungeonSelectManager {
         initUIs();
 
         //TODO : Loopselect
+    }
+
+    public void start() {
+        //前ダンジョンクリアかつ魔王討伐回数＝Clear+1なら、Clearを+1
+        boolean flag = true;
+        for (int i = 0; i < Constants.STAGE_NUM; i++) {
+            if (mapStatus.getMapClearStatus(i) == 0) {
+                flag = false;
+            }
+        }
+        if (playerStatus.getClearCount() > playerStatus.getMaohWinCount() - 1) {
+            flag = false;
+        }
+
+        if (flag) {
+            playerStatus.addClearCount();
+            playerStatus.setNowClearCount(playerStatus.getClearCount());
+
+            enterTextBoxUpdateCountUp();
+            OkButtonGroup.setUpdateFlag(true);
+            OkButtonGroup.setDrawFlag(true);
+
+            for (int i = 0; i < Constants.STAGE_NUM; i++) {
+                mapStatus.setMapClearStatus(0,i);
+                mapStatusSaver.save();
+            }
+            playerStatus.save();
+        }
     }
 
     private void setDatabase(MyDatabaseAdmin databaseAdmin) {
@@ -332,7 +363,7 @@ public class DungeonSelectManager {
                             public void callBackEvent() {
                                 //-ボタンが押された時の処理
                                 soundAdmin.play("enter00");
-                                playerStatus.subClearCount();
+                                playerStatus.subNowClearCountLoop();
                                 loopCountTextBoxUpdate();
                                 mapIconPlateListUpdate();
                             }
@@ -349,7 +380,7 @@ public class DungeonSelectManager {
                             public void callBackEvent() {
                                 //-ボタンが押された時の処理
                                 soundAdmin.play("enter00");
-                                playerStatus.addClearCount();
+                                playerStatus.addNowClearCountLoop();
                                 loopCountTextBoxUpdate();
                                 mapIconPlateListUpdate();
                             }
@@ -621,6 +652,23 @@ public class DungeonSelectManager {
 
         textBoxAdmin.updateText(enterTextBoxID);
     }
+
+    public void enterTextBoxUpdateCountUp() {
+        textBoxAdmin.setTextBoxExists(enterTextBoxID, true);
+        textBoxAdmin.resetTextBox(enterTextBoxID);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "全ダンジョンを制覇した！", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "しかし、新たな魔王が現れた！", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "戦いはまだ終わらない…　", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "ループ回数：", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, String.valueOf(playerStatus.getClearCount()), enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "MOP", enterTextPaint);
+
+        textBoxAdmin.updateText(enterTextBoxID);
+    }
+
 
     public void enterTextBoxUpdateDungeon() {
         MapIconPlate tmp = (MapIconPlate)mapIconPlateGroup.getPlate(focusDungeonButtonID);

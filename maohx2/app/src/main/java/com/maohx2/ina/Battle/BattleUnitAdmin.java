@@ -928,7 +928,10 @@ public class BattleUnitAdmin {
                     dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
                     break;
                 case MAOH:
-                    playerStatus.addMaohWinCount();
+                    if (playerStatus.getClearCount() == playerStatus.getNowClearCount()) {
+                        playerStatus.setMaohWinCount(playerStatus.getClearCount() + 1);
+                        playerStatus.save();
+                    }
                     dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TO_WORLD);
                     break;
                 case OPENING:

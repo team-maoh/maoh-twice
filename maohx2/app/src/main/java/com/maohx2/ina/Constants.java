@@ -44,7 +44,6 @@ public final class Constants {
             MAOH,
             OPENING,
             GOKI,
-            DUNGEON_KIND_NUM
         }
     }
 
