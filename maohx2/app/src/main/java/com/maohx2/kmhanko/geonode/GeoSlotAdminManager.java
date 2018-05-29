@@ -40,6 +40,21 @@ import com.maohx2.kmhanko.sound.SoundAdmin;
 ・各ダンジョンアイコンをInventryの代わりに設置し、ActiveGeoSlotAdminを切り替えることができる(魔王を含まない)
 */
 
+/*
+採掘画面の岩をでかく
+
+ */
+
+/*
+ステータス表示
+
+・アイコンを表示する
+・HP : 0/0　数字の列を同じにする
+TextBoxを使用するのをやめる
+
+
+ */
+
 public class GeoSlotAdminManager {
     static final String DB_NAME_GEOSLOTMAP = "GeoSlotMapDB";
     static final String DB_ASSET_GEOSLOTMAP = "GeoSlotMapDB.db";

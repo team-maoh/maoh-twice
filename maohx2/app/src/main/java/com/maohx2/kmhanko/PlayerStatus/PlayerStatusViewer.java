@@ -1,34 +1,62 @@
-/*
 package com.maohx2.kmhanko.PlayerStatus;
 
-import com.maohx2.fuusya.TextBox.TextBoxAdmin;
-*/
+
+import com.maohx2.ina.Constants;
+import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.Draw.Graphic;
+
 /**
  * Created by user on 2018/04/23.
  */
-/*
+
 public class PlayerStatusViewer {
 
     int statusTextBoxID;
 
+    boolean isExist;
+
+    int posX1;
+    int posX2;
+    int posY1;
+    int posY2;
+
     PlayerStatus playerStatus;
-    TextBoxAdmin textBoxAdmin;
+    Graphic graphic;
 
-    public PlayerStatusViewer(PlayerStatus _playerStatus, TextBoxAdmin _textBoxAdmin) {
+    public PlayerStatusViewer(Graphic _graphic, PlayerStatus _playerStatus) {
         playerStatus = _playerStatus;
-        textBoxAdmin = _textBoxAdmin;
-
+        graphic = _graphic;
         init();
     }
 
     public void init() {
-        statusTextBoxID = textBoxAdmin.createTextBox(0,600,300,900,5);
-        textBoxAdmin.setTextBoxUpdateTextByTouching(statusTextBoxID, false);
-        textBoxAdmin.setTextBoxExists(statusTextBoxID, false);
-        statusTextBoxUpdate();
+        posX1 = 0;
+        posX2 = 400;
+        posY1 = 500;
+        posY2 = 900;
+    }
+
+    public void setPosition(int x1, int y1, int x2, int y2) {
+        posX1 = x1;
+        posX2 = x2;
+        posY1 = y1;
+        posY2 = y2;
+    }
+
+    public void update() {
+        if (!isExist) {
+            return;
+        }
+    }
+
+    public void draw() {
+        if (!isExist) {
+            return;
+        }
     }
 
     public void statusTextBoxUpdate() {
+        /*
         textBoxAdmin.bookingDrawText(statusTextBoxID, "Status");
         textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
         textBoxAdmin.bookingDrawText(statusTextBoxID, "HP " + playerStatus.getHP());
@@ -40,10 +68,14 @@ public class PlayerStatusViewer {
         textBoxAdmin.bookingDrawText(statusTextBoxID, "Luck " + playerStatus.getLuck());
         textBoxAdmin.bookingDrawText(statusTextBoxID, "MOP");
         textBoxAdmin.updateText(statusTextBoxID);
+        */
     }
 
-    public void setExist(boolean f) {
-        textBoxAdmin.setTextBoxExists(statusTextBoxID, f);
+    public void Existis(boolean f) {
+        isExist = f;
+    }
+
+    public boolean isExist() {
+        return isExist;
     }
 }
-*/

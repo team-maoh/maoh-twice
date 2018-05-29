@@ -321,8 +321,10 @@ public class BattleUnitAdmin {
     public void spawnRock() {
         //GeoMining画面のスポーン用。岩を出現させる
 
+        Random r = new Random();
+
         //岩に対応する敵を決定し、その対応する敵データからHPを決める
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < r.nextInt(3) + 1; i++) {
             setRockUnitData(battleUnitDataAdmin.getRandomBattleBaseUnitData());
         }
     }
