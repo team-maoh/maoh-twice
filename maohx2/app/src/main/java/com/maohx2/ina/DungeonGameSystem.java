@@ -114,19 +114,10 @@ public class DungeonGameSystem {
         musicAdmin = globalData.getMusicAdmin();
 
         effectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin);
-        int battle_effect_ID[] = new int[11];
-        battle_effect_ID[0] = effectAdmin.createEffect("axe_effect", "axe_effect", 3, 5);
-        battle_effect_ID[1] = effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3);
-        battle_effect_ID[2] = effectAdmin.createEffect("bow_effect", "bow_effect", 9, 1);
-        battle_effect_ID[3] = effectAdmin.createEffect("cane_effect", "cane_effect", 14, 1);
-        battle_effect_ID[4] = effectAdmin.createEffect("gun_effect", "gun_effect", 5, 2);
-        battle_effect_ID[5] = effectAdmin.createEffect("knuckle_effect", "knuckle_effect", 6, 3);
-        battle_effect_ID[6] = effectAdmin.createEffect("mace_effect", "mace_effect", 5, 1);
-        battle_effect_ID[7] = effectAdmin.createEffect("musical_instrument_effect", "musical_instrument_effect", 1, 14);
-        battle_effect_ID[8] = effectAdmin.createEffect("spear_effect", "spear_effect", 9, 1);
-        battle_effect_ID[9] = effectAdmin.createEffect("sword_effect", "sword_effect", 9, 1);
-        battle_effect_ID[10] = effectAdmin.createEffect("whip_effect", "whip_effect", 5, 5);
-        battle_unit_admin.getEffectID(battle_effect_ID);
+        battle_unit_admin.getEffectAdmin(effectAdmin);
+
+//        battle_unit_admin.getEffectAdmin(effectAdmin);
+//        battle_unit_admin.getEffectID(battle_effect_ID);
 
         //repeat_count = _repeat_count;
 
@@ -358,6 +349,7 @@ public class DungeonGameSystem {
 
         text_box_admin.update();
         //musicAdmin.update();
+        effectAdmin.update();
     }
 
     public void draw() {
@@ -399,12 +391,14 @@ public class DungeonGameSystem {
         }
 
         text_box_admin.draw();
+        effectAdmin.draw();
         graphic.draw();
 
         if (resetBossImage) {
             resetBossImage = false;
             map_object_admin.setBossBitmap("ボス");
         }
+
     }
 
     public void setIsDisplayingMenu(boolean _is_displaying_menu){

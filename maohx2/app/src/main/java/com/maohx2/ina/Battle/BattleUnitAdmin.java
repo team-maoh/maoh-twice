@@ -41,6 +41,7 @@ import static com.maohx2.ina.Constants.DungeonKind.DUNGEON_KIND;
 
 import com.maohx2.ina.Battle.*;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+import com.maohx2.kmhanko.effect.Effect;
 import com.maohx2.kmhanko.effect.EffectAdmin;
 import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 
@@ -102,7 +103,7 @@ public class BattleUnitAdmin {
     int attack_count;
 
     int repeat_count;
-    int effect_ID[];
+    int battle_effect_ID;
 
     PlayerStatus playerStatus;
     MaohMenosStatus maohMenosStatus;
@@ -391,31 +392,40 @@ public class BattleUnitAdmin {
                                                 //todo:attackの計算
                                                 touch_markers[i].generate((int) touch_x, (int) touch_y, attack_equipment.getRadius(), battle_units[0].getAttack() + attack_equipment.getAttack(), attack_equipment.getDecayRate());
                                                 //エフェクト by Horie
-                                                int effect_id  = -1;
                                                 switch(attack_equipment.getEquipmentKind()) {
                                                     case AX:
-                                                        effect_id = effect_ID[0];
-                                                    case BARE:
-                                                        effect_id = effect_ID[1];
+                                                        battle_effect_ID = effectAdmin.createEffect("axe_effect", "axe_effect", 3, 5);
+                                                        break;
+//                                                    case BARE:
+//                                                        battle_effect_ID = effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3);
+//                                                        break;
                                                     case BOW:
-                                                        effect_id = effect_ID[2];
+                                                        battle_effect_ID = effectAdmin.createEffect("bow_effect", "bow_effect", 9, 1);
+                                                        break;
                                                     case WAND:
-                                                        effect_id = effect_ID[3];
+                                                        battle_effect_ID = effectAdmin.createEffect("cane_effect", "cane_effect", 14, 1);
+                                                        break;
                                                     case GUN:
-                                                        effect_id = effect_ID[4];
+                                                        battle_effect_ID = effectAdmin.createEffect("gun_effect", "gun_effect", 5, 2);
+                                                        break;
                                                     case FIST:
-                                                        effect_id = effect_ID[5];
+                                                        battle_effect_ID = effectAdmin.createEffect("knuckle_effect", "knuckle_effect", 6, 3);
+                                                        break;
                                                     case CLUB:
-                                                        effect_id = effect_ID[6];
+                                                        battle_effect_ID = effectAdmin.createEffect("mace_effect", "mace_effect", 5, 1);
+                                                        break;
                                                     case MUSIC:
-                                                        effect_id = effect_ID[7];
+                                                        battle_effect_ID = effectAdmin.createEffect("musical_instrument_effect", "musical_instrument_effect", 1, 15);
+                                                        break;
                                                     case SPEAR:
-                                                        effect_id = effect_ID[8];
+                                                        battle_effect_ID = effectAdmin.createEffect("spear_effect", "spear_effect", 9, 1);
+                                                        break;
                                                     case SWORD:
-                                                        effect_id = effect_ID[9];
+                                                        battle_effect_ID = effectAdmin.createEffect("sword_effect", "sword_effect", 9, 1);
+                                                        break;
                                                     case WHIP:
-                                                        effect_id = effect_ID[10];
-
+                                                        battle_effect_ID = effectAdmin.createEffect("whip_effect", "whip_effect", 5, 5);
+                                                        break;
 //                                                    case MONSTER:
 //                                                        effect_id = effect_ID[1];
 //                                                    case SHIELD:
@@ -423,8 +433,9 @@ public class BattleUnitAdmin {
 //                                                    case NUM:
 //                                                        effect_id = effect_ID[1];
                                                 }
-                                                effectAdmin.getEffect(effect_id).setPosition((int)touch_x, (int)touch_y);
-                                                effectAdmin.getEffect(effect_id).start();
+
+                                                effectAdmin.getEffect(battle_effect_ID).setPosition((int)touch_x, (int)touch_y);
+                                                effectAdmin.getEffect(battle_effect_ID).start();
 
                                                 break;
                                             }
@@ -860,12 +871,8 @@ public class BattleUnitAdmin {
     public BattleUnitAdmin() {
     }
 
-    //by Horie
-    public void getEffectID(int _id[]){
-        effect_ID = new int[_id.length];
-        for(int i = 0;i < _id.length;i++){
-            effect_ID[i] = _id[i];
-        }
+    public void getEffectAdmin(EffectAdmin _effect_admin){
+        effectAdmin = _effect_admin;
     }
 
     // *** リザルトメッセージ関係 ***
