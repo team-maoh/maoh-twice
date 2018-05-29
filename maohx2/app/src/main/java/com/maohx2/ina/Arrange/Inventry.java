@@ -4,6 +4,7 @@ import android.graphics.Paint;
 import android.provider.Settings;
 
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Draw.ImageContext;
 import com.maohx2.ina.ItemData.EquipmentItemData;
@@ -33,8 +34,6 @@ import java.util.List;
 public class Inventry {
 
     PlateGroup<BoxInventryPlate> operate_inventry_list_box;
-    BoxInventryPlate[] inventry_item_plates = new BoxInventryPlate[10];
-    int[][] position = new int[10][4];
     InventryData[] inventry_datas = new InventryData[INVENTRY_DATA_MAX];
     UserInterface user_interface;
     int contentNum;
@@ -52,6 +51,13 @@ public class Inventry {
 
     int page;
 
+    BoxInventryPlate[] inventry_item_plates;
+    int[][] position;
+
+    BitmapData[][] flameElement;
+    int width;
+    int height;
+
 
     public Inventry() {
 
@@ -67,6 +73,10 @@ public class Inventry {
         graphic = _graphic;
 
         paint = new Paint();
+
+        inventry_item_plates = new BoxInventryPlate[contentNum];
+        position = new int[contentNum][4];
+
 
         paint.setARGB(255, 0, 0, 0);
         paint.setTextSize(30);
@@ -89,7 +99,7 @@ public class Inventry {
         left_triangle = graphic.makeImageContext(graphic.searchBitmap("apple"), left, top + (10 * (bottom - top) / contentNum));
 
         leftTrianglePosition[0] = left;
-        leftTrianglePosition[1] = top + (10 * (bottom - top) / contentNum);
+        leftTrianglePosition[1] = bottom;
         leftTrianglePosition[2] = left + (right - left) / 2;
         leftTrianglePosition[3] = leftTrianglePosition[1] + 100;
 
@@ -99,13 +109,24 @@ public class Inventry {
         right_triangle = graphic.makeImageContext(graphic.searchBitmap("apple"), left + (right - left) / 2, top + (10 * (bottom - top) / contentNum));
 
         rightTrianglePosition[0] = left + (right - left) / 2;
-        rightTrianglePosition[1] = top + (10 * (bottom - top) / contentNum);
+        rightTrianglePosition[1] = bottom;
         rightTrianglePosition[2] = right;
         rightTrianglePosition[3] = rightTrianglePosition[1] + 100;
 
         rightPlate = new BoxImagePlate(graphic, user_interface, paint, UP_MOMENT, MOVE, rightTrianglePosition, right_triangle, right_triangle);
 
         page = 0;
+
+        flameElement = new BitmapData[3][3];
+
+        width = graphic.searchBitmap("ウィンドウ5_枠のみ").getWidth();
+        height = graphic.searchBitmap("ウィンドウ5_枠のみ").getHeight();
+
+        for(int i = 0; i <3; i++) {
+            for(int j = 0; j < 3; j++) {
+                flameElement[i][j] = graphic.processTrimmingBitmapData(graphic.searchBitmap("ウィンドウ5_枠のみ"), (int)((double)j*(double)width/3.0), (int)((double)i*(double)height/3.0), (int)((double)width/3.0), (int)((double)height/3.0));
+            }
+        }
     }
 
 
@@ -170,6 +191,20 @@ public class Inventry {
 
     public void draw() {
         operate_inventry_list_box.draw();
+
+        for (int i = 0; i < contentNum; i++) {
+            graphic.bookingDrawBitmapData(flameElement[0][0], position[i][0], position[i][1], 1.0f, 1.0f, 0, 254, true);
+            graphic.bookingDrawBitmapData(flameElement[1][0], position[i][0], position[i][1] + height / 3, 1.0f, 1.0f, 0, 254, true);
+            graphic.bookingDrawBitmapData(flameElement[2][0], position[i][0], position[i][3] - height / 3, 1.0f, 1.0f, 0, 254, true);
+
+            graphic.bookingDrawBitmapData(flameElement[0][1], position[i][0] + width / 3, position[i][1], ((float)(position[i][2]-position[i][0]-(int)((double)width*2.0/3.0)))/((float)width/3.0f), 1.0f, 0, 254, true);
+            graphic.bookingDrawBitmapData(flameElement[2][1], position[i][0] + width / 3, position[i][3] - height / 3, ((float)(position[i][2]-position[i][0]-(int)((double)width*2.0/3.0)))/((float)width/3.0f), 1.0f, 0, 254, true);
+
+            graphic.bookingDrawBitmapData(flameElement[0][2], position[i][2] - width / 3, position[i][1], 1.0f, 1.0f, 0, 254, true);
+            graphic.bookingDrawBitmapData(flameElement[1][2], position[i][2] - width / 3, position[i][1] + height / 3, 1.0f, 1.0f, 0, 254, true);
+            graphic.bookingDrawBitmapData(flameElement[2][2], position[i][2] - width / 3, position[i][3] - height / 3, 1.0f, 1.0f, 0, 254, true);
+        }
+
         leftPlate.drawCollisionRange();
         rightPlate.drawCollisionRange();
         rightPlate.draw();

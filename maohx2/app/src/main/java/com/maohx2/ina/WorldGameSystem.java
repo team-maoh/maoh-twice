@@ -209,7 +209,7 @@ public class WorldGameSystem {
         equipmentInventrySaver = globalData.getEquipmentInventrySaver();
         equipment_item_data_admin = new EquipmentItemDataAdmin(graphic, databaseAdmin);
 
-        palette_admin = new PaletteAdmin(world_user_interface, graphic, equipmentInventry, expendItemInventry, equipment_item_data_admin);
+        palette_admin = new PaletteAdmin(world_user_interface, graphic, equipmentInventry, expendItemInventry, equipment_item_data_admin, soundAdmin);
 
         backGround = graphic.searchBitmap("firstBackground");
 
@@ -269,8 +269,8 @@ public class WorldGameSystem {
             case EQUIP_INIT:
                 backGround = graphic.searchBitmap("firstBackground");//仮
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
-                equipmentInventry.init(world_user_interface, graphic,1000,100,1400,508, 10);
-                expendItemInventry.init(world_user_interface, graphic,200,100,600,508, 10);
+                equipmentInventry.init(world_user_interface, graphic, 800+20,100,1150+20,708, 7);
+                expendItemInventry.init(world_user_interface, graphic,400+20,100,750+20,708, 7);
 
             case EQUIP:
                 equipmentInventry.updata();
