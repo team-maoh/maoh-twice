@@ -436,6 +436,10 @@ public class GeoSlotAdmin {
         releasePlateGroup.setUpdateFlag(false);
     }
 
+    public GeoSlotAdminManager.MODE getMode() {
+        return geoSlotAdminManager.getMode();
+    }
+
     /*
     //InventryにGeoを加える
     public void addToInventry(GeoObjectData geoObjectData) {

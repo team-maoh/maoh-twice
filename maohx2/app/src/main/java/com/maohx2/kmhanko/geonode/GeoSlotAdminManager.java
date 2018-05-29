@@ -231,7 +231,7 @@ public class GeoSlotAdminManager {
     }
 
     public void draw() {
-        effectAdmin.draw();
+        //effectAdmin.draw();
         geoInventry.draw();
 
         if (activeGeoSlotAdmin != null) {
@@ -241,7 +241,7 @@ public class GeoSlotAdminManager {
     }
 
     public void drawInStatus() {
-        effectAdmin.draw();
+        //effectAdmin.draw();
         if (activeGeoSlotAdmin != null) {
             activeGeoSlotAdmin.drawInStatus();
         }
@@ -255,6 +255,7 @@ public class GeoSlotAdminManager {
             if (geoSlotAdmins.get(i) != null) {
                 if (geoSlotAdmins.get(i).getName().equals(name)) {
                     activeGeoSlotAdmin = geoSlotAdmins.get(i);
+                    activeGeoSlotAdmin.geoUpdate();
                     return;
                 }
             }

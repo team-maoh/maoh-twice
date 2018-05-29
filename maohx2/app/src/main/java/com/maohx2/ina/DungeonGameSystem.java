@@ -362,6 +362,7 @@ public class DungeonGameSystem {
         }
 
         text_box_admin.update();
+        effectAdmin.update();
         //musicAdmin.update();
     }
 
@@ -405,6 +406,7 @@ public class DungeonGameSystem {
         }
 
         text_box_admin.draw();
+        effectAdmin.draw();
         graphic.draw();
 
         if (resetBossImage) {

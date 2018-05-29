@@ -396,7 +396,7 @@ public class WorldGameSystem {
         */
 
         text_box_admin.draw();
-        //effectAdmin.draw();
+        effectAdmin.draw();
 
         graphic.draw();
     }
