@@ -121,7 +121,8 @@ public class DungeonGameSystem {
         musicAdmin = globalData.getMusicAdmin();
 
 
-        effectAdmin = new EffectAdmin(graphic, my_database_admin, sound_admin);
+        effectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin);
+        battle_unit_admin.getEffectAdmin(effectAdmin);
 
         //repeat_count = _repeat_count;
 
@@ -268,8 +269,8 @@ public class DungeonGameSystem {
         //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
 
 
-        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
-        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP_INIT);
+        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
+        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP_INIT);
     }
 
     public void saveMapSaveData() {
@@ -413,6 +414,7 @@ public class DungeonGameSystem {
             resetBossImage = false;
             map_object_admin.setBossBitmap("ボス");
         }
+
     }
 
     public void setIsDisplayingMenu(boolean _is_displaying_menu){
