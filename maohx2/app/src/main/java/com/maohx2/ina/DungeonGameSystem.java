@@ -30,7 +30,11 @@ import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatus;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.Saver.GeoSlotSaver;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
+import com.maohx2.kmhanko.effect.EffectAdmin;
+import com.maohx2.kmhanko.geonode.GeoSlotAdminManager;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.itemdata.MiningItemDataAdmin;
@@ -89,7 +93,12 @@ public class DungeonGameSystem {
     MusicAdmin musicAdmin;
     SoundAdmin soundAdmin;
 
+    GeoSlotSaver geoSlotSaver;
+    GeoSlotAdminManager geoSlotAdminManager;
+
     Constants.DungeonKind.DUNGEON_KIND dungeon_kind;
+
+    EffectAdmin effectAdmin;
 
     int repeat_count;
 
@@ -110,6 +119,9 @@ public class DungeonGameSystem {
 
         GlobalData globalData = (GlobalData)(dungeon_activity.getApplication());
         musicAdmin = globalData.getMusicAdmin();
+
+
+        effectAdmin = new EffectAdmin(graphic, my_database_admin, sound_admin);
 
         //repeat_count = _repeat_count;
 
@@ -243,6 +255,10 @@ public class DungeonGameSystem {
         backGround = graphic.searchBitmap("firstBackground");
 
 
+        geoSlotSaver = new GeoSlotSaver(my_database_admin, "GeoSlotSave", "GeoSlotSave.db", 1, "ns", graphic);
+        geoSlotAdminManager = new GeoSlotAdminManager(graphic, dungeon_user_interface, my_database_admin, text_box_admin, playerStatus, globalData.getGeoInventry(), geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin, dungeonModeManage);
+        geoSlotAdminManager.loadGeoSlot();
+
         //by kmhanko即座に魔王との戦闘画面へ
         if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH) {
             dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAOH_INIT);
@@ -252,7 +268,8 @@ public class DungeonGameSystem {
         //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
 
 
-        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
+        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
+        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP_INIT);
     }
 
     public void saveMapSaveData() {
@@ -334,7 +351,12 @@ public class DungeonGameSystem {
                 //palette_admin.update(false);
                 backPlateGroup.update();
                 break;
+            case GEO_MAP_INIT:
+                initBackPlate();
+                geoSlotAdminManager.start();
+                dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP);
             case GEO_MAP:
+                geoSlotAdminManager.updateInStatus();
                 break;
 
         }
@@ -377,6 +399,7 @@ public class DungeonGameSystem {
                 break;
 
             case GEO_MAP:
+                geoSlotAdminManager.drawInStatus();
                 break;
 
         }

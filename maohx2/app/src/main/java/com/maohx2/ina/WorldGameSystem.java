@@ -65,7 +65,7 @@ public class WorldGameSystem {
     Canvas canvas;
     TextBoxAdmin text_box_admin;
     //ListBoxAdmin list_box_admin;
-    GeoSlotAdmin geo_slot_admin;
+
     GeoSlotAdminManager geoSlotAdminManager;
     MyDatabaseAdmin databaseAdmin;
     Graphic graphic;
