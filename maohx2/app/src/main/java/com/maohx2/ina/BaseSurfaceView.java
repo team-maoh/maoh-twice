@@ -3,6 +3,7 @@ package com.maohx2.ina;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.AudioManager;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -52,6 +53,9 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         paint.setColor(Color.BLUE);
         global_data = (GlobalData) currentActivity.getApplication();
         activityChange = new ActivityChange(this, currentActivity);
+
+        //音量調整ボタンを使用できるようにする
+        currentActivity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 
 

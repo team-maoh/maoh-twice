@@ -154,12 +154,16 @@ public class PlayerStatus {
     public void setEquipmentInventryMaxNum(int x){  equipmentInventryMaxNum = x;}
 
     public void addClearCount() {
+        clearCount++;
+    }
+
+    public void addNowClearCountLoop() {
         nowClearCount++;
         if (nowClearCount > clearCount) {
             nowClearCount = 0;
         }
     }
-    public void subClearCount() {
+    public void subNowClearCountLoop() {
         nowClearCount--;
         if (nowClearCount < 0) {
             nowClearCount = clearCount;

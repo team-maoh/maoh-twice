@@ -14,6 +14,7 @@ import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Draw.ImageContext;
 import com.maohx2.ina.ItemData.EquipmentInventrySaver;
+import com.maohx2.ina.ItemData.EquipmentItemDataAdmin;
 import com.maohx2.ina.Text.ListBoxAdmin;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.BattleUserInterface;
@@ -112,6 +113,7 @@ public class WorldGameSystem {
 
 
     MusicAdmin musicAdmin;
+    EquipmentItemDataAdmin equipment_item_data_admin;
 
     public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
         graphic = _graphic;
@@ -156,7 +158,7 @@ public class WorldGameSystem {
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin);
 
 
-        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, activityChange, soundAdmin, worldActivity, map_status);
+        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, activityChange, soundAdmin, worldActivity, map_status,map_status_saver);
 
         geoSlotAdminManager.loadGeoSlot();
 
@@ -205,8 +207,9 @@ public class WorldGameSystem {
         //palette_admin = new PaletteAdmin(world_user_interface, graphic);
         equipmentInventry = globalData.getEquipmentInventry();
         equipmentInventrySaver = globalData.getEquipmentInventrySaver();
+        equipment_item_data_admin = new EquipmentItemDataAdmin(graphic, databaseAdmin);
 
-        palette_admin = new PaletteAdmin(world_user_interface, graphic, equipmentInventry, expendItemInventry);
+        palette_admin = new PaletteAdmin(world_user_interface, graphic, equipmentInventry, expendItemInventry, equipment_item_data_admin);
 
         backGround = graphic.searchBitmap("firstBackground");
 
@@ -241,6 +244,7 @@ public class WorldGameSystem {
             case DUNGEON_SELECT_INIT:
                 backGround = graphic.searchBitmap("firstBackground");
                 worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT);
+                dungeonSelectManager.start();
             case DUNGEON_SELECT:
                 dungeonSelectManager.update();
                 break;
@@ -258,6 +262,7 @@ public class WorldGameSystem {
                 geoSlotAdminManager.update();
                 break;
             case SHOP_INIT:
+                itemShopAdmin.start();
                 backGround = graphic.searchBitmap("City");
                 worldModeAdmin.setMode(WORLD_MODE.SHOP);
             case SHOP:
@@ -276,12 +281,14 @@ public class WorldGameSystem {
                 backPlateGroup.update();
                 break;
             case PRESENT_INIT:
+                geoPresentManager.start();
                 backGround = graphic.searchBitmap("firstBackground");//TODO 仮
                 worldModeAdmin.setMode(WORLD_MODE.PRESENT);
             case PRESENT:
                 geoPresentManager.update();
                 break;
             case SELL_INIT:
+                itemSell.start();
                 backGround = graphic.searchBitmap("City");
                 worldModeAdmin.setMode(WORLD_MODE.SELL);
             case SELL:

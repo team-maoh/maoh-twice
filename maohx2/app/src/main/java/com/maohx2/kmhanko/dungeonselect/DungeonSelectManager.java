@@ -2,6 +2,7 @@ package com.maohx2.kmhanko.dungeonselect;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.horie.map.MapStatus;
+import com.maohx2.horie.map.MapStatusSaver;
 import com.maohx2.ina.ActivityChange;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Constants.SELECT_WINDOW;
@@ -117,8 +118,9 @@ public class DungeonSelectManager {
     InventryS equipmentInventry;
 
     MapStatus mapStatus;
+    MapStatusSaver mapStatusSaver;
 
-    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, ActivityChange _activityChange, SoundAdmin _soundAdmin, WorldActivity _worldActivity, MapStatus _mapStatus) {
+    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, ActivityChange _activityChange, SoundAdmin _soundAdmin, WorldActivity _worldActivity, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver) {
         graphic = _graphic;
         userInterface = _userInterface;
         textBoxAdmin = _textBoxAdmin;
@@ -130,6 +132,7 @@ public class DungeonSelectManager {
         //playerStatus = _playerStatus;
         soundAdmin = _soundAdmin;
         mapStatus = _mapStatus;
+        mapStatusSaver = _mapStatusSaver;
 
         worldActivity = _worldActivity;
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
@@ -150,6 +153,34 @@ public class DungeonSelectManager {
         initUIs();
 
         //TODO : Loopselect
+    }
+
+    public void start() {
+        //前ダンジョンクリアかつ魔王討伐回数＝Clear+1なら、Clearを+1
+        boolean flag = true;
+        for (int i = 0; i < Constants.STAGE_NUM; i++) {
+            if (mapStatus.getMapClearStatus(i) == 0) {
+                flag = false;
+            }
+        }
+        if (playerStatus.getClearCount() > playerStatus.getMaohWinCount() - 1) {
+            flag = false;
+        }
+
+        if (flag) {
+            playerStatus.addClearCount();
+            playerStatus.setNowClearCount(playerStatus.getClearCount());
+
+            enterTextBoxUpdateCountUp();
+            OkButtonGroup.setUpdateFlag(true);
+            OkButtonGroup.setDrawFlag(true);
+
+            for (int i = 0; i < Constants.STAGE_NUM; i++) {
+                mapStatus.setMapClearStatus(0,i);
+                mapStatusSaver.save();
+            }
+            playerStatus.save();
+        }
     }
 
     private void setDatabase(MyDatabaseAdmin databaseAdmin) {
@@ -215,42 +246,43 @@ public class DungeonSelectManager {
 
         MapIconPlate mapIconPlates[] = mapIconPlateGroup.getPlates();
         boolean alphaFlag;
-        int clear;
+        int clear = 0;
         for (int i = 0; i < mapIconPlates.length; i++) {
             switch (mapIconPlates[i].getMapIconName()) {
                 case "Forest":
-                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.FOREST.ordinal());
+                    clear = 1;//mapStatus.getMapClearStatus(DUNGEON_KIND.FOREST.ordinal());
                     break;
                 case "Lava":
-                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.LAVA.ordinal());
+                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.FOREST.ordinal());
                     break;
                 case "Sea":
-                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.SEA.ordinal());
+                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.LAVA.ordinal());
                     break;
                 case "Chess":
-                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.CHESS.ordinal());
+                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.SEA.ordinal());
                     break;
                 case "Swamp":
-                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.SWAMP.ordinal());
+                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.CHESS.ordinal());
                     break;
                 case "Haunted":
-                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.HAUNTED.ordinal());
+                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.SWAMP.ordinal());
                     break;
                 case "Dragon":
-                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.DRAGON.ordinal());
+                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.HAUNTED.ordinal());
                     break;
-
+                case "Maoh":
+                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.FOREST.ordinal());
+                    break;
+                default:
+                    clear = 1;
+                    break;
             }
-            /*
-            if (mapStatus.getMapClearStatus()) {
+            alphaFlag = (clear != 1) && (playerStatus.getNowClearCount() == playerStatus.getClearCount());
 
-
-            }*/
-/*
             mapIconPlates[i].setImageContext(
                     imageName.get(i),x.get(i), y.get(i), scale.get(i), scale.get(i), scale_feed.get(i), scale_feed.get(i), alphaFlag
             );
-            */
+            mapIconPlates[i].setEnterFlag(!alphaFlag);
         }
     }
 
@@ -331,8 +363,9 @@ public class DungeonSelectManager {
                             public void callBackEvent() {
                                 //-ボタンが押された時の処理
                                 soundAdmin.play("enter00");
-                                playerStatus.subClearCount();
+                                playerStatus.subNowClearCountLoop();
                                 loopCountTextBoxUpdate();
+                                mapIconPlateListUpdate();
                             }
                         },
                         new BoxTextPlate(
@@ -347,8 +380,9 @@ public class DungeonSelectManager {
                             public void callBackEvent() {
                                 //-ボタンが押された時の処理
                                 soundAdmin.play("enter00");
-                                playerStatus.addClearCount();
+                                playerStatus.addNowClearCountLoop();
                                 loopCountTextBoxUpdate();
+                                mapIconPlateListUpdate();
                             }
                         }
                 }
@@ -541,6 +575,13 @@ public class DungeonSelectManager {
             OkButtonGroup.setDrawFlag(true);
             return false;
         }
+
+        if (!mapIconPlateGroup.getPlates(focusDungeonButtonID).getEnterFlag()) {
+            enterTextBoxUpdateNotAccept();
+            OkButtonGroup.setUpdateFlag(true);
+            OkButtonGroup.setDrawFlag(true);
+            return false;
+        }
         return true;
     }
 
@@ -602,7 +643,7 @@ public class DungeonSelectManager {
     //TExtBox
     public void enterTextBoxUpdateMaoh() {
         textBoxAdmin.setTextBoxExists(enterTextBoxID, true);
-
+        textBoxAdmin.resetTextBox(enterTextBoxID);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "魔王に挑戦しますか？", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "現在の討伐回数 : ", enterTextPaint);
@@ -612,15 +653,46 @@ public class DungeonSelectManager {
         textBoxAdmin.updateText(enterTextBoxID);
     }
 
+    public void enterTextBoxUpdateCountUp() {
+        textBoxAdmin.setTextBoxExists(enterTextBoxID, true);
+        textBoxAdmin.resetTextBox(enterTextBoxID);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "全ダンジョンを制覇した！", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "しかし、新たな魔王が現れた！", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "戦いはまだ終わらない…　", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "ループ回数：", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, String.valueOf(playerStatus.getClearCount()), enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "MOP", enterTextPaint);
+
+        textBoxAdmin.updateText(enterTextBoxID);
+    }
+
+
     public void enterTextBoxUpdateDungeon() {
         MapIconPlate tmp = (MapIconPlate)mapIconPlateGroup.getPlate(focusDungeonButtonID);
 
         textBoxAdmin.setTextBoxExists(enterTextBoxID, true);
-
+        textBoxAdmin.resetTextBox(enterTextBoxID);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "ダンジョン名 : ", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, tmp.getMapIconName(), enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "このダンジョンに入りますか？", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "MOP", enterTextPaint);
+
+        textBoxAdmin.updateText(enterTextBoxID);
+    }
+
+    public void enterTextBoxUpdateNotAccept() {
+        MapIconPlate tmp = (MapIconPlate)mapIconPlateGroup.getPlate(focusDungeonButtonID);
+
+        textBoxAdmin.setTextBoxExists(enterTextBoxID, true);
+        textBoxAdmin.resetTextBox(enterTextBoxID);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "ダンジョン名 : ", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, tmp.getMapIconName(), enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "このダンジョンにはまだ侵入できません", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "MOP", enterTextPaint);
 
         textBoxAdmin.updateText(enterTextBoxID);

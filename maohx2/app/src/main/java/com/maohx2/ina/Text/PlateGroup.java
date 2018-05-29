@@ -110,5 +110,11 @@ public class PlateGroup<T extends Plate> {
     public T[] getPlates() {
         return plates;
     }
+    public T getPlates(int i) {
+        if(i < plates.length) {
+            return plates[i];
+        }
+        return null;
+    }
 
 }

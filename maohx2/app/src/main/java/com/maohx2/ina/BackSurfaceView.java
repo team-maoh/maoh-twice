@@ -3,6 +3,7 @@ package com.maohx2.ina;
 import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.media.AudioManager;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -23,6 +24,9 @@ class BackSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Run
         holder = getHolder();
         holder.addCallback(this);
         //paint.setColor(Color.BLUE);
+
+        //音量調整ボタンを使用できるようにする
+        _currentActivity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 
 

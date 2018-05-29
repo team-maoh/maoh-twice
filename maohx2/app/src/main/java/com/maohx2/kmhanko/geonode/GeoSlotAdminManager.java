@@ -78,29 +78,11 @@ public class GeoSlotAdminManager {
         //initEffect();
     }
 
-    int[] geoSlotLineEffect;
-
-    public void initEffect() {
-        /*
-        geoSlotLineEffect = new int[]{
-                effectAdmin.createEffect("geoSlotLine", "geoEffectYellow", 3, 1),
-                effectAdmin.createEffect("geoSlotLine", "geoEffectRed", 3, 1),
-                effectAdmin.createEffect("geoSlotLine", "geoEffectBlue", 3, 1),
-                effectAdmin.createEffect("geoSlotLine", "geoEffectGreen", 3, 1),
-                effectAdmin.createEffect("geoSlotLine", "geoEffectViolet", 3, 1),
-        };
-        GeoSlot.setGeoSlotLineEffect(geoSlotLineEffect);
-        */
-    }
 
     public void start() {
         //activeGeoSlotAdmin.start();
-        initStatusTextBox();
+        statusTextBoxUpdate();
         geoInventry.init(userInterface,graphic,1200, 100, 1600, 700, 10);
-
-
-
-
     }
 
     public void update() {

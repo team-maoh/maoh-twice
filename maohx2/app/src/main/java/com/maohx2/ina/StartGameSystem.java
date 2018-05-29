@@ -72,7 +72,8 @@ public class StartGameSystem {
         equipmentInventry = globalData.getEquipmentInventry();
         expendInventry = globalData.getExpendItemInventry();
 
-        palette_admin = new PaletteAdmin(_start_user_interface, graphic, equipmentInventry, expendInventry);
+        equipment_item_data_admin = new EquipmentItemDataAdmin(graphic, my_database_admin);
+        palette_admin = new PaletteAdmin(_start_user_interface, graphic, equipmentInventry, expendInventry, equipment_item_data_admin);
 
         paint = new Paint();
         paint.setTextSize(70);

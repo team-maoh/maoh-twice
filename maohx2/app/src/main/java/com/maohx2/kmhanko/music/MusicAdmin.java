@@ -128,9 +128,9 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
 
     public void update() {
         // 最大音量値を取得
-        vol = manager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        //vol = manager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         // 音量を設定
-        manager.setStreamVolume(AudioManager.STREAM_MUSIC, (int)(vol/2), 0);
+        //manager.setStreamVolume(AudioManager.STREAM_MUSIC, (int)(vol/2), 0);
     }
 
     public boolean play() {
