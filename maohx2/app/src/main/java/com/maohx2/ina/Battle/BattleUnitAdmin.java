@@ -41,6 +41,7 @@ import static com.maohx2.ina.Constants.DungeonKind.DUNGEON_KIND;
 
 import com.maohx2.ina.Battle.*;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+import com.maohx2.kmhanko.effect.EffectAdmin;
 import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 
 import com.maohx2.kmhanko.sound.SoundAdmin;
@@ -101,6 +102,7 @@ public class BattleUnitAdmin {
     int attack_count;
 
     int repeat_count;
+    int effect_ID[];
 
     PlayerStatus playerStatus;
     MaohMenosStatus maohMenosStatus;
@@ -108,6 +110,7 @@ public class BattleUnitAdmin {
 
     MapStatus mapStatus;
     MapStatusSaver mapStatusSaver;
+    EffectAdmin effectAdmin;
 
     boolean resultOperatedFlag;//リザルト関係の処理を一度だけ呼ぶためのフラグ
     boolean battleEndFlag;//戦闘が終わったかどうか
@@ -382,8 +385,42 @@ public class BattleUnitAdmin {
                                             if (touch_markers[i].isExist() == false) {
                                                 //todo:attackの計算
                                                 touch_markers[i].generate((int) touch_x, (int) touch_y, attack_equipment.getRadius(), battle_units[0].getAttack() + attack_equipment.getAttack(), attack_equipment.getDecayRate());
-                                                //エフェクト
-                                                attack_equipment.getEquipmentKind();
+                                                //エフェクト by Horie
+                                                int effect_id  = -1;
+                                                switch(attack_equipment.getEquipmentKind()) {
+                                                    case AX:
+                                                        effect_id = effect_ID[0];
+                                                    case BARE:
+                                                        effect_id = effect_ID[1];
+                                                    case BOW:
+                                                        effect_id = effect_ID[2];
+                                                    case WAND:
+                                                        effect_id = effect_ID[3];
+                                                    case GUN:
+                                                        effect_id = effect_ID[4];
+                                                    case FIST:
+                                                        effect_id = effect_ID[5];
+                                                    case CLUB:
+                                                        effect_id = effect_ID[6];
+                                                    case MUSIC:
+                                                        effect_id = effect_ID[7];
+                                                    case SPEAR:
+                                                        effect_id = effect_ID[8];
+                                                    case SWORD:
+                                                        effect_id = effect_ID[9];
+                                                    case WHIP:
+                                                        effect_id = effect_ID[10];
+
+//                                                    case MONSTER:
+//                                                        effect_id = effect_ID[1];
+//                                                    case SHIELD:
+//                                                        effect_id = effect_ID[1];
+//                                                    case NUM:
+//                                                        effect_id = effect_ID[1];
+                                                }
+                                                effectAdmin.getEffect(effect_id).setPosition((int)touch_x, (int)touch_y);
+                                                effectAdmin.getEffect(effect_id).start();
+
                                                 break;
                                             }
                                         }
@@ -818,6 +855,13 @@ public class BattleUnitAdmin {
     public BattleUnitAdmin() {
     }
 
+    //by Horie
+    public void getEffectID(int _id[]){
+        effect_ID = new int[_id.length];
+        for(int i = 0;i < _id.length;i++){
+            effect_ID[i] = _id[i];
+        }
+    }
 
     // *** リザルトメッセージ関係 ***
 

@@ -31,6 +31,7 @@ import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatus;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+import com.maohx2.kmhanko.effect.EffectAdmin;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.itemdata.MiningItemDataAdmin;
@@ -88,6 +89,7 @@ public class DungeonGameSystem {
 
     MusicAdmin musicAdmin;
     SoundAdmin soundAdmin;
+    EffectAdmin effectAdmin;
 
     Constants.DungeonKind.DUNGEON_KIND dungeon_kind;
 
@@ -110,6 +112,21 @@ public class DungeonGameSystem {
 
         GlobalData globalData = (GlobalData)(dungeon_activity.getApplication());
         musicAdmin = globalData.getMusicAdmin();
+
+        effectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin);
+        int battle_effect_ID[] = new int[11];
+        battle_effect_ID[0] = effectAdmin.createEffect("axe_effect", "axe_effect", 3, 5);
+        battle_effect_ID[1] = effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3);
+        battle_effect_ID[2] = effectAdmin.createEffect("bow_effect", "bow_effect", 9, 1);
+        battle_effect_ID[3] = effectAdmin.createEffect("cane_effect", "cane_effect", 14, 1);
+        battle_effect_ID[4] = effectAdmin.createEffect("gun_effect", "gun_effect", 5, 2);
+        battle_effect_ID[5] = effectAdmin.createEffect("knuckle_effect", "knuckle_effect", 6, 3);
+        battle_effect_ID[6] = effectAdmin.createEffect("mace_effect", "mace_effect", 5, 1);
+        battle_effect_ID[7] = effectAdmin.createEffect("musical_instrument_effect", "musical_instrument_effect", 1, 14);
+        battle_effect_ID[8] = effectAdmin.createEffect("spear_effect", "spear_effect", 9, 1);
+        battle_effect_ID[9] = effectAdmin.createEffect("sword_effect", "sword_effect", 9, 1);
+        battle_effect_ID[10] = effectAdmin.createEffect("whip_effect", "whip_effect", 5, 5);
+        battle_unit_admin.getEffectID(battle_effect_ID);
 
         //repeat_count = _repeat_count;
 
