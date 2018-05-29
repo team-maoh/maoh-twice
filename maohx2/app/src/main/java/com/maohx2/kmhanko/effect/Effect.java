@@ -153,7 +153,9 @@ public class Effect {
                 clear();
             } else {
                 //指定IDのステップへ遷移する。ループする場合もここで自動的に処理される。
-                toStep(effectData.getNextID(step, step));
+                do {
+                    toStep(effectData.getNextID(step, step));
+                } while(effectData.getTime(step) <= 0);
             }
         } else {
             //そのステップのラストにまだ達していない

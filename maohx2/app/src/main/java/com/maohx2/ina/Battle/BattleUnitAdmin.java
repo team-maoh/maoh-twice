@@ -396,9 +396,9 @@ public class BattleUnitAdmin {
                                                     case AX:
                                                         battle_effect_ID = effectAdmin.createEffect("axe_effect", "axe_effect", 3, 5);
                                                         break;
-//                                                    case BARE:
-//                                                        battle_effect_ID = effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3);
-//                                                        break;
+                                                    case BARE:
+                                                        battle_effect_ID = effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3);
+                                                        break;
                                                     case BOW:
                                                         battle_effect_ID = effectAdmin.createEffect("bow_effect", "bow_effect", 9, 1);
                                                         break;
