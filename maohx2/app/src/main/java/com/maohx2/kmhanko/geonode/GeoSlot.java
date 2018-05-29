@@ -440,11 +440,13 @@ public class GeoSlot extends CircleImagePlate {
     @Override
     //タッチされた時の処理
     public void callBackEvent() {
-        geoSlotAdmin.setFocusGeoSlot(this);
-        geoSlotAdmin.geoSlotReleaseChoice();
-        if (isEventClearAll()) {
-            setGeoObjectFromHold();
-            geoSlotAdmin.calcStatus();
+        if (geoSlotAdmin.getMode() == GeoSlotAdminManager.MODE.WORLD) {
+            geoSlotAdmin.setFocusGeoSlot(this);
+            geoSlotAdmin.geoSlotReleaseChoice();
+            if (isEventClearAll()) {
+                setGeoObjectFromHold();
+                geoSlotAdmin.calcStatus();
+            }
         }
     }
 

@@ -83,7 +83,7 @@ public class GeoSlotAdmin {
 
     PlateGroup<GeoSlot> geoSlotGroup;
     PlateGroup<BoxTextPlate> releasePlateGroup;//解放する/やめる　の選択
-    PlateGroup<BackPlate> backPlateGroup;
+    //PlateGroup<BackPlate> backPlateGroup;
 
     Paint releaseTextPaint;
 
@@ -116,7 +116,7 @@ public class GeoSlotAdmin {
 
         //初期化
         initTextBox();
-        initBackPlate();
+        //initBackPlate();
         initReleasePlate();
     }
 
@@ -180,7 +180,7 @@ public class GeoSlotAdmin {
 
     }
 
-
+/*
     private void initBackPlate() {
         backPlateGroup = new PlateGroup<BackPlate>(
                 new BackPlate[] {
@@ -192,27 +192,29 @@ public class GeoSlotAdmin {
                                 //戻るボタンが押された時の処理
                                 soundAdmin.play("cancel00");
 
-
                                 for (int i = 0; i < geoSlots.size(); i++) {
                                     getGeoSlots().get(i).clearGeoSlotLineEffect();
                                 }
 
-                                geoSlotAdminManager.calcStatus();
-                                geoSlotAdminManager.saveGeoInventry();
-
-                                geoSlotAdminManager.saveGeoSlot();
-
-                                textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
-
-                                releasePlateGroup.setDrawFlag(false);
-                                releasePlateGroup.setUpdateFlag(false);
-
-                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT_INIT);
+                                if (geoSlotAdminManager.getMode() == GeoSlotAdminManager.MODE.WORLD) {
+                                    textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
+                                    releasePlateGroup.setDrawFlag(false);
+                                    releasePlateGroup.setUpdateFlag(false);
+                                    geoSlotAdminManager.calcStatus();
+                                    geoSlotAdminManager.saveGeoInventry();
+                                    geoSlotAdminManager.saveGeoSlot();
+                                    worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT_INIT);
+                                }
+                                if (geoSlotAdminManager.getMode() == GeoSlotAdminManager.MODE.DUNGEON) {
+                                    geoSlotAdminManager.getDungeonModeManage().setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
+                                    geoSlotAdminManager.setStatusTextBoxFlag(false);
+                                }
                             }
                         }
                 }
         );
     }
+*/
 
     private void initReleasePlate() {
 
@@ -383,24 +385,20 @@ public class GeoSlotAdmin {
 
         checkInventrySelect();
 
-        backPlateGroup.update();
+        //backPlateGroup.update();
         //textBoxAdmin.setTextBoxExists(statusTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.GEO_MAP_SELECT);
 
         //textBoxAdmin.update();
     }
 
+
+
+    public void updateInStatus(){
+        geoSlotGroup.update();
+        //backPlateGroup.update();
+    }
+
     public void draw() {
-        //GeoSlot
-        //線とスロットの描画は2つのfor文に分けなければならない(描画順の問題)
-        //for(int i = 0; i < geoSlots.size(); i++) {
-            //geoSlots.get(i).drawLine();
-        //}
-        /*
-        for(int i = 0; i < geoSlots.size(); i++) {
-            /oolean f = geoSlots.get(i).equals(focusGeoSlot);
-            geoSlots.get(i).draw(f);
-        }
-        */
         geoSlotGroup.draw();
 
         //Holdの表示
@@ -412,9 +410,12 @@ public class GeoSlotAdmin {
 
         //ListBox
         releasePlateGroup.draw();
-        backPlateGroup.draw();
+        //backPlateGroup.draw();
+    }
 
-        //textBoxAdmin.draw();
+    public void drawInStatus() {
+        geoSlotGroup.draw();
+        //backPlateGroup.draw();
     }
 
     //Inventryから何か選択されているならそれを格納
@@ -427,6 +428,16 @@ public class GeoSlotAdmin {
                 userInterface.setInventryData(null);
             }
         }
+    }
+
+    public void initUIs() {
+        textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
+        releasePlateGroup.setDrawFlag(false);
+        releasePlateGroup.setUpdateFlag(false);
+    }
+
+    public GeoSlotAdminManager.MODE getMode() {
+        return geoSlotAdminManager.getMode();
     }
 
     /*
