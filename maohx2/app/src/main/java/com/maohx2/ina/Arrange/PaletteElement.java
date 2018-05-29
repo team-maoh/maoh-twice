@@ -7,6 +7,7 @@ import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.kmhanko.itemdata.ExpendItemData;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import static com.maohx2.ina.Constants.Palette.CIRCLE_COLOR;
 import static com.maohx2.ina.Constants.Palette.PALETTE_ELEMENT_RADIUS_BIG;
@@ -24,13 +25,16 @@ public class PaletteElement {
     static Graphic graphic;
     int touch_id;
     ItemData item_data;
+    SoundAdmin soundAdmin;
 
-    public PaletteElement(int _x, int _y, int _element_num, int _touch_id){
+    public PaletteElement(int _x, int _y, int _element_num, int _touch_id, SoundAdmin _soundAdmin){
         x = _x;
         y = _y;
         element_num = _element_num;
         touch_id = _touch_id;
         paint = new Paint();
+        soundAdmin = _soundAdmin;
+
         if(element_num == 0) {
             paint.setColor(CIRCLE_COLOR[0]);
         }else {
@@ -94,6 +98,7 @@ public class PaletteElement {
     public void setItemData(ItemData _item_data){
         item_data = _item_data;
         if(item_data != null) {
+            soundAdmin.play("equip00");
             if (item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT){
                 ((EquipmentItemData) (item_data)).setPalettePosition(element_num);
             }else if(item_data.getItemKind() == Constants.Item.ITEM_KIND.EXPEND){
@@ -108,6 +113,7 @@ public class PaletteElement {
 
     public void setItemData(ItemData _item_data, int preElementNum){
         if(_item_data != null) {
+            soundAdmin.play("equip00");
             if (_item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT){
                 ((EquipmentItemData) (_item_data)).setPalettePosition(element_num);
             }else if(_item_data.getItemKind() == Constants.Item.ITEM_KIND.EXPEND){

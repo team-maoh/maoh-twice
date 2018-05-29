@@ -4,6 +4,7 @@ import android.graphics.Paint;
 
 import com.maohx2.ina.Arrange.InventryData;
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Draw.ImageContext;
 import com.maohx2.ina.ItemData.EquipmentItemData;
@@ -36,9 +37,11 @@ public class BoxInventryPlate extends BoxPlate {
 
         if(inventry_data != null) {
             if(inventry_data.getItemData() != null) {
-                image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left, up, 1.7f, 1.7f, 0, 255, true);
+                image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left+50, (up+down)/2, 1.7f, 1.7f, 0, 255, false);
             }
         }
+
+
     }
 
     @Override
@@ -60,23 +63,22 @@ public class BoxInventryPlate extends BoxPlate {
         if (draw_flag == false){
             return;
         }
+        graphic.bookingDrawRect(left, up, right, down, button_paint);
 
-
-            graphic.bookingDrawRect(left, up, right, down, button_paint);
         if(inventry_data != null) {
             if(inventry_data.getItemData() != null) {
                 text_paint.setARGB(255,0,255,255);
                 switch(inventry_data.getItemData().getItemKind()){
                     case GEO:
-                        graphic.bookingDrawText(inventry_data.getItemData().getName(), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1.7 + (int) ((down - up) * (1.0 / 5))), (int) (down - (down - up) * (1.0 / 5)), text_paint);
+                        graphic.bookingDrawText(inventry_data.getItemData().getName(), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 2.0 + (int) ((down - up) * (1.0 / 5))), (int) (down - (down - up) * (1.0 / 5)), text_paint);
                         break;
 
                     case EQUIPMENT:
-                        graphic.bookingDrawText(inventry_data.getItemData().getName()+" +"+String.valueOf(((EquipmentItemData)(inventry_data.getItemData())).getAttack()), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1.7 + (int) ((down - up) * (1.0 / 5))), (int) (down - (down - up) * (1.0 / 5)), text_paint);
+                        graphic.bookingDrawText(inventry_data.getItemData().getName()+" +"+String.valueOf(((EquipmentItemData)(inventry_data.getItemData())).getAttack()), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 2.0 + (int) ((down - up) * (1.0 / 5))), (int) (down - (down - up) * (1.0 / 5)), text_paint);
                         break;
 
                     case EXPEND:
-                        graphic.bookingDrawText(inventry_data.getItemData().getName(), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1.7 + (int) ((down - up) * (1.0 / 5))), (int) (down - (down - up) * (1.0 / 5)), text_paint);
+                        graphic.bookingDrawText(inventry_data.getItemData().getName(), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 2.0 + (int) ((down - up) * (1.0 / 5))), (int) (down - (down - up) * (1.0 / 5)), text_paint);
                         break;
                 }
 
@@ -84,26 +86,27 @@ public class BoxInventryPlate extends BoxPlate {
                     if((inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT)) {
                         if(((EquipmentItemData)(inventry_data.getItemData())).getPalettePosition() != 0) {
                             text_paint.setColor(CIRCLE_COLOR[((EquipmentItemData)(inventry_data.getItemData())).getPalettePosition()-1]);
-                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1.7 + (int) ((down - up) * (1.0 / 5))) + 270, (int) (down - (down - up) * (1.0 / 5)), text_paint);
+                            text_paint.setAlpha(255);
+                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1 + (int) ((down - up) * (1.0 / 5))) + 200, (int) (down - (down - up) * (1.0 / 5)), text_paint);
                         }
                     }else if(inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.GEO){
                         if(((GeoObjectData)(inventry_data.getItemData())).getSlotSetName().equals("noSet") == false) {
                             text_paint.setARGB(255,255,255,255);
-                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1.7 + (int) ((down - up) * (1.0 / 5))) + 270, (int) (down - (down - up) * (1.0 / 5)), text_paint);
+                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1 + (int) ((down - up) * (1.0 / 5))) + 200, (int) (down - (down - up) * (1.0 / 5)), text_paint);
                         }
                     }
                 }else{
-                    graphic.bookingDrawText(String.valueOf(inventry_data.getItemNum() - ((ExpendItemData)inventry_data.getItemData()).getPalettePositionNum()), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1.7 + (int) ((down - up) * (1.0 / 5))) + 270, (int) (down - (down - up) * (1.0 / 5)), text_paint);
+                    graphic.bookingDrawText(String.valueOf(inventry_data.getItemNum() - ((ExpendItemData)inventry_data.getItemData()).getPalettePositionNum()), left + (int) (inventry_data.getItemData().getItemImage().getWidth() + (int) ((down - up) * (1.0 / 5))) + 270, (int) (down - (down - up) * (1.0 / 5)), text_paint);
                     if(((ExpendItemData)(inventry_data.getItemData())).getPalettePosition() != 0) {
                         for(int i = 0; i < ((ExpendItemData)(inventry_data.getItemData())).getPalettePositionNum(); i++) {
                             int offSet = i*30;
                             int palette_position = ((ExpendItemData)(inventry_data.getItemData())).getPalettePosition(i+1);
                             text_paint.setColor(CIRCLE_COLOR[palette_position]);
-                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1.7 + (int) ((down - up) * (1.0 / 5))) + 300 + offSet, (int) (down - (down - up) * (1.0 / 5)), text_paint);
+                            text_paint.setAlpha(255);
+                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() + (int) ((down - up) * (1.0 / 5))) + 100 + offSet, (int) (down - (down - up) * (2.3 / 5)), text_paint);
                         }
                     }
                 }
-                //graphic.bookingDrawText(content_item.getName(), left+(int)(content_item.getItemImage().getWidth()*1.7), 100, text_paint);
                 graphic.bookingDrawBitmapData(image_context);
             }
         }
