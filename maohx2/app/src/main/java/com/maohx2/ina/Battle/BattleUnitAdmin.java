@@ -393,12 +393,12 @@ public class BattleUnitAdmin {
                                                 touch_markers[i].generate((int) touch_x, (int) touch_y, attack_equipment.getRadius(), battle_units[0].getAttack() + attack_equipment.getAttack(), attack_equipment.getDecayRate());
                                                 //エフェクト by Horie
                                                 switch(attack_equipment.getEquipmentKind()) {
-                                                    case AX:
+                                                    case BARE://AX:
                                                         battle_effect_ID = effectAdmin.createEffect("axe_effect", "axe_effect", 3, 5);
                                                         break;
-                                                    case BARE:
-                                                        battle_effect_ID = effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3);
-                                                        break;
+//                                                    case BARE:
+//                                                        battle_effect_ID = effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3);
+//                                                        break;
                                                     case BOW:
                                                         battle_effect_ID = effectAdmin.createEffect("bow_effect", "bow_effect", 9, 1);
                                                         break;
