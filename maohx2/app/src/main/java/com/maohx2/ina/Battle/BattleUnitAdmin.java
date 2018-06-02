@@ -428,6 +428,7 @@ public class BattleUnitAdmin {
                                                     case WHIP:
                                                         battle_effect_ID = effectAdmin.createEffect("whip_effect", "whip_effect", 5, 5);
                                                         break;
+
 //                                                    case MONSTER:
 //                                                        effect_id = effect_ID[1];
 //                                                    case SHIELD:
@@ -435,8 +436,12 @@ public class BattleUnitAdmin {
 //                                                    case NUM:
 //                                                        effect_id = effect_ID[1];
                                                 }
-
-                                                effectAdmin.getEffect(battle_effect_ID).setPosition((int)touch_x, (int)touch_y);
+                                                if(attack_equipment.getEquipmentKind() == EQUIPMENT_KIND.BOW){
+                                                    effectAdmin.getEffect(battle_effect_ID).setPosition(0, 150);
+                                                }
+                                                else {
+                                                    effectAdmin.getEffect(battle_effect_ID).setPosition((int) touch_x, (int) touch_y);
+                                                }
                                                 effectAdmin.getEffect(battle_effect_ID).start();
 
                                                 break;

@@ -68,19 +68,19 @@ public class PaletteAdmin {
 
         }
 
-        palettes[0].palette_elements[7].setItemData(_equipmentItemDataAdmin.getOneDataByName("素手"));
-        palettes[0].palette_elements[6].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ盾"));
+//        palettes[0].palette_elements[7].setItemData(_equipmentItemDataAdmin.getOneDataByName("素手"));
+//        palettes[0].palette_elements[6].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ盾"));
 
 
 
-//        palettes[0].palette_elements[0].setItemData(equipmentItemDataAdmin.getOneDataByName("素手"));
-//        palettes[0].palette_elements[1].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグ剣"));
-//        palettes[0].palette_elements[2].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグ杖"));
-//        palettes[0].palette_elements[3].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグ斧"));
-//        palettes[0].palette_elements[4].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグ槍"));
-//        palettes[0].palette_elements[5].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグ弓"));
-//        palettes[0].palette_elements[6].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグ銃"));
-//        palettes[0].palette_elements[7].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグナックル"));
+        palettes[0].palette_elements[0].setItemData(_equipmentItemDataAdmin.getOneDataByName("素手"));
+        palettes[0].palette_elements[1].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ剣"));
+        palettes[0].palette_elements[2].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ杖"));
+        palettes[0].palette_elements[3].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ斧"));
+        palettes[0].palette_elements[4].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ槍"));
+        palettes[0].palette_elements[5].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ弓"));
+        palettes[0].palette_elements[6].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ銃"));
+        palettes[0].palette_elements[7].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグナックル"));
     }
 
 
