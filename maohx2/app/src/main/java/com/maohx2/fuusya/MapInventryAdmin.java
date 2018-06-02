@@ -25,11 +25,12 @@ public class MapInventryAdmin {
     Inventry inventry;
 
     MapPlayer player;
+    MapObjectAdmin map_object_admin;
     MapPlateAdmin map_plate_admin;
 
     int debug_count;
 
-    public MapInventryAdmin(GlobalData _globalData, Inventry _inventry, MapObjectAdmin map_object_admin, MapPlateAdmin _map_plate_admin) {
+    public MapInventryAdmin(GlobalData _globalData, Inventry _inventry, MapObjectAdmin _map_object_admin, MapPlateAdmin _map_plate_admin) {
 
         globalData = _globalData;
         geoItemInventrySaver = globalData.getGeoInventrySaver();
@@ -40,9 +41,11 @@ public class MapInventryAdmin {
         equipmentInventrySaver = globalData.getEquipmentInventrySaver();
         inventry = _inventry;
 
+        map_object_admin = _map_object_admin;
         player = map_object_admin.getPlayer();
         map_plate_admin = _map_plate_admin;
         map_plate_admin.setMapInventryAdmin(this);
+        map_object_admin.setMapInventryAdmin(this);
 
         debug_count = 300;
 
