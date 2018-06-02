@@ -4,6 +4,7 @@ import android.graphics.Paint;
 
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.ItemData;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import static com.maohx2.ina.Constants.Palette.CIRCLE_COLOR;
 import static com.maohx2.ina.Constants.Palette.PALETTE_CENTER_RADIUS_BIG;
@@ -19,8 +20,8 @@ public class PaletteCenter extends PaletteElement{
     static Graphic graphic;
     int prePos;
 
-    public PaletteCenter(int _x, int _y, int _element_num, int _touch_id){
-        super( _x, _y, _element_num, _touch_id);
+    public PaletteCenter(int _x, int _y, int _element_num, int _touch_id, SoundAdmin _soundAdmin){
+        super( _x, _y, _element_num, _touch_id, _soundAdmin);
 
     }
 

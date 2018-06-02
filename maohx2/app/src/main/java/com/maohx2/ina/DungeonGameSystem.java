@@ -102,17 +102,17 @@ public class DungeonGameSystem {
 
     int repeat_count;
 
-    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin sound_admin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange _activityChange, int _repeat_count, Constants.DungeonKind.DUNGEON_KIND _dungeon_kind) {
+    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin _soundAdmin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange _activityChange, int _repeat_count, Constants.DungeonKind.DUNGEON_KIND _dungeon_kind) {
         dungeon_user_interface = _dungeon_user_interface;
         battle_user_interface = _battle_user_interface;
         dungeonActivity = dungeon_activity;
         graphic = _graphic;
         dungeon_kind = _dungeon_kind;
 
-        soundAdmin = sound_admin;
+        soundAdmin = _soundAdmin;
 
         battle_unit_admin = new BattleUnitAdmin();
-        text_box_admin = new TextBoxAdmin(graphic, sound_admin);
+        text_box_admin = new TextBoxAdmin(graphic, soundAdmin);
         list_box_admin = new ListBoxAdmin();
         text_box_admin.init(dungeon_user_interface);
         list_box_admin.init(dungeon_user_interface, graphic);
@@ -174,8 +174,8 @@ public class DungeonGameSystem {
 
         activityChange = _activityChange;
         dungeonModeManage = new DungeonModeManage();
-        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange, globalData, dungeonModeManage, sound_admin);
-        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_plate_admin, dungeonModeManage, globalData, battle_unit_admin);
+        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange, globalData, dungeonModeManage, soundAdmin);
+        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, soundAdmin, map_plate_admin, dungeonModeManage, globalData, battle_unit_admin);
         map_inventry_admin = new MapInventryAdmin(globalData, map_plate_admin.getInventry(), map_object_admin, map_plate_admin);
 
         dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
@@ -220,7 +220,7 @@ public class DungeonGameSystem {
 
         miningItemDataAdmin = new MiningItemDataAdmin(graphic, my_database_admin);
 
-        palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipmentInventry, expendInventry, equipment_item_data_admin);
+        palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipmentInventry, expendInventry, equipment_item_data_admin, soundAdmin);
         //palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipment_item_data_admin);
         palette_admin.setMiningItems(miningItemDataAdmin);//TODO コンストラクタに入れて居ないためよくない
 
