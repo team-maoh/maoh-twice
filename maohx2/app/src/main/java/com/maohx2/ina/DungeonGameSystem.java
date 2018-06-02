@@ -439,10 +439,13 @@ public class DungeonGameSystem {
                 musicAdmin.loadMusic("forest00",true);
                 break;
             case HAUNTED:
+                musicAdmin.loadMusic("haunted00",true);
                 break;
             case SEA:
+                musicAdmin.loadMusic("sea00",true);
                 break;
             case SWAMP:
+                musicAdmin.loadMusic("swamp00",true);
                 break;
             case LAVA:
                 musicAdmin.loadMusic("lava00",true);

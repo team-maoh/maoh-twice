@@ -14,7 +14,7 @@ abstract public class BoxPlate extends Plate {
 
     protected int left, up, right, down;
 
-    BoxPlate(Graphic _graphic, UserInterface _user_interface, TouchWay _judge_way, TouchWay _feedback_way, int _left, int _up, int _right, int _down){
+    public BoxPlate(Graphic _graphic, UserInterface _user_interface, TouchWay _judge_way, TouchWay _feedback_way, int _left, int _up, int _right, int _down){
         super(_graphic, _user_interface, _judge_way, _feedback_way);
         left = _left;
         up = _up;
