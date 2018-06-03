@@ -259,7 +259,6 @@ public class Inventry {
                 inventry_datas[j] = inventry_datas[j+1];
             }
         }
-
     }
 
     //by kmhanko
@@ -285,6 +284,7 @@ public class Inventry {
             }
         }
     }
+
     public InventryData searchInventryData(ItemData _itemData) {
         for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
             if(inventry_datas[i].getItemData().equals(_itemData)) {
