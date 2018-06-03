@@ -402,7 +402,7 @@ public class BattleUnitAdmin {
                                                         battle_effect_ID = effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3);
                                                         break;
                                                     case BOW:
-                                                        battle_effect_ID = effectAdmin.createEffect("bow_effect", "bow_effect", 9, 1);
+                                                        battle_effect_ID = effectAdmin.createEffect("bow_effect", "bow_effect", 5, 3);
                                                         break;
                                                     case WAND:
                                                         battle_effect_ID = effectAdmin.createEffect("cane_effect", "cane_effect", 14, 1);
@@ -420,7 +420,7 @@ public class BattleUnitAdmin {
                                                         battle_effect_ID = effectAdmin.createEffect("musical_instrument_effect", "musical_instrument_effect", 1, 15);
                                                         break;
                                                     case SPEAR:
-                                                        battle_effect_ID = effectAdmin.createEffect("spear_effect", "spear_effect", 9, 1);
+                                                        battle_effect_ID = effectAdmin.createEffect("spear_effect", "spear_effect", 5, 3);
                                                         break;
                                                     case SWORD:
                                                         battle_effect_ID = effectAdmin.createEffect("sword_effect", "sword_effect", 9, 1);
@@ -436,7 +436,7 @@ public class BattleUnitAdmin {
 //                                                    case NUM:
 //                                                        effect_id = effect_ID[1];
                                                 }
-                                                if(attack_equipment.getEquipmentKind() == EQUIPMENT_KIND.BOW){
+                                                if(attack_equipment.getEquipmentKind() == EQUIPMENT_KIND.MUSIC){
                                                     effectAdmin.getEffect(battle_effect_ID).setPosition(0, 150);
                                                 }
                                                 else {
