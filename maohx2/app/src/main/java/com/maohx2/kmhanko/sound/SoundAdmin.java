@@ -129,17 +129,17 @@ public class SoundAdmin {
         int id = getSoundID(name);
         int stid = sp.play(id, leftVolume, rightVolume, priority, loop, rate);
 
-        stream_ID.add(id - 1, stid);
+        stream_ID.add(id, stid);
         return true;
     }
 
     public void resume(String name) {
-        int id = getSoundID(name) - 1;
+        int id = getSoundID(name);
         sp.resume(stream_ID.get(id));
     }
 
     public void pause(String name) {
-        int id = getSoundID(name) - 1;
+        int id = getSoundID(name);
         sp.pause(stream_ID.get(id));
     }
 
@@ -152,7 +152,7 @@ public class SoundAdmin {
     }
 
     public void stop(String name) {
-        int id = getSoundID(name) - 1;
+        int id = getSoundID(name);
         sp.stop(stream_ID.get(id));
     }
 
