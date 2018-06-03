@@ -315,7 +315,9 @@ public class Inventry {
         int num = 0;
         for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
             if (inventry_datas[i].getItemData() != null) {
-                num++;
+                if (inventry_datas[i].getItemNum() > 0) {
+                    num++;
+                }
             }
         }
         return num;

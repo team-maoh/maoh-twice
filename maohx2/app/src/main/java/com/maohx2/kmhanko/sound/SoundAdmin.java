@@ -100,7 +100,7 @@ public class SoundAdmin {
         for (int i = 0; i < soundData.size(); i++) {
             if (soundData.get(i) != null) {
                 if (soundData.get(i).getName().equals(name)) {
-                    return i;
+                    return sound_ID.get(i);
                 }
             }
         }
@@ -189,7 +189,7 @@ public class SoundAdmin {
                 sound_ID.add(i, sp.load(fd, 1));
                 stream_ID.add(i, 0);//これがないと後でOutOfになる
 
-                //System.out.println("dg_mes:" + " filename:" + l_filename.get(i) + " id:" + sound_ID.get(i));
+                System.out.println("dg_mes:" + " filename:" + l_filename.get(i) + " id:" + sound_ID.get(i));
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new Error("SoundAdmin#loadSoundPack " + l_filename.get(i));
