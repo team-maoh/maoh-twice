@@ -172,12 +172,16 @@ public class SoundAdmin {
         AssetManager asm = mContext.getAssets();
 
         List<String> l_filename = new ArrayList<String>();
+        List<String> l_name = new ArrayList<String>();
+
 
         l_filename = database.getString(sound_pack_table_name, "filename", null);
 
+        l_name = database.getString(sound_pack_table_name, "name", null);
+
 
         for (int i = 0; i < l_filename.size(); i++) {
-            soundData.add(new SoundData(i, l_filename.get(i)));
+            soundData.add(new SoundData(i, l_name.get(i)));
 
             try {
                 //音声ファイル読み込み
