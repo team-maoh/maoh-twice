@@ -53,6 +53,8 @@ public class SoundAdmin {
 
     private boolean isLoaded;
 
+    private List<SoundData> soundData = new ArrayList<SoundData>(SOUND_LOAD_NUM);
+
     //TODO:ボリューム設定　activityと
 
     //コンストラクタ
@@ -83,6 +85,7 @@ public class SoundAdmin {
         setDatabase(databaseAdmin);
     }
 
+    /*
     private int getSoundID(String name) {
         int buf = database.getOneRowIDForArray(soundpack_name, "name=" + MyDatabase.s_quo(name));
         try {
@@ -90,6 +93,18 @@ public class SoundAdmin {
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new Error("SoundAdmin#getSoundID : Cannot get SoundID " + buf + " " + e);
         }
+    }
+    */
+
+    private int getSoundID(String name) {
+        for (int i = 0; i < soundData.size(); i++) {
+            if (soundData.get(i) != null) {
+                if (soundData.get(i).getName().equals(name)) {
+                    return i;
+                }
+            }
+        }
+        throw new Error("SoundAdmin#getSoundID : Cannot get SoundID " + name);
     }
 
     //****ユーザーが普段使用するメソッド****
@@ -113,6 +128,7 @@ public class SoundAdmin {
         }
         int id = getSoundID(name);
         int stid = sp.play(id, leftVolume, rightVolume, priority, loop, rate);
+
         stream_ID.add(id - 1, stid);
         return true;
     }
@@ -161,10 +177,12 @@ public class SoundAdmin {
 
 
         for (int i = 0; i < l_filename.size(); i++) {
+            soundData.add(new SoundData(i, l_filename.get(i)));
+
             try {
                 //音声ファイル読み込み
                 AssetFileDescriptor fd = asm.openFd(FOLDER + "/" + soundpack_name +  "/" + l_filename.get(i));
-                sound_ID.add(i,sp.load(fd, 1));
+                sound_ID.add(i, sp.load(fd, 1));
                 stream_ID.add(i, 0);//これがないと後でOutOfになる
 
                 //System.out.println("dg_mes:" + " filename:" + l_filename.get(i) + " id:" + sound_ID.get(i));
