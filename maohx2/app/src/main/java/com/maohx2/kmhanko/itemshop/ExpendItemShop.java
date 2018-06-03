@@ -29,7 +29,7 @@ public class ExpendItemShop extends ItemShop {
             System.out.println("shop :" + buyItemData.getName()+ " を ¥" + buyItemData.getPrice() + " で購入した");
             itemInventry.addItemData(buyItemData);
             playerStatus.subMoney(buyItemData.getPrice());
-            itemShopAdmin.moneyTextBoxUpdate();
+            //itemShopAdmin.moneyTextBoxUpdate();
         } else {
             //TODO お金足りない
         }

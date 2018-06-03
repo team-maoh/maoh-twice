@@ -24,4 +24,9 @@ abstract public class CirclePlate extends Plate {
     }
 
     abstract public void draw();
+
+    public void releaseTouchID() {
+        user_interface.resetCircleUI(touch_id);
+    }
+
 }

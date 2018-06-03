@@ -2,6 +2,7 @@ package com.maohx2.kmhanko.PlayerStatus;
 
 
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.BoxPlate;
@@ -19,18 +20,30 @@ import android.graphics.Paint;
 public class PlayerStatusViewer {
     boolean isExist;
 
+    static final int TEXT_NUM = 5;
+    static final int TEXT_X_OFFSET_LEFT1 = 65;
+    static final int TEXT_X_OFFSET_LEFT2 = 125;
+
+    static final float TEXT_SIZE_RATE= 0.6f;
+
+
     int posX1;
     int posX2;
     int posY1;
     int posY2;
 
+    int sizeX;
+    int sizeY;
+
     Paint paint;
+    Paint boxPaint;
 
     PlayerStatus playerStatus;
     Graphic graphic;
     UserInterface userInterface;
 
     PlateGroup<BoxPlate> statusPlate;
+    BitmapData statusIcon[] = new BitmapData[TEXT_NUM];
 
     public PlayerStatusViewer(Graphic _graphic, UserInterface _userInterface, PlayerStatus _playerStatus) {
         playerStatus = _playerStatus;
@@ -41,10 +54,33 @@ public class PlayerStatusViewer {
     }
 
     public void initPosition() {
+        /*
         posX1 = 0;
         posX2 = 400;
-        posY1 = 500;
+        posY1 = 550;
         posY2 = 900;
+        */
+
+        posX1 = 0;
+        posX2 = 1600;
+        posY1 = 850;
+        posY2 = 900;
+
+        sizeX = (posX2 - posX1)/TEXT_NUM;
+        sizeY = (posY2 - posY1);
+
+        isExist = true;
+        paint = new Paint();
+        paint.setTextSize(sizeY * TEXT_SIZE_RATE);
+        boxPaint = new Paint();
+        boxPaint.setARGB(128,0,0,0);
+
+        statusIcon[0] = graphic.searchBitmap("status_hp");
+        statusIcon[1] = graphic.searchBitmap("剣");
+        statusIcon[2] = graphic.searchBitmap("盾");
+        statusIcon[3] = graphic.searchBitmap("status_luck");
+        statusIcon[4] = graphic.searchBitmap("status_money");
+
     }
 
     public void initStatusPlate() {
@@ -59,41 +95,45 @@ public class PlayerStatusViewer {
                                 ) {
                             @Override
                             public void draw() {
-                                for (int i = 0; i < 7 ; i++) {
+                                for (int i = 0; i < TEXT_NUM ; i++) {
                                     String statusName = "";
                                     String statusFigure = "";
+
                                     switch(i) {
                                         case 0:
                                             statusName = "HP";
-                                            statusFigure = String.valueOf(playerStatus.getNowHP()) + " / " + String.valueOf(playerStatus.getHP());
+                                            statusFigure = String.valueOf(playerStatus.getHP());
+                                            paint.setARGB(255,128,255,255);
                                             break;
                                         case 1:
-                                            statusName = "Attack";
+                                            statusName = "Atk";
                                             statusFigure = String.valueOf(playerStatus.getAttack());
+                                            paint.setARGB(255,255,128,128);
                                             break;
                                         case 2:
-                                            statusName = "Defence";
+                                            statusName = "Def";
                                             statusFigure = String.valueOf(playerStatus.getDefence());
+                                            paint.setARGB(255,128,128,255);
                                             break;
                                         case 3:
-                                            statusName = "Luck";
+                                            statusName = "Luc";
                                             statusFigure = String.valueOf(playerStatus.getLuck());
+                                            paint.setARGB(255,255,128,255);
                                             break;
                                         case 4:
-                                            statusName = "Money";
-                                            statusFigure = String.valueOf(playerStatus.getMoney() + " Maon");
-                                            break;
-                                        case 5:
-                                            statusName = "Clear";
-                                            statusFigure = String.valueOf(playerStatus.getNowClearCount()) + " / " + String.valueOf(playerStatus.getClearCount());
-                                            break;
-                                        case 6:
-                                            statusName = "MaohWin";
-                                            statusFigure = String.valueOf(playerStatus.getMaohWinCount());
+                                            statusName = String.valueOf(playerStatus.getMoney() + " Maon");
+                                            statusFigure = "";
+                                            paint.setARGB(255,255,255,255);
                                             break;
                                     }
 
-                                    //graphic.bookingDrawText(posX1 + ,);
+                                    //graphic.bookingDrawText(statusName,posX1 + TEXT_X_OFFSET_LEFT1, posY1 + sizeY * i + sizeY, paint);
+                                    //graphic.bookingDrawText(statusFigure,posX1 + TEXT_X_OFFSET_LEFT1 + TEXT_X_OFFSET_LEFT2, posY1 + sizeY * i + sizeY, paint);
+
+                                    graphic.bookingDrawBitmapData(statusIcon[i],posX1 + sizeX * i , posY1, 1.5f, 1.5f,0,255, true);
+                                    graphic.bookingDrawText(statusName,posX1 + sizeX * i + TEXT_X_OFFSET_LEFT1, posY1 + (int)((sizeY + sizeY * TEXT_SIZE_RATE)/2.0f), paint);
+                                    graphic.bookingDrawText(statusFigure,posX1 + sizeX * i + TEXT_X_OFFSET_LEFT2, posY1 + (int)((sizeY + sizeY * TEXT_SIZE_RATE)/2.0f), paint);
+
                                 }
                             }
                         }
@@ -106,6 +146,12 @@ public class PlayerStatusViewer {
         posX2 = x2;
         posY1 = y1;
         posY2 = y2;
+
+        sizeX = (posX2 - posX1)/TEXT_NUM;
+        sizeY = (posY2 - posY1);
+
+        paint = new Paint();
+        paint.setTextSize(sizeY * TEXT_SIZE_RATE);
     }
 
     public void update() {
@@ -119,6 +165,7 @@ public class PlayerStatusViewer {
         if (!isExist) {
             return;
         }
+        graphic.bookingDrawRect(posX1, posY1, posX2, posY2, boxPaint);
         statusPlate.draw();
     }
 

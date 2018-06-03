@@ -26,4 +26,8 @@ abstract public class BoxPlate extends Plate {
 
     abstract public void draw();
 
+    public void releaseTouchID() {
+        user_interface.resetBoxUI(touch_id);
+    }
+
 }

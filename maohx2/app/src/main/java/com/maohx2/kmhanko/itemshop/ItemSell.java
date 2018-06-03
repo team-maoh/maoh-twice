@@ -93,7 +93,7 @@ public class ItemSell {
 
     public void initSellItemInventry() {
         sellItemInventry = new Inventry();
-        sellItemInventry.init(userInterface, graphic,50,50,350,600, 10);
+        sellItemInventry.init(userInterface, graphic, 50,50,350,600, 10);
     }
 
     public void sellInventryAll() {
@@ -116,12 +116,19 @@ public class ItemSell {
     }
 
     private void sellFromInventry(Inventry inventry) {
+        Inventry parentInv;
         for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
             if (inventry.getItemData(i) != null) {
                 if (inventry.getInventryData(i).getSoldNum() > 0) {
+                    /*
                     inventry.getInventryData(i).setItemNum(
                         inventry.getInventryData(i).getItemNum() - inventry.getInventryData(i).getSoldNum()
                     );
+                    */
+                    parentInv = inventry.getInventryData(i).getParentInventry();
+                    for (int j = 0; j < inventry.getInventryData(i).getSoldNum(); j++) {
+                        parentInv.subItemData(inventry.getItemData(i));
+                    }
                     inventry.getInventryData(i).setSoldNum(0);
                 }
             }
@@ -257,10 +264,10 @@ public class ItemSell {
         geoInventry.setPosition(700,50,1000,500);
         expendItemInventry.setPosition(1000,50,1300,500);
         */
-        sellItemInventry.init(userInterface, graphic, 50,50,350,600, 10);
-        equipmentInventry.init(userInterface, graphic,400,50,700,600, 10);
-        geoInventry.init(userInterface, graphic,700,50,1000,600,10);
-        expendItemInventry.init(userInterface, graphic,1000,50,1300,600,10);
+        sellItemInventry.setPosition(50,50,350,600, 10);
+        equipmentInventry.setPosition(400,50,700,600, 10);
+        geoInventry.setPosition(700,50,1000,600,10);
+        expendItemInventry.setPosition(1000,50,1300,600,10);
     }
 
     //***テキストボックス関係
