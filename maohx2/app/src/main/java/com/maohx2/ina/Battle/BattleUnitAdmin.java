@@ -1006,6 +1006,16 @@ public class BattleUnitAdmin {
         resultButtonGroup.setDrawFlag(false);
         textBoxAdmin.setTextBoxExists(resultTextBoxID, false);
         timeLimitBar.delete();
+
+
+        for (int i = 0; i < MAKER_NUM; i++) {
+            if (touch_markers[i].isExist() == true) {
+                touch_markers[i].clear();
+            }
+        }
+
+        effectAdmin.clearAllEffect();
+
     }
 
     // *** リザルトメッセージ関係ここまで ***

@@ -45,7 +45,7 @@ public class PaletteAdmin {
             EquipmentItemData checkEquipmentItem = ((EquipmentItemData)(equipmentInventry.getItemData(i)));
             if(checkEquipmentItem != null) {
                 if (checkEquipmentItem.getPalettePosition() != 0) {
-                    palettes[0].palette_elements[checkEquipmentItem.getPalettePosition()-1].setItemData(checkEquipmentItem);
+                    palettes[0].palette_elements[checkEquipmentItem.getPalettePosition()-1].setItemData(checkEquipmentItem, false);
                 }
             }
         }
@@ -58,7 +58,7 @@ public class PaletteAdmin {
                     int boolCheck = 1;
                     for(int j = 0; j < 8; j++) {
                         if((checkExpendItem.getPalettePosition()&boolCheck) != 0) {
-                            palettes[1].palette_elements[j].setItemData(checkExpendItem);
+                            palettes[1].palette_elements[j].setItemData(checkExpendItem, false);
                         }
                         boolCheck *= 2;
                     }
@@ -71,8 +71,8 @@ public class PaletteAdmin {
 
         }
 
-        palettes[0].palette_elements[7].setItemData(_equipmentItemDataAdmin.getOneDataByName("素手"));
-        palettes[0].palette_elements[6].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ盾"));
+        palettes[0].palette_elements[7].setItemData(_equipmentItemDataAdmin.getOneDataByName("素手"), false);
+        palettes[0].palette_elements[6].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ盾"), false);
 
 
 
@@ -109,7 +109,7 @@ public class PaletteAdmin {
         //by kmhanko 採掘パレットへ道具を格納
         List<MiningItemData> tmpItemData = miningItemDataAdmin.getItemDatas();
         for(int j = 0; j < 5; j++) {// まだ5種類しか用意して居ないため
-            palettes[2].palette_elements[j].setItemData(tmpItemData.get(j));
+            palettes[2].palette_elements[j].setItemData(tmpItemData.get(j), false);
         }
     }
 
@@ -182,7 +182,7 @@ public class PaletteAdmin {
     }
 
     public void deleteExpendItemData(){
-        palettes[1].setPaletteCenter(null);
+        palettes[1].setPaletteCenter(null, false);
     }
 
     //by kmhanko

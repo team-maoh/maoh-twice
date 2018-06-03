@@ -96,23 +96,21 @@ public class Inventry {
 
         paint.setARGB(255, 0, 255, 0);
 
-        left_triangle = graphic.makeImageContext(graphic.searchBitmap("apple"), left, top + (10 * (bottom - top) / contentNum));
+        left_triangle = graphic.makeImageContext(graphic.searchBitmap("矢印左"), left+20, bottom,((float)(bottom-top)/(float)contentNum)/(float)graphic.searchBitmap("矢印左").getHeight(),((float)(bottom-top)/(float)contentNum)/(float)graphic.searchBitmap("矢印左").getHeight(),0,255,true);
 
         leftTrianglePosition[0] = left;
         leftTrianglePosition[1] = bottom;
         leftTrianglePosition[2] = left + (right - left) / 2;
         leftTrianglePosition[3] = leftTrianglePosition[1] + 100;
 
-        leftPlate = new BoxImagePlate(graphic, user_interface, paint, UP_MOMENT, MOVE, leftTrianglePosition, left_triangle, left_triangle);
-
-
-        right_triangle = graphic.makeImageContext(graphic.searchBitmap("apple"), left + (right - left) / 2, top + (10 * (bottom - top) / contentNum));
+        right_triangle = graphic.makeImageContext(graphic.searchBitmap("矢印右"), right-graphic.searchBitmap("矢印右").getWidth()-20, bottom,((float)(bottom-top)/(float)contentNum)/(float)graphic.searchBitmap("矢印左").getHeight(),((float)(bottom-top)/(float)contentNum)/(float)graphic.searchBitmap("矢印右").getHeight(),0,255,true);
 
         rightTrianglePosition[0] = left + (right - left) / 2;
         rightTrianglePosition[1] = bottom;
         rightTrianglePosition[2] = right;
         rightTrianglePosition[3] = rightTrianglePosition[1] + 100;
 
+        leftPlate = new BoxImagePlate(graphic, user_interface, paint, UP_MOMENT, MOVE, leftTrianglePosition, left_triangle, left_triangle);
         rightPlate = new BoxImagePlate(graphic, user_interface, paint, UP_MOMENT, MOVE, rightTrianglePosition, right_triangle, right_triangle);
 
         page = 0;
@@ -205,8 +203,6 @@ public class Inventry {
             graphic.bookingDrawBitmapData(flameElement[2][2], position[i][2] - width / 3, position[i][3] - height / 3, 1.0f, 1.0f, 0, 254, true);
         }
 
-        leftPlate.drawCollisionRange();
-        rightPlate.drawCollisionRange();
         rightPlate.draw();
         leftPlate.draw();
     }
@@ -252,9 +248,18 @@ public class Inventry {
             if (inventry_datas[i].getItemData() != null) {
                 if (inventry_datas[i].getItemData().getName().equals(_item_data.getName())) {
                     inventry_datas[i].setItemNum(inventry_datas[i].getItemNum() - 1);
+                    break;
                 }
             }
         }
+
+        if(inventry_datas[i].getItemNum() <= 0){
+            for(int j = i; j < INVENTRY_DATA_MAX-1; j++){
+                //todo:直す
+                inventry_datas[j] = inventry_datas[j+1];
+            }
+        }
+
     }
 
     //by kmhanko
@@ -288,10 +293,10 @@ public class Inventry {
         }
         return null;
     }
+
     public InventryData getInventryData(int i) {
         return inventry_datas[i];
     }
-
 
     public void setPosition(int left, int top, int right, int bottom) {
 
@@ -308,7 +313,6 @@ public class Inventry {
         }
 
         operate_inventry_list_box = new PlateGroup<BoxInventryPlate>(inventry_item_plates);
-
     }
 
     public int getInventryNum(){
@@ -340,7 +344,6 @@ public class Inventry {
         for (int i = 0; i < contentNum; i++) {
             operate_inventry_list_box.setInventryData(inventry_datas[page * contentNum + i], i);
         }
-
     }
 
     public void sortItemDatabyKind() {
@@ -358,7 +361,6 @@ public class Inventry {
                 }
             }
         }
-
         for (int i = 0; i < contentNum; i++) {
             operate_inventry_list_box.setInventryData(inventry_datas[page * contentNum + i], i);
         }
