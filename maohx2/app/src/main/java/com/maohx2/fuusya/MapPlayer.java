@@ -50,6 +50,7 @@ public class MapPlayer extends MapUnit {
     MapPlateAdmin map_plate_admin;
     BattleUnitAdmin battle_unit_admin;
     DungeonModeManage dungeon_mode_manage;
+    int kind_of_enemy;
 
     //    int PLAYER_STEP = 26;//プレイヤーの歩幅
     int PLAYER_STEP = 100;//プレイヤーの歩幅 //デバッグ用
@@ -65,6 +66,7 @@ public class MapPlayer extends MapUnit {
     boolean will_cancel_step_sound;
 
     boolean debug_first = false;
+    boolean player_touch_refresh;//Playerを二度タッチしたら二度目でMenuが消える
 
     public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, MapPlateAdmin _map_plate_admin, BattleUnitAdmin _battle_unit_admin, DungeonModeManage _dungeon_mode_manage, boolean _avoid_battle_for_debug) {
         super(graphic, _map_object_admin, _camera);
@@ -81,13 +83,14 @@ public class MapPlayer extends MapUnit {
 
         sound_admin = _sound_admin;
 
-        mean_encount_steps = 300;
+        mean_encount_steps = 80;
         var_encount_steps = 0;
         th_encount_steps = makeThresholdEncountSteps();
 
         encount_steps = 0;
         sound_steps = 0;
 
+        kind_of_enemy = 1;
 
         touching_frame_count = 0;
         step = PLAYER_STEP;
@@ -99,6 +102,7 @@ public class MapPlayer extends MapUnit {
         avoid_battle_for_debug = _avoid_battle_for_debug;
 
         will_cancel_step_sound = false;
+        player_touch_refresh = true;
     }
 
     public void init() {
@@ -132,15 +136,20 @@ public class MapPlayer extends MapUnit {
             //Listではない領域をタッチしているとき
             if (map_plate_admin.isTouchingList(touch_n_x, touch_n_y) == false) {
 
+//                int pre_content = map_plate_admin.getDisplayingContent();
+
                 map_plate_admin.setDisplayingContent(-1);
 
                 //Player(画面中央)をタッチしたらMENUを表示する
 //                if (touch_state != TouchState.MOVE) {
-                if (touch_state == TouchState.UP) {
-                    if (isWithinReach(touch_w_x, touch_w_y, 80) == true) {
+                if (isWithinReach(touch_w_x, touch_w_y, 80) == true) {
+                    if (touch_state == TouchState.UP && player_touch_refresh == true) {
                         map_plate_admin.setDisplayingContent(0);
-                        sound_admin.play("cursor00");
+                        sound_admin.play("enter00");
+                        player_touch_refresh = false;
                     }
+                } else {
+                    player_touch_refresh = true;
                 }
 
                 //タッチ座標が現在位置からある程度離れていたら、その座標を目標座標とする
@@ -213,7 +222,7 @@ public class MapPlayer extends MapUnit {
 
             encount_steps++;
 //            System.out.println("encount_step_desudesu  " + (th_encount_steps - encount_steps));
-            if (encount_steps >= th_encount_steps) {
+            if (encount_steps >= th_encount_steps && map_admin.getNow_floor_num() != map_admin.getBoss_floor_num()) {
                 System.out.println("◆一定歩数 歩いたので敵と遭遇");
                 encount_steps = 0;
                 //遭遇の瞬間に、次の遭遇までに要する歩数を乱数で決める
@@ -226,15 +235,12 @@ public class MapPlayer extends MapUnit {
                 int num_of_zako = max_of_num_of_zako * now_floor_num / boss_floor_num;
 
                 String[] tmp_zako = new String[num_of_zako];
-                int num_of_nonnull = 1;
 
-                for (int i = 0; i < num_of_zako; ) {
-                    if (map_admin.getMonsterName(0)[i % num_of_nonnull].equals("null")) {
-                        num_of_nonnull = i;
-                    } else {
-                        tmp_zako[i] = map_admin.getMonsterName(0)[i % num_of_nonnull];
-                        i++;
-                    }
+                int kind_of_zako = map_object_admin.getKindOfZako();
+
+                for (int i = 0; i < num_of_zako; i++) {
+                    double ran1 = kind_of_zako * random.nextDouble();
+                    tmp_zako[i] = map_admin.getMonsterName(0)[(int) ran1 % kind_of_zako];
                 }
 
                 //デバッグ時にエンカウントすると鬱陶しいのでコメントアウト
@@ -319,5 +325,6 @@ public class MapPlayer extends MapUnit {
 //        }
 
     }
+
 
 }
