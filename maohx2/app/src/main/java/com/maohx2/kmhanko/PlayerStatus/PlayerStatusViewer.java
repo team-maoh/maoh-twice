@@ -2,6 +2,7 @@ package com.maohx2.kmhanko.PlayerStatus;
 
 
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.BoxPlate;
@@ -20,11 +21,10 @@ public class PlayerStatusViewer {
     boolean isExist;
 
     static final int TEXT_NUM = 5;
-    static final int TEXT_X_OFFSET_LEFT1 = 60;
-    static final int TEXT_X_OFFSET_LEFT2 = 100;
+    static final int TEXT_X_OFFSET_LEFT1 = 70;
+    static final int TEXT_X_OFFSET_LEFT2 = 130;
 
-    static final int TEXT_X_OFFSET = 60;
-    static final float TEXT_SIZE_RATE= 0.3f;
+    static final float TEXT_SIZE_RATE= 0.6f;
 
 
     int posX1;
@@ -43,6 +43,7 @@ public class PlayerStatusViewer {
     UserInterface userInterface;
 
     PlateGroup<BoxPlate> statusPlate;
+    BitmapData statusIcon[] = new BitmapData[TEXT_NUM];
 
     public PlayerStatusViewer(Graphic _graphic, UserInterface _userInterface, PlayerStatus _playerStatus) {
         playerStatus = _playerStatus;
@@ -62,7 +63,7 @@ public class PlayerStatusViewer {
 
         posX1 = 0;
         posX2 = 1600;
-        posY1 = 800;
+        posY1 = 850;
         posY2 = 900;
 
         sizeX = (posX2 - posX1)/TEXT_NUM;
@@ -73,6 +74,12 @@ public class PlayerStatusViewer {
         paint.setTextSize(sizeY * TEXT_SIZE_RATE);
         boxPaint = new Paint();
         boxPaint.setARGB(128,0,0,0);
+
+        statusIcon[0] = graphic.searchBitmap("status_hp");
+        statusIcon[1] = graphic.searchBitmap("剣");
+        statusIcon[2] = graphic.searchBitmap("盾");
+        statusIcon[3] = graphic.searchBitmap("status_luck");
+        statusIcon[4] = graphic.searchBitmap("status_money");
 
     }
 
@@ -123,8 +130,9 @@ public class PlayerStatusViewer {
                                     //graphic.bookingDrawText(statusName,posX1 + TEXT_X_OFFSET_LEFT1, posY1 + sizeY * i + sizeY, paint);
                                     //graphic.bookingDrawText(statusFigure,posX1 + TEXT_X_OFFSET_LEFT1 + TEXT_X_OFFSET_LEFT2, posY1 + sizeY * i + sizeY, paint);
 
-                                    graphic.bookingDrawText(statusName,posX1 + sizeX * i , posY1 + (int)((sizeY + sizeY * TEXT_SIZE_RATE)/2.0f), paint);
-                                    graphic.bookingDrawText(statusFigure,posX1 + sizeX * i + TEXT_X_OFFSET , posY1 + (int)((sizeY + sizeY * TEXT_SIZE_RATE)/2.0f), paint);
+                                    graphic.bookingDrawBitmapData(statusIcon[i],posX1 + sizeX * i , posY1, 2.0f, 2.0f,0,255, true);
+                                    graphic.bookingDrawText(statusName,posX1 + sizeX * i + TEXT_X_OFFSET_LEFT1, posY1 + (int)((sizeY + sizeY * TEXT_SIZE_RATE)/2.0f), paint);
+                                    graphic.bookingDrawText(statusFigure,posX1 + sizeX * i + TEXT_X_OFFSET_LEFT2, posY1 + (int)((sizeY + sizeY * TEXT_SIZE_RATE)/2.0f), paint);
 
                                 }
                             }
