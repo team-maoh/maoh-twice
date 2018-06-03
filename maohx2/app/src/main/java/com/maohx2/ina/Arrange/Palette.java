@@ -9,6 +9,7 @@ import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.itemdata.ExpendItemData;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import static com.maohx2.ina.Constants.Math.COS;
 import static com.maohx2.ina.Constants.Math.SIN;
@@ -37,13 +38,15 @@ public class Palette {
     int position_x;
     int position_y;
     int paletteNum;
+    SoundAdmin soundAdmin;
 
 
-    public Palette(BattleUserInterface _battle_user_interface, Graphic _graphic, int _position_x, int _position_y, int _paletteNum) {
+    public Palette(BattleUserInterface _battle_user_interface, Graphic _graphic, int _position_x, int _position_y, int _paletteNum, SoundAdmin _soundAdmin) {
         graphic = _graphic;
         battle_user_interface = _battle_user_interface;
         paint = new Paint();
         paletteNum = _paletteNum;
+        soundAdmin = _soundAdmin;
         //inventry = _inventry;
 
         position_x = _position_x;
@@ -60,11 +63,11 @@ public class Palette {
         for (int i = 0; i < 8; i++) {
             int center_x = position_x + (int) (PALETTE_ARRANGE_RADIUS * COS[i]);
             int center_y = position_y - (int) (PALETTE_ARRANGE_RADIUS * SIN[i]);
-            palette_elements[i] = new PaletteElement(center_x, center_y, i + 1, battle_user_interface.setCircleTouchUI(center_x, center_y, PALETTE_ELEMENT_RADIUS_BIG));
+            palette_elements[i] = new PaletteElement(center_x, center_y, i + 1, battle_user_interface.setCircleTouchUI(center_x, center_y, PALETTE_ELEMENT_RADIUS_BIG), soundAdmin);
             //palette_elements[i].setItemData();
         }
 
-        palette_center = new PaletteCenter(position_x, position_y, 0, battle_user_interface.setCircleTouchUI(position_x, position_y, PALETTE_CENTER_RADIUS_BIG));
+        palette_center = new PaletteCenter(position_x, position_y, 0, battle_user_interface.setCircleTouchUI(position_x, position_y, PALETTE_CENTER_RADIUS_BIG), soundAdmin);
 
         //palette_center.setItemData();
     }
@@ -159,23 +162,6 @@ public class Palette {
         }
 
 
-
-        /* ここを使うとパレットバグが起きる
-        //バトルパレットの大きさを設定する際の判定
-        select_circle_num = -1;
-        if (battle_user_interface.checkUI(palette_center.getTouchID(), Constants.Touch.TouchWay.MOVE) == true) {
-            battle_user_interface.setPaletteElement(palette_center);
-            select_circle_num = 0;
-        }
-
-        for (int i = 0; i < 8; i++) {
-            if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.MOVE) == true) {
-                battle_user_interface.setPaletteElement(palette_elements[i]);
-                select_circle_num = i+1;
-            }
-        }
-        */
-
         //指が離れた際のパレットのチェック(パレット間)
         if (battle_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
             InventryData inventry_data = null;
@@ -193,6 +179,11 @@ public class Palette {
 
                     if (inventry_data.getItemData() != null) {
                         if (checkPaletteNumAndItemKind(inventry_data.getItemData().getItemKind()) == false) {return;}
+
+                        if(inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT){
+                            EquipmentItemData checkNumItemData = (EquipmentItemData)(inventry_data.getItemData());
+                            if(checkNumItemData.getPalettePosition() > 0){return;}
+                        }
 
                         if(inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.EXPEND){
                             ExpendItemData checkNumItemData = (ExpendItemData)(inventry_data.getItemData());
@@ -214,19 +205,8 @@ public class Palette {
                     battle_user_interface.setPaletteElement(null);
                 }
 
-                /*
-                for (int i = 0; i < 8; i++) {
-                    if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true){
-                        ItemData a = palette_elements[i].getItemData();
-                        //palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData());
-                        palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData(),battle_user_interface.getPaletteElement().getElementNum());
-                        battle_user_interface.getPaletteElement().setItemData(a);
-                        battle_user_interface.setPaletteElement(null);
-                    }
-                }
-                */
 
-                if(paletteNum == 0) {
+                 if(paletteNum == 0) {
                     for (int i = 0; i < 6; i++) {
                         if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
                             ItemData a = palette_elements[i].getItemData();
@@ -237,6 +217,7 @@ public class Palette {
                         }
                     }
                 }else{
+
                     for (int i = 0; i < 8; i++) {
                         if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
                             ItemData a = palette_elements[i].getItemData();
@@ -335,7 +316,6 @@ public class Palette {
                 palette_elements[i].drawBigAndItem();
             }
         }
-
     }
 
 

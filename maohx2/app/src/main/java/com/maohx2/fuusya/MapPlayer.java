@@ -212,7 +212,7 @@ public class MapPlayer extends MapUnit {
             walkOneStep(dst_w_x, dst_w_y, step);
 
             encount_steps++;
-            System.out.println("encount_step_desudesu  " + (th_encount_steps - encount_steps));
+//            System.out.println("encount_step_desudesu  " + (th_encount_steps - encount_steps));
             if (encount_steps >= th_encount_steps) {
                 System.out.println("◆一定歩数 歩いたので敵と遭遇");
                 encount_steps = 0;

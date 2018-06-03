@@ -1,3 +1,5 @@
+
+/*
 package com.maohx2.kmhanko.dungeonselect;
 
 import java.util.List;
@@ -8,11 +10,11 @@ import com.maohx2.kmhanko.database.MyDatabase;
 
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
-
+*/
 /**
  * Created by user on 2017/10/08.
  */
-
+/*
 //将来的には大幅に書き換えるか消えるかする
 
 public class LoopSelectButtonAdmin {
@@ -92,4 +94,4 @@ public class LoopSelectButtonAdmin {
     }
 
 
-}
+}*/

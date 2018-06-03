@@ -85,7 +85,7 @@ public class MapObjectAdmin {
 
     //リリース時にはfalse
     //trueにすると敵との戦闘を回避できる(デバッグ用)
-    boolean avoid_battle_for_debug = false;
+    boolean avoid_battle_for_debug = true;
 
     MapInventryAdmin map_inventry_admin;
     ActivityChange activityChange;
@@ -115,7 +115,8 @@ public class MapObjectAdmin {
 
             String name_of_trap = randomTrapName();
 
-            map_trap[i] = new MapTrap(graphic, this, i % 4, camera, false, "being_teleported");
+            map_trap[i] = new MapTrap(graphic, this, i % 4, camera, false, name_of_trap);
+//            map_trap[i] = new MapTrap(graphic, this, i % 4, camera, false, "being_teleported");
             map_trap[i].init();
 
             map_trap_bitmap[i] = new MapObjectBitmap(1, graphic, "cave_thing_01");
@@ -152,7 +153,6 @@ public class MapObjectAdmin {
         bag_item_admin = new BagItemAdmin();
         bag_item_admin.init();
 
-        map_inventry_admin = map_plate_admin.getMapInventryAdmin();
         activityChange = map_plate_admin.getActivityChange();
 
     }
@@ -244,7 +244,6 @@ public class MapObjectAdmin {
             map_player_bitmap.draw(map_player.getDirOnMap(), map_player.getNormX(), map_player.getNormY());
         }
 
-
     }
 
     public MapPlayer getPlayer() {
@@ -275,6 +274,9 @@ public class MapObjectAdmin {
     public void setMapAdmin(MapAdmin _map_admin) {
 
         map_admin = _map_admin;
+
+        map_plate_admin.setMapAdmin(map_admin);
+
         magnification = map_admin.getMagnification();
 
         map_player.initClass(map_admin);
@@ -357,11 +359,7 @@ public class MapObjectAdmin {
 
         if (map_admin.getNow_floor_num() != map_admin.getBoss_floor_num()) {
 
-//            System.out.println("MinePointが設置されました");
-
             for (int i = 0; i < NUM_OF_MINE; i++) {
-
-                System.out.println("MinePointが設置されました" + mine_point[i].x);
 
                 if (mine_point[i].x > 0) {
                     map_mine[i].generatePosition(mine_point[i].x * magnification + magnification / 2, mine_point[i].y * magnification + magnification / 2, magnification);
@@ -396,8 +394,8 @@ public class MapObjectAdmin {
                 map_boss[i].setExists(true);
 //            System.out.println("boss_point.x ___ " + boss_point.x);
 //            System.out.println("boss_point.y ___ " + boss_point.y);
-                System.out.println("boss_point.x ___ " + boss_point[i].x);
-                System.out.println("boss_point.y ___ " + boss_point[i].y);
+//                System.out.println("boss_point.x ___ " + boss_point[i].x);
+//                System.out.println("boss_point.y ___ " + boss_point[i].y);
             }
         }
 
@@ -494,6 +492,10 @@ public class MapObjectAdmin {
                 return "being_blown_away";
         }
 
+    }
+
+    public void setMapInventryAdmin(MapInventryAdmin _map_inventry_admin){
+        map_inventry_admin = _map_inventry_admin;
     }
 
     public void escapeDungeon(){

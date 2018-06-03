@@ -9,6 +9,8 @@ import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.itemdata.ExpendItemData;
 import com.maohx2.kmhanko.itemdata.MiningItemData;
 import com.maohx2.kmhanko.itemdata.MiningItemDataAdmin;
+import com.maohx2.kmhanko.sound.SoundAdmin;
+
 import java.util.List;
 
 import static com.maohx2.ina.Constants.Inventry.INVENTRY_DATA_MAX;
@@ -25,6 +27,7 @@ public class PaletteAdmin {
     boolean palettesFlag[] = new boolean[palettes.length]; //palettesより下に配置すること
     EquipmentItemDataAdmin equipmentItemDataAdmin;
 
+    /*
     public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic){
         palettes[0] = new Palette(_battle_user_interface, _graphic, 1400,750,0);
         palettes[1] = new Palette(_battle_user_interface, _graphic,  200,750,1);
@@ -32,12 +35,12 @@ public class PaletteAdmin {
         //by kmhanko ジオ採掘パレット
         palettes[2] = new Palette(_battle_user_interface, _graphic,  1400,750,2);
     }
-
-    public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic, InventryS equipmentInventry, InventryS expendInventry, EquipmentItemDataAdmin _equipmentItemDataAdmin){
-        palettes[0] = new Palette(_battle_user_interface, _graphic, 1400,750,0);
-        palettes[1] = new Palette(_battle_user_interface, _graphic,  200,750,1);
+*/
+    public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic, InventryS equipmentInventry, InventryS expendInventry, EquipmentItemDataAdmin _equipmentItemDataAdmin, SoundAdmin _soundAdmin){
+        palettes[0] = new Palette(_battle_user_interface, _graphic, 1400,750,0, _soundAdmin);
+        palettes[1] = new Palette(_battle_user_interface, _graphic,  200,750,1, _soundAdmin);
         //by kmhanko ジオ採掘パレット
-        palettes[2] = new Palette(_battle_user_interface, _graphic,  1400,750,2);
+        palettes[2] = new Palette(_battle_user_interface, _graphic,  1400,750,2, _soundAdmin);
         for(int i = 0; i < INVENTRY_DATA_MAX; i++){
             EquipmentItemData checkEquipmentItem = ((EquipmentItemData)(equipmentInventry.getItemData(i)));
             if(checkEquipmentItem != null) {
@@ -68,22 +71,23 @@ public class PaletteAdmin {
 
         }
 
-        palettes[0].palette_elements[7].setItemData(_equipmentItemDataAdmin.getOneDataByName("素手"));
-        palettes[0].palette_elements[6].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ盾"));
+//        palettes[0].palette_elements[7].setItemData(_equipmentItemDataAdmin.getOneDataByName("素手"));
+//        palettes[0].palette_elements[6].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ盾"));
 
 
 
-//        palettes[0].palette_elements[0].setItemData(equipmentItemDataAdmin.getOneDataByName("素手"));
-//        palettes[0].palette_elements[1].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグ剣"));
-//        palettes[0].palette_elements[2].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグ杖"));
-//        palettes[0].palette_elements[3].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグ斧"));
-//        palettes[0].palette_elements[4].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグ槍"));
-//        palettes[0].palette_elements[5].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグ弓"));
-//        palettes[0].palette_elements[6].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグ銃"));
-//        palettes[0].palette_elements[7].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグナックル"));
+        palettes[0].palette_elements[0].setItemData(_equipmentItemDataAdmin.getOneDataByName("素手"));
+        palettes[0].palette_elements[1].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ剣"));
+        palettes[0].palette_elements[2].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ杖"));
+        palettes[0].palette_elements[3].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ斧"));
+        palettes[0].palette_elements[4].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ槍"));
+        palettes[0].palette_elements[5].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ弓"));
+        palettes[0].palette_elements[6].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ銃"));
+        palettes[0].palette_elements[7].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグナックル"));
     }
 
 
+    /*
     public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic, EquipmentItemDataAdmin equipmentItemDataAdmin){
         palettes[0] = new Palette(_battle_user_interface, _graphic, 1400,750,0);
         palettes[1] = new Palette(_battle_user_interface, _graphic,  200,750,1);
@@ -99,6 +103,7 @@ public class PaletteAdmin {
         palettes[0].palette_elements[7].setItemData(equipmentItemDataAdmin.getOneDataByName("デバッグナックル"));
 
     }
+    */
 
     public void setMiningItems(MiningItemDataAdmin miningItemDataAdmin) {
         //by kmhanko 採掘パレットへ道具を格納

@@ -1,14 +1,17 @@
+/*
+
 package com.maohx2.kmhanko.dungeonselect;
 
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.UI.UserInterface;
 
 import com.maohx2.ina.Draw.Graphic;
-
+*/
 /**
  * Created by user on 2017/10/13.
  */
 
+/*
 //将来的には大幅に書き換えるか消えるかする
 
 public class LoopSelectButton {
@@ -51,7 +54,7 @@ public class LoopSelectButton {
     }
     //static public void setGameSystem(GameSystem _game_system) { game_system = _game_system; }
 
-    public void draw() {
+    public void draw() {*/
         //消える予定
         /*
         paint.setColor(Color.argb(128, color_r, color_g, color_b));
@@ -61,7 +64,7 @@ public class LoopSelectButton {
         paint.setTextSize(60);
         canvas.drawText(name,(float)x, (float)y + 60, paint);
         */
-    }
+    /*}
 
     public void update() {
         if (map_user_interface.checkUI(touch_id, Constants.Touch.TouchWay.DOWN_MOMENT)) {
@@ -110,3 +113,4 @@ public class LoopSelectButton {
     }
 
 }
+*/

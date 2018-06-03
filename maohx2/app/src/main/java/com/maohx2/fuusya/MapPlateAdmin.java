@@ -3,6 +3,7 @@ package com.maohx2.fuusya;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.ActivityChange;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Constants;
@@ -45,6 +46,7 @@ public class MapPlateAdmin {
     PlayerStatus playerStatus;
     PlayerStatusSaver playerStatusSaver;
     boolean is_displaying_list;
+    MapAdmin map_admin;
 
     double max_hp;
 
@@ -61,7 +63,7 @@ public class MapPlateAdmin {
     int BUTTON_HEIGHT = 100;
     //
     int HP_BG_TOP = 5;
-    int HP_BG_RIGHT = 150;
+    int HP_BG_RIGHT = 110;
     int HP_BG_LEFT = 1570;
     int HP_BG_BOTTOM = 35;
     //
@@ -71,7 +73,7 @@ public class MapPlateAdmin {
     int ITEM_BOTTOM = 450;
     int ITEM_CONTENTS_NUM = 10;
     //
-    int HP_RIGHT = 160;
+    int HP_RIGHT = 120;
     int HP_LEFT = 1560;
     int HP_HEIGHT = 15;
     int HP_TOP = HP_BG_TOP + ((HP_BG_BOTTOM - HP_BG_TOP) - HP_HEIGHT) / 2;
@@ -79,6 +81,10 @@ public class MapPlateAdmin {
     Paint blue_paint = new Paint();
     Paint green_paint = new Paint();
     Paint red_paint = new Paint();
+    //
+    Paint text_paint = new Paint();
+    Paint floor_bg = new Paint();
+
 
     //
     int RETIRE_TOP = 200;
@@ -89,8 +95,8 @@ public class MapPlateAdmin {
     double hp_ratio;//0.00 ~ 1.00
 
     PlateGroup<BoxTextPlate> menuGroup;//[ステータス][アイテム][リタイア]
-    PlateGroup<BoxTextPlate> confirmRetireGroup;//リタイアしますか？[はい][いいえ]
-    PlateGroup<BoxPlate> hitpoint;
+//    PlateGroup<BoxTextPlate> confirmRetireGroup;//リタイアしますか？[はい][いいえ]
+//    PlateGroup<BoxPlate> hitpoint;
 
     EquipmentItemData tmpEquipmentItemData;
     int obtained_item_num;
@@ -115,8 +121,7 @@ public class MapPlateAdmin {
         inventry = new Inventry();
         inventry.init(dungeon_user_interface, graphic, ITEM_LEFT, ITEM_TOP, ITEM_RIGHT, ITEM_BOTTOM, ITEM_CONTENTS_NUM);
 
-        Paint text_paint = new Paint();
-        text_paint.setTextSize(30f);
+        text_paint.setTextSize(40f);
         text_paint.setARGB(255, 255, 255, 255);
 
         is_displaying_list = false;
@@ -132,7 +137,7 @@ public class MapPlateAdmin {
 //        confirmRetireGroup = new PlateGroup<BoxTextPlate>(new BoxTextPlate[]{new BoxTextPlate(graphic, dungeon_user_interface, new Paint(), UP_MOMENT, MOVE, new int[]{RETIRE_LEFT, RETIRE_TOP, RETIRE_RIGHT, RETIRE_BOTTOM}, "はい", text_paint)});
 
 
-        int hp_cutting_x = (int) ((HP_RIGHT - HP_LEFT) * hp_ratio) + HP_LEFT;
+//        int hp_cutting_x = (int) ((HP_RIGHT - HP_LEFT) * hp_ratio) + HP_LEFT;
 
         obtained_item_num = 0;
 
@@ -147,7 +152,9 @@ public class MapPlateAdmin {
         max_hp = playerStatus.getHP();
         blue_paint.setColor(Color.BLUE);
         red_paint.setColor(Color.RED);
+        red_paint.setTextSize(40f);
         green_paint.setColor(Color.GREEN);
+        floor_bg.setColor(Color.BLUE);
 
     }
 
@@ -201,7 +208,7 @@ public class MapPlateAdmin {
                 break;
 
             case 3://[リタイア]
-                map_inventry_admin.storageMapInventry();
+//                map_inventry_admin.storageMapInventry();
                 activityChange.toWorldActivity();
 
                 break;
@@ -244,7 +251,7 @@ public class MapPlateAdmin {
 
         drawTutorialImage();
 
-        drawHP();
+        drawFloorAndHP();
 
     }
 
@@ -364,7 +371,11 @@ public class MapPlateAdmin {
         return activityChange;
     }
 
-    private void drawHP() {
+    public void setMapAdmin(MapAdmin _map_admin) {
+        map_admin = _map_admin;
+    }
+
+    private void drawFloorAndHP() {
 
         double now_hp = playerStatus.getNowHP();
         double hp_ratio = now_hp / max_hp;
@@ -374,6 +385,13 @@ public class MapPlateAdmin {
         graphic.bookingDrawRect(HP_BG_LEFT, HP_BG_TOP, HP_BG_RIGHT, HP_BG_BOTTOM, blue_paint);
         graphic.bookingDrawRect(HP_LEFT, HP_TOP, right_of_green, HP_TOP + HP_HEIGHT, red_paint);
         graphic.bookingDrawRect(right_of_green, HP_TOP, HP_RIGHT, HP_TOP + HP_HEIGHT, green_paint);
+
+        if (map_admin != null) {
+            String now_floor = String.valueOf(map_admin.getNow_floor_num()) + "F";
+
+            graphic.bookingDrawRect(5, 5, 100, 50, floor_bg);
+            graphic.bookingDrawText(now_floor, 20, 40, text_paint);
+        }
 
     }
 
