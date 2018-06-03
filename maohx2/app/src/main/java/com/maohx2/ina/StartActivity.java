@@ -198,7 +198,7 @@ class StartSurfaceView extends BaseSurfaceView {
                 start_game_system.draw();
                 break;
             case 2:
-                soundAdmin.play("opening00");
+                soundAdmin.play("opening01");
                 if(global_data.getPlayerStatus().getTutorialInDungeon() == 1) {
                     activityChange.toWorldActivity();
                 }else{
