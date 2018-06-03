@@ -40,6 +40,8 @@ public class PaletteElement {
         }else {
             paint.setColor(CIRCLE_COLOR[element_num - 1]);
         }
+
+        paint.setAlpha(255);
     }
 
     public static void initStatic(Graphic _graphic){
@@ -95,10 +97,12 @@ public class PaletteElement {
 
 
 
-    public void setItemData(ItemData _item_data){
+    public void setItemData(ItemData _item_data, boolean isSound){
         item_data = _item_data;
         if(item_data != null) {
-            soundAdmin.play("equip00");
+            if(isSound == true) {
+                soundAdmin.play("equip00");
+            }
             if (item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT){
                 ((EquipmentItemData) (item_data)).setPalettePosition(element_num);
             }else if(item_data.getItemKind() == Constants.Item.ITEM_KIND.EXPEND){
@@ -111,9 +115,11 @@ public class PaletteElement {
         }
     }
 
-    public void setItemData(ItemData _item_data, int preElementNum){
+    public void setItemData(ItemData _item_data, int preElementNum, boolean isSound){
         if(_item_data != null) {
-            soundAdmin.play("equip00");
+            if(isSound == true) {
+                soundAdmin.play("equip00");
+            }
             if (_item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT){
                 ((EquipmentItemData) (_item_data)).setPalettePosition(element_num);
             }else if(_item_data.getItemKind() == Constants.Item.ITEM_KIND.EXPEND){

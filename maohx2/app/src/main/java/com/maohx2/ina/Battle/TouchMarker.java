@@ -66,6 +66,14 @@ public class TouchMarker {
         }
     }
 
+    void clear(){
+        exist = false;
+        position_x = 0;
+        position_y = 0;
+        radius = 0;
+        decay_rate = 0;
+    }
+
     boolean isExist(){
         return exist;
     }
