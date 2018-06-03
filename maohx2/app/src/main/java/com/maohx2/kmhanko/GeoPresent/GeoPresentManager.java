@@ -211,8 +211,8 @@ public class GeoPresentManager {
         geoInventry.updata();
         InventryData inventryData = userInterface.getInventryData();
         if (inventryData != null) {
-            if (inventryData.getItemNum() > 0) {
-                GeoObjectData tmp = (GeoObjectData)inventryData.getItemData();//TODO なんかexpendを変換しようしていることがある
+            if (inventryData.getItemNum() > 0 && inventryData.getItemData().getItemKind() == Constants.Item.ITEM_KIND.GEO) {
+                GeoObjectData tmp = (GeoObjectData)inventryData.getItemData();
                 if (inventryData.getItemNum() > 0 && tmp.getName() != null && tmp.getSlotSetName().equals("noSet")) {
                     holdGeoObbjectData = (GeoObjectData) inventryData.getItemData();
                     userInterface.setInventryData(null);
