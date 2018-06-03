@@ -57,7 +57,7 @@ public abstract class BaseActivity extends Activity {
     @Override
     public void onPause() {
         super.onPause();  // Always call the superclass method first
-        MusicAdmin.stop();
+        MusicAdmin.close();
     }
 
     @Override
