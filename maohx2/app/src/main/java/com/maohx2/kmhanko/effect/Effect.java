@@ -194,6 +194,9 @@ public class Effect {
         extend_y = effectData.getExtendY(_step);
         angle = effectData.getAngle(_step);
         alpha = effectData.getAlpha(_step);
+        if (alpha == 255) {
+            alpha = 254;
+        }
 
         isUpLeft = effectData.isUpLeft(_step);
         imageID = effectData.getImageID(_step);
