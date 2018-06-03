@@ -26,6 +26,7 @@ import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.GeoPresent.GeoPresentManager;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatus;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatusViewer;
 import com.maohx2.kmhanko.Saver.ExpendItemInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoSlotSaver;
@@ -111,6 +112,7 @@ public class WorldGameSystem {
     MapStatus map_status;
     MapStatusSaver map_status_saver;
 
+    PlayerStatusViewer playerStatusViewer;
 
     MusicAdmin musicAdmin;
     EquipmentItemDataAdmin equipment_item_data_admin;
@@ -133,6 +135,8 @@ public class WorldGameSystem {
         maohMenosStatus = globalData.getMaohMenosStatus();
         //GeoInventry = globalData.getGeoInventry();
         musicAdmin = globalData.getMusicAdmin();
+
+        playerStatusViewer = new PlayerStatusViewer(graphic, world_user_interface, playerStatus);
 
         worldModeAdmin = new WorldModeAdmin();
         worldModeAdmin.initWorld();
@@ -227,7 +231,6 @@ public class WorldGameSystem {
 
 
     public void update() {
-
 /*
         if (world_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN) {
             List<BitmapData> testBitmapData = new ArrayList<BitmapData>();
@@ -343,11 +346,13 @@ public class WorldGameSystem {
                 break;
             case GEO_MAP:
                 geoSlotAdminManager.draw();
+                playerStatusViewer.draw();
                 break;
             case SHOP_INIT:
                 break;
             case SHOP:
                 itemShopAdmin.draw();
+                playerStatusViewer.draw();
                 break;
             case EQUIP_INIT:
                 break;
@@ -367,6 +372,7 @@ public class WorldGameSystem {
                 break;
             case SELL:
                 itemSell.draw();
+                playerStatusViewer.draw();
                 break;
             default:
                 break;
@@ -413,6 +419,7 @@ public class WorldGameSystem {
                             @Override
                             public void callBackEvent() {
                                 //戻るボタンが押された時の処理
+                                soundAdmin.play("cancel00");
                                 worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT_INIT);
                                 /*worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
