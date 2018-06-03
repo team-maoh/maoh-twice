@@ -274,8 +274,8 @@ public class WorldGameSystem {
             case EQUIP_INIT:
                 backGround = graphic.searchBitmap("firstBackground");//仮
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
-                equipmentInventry.init(world_user_interface, graphic, 800+20,100,1150+20,708, 7);
-                expendItemInventry.init(world_user_interface, graphic,400+20,100,750+20,708, 7);
+                equipmentInventry.setPosition(800+20,100,1150+20,708, 7);
+                expendItemInventry.setPosition(400+20,100,750+20,708, 7);
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
             case EQUIP:
                 equipmentInventry.updata();

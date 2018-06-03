@@ -120,7 +120,7 @@ public class GeoSlotAdminManager {
 
         geoSlotSaver.setGeoSlotAdminManager(this);
         setSlot();
-        initStatusTextBox();
+        //initStatusTextBox();
         initBackPlate();
         mode = MODE.WORLD;
 
@@ -130,7 +130,7 @@ public class GeoSlotAdminManager {
     public void start() {
         //activeGeoSlotAdmin.start();
         calcStatus();
-        geoInventry.init(userInterface,graphic,1200, 100, 1600, 700, 10);
+        geoInventry.setPosition(1200, 100, 1600, 700, 10);
     }
 
 
@@ -173,7 +173,7 @@ public class GeoSlotAdminManager {
                                 if (getMode() == GeoSlotAdminManager.MODE.DUNGEON) {
                                     getDungeonModeManage().setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
                                 }
-                                textBoxAdmin.setTextBoxExists(statusTextBoxID,false);
+                                //textBoxAdmin.setTextBoxExists(statusTextBoxID,false);
                             }
                         }
                 }
@@ -221,7 +221,7 @@ public class GeoSlotAdminManager {
         if (buttonID != -1 ) {
             soundAdmin.play("enter00");
             this.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
-            statusTextBoxUpdate();
+            //statusTextBoxUpdate();
         }
     }
 
@@ -230,7 +230,7 @@ public class GeoSlotAdminManager {
         if (activeGeoSlotAdmin != null) {
             activeGeoSlotAdmin.update();
         }
-        textBoxAdmin.setTextBoxExists(statusTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.GEO_MAP);
+        //textBoxAdmin.setTextBoxExists(statusTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.GEO_MAP);
         backPlateGroup.update();
     }
 
@@ -242,7 +242,7 @@ public class GeoSlotAdminManager {
         mapIconPlateCheck();
         mapIconPlateGroup.update();
         backPlateGroup.update();
-        textBoxAdmin.setTextBoxExists(statusTextBoxID, dungeonModeManage.getMode() == Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP);
+        //textBoxAdmin.setTextBoxExists(statusTextBoxID, dungeonModeManage.getMode() == Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP);
     }
 
     public void draw() {
@@ -345,7 +345,7 @@ public class GeoSlotAdminManager {
             }
         }
         playerStatus.calcStatus();
-        statusTextBoxUpdate();
+        //statusTextBoxUpdate();
         //activeGeoSlotAdmin.statusTextBoxUpdate();
     }
 
@@ -362,7 +362,7 @@ public class GeoSlotAdminManager {
                 }
             }
         }
-        statusTextBoxUpdate();
+        //statusTextBoxUpdate();
         //activeGeoSlotAdmin.statusTextBoxUpdate();
     }
 
@@ -411,7 +411,7 @@ public class GeoSlotAdminManager {
     }
 
     //ステータス表示関係
-
+/*
     int statusTextBoxID;
 
     public void initStatusTextBox() {
@@ -451,7 +451,7 @@ public class GeoSlotAdminManager {
         }
         textBoxAdmin.updateText(statusTextBoxID);
     }
-
+*/
     public MODE getMode() {
         return mode;
     }
@@ -459,11 +459,11 @@ public class GeoSlotAdminManager {
     public DungeonModeManage getDungeonModeManage() {
         return dungeonModeManage;
     }
-
+/*
     public void setStatusTextBoxFlag(boolean flag) {
         textBoxAdmin.setTextBoxExists(statusTextBoxID,flag);
     }
-
+*/
 
 }
 

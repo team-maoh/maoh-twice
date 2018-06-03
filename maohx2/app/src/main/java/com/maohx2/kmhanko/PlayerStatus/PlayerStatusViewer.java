@@ -21,8 +21,8 @@ public class PlayerStatusViewer {
     boolean isExist;
 
     static final int TEXT_NUM = 5;
-    static final int TEXT_X_OFFSET_LEFT1 = 70;
-    static final int TEXT_X_OFFSET_LEFT2 = 130;
+    static final int TEXT_X_OFFSET_LEFT1 = 65;
+    static final int TEXT_X_OFFSET_LEFT2 = 125;
 
     static final float TEXT_SIZE_RATE= 0.6f;
 
@@ -103,22 +103,22 @@ public class PlayerStatusViewer {
                                         case 0:
                                             statusName = "HP";
                                             statusFigure = String.valueOf(playerStatus.getHP());
-                                            paint.setARGB(255,0,255,255);
+                                            paint.setARGB(255,128,255,255);
                                             break;
                                         case 1:
                                             statusName = "Atk";
                                             statusFigure = String.valueOf(playerStatus.getAttack());
-                                            paint.setARGB(255,255,0,0);
+                                            paint.setARGB(255,255,128,128);
                                             break;
                                         case 2:
                                             statusName = "Def";
                                             statusFigure = String.valueOf(playerStatus.getDefence());
-                                            paint.setARGB(255,0,0,255);
+                                            paint.setARGB(255,128,128,255);
                                             break;
                                         case 3:
                                             statusName = "Luc";
                                             statusFigure = String.valueOf(playerStatus.getLuck());
-                                            paint.setARGB(255,255,0,255);
+                                            paint.setARGB(255,255,128,255);
                                             break;
                                         case 4:
                                             statusName = String.valueOf(playerStatus.getMoney() + " Maon");
@@ -130,7 +130,7 @@ public class PlayerStatusViewer {
                                     //graphic.bookingDrawText(statusName,posX1 + TEXT_X_OFFSET_LEFT1, posY1 + sizeY * i + sizeY, paint);
                                     //graphic.bookingDrawText(statusFigure,posX1 + TEXT_X_OFFSET_LEFT1 + TEXT_X_OFFSET_LEFT2, posY1 + sizeY * i + sizeY, paint);
 
-                                    graphic.bookingDrawBitmapData(statusIcon[i],posX1 + sizeX * i , posY1, 2.0f, 2.0f,0,255, true);
+                                    graphic.bookingDrawBitmapData(statusIcon[i],posX1 + sizeX * i , posY1, 1.5f, 1.5f,0,255, true);
                                     graphic.bookingDrawText(statusName,posX1 + sizeX * i + TEXT_X_OFFSET_LEFT1, posY1 + (int)((sizeY + sizeY * TEXT_SIZE_RATE)/2.0f), paint);
                                     graphic.bookingDrawText(statusFigure,posX1 + sizeX * i + TEXT_X_OFFSET_LEFT2, posY1 + (int)((sizeY + sizeY * TEXT_SIZE_RATE)/2.0f), paint);
 

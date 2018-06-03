@@ -125,23 +125,52 @@ public class UserInterface {
     }
 
     public int setCircleTouchUI(double center_x, double center_y, double ciclre_radius) {
-        circle_center_list_x[circle_touch_index_num] = graphic.transrateNormalizedPositionToDispPositionX((int)center_x);
-        circle_center_list_y[circle_touch_index_num] = graphic.transrateNormalizedPositionToDispPositionY((int)center_y);
-        circle_radius_list[circle_touch_index_num] = DENSITY*ciclre_radius;
-        int id = 314000 + circle_touch_index_num;
-        circle_touch_index_num++;
+        int index_num = 0;
+        for(int i = 0 ; i < LIST_MAX ; i++) {
+            if (circle_radius_list[i] == 0) {
+                index_num = i;
+            }
+        }
+        circle_center_list_x[index_num] = graphic.transrateNormalizedPositionToDispPositionX((int)center_x);
+        circle_center_list_y[index_num] = graphic.transrateNormalizedPositionToDispPositionY((int)center_y);
+        circle_radius_list[index_num] = DENSITY*ciclre_radius;
+        int id = 314000 + index_num;
+        //circle_touch_index_num++;
         return id;
     }
 
     public int setBoxTouchUI(double left, double top, double right, double down) {
-        box_left_list[box_touch_index_num] = graphic.transrateNormalizedPositionToDispPositionX((int)left);
-        box_top_list[box_touch_index_num] = graphic.transrateNormalizedPositionToDispPositionY((int)top);
-        box_right_list[box_touch_index_num] = graphic.transrateNormalizedPositionToDispPositionX((int)right);
-        box_down_list[box_touch_index_num] = graphic.transrateNormalizedPositionToDispPositionY((int)down);
+        int index_num = 0;
+        for(int i = 0 ; i < LIST_MAX ; i++) {
+            if (box_left_list[i] * box_top_list[i] * box_right_list[i] * box_down_list[i]  == 0) {
+                index_num = i;
+            }
+        }
+        box_left_list[index_num] = graphic.transrateNormalizedPositionToDispPositionX((int)left);
+        box_top_list[index_num] = graphic.transrateNormalizedPositionToDispPositionY((int)top);
+        box_right_list[index_num] = graphic.transrateNormalizedPositionToDispPositionX((int)right);
+        box_down_list[index_num] = graphic.transrateNormalizedPositionToDispPositionY((int)down);
 
-        int id = 8010000 + box_touch_index_num;
-        box_touch_index_num++;
+        int id = 8010000 + index_num;
+        //box_touch_index_num++;
         return id;
+    }
+
+    public void setCircleTouchUI(int i, double center_x, double center_y, double ciclre_radius) {
+        int index_num = i % 1000;
+        circle_center_list_x[index_num] = graphic.transrateNormalizedPositionToDispPositionX((int)center_x);
+        circle_center_list_y[index_num] = graphic.transrateNormalizedPositionToDispPositionY((int)center_y);
+        circle_radius_list[index_num] = DENSITY*ciclre_radius;
+        return;
+    }
+
+    public void setBoxTouchUI(int i, double left, double top, double right, double down) {
+        int index_num = i % 1000;
+        box_left_list[index_num] = graphic.transrateNormalizedPositionToDispPositionX((int)left);
+        box_top_list[index_num] = graphic.transrateNormalizedPositionToDispPositionY((int)top);
+        box_right_list[index_num] = graphic.transrateNormalizedPositionToDispPositionX((int)right);
+        box_down_list[index_num] = graphic.transrateNormalizedPositionToDispPositionY((int)down);
+        return;
     }
 
     public boolean checkUI(int id, TouchWay touch_way) {
@@ -219,7 +248,22 @@ public class UserInterface {
             box_down_list[i] = 0;
         }
 
-        circle_touch_index_num = 0;
+        box_touch_index_num = 0;
+    }
+
+    public void resetCircleUI(int i) {
+        int index_num = i % 1000;
+        circle_center_list_x[index_num] = 0;
+        circle_center_list_y[index_num] = 0;
+        circle_radius_list[index_num] = 0;
+    }
+
+    public void resetBoxUI(int i) {
+        int index_num = i % 1000;
+        box_left_list[index_num] = 0;
+        box_top_list[index_num] =  0;
+        box_right_list[index_num] = 0;
+        box_down_list[index_num] = 0;
     }
 
     public void resetUI() {

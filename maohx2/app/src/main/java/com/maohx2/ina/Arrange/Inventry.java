@@ -258,6 +258,9 @@ public class Inventry {
                 //todo:直す
                 inventry_datas[j] = inventry_datas[j+1];
             }
+            for (int k = 0; k < contentNum; k++) {
+                operate_inventry_list_box.setInventryData(inventry_datas[page * contentNum + k], k);
+            }
         }
 
     }
@@ -298,8 +301,12 @@ public class Inventry {
         return inventry_datas[i];
     }
 
-    public void setPosition(int left, int top, int right, int bottom) {
-
+    public void setPosition(int left, int top, int right, int bottom, int _contentNum) {
+        operate_inventry_list_box.releaseTouchID();
+        leftPlate.releaseTouchID();
+        rightPlate.releaseTouchID();
+        init(user_interface, graphic, left, top, right, bottom, _contentNum);
+/*
         paint.setARGB(255, 0, 0, 0);
         paint.setTextSize(30);
 
@@ -313,6 +320,9 @@ public class Inventry {
         }
 
         operate_inventry_list_box = new PlateGroup<BoxInventryPlate>(inventry_item_plates);
+        */
+
+
     }
 
     public int getInventryNum(){
