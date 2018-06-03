@@ -273,12 +273,14 @@ public class WorldGameSystem {
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
                 equipmentInventry.init(world_user_interface, graphic, 800+20,100,1150+20,708, 7);
                 expendItemInventry.init(world_user_interface, graphic,400+20,100,750+20,708, 7);
-
+                worldModeAdmin.setMode(WORLD_MODE.EQUIP);
             case EQUIP:
                 equipmentInventry.updata();
                 expendItemInventry.updata();
                 palette_admin.update(false);
                 backPlateGroup.update();
+                //equipmentInventry.onArrow();
+                //expendItemInventry.onArrow();
                 break;
             case PRESENT_INIT:
                 geoPresentManager.start();

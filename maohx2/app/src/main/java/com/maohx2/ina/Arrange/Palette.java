@@ -39,6 +39,7 @@ public class Palette {
     int position_y;
     int paletteNum;
     SoundAdmin soundAdmin;
+    boolean isSound;
 
 
     public Palette(BattleUserInterface _battle_user_interface, Graphic _graphic, int _position_x, int _position_y, int _paletteNum, SoundAdmin _soundAdmin) {
@@ -51,6 +52,7 @@ public class Palette {
 
         position_x = _position_x;
         position_y = _position_y;
+        isSound = false;
 
         for (int i = -3; i <= 4; i++) {
             if (i < 0) {
@@ -104,24 +106,28 @@ public class Palette {
                 if (i != 4) {
                     if (direction_check >= direction_section_check[i] && direction_check < direction_section_check[(i + 1) % 8]) {
 
-                        select_circle_num = i;
-
+                        if(select_circle_num != i) {
+                            select_circle_num = i;
+                            isSound = true;
+                        }
                     }
                 } else {
                     if ((direction_check >= direction_section_check[i] && direction_check <= Math.PI) || (direction_check < direction_section_check[(i + 1) % 8] && direction_check >= -Math.PI)) {
 
-                        select_circle_num = i;
-
+                        if(select_circle_num != i) {
+                            select_circle_num = i;
+                            isSound = true;
+                        }
                     }
                 }
             }
 
-            palette_center.changeElement(select_circle_num);
-
             if(palette_elements[select_circle_num].getItemData() != null) {
-                palette_center.setItemData(palette_elements[select_circle_num].getItemData(), select_circle_num);
+                palette_center.changeElement(select_circle_num);
+                palette_center.setItemData(palette_elements[select_circle_num].getItemData(), select_circle_num, isSound);
+                isSound = false;
                 if (palette_elements[select_circle_num].getItemData().getItemKind() == Constants.Item.ITEM_KIND.EXPEND) {
-                    palette_elements[select_circle_num].setItemData(null);
+                    palette_elements[select_circle_num].setItemData(null, false);
                 }
             }
         }
@@ -200,8 +206,8 @@ public class Palette {
                 if (battle_user_interface.checkUI(palette_center.getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
                     ItemData a = palette_center.getItemData();
                     //palette_center.setItemData(battle_user_interface.getPaletteElement().getItemData());
-                    palette_center.setItemData(battle_user_interface.getPaletteElement().getItemData(),battle_user_interface.getPaletteElement().getElementNum());
-                    battle_user_interface.getPaletteElement().setItemData(a);
+                    palette_center.setItemData(battle_user_interface.getPaletteElement().getItemData(),battle_user_interface.getPaletteElement().getElementNum(), false);
+                    battle_user_interface.getPaletteElement().setItemData(a, true);
                     battle_user_interface.setPaletteElement(null);
                 }
 
@@ -211,8 +217,8 @@ public class Palette {
                         if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
                             ItemData a = palette_elements[i].getItemData();
                             //palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData());
-                            palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData(), battle_user_interface.getPaletteElement().getElementNum());
-                            battle_user_interface.getPaletteElement().setItemData(a);
+                            palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData(), battle_user_interface.getPaletteElement().getElementNum(),true);
+                            battle_user_interface.getPaletteElement().setItemData(a, true);
                             battle_user_interface.setPaletteElement(null);
                         }
                     }
@@ -222,8 +228,8 @@ public class Palette {
                         if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
                             ItemData a = palette_elements[i].getItemData();
                             //palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData());
-                            palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData(), battle_user_interface.getPaletteElement().getElementNum());
-                            battle_user_interface.getPaletteElement().setItemData(a);
+                            palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData(), battle_user_interface.getPaletteElement().getElementNum(), true);
+                            battle_user_interface.getPaletteElement().setItemData(a, true);
                             battle_user_interface.setPaletteElement(null);
                         }
                     }
@@ -233,7 +239,7 @@ public class Palette {
 
             //指が離れた際のインベントリチェック
             if (inventry_data != null) {
-                palette_center.setItemData(inventry_data.getItemData());
+                palette_center.setItemData(inventry_data.getItemData(), true);
             }
 
             if (battle_user_interface.getPaletteElement() != null) {
@@ -247,7 +253,7 @@ public class Palette {
                         putOffItem.setPalettePosition((int)Math.pow(2,battle_user_interface.getPaletteElement().getElementNum()-1),false);
                     }
                 }
-                battle_user_interface.getPaletteElement().setItemData(null);
+                battle_user_interface.getPaletteElement().setItemData(null, false);
                 battle_user_interface.setPaletteElement(null);
             }
 
@@ -269,16 +275,6 @@ public class Palette {
                 palette_center.drawSmall();
             }
         }else{
-            if (battle_user_interface.getPaletteElement() != null) {
-                if (battle_user_interface.isUIPaletteDraw() == true && battle_user_interface.getPaletteElement().getElementNum() == 0 && checkPaletteNumAndItemKind(battle_user_interface.getPaletteElement().getItemData().getItemKind())) {
-                    palette_center.drawBig();
-                } else {
-                    palette_center.drawBigAndItem();
-                }
-            } else {
-                palette_center.drawBigAndItem();
-            }
-
             for (int i = 0; i < 8; i++) {
                 if (battle_user_interface.getPaletteElement() != null) {
                     if (battle_user_interface.isUIPaletteDraw() == true && battle_user_interface.getPaletteElement().getElementNum() == i + 1) {
@@ -289,6 +285,16 @@ public class Palette {
                 } else {
                     palette_elements[i].drawBigAndItem();
                 }
+            }
+
+            if (battle_user_interface.getPaletteElement() != null) {
+                if (battle_user_interface.isUIPaletteDraw() == true && battle_user_interface.getPaletteElement().getElementNum() == 0 && checkPaletteNumAndItemKind(battle_user_interface.getPaletteElement().getItemData().getItemKind())) {
+                    palette_center.drawBig();
+                } else {
+                    palette_center.drawBigAndItem();
+                }
+            } else {
+                palette_center.drawBigAndItem();
             }
         }
     }
@@ -339,7 +345,7 @@ public class Palette {
         return palette_center.getItemData();
     }
 
-    public void setPaletteCenter(ItemData _item_data){palette_center.setItemData(_item_data);}
+    public void setPaletteCenter(ItemData _item_data, boolean isSound){palette_center.setItemData(_item_data, isSound);}
 
     public ItemData getItemData(int _paletteIndex){
         return palette_elements[_paletteIndex].getItemData();
