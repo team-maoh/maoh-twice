@@ -29,6 +29,7 @@ public class BattleEnemy extends BattleUnit {
     BattleBaseUnitData.SpecialAction specialAction;
     int specialActionPeriod;
     int specialActionWidth;
+    boolean is_damaged;
 
     protected BattleBaseUnitData battleBaseUnitDataForRock;
 
@@ -259,6 +260,10 @@ public class BattleEnemy extends BattleUnit {
     @Override
     public void setAttackFrame(int _attack_frame) {
         attack_frame = _attack_frame;
+    }
+    @Override
+    public void setDamagedFlag(boolean _flag){
+        is_damaged = _flag;
     }
 
 

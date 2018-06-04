@@ -349,7 +349,7 @@ public class BattleUnitAdmin {
 
 
     public void update() {
-
+        battle_units[0].setDamagedFlag(false);
         double touch_x = battle_user_interface.getTouchX();
         double touch_y = battle_user_interface.getTouchY();
         TouchState touch_state = battle_user_interface.getTouchState();
@@ -402,7 +402,7 @@ public class BattleUnitAdmin {
                                                         battle_effect_ID = effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3);
                                                         break;
                                                     case BOW:
-                                                        battle_effect_ID = effectAdmin.createEffect("bow_effect", "bow_effect", 5, 3);
+                                                        battle_effect_ID = effectAdmin.createEffect("bow_effect", "bow_effect", 5, 2);
                                                         break;
                                                     case WAND:
                                                         battle_effect_ID = effectAdmin.createEffect("cane_effect", "cane_effect", 14, 1);
@@ -587,6 +587,7 @@ public class BattleUnitAdmin {
                             battleEndFlag = true;
                             new_hp = 0;
                         }
+                        battle_units[0].setDamagedFlag(true);
                         battle_units[0].setHitPoint(new_hp);
                     }
                 }
