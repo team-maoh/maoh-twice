@@ -11,12 +11,12 @@ public class EquipmentItemDataCreater {
 
     EquipmentItemBaseData[] equipmentItemBaseDatas;
 
-    public EquipmentItemDataCreater(EquipmentItemBaseData[] _equipmentItemBaseDatas){
+    public EquipmentItemDataCreater(EquipmentItemBaseData[] _equipmentItemBaseDatas) {
 
         equipmentItemBaseDatas = _equipmentItemBaseDatas;
     }
 
-    public EquipmentItemData getEquipmentItemData(EQUIPMENT_KIND _equipmentKind, BattleDungeonUnitData _battleDungeonUnitData){
+    public EquipmentItemData getEquipmentItemData(EQUIPMENT_KIND _equipmentKind, BattleDungeonUnitData _battleDungeonUnitData) {
 
         EquipmentItemData newEquipmentItemData = new EquipmentItemData();
 
@@ -33,11 +33,6 @@ public class EquipmentItemDataCreater {
         newEquipmentItemData.setAutoFrequencyRate(equipmentItemBaseDatas[_equipmentKind.ordinal()].autoFrequencyRate);
         newEquipmentItemData.setDefence(equipmentItemBaseDatas[_equipmentKind.ordinal()].getDefence());
 
-
-        newEquipmentItemData.setPrice(_battleDungeonUnitData.getStatus(Constants.UnitStatus.Status.LUCK) * equipmentItemBaseDatas[_equipmentKind.ordinal()].getPrice());
-        newEquipmentItemData.setAttack(_battleDungeonUnitData.getStatus(Constants.UnitStatus.Status.ATTACK) * equipmentItemBaseDatas[_equipmentKind.ordinal()].getAttack());
-
         return newEquipmentItemData;
     }
-
 }

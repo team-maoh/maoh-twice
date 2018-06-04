@@ -262,7 +262,6 @@ public class Inventry {
                 operate_inventry_list_box.setInventryData(inventry_datas[page * contentNum + k], k);
             }
         }
-
     }
 
     //by kmhanko
@@ -288,6 +287,7 @@ public class Inventry {
             }
         }
     }
+
     public InventryData searchInventryData(ItemData _itemData) {
         for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
             if(inventry_datas[i].getItemData().equals(_itemData)) {
