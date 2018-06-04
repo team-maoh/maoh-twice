@@ -28,10 +28,7 @@ public abstract class BaseActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        CLASS_NAME = "BaseActivity";
-
-        System.out.println("ActLife:" + CLASS_NAME + " onCreate");
+        System.out.println("ActLife:" + getActivityName() + " onCreate");
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         layout = new RelativeLayout(this);
@@ -63,7 +60,7 @@ public abstract class BaseActivity extends Activity {
     @Override
     public void onPause() {
         super.onPause();  // Always call the superclass method first
-        System.out.println("ActLife:" + CLASS_NAME + " onPause");
+        System.out.println("ActLife:" + getActivityName() + " onPause");
         MusicAdmin.close();
     }
 
@@ -73,77 +70,77 @@ public abstract class BaseActivity extends Activity {
         overridePendingTransition(0, 0);//遷移時のアニメを無効に
     }
 
+    public String getActivityName() { return "BaseActivity"; };
 
     //ライフパス確認用
-    String CLASS_NAME = "???";
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        System.out.println("ActLife:" + CLASS_NAME + " onActivityResult");
+        System.out.println("ActLife:" + getActivityName() + " onActivityResult");
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     protected void onChildTitleChanged(Activity childActivity, CharSequence title) {
-        System.out.println("ActLife:" + CLASS_NAME + " onChildTitleChanged");
+        System.out.println("ActLife:" + getActivityName() + " onChildTitleChanged");
         super.onChildTitleChanged(childActivity, title);
     }
 
     protected void onDestroy() {
-        System.out.println("ActLife:" + CLASS_NAME + " onDestroy");
+        System.out.println("ActLife:" + getActivityName() + " onDestroy");
         super.onDestroy();
     }
 
     protected void onNewIntent(Intent intent) {
-        System.out.println("ActLife:" + CLASS_NAME + " onNewIntent");
+        System.out.println("ActLife:" + getActivityName() + " onNewIntent");
         super.onNewIntent(intent);
     }
 
     protected void onPostCreate(Bundle savedInstanceState) {
-        System.out.println("ActLife:" + CLASS_NAME + " onPostCreate");
+        System.out.println("ActLife:" + getActivityName() + " onPostCreate");
         super.onPostCreate(savedInstanceState);
     }
 
     protected void onPostResume() {
-        System.out.println("ActLife:" + CLASS_NAME + " onPostResume");
+        System.out.println("ActLife:" + getActivityName() + " onPostResume");
         super.onPostResume();
     }
 
     protected void onRestart() {
-        System.out.println("ActLife:" + CLASS_NAME + " onRestart");
+        System.out.println("ActLife:" + getActivityName() + " onRestart");
         super.onRestart();
     }
 
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        System.out.println("ActLife:" + CLASS_NAME + " onRestoreInstanceState");
+        System.out.println("ActLife:" + getActivityName() + " onRestoreInstanceState");
         super.onRestoreInstanceState(savedInstanceState);
     }
 
     protected void onResume() {
-        System.out.println("ActLife:" + CLASS_NAME + " onResume");
+        System.out.println("ActLife:" + getActivityName() + " onResume");
         super.onResume();
     }
 
     protected void onSaveInstanceState(Bundle outState) {
-        System.out.println("ActLife:" + CLASS_NAME + " onSaveInstanceState");
+        System.out.println("ActLife:" + getActivityName() + " onSaveInstanceState");
         super.onSaveInstanceState(outState);
     }
 
     protected void onStart() {
-        System.out.println("ActLife:" + CLASS_NAME + " onStart");
+        System.out.println("ActLife:" + getActivityName() + " onStart");
         super.onStart();
     }
 
     protected void onStop() {
-        System.out.println("ActLife:" + CLASS_NAME + " onStop");
+        System.out.println("ActLife:" + getActivityName() + " onStop");
         super.onStop();
     }
 
     protected void onTitleChanged(CharSequence title, int color) {
-        System.out.println("ActLife:" + CLASS_NAME + " onTitleChanged");
+        System.out.println("ActLife:" + getActivityName() + " onTitleChanged");
         super.onTitleChanged(title, color);
     }
 
     protected void onUserLeaveHint() {
-        System.out.println("ActLife:" + CLASS_NAME + " onUserLeaveHint");
+        System.out.println("ActLife:" + getActivityName() + " onUserLeaveHint");
         super.onUserLeaveHint();
     }
 

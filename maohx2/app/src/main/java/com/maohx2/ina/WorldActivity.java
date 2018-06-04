@@ -31,7 +31,6 @@ public class WorldActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        CLASS_NAME = "WorldActivity";
         super.onCreate(savedInstanceState);
 
         worldSurfaceView = new WorldSurfaceView(this, backSurfaceView);
@@ -47,6 +46,18 @@ public class WorldActivity extends BaseActivity {
             worldSurfaceView.runGameSystem();
             game_system_flag = true;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        worldSurfaceView = null;
+        //worldSurfaceView.graphic.releaseBitmap();
+    }
+
+    @Override
+    public String getActivityName() {
+        return "WorldActivity";
     }
 
 }

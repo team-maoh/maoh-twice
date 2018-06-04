@@ -39,7 +39,6 @@ public class StartActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        CLASS_NAME = "StartActivity";
         super.onCreate(savedInstanceState);
 
         start_surface_view = new StartSurfaceView(this, backSurfaceView);
@@ -65,7 +64,13 @@ public class StartActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        System.out.println("call_destoroy");
+        start_surface_view = null;
+        //start_surface_view.graphic.releaseBitmap();
+    }
+
+    @Override
+    public String getActivityName() {
+        return "StartActivity";
     }
 }
 
