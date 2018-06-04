@@ -65,7 +65,6 @@ public class WorldGameSystem {
     Paint paint = new Paint();
     Canvas canvas;
     TextBoxAdmin text_box_admin;
-    //ListBoxAdmin list_box_admin;
 
     GeoSlotAdminManager geoSlotAdminManager;
     MyDatabaseAdmin databaseAdmin;
@@ -277,7 +276,7 @@ public class WorldGameSystem {
                 itemShopAdmin.update();
                 break;
             case EQUIP_INIT:
-                backGround = graphic.searchBitmap("firstBackground");//仮
+                backGround = graphic.searchBitmap("equipBackground");//仮
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
                 equipmentInventry.setPosition(800+20,100,1150+20,708, 7);
                 expendItemInventry.setPosition(400+20,100,750+20,708, 7);
@@ -307,27 +306,6 @@ public class WorldGameSystem {
             default:
                 break;
         }
-/*
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getGetSlotMap())) {
-            geoSlotAdminManager.update();
-        }
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getWorldMap())) {
-            dungeonSelectManager.update();
-        }
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getShop())) {
-            itemShopAdmin.update();
-        }
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getPresent())) {
-            geoPresentManager.update();
-        }
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getEquip())) {
-            equipmentInventry.updata();
-            expendItemInventry.updata();
-            palette_admin.update(false);
-            backPlateGroup.update();
-        }
-        */
-
         text_box_admin.update();
         effectAdmin.update();
         //musicAdmin.update();
@@ -352,6 +330,7 @@ public class WorldGameSystem {
             case GEO_MAP_INIT:
                 break;
             case GEO_MAP:
+                effectAdmin.draw();
                 geoSlotAdminManager.draw();
                 playerStatusViewer.draw();
                 break;
@@ -384,32 +363,11 @@ public class WorldGameSystem {
             default:
                 break;
         }
-        /*
-        if (worldModeAdmin.getIsDraw(worldModeAdmin.getGetSlotMap())) {
-            geoSlotAdminManager.draw();
-        }
-        if (worldModeAdmin.getIsDraw(worldModeAdmin.getWorldMap())) {
-            dungeonSelectManager.draw();
-        }
-        if (worldModeAdmin.getIsDraw(worldModeAdmin.getShop())) {
-            itemShopAdmin.draw();
-        }
-        if (worldModeAdmin.getIsDraw(worldModeAdmin.getPresent())) {
-            geoPresentManager.draw();
-        }
-
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getEquip())) {
-            equipmentInventry.draw();
-            expendItemInventry.draw();
-            palette_admin.draw();
-            world_user_interface.draw();
-
-            backPlateGroup.draw();
-        }
-        */
 
         text_box_admin.draw();
-        effectAdmin.draw();
+        if (worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP) {
+            effectAdmin.draw();
+        }
 
         graphic.draw();
     }

@@ -60,6 +60,7 @@ public class GeoSlotAdmin {
     static MyDatabase geoSlotMapDB;
     static MyDatabase geoSlotEventDB;
 
+
     public final int GEO_SLOT_MAX = 64;
     public final int TOUCH_R = 90;
 
