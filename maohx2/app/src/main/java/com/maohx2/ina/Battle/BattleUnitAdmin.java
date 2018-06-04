@@ -5,6 +5,7 @@ import android.graphics.Paint;
 
 import com.maohx2.fuusya.MapPlateAdmin;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.horie.map.DungeonMonsterDataAdmin;
 import com.maohx2.horie.map.MapStatus;
 import com.maohx2.horie.map.MapStatusSaver;
 import com.maohx2.ina.Arrange.PaletteAdmin;
@@ -115,6 +116,8 @@ public class BattleUnitAdmin {
 
     DUNGEON_KIND dungeonKind;
 
+    DungeonMonsterDataAdmin dungeonMonsterDataAdmin;
+
     boolean resultOperatedFlag;//リザルト関係の処理を一度だけ呼ぶためのフラグ
     boolean battleEndFlag;//戦闘が終わったかどうか
 
@@ -135,7 +138,8 @@ public class BattleUnitAdmin {
             SoundAdmin _soundAdmin,
             MapStatus _mapStatus,
             MapStatusSaver _mapStatusSaver,
-            DUNGEON_KIND _dungeonKind
+            DUNGEON_KIND _dungeonKind,
+            DungeonMonsterDataAdmin _dungeonMonsterDataAdmin
     ) {
         //引数の代入
         graphic = _graphic;
@@ -154,6 +158,8 @@ public class BattleUnitAdmin {
         mapPlateAdmin = _map_plate_admin;
 
         dungeonKind = _dungeonKind;
+
+        dungeonMonsterDataAdmin = _dungeonMonsterDataAdmin;
 
         textBoxAdmin = _textBoxAdmin;
         initResultTextBox();
@@ -325,7 +331,7 @@ public class BattleUnitAdmin {
 
         //岩に対応する敵を決定し、その対応する敵データからHPを決める
         for (int i = 0; i < r.nextInt(3) + 1; i++) {
-            setRockUnitData(battleUnitDataAdmin.getRandomBattleBaseUnitData());
+            setRockUnitData(battleUnitDataAdmin.getRandomBattleBaseUnitDataExceptBoss(dungeonMonsterDataAdmin));
         }
     }
 

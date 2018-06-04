@@ -39,6 +39,7 @@ public class StartActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        CLASS_NAME = "StartActivity";
         super.onCreate(savedInstanceState);
 
         start_surface_view = new StartSurfaceView(this, backSurfaceView);

@@ -77,6 +77,10 @@ public class Effect {
         effectData = null;
         original_angle = 0.0f;
         original_angle_deg = 0.0f;
+        for (int i = 0; i < bitmapData.size(); i++) {
+            bitmapData.set(i,null);
+        }
+        bitmapData.clear();
     }
 
     public void start() {
@@ -133,6 +137,7 @@ public class Effect {
         }
         if (step == steps && effectData.getNextID(step - 1) == -1) {
             //ループせず、アニメーションの末端なら更新しない
+            clear();
             return;
         }
 

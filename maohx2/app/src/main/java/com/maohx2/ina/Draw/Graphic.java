@@ -598,4 +598,5 @@ public class Graphic {
     }
 
     public SurfaceHolder getHolder(){return holder;}
+  
 }

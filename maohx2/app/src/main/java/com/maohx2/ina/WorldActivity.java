@@ -31,6 +31,7 @@ public class WorldActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        CLASS_NAME = "WorldActivity";
         super.onCreate(savedInstanceState);
 
         worldSurfaceView = new WorldSurfaceView(this, backSurfaceView);

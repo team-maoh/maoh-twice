@@ -250,7 +250,8 @@ public class DungeonGameSystem {
                 soundAdmin,
                 map_status,
                 map_status_saver,
-                dungeon_kind
+                dungeon_kind,
+                dungeonMonsterDataAdmin
         );
 
         backGround = graphic.searchBitmap("firstBackground");
