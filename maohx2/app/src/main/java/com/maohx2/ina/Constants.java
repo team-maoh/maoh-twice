@@ -163,6 +163,7 @@ public final class Constants {
             EQUIP,
             PRESENT,
             SELL,
+            GEO_MAP_SEE_ONLY,
 
             DUNGEON_SELECT_INIT,
             GEO_MAP_SELECT_INIT,
@@ -171,6 +172,7 @@ public final class Constants {
             EQUIP_INIT,
             PRESENT_INIT,
             SELL_INIT,
+            GEO_MAP_SEE_ONLY_INIT,
 
             DUNGEON_SELECT_INIT_START,
         }

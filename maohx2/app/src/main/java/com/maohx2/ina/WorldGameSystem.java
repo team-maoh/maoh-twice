@@ -303,6 +303,13 @@ public class WorldGameSystem {
             case SELL:
                 itemSell.update();
                 break;
+            case GEO_MAP_SEE_ONLY_INIT:
+                initBackPlate();
+                geoSlotAdminManager.start();
+                worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SEE_ONLY);
+            case GEO_MAP_SEE_ONLY:
+                geoSlotAdminManager.updateInStatus();
+                break;
             default:
                 break;
         }
@@ -358,6 +365,10 @@ public class WorldGameSystem {
                 break;
             case SELL:
                 itemSell.draw();
+                playerStatusViewer.draw();
+                break;
+            case GEO_MAP_SEE_ONLY:
+                geoSlotAdminManager.drawInStatus();
                 playerStatusViewer.draw();
                 break;
             default:

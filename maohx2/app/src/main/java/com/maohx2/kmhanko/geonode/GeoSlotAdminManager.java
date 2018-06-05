@@ -98,7 +98,6 @@ public class GeoSlotAdminManager {
     public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver, MaohMenosStatus _maohMenosStatus, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin, DungeonModeManage _dungeonModeManage) {
         this(_graphic, _userInterface, null, _databaseAdmin, _textBoxAdmin, _playerStatus, _geoInventry, _geoSlotSaver,_maohMenosStatus,_soundAdmin, _effectAdmin);
         mode = MODE.DUNGEON;
-        initMapIconPlate();
         dungeonModeManage = _dungeonModeManage;
     }
 
@@ -123,6 +122,8 @@ public class GeoSlotAdminManager {
         setSlot();
         //initStatusTextBox();
         initBackPlate();
+        initMapIconPlate();
+
         mode = MODE.WORLD;
 
     }

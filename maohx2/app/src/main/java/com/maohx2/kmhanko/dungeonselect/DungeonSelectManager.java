@@ -163,9 +163,6 @@ public class DungeonSelectManager {
                 flag = false;
             }
         }
-        if (playerStatus.getClearCount() > playerStatus.getMaohWinCount() - 1) {
-            flag = false;
-        }
 
         if (flag) {
             playerStatus.addClearCount();
@@ -271,7 +268,7 @@ public class DungeonSelectManager {
                     clear = mapStatus.getMapClearStatus(DUNGEON_KIND.HAUNTED.ordinal());
                     break;
                 case "Maoh":
-                    clear = mapStatus.getMapClearStatus(DUNGEON_KIND.FOREST.ordinal());
+                    clear = 1;
                     break;
                 default:
                     clear = 1;
@@ -482,7 +479,11 @@ public class DungeonSelectManager {
                 if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
                     soundAdmin.play("enter00");
                     geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
-                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
+                    if (mapIconPlateGroup.getPlates(focusDungeonButtonID).getEnterFlag()) {
+                        worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
+                    } else {
+                        worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SEE_ONLY_INIT);
+                    }
                     initUIsFlag = true;
                 }
             }
@@ -658,8 +659,7 @@ public class DungeonSelectManager {
         textBoxAdmin.resetTextBox(enterTextBoxID);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "全ダンジョンを制覇した！", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
-        textBoxAdmin.bookingDrawText(enterTextBoxID, "しかし、新たな魔王が現れた！", enterTextPaint);
-        textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "しかし、", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "戦いはまだ終わらない…　", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "ループ回数：", enterTextPaint);
