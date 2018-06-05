@@ -520,6 +520,7 @@ public class BattleUnitAdmin {
                                 if (((BattleEnemy) (battle_units[i])).isSpecialAction() == false) {
                                     //敵が特殊行動していないなら
 
+                                    //TODO:0割が発生した by horie
                                     int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage()/battle_units[i].getDefence();
                                     if (new_hp > 0) {
                                         battle_units[i].setHitPoint(new_hp);
