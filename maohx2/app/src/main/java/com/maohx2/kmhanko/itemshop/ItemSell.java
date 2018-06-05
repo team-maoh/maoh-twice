@@ -7,6 +7,7 @@ import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.GlobalData;
+import com.maohx2.ina.Text.BoxImagePlate;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.UserInterface;
@@ -28,6 +29,7 @@ import com.maohx2.ina.Constants;
 import com.maohx2.ina.Constants.SELECT_WINDOW;
 import com.maohx2.ina.Constants.GAMESYSTEN_MODE.WORLD_MODE;
 import static com.maohx2.ina.Constants.Inventry.*;
+import com.maohx2.ina.Constants.SIDE_INVENTRY;
 
 /**
  * Created by user on 2018/05/21.
@@ -264,10 +266,10 @@ public class ItemSell {
         geoInventry.setPosition(700,50,1000,500);
         expendItemInventry.setPosition(1000,50,1300,500);
         */
-        sellItemInventry.setPosition(50,50,350,600, 10);
-        equipmentInventry.setPosition(400,50,700,600, 10);
-        geoInventry.setPosition(700,50,1000,600,10);
-        expendItemInventry.setPosition(1000,50,1300,600,10);
+        sellItemInventry.setPosition(50,SIDE_INVENTRY.INV_UP,350,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
+        equipmentInventry.setPosition(400,SIDE_INVENTRY.INV_UP,700,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
+        geoInventry.setPosition(700,SIDE_INVENTRY.INV_UP,1000,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
+        expendItemInventry.setPosition(1000,SIDE_INVENTRY.INV_UP,1300,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
     }
 
     //***テキストボックス関係
@@ -301,7 +303,7 @@ public class ItemSell {
         backPlateGroup = new PlateGroup<BackPlate>(
                 new BackPlate[] {
                         new BackPlate(
-                                graphic, userInterface, worldModeAdmin
+                                graphic, userInterface
                         ) {
                             @Override
                             public void callBackEvent() {
@@ -318,21 +320,30 @@ public class ItemSell {
         backPlateGroup.setDrawFlag(true);
     }
 
-    PlateGroup<BoxTextPlate> switchPlateGroup;
+    PlateGroup<BoxImagePlate> switchPlateGroup;
     private void initSwitchPlate() {
-        Paint textPaint = new Paint();
-        textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
-        textPaint.setARGB(255,255,255,255);
-
-        switchPlateGroup = new PlateGroup<BoxTextPlate>(
-                new BoxTextPlate[]{
-                        new BoxTextPlate(
+        int position[] = new int[] {
+                1250, 50, 1350, 150
+        };
+        switchPlateGroup = new PlateGroup<BoxImagePlate>(
+                new BoxImagePlate[]{
+                        new BoxImagePlate(
                                 graphic, userInterface, new Paint(),
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
-                                new int[]{ 1300, 700, 1500, 800 },
-                                "購入画面へ",
-                                textPaint
+                                position,
+                                graphic.makeImageContext(
+                                        graphic.searchBitmap("buyPlate"),
+                                        (position[0] + position[2])/2, (position[1] + position[3])/2,
+                                        5.0f, 5.0f, 0,
+                                        255, false
+                                ),
+                                graphic.makeImageContext(
+                                        graphic.searchBitmap("buyPlate"),
+                                        (position[0] + position[2])/2, (position[1] + position[3])/2,
+                                        7.0f, 7.0f, 0,
+                                        255, false
+                                )
                         ) {
                             @Override
                             public void callBackEvent() {
@@ -348,11 +359,15 @@ public class ItemSell {
         switchPlateGroup.setDrawFlag(true);
     }
 
+
+
+
     PlateGroup<BoxTextPlate> sellSelectButtonGroup;
     private void initSellSelectButton(){
         Paint textPaint = new Paint();
         textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
         textPaint.setARGB(255,255,255,255);
+
 
         sellSelectButtonGroup = new PlateGroup<BoxTextPlate>(
                 new BoxTextPlate[]{
@@ -393,6 +408,7 @@ public class ItemSell {
         sellSelectButtonGroup.setDrawFlag(false);
     }
 
+/*
     PlateGroup<BoxTextPlate> sellEnterPlateGroup;
     private void initsellEnterPlate() {
         Paint textPaint = new Paint();
@@ -408,6 +424,53 @@ public class ItemSell {
                                 new int[]{ 50, 750, 350, 850 },
                                 "売却",
                                 textPaint
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //売却ボタンが押された時の処理
+                                soundAdmin.play("enter00");
+                                updateSellConformTextBox(calcSellMoney());
+                                sellSelectButtonGroup.setUpdateFlag(true);
+                                sellSelectButtonGroup.setDrawFlag(true);
+                                sellEnterPlateGroup.setUpdateFlag(false);
+                            }
+                        }
+                }
+        );
+        sellEnterPlateGroup.setUpdateFlag(true);
+        sellEnterPlateGroup.setDrawFlag(true);
+    }
+    */
+
+    PlateGroup<BoxImagePlate> sellEnterPlateGroup;
+    private void initsellEnterPlate() {
+        Paint textPaint = new Paint();
+        textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
+        textPaint.setARGB(255,255,255,255);
+
+        int position[] = new int[] {
+                1450, 650, 1550, 750
+        };
+
+        sellEnterPlateGroup = new PlateGroup<BoxImagePlate>(
+                new BoxImagePlate[] {
+                        new BoxImagePlate(
+                                graphic, userInterface, new Paint(),
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                position,
+                                graphic.makeImageContext(
+                                        graphic.searchBitmap("sellPlate2"),
+                                        (position[0] + position[2])/2, (position[1] + position[3])/2,
+                                        5.0f, 5.0f, 0,
+                                        255, false
+                                ),
+                                graphic.makeImageContext(
+                                        graphic.searchBitmap("sellPlate2"),
+                                        (position[0] + position[2])/2, (position[1] + position[3])/2,
+                                        7.0f, 7.0f, 0,
+                                        255, false
+                                )
                         ) {
                             @Override
                             public void callBackEvent() {

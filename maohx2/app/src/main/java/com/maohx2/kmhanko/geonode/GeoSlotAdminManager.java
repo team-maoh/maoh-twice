@@ -148,7 +148,7 @@ public class GeoSlotAdminManager {
         backPlateGroup = new PlateGroup<BackPlate>(
                 new BackPlate[] {
                         new BackPlate(
-                                graphic, userInterface, worldModeAdmin
+                                graphic, userInterface
                         ) {
                             @Override
                             public void callBackEvent() {

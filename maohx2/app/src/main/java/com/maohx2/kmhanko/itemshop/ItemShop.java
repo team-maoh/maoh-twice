@@ -3,6 +3,7 @@ package com.maohx2.kmhanko.itemshop;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Constants.SELECT_WINDOW;
+import com.maohx2.ina.Text.BoxImagePlate;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.WorldModeAdmin;
@@ -162,7 +163,7 @@ public abstract class ItemShop {
         backPlateGroup = new PlateGroup<BackPlate>(
                 new BackPlate[] {
                         new BackPlate(
-                                graphic, userInterface, worldModeAdmin
+                                graphic, userInterface
                         ) {
                             @Override
                             public void callBackEvent() {
@@ -183,6 +184,48 @@ public abstract class ItemShop {
         backPlateGroup.setDrawFlag(true);
     }
 
+    PlateGroup<BoxImagePlate> switchPlateGroup;
+    private void initSwitchPlate() {
+        int position[] = new int[] {
+                1250, 50, 1350, 150
+        };
+
+        switchPlateGroup = new PlateGroup<BoxImagePlate>(
+                new BoxImagePlate[]{
+                        new BoxImagePlate(
+                                graphic, userInterface, new Paint(),
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                position,
+                                graphic.makeImageContext(
+                                        graphic.searchBitmap("sellPlate"),
+                                        (position[0] + position[2])/2, (position[1] + position[3])/2,
+                                        5.0f, 5.0f, 0,
+                                        255, false
+                                ),
+                                graphic.makeImageContext(
+                                        graphic.searchBitmap("sellPlate"),
+                                        (position[0] + position[2])/2, (position[1] + position[3])/2,
+                                        7.0f, 7.0f, 0,
+                                        255, false
+                                )
+
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //売却画面へが押された時の処理
+                                soundAdmin.play("enter00");
+                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.SELL_INIT);
+                                initUIs();
+                            }
+                        }
+                }
+        );
+        switchPlateGroup.setUpdateFlag(true);
+        switchPlateGroup.setDrawFlag(true);
+    }
+
+/*
     PlateGroup<BoxTextPlate> switchPlateGroup;
     private void initSwitchPlate() {
         Paint textPaint = new Paint();
@@ -195,7 +238,7 @@ public abstract class ItemShop {
                                 graphic, userInterface, new Paint(),
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
-                                new int[]{ 1300, 700, 1500, 800 },
+                                new int[]{ 50, 700, 250, 800 },
                                 "売却画面へ",
                                 textPaint
                         ) {
@@ -212,7 +255,7 @@ public abstract class ItemShop {
         switchPlateGroup.setUpdateFlag(true);
         switchPlateGroup.setDrawFlag(true);
     }
-
+*/
     public void setTextBox() {
         //textBoxID = textBoxAdmin.createTextBox(100.0, 300.0, 500.0, 500, 5);
     }

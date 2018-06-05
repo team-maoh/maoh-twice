@@ -379,7 +379,7 @@ public class WorldGameSystem {
         backPlateGroup = new PlateGroup<BackPlate>(
                 new BackPlate[]{
                         new BackPlate(
-                                graphic, world_user_interface, worldModeAdmin
+                                graphic, world_user_interface
                         ) {
                             @Override
                             public void callBackEvent() {

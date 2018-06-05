@@ -3,7 +3,9 @@ package com.maohx2.kmhanko.plate;
 import android.graphics.Paint;
 
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Draw.ImageContext;
 import com.maohx2.ina.Text.BoxTextPlate;
+import com.maohx2.ina.Text.BoxImagePlate;
 import com.maohx2.ina.Text.CircleImagePlate;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.WorldModeAdmin;
@@ -35,14 +37,26 @@ public class BackPlate extends BoxTextPlate {
 }
 */
 
-public class BackPlate extends CircleImagePlate {
-    public CircleImagePlate(Graphic _graphic, UserInterface _userInterFace) {
-        super(_graphic, _userInterFace, new Paint(),
+public class BackPlate extends BoxImagePlate {
+    public BackPlate(Graphic _graphic, UserInterface _userInterFace) {
+        super(
+                _graphic,
+                _userInterFace, new Paint(),
                 Constants.Touch.TouchWay.UP_MOMENT,
                 Constants.Touch.TouchWay.MOVE,
-                new int[] { 1200, 0, 1600, 100 },
-                "戻る",
-                new Paint()
+                new int[]{1450, 50, 1550, 150},
+                _graphic.makeImageContext(
+                        _graphic.searchBitmap("backPlate"),
+                        1500, 100,
+                        5.0f, 5.0f, 0,
+                        255, false
+                ),
+                _graphic.makeImageContext(
+                        _graphic.searchBitmap("backPlate"),
+                        1500, 100,
+                        7.0f, 7.0f, 0,
+                        255, false
+                )
         );
     }
 
