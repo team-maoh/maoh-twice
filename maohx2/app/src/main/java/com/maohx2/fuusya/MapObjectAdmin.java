@@ -91,7 +91,7 @@ public class MapObjectAdmin {
 
     //リリース時にはfalse
     //trueにすると敵との戦闘を回避できる(デバッグ用)
-    boolean avoid_battle_for_debug = false;
+    boolean avoid_battle_for_debug = true;
 
     MapInventryAdmin map_inventry_admin;
     ActivityChange activityChange;

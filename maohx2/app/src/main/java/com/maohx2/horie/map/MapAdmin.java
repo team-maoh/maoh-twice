@@ -369,7 +369,8 @@ public class MapAdmin {
         section_admin.connectRooms(map_data);
         section_admin.makeStairs(map_data);
         section_admin.makeGate(map_data);
-        createMine(mine_min_num, mine_max_num);
+        createMine(5, 5);
+        //createMine(mine_min_num, mine_max_num);
         //map_object_adminに採掘場所の座標を渡す
 
 
@@ -411,11 +412,11 @@ public class MapAdmin {
                     } else {
                         setAutoTile_light_animation(i, j, i, j, map_tile_animation, false);
                     }
-                    if(isGate(i, j)) {
-                        for (int k = 0; k < animation_num; k++) {
-                            map_tile_animation[k][i][j] = gate_tile;
-                        }
-                    }
+//                    if(isGate(i, j)) {
+//                        for (int k = 0; k < animation_num; k++) {
+//                            map_tile_animation[k][i][j] = gate_tile;
+//                        }
+//                    }
                 }
             }
         }
@@ -1024,6 +1025,9 @@ public class MapAdmin {
                 for (int j = 0; j < map_size.y; j++) {
                     if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
                         graphic.bookingDrawBitmapData(map_tile_animation[(time / 3) % animation_num][i][j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+                        if(map_data[i][j].isGate()){
+                            graphic.bookingDrawBitmapData(gate_tile, camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+                        }
                     }
                 }
             }
