@@ -520,7 +520,7 @@ public class BattleUnitAdmin {
                                 if (((BattleEnemy) (battle_units[i])).isSpecialAction() == false) {
                                     //敵が特殊行動していないなら
 
-                                    int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage();
+                                    int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage()/battle_units[i].getDefence();
                                     if (new_hp > 0) {
                                         battle_units[i].setHitPoint(new_hp);
                                     } else {
@@ -546,6 +546,7 @@ public class BattleUnitAdmin {
                                             battle_units[0].existIs(false);
                                         }
                                     } else if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.STEALTH) {
+                                        //todo:敵の防御力を考慮する
                                         int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage();
                                         if (new_hp > 0) {
                                             battle_units[i].setHitPoint(new_hp);
@@ -585,7 +586,7 @@ public class BattleUnitAdmin {
                             palette_admin.deleteExpendItemData();
                         }
 
-                        int new_hp = battle_units[0].getHitPoint() - (int) (damage_to_player * damage_rate) + heel_to_player;
+                        int new_hp = battle_units[0].getHitPoint() - (int) (damage_to_player/battle_units[0].getDefence() * damage_rate) + heel_to_player;
                         if (new_hp > battle_units[0].getMaxHitPoint()) {
                             new_hp = battle_units[0].getMaxHitPoint();
                         }

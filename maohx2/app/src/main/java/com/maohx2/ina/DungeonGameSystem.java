@@ -618,7 +618,7 @@ public class DungeonGameSystem {
         backPlateGroup = new PlateGroup<BackPlate>(
                 new BackPlate[]{
                         new BackPlate(
-                                graphic, dungeon_user_interface, null
+                                graphic, dungeon_user_interface
                         ) {
                             @Override
                             public void callBackEvent() {

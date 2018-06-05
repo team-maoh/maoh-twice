@@ -195,8 +195,8 @@ public final class Constants {
     public static class SIDE_INVENTRY {
         public static final int INV_LEFT = 1200;
         public static final int INV_RIGHT = 1600;
-        public static final int INV_UP = 100;
-        public static final int INV_BOTTOM = 660;
+        public static final int INV_UP = 200;
+        public static final int INV_BOTTOM = 760;
         public static final int INV_CONTENT_NUM = 7;
     }
 
