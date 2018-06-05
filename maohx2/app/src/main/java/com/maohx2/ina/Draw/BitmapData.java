@@ -37,4 +37,12 @@ public class BitmapData{
 
     public int getHeight(){return bitmap.getHeight();}
 
+    //by kmhanko
+    public void releaseBitmap() {
+        if (bitmap != null) {
+            bitmap.recycle();
+            bitmap = null;
+        }
+    }
+
 }

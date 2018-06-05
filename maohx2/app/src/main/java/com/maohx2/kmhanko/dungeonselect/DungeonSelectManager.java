@@ -723,6 +723,7 @@ public class DungeonSelectManager {
     public void loopCountTextBoxUpdate() {
         textBoxAdmin.setTextBoxExists(loopCountTextBoxID, true);
 
+        textBoxAdmin.bookingDrawText(loopCountTextBoxID, "\n", loopCountTextPaint);
         textBoxAdmin.bookingDrawText(loopCountTextBoxID, "" + playerStatus.getNowClearCount() + " / " + playerStatus.getClearCount(), loopCountTextPaint);
         textBoxAdmin.bookingDrawText(loopCountTextBoxID, "MOP", loopCountTextPaint);
 

@@ -34,8 +34,13 @@ public class Effect {
     private String soundName;
     private int x;
     private int y;
+    private float r;
     private float extend_x;
     private float extend_y;
+    private float original_angle;
+    private float original_angle_deg;
+
+    private float anime_angle;
     private float angle;
     private int alpha;
     private boolean isUpLeft;
@@ -70,6 +75,12 @@ public class Effect {
         isDraw = false;
         is_pause = false;
         effectData = null;
+        original_angle = 0.0f;
+        original_angle_deg = 0.0f;
+        for (int i = 0; i < bitmapData.size(); i++) {
+            bitmapData.set(i,null);
+        }
+        bitmapData.clear();
     }
 
     public void start() {
@@ -90,6 +101,14 @@ public class Effect {
         //基本座標の更新
         original_x = _original_x;
         original_y = _original_y;
+    }
+
+    public void setPosition(int _original_x, int _original_y, float _original_angle) {
+        //基本座標の更新
+        original_x = _original_x;
+        original_y = _original_y;
+        original_angle = _original_angle;
+        original_angle_deg = original_angle * 360.0f / (2.0f * (float)Math.PI);
     }
 
     /*
@@ -118,6 +137,7 @@ public class Effect {
         }
         if (step == steps && effectData.getNextID(step - 1) == -1) {
             //ループせず、アニメーションの末端なら更新しない
+            clear();
             return;
         }
 
@@ -170,7 +190,8 @@ public class Effect {
             return;
         }
         //Graphicに描画を依頼
-        graphic.bookingDrawBitmapData(bitmapData.get(imageID), original_x + x, original_y + y, extend_x, extend_y, angle, alpha, isUpLeft);
+        //graphic.bookingDrawBitmapData(bitmapData.get(imageID), original_x + x, original_y + y, extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
+        graphic.bookingDrawBitmapData(bitmapData.get(imageID), original_x + (int)(r * Math.cos(anime_angle + original_angle)), original_y  + (int)(r * Math.sin(anime_angle + original_angle)), extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
     }
 
     //ステップ遷移するメソッド
@@ -190,6 +211,7 @@ public class Effect {
     private void setParam(int _step) {
         x = effectData.getX(_step);
         y = effectData.getY(_step);
+        r = (float)Math.sqrt(x*x+y*y);
         extend_x = effectData.getExtendX(_step);
         extend_y = effectData.getExtendY(_step);
         angle = effectData.getAngle(_step);
@@ -197,7 +219,7 @@ public class Effect {
         if (alpha == 255) {
             alpha = 254;
         }
-
+        anime_angle = (float)Math.atan2((double)y,(double)x);
         isUpLeft = effectData.isUpLeft(_step);
         imageID = effectData.getImageID(_step);
         soundName = effectData.getSoundName(_step);

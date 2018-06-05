@@ -285,6 +285,7 @@ public class ItemSell {
 
     private void updateSellConformTextBox(int _sellMoney) {
         textBoxAdmin.setTextBoxExists(sellConfirmTextBoxID, true);
+        textBoxAdmin.resetTextBox(sellConfirmTextBoxID);
 
         textBoxAdmin.bookingDrawText(sellConfirmTextBoxID, "売却価格は " + _sellMoney + " G です．", sellConfirmTextBoxPaint);
         textBoxAdmin.bookingDrawText(sellConfirmTextBoxID, "\n", sellConfirmTextBoxPaint);

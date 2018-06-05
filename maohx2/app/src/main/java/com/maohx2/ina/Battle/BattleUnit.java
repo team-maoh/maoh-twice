@@ -230,7 +230,7 @@ abstract public class BattleUnit {
     abstract public void setWaitFrame(int _wait_frame);
     abstract public double getAttackFrame();
     abstract public void setAttackFrame(int _attack_frame);
-
+    abstract public void setDamagedFlag(boolean _flag);
 
     public int[] getAlimentCounts() {return alimentCounts;}
     public void setAlimentCounts(int[] alimentCounts) {this.alimentCounts = alimentCounts;}

@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Constants.SIDE_INVENTRY;
 import com.maohx2.ina.DungeonModeManage;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.UserInterface;
@@ -130,7 +131,7 @@ public class GeoSlotAdminManager {
     public void start() {
         //activeGeoSlotAdmin.start();
         calcStatus();
-        geoInventry.setPosition(1200, 100, 1600, 700, 10);
+        geoInventry.setPosition(SIDE_INVENTRY.INV_LEFT, SIDE_INVENTRY.INV_UP, SIDE_INVENTRY.INV_RIGHT,SIDE_INVENTRY.INV_BOTTOM,SIDE_INVENTRY.INV_CONTENT_NUM);
     }
 
 

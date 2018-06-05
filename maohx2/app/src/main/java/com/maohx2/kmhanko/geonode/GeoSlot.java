@@ -43,7 +43,7 @@ public class GeoSlot extends CircleImagePlate {
 
     static final int GEO_SLOT_CHILDREN_MAX = 8;
 
-
+    static final int GEO_LINE_DISTANCE = 60;
 
     GeoSlotAdmin geoSlotAdmin; //staticにしてはならない。いくつかのGeoSlotAdminがあるため。
     static TextBoxAdmin textBoxAdmin;
@@ -284,9 +284,6 @@ public class GeoSlot extends CircleImagePlate {
     }
 
     public void drawLine() {
-        if (!isInGeoObject()) {
-            return;
-        }
         //子に対しての線
         clearGeoSlotLineEffect();
 
@@ -294,13 +291,12 @@ public class GeoSlot extends CircleImagePlate {
         int c_y = 0;
         double radian = 0.0f;
         double distance = 0.0f;
-        double distanceRate = 1.0f;
 
         //dotPaint.setARGB(255,255,255,255);
 
         for (int i = 0; i<children_slot.size(); i++) {
             if (children_slot.get(i) != null) {
-                if (children_slot.get(i).isExist() && children_slot.get(i).isInGeoObject()) {
+                if (children_slot.get(i).isExist()) {
                     /*
                     GeoCalcSaverAdmin tempGeoCalcSaverAdmin= children_slot.get(i).getThisGeoCalcSaverAdmin();
                     if (tempGeoCalcSaverAdmin == null) {
@@ -336,6 +332,7 @@ public class GeoSlot extends CircleImagePlate {
                     );
                     */
                     String effectImageName = "";
+
                     switch (childGeoSlotLineColor) {
                         case 0:
                             effectImageName = "geoEffectYellow";
@@ -350,11 +347,15 @@ public class GeoSlot extends CircleImagePlate {
                             effectImageName = "geoEffectViolet";
                             break;
                         default:
-                            continue;
+                            effectImageName = "geoEffectGray";
+                            break;
 
                     }
+                    if (!children_slot.get(i).isInGeoObject()) {
+                        effectImageName = "geoEffectGray";
+                    }
 
-                    int dotNum = 6;
+                    int dotNum = Math.round((float)(distance / (float)(GEO_LINE_DISTANCE)));
                     int id = 0;
                     for(int j = 0; j < dotNum; j++) {
 
@@ -364,8 +365,9 @@ public class GeoSlot extends CircleImagePlate {
                         id = geoSlotLineEffect.get(geoSlotLineEffect.size() - 1);
                         effectAdmin.setPosition(
                                 id,
-                                (int)(x - distance * (1.0f - distanceRate)/2.0f * Math.cos(radian) - (distance * distanceRate * (double)j) * Math.cos(radian) / (double)dotNum),
-                                (int)(y - distance * (1.0f - distanceRate)/2.0f * Math.sin(radian) - (distance * distanceRate * (double)j) * Math.sin(radian) / (double)dotNum)
+                                (int)(x - (GEO_LINE_DISTANCE * j) * Math.cos(radian)),
+                                (int)(y - (GEO_LINE_DISTANCE * j) * Math.sin(radian)),
+                                (float)radian
                         );
                         effectAdmin.startEffect(id);
 

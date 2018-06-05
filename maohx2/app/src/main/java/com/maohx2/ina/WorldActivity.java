@@ -48,6 +48,18 @@ public class WorldActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        worldSurfaceView = null;
+        //worldSurfaceView.graphic.releaseBitmap();
+    }
+
+    @Override
+    public String getActivityName() {
+        return "WorldActivity";
+    }
+
 }
 
 

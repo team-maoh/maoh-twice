@@ -2,13 +2,16 @@ package com.maohx2.ina.Battle;
 
 import com.maohx2.ina.Draw.Graphic;
 
+import java.util.Random;
+
 /**
  * Created by ina on 2017/09/21.
  */
 
 public class BattlePlayer extends BattleUnit {
 
-
+    boolean is_damaged = false;
+    int shake_count = 0;
 
     BattlePlayer(Graphic _graphic){
         super(_graphic);
@@ -21,7 +24,35 @@ public class BattlePlayer extends BattleUnit {
     //@Override
     public void drawStatus(){
         //HPバー
-        graphic.bookingDrawRect(200,20, (int)(200+1200*((double)hit_point/(double)max_hit_point)), 40, paint);
+        if(is_damaged || shake_count > 0) {
+            Random rnd = new Random();
+            if(is_damaged){
+                shake_count = 5;
+            }
+            else{
+                shake_count--;
+            }
+            int shake_x = shake_count;//rnd.nextInt(5)+1;
+            int shake_y = shake_count;//rnd.nextInt(5)+1;
+            int direction = rnd.nextInt(3);
+            switch (direction){
+                case 0:
+                    graphic.bookingDrawRect(200+shake_x, 20+shake_y, (int) (200 + 1200 * ((double) hit_point / (double) max_hit_point))+shake_x, 40+shake_y, paint);
+                    break;
+                case 1:
+                    graphic.bookingDrawRect(200+shake_x, 20-shake_y, (int) (200 + 1200 * ((double) hit_point / (double) max_hit_point))+shake_x, 40-shake_y, paint);
+                    break;
+                case 2:
+                    graphic.bookingDrawRect(200-shake_x, 20+shake_y, (int) (200 + 1200 * ((double) hit_point / (double) max_hit_point))-shake_x, 40+shake_y, paint);
+                    break;
+                case 3:
+                    graphic.bookingDrawRect(200-shake_x, 20-shake_y, (int) (200 + 1200 * ((double) hit_point / (double) max_hit_point))-shake_x, 40-shake_y, paint);
+                    break;
+            }
+        }
+        else{
+            graphic.bookingDrawRect(200, 20, (int) (200 + 1200 * ((double) hit_point / (double) max_hit_point)), 40, paint);
+        }
 
         for(int i = 0; i < BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal() -1; i++) {
             if (alimentCounts[i] > 0) {
@@ -77,4 +108,9 @@ public class BattlePlayer extends BattleUnit {
     }
     @Override
     public void setAttackFrame(int _attack_frame) {}
+
+    @Override
+    public void setDamagedFlag(boolean _flag){
+        is_damaged = _flag;
+    }
 }

@@ -64,7 +64,13 @@ public class StartActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        System.out.println("call_destoroy");
+        start_surface_view = null;
+        //start_surface_view.graphic.releaseBitmap();
+    }
+
+    @Override
+    public String getActivityName() {
+        return "StartActivity";
     }
 }
 
