@@ -106,7 +106,6 @@ public class GeoPresentManager {
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
         textBoxAdmin = _textBoxAdmin;
-        loadDatabase(databaseAdmin);
         geoInventry = _geoInventry; //TODO globalから
         expendItemInventry = _expendItemInventry;
         expendItemDataAdmin = _expendItemDataAdmin;
@@ -114,8 +113,7 @@ public class GeoPresentManager {
         worldModeAdmin = _worldModeAdmin;
         soundAdmin = _soundAdmin;
 
-        //gaiaImage = graphic.makeImageContext(graphic.searchBitmap("gaia0r"), 300, 450, 2.0f, 2.0f, 0, 255, false);
-
+        loadDatabase(databaseAdmin);
         initTextBox();
         initPlateGroup();
         initPresentTextBox();
@@ -126,8 +124,8 @@ public class GeoPresentManager {
     public void start() {
         geoInventry.setPosition(SIDE_INVENTRY.INV_LEFT, SIDE_INVENTRY.INV_UP, SIDE_INVENTRY.INV_RIGHT,SIDE_INVENTRY.INV_BOTTOM,SIDE_INVENTRY.INV_CONTENT_NUM);
         gaiaImage = graphic.makeImageContext(graphic.searchBitmap("gaia0r"), 300, 450, 2.0f, 2.0f, 0, 255, false);
-
         scoreTextBoxUpdate();
+        updateTextBox();
     }
 
     private void initPresentTextBox() {
@@ -160,7 +158,11 @@ public class GeoPresentManager {
 
         messageBoxID = textBoxAdmin.createTextBox(50, 700, 1150, 880,3);
         textBoxAdmin.setTextBoxExists(messageBoxID, false);
+        updateTextBox();
+    }
 
+    private void updateTextBox() {
+        textBoxAdmin.resetTextBox(messageBoxID);
         textBoxAdmin.setTextBoxUpdateTextByTouching(messageBoxID, false);
         textBoxAdmin.bookingDrawText(messageBoxID, "ジオオブジェクトちょうだ〜い");
         textBoxAdmin.bookingDrawText(messageBoxID, "MOP");

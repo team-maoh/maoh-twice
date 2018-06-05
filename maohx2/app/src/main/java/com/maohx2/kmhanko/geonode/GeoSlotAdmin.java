@@ -54,6 +54,17 @@ import com.maohx2.ina.Text.ListBox;
 
     //imageMagic
 
+    /*
+
+    スロットで使える範囲
+
+    (0, 100) - ( 1200, 850 )が最大なので
+    (50, 150) - ( 1150, 800 )　が実質の範囲になる。
+
+
+
+     */
+
 public class GeoSlotAdmin {
 
     //** Created by kmhanko **//
@@ -266,7 +277,7 @@ public class GeoSlotAdmin {
                                 graphic, userInterface, new Paint(),
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
-                                new int[]{SELECT_WINDOW.YES_LEFT, SELECT_WINDOW.YES_UP, SELECT_WINDOW.YES_RIGHT, SELECT_WINDOW.YES_BOTTOM},
+                                new int[]{ 0, 0, 400, 100},
                                 null
                         )
                 }
