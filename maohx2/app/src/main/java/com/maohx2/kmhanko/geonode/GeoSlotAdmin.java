@@ -358,6 +358,8 @@ public class GeoSlotAdmin {
 
             textBoxAdmin.setTextBoxExists(releaseTextBoxID, true);
 
+            textBoxAdmin.resetTextBox(releaseTextBoxID);
+
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "このスロットを解放するには ", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, focusGeoSlot.getReleaseEvent(), releaseTextPaint);//TODO:イベント名そのままになっているが、これは仮
             textBoxAdmin.bookingDrawText(releaseTextBoxID, " が必要です。", releaseTextPaint);

@@ -114,7 +114,7 @@ public class GeoPresentManager {
         worldModeAdmin = _worldModeAdmin;
         soundAdmin = _soundAdmin;
 
-        gaiaImage = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        //gaiaImage = graphic.makeImageContext(graphic.searchBitmap("gaia0r"), 300, 450, 2.0f, 2.0f, 0, 255, false);
 
         initTextBox();
         initPlateGroup();
@@ -125,6 +125,8 @@ public class GeoPresentManager {
 
     public void start() {
         geoInventry.setPosition(SIDE_INVENTRY.INV_LEFT, SIDE_INVENTRY.INV_UP, SIDE_INVENTRY.INV_RIGHT,SIDE_INVENTRY.INV_BOTTOM,SIDE_INVENTRY.INV_CONTENT_NUM);
+        gaiaImage = graphic.makeImageContext(graphic.searchBitmap("gaia0r"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+
         scoreTextBoxUpdate();
     }
 
@@ -158,7 +160,6 @@ public class GeoPresentManager {
 
         messageBoxID = textBoxAdmin.createTextBox(50, 700, 1150, 880,3);
         textBoxAdmin.setTextBoxExists(messageBoxID, false);
-
 
         textBoxAdmin.setTextBoxUpdateTextByTouching(messageBoxID, false);
         textBoxAdmin.bookingDrawText(messageBoxID, "ジオオブジェクトちょうだ〜い");
@@ -365,6 +366,8 @@ public class GeoPresentManager {
                 name = bufItemData.getName();
             }
             presentGetMessage(name);
+            gaiaImage = graphic.makeImageContext(graphic.searchBitmap("gaia22r"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+
             System.out.println("takano:GeoPresentManager#presentToInventry : 献上により獲得 : " + name);
 
             //セーブのために格納

@@ -309,7 +309,7 @@ public abstract class ItemShop {
 
     public void buyTextBoxUpdate(ItemData _itemData) {
         textBoxAdmin.setTextBoxExists(buyTextBoxID, true);
-
+        textBoxAdmin.resetTextBox(buyTextBoxID);
         textBoxAdmin.bookingDrawText(buyTextBoxID, _itemData.getName(), buyTextBoxPaint);
         textBoxAdmin.bookingDrawText(buyTextBoxID, "を購入しますか？", buyTextBoxPaint);
         textBoxAdmin.bookingDrawText(buyTextBoxID, "\n", buyTextBoxPaint);
