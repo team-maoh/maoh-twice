@@ -183,7 +183,11 @@ public class GeoSlotAdmin {
         GeoSlot.staticInit(textBoxAdmin, geoSlotEventDB, geoInventry, soundAdmin, effectAdmin);
 
         for(int i = 0; i < geoSlots.size(); i++) {
-            geoSlots.get(i).setParam(xs.get(i), ys.get(i), TOUCH_R);
+            if ( i == 0 ) {
+                geoSlots.get(i).setParam(xs.get(i), ys.get(i), TOUCH_R, true);
+            } else {
+                geoSlots.get(i).setParam(xs.get(i), ys.get(i), TOUCH_R, false);
+            }
             //TouchIDセット
             //geoSlots.get(i).setTouchID(userInterface.setCircleTouchUI(xs.get(i), ys.get(i), 100));
             geoSlots.get(i).setReleaseEvent(release_events.get(i));
@@ -279,7 +283,13 @@ public class GeoSlotAdmin {
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{ 0, 0, 400, 100},
                                 null
-                        )
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                soundAdmin.play("equip00");
+                                setHoldGeoObject(null);
+                            }
+                        }
                 }
         );
         holdGeoPlateGroup.setDrawFlag(true);
@@ -396,6 +406,7 @@ public class GeoSlotAdmin {
         geoSlotGroup.update();
         holdGeoPlateGroup.update();
         releasePlateGroup.update();
+
         if (releasePlateGroup.getUpdateFlag()) {
             int content = releasePlateGroup.getTouchContentNum();
             switch (content) {
