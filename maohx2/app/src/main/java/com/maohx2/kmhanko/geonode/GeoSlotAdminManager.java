@@ -130,7 +130,7 @@ public class GeoSlotAdminManager {
     public void start() {
         //activeGeoSlotAdmin.start();
         calcStatus();
-        geoInventry.setPosition(1200, 100, 1600, 700, 10);
+        geoInventry.setPosition(1200, 100, 1600, 660, 7);
     }
 
 
