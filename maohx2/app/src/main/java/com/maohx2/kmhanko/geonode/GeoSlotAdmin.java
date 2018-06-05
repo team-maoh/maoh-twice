@@ -457,7 +457,6 @@ public class GeoSlotAdmin {
             GeoObjectData tmp = (GeoObjectData)inventryData.getItemData();
             if (inventryData.getItemNum() > 0 && tmp.getName() != null && tmp.getSlotSetName().equals("noSet")) {
                 setHoldGeoObject((GeoObjectData)inventryData.getItemData());
-                holdGeoPlateGroup.setContentItem(inventryData.getItemData(),0);
                 userInterface.setInventryData(null);
             }
         }
@@ -517,6 +516,7 @@ public class GeoSlotAdmin {
     // ***** Setter *****
     public void setHoldGeoObject(GeoObjectData geoObjectData) {
         holdGeoObject = geoObjectData;
+        holdGeoPlateGroup.setContentItem(geoObjectData,0);
     }
     public void setFocusGeoSlot(GeoSlot _focusGeoSlot) {
         focusGeoSlot = _focusGeoSlot;
