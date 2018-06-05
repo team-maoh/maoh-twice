@@ -212,6 +212,25 @@ public class MapObjectBitmap {
         frame_periods = FRAME_SLOW_PERIODS;
     }
 
+    public void setName(String _object_name) {
+        object_name = _object_name;
+
+        raw_bitmap_data = graphic.searchBitmap(object_name);
+        switch (total_dirs) {
+            case 1:
+                unit_width = raw_bitmap_data.getWidth();
+                unit_height = raw_bitmap_data.getHeight();
+                break;
+            case 8:
+                unit_width = raw_bitmap_data.getWidth() / 6;
+                unit_height = raw_bitmap_data.getHeight() / 4;
+                break;
+            default:
+                break;
+        }
+
+    }
+
 
 //    private void storeEightBD(BitmapData _raw_bitmap_data) {
 //

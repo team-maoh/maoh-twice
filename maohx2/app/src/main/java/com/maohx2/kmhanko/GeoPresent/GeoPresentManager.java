@@ -7,6 +7,7 @@ import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Arrange.InventryData;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Constants.SELECT_WINDOW;
+import com.maohx2.ina.Constants.SIDE_INVENTRY;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.PlateGroup;
@@ -26,6 +27,8 @@ import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.plate.BackPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
+
+import com.maohx2.ina.Draw.ImageContext;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -96,6 +99,8 @@ public class GeoPresentManager {
 
     SoundAdmin soundAdmin;
 
+    ImageContext gaiaImage;
+
     public GeoPresentManager(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, InventryS _geoInventry, InventryS _expendItemInventry, ExpendItemDataAdmin _expendItemDataAdmin, PlayerStatus _playerStatus, SoundAdmin _soundAdmin) {
         userInterface = _user_interface;
         graphic = _graphic;
@@ -109,6 +114,8 @@ public class GeoPresentManager {
         worldModeAdmin = _worldModeAdmin;
         soundAdmin = _soundAdmin;
 
+        gaiaImage = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+
         initTextBox();
         initPlateGroup();
         initPresentTextBox();
@@ -117,7 +124,7 @@ public class GeoPresentManager {
     }
 
     public void start() {
-        geoInventry.init(userInterface, graphic, 1200, 100 , 1600, 600,10);
+        geoInventry.setPosition(SIDE_INVENTRY.INV_LEFT, SIDE_INVENTRY.INV_UP, SIDE_INVENTRY.INV_RIGHT,SIDE_INVENTRY.INV_BOTTOM,SIDE_INVENTRY.INV_CONTENT_NUM);
         scoreTextBoxUpdate();
     }
 
@@ -144,12 +151,12 @@ public class GeoPresentManager {
     }
 
     private void initTextBox() {
-        scoreTextBoxID = textBoxAdmin.createTextBox(0,0,300,500,6);
+        scoreTextBoxID = textBoxAdmin.createTextBox(600,100,1000,660,6);
         textBoxAdmin.setTextBoxUpdateTextByTouching(scoreTextBoxID, false);
         textBoxAdmin.setTextBoxExists(scoreTextBoxID, false);
         scoreTextBoxUpdate();
 
-        messageBoxID = textBoxAdmin.createTextBox(0,600,1000,900,3);
+        messageBoxID = textBoxAdmin.createTextBox(50, 700, 1150, 880,3);
         textBoxAdmin.setTextBoxExists(messageBoxID, false);
 
 
@@ -413,6 +420,7 @@ public class GeoPresentManager {
 
 
     public void draw() {
+        graphic.bookingDrawBitmapData(gaiaImage);
         geoInventry.draw();
         presentSelectPlateGroup.draw();
         backPlateGroup.draw();

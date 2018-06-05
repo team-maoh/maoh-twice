@@ -68,7 +68,7 @@ public class GlobalData extends Application {
 
         musicAdmin = new MusicAdmin(this, g_my_database_admin);
 
-        equipmentInventrySaver = new EquipmentInventrySaver(g_my_database_admin, "EquipmentInventrySave", "EquipmentInventrySave.db", 1, "s");
+        equipmentInventrySaver = new EquipmentInventrySaver(g_my_database_admin, "EquipmentInventrySave", "EquipmentInventrySave.db", 1, "ns");
         equipmentInventry = new InventryS(equipmentInventrySaver);
 
         geoInventrySaver = new GeoInventrySaver(g_my_database_admin, "GeoInventrySave", "GeoInventrySave.db", 1, "ns", graphic);

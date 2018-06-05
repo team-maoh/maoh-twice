@@ -29,6 +29,7 @@ public class PaletteCenter extends PaletteElement{
 
         element_num = _element_num;
         paint.setColor(CIRCLE_COLOR[element_num]);
+        paint.setAlpha(255);
     }
 
     public static void initStatic(Graphic _graphic){
@@ -39,6 +40,7 @@ public class PaletteCenter extends PaletteElement{
     public void drawSmall() {
 
         graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_SMALL, paint);
+        graphic.bookingDrawBitmapData(graphic.searchBitmap("kazariwaku9"),x,y,0.1f,0.1f,0,254,false);
     }
 
     @Override
@@ -48,17 +50,19 @@ public class PaletteCenter extends PaletteElement{
         if(item_data != null) {
             graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y);
         }
+        graphic.bookingDrawBitmapData(graphic.searchBitmap("kazariwaku9"),x,y,0.1f,0.1f,0,254,false);
     }
 
 
     @Override
     public void drawBig(){
         graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_BIG, paint);
+        graphic.bookingDrawBitmapData(graphic.searchBitmap("kazariwaku9"),x,y,0.2f,0.2f,0,254,false);
     }
 
     @Override
-    public void setItemData(ItemData _item_data, int preElementNum){
-        super.setItemData(_item_data,preElementNum);
+    public void setItemData(ItemData _item_data, int preElementNum, boolean isSound){
+        super.setItemData(_item_data,preElementNum, isSound);
         prePos = preElementNum;
     }
 
@@ -70,6 +74,7 @@ public class PaletteCenter extends PaletteElement{
             //graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y);
             graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y,2.0f,2.0f,0,255,false);
         }
+        graphic.bookingDrawBitmapData(graphic.searchBitmap("kazariwaku9"),x,y,0.2f,0.2f,0,254,false);
     }
 
     @Override
@@ -78,8 +83,8 @@ public class PaletteCenter extends PaletteElement{
             graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_BIG + 10, paint);
         }else{
             graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_BIG, paint);
-
         }
+        graphic.bookingDrawBitmapData(graphic.searchBitmap("kazariwaku9"),x,y,0.2f,0.2f,0,254,false);
     }
 
     @Override
@@ -87,14 +92,15 @@ public class PaletteCenter extends PaletteElement{
         if(_select_circle_num == element_num) {
             graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_BIG+10, paint);
             if (item_data != null) {
-                graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y, 2.0f, 2.0f, 0, 255, false);
+                graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y, 2.0f, 2.0f, 0, 254, false);
             }
         }else{
             graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_BIG, paint);
             if (item_data != null) {
-                graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y, 2.0f, 2.0f, 0, 255, false);
+                graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y, 2.0f, 2.0f, 0, 254, false);
             }
         }
+        graphic.bookingDrawBitmapData(graphic.searchBitmap("kazariwaku9"),x,y,0.2f,0.2f,0,254,false);
     }
 
 

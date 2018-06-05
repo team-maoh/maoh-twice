@@ -1,5 +1,7 @@
 package com.maohx2.ina.Battle;
 
+import com.maohx2.horie.map.DungeonMonsterData;
+import com.maohx2.horie.map.DungeonMonsterDataAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Constants.Item.*;
 import com.maohx2.ina.Draw.Graphic;
@@ -326,6 +328,20 @@ public class BattleUnitDataAdmin {
         Random random = new Random();
         int i = random.nextInt(battle_base_unit_datas.size() - 1);
         return battle_base_unit_datas.get(i);
+    }
+
+    public BattleBaseUnitData getRandomBattleBaseUnitDataExceptBoss(DungeonMonsterDataAdmin dungeonMonsterDataAdmin) {
+        List<DungeonMonsterData> dungeonMonsterData = dungeonMonsterDataAdmin.getDungeon_monster_data();
+        List<DungeonMonsterData> tempDungeonMonsterData = new ArrayList<>();
+        for(int i = 0 ; i < dungeonMonsterData.size(); i++) {
+            if (dungeonMonsterData.get(i).getType() == 0) {
+                tempDungeonMonsterData.add(dungeonMonsterData.get(i));
+            }
+        }
+        Random random = new Random();
+        int i = random.nextInt(tempDungeonMonsterData.size() - 1);
+        return battle_base_unit_datas.get(i);
+
     }
 
     /*

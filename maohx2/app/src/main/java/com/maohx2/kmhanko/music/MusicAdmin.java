@@ -213,7 +213,7 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
         }
     }
     //ActivityのonPause()で呼ぶこと
-    public void close() {
+    static public void close() {
         if (media_player != null) {
             if (media_player.isPlaying()) {
                 media_player.stop();
@@ -221,6 +221,7 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
             media_player.reset();
             media_player.release();
             media_player = null;
+            threadStop();
         }
     }
 }

@@ -138,6 +138,8 @@ public class EffectData {
         int _nextID = nextID.get(i);
         if (_nextID == -1) {
             _nextID = nowID + 1;
+        } else {
+            _nextID--;
         }
         try {
             return _nextID;

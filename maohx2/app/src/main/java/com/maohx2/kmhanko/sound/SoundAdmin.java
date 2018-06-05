@@ -53,6 +53,8 @@ public class SoundAdmin {
 
     private boolean isLoaded;
 
+    private List<SoundData> soundData = new ArrayList<SoundData>(SOUND_LOAD_NUM);
+
     //TODO:ボリューム設定　activityと
 
     //コンストラクタ
@@ -83,6 +85,7 @@ public class SoundAdmin {
         setDatabase(databaseAdmin);
     }
 
+    /*
     private int getSoundID(String name) {
         int buf = database.getOneRowIDForArray(soundpack_name, "name=" + MyDatabase.s_quo(name));
         try {
@@ -90,6 +93,18 @@ public class SoundAdmin {
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new Error("SoundAdmin#getSoundID : Cannot get SoundID " + buf + " " + e);
         }
+    }
+    */
+
+    private int getSoundID(String name) {
+        for (int i = 0; i < soundData.size(); i++) {
+            if (soundData.get(i) != null) {
+                if (soundData.get(i).getName().equals(name)) {
+                    return sound_ID.get(i);
+                }
+            }
+        }
+        throw new Error("SoundAdmin#getSoundID : Cannot get SoundID " + name);
     }
 
     //****ユーザーが普段使用するメソッド****
@@ -113,17 +128,18 @@ public class SoundAdmin {
         }
         int id = getSoundID(name);
         int stid = sp.play(id, leftVolume, rightVolume, priority, loop, rate);
-        stream_ID.add(id - 1, stid);
+
+        stream_ID.add(id, stid);
         return true;
     }
 
     public void resume(String name) {
-        int id = getSoundID(name) - 1;
+        int id = getSoundID(name);
         sp.resume(stream_ID.get(id));
     }
 
     public void pause(String name) {
-        int id = getSoundID(name) - 1;
+        int id = getSoundID(name);
         sp.pause(stream_ID.get(id));
     }
 
@@ -136,7 +152,7 @@ public class SoundAdmin {
     }
 
     public void stop(String name) {
-        int id = getSoundID(name) - 1;
+        int id = getSoundID(name);
         sp.stop(stream_ID.get(id));
     }
 
@@ -156,18 +172,24 @@ public class SoundAdmin {
         AssetManager asm = mContext.getAssets();
 
         List<String> l_filename = new ArrayList<String>();
+        List<String> l_name = new ArrayList<String>();
+
 
         l_filename = database.getString(sound_pack_table_name, "filename", null);
 
+        l_name = database.getString(sound_pack_table_name, "name", null);
+
 
         for (int i = 0; i < l_filename.size(); i++) {
+            soundData.add(new SoundData(i, l_name.get(i)));
+
             try {
                 //音声ファイル読み込み
                 AssetFileDescriptor fd = asm.openFd(FOLDER + "/" + soundpack_name +  "/" + l_filename.get(i));
-                sound_ID.add(i,sp.load(fd, 1));
+                sound_ID.add(i, sp.load(fd, 1));
                 stream_ID.add(i, 0);//これがないと後でOutOfになる
 
-                //System.out.println("dg_mes:" + " filename:" + l_filename.get(i) + " id:" + sound_ID.get(i));
+                System.out.println("dg_mes:" + " filename:" + l_filename.get(i) + " id:" + sound_ID.get(i));
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new Error("SoundAdmin#loadSoundPack " + l_filename.get(i));

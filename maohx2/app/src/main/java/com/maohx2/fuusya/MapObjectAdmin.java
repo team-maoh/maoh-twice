@@ -4,9 +4,11 @@ package com.maohx2.fuusya;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.view.SurfaceHolder;
 
+import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.ActivityChange;
@@ -36,7 +38,7 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 
 public class MapObjectAdmin {
 
-    int NUM_OF_ENEMY = 10;
+    int NUM_OF_ENEMY = 3;
     //    int NUM_OF_ITEM = 10;// > 2
     int NUM_OF_TRAP = 10;
     int NUM_OF_MINE = 5;
@@ -81,6 +83,10 @@ public class MapObjectAdmin {
     Graphic graphic;
     Camera camera;
 
+    int textbox_id;
+    TextBoxAdmin text_box_admin;
+    Paint paint;
+
     boolean is_displaying_menu;
 
     //リリース時にはfalse
@@ -89,8 +95,9 @@ public class MapObjectAdmin {
 
     MapInventryAdmin map_inventry_admin;
     ActivityChange activityChange;
+    int kind_of_zako;
 
-    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, GlobalData _globalData, BattleUnitAdmin _battle_unit_admin) {
+    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, GlobalData _globalData, BattleUnitAdmin _battle_unit_admin, TextBoxAdmin _text_box_admin) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
         sound_admin = _sound_admin;
@@ -99,6 +106,7 @@ public class MapObjectAdmin {
         globalData = _globalData;
         playerStatus = globalData.getPlayerStatus();
         battle_unit_admin = _battle_unit_admin;
+        text_box_admin = _text_box_admin;
 
         is_displaying_menu = false;
         random = new Random();
@@ -115,11 +123,12 @@ public class MapObjectAdmin {
 
             String name_of_trap = randomTrapName();
 
-            map_trap[i] = new MapTrap(graphic, this, i % 4, camera, false, name_of_trap);
+            map_trap[i] = new MapTrap(graphic, this, i % 4, camera, false, name_of_trap, sound_admin);
 //            map_trap[i] = new MapTrap(graphic, this, i % 4, camera, false, "being_teleported");
             map_trap[i].init();
 
-            map_trap_bitmap[i] = new MapObjectBitmap(1, graphic, "cave_thing_01");
+//            map_trap_bitmap[i] = new MapObjectBitmap(1, graphic, "cave_thing_01");
+            map_trap_bitmap[i] = new MapObjectBitmap(1, graphic, name_of_trap);
             map_trap_bitmap[i].init();
         }
 
@@ -155,6 +164,15 @@ public class MapObjectAdmin {
 
         activityChange = map_plate_admin.getActivityChange();
 
+        textbox_id = text_box_admin.createTextBox(100, 700, 1450, 880, 4);
+        text_box_admin.setTextBoxUpdateTextByTouching(textbox_id, false);
+        text_box_admin.setTextBoxExists(textbox_id, false);
+
+        paint = new Paint();
+        paint.setTextSize(40);
+        paint.setARGB(255, 255, 255, 255);
+
+        kind_of_zako = 1;
     }
 
     public void init() {
@@ -297,6 +315,13 @@ public class MapObjectAdmin {
             map_boss[i].initClass(map_admin);
         }
 
+        while (true) {
+            if (map_admin.getMonsterName(0)[kind_of_zako] == null) {
+                break;
+            }
+            kind_of_zako++;
+        }
+
     }
 
     //リスポーン関数
@@ -313,23 +338,10 @@ public class MapObjectAdmin {
         //堀江さんと二人がかりでデバッグするのも何なので、今はここに書く
 //        String[] debug_enemy_name = new String[NUM_OF_ENEMY];
 //        String mid_monster_name[] = map_admin.getMidMonster(1);
-        String[] tmp_enemy_name = new String[1];
-        tmp_enemy_name[0] = map_admin.getMonsterName(2)[0];
-//            map_enemy[i].setName(tmp_enemy_name);
-//            map_enemy[i].setExists(true);
-
-
-//        for (int i = 0; i < NUM_OF_BOSS; i++) {
-//            String[] tmp_boss = new String[1];
-//            tmp_boss[0] = map_admin.getMonsterName(2)[0];
-//            map_boss[i].setName(tmp_boss);
-//            map_boss[i].setExists(true);
-//
-//        }
 
         String[] debug_trap_name = new String[NUM_OF_TRAP];
         for (int i = 0; i < NUM_OF_TRAP; i++) {
-            debug_trap_name[i] = "being_teleported";
+            debug_trap_name[i] = randomTrapName();
         }
         Point[] debug_mine_point = new Point[NUM_OF_MINE];
         for (int i = 0; i < NUM_OF_MINE; i++) {
@@ -345,7 +357,7 @@ public class MapObjectAdmin {
         }
 
         spawnMine(mine_point);
-        spawnEnemy(tmp_enemy_name);
+        spawnEnemy();
         spawnTrap(debug_trap_name);
         spawnBoss(debug_boss_point);
 
@@ -401,7 +413,8 @@ public class MapObjectAdmin {
 
     }
 
-    public void spawnEnemy(String[] names_of_enemys) {
+    public void spawnEnemy() {
+
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
             map_enemy[i].setExists(false);
@@ -409,8 +422,23 @@ public class MapObjectAdmin {
 
         if (map_admin.getNow_floor_num() != map_admin.getBoss_floor_num()) {
 
+            String[] tmp_enemy_name = new String[1];
+            String[] enemy_string = new String[50];
+
+//            int local_i = 0;
+
+//            map_admin.getMonsterName(1)[local_i];
+            int un_null = 1;
+            while (true) {
+                if (map_admin.getMonsterName(1)[un_null % 5] == null) {
+                    break;
+                }
+                un_null++;
+            }
+
             for (int i = 0; i < NUM_OF_ENEMY; i++) {
 
+//                tmp_enemy_name[0] = map_admin.getMonsterName(1)[local_i];
                 if (i == 2 && map_mine[0].exists() == true) {
                     map_enemy[i].setPosition((int) map_mine[0].getWorldX(), (int) map_mine[0].getWorldY());//採掘スポットの近く
                 } else {
@@ -418,19 +446,20 @@ public class MapObjectAdmin {
                     map_enemy[i].setPosition(room_point.x + magnification / 2, room_point.y + magnification / 2);
                 }
                 map_enemy[i].setExists(true);
-                map_enemy[i].setName(names_of_enemys);
+
+                tmp_enemy_name[0] = map_admin.getMonsterName(1)[i % un_null];
+                map_enemy[i].setName(tmp_enemy_name);
             }
         }
     }
 
     public void spawnTrap(String[] names_of_traps) {
 
+        for (int i = 0; i < NUM_OF_TRAP; i++) {
+            map_trap[i].setExists(false);
+        }
 
         if (map_admin.getNow_floor_num() != map_admin.getBoss_floor_num()) {
-
-            for (int i = 0; i < NUM_OF_TRAP; i++) {
-                map_trap[i].setExists(false);
-            }
 
             for (int i = 0; i < NUM_OF_TRAP; i++) {
 
@@ -442,9 +471,9 @@ public class MapObjectAdmin {
                 map_trap[i].setPosition(room_point.x + magnification / 2, room_point.y + magnification / 2);
                 map_trap[i].setExists(true);
                 map_trap[i].setName(names_of_traps[i]);
+                map_trap_bitmap[i].setName(names_of_traps[i]);
             }
         }
-
     }
 
     public void putBoss() {
@@ -494,13 +523,65 @@ public class MapObjectAdmin {
 
     }
 
-    public void setMapInventryAdmin(MapInventryAdmin _map_inventry_admin){
+    public void setMapInventryAdmin(MapInventryAdmin _map_inventry_admin) {
         map_inventry_admin = _map_inventry_admin;
     }
 
-    public void escapeDungeon(){
+    public void escapeDungeon() {
         map_inventry_admin.storageMapInventry();
         activityChange.toWorldActivity();
     }
 
+    public int getMagnification() {
+        return magnification;
+    }
+
+    public void displayEffectText(String trap_name) {
+        String effect_text1 = "罠だ！";
+        String effect_text2;
+        switch (trap_name) {
+            case "walking_slowly":
+                effect_text2 = "あなたは移動が遅くなってしまった";
+                break;
+            case "walking_inversely":
+                effect_text2 = "あなたは移動が逆向きになってしまった";
+                break;
+            case "cannot_walk":
+                effect_text2 = "あなたは移動できなくなってしまった";
+                break;
+            case "being_drunk":
+                effect_text2 = "あなたは目が回ってしまった";
+                break;
+            case "being_teleported":
+                effect_text2 = "あなたはワープしてしまった";
+                break;
+            case "cannot_exit_room":
+                effect_text2 = "あなたは部屋から出られなくなった";
+                break;
+            case "found_by_enemy":
+                effect_text2 = "あなたは敵に見つかってしまった";
+                break;
+            case "being_blown_away":
+                effect_text2 = "あなたはふっ飛ばされた";
+                break;
+            default:
+                effect_text2 = "あなたは{default}";
+        }
+        text_box_admin.bookingDrawText(textbox_id, effect_text1, paint);
+        text_box_admin.bookingDrawText(textbox_id, "\n");
+        text_box_admin.bookingDrawText(textbox_id, effect_text2, paint);
+        text_box_admin.bookingDrawText(textbox_id, "\n");
+        text_box_admin.bookingDrawText(textbox_id, "MOP");
+        text_box_admin.setTextBoxExists(textbox_id, true);
+        text_box_admin.updateText(textbox_id);
+    }
+
+    public void eraseEffectBox() {
+        text_box_admin.setTextBoxExists(textbox_id, false);
+        text_box_admin.resetTextBox(textbox_id);
+    }
+
+    public int getKindOfZako(){
+        return kind_of_zako;
+    }
 }

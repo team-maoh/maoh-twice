@@ -26,6 +26,7 @@ import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.GeoPresent.GeoPresentManager;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatus;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatusViewer;
 import com.maohx2.kmhanko.Saver.ExpendItemInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoSlotSaver;
@@ -64,7 +65,6 @@ public class WorldGameSystem {
     Paint paint = new Paint();
     Canvas canvas;
     TextBoxAdmin text_box_admin;
-    //ListBoxAdmin list_box_admin;
 
     GeoSlotAdminManager geoSlotAdminManager;
     MyDatabaseAdmin databaseAdmin;
@@ -111,6 +111,7 @@ public class WorldGameSystem {
     MapStatus map_status;
     MapStatusSaver map_status_saver;
 
+    PlayerStatusViewer playerStatusViewer;
 
     MusicAdmin musicAdmin;
     EquipmentItemDataAdmin equipment_item_data_admin;
@@ -133,6 +134,8 @@ public class WorldGameSystem {
         maohMenosStatus = globalData.getMaohMenosStatus();
         //GeoInventry = globalData.getGeoInventry();
         musicAdmin = globalData.getMusicAdmin();
+
+        playerStatusViewer = new PlayerStatusViewer(graphic, world_user_interface, playerStatus);
 
         worldModeAdmin = new WorldModeAdmin();
         worldModeAdmin.initWorld();
@@ -172,8 +175,13 @@ public class WorldGameSystem {
         GeoObjectDataCreater.setGraphic(graphic);
         // 仮。適当にGeo入れる GEO1が上がる能力は単一
         //TODO 同じの追加されたら個数とかないのに2とかになりそう
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 5; i++) {
             geoInventry.addItemData(GeoObjectDataCreater.getGeoObjectData(100));
+
+            geoInventry.addItemData(GeoObjectDataCreater.getGeoObjectData(
+                    new int[] { 100, 0, 0, 0},
+                    new double[] { 1.0, 1.0, 1.0, 1.0}
+            ));
         }
 
 
@@ -227,7 +235,6 @@ public class WorldGameSystem {
 
 
     public void update() {
-
 /*
         if (world_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN) {
             List<BitmapData> testBitmapData = new ArrayList<BitmapData>();
@@ -269,16 +276,18 @@ public class WorldGameSystem {
                 itemShopAdmin.update();
                 break;
             case EQUIP_INIT:
-                backGround = graphic.searchBitmap("firstBackground");//仮
+                backGround = graphic.searchBitmap("equipBackground");//仮
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
-                equipmentInventry.init(world_user_interface, graphic, 800+20,100,1150+20,708, 7);
-                expendItemInventry.init(world_user_interface, graphic,400+20,100,750+20,708, 7);
-
+                equipmentInventry.setPosition(800+20,100,1150+20,708, 7);
+                expendItemInventry.setPosition(400+20,100,750+20,708, 7);
+                worldModeAdmin.setMode(WORLD_MODE.EQUIP);
             case EQUIP:
                 equipmentInventry.updata();
                 expendItemInventry.updata();
                 palette_admin.update(false);
                 backPlateGroup.update();
+                //equipmentInventry.onArrow();
+                //expendItemInventry.onArrow();
                 break;
             case PRESENT_INIT:
                 geoPresentManager.start();
@@ -297,27 +306,6 @@ public class WorldGameSystem {
             default:
                 break;
         }
-/*
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getGetSlotMap())) {
-            geoSlotAdminManager.update();
-        }
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getWorldMap())) {
-            dungeonSelectManager.update();
-        }
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getShop())) {
-            itemShopAdmin.update();
-        }
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getPresent())) {
-            geoPresentManager.update();
-        }
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getEquip())) {
-            equipmentInventry.updata();
-            expendItemInventry.updata();
-            palette_admin.update(false);
-            backPlateGroup.update();
-        }
-        */
-
         text_box_admin.update();
         effectAdmin.update();
         //musicAdmin.update();
@@ -342,12 +330,15 @@ public class WorldGameSystem {
             case GEO_MAP_INIT:
                 break;
             case GEO_MAP:
+                effectAdmin.draw();
                 geoSlotAdminManager.draw();
+                playerStatusViewer.draw();
                 break;
             case SHOP_INIT:
                 break;
             case SHOP:
                 itemShopAdmin.draw();
+                playerStatusViewer.draw();
                 break;
             case EQUIP_INIT:
                 break;
@@ -367,36 +358,16 @@ public class WorldGameSystem {
                 break;
             case SELL:
                 itemSell.draw();
+                playerStatusViewer.draw();
                 break;
             default:
                 break;
         }
-        /*
-        if (worldModeAdmin.getIsDraw(worldModeAdmin.getGetSlotMap())) {
-            geoSlotAdminManager.draw();
-        }
-        if (worldModeAdmin.getIsDraw(worldModeAdmin.getWorldMap())) {
-            dungeonSelectManager.draw();
-        }
-        if (worldModeAdmin.getIsDraw(worldModeAdmin.getShop())) {
-            itemShopAdmin.draw();
-        }
-        if (worldModeAdmin.getIsDraw(worldModeAdmin.getPresent())) {
-            geoPresentManager.draw();
-        }
-
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getEquip())) {
-            equipmentInventry.draw();
-            expendItemInventry.draw();
-            palette_admin.draw();
-            world_user_interface.draw();
-
-            backPlateGroup.draw();
-        }
-        */
 
         text_box_admin.draw();
-        effectAdmin.draw();
+        if (worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP) {
+            effectAdmin.draw();
+        }
 
         graphic.draw();
     }
@@ -413,6 +384,7 @@ public class WorldGameSystem {
                             @Override
                             public void callBackEvent() {
                                 //戻るボタンが押された時の処理
+                                soundAdmin.play("cancel00");
                                 worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT_INIT);
                                 /*worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);

@@ -64,7 +64,13 @@ public class StartActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        System.out.println("call_destoroy");
+        start_surface_view = null;
+        //start_surface_view.graphic.releaseBitmap();
+    }
+
+    @Override
+    public String getActivityName() {
+        return "StartActivity";
     }
 }
 
@@ -198,7 +204,7 @@ class StartSurfaceView extends BaseSurfaceView {
                 start_game_system.draw();
                 break;
             case 2:
-                soundAdmin.play("opening00");
+                soundAdmin.play("opening01");
                 if(global_data.getPlayerStatus().getTutorialInDungeon() == 1) {
                     activityChange.toWorldActivity();
                 }else{

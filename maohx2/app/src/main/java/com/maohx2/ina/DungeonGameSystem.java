@@ -30,6 +30,7 @@ import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatus;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatusViewer;
 import com.maohx2.kmhanko.Saver.GeoSlotSaver;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
@@ -99,6 +100,8 @@ public class DungeonGameSystem {
     Constants.DungeonKind.DUNGEON_KIND dungeon_kind;
 
     EffectAdmin effectAdmin;
+
+    PlayerStatusViewer playerStatusViewer;
 
     int repeat_count;
 
@@ -175,7 +178,7 @@ public class DungeonGameSystem {
         activityChange = _activityChange;
         dungeonModeManage = new DungeonModeManage();
         map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange, globalData, dungeonModeManage, soundAdmin);
-        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, soundAdmin, map_plate_admin, dungeonModeManage, globalData, battle_unit_admin);
+        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, soundAdmin, map_plate_admin, dungeonModeManage, globalData, battle_unit_admin, text_box_admin);
         map_inventry_admin = new MapInventryAdmin(globalData, map_plate_admin.getInventry(), map_object_admin, map_plate_admin);
 
         dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
@@ -228,6 +231,8 @@ public class DungeonGameSystem {
         playerStatus = globalData.getPlayerStatus();
         maohMenosStatus = globalData.getMaohMenosStatus();
 
+        playerStatusViewer = new PlayerStatusViewer(graphic, dungeon_user_interface, playerStatus);
+
         if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH) {
             repeat_count = playerStatus.getMaohWinCount();
         } else {
@@ -250,7 +255,8 @@ public class DungeonGameSystem {
                 soundAdmin,
                 map_status,
                 map_status_saver,
-                dungeon_kind
+                dungeon_kind,
+                dungeonMonsterDataAdmin
         );
 
         backGround = graphic.searchBitmap("firstBackground");
@@ -259,6 +265,8 @@ public class DungeonGameSystem {
         geoSlotSaver = new GeoSlotSaver(my_database_admin, "GeoSlotSave", "GeoSlotSave.db", 1, "ns", graphic);
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, dungeon_user_interface, my_database_admin, text_box_admin, playerStatus, globalData.getGeoInventry(), geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin, dungeonModeManage);
         geoSlotAdminManager.loadGeoSlot();
+
+        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
 
         //by kmhanko即座に魔王との戦闘画面へ
         if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH) {
@@ -269,7 +277,7 @@ public class DungeonGameSystem {
         //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
 
 
-        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
+        //
         //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP_INIT);
     }
 
@@ -398,10 +406,12 @@ public class DungeonGameSystem {
                 //dungeon_user_interface.draw();
                 backPlateGroup.draw();
                 //backPlateGroup.draw();
+                playerStatusViewer.draw();
                 break;
 
             case GEO_MAP:
                 geoSlotAdminManager.drawInStatus();
+                playerStatusViewer.draw();
                 break;
 
         }

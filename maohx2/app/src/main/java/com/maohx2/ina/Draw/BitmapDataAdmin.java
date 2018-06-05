@@ -113,5 +113,12 @@ public class BitmapDataAdmin {
         return bitmap_data[bitmap_data_num];
     }
 
+    //by kmhanko
+    public void releaseBitmap() {
+        for(int i = 0; i < bitmap_data.length; i++) {
+            bitmap_data[i].releaseBitmap();
+        }
+    }
+
 }
 

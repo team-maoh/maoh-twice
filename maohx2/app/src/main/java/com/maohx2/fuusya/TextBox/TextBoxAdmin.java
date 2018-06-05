@@ -13,7 +13,6 @@ import com.maohx2.kmhanko.sound.SoundAdmin;
 import static android.graphics.Color.RED;
 import static android.graphics.Color.WHITE;
 import static android.hardware.camera2.params.RggbChannelVector.BLUE;
-
 /**
  * Created by ina on 2017/10/01.
  */

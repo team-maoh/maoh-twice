@@ -5,6 +5,7 @@ import android.graphics.Paint;
 
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Constants.SIDE_INVENTRY;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.PlateGroup;
@@ -63,7 +64,7 @@ public class ItemShopAdmin {
 
     SoundAdmin soundAdmin;
 
-    int moneyTextBoxID;
+    //int moneyTextBoxID;
 
     public enum ITEM_KIND {
         EXPEND,
@@ -88,13 +89,14 @@ public class ItemShopAdmin {
         geoObjectShopData = new GeoObjectShopData(graphic, databaseAdmin);
         geoObjectShopData.setGeoObjectDataAdmin(itemDataAdminManager.getGeoObjectDataAdmin());
 
-        initTextBox();
+        //initTextBox();
     }
 
     public void start() {
-        expendItemInventry.init(userInterface, graphic, 1200, 100 , 1600, 600,10);
-        geoInventry.init(userInterface, graphic, 1200, 100 , 1600, 600,10);
-        moneyTextBoxUpdate();
+        expendItemInventry.setPosition(SIDE_INVENTRY.INV_LEFT, SIDE_INVENTRY.INV_UP, SIDE_INVENTRY.INV_RIGHT,SIDE_INVENTRY.INV_BOTTOM,SIDE_INVENTRY.INV_CONTENT_NUM);
+
+        //geoInventry.setPosition(1200, 100 , 1600, 600,10);
+        //moneyTextBoxUpdate();
     }
 
 
@@ -139,7 +141,7 @@ public class ItemShopAdmin {
         if (itemShopActive) {
             itemShop.update();
         }
-        textBoxAdmin.setTextBoxExists(moneyTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.SHOP);
+        //textBoxAdmin.setTextBoxExists(moneyTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.SHOP);
 
     }
 
@@ -147,32 +149,30 @@ public class ItemShopAdmin {
         if (itemShopActive) {
             itemShop.draw();
         }
-        textBoxAdmin.setTextBoxExists(moneyTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.SHOP);
+        //textBoxAdmin.setTextBoxExists(moneyTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.SHOP);
     }
 
     public ItemShop getItemShop() {
         return itemShop;
     }
-
+/*
     public void moneyTextBoxUpdate() {
         textBoxAdmin.bookingDrawText(moneyTextBoxID, "所持金 " + playerStatus.getMoney());
         textBoxAdmin.bookingDrawText(moneyTextBoxID, "MOP");
         textBoxAdmin.updateText(moneyTextBoxID);
     }
-
+*/
+/*
     private void initTextBox() {
         moneyTextBoxID = textBoxAdmin.createTextBox(0,600,300,900,6);
         textBoxAdmin.setTextBoxUpdateTextByTouching(moneyTextBoxID, false);
         textBoxAdmin.setTextBoxExists(moneyTextBoxID, false);
         moneyTextBoxUpdate();
     }
-
-
-
-
     public int getMoneyTextBoxID() {
         return moneyTextBoxID;
     }
+*/
 
 }
 
