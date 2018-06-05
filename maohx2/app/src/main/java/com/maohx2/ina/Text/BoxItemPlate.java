@@ -39,6 +39,7 @@ public class BoxItemPlate extends BoxPlate {
 
         if (user_interface.checkUI(touch_id, judge_way) == true) {
             button_paint.setAlpha(255);
+            callBackEvent();
         } else if (user_interface.checkUI(touch_id, feedback_way) == true) {
             button_paint.setAlpha(255);
         } else {
