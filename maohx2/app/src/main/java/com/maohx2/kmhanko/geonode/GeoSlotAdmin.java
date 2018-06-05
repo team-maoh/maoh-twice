@@ -7,6 +7,7 @@ import com.maohx2.ina.Constants;
 import com.maohx2.ina.Constants.SELECT_WINDOW;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.ImageContext;
+import com.maohx2.ina.Text.BoxItemPlate;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.UI.UserInterface;
 
@@ -86,6 +87,8 @@ public class GeoSlotAdmin {
     PlateGroup<BoxTextPlate> releasePlateGroup;//解放する/やめる　の選択
     //PlateGroup<BackPlate> backPlateGroup;
 
+    PlateGroup<BoxItemPlate> holdGeoPlateGroup;
+
     Paint releaseTextPaint;
 
     InventryS geoInventry;
@@ -119,6 +122,7 @@ public class GeoSlotAdmin {
         initTextBox();
         //initBackPlate();
         initReleasePlate();
+        initHoldGeoPlateGroup();
     }
 
     /*
@@ -249,6 +253,29 @@ public class GeoSlotAdmin {
 
     }
 
+    private void initHoldGeoPlateGroup() {
+
+        Paint textPaint = new Paint();
+        textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
+        textPaint.setARGB(255,255,255,255);
+
+        //「解放する」「解放しない」ボタン表示　→　ListBox<Button>の完成待ち
+        holdGeoPlateGroup = new PlateGroup<BoxItemPlate>(
+                new BoxItemPlate[]{
+                        new BoxItemPlate(
+                                graphic, userInterface, new Paint(),
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{SELECT_WINDOW.YES_LEFT, SELECT_WINDOW.YES_UP, SELECT_WINDOW.YES_RIGHT, SELECT_WINDOW.YES_BOTTOM},
+                                null
+                        )
+                }
+        );
+        holdGeoPlateGroup.setDrawFlag(true);
+        holdGeoPlateGroup.setUpdateFlag(true);
+
+    }
+
     private void initTextBox() {
 
         releaseTextBoxID = textBoxAdmin.createTextBox(SELECT_WINDOW.MESS_LEFT,SELECT_WINDOW.MESS_UP,SELECT_WINDOW.MESS_RIGHT,SELECT_WINDOW.MESS_BOTTOM, SELECT_WINDOW.MESS_ROW);
@@ -354,7 +381,7 @@ public class GeoSlotAdmin {
 
     public void update(){
         geoSlotGroup.update();
-
+        holdGeoPlateGroup.update();
         releasePlateGroup.update();
         if (releasePlateGroup.getUpdateFlag()) {
             int content = releasePlateGroup.getTouchContentNum();
@@ -403,11 +430,15 @@ public class GeoSlotAdmin {
         geoSlotGroup.draw();
 
         //Holdの表示
+        /*
         if (isHoldGeoObject()) {
             graphic.bookingDrawBitmapData(
                     graphic.makeImageContext(holdGeoObject.getItemImage(), 100, 100, Constants.GeoSlotParam.GEO_SLOT_SCALE, Constants.GeoSlotParam.GEO_SLOT_SCALE, 0, 255, false)
             );
         }
+        */
+
+        holdGeoPlateGroup.draw();
 
         //ListBox
         releasePlateGroup.draw();
@@ -425,7 +456,8 @@ public class GeoSlotAdmin {
         if (inventryData != null) {
             GeoObjectData tmp = (GeoObjectData)inventryData.getItemData();
             if (inventryData.getItemNum() > 0 && tmp.getName() != null && tmp.getSlotSetName().equals("noSet")) {
-                setHoldGeoObject((GeoObjectData) inventryData.getItemData());
+                setHoldGeoObject((GeoObjectData)inventryData.getItemData());
+                holdGeoPlateGroup.setContentItem(inventryData.getItemData(),0);
                 userInterface.setInventryData(null);
             }
         }
