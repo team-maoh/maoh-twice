@@ -230,7 +230,7 @@ public final class Constants {
         public static final int PLUS_BOTTOM = 400;
 
         public static final float TEXT_SIZE = 80f;
-        public static final int MESS_ROW = 1;
+        public static final int MESS_ROW = 2;
     }
 
     public static class Item {
