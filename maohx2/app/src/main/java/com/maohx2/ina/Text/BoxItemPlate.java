@@ -68,6 +68,8 @@ public class BoxItemPlate extends BoxPlate {
     @Override
     public void setContentItem(ItemData _content_item){
         content_item = _content_item;
-        image_context = graphic.makeImageContext(content_item.getItemImage(), left, up, 1.7f, 1.7f, 0, 255, true);
+        if (content_item != null) {
+            image_context = graphic.makeImageContext(content_item.getItemImage(), left, up, 1.7f, 1.7f, 0, 255, true);
+        }
     }
 }
