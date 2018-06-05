@@ -494,7 +494,7 @@ public class BattleUnitAdmin {
                                 if (((BattleEnemy) (battle_units[i])).isSpecialAction() == false) {
                                     //敵が特殊行動していないなら
 
-                                    int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage()/battle_units[i].getDefence();
+                                    int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage()/(battle_units[i].getDefence()*battle_units[i].getDefence()*battle_units[i].getDefence());
                                     if (new_hp > 0) {
                                         battle_units[i].setHitPoint(new_hp);
                                     } else {
@@ -539,7 +539,6 @@ public class BattleUnitAdmin {
                             //HPがマイナスになっているはずなので、マイナス分をジオ計算時に反映する
                         }
                     }
-
                 }
             }
 
@@ -560,7 +559,7 @@ public class BattleUnitAdmin {
                             palette_admin.deleteExpendItemData();
                         }
 
-                        int new_hp = battle_units[0].getHitPoint() - (int) (damage_to_player/battle_units[0].getDefence() * damage_rate) + heel_to_player;
+                        int new_hp = battle_units[0].getHitPoint() - (int) ((damage_to_player/(battle_units[0].getDefence()*battle_units[0].getDefence()*battle_units[0].getDefence())) * damage_rate) + heel_to_player;
                         if (new_hp > battle_units[0].getMaxHitPoint()) {
                             new_hp = battle_units[0].getMaxHitPoint();
                         }
