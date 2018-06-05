@@ -369,7 +369,8 @@ public class MapAdmin {
         section_admin.connectRooms(map_data);
         section_admin.makeStairs(map_data);
         section_admin.makeGate(map_data);
-        createMine(mine_min_num, mine_max_num);
+        createMine(5, 5);
+        //createMine(mine_min_num, mine_max_num);
         //map_object_adminに採掘場所の座標を渡す
 
 
