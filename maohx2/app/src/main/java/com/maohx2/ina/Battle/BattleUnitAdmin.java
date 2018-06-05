@@ -405,7 +405,7 @@ public class BattleUnitAdmin {
                                                 if(mode == MODE.MINING){
                                                     switch (attack_equipment.getName()){
                                                         case "スコップ":
-                                                             mine_effect_ID = effectAdmin.createEffect("axe_effect", "axe_effect", 3, 5);
+                                                             mine_effect_ID = effectAdmin.createEffect("scoop_effect", "scoop_effect", 5, 4);
                                                             break;
                                                         case "ハンマー":
                                                             mine_effect_ID = effectAdmin.createEffect("hammer_effect", "hammer_effect", 5, 1);
