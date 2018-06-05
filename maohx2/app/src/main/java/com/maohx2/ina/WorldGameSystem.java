@@ -182,6 +182,9 @@ public class WorldGameSystem {
                     new int[] { 100, 0, 0, 0},
                     new double[] { 1.0, 1.0, 1.0, 1.0}
             ));
+            //デバッグ用
+            playerStatus.addBaseAttack(1000000);
+            playerStatus.calcStatus();
         }
 
 
