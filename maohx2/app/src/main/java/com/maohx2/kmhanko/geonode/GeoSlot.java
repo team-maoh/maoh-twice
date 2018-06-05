@@ -607,7 +607,7 @@ public class GeoSlot extends CircleImagePlate {
     }
 
     //TODO: inaの関数ができたら消す
-    public void setParam(int _x, int _y, int _r) {
+    public void setParam(int _x, int _y, int _r, boolean grandFlag) {
         x = _x;
         y = _y;
         radius = _r;
@@ -615,7 +615,11 @@ public class GeoSlot extends CircleImagePlate {
         //TODO: 前の奴を消せないので格納上の問題あり
 
         notEventCrearImageContext = graphic.makeImageContext(graphic.searchBitmap("apple"), x , y, GeoSlotParam.GEO_SLOT_SCALE, GeoSlotParam.GEO_SLOT_SCALE, 0.0f, 255, false);
-        slotHoleImageContext = graphic.makeImageContext(graphic.searchBitmap("GeoSlotHole"), x, y, GeoSlotParam.GEO_SLOT_SCALE, GeoSlotParam.GEO_SLOT_SCALE, 0.0f, 255, false);
+        if (grandFlag) {
+            slotHoleImageContext = graphic.makeImageContext(graphic.searchBitmap("GeoSlotHoleGreen"), x, y, GeoSlotParam.GEO_SLOT_SCALE, GeoSlotParam.GEO_SLOT_SCALE, 0.0f, 255, false);
+        } else {
+            slotHoleImageContext = graphic.makeImageContext(graphic.searchBitmap("GeoSlotHole"), x, y, GeoSlotParam.GEO_SLOT_SCALE, GeoSlotParam.GEO_SLOT_SCALE, 0.0f, 255, false);
+        }
         geoImageContext = null;
 
         default_image_context = slotHoleImageContext;
