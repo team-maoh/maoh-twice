@@ -5,6 +5,7 @@ import android.graphics.Paint;
 
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Constants.SIDE_INVENTRY;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.PlateGroup;
@@ -92,8 +93,9 @@ public class ItemShopAdmin {
     }
 
     public void start() {
-        expendItemInventry.setPosition(1200, 100 , 1600, 600,10);
-        geoInventry.setPosition(1200, 100 , 1600, 600,10);
+        expendItemInventry.setPosition(SIDE_INVENTRY.INV_LEFT, SIDE_INVENTRY.INV_UP, SIDE_INVENTRY.INV_RIGHT,SIDE_INVENTRY.INV_BOTTOM,SIDE_INVENTRY.INV_CONTENT_NUM);
+
+        //geoInventry.setPosition(1200, 100 , 1600, 600,10);
         //moneyTextBoxUpdate();
     }
 

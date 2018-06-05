@@ -192,6 +192,14 @@ public final class Constants {
         public static final int MESS_ROW = 5;
     }
 
+    public static class SIDE_INVENTRY {
+        public static final int INV_LEFT = 1200;
+        public static final int INV_RIGHT = 1600;
+        public static final int INV_UP = 100;
+        public static final int INV_BOTTOM = 660;
+        public static final int INV_CONTENT_NUM = 7;
+    }
+
     public static class SELECT_WINDOW {
         public static final int MESS_LEFT = 200;
         public static final int MESS_RIGHT = 1400;
