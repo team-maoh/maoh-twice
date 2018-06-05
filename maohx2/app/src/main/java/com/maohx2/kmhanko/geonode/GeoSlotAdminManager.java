@@ -157,9 +157,7 @@ public class GeoSlotAdminManager {
                                 soundAdmin.play("cancel00");
 
                                 if ( activeGeoSlotAdmin != null) {
-                                    for (int i = 0; i < activeGeoSlotAdmin.getGeoSlots().size(); i++) {
-                                        activeGeoSlotAdmin.getGeoSlots().get(i).clearGeoSlotLineEffect();
-                                    }
+                                    activeGeoSlotAdmin.clearGeoSlotLineEffect();
                                 }
 
                                 if (getMode() == GeoSlotAdminManager.MODE.WORLD) {
@@ -222,6 +220,9 @@ public class GeoSlotAdminManager {
         int buttonID = mapIconPlateGroup.getTouchContentNum();
         if (buttonID != -1 ) {
             soundAdmin.play("enter00");
+            if ( activeGeoSlotAdmin != null) {
+                activeGeoSlotAdmin.clearGeoSlotLineEffect();
+            }
             this.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
             //statusTextBoxUpdate();
         }

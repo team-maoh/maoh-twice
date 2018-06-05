@@ -368,6 +368,7 @@ public class WorldGameSystem {
                 playerStatusViewer.draw();
                 break;
             case GEO_MAP_SEE_ONLY:
+                effectAdmin.draw();
                 geoSlotAdminManager.drawInStatus();
                 playerStatusViewer.draw();
                 break;
@@ -376,7 +377,7 @@ public class WorldGameSystem {
         }
 
         text_box_admin.draw();
-        if (worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP) {
+        if (worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP && worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP_SEE_ONLY) {
             effectAdmin.draw();
         }
 

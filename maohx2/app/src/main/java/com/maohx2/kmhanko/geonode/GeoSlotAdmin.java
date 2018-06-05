@@ -486,6 +486,12 @@ public class GeoSlotAdmin {
         }
     }
 
+    public void clearGeoSlotLineEffect() {
+        for(int i = 0; i < geoSlots.size(); i++) {
+            geoSlots.get(i).clearGeoSlotLineEffect();
+        }
+    }
+
     public void initUIs() {
         textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
         releasePlateGroup.setDrawFlag(false);
