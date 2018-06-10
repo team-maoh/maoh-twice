@@ -73,6 +73,15 @@ public class PaletteAdmin {
 
         palettes[0].palette_elements[7].setItemData(_equipmentItemDataAdmin.getOneDataByName("素手"), false);
         palettes[0].palette_elements[6].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ盾"), false);
+
+//        palettes[0].palette_elements[0].setItemData(_equipmentItemDataAdmin.getOneDataByName("素手"), false);
+//        palettes[0].palette_elements[1].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ剣"), false);
+//        palettes[0].palette_elements[2].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ杖"), false);
+//        palettes[0].palette_elements[3].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ斧"), false);
+//        palettes[0].palette_elements[4].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ槍"), false);
+//        palettes[0].palette_elements[5].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ弓"), false);
+//        palettes[0].palette_elements[6].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグ銃"), false);
+//        palettes[0].palette_elements[7].setItemData(_equipmentItemDataAdmin.getOneDataByName("デバッグナックル"), false);
     }
 
 
