@@ -280,6 +280,9 @@ public class BattleUnitDataAdmin {
                     if (tempDropItem == null) {
                         continue;
                     }
+                    if (tempDropItem.get(i) == null) {
+                        continue;
+                    }
                     //武器の場合
                     EQUIPMENT_KIND bufEK;
                     switch (tempDropItem.get(i)) {
