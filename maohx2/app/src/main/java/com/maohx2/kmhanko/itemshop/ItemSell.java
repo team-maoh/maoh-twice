@@ -267,10 +267,10 @@ public class ItemSell {
         geoInventry.setPosition(700,50,1000,500);
         expendItemInventry.setPosition(1000,50,1300,500);
         */
-        sellItemInventry.setPosition(50,SIDE_INVENTRY.INV_UP,350,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
-        equipmentInventry.setPosition(400,SIDE_INVENTRY.INV_UP,700,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
-        geoInventry.setPosition(700,SIDE_INVENTRY.INV_UP,1000,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
-        expendItemInventry.setPosition(1000,SIDE_INVENTRY.INV_UP,1300,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
+        sellItemInventry.setPosition(0,SIDE_INVENTRY.INV_UP,390,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
+        equipmentInventry.setPosition(430,SIDE_INVENTRY.INV_UP,820,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
+        geoInventry.setPosition(820,SIDE_INVENTRY.INV_UP,1210,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
+        expendItemInventry.setPosition(1210,SIDE_INVENTRY.INV_UP,1600,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
     }
 
     //***テキストボックス関係
@@ -450,7 +450,7 @@ public class ItemSell {
         textPaint.setARGB(255,255,255,255);
 
         int position[] = new int[] {
-                1450, 650, 1550, 750
+                50, 50, 150, 150
         };
 
         sellEnterPlateGroup = new PlateGroup<BoxImagePlate>(

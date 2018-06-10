@@ -479,10 +479,12 @@ public class GeoSlotAdmin {
     public void checkInventrySelect() {
         InventryData inventryData = userInterface.getInventryData();
         if (inventryData != null) {
-            GeoObjectData tmp = (GeoObjectData)inventryData.getItemData();
-            if (inventryData.getItemNum() > 0 && tmp.getName() != null && tmp.getSlotSetName().equals("noSet")) {
-                setHoldGeoObject((GeoObjectData)inventryData.getItemData());
-                userInterface.setInventryData(null);
+            if (inventryData.getItemData().getItemKind() == Constants.Item.ITEM_KIND.GEO) {
+                GeoObjectData tmp = (GeoObjectData) inventryData.getItemData();
+                if (inventryData.getItemNum() > 0 && tmp.getName() != null && tmp.getSlotSetName().equals("noSet")) {
+                    setHoldGeoObject((GeoObjectData) inventryData.getItemData());
+                    userInterface.setInventryData(null);
+                }
             }
         }
     }
