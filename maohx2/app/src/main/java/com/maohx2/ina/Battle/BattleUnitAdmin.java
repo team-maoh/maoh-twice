@@ -520,7 +520,7 @@ public class BattleUnitAdmin {
                                 if (((BattleEnemy) (battle_units[i])).isSpecialAction() == false) {
                                     //敵が特殊行動していないなら
 
-                                    int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage()/(battle_units[i].getDefence()*battle_units[i].getDefence()*battle_units[i].getDefence());
+                                    int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage()/(1+battle_units[i].getDefence()*battle_units[i].getDefence()*battle_units[i].getDefence());
                                     if (new_hp > 0) {
                                         battle_units[i].setHitPoint(new_hp);
                                     } else {
