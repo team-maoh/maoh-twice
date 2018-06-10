@@ -175,6 +175,7 @@ public final class Constants {
             GEO_MAP_SEE_ONLY_INIT,
 
             DUNGEON_SELECT_INIT_START,
+            TU_EQUIP,
         }
     }
 
