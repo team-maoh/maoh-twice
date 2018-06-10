@@ -86,6 +86,61 @@ public class GeoObjectData extends ItemData {
         return slotSetID;
     }
 
+    public GEO_KIND_ALL getGeoKind() {
+        return geoKind;
+    }
+
+    public void setStatusAuto(float x) {
+        switch(geoKind) {
+            case HP:
+                hp = (int)x;
+                break;
+            case ATTACK:
+                attack = (int)x;
+                break;
+            case DEFENCE:
+                defence = (int)x;
+                break;
+            case LUCK:
+                luck = (int)x;
+                break;
+            case HP_RATE:
+                hp_rate = (int)x;
+                break;
+            case ATTACK_RATE:
+                attack_rate = (int)x;
+                break;
+            case DEFENCE_RATE:
+                defence_rate = (int)x;
+                break;
+            case LUCK_RATE:
+                luck_rate = (int)x;
+                break;
+        }
+    }
+
+    public double getStatusAuto() {
+        switch(geoKind) {
+            case HP:
+                return hp;
+            case ATTACK:
+                return attack;
+            case DEFENCE:
+                return defence;
+            case LUCK:
+                return luck;
+            case HP_RATE:
+                return hp_rate;
+            case ATTACK_RATE:
+                return attack_rate;
+            case DEFENCE_RATE:
+                return defence_rate;
+            case LUCK_RATE:
+                return luck_rate;
+        }
+        return 0.0;
+    }
+
     public void setStatus(int _hp, int _attack, int _defence, int _luck, double _hp_rate, double _attack_rate, double _defence_rate, double _luck_rate) {
         hp = _hp;
         attack = _attack;

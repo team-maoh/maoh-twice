@@ -16,7 +16,7 @@ public class BattleRockCreater {
         graphic = _graphic;
     }
 
-    static BattleBaseUnitData getBattleBaseUnitData(int _hp, int _defence) {
+    static BattleBaseUnitData getBattleBaseUnitData(int _hp, int _defence, float rareRate) {
         BattleBaseUnitData tempBBUD = new BattleBaseUnitData();
 
         tempBBUD.setName("岩");//仮
@@ -24,7 +24,20 @@ public class BattleRockCreater {
         tempBBUD.setDbStatus(BattleBaseUnitData.DbStatusID.InitialDefence, _defence);
         tempBBUD.setDbStatus(BattleBaseUnitData.DbStatusID.AttackFlame, 0);
 
-        tempBBUD.setBitmapData(graphic.searchBitmap("GeoRock00"));//仮
+        String imageName = "";
+        if (rareRate < 0.25f) {
+            imageName = "GeoRock00";
+        }
+        if (rareRate >= 0.25f && rareRate < 0.50f) {
+            imageName = "GeoRock01";
+        }
+        if (rareRate >= 0.50f && rareRate < 0.75f) {
+            imageName = "GeoRock02";
+        }
+        if (rareRate >= 0.75f) {
+            imageName = "GeoRock03";
+        }
+        tempBBUD.setBitmapData(graphic.searchBitmap(imageName));//仮
 
         tempBBUD.setRadius(70);
 

@@ -239,6 +239,7 @@ public class BattleUnitAdmin {
 
         if (mode == MODE.MINING) {
             palette_admin.setPalettesFlags(new boolean[]{false, false, true});
+            dropGeoObject.clear();
             spawnRock();
             timeLimitBar.reset(30 * 60);
         }
@@ -345,11 +346,47 @@ public class BattleUnitAdmin {
     }
 
     public int setRockUnitData(BattleBaseUnitData bBUD) {
+        List<BattleBaseUnitData> battleBaseUnitData = battleUnitDataAdmin.getBattleBaseUnitDataExceptBoss(dungeonMonsterDataAdmin);
+        int maxMinParam[][] = new int[4][2];
+
+        for (int i = 1; i < battleBaseUnitData.size(); i++) {
+            int tempParam[] = battleBaseUnitData.get(i).getStatus(repeat_count);
+            for (int j = 0; j < maxMinParam.length; j++) {
+                if (tempParam[j] * battleBaseUnitData.get(i).getPower() > maxMinParam[j][0]) {
+                    maxMinParam[j][0] = tempParam[j] * battleBaseUnitData.get(i).getPower();
+                }
+                if (tempParam[j] * battleBaseUnitData.get(i).getPower() < maxMinParam[j][1]) {
+                    maxMinParam[j][1] = tempParam[j] * battleBaseUnitData.get(i).getPower();
+                }
+            }
+        }
+
+
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (!battle_units[i].isExist()) {
-                BattleBaseUnitData tempBBUD = BattleRockCreater.getBattleBaseUnitData(bBUD.getDbStatus(BattleBaseUnitData.DbStatusID.InitialHP) * bBUD.getPower(), 0);
-                battle_units[i].setBattleUnitDataRock(tempBBUD);
                 ((BattleEnemy) battle_units[i]).setBattleBaseUnitDataForRock(bBUD);
+                getDropGeoBefore(battle_units[i]);
+                float rareRate = 0.0f;
+                switch(dropGeoObjectKind.get(i-1)) {
+                    case HP:
+                    case HP_RATE:
+                        rareRate = (float)(dropGeoObject.get(i - 1) - maxMinParam[0][1]) / (float)(maxMinParam[0][0] - maxMinParam[0][1]);
+                        break;
+                    case ATTACK:
+                    case ATTACK_RATE:
+                        rareRate = (float)(dropGeoObject.get(i - 1) - maxMinParam[1][1]) / (float)(maxMinParam[1][0] - maxMinParam[1][1]);
+                        break;
+                    case DEFENCE:
+                    case DEFENCE_RATE:
+                        rareRate = (float)(dropGeoObject.get(i - 1) - maxMinParam[2][1]) / (float)(maxMinParam[2][0] - maxMinParam[2][1]);
+                        break;
+                    case LUCK:
+                    case LUCK_RATE:
+                        rareRate = (float)(dropGeoObject.get(i - 1) - maxMinParam[3][1]) / (float)(maxMinParam[3][0] - maxMinParam[3][1]);
+                        break;
+                }
+                BattleBaseUnitData tempBBUD = BattleRockCreater.getBattleBaseUnitData(bBUD.getDbStatus(BattleBaseUnitData.DbStatusID.InitialHP) * bBUD.getPower(), 0, rareRate);
+                battle_units[i].setBattleUnitDataRock(tempBBUD);
                 return i;
             }
         }
@@ -708,7 +745,7 @@ public class BattleUnitAdmin {
                     resultTextBoxUpdate(new String[]{"時間切れになってしまった！", "今回の獲得ジオはありません"});
                 } else {
                     //ジオを掘り尽くした場合
-                    getDropGeo();
+                    getDropGeoAfter();
                 }
                 resultButtonGroup.setUpdateFlag(true);
                 resultButtonGroup.setDrawFlag(true);
@@ -775,67 +812,82 @@ public class BattleUnitAdmin {
 
     //by kmhanko
 
-    List<GeoObjectData> dropGeoObject = new ArrayList<>();
-    private void getDropGeoBefore() {
+    //1ずれるので注意
+    List<Integer> dropGeoObject = new ArrayList<>();
+    List<Constants.Item.GEO_KIND_ALL> dropGeoObjectKind = new ArrayList<>();
+
+    private void getDropGeoBefore(BattleUnit tempBattleUnit) {
         //岩からのジオドロップ
-        dropGeoObject.clear();
-        for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
-            if (battle_units[i].getUnitKind() == Constants.UnitKind.ROCK && battle_units[i].isDropFlag()) {
-                BattleBaseUnitData bBUDforRock = ((BattleEnemy) battle_units[i]).getBattleBaseUnitDataForRock();
-                GeoObjectData geoObjectData = null;
-                int parameter = 0;
-                int[] status = bBUDforRock.getStatus(repeat_count);
-                //このジオは何ジオか決定する
-                if (Math.random() < 0.5) {
-                    //NormalGeo
-                    GEO_PARAM_KIND_NORMAL kindNormal = GeoObjectDataCreater.getRandKindNormal();
-                    switch (kindNormal) {
-                        case HP:
-                            parameter = status[HP.ordinal()] * bBUDforRock.getPower();
-                            break;
-                        case ATTACK:
-                            parameter = status[ATTACK.ordinal()] * bBUDforRock.getPower();
-                            break;
-                        case DEFENCE:
-                            parameter = status[DEFENSE.ordinal()] * bBUDforRock.getPower();
-                            break;
-                        case LUCK:
-                            parameter = status[LUCK.ordinal()] * bBUDforRock.getPower();
-                            break;
-                    }
-                    geoObjectData = GeoObjectDataCreater.getGeoObjectData(parameter, kindNormal);
-                } else {
-                    //RateGeo
-                    GEO_PARAM_KIND_RATE kindRate = GeoObjectDataCreater.getRandKindRate();
-                    switch (kindRate) {
-                        case HP_RATE:
-                            parameter = status[HP.ordinal()] * bBUDforRock.getPower();
-                            break;
-                        case ATTACK_RATE:
-                            parameter = status[ATTACK.ordinal()] * bBUDforRock.getPower();
-                            break;
-                        case DEFENCE_RATE:
-                            parameter = status[DEFENSE.ordinal()] * bBUDforRock.getPower();
-                            break;
-                        case LUCK_RATE:
-                            parameter = status[LUCK.ordinal()] * bBUDforRock.getPower();
-                            break;
-                    }
-                    geoObjectData = GeoObjectDataCreater.getGeoObjectData(parameter, kindRate);
-                }
-                if (geoObjectData != null) {
-                    dropGeoObject.add(geoObjectData);//1ずれるので注意
-                }
+        BattleBaseUnitData bBUDforRock = ((BattleEnemy) tempBattleUnit).getBattleBaseUnitDataForRock();
+        int[] status = bBUDforRock.getStatus(repeat_count);
+        //このジオは何ジオか決定する
+        if (Math.random() < 0.5) {
+            //NormalGeo
+            GEO_PARAM_KIND_NORMAL kindNormal = GeoObjectDataCreater.getRandKindNormal();
+            switch (kindNormal) {
+                case HP:
+                    dropGeoObject.add(status[HP.ordinal()] * bBUDforRock.getPower());
+                    dropGeoObjectKind.add(Constants.Item.GEO_KIND_ALL.HP);
+                    break;
+                case ATTACK:
+                    dropGeoObject.add(status[ATTACK.ordinal()] * bBUDforRock.getPower());
+                    dropGeoObjectKind.add(Constants.Item.GEO_KIND_ALL.ATTACK);
+                    break;
+                case DEFENCE:
+                    dropGeoObject.add(status[DEFENSE.ordinal()] * bBUDforRock.getPower());
+                    dropGeoObjectKind.add(Constants.Item.GEO_KIND_ALL.DEFENCE);
+                    break;
+                case LUCK:
+                    dropGeoObject.add(status[LUCK.ordinal()] * bBUDforRock.getPower());
+                    dropGeoObjectKind.add(Constants.Item.GEO_KIND_ALL.LUCK);
+                    break;
+            }
+        } else {
+            //RateGeo
+            GEO_PARAM_KIND_RATE kindRate = GeoObjectDataCreater.getRandKindRate();
+            switch (kindRate) {
+                case HP_RATE:
+                    dropGeoObject.add(status[HP.ordinal()] * bBUDforRock.getPower());
+                    dropGeoObjectKind.add(Constants.Item.GEO_KIND_ALL.HP_RATE);
+                    break;
+                case ATTACK_RATE:
+                    dropGeoObject.add(status[ATTACK.ordinal()] * bBUDforRock.getPower());
+                    dropGeoObjectKind.add(Constants.Item.GEO_KIND_ALL.ATTACK_RATE);
+                    break;
+                case DEFENCE_RATE:
+                    dropGeoObject.add(status[DEFENSE.ordinal()] * bBUDforRock.getPower());
+                    dropGeoObjectKind.add(Constants.Item.GEO_KIND_ALL.DEFENCE_RATE);
+                    break;
+                case LUCK_RATE:
+                    dropGeoObject.add(status[LUCK.ordinal()] * bBUDforRock.getPower());
+                    dropGeoObjectKind.add(Constants.Item.GEO_KIND_ALL.LUCK_RATE);
+                    break;
             }
         }
     }
 
     private void getDropGeoAfter() {
+        List<String> dropItemNames = new ArrayList<String>();
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
-
+            GeoObjectData geoObjectData = null;
+            if (battle_units[i].getUnitKind() == Constants.UnitKind.ROCK && battle_units[i].isDropFlag()) {
+                int parameter = dropGeoObject.get(i - 1);
+                if (battle_units[i].getHitPoint() < 0) {
+                    parameter = (int) ((float) parameter * (float) (battle_units[i].getHitPoint() + battle_units[i].getMaxHitPoint()) / (float) battle_units[i].getMaxHitPoint());
+                }
+                if (parameter > 0) {
+                    geoObjectData = GeoObjectDataCreater.getGeoObjectData(parameter, dropGeoObjectKind.get(i-1));
+                }
+                if (geoObjectData != null) {
+                    mapPlateAdmin.getInventry().addItemData(geoObjectData);
+                    dropItemNames.add(geoObjectData.getName());
+                }
+            }
         }
+        resultTextBoxUpdateItems(dropItemNames);
     }
 
+    /*
     //by kmhanko
     private void getDropGeo() {
         //岩からのジオドロップ
@@ -902,7 +954,7 @@ public class BattleUnitAdmin {
             }
         }
         resultTextBoxUpdateItems(dropItemNames);
-    }
+    }*/
 
     //敵を倒したら成長する処理
     private void growUp() {

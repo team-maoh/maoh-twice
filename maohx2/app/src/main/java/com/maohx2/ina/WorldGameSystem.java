@@ -230,8 +230,6 @@ public class WorldGameSystem {
         worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT_INIT_START);
 
 
-
-
         //TODO かり。戻るボタン
         initBackPlate();
     }

@@ -55,6 +55,28 @@ public class GeoObjectDataCreater {
         return null;
     }
     */
+    public static GeoObjectData getGeoObjectData(int parameter, Constants.Item.GEO_KIND_ALL parameterKind) {
+        switch(parameterKind) {
+            case HP:
+                return getGeoObjectData(parameter, GEO_PARAM_KIND_NORMAL.HP);
+            case HP_RATE:
+                return getGeoObjectData(parameter, GEO_PARAM_KIND_RATE.HP_RATE);
+            case ATTACK:
+                return getGeoObjectData(parameter, GEO_PARAM_KIND_NORMAL.ATTACK);
+            case ATTACK_RATE:
+                return getGeoObjectData(parameter, GEO_PARAM_KIND_RATE.ATTACK_RATE);
+            case DEFENCE:
+                return getGeoObjectData(parameter, GEO_PARAM_KIND_NORMAL.DEFENCE);
+            case DEFENCE_RATE:
+                return getGeoObjectData(parameter, GEO_PARAM_KIND_RATE.DEFENCE_RATE);
+            case LUCK:
+                return getGeoObjectData(parameter, GEO_PARAM_KIND_NORMAL.LUCK);
+            case LUCK_RATE:
+                return getGeoObjectData(parameter, GEO_PARAM_KIND_RATE.LUCK_RATE);
+        }
+        return null;
+    }
+
 
     public static GeoObjectData getGeoObjectData(int parameter, GEO_PARAM_KIND_NORMAL parameterKind) {
         Random random = new Random();// by fuusya
