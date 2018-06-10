@@ -375,9 +375,9 @@ public class DungeonGameSystem {
     }
 
     public void draw() {
-        for(int i = 0;i < 7;i++) {
-            System.out.println("ホリエ：is_tf("+i+") = " + map_status.getTutorialFinishStatus(i));
-        }
+//        for(int i = 0;i < 7;i++) {
+//            System.out.println("ホリエ：is_tf("+i+") = " + map_status.getTutorialFinishStatus(i));
+//        }
         switch (dungeonModeManage.getMode()) {
             case MAP:
                 map_admin.drawMap_for_autotile_light_animation();
