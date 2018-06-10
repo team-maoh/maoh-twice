@@ -839,6 +839,7 @@ public class BattleUnitAdmin {
                 if (geoObjectData != null) {
                     mapPlateAdmin.getInventry().addItemData(geoObjectData);
                     dropItemNames.add(geoObjectData.getName());
+                    //(BattleEnemy)battle_units[i].setRock(geoObjectData);
                 }
             }
         }
