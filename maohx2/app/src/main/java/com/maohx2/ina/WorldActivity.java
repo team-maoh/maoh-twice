@@ -104,7 +104,7 @@ class WorldSurfaceView extends BaseSurfaceView {
         global_data.getGeoInventry().sortItemDatabyKind();
         global_data.getExpendItemInventry().sortItemData();
 
-
+        openingFlag = true;
         if(global_data.getPlayerStatus().getTutorialInDungeon() == 0) {
             openingFlag = true;
         }

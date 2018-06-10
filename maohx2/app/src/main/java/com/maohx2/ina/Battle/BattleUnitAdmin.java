@@ -399,6 +399,9 @@ public class BattleUnitAdmin {
                                             if (touch_markers[i].isExist() == false) {
                                                 //todo:attackの計算
                                                 touch_markers[i].generate((int) touch_x, (int) touch_y, attack_equipment.getRadius(), battle_units[0].getAttack() + attack_equipment.getAttack(), attack_equipment.getDecayRate());
+                                                //System.out.println("装備攻撃力:"+attack_equipment.getAttack());
+                                                //System.out.println("プレーヤー攻撃力:"+battle_units[0].getAttack());
+                                                //System.out.println("マーカーダメージ:"+touch_markers[i].getDamage());
                                                 //エフェクト by Horie
                                                 switch(attack_equipment.getEquipmentKind()) {
                                                     case AX:
@@ -495,6 +498,7 @@ public class BattleUnitAdmin {
                                     //敵が特殊行動していないなら
 
                                     int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage()/(battle_units[i].getDefence()*battle_units[i].getDefence()*battle_units[i].getDefence());
+                                    //System.out.println("マーカーダメージ:"+touch_markers[j].getDamage());
                                     if (new_hp > 0) {
                                         battle_units[i].setHitPoint(new_hp);
                                     } else {
