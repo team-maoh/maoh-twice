@@ -125,7 +125,7 @@ public class WorldGameSystem {
 
 
         map_status = new MapStatus(Constants.STAGE_NUM);
-        map_status_saver = new MapStatusSaver(databaseAdmin, "MapSaveData", "MapSaveData.db", 1, "ns", map_status, 7);
+        map_status_saver = new MapStatusSaver(databaseAdmin, "MapSaveData", "MapSaveData.db", 1, "s", map_status, 7);
         map_status_saver.load();
 
         worldActivity = _worldActivity;
@@ -183,7 +183,7 @@ public class WorldGameSystem {
                     new double[] { 1.0, 1.0, 1.0, 1.0}
             ));
             //デバッグ用
-//            playerStatus.addBaseAttack(1000000);
+//            playerStatus.addBaseAttack(100000000);
 //            playerStatus.calcStatus();
         }
 

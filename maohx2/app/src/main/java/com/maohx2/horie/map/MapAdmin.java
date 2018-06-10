@@ -93,6 +93,8 @@ public class MapAdmin {
     MapObjectAdmin map_object_admin;
     DungeonData dungeon_data;
     List<DungeonMonsterData> dungeon_monster_data;
+    MapStatus map_status;
+    MapStatusSaver map_status_saver;
 
     //auto_tile用
     AutoTile auto_tile_wall = new AutoTile();
@@ -118,10 +120,6 @@ public class MapAdmin {
     BitmapData stair_tile;
     BitmapData gate_tile;
     BitmapData stair_tile_div[] = new BitmapData[4];//階段の画像を4分割
-
-    Rect sizeRect;
-    Rect posRect;
-
 
     public int getMap_size_x() {
         return map_size.x;
@@ -155,12 +153,14 @@ public class MapAdmin {
         return boss_floor_num;
     }
 
-    public MapAdmin(Graphic m_graphic, MapObjectAdmin m_map_object_admin, DungeonData m_dungeon_data, List<DungeonMonsterData> m_dungeon_monster_data) {
+    public MapAdmin(Graphic m_graphic, MapObjectAdmin m_map_object_admin, DungeonData m_dungeon_data, List<DungeonMonsterData> m_dungeon_monster_data, MapStatus _map_status, MapStatusSaver _map_status_saver) {
         graphic = m_graphic;
         map_object_admin = m_map_object_admin;
         map_player = map_object_admin.getPlayer();
         dungeon_data = m_dungeon_data;
         dungeon_monster_data = m_dungeon_monster_data;
+//        map_status = _map_status;
+//        map_status_saver = _map_status_saver;
 
         //データベースからマップ情報の読み込み
         dungeon_name = dungeon_data.getDungeon_name();
