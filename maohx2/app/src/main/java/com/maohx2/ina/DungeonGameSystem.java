@@ -287,7 +287,6 @@ public class DungeonGameSystem {
 
 
     public void update() {
-
         switch (dungeonModeManage.getMode()) {
             case MAP_INIT:
                 playMapBGM();
@@ -312,7 +311,6 @@ public class DungeonGameSystem {
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE);
                 backGround = graphic.searchBitmap("firstBackground");
                 musicAdmin.loadMusic("battle00",true);
-
             case BUTTLE:
                 battle_user_interface.update();
                 battle_unit_admin.update();
@@ -368,7 +366,6 @@ public class DungeonGameSystem {
                 break;
 
         }
-
         text_box_admin.update();
         effectAdmin.update();
         //musicAdmin.update();
@@ -484,7 +481,6 @@ public class DungeonGameSystem {
     ImageContext talkChara;
 
     public void openningInit() {
-
         openningTextBoxID = text_box_admin.createTextBox(50, 700, 1550, 880, 4);
         playMapBGM();
         text_box_admin.setTextBoxUpdateTextByTouching(openningTextBoxID, false);
@@ -492,7 +488,7 @@ public class DungeonGameSystem {
         map_admin.createOpeningMap();
     }
 
-    public void drawCharaAndTouchCheck(ImageContext _imageContext){
+    public void drawCharaAndTouchCheck(ImageContext _imageContext) {
         if (_imageContext != null) {
             charaFlag = true;
         }
@@ -506,7 +502,6 @@ public class DungeonGameSystem {
 
 
     public void openningUpdate() {
-
         paint.setTextSize(35);
         paint.setARGB(255, 255, 255, 255);
 
@@ -599,7 +594,6 @@ public class DungeonGameSystem {
     }
 
     public void openningDraw() {
-
         map_admin.drawOpeningMap();
         map_object_admin.draw();
         if (charaFlag) {

@@ -944,7 +944,6 @@ public class BattleUnitAdmin {
 
     private void resultTextBoxUpdateItems(List<String> itemNames) {
 
-
         textBoxAdmin.setTextBoxExists(resultTextBoxID, true);
 
         String winMessage = "▽入手アイテム▽";
@@ -952,6 +951,9 @@ public class BattleUnitAdmin {
         int row = 0;
 
         int i = 0;
+        if(itemNames.size() == 0){
+            textBoxAdmin.bookingDrawText(resultTextBoxID, winMessage, resultTextPaint);
+        }
         while (i < itemNames.size()) {
             if (row == 0) {
                 textBoxAdmin.bookingDrawText(resultTextBoxID, winMessage, resultTextPaint);
@@ -959,7 +961,6 @@ public class BattleUnitAdmin {
                 row++;
                 continue;
             }
-
             textBoxAdmin.bookingDrawText(resultTextBoxID, itemNames.get(i), resultTextPaint);
             i++;
             row++;
