@@ -897,16 +897,20 @@ public class BattleUnitAdmin {
                 double[] dropItemRate = tempBattleBaseUnitData.getDropItemRate();
                 ITEM_KIND[] dropItemKind = tempBattleBaseUnitData.getDropItemKinds();
                 ItemData tempItemData = null;
+                EquipmentItemData eqTempItemData = null;
                 double tempRand;
+                float rate = 0.0f;
                 for (int j = 0; j < Constants.Item.DROP_NUM; j++) {
+                    rate = 0.0f;
                     if (dropItemName[j] != null) {
                         tempRand = Math.random();
                         System.out.println("☆タカノ:BattleUnitAdmin#getDropItem : アイテムドロップ率計算 : " + dropItemName[j] + " from " + battle_units[i].getName() + " : " + dropItemRate[j] + " ? " + tempRand);
-
-                        if (true) {//if (dropItemRate[j] > tempRand) { //ドロップ確率
+                        rate += dropItemRate[j];
+                        if (rate > tempRand) {
                             switch (dropItemKind[j]) {
                                 case EQUIPMENT:
-                                    tempItemData = equipmentItemDataCreater.getEquipmentItemData(dropItemEquipmentKind[j], battle_units[i].getBattleDungeonUnitData());
+                                    eqTempItemData = equipmentItemDataCreater.getEquipmentItemData(dropItemEquipmentKind[j], battle_units[i].getBattleDungeonUnitData());
+                                    tempItemData = (ItemData)eqTempItemData;
                                     break;
                                 case EXPEND:
                                     tempItemData = expendItemDataAdmin.getOneDataByName(dropItemName[j]);
@@ -919,9 +923,13 @@ public class BattleUnitAdmin {
                     }
                     if (tempItemData != null) {
                         mapPlateAdmin.getInventry().addItemData(tempItemData);
-                        dropItemNames.add(tempItemData.getName());
-
+                        if (tempItemData.getItemKind() == ITEM_KIND.EQUIPMENT) {
+                            dropItemNames.add(tempItemData.getName() + "+" + eqTempItemData.getAttack());
+                        } else {
+                            dropItemNames.add(tempItemData.getName());
+                        }
                         System.out.println("☆タカノ:BattleUnitAdmin#getDropItem : アイテムを取得 : " + dropItemName[j] + " from " + battle_units[i].getName());
+                        break;
                     }
                 }
             }

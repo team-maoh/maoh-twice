@@ -20,6 +20,10 @@ import java.util.List;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
+import android.media.AudioAttributes;
+import android.annotation.TargetApi;
+import android.os.Build;
+
 
 /**
  * Created by user on 2017/09/10.
@@ -43,7 +47,7 @@ public class SoundAdmin {
 
     private String soundpack_name;
 
-    private SoundPool sp = new SoundPool(SOUND_ACTIVE_NUM, AudioManager.STREAM_MUSIC, 0);
+    //private SoundPool sp;// = new SoundPool(SOUND_ACTIVE_NUM, AudioManager.STREAM_MUSIC, 0);
     //TODO:Builder
 
     private List<Integer> sound_ID = new ArrayList<Integer>(SOUND_LOAD_NUM);
@@ -62,26 +66,39 @@ public class SoundAdmin {
         mContext = _context;
         isLoaded = false;
     }
-    public SoundAdmin(Context _context, MyDatabaseAdmin databaseAdmin) {
-        //TODO:Builder
-        /*
-        audioAttributes = new AudioAttributes.Builder()
-                // USAGE_MEDIA
-                // USAGE_GAME
-                .setUsage(AudioAttributes.USAGE_GAME)
-                // CONTENT_TYPE_MUSIC
-                // CONTENT_TYPE_SPEECH, etc.
-                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-                .build();
 
-        sp = new SoundPool.Builder()
-                .setAudioAttributes(audioAttributes)
-                .setMaxStreams(2)
-                .build();
-        */
+// 互換性
+    @SuppressWarnings("deprecation")
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private SoundPool buildSoundPool(int poolMax)
+    {
+        SoundPool pool = null;
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            pool = new SoundPool(poolMax, AudioManager.STREAM_MUSIC, 0);
+        }
+        else {
+            AudioAttributes attr = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build();
+
+            pool = new SoundPool.Builder()
+                    .setAudioAttributes(attr)
+                    .setMaxStreams(poolMax)
+                    .build();
+        }
+
+        return pool;
+    }
+
+    final int SOUND_POOL_MAX = 6;
+    SoundPool sp = buildSoundPool(SOUND_POOL_MAX);
+    //以上
+
+    public SoundAdmin(Context _context, MyDatabaseAdmin databaseAdmin) {
         mContext = _context;
         isLoaded = false;
-
         setDatabase(databaseAdmin);
     }
 

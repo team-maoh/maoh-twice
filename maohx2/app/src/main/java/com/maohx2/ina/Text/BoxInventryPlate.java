@@ -78,7 +78,7 @@ public class BoxInventryPlate extends BoxPlate {
                         break;
 
                     case EXPEND:
-                        graphic.bookingDrawText(inventry_data.getItemData().getName(), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 2.0 + (int) ((down - up) * (1.0 / 5))), up + (int)((down - up + text_paint.getTextSize()) / 2), text_paint);
+                        graphic.bookingDrawText(inventry_data.getItemData().getName(), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 2.0 + (int) ((down - up) * (1.0 / 5))), up + (int)((down - up + text_paint.getTextSize() * 2) / 2 + text_paint.getTextSize()), text_paint);
                         break;
                 }
 
@@ -103,7 +103,7 @@ public class BoxInventryPlate extends BoxPlate {
                             int palette_position = ((ExpendItemData)(inventry_data.getItemData())).getPalettePosition(i+1);
                             text_paint.setColor(CIRCLE_COLOR[palette_position]);
                             text_paint.setAlpha(255);
-                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() + (int) ((down - up) * (1.0 / 5))) + 100 + offSet, up + (int)((down - up + text_paint.getTextSize()) / 2), text_paint);
+                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() + (int) ((down - up) * (1.0 / 5))) + 100 + offSet, up + (int)((down - up + text_paint.getTextSize() * 2) / 2), text_paint);
                         }
                     }
                 }

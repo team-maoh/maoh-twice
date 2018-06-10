@@ -19,13 +19,16 @@ public class BoxProductPlate extends BoxItemPlate {
     static final float ICON_RATE = 2.0f;
     static final int FONT_SIZE = 40;
     static final int PRICE_PLECE = 300;
+    int price;
 
-    public BoxProductPlate(Graphic _graphic, UserInterface _user_interface, Paint _button_paint, Constants.Touch.TouchWay _judge_way, Constants.Touch.TouchWay _feedback_way, int[] position, ItemData _content_item){
+    public BoxProductPlate(Graphic _graphic, UserInterface _user_interface, Paint _button_paint, Constants.Touch.TouchWay _judge_way, Constants.Touch.TouchWay _feedback_way, int[] position, ItemData _content_item, int _price){
         super(_graphic, _user_interface, _button_paint, _judge_way, _feedback_way, position, _content_item);
 
         //大きさ変更
         image_context = graphic.makeImageContext(content_item.getItemImage(), position[0] + 10, position[1] + 10, ICON_RATE, ICON_RATE, 0, 255, true);
         text_paint.setTextSize(FONT_SIZE);
+
+        price = _price;
     }
 
     @Override
@@ -46,7 +49,7 @@ public class BoxProductPlate extends BoxItemPlate {
         );
 
         graphic.bookingDrawText(
-                 content_item.getPrice() + " Maon",
+                price + " Maon",
                 right - PRICE_PLECE,
                 up + (int)(boxheight + FONT_SIZE) / 2,
                 text_paint

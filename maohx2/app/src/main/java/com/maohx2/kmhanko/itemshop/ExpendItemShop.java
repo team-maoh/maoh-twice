@@ -25,10 +25,10 @@ public class ExpendItemShop extends ItemShop {
     @Override
     public void buyItem(ItemData _itemData) {
         ExpendItemData buyItemData = (ExpendItemData)_itemData;
-        if (playerStatus.getMoney() >= buyItemData.getPrice()) {
-            System.out.println("shop :" + buyItemData.getName()+ " を ¥" + buyItemData.getPrice() + " で購入した");
+        if (playerStatus.getMoney() >= buyItemData.getPriceByPlayerStatus(playerStatus)) {
+            System.out.println("shop :" + buyItemData.getName()+ " を ¥" + buyItemData.getPriceByPlayerStatus(playerStatus) + " で購入した");
             itemInventry.addItemData(buyItemData);
-            playerStatus.subMoney(buyItemData.getPrice());
+            playerStatus.subMoney(buyItemData.getPriceByPlayerStatus(playerStatus));
             //itemShopAdmin.moneyTextBoxUpdate();
         } else {
             //TODO お金足りない
