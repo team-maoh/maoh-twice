@@ -18,6 +18,7 @@ import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 import com.maohx2.kmhanko.plate.BackPlate;
 
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import android.graphics.Canvas;
@@ -38,7 +39,7 @@ public abstract class ItemShop {
     //ListBox listBox_Item;
     //ListBox listBox_Select;
     PlateGroup<BoxProductPlate> productPlateGroup;
-    PlateGroup<BoxTextPlate> buySelectPlateGroup;
+    PlateGroup<BoxImageTextPlate> buySelectPlateGroup;
     PlateGroup<BackPlate> backPlateGroup;
 
     int textBoxID;
@@ -137,18 +138,18 @@ public abstract class ItemShop {
         Paint textPaint = new Paint();
         textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
         textPaint.setARGB(255,255,255,255);
-        buySelectPlateGroup = new PlateGroup<BoxTextPlate>(
-                new BoxTextPlate[]{
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+        buySelectPlateGroup = new PlateGroup<BoxImageTextPlate>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.YES_LEFT, SELECT_WINDOW.YES_UP, SELECT_WINDOW.YES_RIGHT, SELECT_WINDOW.YES_BOTTOM},
                                 "購入する",
                                 textPaint
                         ),
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.NO_LEFT, SELECT_WINDOW.NO_UP, SELECT_WINDOW.NO_RIGHT, SELECT_WINDOW.NO_BOTTOM},

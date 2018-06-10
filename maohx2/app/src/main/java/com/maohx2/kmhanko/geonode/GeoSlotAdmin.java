@@ -24,6 +24,7 @@ import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.myavail.MyAvail;
 import com.maohx2.kmhanko.plate.BackPlate;
 import com.maohx2.kmhanko.Arrange.InventryS;
+import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
 // *** Graphic関係 ***
@@ -95,7 +96,7 @@ public class GeoSlotAdmin {
     //int statusTextBoxID;
 
     PlateGroup<GeoSlot> geoSlotGroup;
-    PlateGroup<BoxTextPlate> releasePlateGroup;//解放する/やめる　の選択
+    PlateGroup<BoxImageTextPlate> releasePlateGroup;//解放する/やめる　の選択
     //PlateGroup<BackPlate> backPlateGroup;
 
     PlateGroup<BoxItemPlate> holdGeoPlateGroup;
@@ -243,18 +244,18 @@ public class GeoSlotAdmin {
         textPaint.setARGB(255,255,255,255);
 
         //「解放する」「解放しない」ボタン表示　→　ListBox<Button>の完成待ち
-        releasePlateGroup = new PlateGroup<BoxTextPlate>(
-                new BoxTextPlate[]{
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+        releasePlateGroup = new PlateGroup<BoxImageTextPlate>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.YES_LEFT, SELECT_WINDOW.YES_UP, SELECT_WINDOW.YES_RIGHT, SELECT_WINDOW.YES_BOTTOM},
                                 "解放する",
                                 textPaint
                         ),
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.NO_LEFT, SELECT_WINDOW.NO_UP, SELECT_WINDOW.NO_RIGHT, SELECT_WINDOW.NO_BOTTOM},

@@ -17,6 +17,7 @@ import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 
 import com.maohx2.ina.Constants.POPUP_WINDOW;
 
@@ -87,9 +88,8 @@ public class DungeonSelectManager {
     PlateGroup<MapIconPlate> mapIconPlateGroup;
 
     //PlateGroup<BoxTextPlate> dungeonInformationPlate;
-    PlateGroup<BoxTextPlate> dungeonEnterSelectButtonGroup;
-    PlateGroup<BoxTextPlate> maohEnterSelectButtonGroup;
-    PlateGroup<BoxTextPlate> loopCountSelectButtonGroup;
+    PlateGroup<BoxImageTextPlate> dungeonEnterSelectButtonGroup;
+    PlateGroup<BoxImageTextPlate> maohEnterSelectButtonGroup;
 
 
 
@@ -288,6 +288,7 @@ public class DungeonSelectManager {
         textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
         textPaint.setARGB(255,255,255,255);
 
+        /*
         dungeonEnterSelectButtonGroup = new PlateGroup<BoxTextPlate>(
                 new BoxTextPlate[]{
                         new BoxTextPlate(
@@ -308,6 +309,29 @@ public class DungeonSelectManager {
                         )
                 }
         );
+        */
+
+        dungeonEnterSelectButtonGroup = new PlateGroup<BoxImageTextPlate>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{SELECT_WINDOW.YES_LEFT, SELECT_WINDOW.YES_UP, SELECT_WINDOW.YES_RIGHT, SELECT_WINDOW.YES_BOTTOM},
+                                "侵入する",
+                                textPaint
+                        ),
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{SELECT_WINDOW.NO_LEFT, SELECT_WINDOW.NO_UP, SELECT_WINDOW.NO_RIGHT, SELECT_WINDOW.NO_BOTTOM},
+                                "やめる",
+                                textPaint
+                        )
+                }
+        );
+
         dungeonEnterSelectButtonGroup.setUpdateFlag(false);
         dungeonEnterSelectButtonGroup.setDrawFlag(false);
     }
@@ -317,18 +341,18 @@ public class DungeonSelectManager {
         textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
         textPaint.setARGB(255,255,255,255);
 
-        maohEnterSelectButtonGroup = new PlateGroup<BoxTextPlate>(
-                new BoxTextPlate[]{
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+        maohEnterSelectButtonGroup = new PlateGroup<BoxImageTextPlate>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.YES_LEFT, SELECT_WINDOW.YES_UP, SELECT_WINDOW.YES_RIGHT, SELECT_WINDOW.YES_BOTTOM},
                                 "魔王と戦う",
                                 textPaint
                         ),
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.NO_LEFT, SELECT_WINDOW.NO_UP, SELECT_WINDOW.NO_RIGHT, SELECT_WINDOW.NO_BOTTOM},
@@ -341,15 +365,65 @@ public class DungeonSelectManager {
         maohEnterSelectButtonGroup.setDrawFlag(false);
     }
 
+
+    PlateGroup<CircleImagePlate> loopCountSelectButtonGroup;
+    private void initLoopCountSelectButton(){
+        float tempScale = 2.0f;
+
+        loopCountSelectButtonGroup = new PlateGroup<CircleImagePlate>(
+                new CircleImagePlate[]{
+                        new CircleImagePlate(
+                                graphic, userInterface,
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{ LOOP_WINDOW.MENOS_X, LOOP_WINDOW.MENOS_Y, LOOP_WINDOW.MENOS_R },
+                                graphic.makeImageContext(graphic.searchBitmap("矢印左"), LOOP_WINDOW.MENOS_X, LOOP_WINDOW.MENOS_Y, tempScale, tempScale, 0.0f, 254, false),
+                                graphic.makeImageContext(graphic.searchBitmap("矢印左"), LOOP_WINDOW.MENOS_X, LOOP_WINDOW.MENOS_Y, tempScale, tempScale, 0.0f, 254, false)
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //-ボタンが押された時の処理
+                                soundAdmin.play("enter00");
+                                playerStatus.subNowClearCountLoop();
+                                loopCountTextBoxUpdate();
+                                mapIconPlateListUpdate();
+                            }
+                        },
+                        new CircleImagePlate(
+                                graphic, userInterface,
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{ LOOP_WINDOW.PLUS_X, LOOP_WINDOW.PLUS_Y, LOOP_WINDOW.PLUS_R },
+                                graphic.makeImageContext(graphic.searchBitmap("矢印右"), LOOP_WINDOW.PLUS_X, LOOP_WINDOW.PLUS_Y, tempScale, tempScale, 0.0f, 254, false),
+                                graphic.makeImageContext(graphic.searchBitmap("矢印右"), LOOP_WINDOW.PLUS_X, LOOP_WINDOW.PLUS_Y, tempScale, tempScale, 0.0f, 254, false)
+
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //-ボタンが押された時の処理
+                                soundAdmin.play("enter00");
+                                playerStatus.addNowClearCountLoop();
+                                loopCountTextBoxUpdate();
+                                mapIconPlateListUpdate();
+                            }
+                        }
+                }
+        );
+        loopCountSelectButtonGroup.setUpdateFlag(false);
+        loopCountSelectButtonGroup.setDrawFlag(false);
+    }
+
+    /*
+    PlateGroup<BoxImageTextPlate> loopCountSelectButtonGroup;
     private void initLoopCountSelectButton(){
         Paint textPaint = new Paint();
         textPaint.setTextSize(LOOP_WINDOW.TEXT_SIZE);
         textPaint.setARGB(255,255,255,255);
 
-        loopCountSelectButtonGroup = new PlateGroup<BoxTextPlate>(
-                new BoxTextPlate[]{
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+        loopCountSelectButtonGroup = new PlateGroup<BoxImageTextPlate>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{ LOOP_WINDOW.MENOS_LEFT, LOOP_WINDOW.MENOS_UP, LOOP_WINDOW.MENOS_RIGHT, LOOP_WINDOW.MENOS_BOTTOM },
@@ -365,8 +439,8 @@ public class DungeonSelectManager {
                                 mapIconPlateListUpdate();
                             }
                         },
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{ LOOP_WINDOW.PLUS_LEFT, LOOP_WINDOW.PLUS_UP, LOOP_WINDOW.PLUS_RIGHT, LOOP_WINDOW.PLUS_BOTTOM },
@@ -387,6 +461,7 @@ public class DungeonSelectManager {
         loopCountSelectButtonGroup.setUpdateFlag(false);
         loopCountSelectButtonGroup.setDrawFlag(false);
     }
+    */
 
     private void initTextBox() {
         enterTextBoxID = textBoxAdmin.createTextBox(SELECT_WINDOW.MESS_LEFT, SELECT_WINDOW.MESS_UP, SELECT_WINDOW.MESS_RIGHT, SELECT_WINDOW.MESS_BOTTOM, SELECT_WINDOW.MESS_ROW);
@@ -746,16 +821,16 @@ public class DungeonSelectManager {
         mapIconPlateGroup.setUpdateFlag(true);
     }
 
-    PlateGroup<BoxTextPlate> OkButtonGroup;
+    PlateGroup<BoxImageTextPlate> OkButtonGroup;
     private void initOkButton() {
         Paint textPaint = new Paint();
         textPaint.setTextSize(POPUP_WINDOW.TEXT_SIZE);
         textPaint.setARGB(255, 255, 255, 255);
 
-        OkButtonGroup = new PlateGroup<BoxTextPlate>(
-                new BoxTextPlate[]{
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(), Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE, new int[]{POPUP_WINDOW.OK_LEFT, POPUP_WINDOW.OK_UP, POPUP_WINDOW.OK_RIGHT, POPUP_WINDOW.OK_BOTTOM}, "OK", textPaint
+        OkButtonGroup = new PlateGroup<BoxImageTextPlate>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic, userInterface, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE, new int[]{POPUP_WINDOW.OK_LEFT, POPUP_WINDOW.OK_UP, POPUP_WINDOW.OK_RIGHT, POPUP_WINDOW.OK_BOTTOM}, "OK", textPaint
                         ) {
                             @Override
                             public void callBackEvent() {

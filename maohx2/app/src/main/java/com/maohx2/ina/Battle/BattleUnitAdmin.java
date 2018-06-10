@@ -46,6 +46,7 @@ import com.maohx2.kmhanko.effect.Effect;
 import com.maohx2.kmhanko.effect.EffectAdmin;
 import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 
+import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import java.util.ArrayList;
@@ -920,7 +921,7 @@ public class BattleUnitAdmin {
     int resultTextBoxID;
     Paint resultTextPaint;
     TextBoxAdmin textBoxAdmin;
-    PlateGroup resultButtonGroup;
+    PlateGroup<BoxImageTextPlate> resultButtonGroup;
 
     private void initResultTextBox() {
         resultTextBoxID = textBoxAdmin.createTextBox(POPUP_WINDOW.MESS_LEFT, POPUP_WINDOW.MESS_UP, POPUP_WINDOW.MESS_RIGHT, POPUP_WINDOW.MESS_BOTTOM, POPUP_WINDOW.MESS_ROW);
@@ -980,7 +981,7 @@ public class BattleUnitAdmin {
         textPaint.setTextSize(POPUP_WINDOW.TEXT_SIZE);
         textPaint.setARGB(255, 255, 255, 255);
 
-        resultButtonGroup = new PlateGroup<BoxTextPlate>(new BoxTextPlate[]{new BoxTextPlate(graphic, battle_user_interface, new Paint(), Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE, new int[]{POPUP_WINDOW.OK_LEFT, POPUP_WINDOW.OK_UP, POPUP_WINDOW.OK_RIGHT, POPUP_WINDOW.OK_BOTTOM}, "OK", textPaint)});
+        resultButtonGroup = new PlateGroup<BoxImageTextPlate>(new BoxImageTextPlate[]{new BoxImageTextPlate(graphic, battle_user_interface, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE, new int[]{POPUP_WINDOW.OK_LEFT, POPUP_WINDOW.OK_UP, POPUP_WINDOW.OK_RIGHT, POPUP_WINDOW.OK_BOTTOM}, "OK", textPaint)});
         resultButtonGroup.setUpdateFlag(false);
         resultButtonGroup.setDrawFlag(false);
     }
