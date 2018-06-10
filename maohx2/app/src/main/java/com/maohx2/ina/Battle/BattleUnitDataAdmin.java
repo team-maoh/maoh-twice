@@ -129,11 +129,11 @@ public class BattleUnitDataAdmin {
 
         //for(int k = 0; k < tableName.length; k++) {
 
-            List<String>[] drop_item = new ArrayList[Constants.Item.DROP_NUM];
+            ArrayList<String>[] drop_item = new ArrayList[Constants.Item.DROP_NUM];
             for (int i = 0; i < drop_item.length; i++) {
                 drop_item[i] = new ArrayList<String>();
             }
-            List<Double>[] drop_item_percent = new ArrayList[Constants.Item.DROP_NUM];
+            ArrayList<Double>[] drop_item_percent = new ArrayList[Constants.Item.DROP_NUM];
             for (int i = 0; i < drop_item_percent.length; i++) {
                 drop_item_percent[i] = new ArrayList<Double>();
             }
@@ -183,9 +183,9 @@ public class BattleUnitDataAdmin {
             List<Integer> power = battle_unit_data_database.getInt(tableName, "power", null);
 
 
-        for (int i = 0; i < drop_item.length; i++) {
-                drop_item[i] = battle_unit_data_database.getString(tableName, "drop_item0" + String.valueOf(i + 1), null);
-                drop_item_percent[i] = battle_unit_data_database.getDouble(tableName, "drop_item0" + String.valueOf(i + 1) + "_percent", null);
+            for (int i = 0; i < drop_item.length; i++) {
+                drop_item[i] = (ArrayList)battle_unit_data_database.getString(tableName, "drop_item0" + String.valueOf(i + 1), null);
+                drop_item_percent[i] = (ArrayList)battle_unit_data_database.getDouble(tableName, "drop_item0" + String.valueOf(i + 1) + "_percent", null);
             }
 
             for (int i = 0; i < name.size(); i++) {
