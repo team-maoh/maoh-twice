@@ -116,6 +116,8 @@ public class WorldGameSystem {
     MusicAdmin musicAdmin;
     EquipmentItemDataAdmin equipment_item_data_admin;
 
+    boolean is_equip_tutorial = true;
+
     public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
@@ -284,6 +286,9 @@ public class WorldGameSystem {
                 equipmentInventry.setPosition(800+20,100,1150+20,708, 7);
                 expendItemInventry.setPosition(400+20,100,750+20,708, 7);
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
+                if(is_equip_tutorial){
+                    
+                }
             case EQUIP:
                 equipmentInventry.updata();
                 expendItemInventry.updata();
