@@ -184,16 +184,16 @@ public class DungeonGameSystem {
         dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
 
         map_status = new MapStatus(Constants.STAGE_NUM);//mapのクリア状況,チュートリアルを見たかどうかを記憶しておく
-        map_status_saver = new MapStatusSaver(_myDatabaseAdmin, "MapSaveData", "MapSaveData.db", 1, "ns", map_status, Constants.STAGE_NUM);
+        map_status_saver = new MapStatusSaver(_myDatabaseAdmin, "MapSaveData", "MapSaveData.db", 1, "s", map_status, Constants.STAGE_NUM);
         map_status_saver.load();
-//        for(int i = 0;i < 4;i++){
+//        for(int i = 0;i < 7;i++){
 //            System.out.println("before:stage_num = "+i+", is_clear = "+map_status.getTutorialFinishStatus(i));
 //        }
-        map_status.setTutorialFinishStatus(1, 0);
-        //saveMapSaveData();
-        map_status_saver.load();
-
-//        for(int i = 0;i < 4;i++){
+//        map_status.setTutorialFinishStatus(1, 0);
+//        saveMapSaveData();
+//        map_status_saver.load();
+//
+//        for(int i = 0;i < 7;i++){
 //            System.out.println("after:stage_num = "+i+", is_clear = "+map_status.getTutorialFinishStatus(i));
 //        }
 //      camera = new Camera(map_size, 64*4);
@@ -201,7 +201,7 @@ public class DungeonGameSystem {
 
         if (!(dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH)) {
             map_size.set(dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_y());
-            map_admin = new MapAdmin(graphic, map_object_admin, dungeon_data_admin.getDungeon_data().get(dungeon_num), dungeonMonsterDataAdmin.getDungeon_monster_data());
+            map_admin = new MapAdmin(graphic, map_object_admin, dungeon_data_admin.getDungeon_data().get(dungeon_num), dungeonMonsterDataAdmin.getDungeon_monster_data(), map_status, map_status_saver);
             map_admin.goNextFloor();
         }
 //        map_object_admin.getCamera(map_admin.getCamera());
@@ -282,7 +282,6 @@ public class DungeonGameSystem {
     }
 
     public void saveMapSaveData() {
-        map_status_saver.deleteAll();
         map_status_saver.save();
     }
 
@@ -376,7 +375,9 @@ public class DungeonGameSystem {
     }
 
     public void draw() {
-
+        for(int i = 0;i < 7;i++) {
+            System.out.println("ホリエ：is_tf("+i+") = " + map_status.getTutorialFinishStatus(i));
+        }
         switch (dungeonModeManage.getMode()) {
             case MAP:
                 map_admin.drawMap_for_autotile_light_animation();

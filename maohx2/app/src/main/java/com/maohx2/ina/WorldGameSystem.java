@@ -125,7 +125,7 @@ public class WorldGameSystem {
 
 
         map_status = new MapStatus(Constants.STAGE_NUM);
-        map_status_saver = new MapStatusSaver(databaseAdmin, "MapSaveData", "MapSaveData.db", 1, "ns", map_status, 7);
+        map_status_saver = new MapStatusSaver(databaseAdmin, "MapSaveData", "MapSaveData.db", 1, "s", map_status, 7);
         map_status_saver.load();
 
         worldActivity = _worldActivity;
@@ -183,8 +183,8 @@ public class WorldGameSystem {
                     new double[] { 1.0, 1.0, 1.0, 1.0}
             ));
             //デバッグ用
-            playerStatus.addBaseAttack(1000000);
-            playerStatus.calcStatus();
+//            playerStatus.addBaseAttack(100000000);
+//            playerStatus.calcStatus();
         }
 
 
@@ -435,31 +435,31 @@ public class WorldGameSystem {
 
 
         talkContent[0] = new String[2];
-        talkChara[0] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[0] = graphic.makeImageContext(graphic.searchBitmap("syujinko7r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[0][0] = "あいたた，なんだあいつ，ひどい目にあったな・・・．";
         talkContent[0][1] = "MOP";
 
 
         talkContent[1] = new String[4];
-        talkChara[1] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[1] = graphic.makeImageContext(graphic.searchBitmap("gaia13l"), 1300, 450, 4.0f, 4.0f, 0, 255, false);
         talkContent[1][0] = "あらら，やられちゃったかぁ．";
         talkContent[1][1] = "\n";
-        talkContent[1][2] = "もしかしたらうまくやってくれると思ったのに・・・．";
+        talkContent[1][2] = "もしかしたらうまくやってくれるかもと思ったのに・・・．";
         talkContent[1][3] = "MOP";
 
 
-        talkContent[2] = new String[6];
-        talkChara[2] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkContent[2] = new String[4];
+        talkChara[2] = graphic.makeImageContext(graphic.searchBitmap("syujinko3r"), 300, 450, 2.0f, 2.0f, 0, 255, false);
         talkContent[2][0] = "うわっ，だれ！？．";
         talkContent[2][1] = "\n";
         talkContent[2][2] = "びっくりしたー．";
-        talkContent[2][3] = "\n";
-        talkContent[2][4] = "うまくやるって何？";
-        talkContent[2][5] = "MOP";
+        //talkContent[2][3] = "\n";
+        //talkContent[2][4] = "うまくやるって何？";
+        talkContent[2][3] = "MOP";
 
 
         talkContent[3] = new String[8];
-        talkChara[3] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[3] = graphic.makeImageContext(graphic.searchBitmap("gaia15l"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
         talkContent[3][0] = "私はガイアよ．";
         talkContent[3][1] = "\n";
         talkContent[3][2] = "あなたが生まれたときからずっとあなたのことを見ていたわ．";
@@ -471,7 +471,7 @@ public class WorldGameSystem {
 
 
         talkContent[4] = new String[6];
-        talkChara[4] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[4] = graphic.makeImageContext(graphic.searchBitmap("syujinko3r"), 300, 450, 2.0f, 2.0f, 0, 255, false);
         talkContent[4][0] = "魔王！？";
         talkContent[4][1] = "\n";
         talkContent[4][2] = "魔王ってなにいっているんだ，突然だな．";
@@ -481,7 +481,7 @@ public class WorldGameSystem {
 
 
         talkContent[5] = new String[4];
-        talkChara[5] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[5] = graphic.makeImageContext(graphic.searchBitmap("gaia12l"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
         talkContent[5][0] = "それはあなたがこの世界を流れる地脈のエネルギー．";
         talkContent[5][1] = "\n";
         talkContent[5][2] = "ジオエネルギーの加護を受けるものだからよ！！";
@@ -489,13 +489,13 @@ public class WorldGameSystem {
 
 
         talkContent[6] = new String[2];
-        talkChara[6] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[6] = graphic.makeImageContext(graphic.searchBitmap("syujinko5r"), 300, 450, 2.0f, 2.0f, 0, 255, false);
         talkContent[6][0] = "・・・．";
         talkContent[6][1] = "MOP";
 
 
         talkContent[7] = new String[4];
-        talkChara[7] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[7] = graphic.makeImageContext(graphic.searchBitmap("gaia14l"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
         talkContent[7][0] = "あと，ストーカーはやめて．";
         talkContent[7][1] = "\n";
         talkContent[7][2] = "これでも女神様なんだから，あなたのことをずっと加護してたのよ，感謝しなさい．";
@@ -503,7 +503,7 @@ public class WorldGameSystem {
 
 
         talkContent[8] = new String[4];
-        talkChara[8] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[8] = graphic.makeImageContext(graphic.searchBitmap("syujinko5r"), 300, 450, 2.0f, 2.0f, 0, 255, false);
         talkContent[8][0] = "加護だか何だかわからないけど，図々しい女神さまだな．";
         talkContent[8][1] = "\n";
         talkContent[8][2] = "俺は加護なんてなくても生きていけるし，そんなものあったって何の得にもならない．";
@@ -511,7 +511,7 @@ public class WorldGameSystem {
 
 
         talkContent[9] = new String[6];
-        talkChara[9] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[9] = graphic.makeImageContext(graphic.searchBitmap("gaia15l"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
         talkContent[9][0] = "何よ，失礼な．";
         talkContent[9][1] = "\n";
         talkContent[9][2] = "ほら，最近いいことあったんじゃない？";
@@ -521,13 +521,13 @@ public class WorldGameSystem {
 
 
         talkContent[10] = new String[2];
-        talkChara[10] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[10] = graphic.makeImageContext(graphic.searchBitmap("syujinko7r"), 300, 450, 2.0f, 2.0f, 0, 255, false);
         talkContent[10][0] = "俺は宝くじも買わなければ，好きな女の子もいない．";
         talkContent[10][1] = "MOP";
 
 
         talkContent[11] = new String[2];
-        talkChara[11] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[11] = graphic.makeImageContext(graphic.searchBitmap("gaia20l"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
         talkContent[11][0] = "なによ，夢も何もないのね．悲しい子．";
         talkContent[11][1] = "MOP";
 

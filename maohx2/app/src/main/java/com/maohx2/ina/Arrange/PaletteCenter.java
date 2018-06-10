@@ -48,7 +48,8 @@ public class PaletteCenter extends PaletteElement{
 
         graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_SMALL, paint);
         if(item_data != null) {
-            graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y);
+            //graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y);
+            graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y,2.0f,2.0f,0,254,false);
         }
         graphic.bookingDrawBitmapData(graphic.searchBitmap("kazariwaku9"),x,y,0.1f,0.1f,0,254,false);
     }
@@ -72,7 +73,7 @@ public class PaletteCenter extends PaletteElement{
         graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_BIG, paint);
         if(item_data != null) {
             //graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y);
-            graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y,2.0f,2.0f,0,255,false);
+            graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y,2.0f,2.0f,0,254,false);
         }
         graphic.bookingDrawBitmapData(graphic.searchBitmap("kazariwaku9"),x,y,0.2f,0.2f,0,254,false);
     }
