@@ -24,6 +24,7 @@ import com.maohx2.kmhanko.itemdata.ExpendItemData;
 import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.plate.BackPlate;
+import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Constants.SELECT_WINDOW;
@@ -266,10 +267,10 @@ public class ItemSell {
         geoInventry.setPosition(700,50,1000,500);
         expendItemInventry.setPosition(1000,50,1300,500);
         */
-        sellItemInventry.setPosition(50,SIDE_INVENTRY.INV_UP,350,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
-        equipmentInventry.setPosition(400,SIDE_INVENTRY.INV_UP,700,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
-        geoInventry.setPosition(700,SIDE_INVENTRY.INV_UP,1000,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
-        expendItemInventry.setPosition(1000,SIDE_INVENTRY.INV_UP,1300,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
+        sellItemInventry.setPosition(0,SIDE_INVENTRY.INV_UP,390,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
+        equipmentInventry.setPosition(430,SIDE_INVENTRY.INV_UP,820,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
+        geoInventry.setPosition(820,SIDE_INVENTRY.INV_UP,1210,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
+        expendItemInventry.setPosition(1210,SIDE_INVENTRY.INV_UP,1600,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
     }
 
     //***テキストボックス関係
@@ -362,17 +363,17 @@ public class ItemSell {
 
 
 
-    PlateGroup<BoxTextPlate> sellSelectButtonGroup;
+    PlateGroup<BoxImageTextPlate> sellSelectButtonGroup;
     private void initSellSelectButton(){
         Paint textPaint = new Paint();
         textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
         textPaint.setARGB(255,255,255,255);
 
 
-        sellSelectButtonGroup = new PlateGroup<BoxTextPlate>(
-                new BoxTextPlate[]{
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+        sellSelectButtonGroup = new PlateGroup<BoxImageTextPlate>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.YES_LEFT, SELECT_WINDOW.YES_UP, SELECT_WINDOW.YES_RIGHT, SELECT_WINDOW.YES_BOTTOM},
@@ -387,8 +388,8 @@ public class ItemSell {
                                 initUIs();
                             }
                         },
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.NO_LEFT, SELECT_WINDOW.NO_UP, SELECT_WINDOW.NO_RIGHT, SELECT_WINDOW.NO_BOTTOM},
@@ -449,7 +450,7 @@ public class ItemSell {
         textPaint.setARGB(255,255,255,255);
 
         int position[] = new int[] {
-                1450, 650, 1550, 750
+                50, 50, 150, 150
         };
 
         sellEnterPlateGroup = new PlateGroup<BoxImagePlate>(

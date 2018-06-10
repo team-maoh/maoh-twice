@@ -26,6 +26,7 @@ import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.plate.BackPlate;
+import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import com.maohx2.ina.Draw.ImageContext;
@@ -89,7 +90,7 @@ public class GeoPresentManager {
     InventryS expendItemInventry;
     ExpendItemDataAdmin expendItemDataAdmin;
 
-    PlateGroup<BoxTextPlate> presentSelectPlateGroup;
+    PlateGroup<BoxImageTextPlate> presentSelectPlateGroup;
 
     WorldModeAdmin worldModeAdmin;
 
@@ -173,18 +174,18 @@ public class GeoPresentManager {
         Paint textPaint = new Paint();
         textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
         textPaint.setARGB(255,255,255,255);
-        presentSelectPlateGroup = new PlateGroup<BoxTextPlate>(
-                new BoxTextPlate[]{
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+        presentSelectPlateGroup = new PlateGroup<BoxImageTextPlate>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.YES_LEFT, SELECT_WINDOW.YES_UP, SELECT_WINDOW.YES_RIGHT, SELECT_WINDOW.YES_BOTTOM},
                                 "献上する",
                                 textPaint
                         ),
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.NO_LEFT, SELECT_WINDOW.NO_UP, SELECT_WINDOW.NO_RIGHT, SELECT_WINDOW.NO_BOTTOM},

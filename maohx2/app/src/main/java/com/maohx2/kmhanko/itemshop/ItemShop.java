@@ -14,10 +14,12 @@ import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.PlateGroup;
+import com.maohx2.kmhanko.itemdata.ExpendItemData;
 import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 import com.maohx2.kmhanko.plate.BackPlate;
 
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import android.graphics.Canvas;
@@ -38,7 +40,7 @@ public abstract class ItemShop {
     //ListBox listBox_Item;
     //ListBox listBox_Select;
     PlateGroup<BoxProductPlate> productPlateGroup;
-    PlateGroup<BoxTextPlate> buySelectPlateGroup;
+    PlateGroup<BoxImageTextPlate> buySelectPlateGroup;
     PlateGroup<BackPlate> backPlateGroup;
 
     int textBoxID;
@@ -119,7 +121,6 @@ public abstract class ItemShop {
 
         Paint productPlatePaint = new Paint();
         productPlatePaint.setARGB(255, 64, 64, 64);
-        //TODO このPlateは価格表示ができないので、オーバーライドするかしてBoxProductPlatesでも作る
         BoxProductPlate[] boxProductPlates = new BoxProductPlate[size];
         for (int i = 0; i < size; i++) {
             boxProductPlates[i] = new BoxProductPlate(
@@ -127,7 +128,8 @@ public abstract class ItemShop {
                     Constants.Touch.TouchWay.UP_MOMENT,
                     Constants.Touch.TouchWay.MOVE,
                     new int[]{50, 50 + 100 * i, 900, 150 + 100 * i},
-                    itemShopData.getItemData(i)
+                    itemShopData.getItemData(i),
+                    itemShopData.getItemData(i).getPriceByPlayerStatus(playerStatus)
             );
         }
         productPlateGroup = new PlateGroup<BoxProductPlate>(boxProductPlates);
@@ -137,18 +139,18 @@ public abstract class ItemShop {
         Paint textPaint = new Paint();
         textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
         textPaint.setARGB(255,255,255,255);
-        buySelectPlateGroup = new PlateGroup<BoxTextPlate>(
-                new BoxTextPlate[]{
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+        buySelectPlateGroup = new PlateGroup<BoxImageTextPlate>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.YES_LEFT, SELECT_WINDOW.YES_UP, SELECT_WINDOW.YES_RIGHT, SELECT_WINDOW.YES_BOTTOM},
                                 "購入する",
                                 textPaint
                         ),
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.NO_LEFT, SELECT_WINDOW.NO_UP, SELECT_WINDOW.NO_RIGHT, SELECT_WINDOW.NO_BOTTOM},
@@ -357,17 +359,13 @@ public abstract class ItemShop {
         textBoxAdmin.bookingDrawText(buyTextBoxID, "を購入しますか？", buyTextBoxPaint);
         textBoxAdmin.bookingDrawText(buyTextBoxID, "\n", buyTextBoxPaint);
         textBoxAdmin.bookingDrawText(buyTextBoxID, "価格 : ", buyTextBoxPaint);
-        textBoxAdmin.bookingDrawText(buyTextBoxID, String.valueOf(_itemData.getPrice()), buyTextBoxPaint);
+        textBoxAdmin.bookingDrawText(buyTextBoxID, String.valueOf(_itemData.getPriceByPlayerStatus(playerStatus)), buyTextBoxPaint);
+        textBoxAdmin.bookingDrawText(buyTextBoxID, " Maon", buyTextBoxPaint);
         textBoxAdmin.bookingDrawText(buyTextBoxID, "MOP", buyTextBoxPaint);
 
         textBoxAdmin.updateText(buyTextBoxID);
     }
 
-    public void debugDraw() {
-        for (int i = 0 ; i < itemShopData.getItemDataSize(); i++) {
-            System.out.println("shop :" + itemShopData.getItemData(i).getName() + " ¥" + itemShopData.getItemData(i).getPrice());
-        }
-    }
 
     public void draw() {
         buySelectPlateGroup.draw();

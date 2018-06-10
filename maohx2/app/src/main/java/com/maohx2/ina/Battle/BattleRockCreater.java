@@ -24,7 +24,7 @@ public class BattleRockCreater {
         tempBBUD.setDbStatus(BattleBaseUnitData.DbStatusID.InitialDefence, _defence);
         tempBBUD.setDbStatus(BattleBaseUnitData.DbStatusID.AttackFlame, 0);
 
-        tempBBUD.setBitmapData(graphic.searchBitmap("rock01"));//仮
+        tempBBUD.setBitmapData(graphic.searchBitmap("GeoRock00"));//仮
 
         tempBBUD.setRadius(70);
 

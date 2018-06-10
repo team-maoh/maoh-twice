@@ -2,6 +2,7 @@ package com.maohx2.ina.ItemData;
 
 import com.maohx2.ina.Constants.Item.*;
 import com.maohx2.ina.Draw.BitmapData;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.NamedData;
 
 /**
@@ -11,11 +12,11 @@ import com.maohx2.kmhanko.database.NamedData;
 //test
 
 public abstract class ItemData {
-    String image_name;
-    int price;
-    String name;
-    ITEM_KIND item_kind;
-    BitmapData item_image;
+    protected String image_name;
+    protected int price;
+    protected String name;
+    protected ITEM_KIND item_kind;
+    protected BitmapData item_image;
 
 
 
@@ -45,6 +46,10 @@ public abstract class ItemData {
         return item_image;
     }
     public void setItemImage(BitmapData _item_image) {item_image = _item_image;}
+
+    public int getPriceByPlayerStatus(PlayerStatus playerStatus) {
+        return 0;
+    }
 
 }
 

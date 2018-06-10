@@ -43,7 +43,7 @@ public class GeoSlot extends CircleImagePlate {
 
     static final int GEO_SLOT_CHILDREN_MAX = 8;
 
-    static final int GEO_LINE_DISTANCE = 60;
+    static final int GEO_LINE_DISTANCE = 100;
 
     GeoSlotAdmin geoSlotAdmin; //staticにしてはならない。いくつかのGeoSlotAdminがあるため。
     static TextBoxAdmin textBoxAdmin;

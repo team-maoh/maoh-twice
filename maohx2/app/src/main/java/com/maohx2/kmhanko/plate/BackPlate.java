@@ -46,15 +46,15 @@ public class BackPlate extends BoxImagePlate {
                 Constants.Touch.TouchWay.MOVE,
                 new int[]{1450, 50, 1550, 150},
                 _graphic.makeImageContext(
-                        _graphic.searchBitmap("backPlate"),
+                        _graphic.searchBitmap("backPlate01"),
                         1500, 100,
-                        5.0f, 5.0f, 0,
+                        0.75f, 0.75f, 0,
                         255, false
                 ),
                 _graphic.makeImageContext(
-                        _graphic.searchBitmap("backPlate"),
+                        _graphic.searchBitmap("backPlate01"),
                         1500, 100,
-                        7.0f, 7.0f, 0,
+                        0.75f, 0.75f, 0,
                         255, false
                 )
         );

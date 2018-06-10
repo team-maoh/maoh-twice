@@ -184,10 +184,10 @@ public final class Constants {
         public static final int MESS_UP = 300;
         public static final int MESS_BOTTOM = 500;
 
-        public static final int OK_LEFT = 200;
-        public static final int OK_RIGHT = 1400;
-        public static final int OK_UP = 500;
-        public static final int OK_BOTTOM = 600;
+        public static final int OK_LEFT = 500 + 10;
+        public static final int OK_RIGHT = 1100 - 10;
+        public static final int OK_UP = 500 + 10;
+        public static final int OK_BOTTOM = 600 - 10;
 
         public static final float TEXT_SIZE = 40f;
         public static final float TEXT_SIZE_BIG = 80f;
@@ -208,15 +208,15 @@ public final class Constants {
         public static final int MESS_UP = 300;
         public static final int MESS_BOTTOM = 500;
 
-        public static final int YES_LEFT = 200;
-        public static final int YES_RIGHT = 800;
-        public static final int YES_UP = 500;
-        public static final int YES_BOTTOM = 600;
+        public static final int YES_LEFT = 200+ 50;
+        public static final int YES_RIGHT = 800- 50;
+        public static final int YES_UP = 500+ 10;
+        public static final int YES_BOTTOM = 600- 10;
 
-        public static final int NO_LEFT = 800;
-        public static final int NO_RIGHT = 1400;
-        public static final int NO_UP = 500;
-        public static final int NO_BOTTOM = 600;
+        public static final int NO_LEFT = 800+ 50;
+        public static final int NO_RIGHT = 1400- 50;
+        public static final int NO_UP = 500+ 10;
+        public static final int NO_BOTTOM = 600- 10;
 
         public static final float TEXT_SIZE = 40f;
         public static final float TEXT_SIZE_BIG = 80f;
@@ -229,6 +229,15 @@ public final class Constants {
         public static final int COUNT_UP = 200;
         public static final int COUNT_BOTTOM = 400;
 
+        public static final int MENOS_X = 500;
+        public static final int MENOS_Y = 300;
+        public static final int MENOS_R = 100;
+
+        public static final int PLUS_X = 1100;
+        public static final int PLUS_Y = 300;
+        public static final int PLUS_R = 100;
+
+        /*
         public static final int MENOS_LEFT = 200;
         public static final int MENOS_RIGHT = 400;
         public static final int MENOS_UP = 200;
@@ -238,6 +247,7 @@ public final class Constants {
         public static final int PLUS_RIGHT = 1400;
         public static final int PLUS_UP = 200;
         public static final int PLUS_BOTTOM = 400;
+        */
 
         public static final float TEXT_SIZE = 80f;
         public static final int MESS_ROW = 2;

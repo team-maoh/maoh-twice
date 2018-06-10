@@ -187,6 +187,7 @@ public class GeoSlotAdminManager {
         String w_script = "event = " + MyDatabase.s_quo("dungeon");
 
         dungeonName = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "name", w_script);
+        List<String> dungeonNameExpress = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "dungeonName", w_script);
         List<String> imageName = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "image_name", w_script);
         List<Integer> x = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "statusX", w_script);
         List<Integer> y = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "statusY", w_script);
@@ -207,6 +208,7 @@ public class GeoSlotAdminManager {
                     graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale.get(i), scale.get(i), 0.0f, 255, false),
                     graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale_feed.get(i), scale_feed.get(i), 0.0f, 255, false),
                     dungeonName.get(i),
+                    dungeonNameExpress.get(i),
                     "dungeon"
             ));
         }

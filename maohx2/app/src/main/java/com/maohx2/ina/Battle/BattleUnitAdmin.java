@@ -46,6 +46,7 @@ import com.maohx2.kmhanko.effect.Effect;
 import com.maohx2.kmhanko.effect.EffectAdmin;
 import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 
+import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import java.util.ArrayList;
@@ -400,6 +401,9 @@ public class BattleUnitAdmin {
                                             if (touch_markers[i].isExist() == false) {
                                                 //todo:attackの計算
                                                 touch_markers[i].generate((int) touch_x, (int) touch_y, attack_equipment.getRadius(), battle_units[0].getAttack() + attack_equipment.getAttack(), attack_equipment.getDecayRate());
+                                                //System.out.println("装備攻撃力:"+attack_equipment.getAttack());
+                                                //System.out.println("プレーヤー攻撃力:"+battle_units[0].getAttack());
+                                                //System.out.println("マーカーダメージ:"+touch_markers[i].getDamage());
                                                 //エフェクト by Horie
                                                 if(mode == MODE.MINING){
                                                     switch(attack_equipment.getName()) {
@@ -519,7 +523,8 @@ public class BattleUnitAdmin {
                                 if (((BattleEnemy) (battle_units[i])).isSpecialAction() == false) {
                                     //敵が特殊行動していないなら
 
-                                    int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage()/(battle_units[i].getDefence()*battle_units[i].getDefence()*battle_units[i].getDefence()+1);//堀江：デバッグ用に1を足した
+                                    int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage()/(1+battle_units[i].getDefence()*battle_units[i].getDefence()*battle_units[i].getDefence());//System.out.println("マーカーダメージ:"+touch_markers[j].getDamage());
+
                                     if (new_hp > 0) {
                                         battle_units[i].setHitPoint(new_hp);
                                     } else {
@@ -691,6 +696,7 @@ public class BattleUnitAdmin {
             case BATTLE:
             case BOSS:
                 getDropItem();
+                getDropMoney();
                 growUp();
                 resultButtonGroup.setUpdateFlag(true);
                 resultButtonGroup.setDrawFlag(true);
@@ -839,6 +845,7 @@ public class BattleUnitAdmin {
                 if (geoObjectData != null) {
                     mapPlateAdmin.getInventry().addItemData(geoObjectData);
                     dropItemNames.add(geoObjectData.getName());
+                    //(BattleEnemy)battle_units[i].setRock(geoObjectData);
                 }
             }
         }
@@ -861,8 +868,25 @@ public class BattleUnitAdmin {
     }
 
     //by kmhanko
+
+
+    private int getDropMoney() {
+        int getMoney = 0;
+        for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
+            if (battle_units[i].isDropFlag()) {
+                getMoney += (battle_units[i].getAttack() + battle_units[i].getDefence() + battle_units[i].getLuck())/3;
+            }
+        }
+        playerStatus.addMoney(getMoney);
+        return getMoney;
+    }
+
+    //by kmhanko
     private void getDropItem() {
         List<String> dropItemNames = new ArrayList<String>();
+
+        dropItemNames.add(String.valueOf(getDropMoney()) + " Maon");
+
         BattleBaseUnitData tempBattleBaseUnitData = null;
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (battle_units[i].isDropFlag()) {
@@ -873,16 +897,20 @@ public class BattleUnitAdmin {
                 double[] dropItemRate = tempBattleBaseUnitData.getDropItemRate();
                 ITEM_KIND[] dropItemKind = tempBattleBaseUnitData.getDropItemKinds();
                 ItemData tempItemData = null;
+                EquipmentItemData eqTempItemData = null;
                 double tempRand;
+                float rate = 0.0f;
                 for (int j = 0; j < Constants.Item.DROP_NUM; j++) {
+                    rate = 0.0f;
                     if (dropItemName[j] != null) {
                         tempRand = Math.random();
                         System.out.println("☆タカノ:BattleUnitAdmin#getDropItem : アイテムドロップ率計算 : " + dropItemName[j] + " from " + battle_units[i].getName() + " : " + dropItemRate[j] + " ? " + tempRand);
-
-                        if (true) {//if (dropItemRate[j] > tempRand) { //ドロップ確率
+                        rate += dropItemRate[j];
+                        if (rate > tempRand) {
                             switch (dropItemKind[j]) {
                                 case EQUIPMENT:
-                                    tempItemData = equipmentItemDataCreater.getEquipmentItemData(dropItemEquipmentKind[j], battle_units[i].getBattleDungeonUnitData());
+                                    eqTempItemData = equipmentItemDataCreater.getEquipmentItemData(dropItemEquipmentKind[j], battle_units[i].getBattleDungeonUnitData());
+                                    tempItemData = (ItemData)eqTempItemData;
                                     break;
                                 case EXPEND:
                                     tempItemData = expendItemDataAdmin.getOneDataByName(dropItemName[j]);
@@ -895,9 +923,13 @@ public class BattleUnitAdmin {
                     }
                     if (tempItemData != null) {
                         mapPlateAdmin.getInventry().addItemData(tempItemData);
-                        dropItemNames.add(tempItemData.getName());
-
+                        if (tempItemData.getItemKind() == ITEM_KIND.EQUIPMENT) {
+                            dropItemNames.add(tempItemData.getName() + "+" + eqTempItemData.getAttack());
+                        } else {
+                            dropItemNames.add(tempItemData.getName());
+                        }
                         System.out.println("☆タカノ:BattleUnitAdmin#getDropItem : アイテムを取得 : " + dropItemName[j] + " from " + battle_units[i].getName());
+                        break;
                     }
                 }
             }
@@ -919,7 +951,7 @@ public class BattleUnitAdmin {
     int resultTextBoxID;
     Paint resultTextPaint;
     TextBoxAdmin textBoxAdmin;
-    PlateGroup resultButtonGroup;
+    PlateGroup<BoxImageTextPlate> resultButtonGroup;
 
     private void initResultTextBox() {
         resultTextBoxID = textBoxAdmin.createTextBox(POPUP_WINDOW.MESS_LEFT, POPUP_WINDOW.MESS_UP, POPUP_WINDOW.MESS_RIGHT, POPUP_WINDOW.MESS_BOTTOM, POPUP_WINDOW.MESS_ROW);
@@ -949,6 +981,10 @@ public class BattleUnitAdmin {
         String winMessage = "▽入手アイテム▽";
 
         int row = 0;
+
+        if ( itemNames.size() == 0) {
+            textBoxAdmin.bookingDrawText(resultTextBoxID, winMessage, resultTextPaint);
+        }
 
         int i = 0;
         if(itemNames.size() == 0){
@@ -980,7 +1016,7 @@ public class BattleUnitAdmin {
         textPaint.setTextSize(POPUP_WINDOW.TEXT_SIZE);
         textPaint.setARGB(255, 255, 255, 255);
 
-        resultButtonGroup = new PlateGroup<BoxTextPlate>(new BoxTextPlate[]{new BoxTextPlate(graphic, battle_user_interface, new Paint(), Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE, new int[]{POPUP_WINDOW.OK_LEFT, POPUP_WINDOW.OK_UP, POPUP_WINDOW.OK_RIGHT, POPUP_WINDOW.OK_BOTTOM}, "OK", textPaint)});
+        resultButtonGroup = new PlateGroup<BoxImageTextPlate>(new BoxImageTextPlate[]{new BoxImageTextPlate(graphic, battle_user_interface, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE, new int[]{POPUP_WINDOW.OK_LEFT, POPUP_WINDOW.OK_UP, POPUP_WINDOW.OK_RIGHT, POPUP_WINDOW.OK_BOTTOM}, "OK", textPaint)});
         resultButtonGroup.setUpdateFlag(false);
         resultButtonGroup.setDrawFlag(false);
     }
