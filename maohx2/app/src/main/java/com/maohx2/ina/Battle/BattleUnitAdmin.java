@@ -696,6 +696,7 @@ public class BattleUnitAdmin {
             case BATTLE:
             case BOSS:
                 getDropItem();
+                getDropMoney();
                 growUp();
                 resultButtonGroup.setUpdateFlag(true);
                 resultButtonGroup.setDrawFlag(true);
@@ -867,8 +868,25 @@ public class BattleUnitAdmin {
     }
 
     //by kmhanko
+
+
+    private int getDropMoney() {
+        int getMoney = 0;
+        for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
+            if (battle_units[i].isDropFlag()) {
+                getMoney += (battle_units[i].getAttack() + battle_units[i].getDefence() + battle_units[i].getLuck())/3;
+            }
+        }
+        playerStatus.addMoney(getMoney);
+        return getMoney;
+    }
+
+    //by kmhanko
     private void getDropItem() {
         List<String> dropItemNames = new ArrayList<String>();
+
+        dropItemNames.add(String.valueOf(getDropMoney()) + " Maon");
+
         BattleBaseUnitData tempBattleBaseUnitData = null;
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (battle_units[i].isDropFlag()) {
@@ -956,6 +974,10 @@ public class BattleUnitAdmin {
         String winMessage = "▽入手アイテム▽";
 
         int row = 0;
+
+        if ( itemNames.size() == 0) {
+            textBoxAdmin.bookingDrawText(resultTextBoxID, winMessage, resultTextPaint);
+        }
 
         int i = 0;
         while (i < itemNames.size()) {

@@ -166,7 +166,7 @@ public class WorldGameSystem {
         geoSlotAdminManager.loadGeoSlot();
 
         itemShopAdmin.init(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager, expendItemInventry, geoInventry, playerStatus, soundAdmin);
-        itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "debug");
+        itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "expendBasic");
 
         itemSell = new ItemSell(graphic, world_user_interface, worldActivity, text_box_admin, worldModeAdmin, soundAdmin);
 
