@@ -83,6 +83,7 @@ public class DungeonSelectManager {
 
     //TODO いなの関数待ち
     List<String> dungeonName;
+    List<String> dungeonNameExpress;
     List<String> event;
 
     PlateGroup<MapIconPlate> mapIconPlateGroup;
@@ -200,6 +201,7 @@ public class DungeonSelectManager {
         int size = database.getSize(DUNGEON_SELECT_BUTTON_TABLE_NAME);
 
         dungeonName = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "name");
+        dungeonNameExpress = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "dungeonName");
         List<String> imageName = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "image_name");
         List<Integer> x = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "x");
         List<Integer> y = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "y");
@@ -219,6 +221,7 @@ public class DungeonSelectManager {
                     graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale.get(i), scale.get(i), 0.0f, 255, false),
                     graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale_feed.get(i), scale_feed.get(i), 0.0f, 255, false),
                     dungeonName.get(i),
+                    dungeonNameExpress.get(i),
                     event.get(i)
 
             ));
@@ -751,7 +754,7 @@ public class DungeonSelectManager {
         textBoxAdmin.setTextBoxExists(enterTextBoxID, true);
         textBoxAdmin.resetTextBox(enterTextBoxID);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "ダンジョン名 : ", enterTextPaint);
-        textBoxAdmin.bookingDrawText(enterTextBoxID, tmp.getMapIconName(), enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, tmp.getDungeonName(), enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "このダンジョンに入りますか？", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "MOP", enterTextPaint);
@@ -765,7 +768,7 @@ public class DungeonSelectManager {
         textBoxAdmin.setTextBoxExists(enterTextBoxID, true);
         textBoxAdmin.resetTextBox(enterTextBoxID);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "ダンジョン名 : ", enterTextPaint);
-        textBoxAdmin.bookingDrawText(enterTextBoxID, tmp.getMapIconName(), enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, tmp.getDungeonName(), enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "このダンジョンにはまだ侵入できません", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "MOP", enterTextPaint);
