@@ -328,9 +328,10 @@ public class DungeonGameSystem {
 
             case MAOH_INIT:
                 battle_unit_admin.reset(BattleUnitAdmin.MODE.MAOH);
+                int size = battleUnitDataAdmin.getMaohUnitNames().size();
                 battle_unit_admin.spawnEnemy(
                         new String[] {
-                                battleUnitDataAdmin.getMaohUnitNames().get(playerStatus.getMaohWinCount())
+                                battleUnitDataAdmin.getMaohUnitNames().get(playerStatus.getMaohWinCount()%size)
                         }
                 );
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAOH);
