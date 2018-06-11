@@ -334,7 +334,7 @@ public class MapPlateAdmin {
             BitmapData tutorial_bitmap = graphic.searchBitmap(bitmap_name);
 
             if (tutorial_bitmap != null) {
-                graphic.bookingDrawBitmapData(tutorial_bitmap, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(tutorial_bitmap, 0, 0, 1.0f, 1.0f, 0, 254, true);
             }
 
             Constants.Touch.TouchState touch_state = dungeon_user_interface.getTouchState();

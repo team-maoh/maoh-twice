@@ -616,6 +616,10 @@ public class BattleUnitAdmin {
 //                                    System.out.println("damage_teki_desuyo_" + touch_markers[j].getDamage());//22222
 //                                    System.out.println("def_teki_desuyo_" + battle_units[i].getDefence());//100
 
+                                    //OPならダメージは0
+                                    if (mode == MODE.OPENING) {
+                                        new_hp = battle_units[i].getHitPoint();
+                                    }
 
                                     if (new_hp > 0) {
                                         battle_units[i].setHitPoint(new_hp);
