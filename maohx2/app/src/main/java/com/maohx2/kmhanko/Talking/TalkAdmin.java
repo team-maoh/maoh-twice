@@ -32,9 +32,15 @@ public class TalkAdmin {
     int count;
     int talkSize;
 
+    int waitCount;
+    boolean isWait;
+
+    boolean isUpdateThisFrame;
+
     static final int TALK_CONTENT_MAX = 100;
     String talkContent[][] = new String[TALK_CONTENT_MAX][];
     ImageContext talkChara[] = new ImageContext[TALK_CONTENT_MAX];
+    int talkWaitTime[] = new int[TALK_CONTENT_MAX];
 
     static final float SCALE_X = 2.7f;
     static final float SCALE_Y = 2.7f;
@@ -43,6 +49,8 @@ public class TalkAdmin {
 
     static final String DB_NAME = "TalkData";
     static final String DB_ASSET = "TalkData.db";
+
+    TalkSaveDataAdmin talkSaveDataAdmin;
 
     public TalkAdmin(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, SoundAdmin _soundAdmin) {
         graphic = _graphic;
@@ -53,6 +61,9 @@ public class TalkAdmin {
 
         initTextBox();
         initDatabase();
+
+        talkSaveDataAdmin = new TalkSaveDataAdmin(databaseAdmin);
+        talkSaveDataAdmin.load();
 
         clear();//init群の後
     }
@@ -77,14 +88,22 @@ public class TalkAdmin {
 
 
     // *** 実用関数 ***
-    public void start(String tableName) {
-        //この関数を呼ぶと、会話イベントがスタートする。
+
+    public void start(String tableName, Boolean saveIgnoreFlag) {
+        //この関数を呼ぶと、会話イベントがスタートする。 saveIgnoreFlag = true でセーブ状況によらず実行
         if (isTalking) {
             return;
         }
+        if (!saveIgnoreFlag && talkSaveDataAdmin.getTalkFlagByName(tableName)) {
+            return;
+        }
+        talkSaveDataAdmin.setTalkFlagByName(tableName, true);
+        talkSaveDataAdmin.save();
+
         clear();
         talkContent = loadTalkContent(tableName);
         talkChara = loadTalkChara(tableName);
+        talkWaitTime = loadTalkWaitTime(tableName);
 
         isTalking = true;
         textBoxAdmin.setTextBoxExists(textBoxID, true);
@@ -92,17 +111,36 @@ public class TalkAdmin {
         updateText();
     }
 
+    public void start(String tableName) {
+        //第二引数なしの場合、セーブデータ依存となる
+        start(tableName, false);
+    }
+
     public void update() {
         //会話イベント用の更新。常に呼び続けておいて構わない
+        isUpdateThisFrame = false;
         if (!isTalking) {
             return;
         }
-        touchCheck();
+        if (isWait) {
+            if (waitCount >= talkWaitTime[count]) {
+                updateTextFinal();
+                isWait = false;
+                waitCount = 0;
+            } else {
+                waitCount++;
+            }
+        } else {
+            touchCheck();
+        }
     }
 
     public void draw() {
         //会話イベント用の描画。常に呼び続けておいて構わない
         if (!isTalking) {
+            return;
+        }
+        if (isWait) {
             return;
         }
         if (count >= TALK_CONTENT_MAX ) {
@@ -118,6 +156,9 @@ public class TalkAdmin {
         isTalking = false;
         count = 0;
         talkSize = 0;
+        isWait = false;
+        isUpdateThisFrame = false;
+        waitCount = 0;
         textBoxAdmin.setTextBoxExists(textBoxID, false);
         textBoxAdmin.resetTextBox(textBoxID);
     }
@@ -151,7 +192,19 @@ public class TalkAdmin {
                 textBoxAdmin.bookingDrawText(textBoxID, talkContent[count][i], paint);
             }
         }
+        if (talkWaitTime[count] > 1) {
+            isWait = true;
+            waitCount = 0;
+            textBoxAdmin.setTextBoxExists(textBoxID, false);
+        } else {
+            updateTextFinal();
+        }
+    }
+
+    private void updateTextFinal() {
         textBoxAdmin.updateText(textBoxID);
+        textBoxAdmin.setTextBoxExists(textBoxID, true);
+        isUpdateThisFrame = true;
     }
 
 
@@ -164,6 +217,7 @@ public class TalkAdmin {
         }
 
         List<String> text = database.getString(tableName, "text");
+
         String tempTalkContent[][] = new String[TALK_CONTENT_MAX][ROWS * 2];
         String[] tempText;
 
@@ -184,8 +238,26 @@ public class TalkAdmin {
                     tempTalkContent[i][2 * j + 1] = "\n";
                 }
             }
+
         }
         return tempTalkContent;
+    }
+
+    private int[] loadTalkWaitTime(String tableName) {
+        //DBからWaitTime(次の会話文表示までの待機フレーム)を読み出す。
+        talkSize = database.getSize(tableName);
+        if (talkSize >= TALK_CONTENT_MAX) {
+            throw new Error("TalkAdmin : 会話文の数がTALK_CONTENT_MAX以上となった。配列変数の大きさが足りません。(TALK_CONTENT_MAXを増やしなさい) : " + talkSize);
+        }
+
+        List<Integer> waitTime = database.getInt(tableName, "wait_time");
+
+        int tempTalkWaitTime[] = new int[TALK_CONTENT_MAX];
+
+        for (int i = 0; i < talkSize; i++) {
+            tempTalkWaitTime[i] = waitTime.get(i);
+        }
+        return tempTalkWaitTime;
     }
 
     private ImageContext[] loadTalkChara(String tableName) {
@@ -217,13 +289,40 @@ public class TalkAdmin {
                         false);
             }
         }
-
         return tempTalkChara;
     }
 
     // *** Getter, Setter ***
     public boolean isTalking() {
         return isTalking;
+    }
+
+    public boolean isWait() {
+        return isWait;
+    }
+
+    public int getWaitCount() {
+        return waitCount;
+    }
+
+    public boolean isUpdateThisFrame() {
+        return isUpdateThisFrame;
+    }
+
+    public int getID() {
+        if (isTalking) {
+            return count + 1;
+        } else {
+            return -1;
+        }
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public boolean isWaitOrNotTalk() {
+        return isWait || !isTalking;
     }
 
 }

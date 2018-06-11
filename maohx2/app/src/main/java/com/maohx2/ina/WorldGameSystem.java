@@ -48,6 +48,7 @@ import com.maohx2.kmhanko.music.MusicAdmin;
 import com.maohx2.kmhanko.itemshop.ItemSell;
 import com.maohx2.horie.map.MapStatus;
 import com.maohx2.horie.map.MapStatusSaver;
+import com.maohx2.kmhanko.Talking.TalkSaveDataAdmin;
 
 
 import java.util.ArrayList;
@@ -242,10 +243,8 @@ public class WorldGameSystem {
         //TODO かり。戻るボタン
         initBackPlate();
 
-        //OP判定。まだOPを流していないならOP会話イベントを発動する
-        //if (playerStatus.getTutorialInDungeon() == 0) {
-            talkAdmin.start("Opening_in_world");
-        //}
+        //OP判定。まだOPを流していないならOP会話イベントを発動する。
+        talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される
     }
 
 
