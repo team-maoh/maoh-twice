@@ -205,6 +205,9 @@ public class MapEnemy extends MapUnit {
 
             exists = false;
 
+            //戦闘画面では「罠だ！」のTextBoxを出さない
+            map_object_admin.eraseEffectBox();
+
             //デバッグ時に鬱陶しいのでコメントアウト
             if(avoid_battle_for_debug == false) {
                 battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);

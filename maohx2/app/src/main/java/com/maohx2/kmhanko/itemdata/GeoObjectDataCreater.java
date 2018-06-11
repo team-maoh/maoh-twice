@@ -94,6 +94,7 @@ public class GeoObjectDataCreater {
 
         int calcParam = 0;
 
+        /*
         if (randFlag) {
 //            calcParam = status1[parameterKind.ordinal()] = parameter / 2 + (int) ((double) parameter * Math.random());//
             switch (parameterKind) {
@@ -119,7 +120,37 @@ public class GeoObjectDataCreater {
             calcParam = status1[parameterKind.ordinal()] = (int) (parameter * (1.0 + random_num) / 50);
         } else {
             calcParam = status1[parameterKind.ordinal()] = parameter;
+        }*/
+
+
+        if (randFlag) {
+//            calcParam = status1[parameterKind.ordinal()] = parameter / 2 + (int) ((double) parameter * Math.random());//
+//            switch (parameterKind) {
+//                case HP:
+//                    parameter = parameter / 4;
+//                    //この時点で param = 100 だと思う
+//                    parameter = parameter * 40000 / 5000;
+//                    break;
+//                case ATTACK:
+//                    //この時点で param = 100 だと思う
+//                    parameter = parameter * 200 / 5000;
+//                    break;
+//                case DEFENCE:
+//                    parameter = parameter * 2;
+//                    //この時点で param = 100 だと思う
+//                    parameter = parameter * 10000 / 5000;
+//                    break;
+//                default:
+//                    //TODO LUCK
+//                    break;
+//            }
+            double random_num = sqrt(-2 * log(Math.random())) * cos(2 * PI * Math.random());// だいたい[-1, +1]の範囲の正規分布
+//            calcParam = status1[parameterKind.ordinal()] = (int) (parameter * (1.0 + random_num) / 50);
+            calcParam = status1[parameterKind.ordinal()] = (int) (parameter * (1.0 + random_num / 20.0) * 15.0 / 1000.0);//20180610に調整
+        } else {
+            calcParam = status1[parameterKind.ordinal()] = parameter;
         }
+
 
         String[] names = getNamesNormal(parameterKind, calcParam);
         String name = names[0];
@@ -191,7 +222,8 @@ public class GeoObjectDataCreater {
         status2[1] = 1.0;
         status2[2] = 1.0;
         status2[3] = 1.0;
-
+        double calcParam;
+/*
         double calcParam;
         if (randFlag) {
 //            calcParam = status2[parameterKind.ordinal()] = 1.0 + ((double) parameter / 2 + (double) parameter * Math.random()) / 100.0;
@@ -212,6 +244,14 @@ public class GeoObjectDataCreater {
             }
             double random_num = sqrt(-2 * log(Math.random())) * cos(2 * PI * Math.random()) / 20.0;// だいたい[-1, +1]の範囲の正規分布
             calcParam = status2[parameterKind.ordinal()] = parameter * (1.0 + random_num) / 100.0;
+        } else {
+            calcParam = status2[parameterKind.ordinal()] = parameter;
+        }*/
+
+        if (randFlag) {
+//            double random_num = sqrt(-2 * log(Math.random())) * cos(2 * PI * Math.random()) / 20.0;// だいたい[-1, +1]の範囲の正規分布
+//            calcParam = status2[parameterKind.ordinal()] = parameter * (1.0 + random_num) / 100.0;
+            calcParam = status2[parameterKind.ordinal()] = (1.1 + 0.9 * Math.random()) * 2.0;//1.1 ~ 2.0倍
         } else {
             calcParam = status2[parameterKind.ordinal()] = parameter;
         }

@@ -385,7 +385,10 @@ public class BattleUnitAdmin {
                         rareRate = (float)(dropGeoObject.get(i - 1) - maxMinParam[3][1]) / (float)(maxMinParam[3][0] - maxMinParam[3][1]);
                         break;
                 }
-                BattleBaseUnitData tempBBUD = BattleRockCreater.getBattleBaseUnitData(bBUD.getDbStatus(BattleBaseUnitData.DbStatusID.InitialHP) * bBUD.getPower(), 0, rareRate);
+                int hp = bBUD.getStatus(repeat_count)[1];
+                int attack = bBUD.getStatus(repeat_count)[2];
+                int defence = bBUD.getStatus(repeat_count)[3];
+                BattleBaseUnitData tempBBUD = BattleRockCreater.getBattleBaseUnitData(hp * bBUD.getPower(), attack, defence, rareRate);//ダメージ計算上で攻撃力が必要
                 battle_units[i].setBattleUnitDataRock(tempBBUD);
                 return i;
             }
@@ -439,9 +442,9 @@ public class BattleUnitAdmin {
                                             if (touch_markers[i].isExist() == false) {
                                                 //todo:attackの計算
                                                 touch_markers[i].generate((int) touch_x, (int) touch_y, attack_equipment.getRadius(), battle_units[0].getAttack() + attack_equipment.getAttack(), attack_equipment.getDecayRate());
-                                                //System.out.println("装備攻撃力:"+attack_equipment.getAttack());
-                                                //System.out.println("プレーヤー攻撃力:"+battle_units[0].getAttack());
-                                                //System.out.println("マーカーダメージ:"+touch_markers[i].getDamage());
+                                                System.out.println("装備攻撃力:"+attack_equipment.getAttack());
+                                                System.out.println("プレーヤー攻撃力:"+battle_units[0].getAttack());
+                                                System.out.println("マーカーダメージ:"+touch_markers[i].getDamage());
                                                 //エフェクト by Horie
                                                 if(mode == MODE.MINING){
                                                     switch(attack_equipment.getName()) {
@@ -556,12 +559,55 @@ public class BattleUnitAdmin {
                             int cr = touch_markers[j].getRadius();
 
                             //マーカーが当たっている
-                            if ((ex - cx) * (ex - cx) + (ey - cy) * (ey - cy) < (er - cr) * (er - cr)) {
+                            if ((ex - cx) * (ex - cx) + (ey - cy) * (ey - cy) < (er + cr) * (er + cr)) { //kmhanko 修正
                                 markHitFlag = true;
+
+                                double strong_ratio = (touch_markers[j].getDamage() * 100.0) / (battle_units[i].getDefence() * 22222.0 + 1);
+                                strong_ratio = Math.pow(strong_ratio, 7.0f);
+                                double level_rate = battle_units[i].getAttack() * battle_units[i].getDefence() * battle_units[i].getMaxHitPoint() / 1000.0 / 100.0 / 1000.0;
+                                level_rate = Math.pow(level_rate, 0.4);
+                                int new_hp = battle_units[i].getHitPoint() - (int) (20.0 * strong_ratio * level_rate);
+
                                 if (((BattleEnemy) (battle_units[i])).isSpecialAction() == false) {
                                     //敵が特殊行動していないなら
+                                    //int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage()/(1+battle_units[i].getDefence()*battle_units[i].getDefence()*battle_units[i].getDefence());//System.out.println("マーカーダメージ:"+touch_markers[j].getDamage());
 
-                                    int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage()/(1+battle_units[i].getDefence()*battle_units[i].getDefence()*battle_units[i].getDefence());//System.out.println("マーカーダメージ:"+touch_markers[j].getDamage());
+                                    //敵が特殊行動していないなら
+
+//                                    int coef = 3;//3だと4回タッチで倒せるくらい
+//                                    int new_hp = battle_units[i].getHitPoint() - coef * touch_markers[j].getDamage() / (battle_units[i].getDefence() * battle_units[i].getDefence() * battle_units[i].getDefence() + 1);
+//                                    int new_hp = battle_units[i].getHitPoint() - (int) ((int) (real_atk * real_atk * real_atk * real_atk * 0.00032) / (battle_units[i].getDefence() + 1));
+//                                    double exp = 4 * (Math.log10(battle_units[i].getDefence()) / Math.log10(100) - 1);
+//                                    double exp = 4 * battle_units[i].getDefence() / 100.0;
+//                                    double exp = Math.pow(battle_units[i].getDefence() / 100.0, 4);
+//                                    double tmp_exp = battle_units[i].getDefence();
+//                                    double exp = tmp_exp * tmp_exp * tmp_exp * tmp_exp * tmp_exp * tmp_exp * tmp_exp;
+//                                    double exp = tmp_exp * tmp_exp * tmp_exp * tmp_exp * tmp_exp;
+//                                    exp = exp * exp * exp;
+
+//                                    System.out.println("pow_desuyo_teki" + exp);
+
+//                                    System.out.println("log_atk_desu" + battle_units[0].getAttack());
+//                                    int new_hp = battle_units[i].getHitPoint() - ((int) (touch_markers[j].getDamage() * 0.09) / (battle_units[i].getDefence() * (int) Math.pow(2, exp) + 1));
+//                                    int new_hp = battle_units[i].getHitPoint() - (int) ((touch_markers[j].getDamage() * 0.09) / (battle_units[i].getDefence() * exp + 1));
+                                    //fusya double strong_ratio = (touch_markers[j].getDamage() * 100.0) / (battle_units[i].getDefence() * 22222.0);
+//                                    double strong_ratio = (touch_markers[j].getDamage() * 100) / (battle_units[i].getDefence() * 22222 + 1);
+                                    //fusya strong_ratio = strong_ratio * strong_ratio * strong_ratio * strong_ratio * strong_ratio;
+                                    //fusya strong_ratio = strong_ratio * strong_ratio * strong_ratio;
+                                    //fusya double level_rate = battle_units[i].getAttack() * battle_units[i].getDefence() * battle_units[i].getMaxHitPoint() / 1000.0 / 100.0 / 1000.0;
+//                                    System.out.println("level_da_Atk_1_" + battle_units[i].getAttack());
+//                                    System.out.println("level_da_Def_1_" + battle_units[i].getDefence());
+//                                    System.out.println("level_da_MHP_1_" + battle_units[i].getMaxHitPoint());
+//                                    System.out.println("level_teki_1_" + level_rate);
+                                    //fusya level_rate = Math.pow(level_rate, 0.4);
+//                                    System.out.println("level_teki_2_" + level_rate);
+                                    //fusya int new_hp = battle_units[i].getHitPoint() - (int) (20 * strong_ratio * level_rate);
+
+//                                    System.out.println("strong_ratio_teki" + strong_ratio);
+//                                    System.out.println("hp_teki_desuyo_" + new_hp);//270だけ減る(全体は1000)
+//                                    System.out.println("damage_teki_desuyo_" + touch_markers[j].getDamage());//22222
+//                                    System.out.println("def_teki_desuyo_" + battle_units[i].getDefence());//100
+
 
                                     if (new_hp > 0) {
                                         battle_units[i].setHitPoint(new_hp);
@@ -581,15 +627,26 @@ public class BattleUnitAdmin {
                                     if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.BARRIER) {
                                         //敵がバリアを張っているなら(ダメージを受けない)
                                     } else if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.COUNTER) {
-                                        int new_hp = battle_units[0].getHitPoint() - touch_markers[j].getDamage();
+                                        //カウンターでも敵にダメージは入る
                                         if (new_hp > 0) {
                                             battle_units[0].setHitPoint(new_hp);
                                         } else {
                                             battle_units[0].existIs(false);
                                         }
+
+                                        //プレイヤーも同じだけダメージを食らう
+                                        new_hp = battle_units[0].getHitPoint() - (int) (20 * strong_ratio * level_rate);
+                                        if (new_hp <= 0) {
+                                            //負けたとき
+                                            gameOver();
+                                            resultOperatedFlag = true;
+                                            battleEndFlag = true;
+                                            new_hp = 0;
+                                        }
+                                        battle_units[0].setDamagedFlag(true);
+                                        battle_units[0].setHitPoint(new_hp);
+
                                     } else if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.STEALTH) {
-                                        //todo:敵の防御力を考慮する
-                                        int new_hp = battle_units[i].getHitPoint() - touch_markers[j].getDamage();
                                         if (new_hp > 0) {
                                             battle_units[i].setHitPoint(new_hp);
                                         } else {
@@ -626,11 +683,40 @@ public class BattleUnitAdmin {
                             heel_to_player = battle_units[0].getHitPoint() * palette_admin.checkSelectedExpendItemData().getHp();
                             palette_admin.deleteExpendItemData();
                         }
-
+/*
                         int new_hp = battle_units[0].getHitPoint() - (int) ((damage_to_player/(battle_units[0].getDefence()*battle_units[0].getDefence()*battle_units[0].getDefence())) * damage_rate) + heel_to_player;
                         if (new_hp > battle_units[0].getMaxHitPoint()) {
                             new_hp = battle_units[0].getMaxHitPoint();
+                        }*/
+
+
+                        double strong_ratio = (damage_to_player * 2222.0) / (battle_units[0].getDefence() * 1000.0 + 1.0);
+                        strong_ratio = strong_ratio * strong_ratio * strong_ratio * strong_ratio * strong_ratio;
+                        strong_ratio = strong_ratio * strong_ratio * strong_ratio;
+
+                        double level_rate = battle_units[i].getAttack() * battle_units[i].getDefence() * battle_units[i].getMaxHitPoint() / 1000.0 / 100.0 / 1000.0;
+//                        double level_rate = battle_units[0].getAttack() * battle_units[0].getDefence() * battle_units[0].getMaxHitPoint() / 22222.0 / 22222.0 / 2222.0;
+//                        System.out.println("damage_to_desuno_" + damage_to_player);
+//
+//                        System.out.println("level_wa_Atk_1_" + battle_units[0].getAttack());
+//                        System.out.println("level_wa_Def_1_" + battle_units[0].getDefence());
+//                        System.out.println("level_wa_MHP_1_" + battle_units[0].getMaxHitPoint());
+//
+//                        System.out.println("level_pl_1_" + level_rate);
+                        level_rate = Math.pow(level_rate, 0.4);//0.4だと、自他のStatusが定数倍になっても、敵を倒すための確定数はほぼ変化しない
+//                        System.out.println("level_pl_2_" + level_rate);
+
+                        int new_hp = battle_units[0].getHitPoint() - (int) ((133.0 * strong_ratio) * level_rate * damage_rate + heel_to_player);
+//                        int new_hp = battle_units[0].getHitPoint() - (int) ((real_atk * exp * 0.295 / (real_def + 1) * damage_rate) + heel_to_player);
+
+//                        System.out.println("strong_ratio_pl" + strong_ratio);
+//                        System.out.println("hp_pl_desuyo_" + new_hp);//PlayerのHP22222に対して、133ずつ減る
+//                        System.out.println("damage_pl_desuyo_" + damage_to_player);//1000
+//                        System.out.println("def_pl_desuyo_" + battle_units[0].getDefence());//2222
+                        if (new_hp > battle_units[0].getMaxHitPoint()) {
+                            new_hp = battle_units[0].getMaxHitPoint();
                         }
+
 
 
                         //状態異常攻撃
@@ -1013,7 +1099,9 @@ public class BattleUnitAdmin {
                         if (rate > tempRand) {
                             switch (dropItemKind[j]) {
                                 case EQUIPMENT:
-                                    eqTempItemData = equipmentItemDataCreater.getEquipmentItemData(dropItemEquipmentKind[j], battle_units[i].getBattleDungeonUnitData());
+                                    eqTempItemData = equipmentItemDataCreater.getEquipmentItemData(dropItemEquipmentKind[j], battle_units[i].getBattleDungeonUnitData(), battle_units[0].getLuck());
+
+                                    // equipmentItemDataCreater.getEquipmentItemData(dropItemEquipmentKind[j], battle_units[i].getBattleDungeonUnitData());
                                     tempItemData = (ItemData)eqTempItemData;
                                     break;
                                 case EXPEND:

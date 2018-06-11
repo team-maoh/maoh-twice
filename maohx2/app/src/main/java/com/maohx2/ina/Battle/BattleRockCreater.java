@@ -16,11 +16,12 @@ public class BattleRockCreater {
         graphic = _graphic;
     }
 
-    static BattleBaseUnitData getBattleBaseUnitData(int _hp, int _defence, float rareRate) {
+    static BattleBaseUnitData getBattleBaseUnitData(int _hp, int _attack, int _defence, float rareRate) {
         BattleBaseUnitData tempBBUD = new BattleBaseUnitData();
 
         tempBBUD.setName("岩");//仮
         tempBBUD.setDbStatus(BattleBaseUnitData.DbStatusID.InitialHP, _hp);
+        tempBBUD.setDbStatus(BattleBaseUnitData.DbStatusID.InitialAttack, _attack);
         tempBBUD.setDbStatus(BattleBaseUnitData.DbStatusID.InitialDefence, _defence);
         tempBBUD.setDbStatus(BattleBaseUnitData.DbStatusID.AttackFlame, 0);
 
