@@ -381,7 +381,7 @@ public class DungeonSelectManager {
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{ LOOP_WINDOW.MENOS_X, LOOP_WINDOW.MENOS_Y, LOOP_WINDOW.MENOS_R },
                                 graphic.makeImageContext(graphic.searchBitmap("矢印左"), LOOP_WINDOW.MENOS_X, LOOP_WINDOW.MENOS_Y, tempScale, tempScale, 0.0f, 254, false),
-                                graphic.makeImageContext(graphic.searchBitmap("矢印左"), LOOP_WINDOW.MENOS_X, LOOP_WINDOW.MENOS_Y, tempScale, tempScale, 0.0f, 254, false)
+                                graphic.makeImageContext(graphic.searchBitmap("矢印左"), LOOP_WINDOW.MENOS_X - 30, LOOP_WINDOW.MENOS_Y, tempScale, tempScale, 0.0f, 254, false)
                         ) {
                             @Override
                             public void callBackEvent() {
@@ -398,7 +398,7 @@ public class DungeonSelectManager {
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{ LOOP_WINDOW.PLUS_X, LOOP_WINDOW.PLUS_Y, LOOP_WINDOW.PLUS_R },
                                 graphic.makeImageContext(graphic.searchBitmap("矢印右"), LOOP_WINDOW.PLUS_X, LOOP_WINDOW.PLUS_Y, tempScale, tempScale, 0.0f, 254, false),
-                                graphic.makeImageContext(graphic.searchBitmap("矢印右"), LOOP_WINDOW.PLUS_X, LOOP_WINDOW.PLUS_Y, tempScale, tempScale, 0.0f, 254, false)
+                                graphic.makeImageContext(graphic.searchBitmap("矢印右"), LOOP_WINDOW.PLUS_X + 30, LOOP_WINDOW.PLUS_Y, tempScale, tempScale, 0.0f, 254, false)
 
                         ) {
                             @Override
