@@ -414,10 +414,8 @@ public class GeoSlotAdmin {
                 case (0)://解放する
                     //解放するための色々な処理
                     if (focusGeoSlot.geoSlotRelease()) {
-                        //TODO 解放したことを通知
                         soundAdmin.play("levelup00");
                     } else {
-                        //TODO 条件を満たしていないことを通知
                         soundAdmin.play("cancel00");
                     }
                     releasePlateGroup.setDrawFlag(false);
@@ -479,11 +477,13 @@ public class GeoSlotAdmin {
     public void checkInventrySelect() {
         InventryData inventryData = userInterface.getInventryData();
         if (inventryData != null) {
-            if (inventryData.getItemData().getItemKind() == Constants.Item.ITEM_KIND.GEO) {
-                GeoObjectData tmp = (GeoObjectData) inventryData.getItemData();
-                if (inventryData.getItemNum() > 0 && tmp.getName() != null && tmp.getSlotSetName().equals("noSet")) {
-                    setHoldGeoObject((GeoObjectData) inventryData.getItemData());
-                    userInterface.setInventryData(null);
+            if (inventryData.getItemData() != null) {
+                if (inventryData.getItemData().getItemKind() == Constants.Item.ITEM_KIND.GEO) {
+                    GeoObjectData tmp = (GeoObjectData) inventryData.getItemData();
+                    if (inventryData.getItemNum() > 0 && tmp.getName() != null && tmp.getSlotSetName().equals("noSet")) {
+                        setHoldGeoObject((GeoObjectData) inventryData.getItemData());
+                        userInterface.setInventryData(null);
+                    }
                 }
             }
         }

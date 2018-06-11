@@ -23,15 +23,16 @@ public class GeoObjectShop extends ItemShop {
     }
 
     @Override
-    public void buyItem(ItemData _itemData) {
+    public boolean buyItem(ItemData _itemData) {
         GeoObjectData buyItemData = (GeoObjectData)_itemData;
         if (playerStatus.getMoney() >= buyItemData.getPrice()) {
             System.out.println("shop :" + buyItemData.getName()+ " を ¥" + buyItemData.getPrice() + " で購入した");
             itemInventry.addItemData(buyItemData);
             playerStatus.subMoney(buyItemData.getPrice());
             //itemShopAdmin.moneyTextBoxUpdate();
+            return true;
         } else {
-            //TODO お金足りない
+            return false;
         }
     }
 

@@ -175,7 +175,7 @@ public class ItemSell {
             //売却インベントリからの場合。そのInventryDataを売却インベントリから1つ削除する
             //さらに、同一ItemDataを各種インベントリから探し、その売却個数に-1する
             if (tempInventryData.getItemNum() > 0) {
-                tempInventryData.setItemNum(tempInventryData.getItemNum() - 1);
+                tempInventryData.getParentInventry().subItemData(tempInventryData.getItemData());
                 switch (tempInventryData.getItemData().getItemKind()) {
                     case GEO:
                         geoInventry.searchInventryData(tempInventryData.getItemData()).subSoldNum();

@@ -559,9 +559,9 @@ public class GeoSlot extends CircleImagePlate {
                         geoSlotAdmin.setHoldGeoObject(null);
                         isReleased = true;
                         System.out.println("GeoSlot#geoSlotRelease　ジオオブジェクトを支払う　" + release_event);
+                        return true;
                     }
                 }
-                return true;
             }
         }
 
@@ -614,7 +614,7 @@ public class GeoSlot extends CircleImagePlate {
         touch_id = user_interface.setCircleTouchUI(x, y, radius);
         //TODO: 前の奴を消せないので格納上の問題あり
 
-        notEventCrearImageContext = graphic.makeImageContext(graphic.searchBitmap("apple"), x , y, GeoSlotParam.GEO_SLOT_SCALE, GeoSlotParam.GEO_SLOT_SCALE, 0.0f, 255, false);
+        notEventCrearImageContext = graphic.makeImageContext(graphic.searchBitmap("GeoStop"), x , y, GeoSlotParam.GEO_STOP_SCALE, GeoSlotParam.GEO_STOP_SCALE, 0.0f, 255, false);
         if (grandFlag) {
             slotHoleImageContext = graphic.makeImageContext(graphic.searchBitmap("GeoSlotHoleGreen"), x, y, GeoSlotParam.GEO_SLOT_SCALE, GeoSlotParam.GEO_SLOT_SCALE, 0.0f, 255, false);
         } else {

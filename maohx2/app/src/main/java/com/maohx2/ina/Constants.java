@@ -361,6 +361,7 @@ public final class Constants {
 
     public static class GeoSlotParam {
         public static final float GEO_SLOT_SCALE = 4.0f;
+        public static final float GEO_STOP_SCALE = 3.0f;
     }
 
     // *** takanoここまで ***

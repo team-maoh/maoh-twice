@@ -333,8 +333,11 @@ public abstract class ItemShop {
             switch(content) {
                 case(0) ://購入する
                     //itemData = (ItemData)itemShopData.getOneDataByName(buyItemName);
-                    soundAdmin.play("shop00");
-                    buyItem(focusItemData);
+                    if (buyItem(focusItemData)) {
+                        soundAdmin.play("shop00");
+                    } else {
+                        soundAdmin.play("cancel00");
+                    }
                     initUIs();
 
                     break;
@@ -347,7 +350,7 @@ public abstract class ItemShop {
     }
 
     //TODO:購入時処理
-    public abstract void buyItem(ItemData _itemData);
+    public abstract boolean buyItem(ItemData _itemData);
 
     //TODO:商品詳細情報の表示処理
     public abstract void explainItem(ItemData _itemData);

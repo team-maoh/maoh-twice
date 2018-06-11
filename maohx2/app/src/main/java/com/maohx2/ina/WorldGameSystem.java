@@ -178,21 +178,17 @@ public class WorldGameSystem {
         GeoObjectDataCreater.setGraphic(graphic);
 
         //by kmhanko デバッグ用削除
-        /*
-        // 仮。適当にGeo入れる GEO1が上がる能力は単一
-        //TODO 同じの追加されたら個数とかないのに2とかになりそう
-        for (int i = 0; i < 5; i++) {
-            geoInventry.addItemData(GeoObjectDataCreater.getGeoObjectData(100));
 
-            geoInventry.addItemData(GeoObjectDataCreater.getGeoObjectData(
-                    new int[] { 100, 0, 0, 0},
-                    new double[] { 1.0, 1.0, 1.0, 1.0}
-            ));
+        // 仮。適当にGeo入れる GEO1が上がる能力は単一
+        /*
+        for (int i = 0; i < 50; i++) {
+            geoInventry.addItemData(GeoObjectDataCreater.getGeoObjectData(1000000));
             //デバッグ用
-            //playerStatus.addBaseAttack(100000000);
+            playerStatus.addMoney(100000000);
             //playerStatus.calcStatus();
         }
         */
+
 
 
         geoPresentManager = new GeoPresentManager(

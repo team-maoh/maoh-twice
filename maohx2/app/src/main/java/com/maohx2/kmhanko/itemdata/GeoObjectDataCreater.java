@@ -251,7 +251,7 @@ public class GeoObjectDataCreater {
         if (randFlag) {
 //            double random_num = sqrt(-2 * log(Math.random())) * cos(2 * PI * Math.random()) / 20.0;// だいたい[-1, +1]の範囲の正規分布
 //            calcParam = status2[parameterKind.ordinal()] = parameter * (1.0 + random_num) / 100.0;
-            calcParam = status2[parameterKind.ordinal()] = (1.1 + 0.9 * Math.random()) * 2.0;//1.1 ~ 2.0倍
+            calcParam = status2[parameterKind.ordinal()] = (1.1 + 0.9 * Math.random());// * 2.0;//1.1 ~ 2.0倍
         } else {
             calcParam = status2[parameterKind.ordinal()] = parameter;
         }
@@ -278,7 +278,7 @@ public class GeoObjectDataCreater {
 
         GeoObjectData newGeoObjectData = new GeoObjectData(name, graphic.searchBitmap(imageName), status1, status2);
         newGeoObjectData.setImageName(imageName);
-        newGeoObjectData.setPrice((int) calcParam);
+        newGeoObjectData.setPrice((int) calcParam * 100);
         newGeoObjectData.setGeoKind(geoKind);
         //newGeoObjectData.setItemKind(Constants.Item.ITEM_KIND.GEO);
         //newGeoObjectData.setPrice(parameter);
@@ -287,7 +287,16 @@ public class GeoObjectDataCreater {
     }
 
     public static boolean compare(GeoObjectData geoObjectData1, GeoObjectData geoObjectData2) {
-        if (geoObjectData1.getHp() >= geoObjectData2.getHp() && geoObjectData1.getAttack() >= geoObjectData2.getAttack() && geoObjectData1.getDefence() >= geoObjectData2.getDefence() && geoObjectData1.getHpRate() >= geoObjectData2.getHpRate() && geoObjectData1.getAttackRate() >= geoObjectData2.getAttack() && geoObjectData1.getDefenceRate() >= geoObjectData2.getDefenceRate() && geoObjectData1.getLuckRate() >= geoObjectData2.getLuckRate()) {
+        if (
+                        geoObjectData1.getHp() >= geoObjectData2.getHp() &&
+                        geoObjectData1.getAttack() >= geoObjectData2.getAttack() &&
+                        geoObjectData1.getDefence() >= geoObjectData2.getDefence() &&
+                        geoObjectData1.getLuck() >= geoObjectData2.getLuck() &&
+                        geoObjectData1.getHpRate() >= geoObjectData2.getHpRate() &&
+                        geoObjectData1.getAttackRate() >= geoObjectData2.getAttackRate() &&
+                        geoObjectData1.getDefenceRate() >= geoObjectData2.getDefenceRate() &&
+                        geoObjectData1.getLuckRate() >= geoObjectData2.getLuckRate()
+                ) {
             return true;
         } else {
             return false;
@@ -306,9 +315,9 @@ public class GeoObjectDataCreater {
     private static String[] getNamesNormal(GEO_PARAM_KIND_NORMAL parameterKind, int calcParam) {
 
         int imageNum = 1;
-        for (int i = 6; i >= 2; i--) {
+        for (int i = 7; i >= 0; i--) {
             if (calcParam > Math.pow(10, i)) {
-                imageNum = i - 1;
+                imageNum = i + 1;
                 break;
             }
         }
@@ -343,9 +352,9 @@ public class GeoObjectDataCreater {
     private static String[] getNamesRate(GEO_PARAM_KIND_RATE parameterKind, double calcParam) {
 
         int imageNum = 1;
-        for (int i = 6; i >= 2; i--) {
-            if (calcParam > Math.pow(10, i)) {
-                imageNum = i - 1;
+        for (int i = 2; i >= 0; i--) {
+            if (calcParam > 1.1f + (float)i * 0.3f) {
+                imageNum = i + 1;
                 break;
             }
         }
@@ -370,7 +379,7 @@ public class GeoObjectDataCreater {
                 name = "運命倍加ジオ";
                 break;
         }
-        imageName += "0" + String.valueOf(imageNum);
+        imageName += "1" + String.valueOf(imageNum);
         name += String.format("%.2f", calcParam);
 
 

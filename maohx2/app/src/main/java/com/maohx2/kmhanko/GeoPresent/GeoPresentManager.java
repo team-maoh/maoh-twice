@@ -124,7 +124,7 @@ public class GeoPresentManager {
 
     public void start() {
         geoInventry.setPosition(SIDE_INVENTRY.INV_LEFT, SIDE_INVENTRY.INV_UP, SIDE_INVENTRY.INV_RIGHT,SIDE_INVENTRY.INV_BOTTOM,SIDE_INVENTRY.INV_CONTENT_NUM);
-        gaiaImage = graphic.makeImageContext(graphic.searchBitmap("gaia0r"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        gaiaImage = graphic.makeImageContext(graphic.searchBitmap("gaia0r"), 300, 450, 2.7f, 2.7f, 0, 255, false);
         scoreTextBoxUpdate();
         updateTextBox();
     }
@@ -212,8 +212,8 @@ public class GeoPresentManager {
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "Deffence " + defenceScore);
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "\n");
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "Luck " + luckScore);
-        textBoxAdmin.bookingDrawText(scoreTextBoxID, "\n");
-        textBoxAdmin.bookingDrawText(scoreTextBoxID, "Special " + specialScore);
+        //textBoxAdmin.bookingDrawText(scoreTextBoxID, "\n");
+        //textBoxAdmin.bookingDrawText(scoreTextBoxID, "Special " + specialScore);
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "MOP");
         textBoxAdmin.updateText(scoreTextBoxID);
     }
@@ -246,10 +246,10 @@ public class GeoPresentManager {
         attackScore += geoObjectData.getAttack();
         defenceScore += geoObjectData.getDefence();
         luckScore += geoObjectData.getLuck();
-        specialScore += (geoObjectData.getHpRate() - 1.0) * 10;
-        specialScore += (geoObjectData.getAttackRate() - 1.0) * 10;
-        specialScore += (geoObjectData.getDefenceRate() - 1.0) * 10;
-        specialScore += (geoObjectData.getLuckRate() - 1.0) * 10;
+        hpScore += (geoObjectData.getHpRate() - 1.0) * 30 * Math.pow(2,playerStatus.getClearCount());
+        attackScore += (geoObjectData.getAttackRate() - 1.0) * 30 * Math.pow(2,playerStatus.getClearCount());
+        defenceScore += (geoObjectData.getDefenceRate() - 1.0) * 30 * Math.pow(2,playerStatus.getClearCount());
+        luckScore += (geoObjectData.getLuckRate() - 1.0) * 30 * Math.pow(2,playerStatus.getClearCount());
 
         sumScore = hpScore + attackScore + defenceScore + luckScore + specialScore;
 
@@ -368,7 +368,7 @@ public class GeoPresentManager {
                 name = bufItemData.getName();
             }
             presentGetMessage(name);
-            gaiaImage = graphic.makeImageContext(graphic.searchBitmap("gaia22r"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+            gaiaImage = graphic.makeImageContext(graphic.searchBitmap("gaia22r"), 300, 450, 2.7f, 2.7f, 0, 255, false);
 
             System.out.println("takano:GeoPresentManager#presentToInventry : 献上により獲得 : " + name);
 
