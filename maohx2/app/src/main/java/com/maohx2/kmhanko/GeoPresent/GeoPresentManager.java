@@ -242,7 +242,6 @@ public class GeoPresentManager {
     }
 
     private void presentGeoObject(GeoObjectData geoObjectData) {
-        //TODO:計算が適当なので直す
         hpScore += geoObjectData.getHp();
         attackScore += geoObjectData.getAttack();
         defenceScore += geoObjectData.getDefence();
