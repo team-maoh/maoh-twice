@@ -364,7 +364,7 @@ public class WorldGameSystem {
             case EQUIP_INIT:
                 break;
             case TU_EQUIP:
-                graphic.bookingDrawBitmapData(tu_equip_img, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(tu_equip_img, 0, 0, 1.25f, 1.25f, 0, 255, true);
                 break;
             case EQUIP:
                 equipmentInventry.draw();

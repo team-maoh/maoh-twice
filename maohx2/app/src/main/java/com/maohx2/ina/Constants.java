@@ -72,6 +72,13 @@ public final class Constants {
         public static final int BOOKING_DATA_INSTANCE = 1000;
     }
 
+    /*
+    public static class EffectConstant {
+        public static final int EFFECT_ANIME_MAX = 50;
+    }
+    */
+
+
     public static class BattleUnit {
         public static final int BATTLE_UNIT_MAX = 15;
     }

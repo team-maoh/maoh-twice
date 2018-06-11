@@ -8,6 +8,7 @@ import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.sound.SoundAdmin;
+//import com.maohx2.ina.Constants.EffectConstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,14 +38,21 @@ public class EffectAdmin {
 
     public int createEffect(String _name, String _imageName, int widthNum, int heightNum) {
 
+        //軽くするため、配列に変更する
+
         List<BitmapData> tempBitmapData = new ArrayList<BitmapData>();
+        //BitmapData tempBitmapData[] = new BitmapData[Effect.EFFECT_ANIME_MAX];
+
         BitmapData _bitmapData = graphic.searchBitmap(_imageName);
         int x = _bitmapData.getWidth();
         int y = _bitmapData.getHeight();
 
+        //int count = 0;
         for (int i = 0; i < heightNum; i++ ) {
             for (int j = 0; j < widthNum; j++ ) {
                 tempBitmapData.add(graphic.processTrimmingBitmapData(_bitmapData, x/widthNum * j, y/heightNum * i, x/widthNum, y/heightNum));
+
+                //count++;
             }
         }
 
