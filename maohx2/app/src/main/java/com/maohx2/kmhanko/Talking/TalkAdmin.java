@@ -192,6 +192,8 @@ public class TalkAdmin {
                 textBoxAdmin.bookingDrawText(textBoxID, talkContent[count][i], paint);
             }
         }
+
+        textBoxAdmin.updateText(textBoxID);
         if (talkWaitTime[count] > 1) {
             isWait = true;
             waitCount = 0;
@@ -202,7 +204,6 @@ public class TalkAdmin {
     }
 
     private void updateTextFinal() {
-        textBoxAdmin.updateText(textBoxID);
         textBoxAdmin.setTextBoxExists(textBoxID, true);
         isUpdateThisFrame = true;
     }

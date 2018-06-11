@@ -261,7 +261,8 @@ public class DungeonGameSystem {
                 map_status,
                 map_status_saver,
                 dungeon_kind,
-                dungeonMonsterDataAdmin
+                dungeonMonsterDataAdmin,
+                talkAdmin
         );
 
         backGround = graphic.searchBitmap("firstBackground");
@@ -297,10 +298,12 @@ public class DungeonGameSystem {
                 playMapBGM();
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
             case MAP:
-                //map_object_admin.update(is_displaying_menu, is_touching_outside_menu);
-                //map_plate_admin.update(is_displaying_menu);
-                map_object_admin.update();
-                map_plate_admin.update();
+                if (!talkAdmin.isTalking()) {
+                    //map_object_admin.update(is_displaying_menu, is_touching_outside_menu);
+                    //map_plate_admin.update(is_displaying_menu);
+                    map_object_admin.update();
+                    map_plate_admin.update();
+                }
                 break;
             case OPENING_BATTLE_INIT:
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE);
@@ -317,8 +320,10 @@ public class DungeonGameSystem {
                 backGround = graphic.searchBitmap("firstBackground");
                 musicAdmin.loadMusic("battle00",true);
             case BUTTLE:
-                battle_user_interface.update();
-                battle_unit_admin.update();
+                if (!talkAdmin.isTalking()) {
+                    battle_user_interface.update();
+                    battle_unit_admin.update();
+                }
                 break;
 
             case MAOH_INIT:
@@ -332,8 +337,10 @@ public class DungeonGameSystem {
                 musicAdmin.loadMusic("boss00",true);
 
             case MAOH:
-                battle_user_interface.update();
-                battle_unit_admin.update();
+                if (!talkAdmin.isTalking()) {
+                    battle_user_interface.update();
+                    battle_unit_admin.update();
+                }
                 break;
 
             case GEO_MINING_INIT:
@@ -344,8 +351,10 @@ public class DungeonGameSystem {
                 musicAdmin.loadMusic("battle00",true);
 
             case GEO_MINING:
-                battle_user_interface.update();
-                battle_unit_admin.update();
+                if (!talkAdmin.isTalking()) {
+                    battle_user_interface.update();
+                    battle_unit_admin.update();
+                }
                 break;
 
             case TO_WORLD:
@@ -357,20 +366,25 @@ public class DungeonGameSystem {
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.EQUIP_EXPEND);
 
             case EQUIP_EXPEND:
-                //equipmentInventry.updata();
-                //expendInventry.updata();
-                //palette_admin.update(false);
-                backPlateGroup.update();
+                if (!talkAdmin.isTalking()) {
+                    //equipmentInventry.updata();
+                    //expendInventry.updata();
+                    //palette_admin.update(false);
+                    backPlateGroup.update();
+                }
                 break;
             case GEO_MAP_INIT:
                 initBackPlate();
                 geoSlotAdminManager.start();
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP);
             case GEO_MAP:
-                geoSlotAdminManager.updateInStatus();
+                if (!talkAdmin.isTalking()) {
+                    geoSlotAdminManager.updateInStatus();
+                }
                 break;
 
         }
+        talkAdmin.update();
         text_box_admin.update();
         effectAdmin.update();
         //musicAdmin.update();
@@ -419,6 +433,7 @@ public class DungeonGameSystem {
 
         }
 
+        talkAdmin.draw();
         text_box_admin.draw();
         effectAdmin.draw();
         graphic.draw();
