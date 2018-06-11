@@ -31,6 +31,7 @@ import com.maohx2.kmhanko.Saver.ExpendItemInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoSlotSaver;
 import com.maohx2.kmhanko.Saver.GeoPresentSaver;
+import com.maohx2.kmhanko.Talking.TalkAdmin;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
 import com.maohx2.kmhanko.effect.EffectAdmin;
@@ -117,6 +118,8 @@ public class WorldGameSystem {
     MusicAdmin musicAdmin;
     EquipmentItemDataAdmin equipment_item_data_admin;
 
+    TalkAdmin talkAdmin;
+
     boolean is_equip_tutorial = true;
 
     public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
@@ -126,6 +129,7 @@ public class WorldGameSystem {
         world_user_interface = _world_user_interface;
         activityChange = _activityChange;
         tu_equip_img = graphic.searchBitmap("tu_equip");
+
 
         map_status = new MapStatus(Constants.STAGE_NUM);
         map_status_saver = new MapStatusSaver(databaseAdmin, "MapSaveData", "MapSaveData.db", 1, Constants.DEBUG_SAVE_MODE, map_status, 7);
@@ -147,6 +151,8 @@ public class WorldGameSystem {
 
         text_box_admin = new TextBoxAdmin(graphic, soundAdmin);
         text_box_admin.init(world_user_interface);
+
+        talkAdmin = new TalkAdmin(graphic, world_user_interface, databaseAdmin, text_box_admin , soundAdmin);
 
         itemDataAdminManager = new ItemDataAdminManager();
         itemShopAdmin = new ItemShopAdmin();
@@ -235,6 +241,11 @@ public class WorldGameSystem {
 
         //TODO かり。戻るボタン
         initBackPlate();
+
+        //OP判定。まだOPを流していないならOP会話イベントを発動する
+        //if (playerStatus.getTutorialInDungeon() == 0) {
+            talkAdmin.start("Opening_in_world");
+        //}
     }
 
 
@@ -248,7 +259,6 @@ public class WorldGameSystem {
         }
 */
 
-
         switch (worldModeAdmin.getMode()) {
             case DUNGEON_SELECT_INIT_START:
                 musicAdmin.loadMusic("world00",true);
@@ -257,27 +267,35 @@ public class WorldGameSystem {
                 worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT);
                 dungeonSelectManager.start();
             case DUNGEON_SELECT:
-                dungeonSelectManager.update();
+                if (!talkAdmin.isTalking()) {
+                    dungeonSelectManager.update();
+                }
                 break;
             case GEO_MAP_SELECT_INIT:
                 backGround = graphic.searchBitmap("GeoMap");
                 worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT);
             case GEO_MAP_SELECT:
-                dungeonSelectManager.update();
+                if (!talkAdmin.isTalking()) {
+                    dungeonSelectManager.update();
+                }
                 break;
             case GEO_MAP_INIT:
                 backGround = graphic.searchBitmap("GeoMap");
                 worldModeAdmin.setMode(WORLD_MODE.GEO_MAP);
                 geoSlotAdminManager.start();
             case GEO_MAP:
-                geoSlotAdminManager.update();
+                if (!talkAdmin.isTalking()) {
+                    geoSlotAdminManager.update();
+                }
                 break;
             case SHOP_INIT:
                 itemShopAdmin.start();
                 backGround = graphic.searchBitmap("City");
                 worldModeAdmin.setMode(WORLD_MODE.SHOP);
             case SHOP:
-                itemShopAdmin.update();
+                if (!talkAdmin.isTalking()) {
+                    itemShopAdmin.update();
+                }
                 break;
             case EQUIP_INIT:
                 backGround = graphic.searchBitmap("equipBackground");//仮
@@ -290,12 +308,14 @@ public class WorldGameSystem {
                     is_equip_tutorial = false;
                 }
             case EQUIP:
-                equipmentInventry.updata();
-                expendItemInventry.updata();
-                palette_admin.update(false);
-                backPlateGroup.update();
-                //equipmentInventry.onArrow();
-                //expendItemInventry.onArrow();
+                if (!talkAdmin.isTalking()) {
+                    equipmentInventry.updata();
+                    expendItemInventry.updata();
+                    palette_admin.update(false);
+                    backPlateGroup.update();
+                    //equipmentInventry.onArrow();
+                    //expendItemInventry.onArrow();
+                }
                 break;
             case TU_EQUIP:
                 if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
@@ -308,14 +328,18 @@ public class WorldGameSystem {
                 backGround = graphic.searchBitmap("firstBackground");//TODO 仮
                 worldModeAdmin.setMode(WORLD_MODE.PRESENT);
             case PRESENT:
-                geoPresentManager.update();
+                if (!talkAdmin.isTalking()) {
+                    geoPresentManager.update();
+                }
                 break;
             case SELL_INIT:
                 itemSell.start();
                 backGround = graphic.searchBitmap("City");
                 worldModeAdmin.setMode(WORLD_MODE.SELL);
             case SELL:
-                itemSell.update();
+                if (!talkAdmin.isTalking()) {
+                    itemSell.update();
+                }
                 break;
             case GEO_MAP_SEE_ONLY_INIT:
                 initBackPlate();
@@ -327,6 +351,7 @@ public class WorldGameSystem {
             default:
                 break;
         }
+        talkAdmin.update();
         text_box_admin.update();
         effectAdmin.update();
         //musicAdmin.update();
@@ -393,7 +418,10 @@ public class WorldGameSystem {
                 break;
         }
 
+        talkAdmin.draw(); //分岐は特に必要ない
         text_box_admin.draw();
+
+        //GEOMAPでは諸事情により、エフェクトを背後に描画したいため
         if (worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP && worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP_SEE_ONLY) {
             effectAdmin.draw();
         }
@@ -428,10 +456,11 @@ public class WorldGameSystem {
         );
     }
 
-
+/*
     int count = 0;
     int openningTextBoxID;
     boolean text_mode = false;
+
 
     public void openningInit() {
 
@@ -923,16 +952,10 @@ public class WorldGameSystem {
         //musicAdmin.update();
     }
 
-
     public void openningDraw() {
 
         graphic.draw();
     }
-
-
-
-
-
     public void talk(String[] talkContent) {
 
         for(int i = 0; i < talkContent.length; i++){
@@ -952,6 +975,7 @@ public class WorldGameSystem {
             count++;
         }
     }
+    */
 }
 
 

@@ -163,7 +163,7 @@ class StartSurfaceView extends BaseSurfaceView {
         musicAdmin.loadMusic("title", true);
         */
 
-        global_data.getPlayerStatus().setTutorialInDungeon(1);
+        //global_data.getPlayerStatus().setTutorialInDungeon(1);
 
         //todo:こいつは一番下
         thread = new Thread(this);
@@ -205,6 +205,7 @@ class StartSurfaceView extends BaseSurfaceView {
                 break;
             case 2:
                 soundAdmin.play("opening01");
+                //初めてゲームを開始下ならDungeonへ。そうでないならワールドへ。
                 if(global_data.getPlayerStatus().getTutorialInDungeon() == 1) {
                     activityChange.toWorldActivity();
                 }else{

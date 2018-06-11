@@ -104,17 +104,19 @@ class WorldSurfaceView extends BaseSurfaceView {
         global_data.getGeoInventry().sortItemDatabyKind();
         global_data.getExpendItemInventry().sortItemData();
 
+        /*by kmhanko OPであるかどうかはworldGameSystemのinitで判定するよう変更
         openingFlag = true;
         if(global_data.getPlayerStatus().getTutorialInDungeon() == 0) {
             openingFlag = true;
         }
-
+        */
 
         world_game_system.init(map_user_interface, graphic, my_database_admin, soundAdmin, _map_activity, activityChange);
 
+        /*
         if(openingFlag == true){
             world_game_system.openningInit();
-        }
+        }*/
 
     }
 
@@ -134,6 +136,7 @@ class WorldSurfaceView extends BaseSurfaceView {
 
         map_user_interface.updateTouchState(touch_x, touch_y, touch_state);
 
+        /*
         if(openingFlag == true) {
             world_game_system.openningUpdate();
             world_game_system.openningDraw();
@@ -141,9 +144,12 @@ class WorldSurfaceView extends BaseSurfaceView {
             world_game_system.update();
             world_game_system.draw();
         }
+        */
+        world_game_system.update();
+        world_game_system.draw();
 
     }
 
-    public void setOpenningFlag(boolean _openningFlag) {openingFlag = _openningFlag;}
+    //public void setOpenningFlag(boolean _openningFlag) {openingFlag = _openningFlag;}
 
 }
