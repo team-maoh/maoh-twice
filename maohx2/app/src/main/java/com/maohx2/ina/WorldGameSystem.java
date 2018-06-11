@@ -128,7 +128,7 @@ public class WorldGameSystem {
         tu_equip_img = graphic.searchBitmap("tu_equip");
 
         map_status = new MapStatus(Constants.STAGE_NUM);
-        map_status_saver = new MapStatusSaver(databaseAdmin, "MapSaveData", "MapSaveData.db", 1, "s", map_status, 7);
+        map_status_saver = new MapStatusSaver(databaseAdmin, "MapSaveData", "MapSaveData.db", 1, Constants.DEBUG_SAVE_MODE, map_status, 7);
         map_status_saver.load();
 
         worldActivity = _worldActivity;
@@ -160,7 +160,7 @@ public class WorldGameSystem {
         expendItemInventrySaver = globalData.getExpendItemInventrySaver();
         expendItemInventry = globalData.getExpendItemInventry();
 
-        geoSlotSaver = new GeoSlotSaver(databaseAdmin, "GeoSlotSave", "GeoSlotSave.db", 1, "ns", graphic);
+        geoSlotSaver = new GeoSlotSaver(databaseAdmin, "GeoSlotSave", "GeoSlotSave.db", 1, Constants.DEBUG_SAVE_MODE, graphic);
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin);
 
 
@@ -210,7 +210,7 @@ public class WorldGameSystem {
                 databaseAdmin,
                 "GeoPresentSave",
                 "GeoPresentSave.db",
-                1, "ns"
+                1, Constants.DEBUG_SAVE_MODE
         );
 
         geoPresentManager.setGeoPresentSaver(geoPresentSaver);

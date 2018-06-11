@@ -184,7 +184,7 @@ public class DungeonGameSystem {
         dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
 
         map_status = new MapStatus(Constants.STAGE_NUM);//mapのクリア状況,チュートリアルを見たかどうかを記憶しておく
-        map_status_saver = new MapStatusSaver(_myDatabaseAdmin, "MapSaveData", "MapSaveData.db", 1, "s", map_status, Constants.STAGE_NUM);
+        map_status_saver = new MapStatusSaver(_myDatabaseAdmin, "MapSaveData", "MapSaveData.db", 1, Constants.DEBUG_SAVE_MODE, map_status, Constants.STAGE_NUM);
         map_status_saver.load();
 //        for(int i = 0;i < 7;i++){
 //            System.out.println("before:stage_num = "+i+", is_clear = "+map_status.getTutorialFinishStatus(i));
@@ -262,7 +262,7 @@ public class DungeonGameSystem {
         backGround = graphic.searchBitmap("firstBackground");
 
 
-        geoSlotSaver = new GeoSlotSaver(my_database_admin, "GeoSlotSave", "GeoSlotSave.db", 1, "ns", graphic);
+        geoSlotSaver = new GeoSlotSaver(my_database_admin, "GeoSlotSave", "GeoSlotSave.db", 1, Constants.DEBUG_SAVE_MODE, graphic);
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, dungeon_user_interface, my_database_admin, text_box_admin, playerStatus, globalData.getGeoInventry(), geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin, dungeonModeManage);
         geoSlotAdminManager.loadGeoSlot();
 
