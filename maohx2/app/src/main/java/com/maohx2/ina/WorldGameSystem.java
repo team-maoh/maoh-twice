@@ -176,6 +176,9 @@ public class WorldGameSystem {
         canvas = null;
 
         GeoObjectDataCreater.setGraphic(graphic);
+
+        //by kmhanko デバッグ用削除
+        /*
         // 仮。適当にGeo入れる GEO1が上がる能力は単一
         //TODO 同じの追加されたら個数とかないのに2とかになりそう
         for (int i = 0; i < 5; i++) {
@@ -189,6 +192,7 @@ public class WorldGameSystem {
             //playerStatus.addBaseAttack(100000000);
             //playerStatus.calcStatus();
         }
+        */
 
 
         geoPresentManager = new GeoPresentManager(

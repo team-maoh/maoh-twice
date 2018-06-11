@@ -1171,17 +1171,14 @@ public class BattleUnitAdmin {
         textBoxAdmin.setTextBoxExists(resultTextBoxID, true);
 
         String winMessage = "▽入手アイテム▽";
-
-        int row = 0;
-
         if ( itemNames.size() == 0) {
             textBoxAdmin.bookingDrawText(resultTextBoxID, winMessage, resultTextPaint);
         }
 
+
+        int row = 0;
         int i = 0;
-        if(itemNames.size() == 0){
-            textBoxAdmin.bookingDrawText(resultTextBoxID, winMessage, resultTextPaint);
-        }
+
         while (i < itemNames.size()) {
             if (row == 0) {
                 textBoxAdmin.bookingDrawText(resultTextBoxID, winMessage, resultTextPaint);
