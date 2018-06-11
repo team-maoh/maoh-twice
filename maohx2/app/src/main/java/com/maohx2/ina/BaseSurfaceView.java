@@ -58,7 +58,7 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         currentActivity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPurgeable = true; //再利用性のない画像を解放する
+//        options.inPurgeable = true; //再利用性のない画像を解放する
     }
 
 

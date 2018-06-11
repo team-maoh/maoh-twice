@@ -104,6 +104,7 @@ public class WorldGameSystem {
     InventryS equipmentInventry;
 
     BitmapData backGround;
+    BitmapData tu_equip_img;
 
     String talkContent[][] = new String[100][];
     ImageContext talkChara[] = new ImageContext[100];
@@ -116,13 +117,15 @@ public class WorldGameSystem {
     MusicAdmin musicAdmin;
     EquipmentItemDataAdmin equipment_item_data_admin;
 
+    boolean is_equip_tutorial = true;
+
     public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
         soundAdmin = _soundAdmin;
         world_user_interface = _world_user_interface;
         activityChange = _activityChange;
-
+        tu_equip_img = graphic.searchBitmap("tu_equip");
 
         map_status = new MapStatus(Constants.STAGE_NUM);
         map_status_saver = new MapStatusSaver(databaseAdmin, "MapSaveData", "MapSaveData.db", 1, "s", map_status, 7);
@@ -282,6 +285,10 @@ public class WorldGameSystem {
                 equipmentInventry.setPosition(800+20,100,1150+20,708, 7);
                 expendItemInventry.setPosition(400+20,100,750+20,708, 7);
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
+                if(is_equip_tutorial){
+                    worldModeAdmin.setMode(WORLD_MODE.TU_EQUIP);
+                    is_equip_tutorial = false;
+                }
             case EQUIP:
                 equipmentInventry.updata();
                 expendItemInventry.updata();
@@ -289,6 +296,12 @@ public class WorldGameSystem {
                 backPlateGroup.update();
                 //equipmentInventry.onArrow();
                 //expendItemInventry.onArrow();
+                break;
+            case TU_EQUIP:
+                if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
+                    worldModeAdmin.setMode(WORLD_MODE.EQUIP_INIT);
+                    //TODO セーブする
+                }
                 break;
             case PRESENT_INIT:
                 geoPresentManager.start();
@@ -349,6 +362,9 @@ public class WorldGameSystem {
                 playerStatusViewer.draw();
                 break;
             case EQUIP_INIT:
+                break;
+            case TU_EQUIP:
+                graphic.bookingDrawBitmapData(tu_equip_img, 0, 0, 1, 1, 0, 255, true);
                 break;
             case EQUIP:
                 equipmentInventry.draw();
