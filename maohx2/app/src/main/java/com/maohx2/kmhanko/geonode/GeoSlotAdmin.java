@@ -382,15 +382,15 @@ public class GeoSlotAdmin {
 
             textBoxAdmin.resetTextBox(releaseTextBoxID);
 
-            textBoxAdmin.bookingDrawText(releaseTextBoxID, "このスロットを解放するには ", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, "ガイア「ごめ〜ん、ここを使うなら、 ", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, focusGeoSlot.getReleaseEvent(), releaseTextPaint);//TODO:イベント名そのままになっているが、これは仮
-            textBoxAdmin.bookingDrawText(releaseTextBoxID, " が必要です。", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, " を私に献上しなさい！」", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "\n", releaseTextPaint);
-            textBoxAdmin.bookingDrawText(releaseTextBoxID, "条件がジオの場合は今ホールドしているジオを消費します。", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, "※条件がジオの場合は今ホールドしているジオを消費します。", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "\n", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "お金の場合は所持金から消費します。", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "\n", releaseTextPaint);
-            textBoxAdmin.bookingDrawText(releaseTextBoxID, "解放しますか？", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, "献上してこのジオスロットを解放しますか？", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "MOP", releaseTextPaint);
 
             textBoxAdmin.updateText(releaseTextBoxID);

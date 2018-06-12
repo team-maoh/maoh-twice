@@ -264,7 +264,6 @@ public class GeoSlot extends CircleImagePlate {
 
     //GeoSlotの計算を行うメソッド。再帰ライクの終着点に該当する。
     private void calc(GeoCalcSaverAdmin geo_calc_saver_admin) {
-        //TODO: ステータス加算を書き連ねる。,正式なGeoObjectが完成してから書き直す。
         geo_calc_saver_admin.getGeoCalcSaver("HP").calc(geoObjectData.getHp(),geoObjectData.getHpRate());
         geo_calc_saver_admin.getGeoCalcSaver("Attack").calc(geoObjectData.getAttack(),geoObjectData.getAttackRate());
         geo_calc_saver_admin.getGeoCalcSaver("Defence").calc(geoObjectData.getDefence(),geoObjectData.getDefenceRate());
