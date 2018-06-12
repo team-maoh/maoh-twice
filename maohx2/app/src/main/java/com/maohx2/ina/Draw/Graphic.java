@@ -605,7 +605,16 @@ public class Graphic {
     public void releaseBitmap() {
         //global_bitmap_data_admin.releaseBitmap();
         local_bitmap_data_admin.releaseBitmap();
-        //booking_task_datas.
+        for (int i = 0; i < BOOKING_DATA_INSTANCE; i++ ) {
+            booking_circle_datas.get(i).release();
+            booking_rect_datas.get(i).release();
+            booking_text_datas.get(i).release();
+            booking_bitmap_datas.get(i).release();
+        }
+        for (int i = 0; i < booking_task_datas.size(); i++ ) {
+            booking_task_datas.get(i).release();
+        }
+
     }
   
 }

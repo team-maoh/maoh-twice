@@ -99,6 +99,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
             output.write(buffer, 0, n);
             count += n;
         }
+        buffer = null;
         return count;
     }
 

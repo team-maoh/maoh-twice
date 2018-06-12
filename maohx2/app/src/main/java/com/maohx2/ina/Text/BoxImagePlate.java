@@ -56,4 +56,12 @@ public class BoxImagePlate extends BoxPlate {
         }
         graphic.bookingDrawBitmapData(draw_image_context);
     }
+
+    @Override
+    public void release() {
+        super.release();
+        draw_image_context = null;
+        default_image_context = null;
+        feedback_image_context = null;
+    }
 }
