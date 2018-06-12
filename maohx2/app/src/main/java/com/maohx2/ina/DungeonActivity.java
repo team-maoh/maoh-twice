@@ -62,8 +62,13 @@ public class DungeonActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        dungeon_surface_view = null;
         //dungeon_surface_view.graphic.releaseBitmap();
+    }
+
+    @Override
+    public void finish() {
+        dungeon_surface_view.my_database_admin.close();
+        dungeon_surface_view = null;
     }
 
     @Override

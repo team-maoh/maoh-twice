@@ -35,7 +35,8 @@ public abstract class BaseActivity extends Activity {
         setContentView(layout);
 
         //音量調整ボタンを使用できるようにする
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        System.out.println("talano : setVolumeControlStream");
+        super.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         //MusicAdmin.setAudioService(this);
         /*
         backSurfaceView = new BackSurfaceView(this);
@@ -61,7 +62,7 @@ public abstract class BaseActivity extends Activity {
     public void onPause() {
         super.onPause();  // Always call the superclass method first
         System.out.println("ActLife:" + getActivityName() + " onPause");
-        MusicAdmin.close();
+        MusicAdmin.pauseAll();
     }
 
     @Override
@@ -107,6 +108,7 @@ public abstract class BaseActivity extends Activity {
     protected void onRestart() {
         System.out.println("ActLife:" + getActivityName() + " onRestart");
         super.onRestart();
+        MusicAdmin.restartAll();
     }
 
     protected void onRestoreInstanceState(Bundle savedInstanceState) {

@@ -383,6 +383,7 @@ public class GeoSlotAdmin {
             textBoxAdmin.resetTextBox(releaseTextBoxID);
 
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "ガイア「ごめ〜ん、ここを使うなら、 ", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, "\n", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, focusGeoSlot.getReleaseEvent(), releaseTextPaint);//TODO:イベント名そのままになっているが、これは仮
             textBoxAdmin.bookingDrawText(releaseTextBoxID, " を私に献上しなさい！」", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "\n", releaseTextPaint);

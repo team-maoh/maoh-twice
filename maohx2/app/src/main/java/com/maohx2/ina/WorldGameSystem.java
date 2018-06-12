@@ -217,7 +217,7 @@ public class WorldGameSystem {
                 databaseAdmin,
                 "GeoPresentSave",
                 "GeoPresentSave.db",
-                1, Constants.DEBUG_SAVE_MODE
+                Constants.SaveDataVersion.GEO_PRESENT, Constants.DEBUG_SAVE_MODE
         );
 
         geoPresentManager.setGeoPresentSaver(geoPresentSaver);
