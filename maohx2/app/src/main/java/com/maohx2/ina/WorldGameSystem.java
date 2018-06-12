@@ -310,8 +310,8 @@ public class WorldGameSystem {
             case EQUIP_INIT:
                 backGround = graphic.searchBitmap("equipBackground");//仮
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
-                equipmentInventry.setPosition(800+20,100,1150+20,708, 7);
-                expendItemInventry.setPosition(400+20,100,750+20,708, 7);
+                equipmentInventry.setPosition(825,100,1225,708, 7);
+                expendItemInventry.setPosition(375,100,775,708, 7);
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
                 if(equip_tutorial_save_data.getTutorialFinishStatus() == 0){
                     worldModeAdmin.setMode(WORLD_MODE.TU_EQUIP);
