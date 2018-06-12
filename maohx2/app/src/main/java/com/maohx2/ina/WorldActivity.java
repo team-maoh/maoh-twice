@@ -141,7 +141,6 @@ class WorldSurfaceView extends BaseSurfaceView {
             world_game_system.update();
             world_game_system.draw();
         }
-
     }
 
     public void setOpenningFlag(boolean _openningFlag) {openingFlag = _openningFlag;}

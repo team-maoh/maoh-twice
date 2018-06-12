@@ -40,8 +40,6 @@ public class BoxInventryPlate extends BoxPlate {
                 image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left+50, (up+down)/2, 1.7f, 1.7f, 0, 255, false);
             }
         }
-
-
     }
 
     @Override
@@ -123,14 +121,14 @@ public class BoxInventryPlate extends BoxPlate {
 
         if(inventry_data != null) {
             if(inventry_data.getItemData() != null) {
-                image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left, up, 1.7f, 1.7f, 0, 255, true);
+                image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left+50, (up+down)/2, 1.7f, 1.7f, 0, 255, false);
             }
         }
     }
 
     @Override
     public void changeInventryData(){
-        image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left, up, 1.7f, 1.7f, 0, 255, true);
+        image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left+50, (up+down)/2, 1.7f, 1.7f, 0, 255, false);
     }
 
 }

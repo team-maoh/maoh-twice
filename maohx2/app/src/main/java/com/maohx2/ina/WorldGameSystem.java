@@ -907,6 +907,9 @@ public class WorldGameSystem {
         text_box_admin.update();
         text_box_admin.draw();
         //musicAdmin.update();
+
+        System.out.println(world_user_interface.getTouchState());
+
     }
 
 
