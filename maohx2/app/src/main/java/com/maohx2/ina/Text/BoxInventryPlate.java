@@ -40,8 +40,6 @@ public class BoxInventryPlate extends BoxPlate {
                 image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left+50, (up+down)/2, 1.7f, 1.7f, 0, 255, false);
             }
         }
-
-
     }
 
     @Override
@@ -87,7 +85,7 @@ public class BoxInventryPlate extends BoxPlate {
                         if(((EquipmentItemData)(inventry_data.getItemData())).getPalettePosition() != 0) {
                             text_paint.setColor(CIRCLE_COLOR[((EquipmentItemData)(inventry_data.getItemData())).getPalettePosition()-1]);
                             text_paint.setAlpha(255);
-                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1 + (int) ((down - up) * (1.0 / 5))) + 200, up + (int)((down - up - text_paint.getTextSize()) / 2), text_paint);
+                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1 + (int) ((down - up) * (1.0 / 5))) + 200, up + (int)((down - up + text_paint.getTextSize()) / 2), text_paint);
                         }
                     }else if(inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.GEO){
                         if(((GeoObjectData)(inventry_data.getItemData())).getSlotSetName().equals("noSet") == false) {
@@ -103,7 +101,7 @@ public class BoxInventryPlate extends BoxPlate {
                             int palette_position = ((ExpendItemData)(inventry_data.getItemData())).getPalettePosition(i+1);
                             text_paint.setColor(CIRCLE_COLOR[palette_position]);
                             text_paint.setAlpha(255);
-                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() + (int) ((down - up) * (1.0 / 5))) + 100 + offSet, up + (int)((down - up) / 2), text_paint);
+                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() + (int) ((down - up) * (1.0 / 5))) + 50 + offSet, up + (int)((down - up) / 2), text_paint);
                         }
                     }
                 }
@@ -123,14 +121,14 @@ public class BoxInventryPlate extends BoxPlate {
 
         if(inventry_data != null) {
             if(inventry_data.getItemData() != null) {
-                image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left, up, 1.7f, 1.7f, 0, 255, true);
+                image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left+50, (up+down)/2, 1.7f, 1.7f, 0, 255, false);
             }
         }
     }
 
     @Override
     public void changeInventryData(){
-        image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left, up, 1.7f, 1.7f, 0, 255, true);
+        image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left+50, (up+down)/2, 1.7f, 1.7f, 0, 255, false);
     }
 
 }

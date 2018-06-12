@@ -345,7 +345,6 @@ public class MapPlateAdmin {
                 if (i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP) {
                     playerStatus.setTutorialInDungeon(1);
                     playerStatusSaver.save();
-
                 }
             }
         }
@@ -386,7 +385,5 @@ public class MapPlateAdmin {
             graphic.bookingDrawRect(5, 5, 100, 50, floor_bg);
             graphic.bookingDrawText(now_floor, 20, 40, text_paint);
         }
-
     }
-
 }

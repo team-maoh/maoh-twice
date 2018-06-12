@@ -173,7 +173,7 @@ class StartSurfaceView extends BaseSurfaceView {
         openingFlag = !talkSaveDataAdmin.getTalkFlagByName("Opening_in_dungeon"); //openingFlag = true ならOpeningを実行
 
         //デバッグ用
-        //openingFlag = false;
+        openingFlag = false;
 
 
         //todo:こいつは一番下
@@ -219,7 +219,8 @@ class StartSurfaceView extends BaseSurfaceView {
                 if (!openingFlag) {
                     activityChange.toWorldActivity();
                 } else {
-                    activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.OPENING);
+                    activityChange.toWorldActivity();
+                    //activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.OPENING);
                 }
                 break;
         }
