@@ -141,7 +141,7 @@ public class BattleBaseUnitData {
         status[ATTACK.ordinal()] = (int) (dbStatus[DbStatusID.InitialAttack.ordinal()] * Math.pow(mag, repeat_count));
         status[DEFENSE.ordinal()] = (int) (dbStatus[DbStatusID.InitialDefence.ordinal()] * Math.pow(mag, repeat_count));
         status[LUCK.ordinal()] = (int) (dbStatus[DbStatusID.InitialLuck.ordinal()] * Math.pow(mag, repeat_count));
-        //status[SPEED.ordinal()] = (int) (dbStatus[DbStatusID.InitialSpeed.ordinal()] * Math.pow(mag, repeat_count));
+        status[SPEED.ordinal()] = (int) (dbStatus[DbStatusID.InitialSpeed.ordinal()]);
 
         return status;
     }
