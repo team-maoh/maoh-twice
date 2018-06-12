@@ -12,6 +12,8 @@ import com.maohx2.ina.Arrange.PaletteCenter;
 import com.maohx2.ina.Arrange.PaletteElement;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Draw.BitmapData;
+import com.maohx2.ina.Draw.Credit;
+import com.maohx2.ina.Draw.Credits;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.EquipmentInventrySaver;
 import com.maohx2.ina.ItemData.EquipmentItemData;
@@ -57,6 +59,8 @@ public class StartGameSystem {
     int messageNum = 0;
     StartActivity start_activity;
 
+    Credits credis;
+
     public void init(SurfaceHolder _holder, Graphic _graphic, BattleUserInterface _start_user_interface, StartActivity _start_activity, MyDatabaseAdmin my_database_admin) {
 
         holder = _holder;
@@ -77,8 +81,11 @@ public class StartGameSystem {
 
         paint = new Paint();
         paint.setTextSize(70);
+        paint.setARGB(255,0,0,0);
 
         backGround = graphic.searchBitmap("firstBackground");
+
+        credis = new Credits(graphic);
 
         /*
         textBoxAdmin = new TextBoxAdmin(graphic);

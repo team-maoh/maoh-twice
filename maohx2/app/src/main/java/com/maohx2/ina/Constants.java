@@ -198,6 +198,7 @@ public final class Constants {
 
             DUNGEON_SELECT_INIT_START,
             TU_EQUIP,
+            CREDIT,
         }
     }
 
