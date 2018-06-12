@@ -159,8 +159,10 @@ public class DungeonSelectManager {
     public void start() {
 
         //todo:魔王の種類10を置き換える
-        if(playerStatus.getMaohWinCount() == 1){
-            worldModeAdmin.setMode(WORLD_MODE.CREDIT);
+        if(playerStatus.getMaohWinCount() == 10 && playerStatus.getEndingFlag() == 0){
+            playerStatus.setEndingFlag(1);
+            playerStatus.save();
+            worldModeAdmin.setMode(WORLD_MODE.ENDING);
         }
 
         //前ダンジョンクリアかつ魔王討伐回数＝Clear+1なら、Clearを+1
