@@ -68,6 +68,8 @@ public class DungeonActivity extends BaseActivity {
     @Override
     public void finish() {
         dungeon_surface_view.my_database_admin.close();
+        dungeon_surface_view.game_system.drawStop();
+        dungeon_surface_view.graphic.releaseBitmap();
         dungeon_surface_view = null;
     }
 

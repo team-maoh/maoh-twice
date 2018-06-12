@@ -227,7 +227,9 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
     }
 
     static public void restartAll() {
-        media_player.start();
+        if (media_player != null) {
+            media_player.start();
+        }
     }
 
     static public void pauseAll() {

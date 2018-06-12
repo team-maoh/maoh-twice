@@ -369,6 +369,10 @@ public class WorldGameSystem {
 
 
     public void draw() {
+        if (drawStopFlag) {
+            return;
+        }
+
         graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
         //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
 
@@ -437,6 +441,11 @@ public class WorldGameSystem {
         }
 
         graphic.draw();
+    }
+
+    boolean drawStopFlag = false;
+    public void drawStop() {
+        drawStopFlag = true;
     }
 
     //TODO 仮。もどるボタン

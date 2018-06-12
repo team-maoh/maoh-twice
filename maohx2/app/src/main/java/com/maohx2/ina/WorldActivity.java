@@ -57,6 +57,8 @@ public class WorldActivity extends BaseActivity {
     @Override
     public void finish() {
         worldSurfaceView.my_database_admin.close();
+        worldSurfaceView.world_game_system.drawStop();
+        worldSurfaceView.graphic.releaseBitmap();
         worldSurfaceView = null;
     }
 

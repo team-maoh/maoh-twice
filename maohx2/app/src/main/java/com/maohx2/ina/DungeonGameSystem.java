@@ -392,6 +392,10 @@ public class DungeonGameSystem {
     }
 
     public void draw() {
+        if (drawStopFlag) {
+            return;
+        }
+
 //        for(int i = 0;i < 7;i++) {
 //            System.out.println("ホリエ：is_tf("+i+") = " + map_status.getTutorialFinishStatus(i));
 //        }
@@ -443,7 +447,11 @@ public class DungeonGameSystem {
             resetBossImage = false;
             map_object_admin.setBossBitmap("ボス");
         }
+    }
 
+    boolean drawStopFlag = false;
+    public void drawStop() {
+        drawStopFlag = true;
     }
 
     public void setIsDisplayingMenu(boolean _is_displaying_menu){
