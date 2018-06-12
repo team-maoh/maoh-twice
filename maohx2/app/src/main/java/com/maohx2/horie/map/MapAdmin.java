@@ -4,15 +4,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.view.SurfaceHolder;
 
 import com.maohx2.fuusya.MapObjectAdmin;
 import com.maohx2.fuusya.MapPlayer;
-import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +22,6 @@ import static java.lang.Math.abs;
 /**
  * Created by horie on 2017/08/30.
  */
-//TODO:藤原に階層移動のタイミングを伝える，ゲートの実装(階段と同じ感じで外に出れるやつ)
 public class MapAdmin {
     int map_data_int[][] = {
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -48,20 +44,6 @@ public class MapAdmin {
     Chip opening_map_data[][];
     Graphic graphic;
 
-    boolean is_debug_mode = false;
-
-//    final int MAX_MAP_SIZE_X = 1024;
-//    final int MAX_MAP_SIZE_Y = 1024;
-
-    /*デバッグ用変数*/
-//    Point map_size = new Point(map_data_int[0].length, map_data_int.length);
-//    int magnification = 80;
-    /*自動生成用変数*/
-    //drawMap用
-    //Point map_size = new Point(1080/30, 1700/30);//x : 左右幅, y : 上下幅
-    //int magnification = 30;
-    //drawMap2用
-//    Point map_size = new Point(80, 50);//x : 左右幅, y : 上下幅
     Point map_size = new Point(0, 0);//60, 40
     int magnification = 64 * 4;//倍率
     int time = 0;//アニメーションタイミング用
@@ -80,7 +62,6 @@ public class MapAdmin {
     Point start_point = new Point(0, 0);
 
     Paint paint = new Paint();
-    Point map_offset = new Point(0, 0);
     Point room_point = new Point(0, 0);
     Point mine_point[];//採掘場所の座標
     Point opening_map_size = new Point (0, 0);
@@ -93,8 +74,6 @@ public class MapAdmin {
     MapObjectAdmin map_object_admin;
     DungeonData dungeon_data;
     List<DungeonMonsterData> dungeon_monster_data;
-    MapStatus map_status;
-    MapStatusSaver map_status_saver;
 
     //auto_tile用
     AutoTile auto_tile_wall = new AutoTile();
@@ -111,8 +90,6 @@ public class MapAdmin {
     BitmapData map_tile_set_animation[][][];// = new BitmapData[3][map_size.x*2][map_size.y*2];
     BitmapData map_tile[][];// = new BitmapData[map_size.x][map_size.y];//map_tile_set[][]を1つに纏めた画像
     BitmapData map_tile_animation[][][];// = new BitmapData[3][map_size.x][map_size.y];//上のアニメション用
-    BitmapData map_image;//mapを1つの画像にした物
-    BitmapData side_wall[] = new BitmapData[4];//横壁4種類
     BitmapData side_wall_4[][];
     BitmapData op_map_tile[][][];
 
@@ -159,8 +136,6 @@ public class MapAdmin {
         map_player = map_object_admin.getPlayer();
         dungeon_data = m_dungeon_data;
         dungeon_monster_data = m_dungeon_monster_data;
-//        map_status = _map_status;
-//        map_status_saver = _map_status_saver;
 
         //データベースからマップ情報の読み込み
         dungeon_name = dungeon_data.getDungeon_name();
@@ -210,7 +185,6 @@ public class MapAdmin {
         } else {
             createAutoTileImg();
         }
-//        createAutoTileImg_old();
         getHolder();
     }
 
@@ -343,9 +317,9 @@ public class MapAdmin {
         return map_data[i][j].isDisp();
     }
 
-    public boolean isMine(int i, int j) {
+    /*public boolean isMine(int i, int j) {
         return map_data[i][j].isMine();
-    }
+    }*/
 
     //壁かどうかワールドマップで判定
     public boolean isWallWorld(int world_x, int world_y) {
@@ -373,8 +347,6 @@ public class MapAdmin {
         createMine(mine_min_num, mine_max_num);
         //map_object_adminに採掘場所の座標を渡す
 
-
-        //section_admin.printNeighborLeafNum();
         //createMapTileData_old();//以前のバージョン
 
         if(dungeon_name.equals("Dragon")) {
@@ -420,104 +392,9 @@ public class MapAdmin {
                 }
             }
         }
-//        System.out.println("setAutoTile finished!");
         //map_object_admin初期化
-        //TODO:藤原変更適用後修正必要
-        map_object_admin.setMapAdmin(this);//藤原変更を適用後要変更
+        map_object_admin.setMapAdmin(this);
         map_object_admin.spawnMapObject(mine_point);
-//        map_object_admin.getMapAdmin(this);//藤原変更を適用していないため今はコメントアウトしている
-//        map_object_admin.getMinePoint(mine_point);//藤原変更を適用していないため今はコメントアウトしている
-//        map_object_admin.getCamera(camera);
-        //System.out.println("map_create_finish");
-        //sizeRect.set(0,0,map_tile[0][0].getBitmap().getWidth(),map_tile[0][0].getBitmap().getHeight());
-    }
-
-    private void createMapTileData_old() {
-        createDispMapData();
-        for (int i = 0; i < map_size.x; i++) {
-            for (int j = 0; j < map_size.y; j++) {
-                if (!isWall(i, j) && !isStairs(i, j) && !isMine(i, j)) {
-                    map_tile_set[2 * i][2 * j] = floor_tile;
-                    map_tile_set[2 * i + 1][2 * j] = floor_tile;
-                    map_tile_set[2 * i][2 * j + 1] = floor_tile;
-                    map_tile_set[2 * i + 1][2 * j + 1] = floor_tile;
-                    for (int k = 0; k < 3; k++) {
-                        map_tile_set_animation[k][2 * i][2 * j] = floor_tile;
-                        map_tile_set_animation[k][2 * i + 1][2 * j] = floor_tile;
-                        map_tile_set_animation[k][2 * i][2 * j + 1] = floor_tile;
-                        map_tile_set_animation[k][2 * i + 1][2 * j + 1] = floor_tile;
-                    }
-                    //階段
-                } else if (isStairs(i, j)) {
-                    map_tile_set[2 * i][2 * j] = stair_tile_div[0];
-                    map_tile_set[2 * i + 1][2 * j] = stair_tile_div[1];
-                    map_tile_set[2 * i][2 * j + 1] = stair_tile_div[2];
-                    map_tile_set[2 * i + 1][2 * j + 1] = stair_tile_div[3];
-                    for (int k = 0; k < 3; k++) {
-                        map_tile_set_animation[k][2 * i][2 * j] = stair_tile_div[0];
-                        map_tile_set_animation[k][2 * i + 1][2 * j] = stair_tile_div[1];
-                        map_tile_set_animation[k][2 * i][2 * j + 1] = stair_tile_div[2];
-                        map_tile_set_animation[k][2 * i + 1][2 * j + 1] = stair_tile_div[3];
-                    }
-                } /*else if (isMine(i, j)){
-                    map_tile_set[2 * i][2 * j] = mine_tile;
-                    map_tile_set[2 * i + 1][2 * j] = mine_tile;
-                    map_tile_set[2 * i][2 * j + 1] = mine_tile;
-                    map_tile_set[2 * i + 1][2 * j + 1] = mine_tile;
-                    for (int k = 0; k < 3; k++) {
-                        map_tile_set_animation[k][2 * i][2 * j] = mine_tile;
-                        map_tile_set_animation[k][2 * i + 1][2 * j] = mine_tile;
-                        map_tile_set_animation[k][2 * i][2 * j + 1] = mine_tile;
-                        map_tile_set_animation[k][2 * i + 1][2 * j + 1] = mine_tile;
-                    }
-                } */ else {
-                    setAutoTile(2 * i, 2 * j, 2 * i, 2 * j);
-                    setAutoTile(2 * i + 1, 2 * j, 2 * i + 1, 2 * j);
-                    setAutoTile(2 * i, 2 * j + 1, 2 * i, 2 * j + 1);
-                    setAutoTile(2 * i + 1, 2 * j + 1, 2 * i + 1, 2 * j + 1);
-                }
-            }
-        }
-        System.out.println("map_create_finish");
-        //4つを1つに
-        for (int i = 0; i < map_size.x; i++) {
-            for (int j = 0; j < map_size.y; j++) {
-                map_tile[i][j] = auto_tile_admin.combineFourAutoTile(map_tile_set[2 * i][2 * j], map_tile_set[2 * i + 1][2 * j], map_tile_set[2 * i][2 * j + 1], map_tile_set[2 * i + 1][2 * j + 1]);
-                for (int k = 0; k < 3; k++) {
-                    map_tile_animation[k][i][j] = auto_tile_admin.combineFourAutoTile(map_tile_set_animation[k][2 * i][2 * j], map_tile_set_animation[k][2 * i + 1][2 * j], map_tile_set_animation[k][2 * i][2 * j + 1], map_tile_set_animation[k][2 * i + 1][2 * j + 1]);
-                }
-            }
-        }
-
-        //1つの画像に
-        /*BitmapData wide_map_image[] = new BitmapData[map_size.x];//横に繋げた画像
-        for(int i = 0;i < map_size.x;i++){
-            wide_map_image[i] = graphic.processCombineBitmapData(map_tile[i], false);
-        }
-        map_image = graphic.processCombineBitmapData(wide_map_image, true);*/
-    }
-
-    private void createDispMapData() {
-        for (int i = 0; i < map_size.x; i++) {
-            for (int j = 0; j < map_size.y; j++) {
-                if (map_data[i][j].isWall()) {
-                    is_map_data_wall[2 * i][2 * j] = true;
-                    is_map_data_wall[2 * i + 1][2 * j] = true;
-                    is_map_data_wall[2 * i][2 * j + 1] = true;
-                    is_map_data_wall[2 * i + 1][2 * j + 1] = true;
-                } else {
-                    is_map_data_wall[2 * i][2 * j] = false;
-                    is_map_data_wall[2 * i + 1][2 * j] = false;
-                    is_map_data_wall[2 * i][2 * j + 1] = false;
-                    is_map_data_wall[2 * i + 1][2 * j + 1] = false;
-                }
-            }
-        }
-        for (int i = 0; i < map_size.x * 2; i++) {
-            for (int j = 0; j < map_size.y * 2 - 1; j++) {
-                is_map_data_sidewall[i][j] = is_map_data_wall[i][j] && !is_map_data_wall[i][j + 1];
-            }
-        }
     }
 
     //スタート地点を探す
@@ -1448,7 +1325,7 @@ public class MapAdmin {
 //        }
 //    }
 
-    private void setAutoTile(int array_x, int array_y, int i, int j) {
+    /*private void setAutoTile(int array_x, int array_y, int i, int j) {
         int before_array_x = array_x - 1;
         int after_array_x = array_x + 1;
         int before_array_y = array_y - 1;
@@ -1508,7 +1385,7 @@ public class MapAdmin {
                     is_map_data_sidewall[before_array_x][after_array_y], is_map_data_sidewall[array_x][after_array_y], is_map_data_sidewall[after_array_x][after_array_y],
                     auto_tile_side_wall, i, j, map_tile_set_animation[2]);
         }
-    }
+    }*/
 
 //    private void setAutoTile_light(int array_x, int array_y, int i, int j) {
 //        int before_array_x = array_x - 1;
@@ -1771,6 +1648,28 @@ public class MapAdmin {
 
     //過去関数
 /*
+private void createDispMapData() {
+        for (int i = 0; i < map_size.x; i++) {
+            for (int j = 0; j < map_size.y; j++) {
+                if (map_data[i][j].isWall()) {
+                    is_map_data_wall[2 * i][2 * j] = true;
+                    is_map_data_wall[2 * i + 1][2 * j] = true;
+                    is_map_data_wall[2 * i][2 * j + 1] = true;
+                    is_map_data_wall[2 * i + 1][2 * j + 1] = true;
+                } else {
+                    is_map_data_wall[2 * i][2 * j] = false;
+                    is_map_data_wall[2 * i + 1][2 * j] = false;
+                    is_map_data_wall[2 * i][2 * j + 1] = false;
+                    is_map_data_wall[2 * i + 1][2 * j + 1] = false;
+                }
+            }
+        }
+        for (int i = 0; i < map_size.x * 2; i++) {
+            for (int j = 0; j < map_size.y * 2 - 1; j++) {
+                is_map_data_sidewall[i][j] = is_map_data_wall[i][j] && !is_map_data_wall[i][j + 1];
+            }
+        }
+    }
     private void createAutoTileImg_old() {
         //画像読込
         BitmapData auto_tile_block_wall = graphic.searchBitmap("cave_wall_w_01");//壁のauto_tile元データ
