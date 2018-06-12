@@ -371,7 +371,7 @@ public class DungeonGameSystem {
             case MAOH_INIT:
                 battle_unit_admin.reset(BattleUnitAdmin.MODE.MAOH);
                 int size = battleUnitDataAdmin.getMaohUnitNames().size();
-                battle_unit_admin.spawnEnemy(
+                battle_unit_admin.spawnMaoh(
                         new String[] {
                                 battleUnitDataAdmin.getMaohUnitNames().get(playerStatus.getMaohWinCount()%size)
                         }
@@ -537,6 +537,12 @@ public class DungeonGameSystem {
             default:
                 break;
         }
+    }
+
+    public void release() {
+        map_admin.release();
+        dungeonMonsterDataAdmin.release();
+        battle_unit_admin.release();
     }
 
 

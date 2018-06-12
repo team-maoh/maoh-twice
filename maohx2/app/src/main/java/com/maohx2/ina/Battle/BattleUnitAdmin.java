@@ -261,7 +261,7 @@ public class BattleUnitAdmin {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (!battle_units[i].isExist()) {
                 BattleBaseUnitData tempBattleBaseUnitData = battleUnitDataAdmin.getBattleUnitDataNum(enemyName);
-                battle_units[i].setBattleUnitDataEnemy(tempBattleBaseUnitData, repeatCount);
+                battle_units[i].setBattleUnitDataEnemy(tempBattleBaseUnitData, repeatCount, mode == MODE.MAOH);
                 if (mode == MODE.MAOH) {
                     //魔王の弱体化
 
@@ -358,7 +358,7 @@ public class BattleUnitAdmin {
         int maxMinParam[][] = new int[4][2];
 
         for (int i = 1; i < battleBaseUnitData.size(); i++) {
-            int tempParam[] = battleBaseUnitData.get(i).getStatus(repeat_count);
+            int tempParam[] = battleBaseUnitData.get(i).getStatus(repeat_count, 5.042);
             for (int j = 0; j < maxMinParam.length; j++) {
                 if (tempParam[j] * battleBaseUnitData.get(i).getPower() > maxMinParam[j][0]) {
                     maxMinParam[j][0] = tempParam[j] * battleBaseUnitData.get(i).getPower();
@@ -393,11 +393,11 @@ public class BattleUnitAdmin {
                         rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[3][1]) / (float) (maxMinParam[3][0] - maxMinParam[3][1]);
                         break;
                 }
-                int hp = bBUD.getStatus(repeat_count)[1];
-                int attack = bBUD.getStatus(repeat_count)[2];
-                int defence = bBUD.getStatus(repeat_count)[3];
+                int hp = bBUD.getStatus(repeat_count, 5.042)[1];
+                int attack = bBUD.getStatus(repeat_count, 5.042)[2];
+                int defence = bBUD.getStatus(repeat_count, 5.042)[3];
                 BattleBaseUnitData tempBBUD = BattleRockCreater.getBattleBaseUnitData(hp * bBUD.getPower(), attack, defence, rareRate);//ダメージ計算上で攻撃力が必要
-                battle_units[i].setBattleUnitDataRock(tempBBUD);
+                battle_units[i].setBattleUnitDataRock(tempBBUD, repeat_count);
                 return i;
             }
         }
@@ -919,7 +919,7 @@ public class BattleUnitAdmin {
     private void getDropGeoBefore(BattleUnit tempBattleUnit) {
         //岩からのジオドロップ
         BattleBaseUnitData bBUDforRock = ((BattleEnemy) tempBattleUnit).getBattleBaseUnitDataForRock();
-        int[] status = bBUDforRock.getStatus(repeat_count);
+        int[] status = bBUDforRock.getStatus(repeat_count, 5.042);
         //このジオは何ジオか決定する
         if (Math.random() < 0.5) {
             //NormalGeo
@@ -1245,6 +1245,7 @@ public class BattleUnitAdmin {
             battleEnd();
         }
     }
+
     // *** オープニング戦闘の会話文関係 ここまで ***
 }
 

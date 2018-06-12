@@ -131,4 +131,14 @@ public class BoxInventryPlate extends BoxPlate {
         image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left+50, (up+down)/2, 1.7f, 1.7f, 0, 255, false);
     }
 
+    @Override
+    public void release() {
+        /*
+        super.release();
+        text_paint = null;
+        button_paint = null;
+        image_context = null;
+        */
+    }
+
 }

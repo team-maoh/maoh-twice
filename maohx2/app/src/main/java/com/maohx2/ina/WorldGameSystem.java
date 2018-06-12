@@ -72,7 +72,6 @@ import android.graphics.Paint;
 public class WorldGameSystem {
 
     SurfaceHolder holder;
-    Paint paint = new Paint();
     Canvas canvas;
     TextBoxAdmin text_box_admin;
 
@@ -535,6 +534,10 @@ public class WorldGameSystem {
                         }
                 }
         );
+    }
+
+    public void release() {
+        playerStatusViewer.release();
     }
 
 /*

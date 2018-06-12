@@ -70,6 +70,7 @@ public class DungeonActivity extends BaseActivity {
         dungeon_surface_view.my_database_admin.close();
         dungeon_surface_view.game_system.drawStop();
         dungeon_surface_view.graphic.releaseBitmap();
+        dungeon_surface_view.game_system.release();
         dungeon_surface_view = null;
     }
 

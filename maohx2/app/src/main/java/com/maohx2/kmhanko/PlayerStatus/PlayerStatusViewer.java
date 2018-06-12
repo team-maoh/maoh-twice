@@ -192,4 +192,15 @@ public class PlayerStatusViewer {
     public boolean isExist() {
         return isExist;
     }
+
+    public void release() {
+        for (int i = 0; i < statusIcon.length; i++) {
+            statusIcon[i] = null;
+        }
+        statusIcon = null;
+        paint = null;
+        boxPaint = null;
+        statusPlate.release();
+        statusPlate = null;
+    }
 }

@@ -118,7 +118,7 @@ abstract public class BattleUnit {
     }
 
     //enemy 用
-    public void setBattleUnitDataEnemy(BattleBaseUnitData _battleBaseUnitData, int repeatCount) {
+    public void setBattleUnitDataEnemy(BattleBaseUnitData _battleBaseUnitData, int repeatCount, boolean maohFlag) {
         //初期化処理 (データに寄らない)
         //init();
 
@@ -133,8 +133,13 @@ abstract public class BattleUnit {
 
         battleDungeonUnitData = new BattleDungeonUnitData();
         battleDungeonUnitData.setName(_battleBaseUnitData.getName());
-        battleDungeonUnitData.setStatus(_battleBaseUnitData.getStatus(repeatCount));
-        battleDungeonUnitData.setBonusStatus(_battleBaseUnitData.getBonusStatus(repeatCount));
+        if (maohFlag) {
+            battleDungeonUnitData.setStatus(_battleBaseUnitData.getStatus(repeatCount, 2.0));
+            battleDungeonUnitData.setBonusStatus(_battleBaseUnitData.getBonusStatus(repeatCount, 2.0));
+        } else {
+            battleDungeonUnitData.setStatus(_battleBaseUnitData.getStatus(repeatCount, 5.042));
+            battleDungeonUnitData.setBonusStatus(_battleBaseUnitData.getBonusStatus(repeatCount, 5.042));
+        }
         battleDungeonUnitData.setBitmapData(_battleBaseUnitData.getBitmapData());
 
         battleDungeonUnitData.setActionRate(_battleBaseUnitData.getActionRate());
@@ -161,7 +166,7 @@ abstract public class BattleUnit {
     }
 
     //rock用
-    public void setBattleUnitDataRock(BattleBaseUnitData _battleBaseUnitData) {
+    public void setBattleUnitDataRock(BattleBaseUnitData _battleBaseUnitData, int repeatCount) {
         exist = true;
         dropFlag = true;
         unitKind = UnitKind.ROCK;
@@ -173,8 +178,8 @@ abstract public class BattleUnit {
 
         battleDungeonUnitData = new BattleDungeonUnitData();
         battleDungeonUnitData.setName(_battleBaseUnitData.getName());
-        battleDungeonUnitData.setStatus(_battleBaseUnitData.getStatus(0));
-        battleDungeonUnitData.setBonusStatus(_battleBaseUnitData.getBonusStatus(0));
+        battleDungeonUnitData.setStatus(_battleBaseUnitData.getStatus(repeatCount, 5.042));
+        battleDungeonUnitData.setBonusStatus(_battleBaseUnitData.getBonusStatus(repeatCount, 5.042));
         battleDungeonUnitData.setBitmapData(_battleBaseUnitData.getBitmapData());
 
         setRadius(_battleBaseUnitData.getRadius());

@@ -36,4 +36,8 @@ public class DungeonMonsterDataAdmin {
     public List<DungeonMonsterData> getDungeon_monster_data(){
         return dungeon_monster_data;
     }
+
+    public void release() {
+        dungeon_monster_data.clear();
+    }
 }

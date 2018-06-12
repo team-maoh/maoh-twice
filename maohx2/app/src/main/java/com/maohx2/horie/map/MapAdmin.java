@@ -1646,6 +1646,76 @@ public class MapAdmin {
         }
     }
 
+    public void release() {
+        map_data_int = null;
+        t_map_data_int = null;
+
+        map_data = null;
+        opening_map_data = null;
+
+        map_size = null;
+
+        offset  = null;
+        start_point  = null;
+
+        paint  = null;
+        room_point  = null;
+        mine_point = null;
+        opening_map_size = null;
+
+        camera = null;
+        section_admin.release();
+        section_admin = null;
+        canvas = null;
+        holder = null;
+        map_player = null;
+        map_object_admin = null;
+        dungeon_data = null;
+        dungeon_monster_data = null;
+
+        //auto_tile用
+        auto_tile_wall.release();
+        auto_tile_wall = null;
+        auto_tile_side_wall.release();
+        auto_tile_side_wall = null;
+        for (int i = 0; i<at_wall.length; i++) {
+            if (at_wall[i] != null) {
+                at_wall[i].release();
+            }
+        }
+        at_wall = null;
+        for (int i = 0; i<at_side_wall.length; i++) {
+            if (at_side_wall[i] != null) {
+                at_side_wall[i].release();
+            }
+        }
+        at_side_wall = null;
+        at_floor.release();
+        at_floor = null;
+        for (int i = 0; i<auto_tile_cave_hole.length; i++) {
+            if (auto_tile_cave_hole[i] != null) {
+                auto_tile_cave_hole[i].release();
+            }
+        }
+        auto_tile_cave_hole = null;
+        auto_tile_admin.release();
+        auto_tile_admin = null;
+        is_map_data_wall = null;
+        is_map_data_sidewall = null;
+
+        map_tile_set = null;
+        map_tile_set_animation = null;
+        map_tile = null;
+        map_tile_animation = null;
+        side_wall_4 = null;
+        op_map_tile = null;
+
+        floor_tile = null;
+        stair_tile = null;
+        gate_tile = null;
+        stair_tile_div = null;
+    }
+
     //過去関数
 /*
 private void createDispMapData() {
