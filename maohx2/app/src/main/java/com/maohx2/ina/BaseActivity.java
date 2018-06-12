@@ -42,6 +42,8 @@ public abstract class BaseActivity extends Activity {
         backSurfaceView = new BackSurfaceView(this);
         layout.addView(backSurfaceView);
         */
+
+
     }
 
     @Override
