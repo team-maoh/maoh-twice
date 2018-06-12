@@ -542,7 +542,7 @@ public class DungeonGameSystem {
     public void release() {
         map_admin.release();
         dungeonMonsterDataAdmin.release();
-        battle_unit_admin.release();
+//        battle_unit_admin.release();
     }
 
 
