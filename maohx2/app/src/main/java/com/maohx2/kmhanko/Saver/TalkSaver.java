@@ -50,4 +50,13 @@ public class TalkSaver extends SaveManager {
         );
     }
 
+    @Override
+    public void onUpgrade(int oldVersion, int newVersion) {
+
+    };
+    @Override
+    public void onDowngrade (int oldVersion, int newVersion) {
+
+    };
+
 }

@@ -22,7 +22,7 @@ public class TalkSaveDataAdmin {
 
     public TalkSaveDataAdmin(MyDatabaseAdmin _databaseAdmin) {
         databaseAdmin = _databaseAdmin;
-        talkSaver = new TalkSaver(databaseAdmin, "TalkSave", "TalkSave.db", 1,  Constants.DEBUG_SAVE_MODE);
+        talkSaver = new TalkSaver(databaseAdmin, "TalkSave", "TalkSave.db", Constants.SaveDataVersion.TALK,  Constants.DEBUG_SAVE_MODE);
         talkSaver.setTalkSaveDataAdmin(this);
     }
 

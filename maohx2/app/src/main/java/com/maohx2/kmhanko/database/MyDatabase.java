@@ -585,6 +585,8 @@ public class MyDatabase {
     public int getDbVersion() { return db_version; }
     public boolean isDatabaseNotNull() { return db != null; }
 
+    public int getNewVer() { return mDbHelper.getNewVer(); }
+    public int getOldVer() { return mDbHelper.getOldVer(); }
 
     public void close() {
         db.close();
