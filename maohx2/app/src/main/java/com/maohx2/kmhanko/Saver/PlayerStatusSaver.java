@@ -41,6 +41,7 @@ public class PlayerStatusSaver extends SaveManager {
         playerStatus.setGeoInventryMaxNum(database.getOneInt("BaseStatus", "geo_max", "rowid = 1"));
         playerStatus.setExpendInvetryMaxNum(database.getOneInt("BaseStatus", "expend_max", "rowid = 1"));
         playerStatus.setEquipmentInventryMaxNum(database.getOneInt("BaseStatus", "equipment_max", "rowid = 1"));
+        playerStatus.setEndingFlag(database.getOneInt("BaseStatus", "ending_flag", "rowid = 1"));
         int test = database.getOneInt("BaseStatus", "tutorial_in_dungeon", "rowid = 1");
         int test2 = 2;
     }
@@ -50,7 +51,7 @@ public class PlayerStatusSaver extends SaveManager {
         deleteAll();
         database.insertLineByArray(
                 "BaseStatus",
-                new String[] { "level", "hp", "attack", "defence", "luck", "money", "maoh_win_count", "clear_count", "now_clear_count", "tutorial_in_dungeon", "geo_max", "expend_max", "equipment_max"},
+                new String[] { "level", "hp", "attack", "defence", "luck", "money", "maoh_win_count", "clear_count", "now_clear_count", "tutorial_in_dungeon", "geo_max", "expend_max", "equipment_max", "ending_flag"},
                 playerStatus.getSaveStatuses()
         );
     }

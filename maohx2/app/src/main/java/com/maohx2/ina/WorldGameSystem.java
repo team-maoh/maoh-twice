@@ -15,6 +15,7 @@ import com.maohx2.ina.Battle.BattleDungeonUnitData;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Battle.BattleUnitDataAdmin;
 import com.maohx2.ina.Draw.BitmapData;
+import com.maohx2.ina.Draw.Credits;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Draw.ImageContext;
 import com.maohx2.ina.ItemData.EquipmentInventrySaver;
@@ -138,6 +139,8 @@ public class WorldGameSystem {
     boolean is_equip_tutorial = true;
     BattleUnitDataAdmin battleUnitDataAdmin;
 
+    Credits credits;
+
     public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
@@ -221,6 +224,7 @@ public class WorldGameSystem {
         */
 
 
+        credits = new Credits(graphic);
 
 
 
@@ -270,8 +274,11 @@ public class WorldGameSystem {
         initBackPlate();
 
         //OP判定。まだOPを流していないならOP会話イベントを発動する。
-        talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される
+        //talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される
 
+
+
+        /*
         battleUnitDataAdmin = new BattleUnitDataAdmin(databaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
         battleUnitDataAdmin.loadBattleUnitData(Constants.DungeonKind.DUNGEON_KIND.FOREST);//敵読み込み
 
@@ -309,6 +316,7 @@ public class WorldGameSystem {
                         22222
                 )
         );//kokomade
+        */
     }
 
 
@@ -416,6 +424,13 @@ public class WorldGameSystem {
                 if(world_user_interface.getTouchState() == Constants.Touch.TouchState.UP){
                     credit_num = 3 - credit_num;
                 }
+                break;
+            case ENDING:
+                credits.update();
+                if(credits.endCheck() == true){
+                    worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT_INIT_START);
+                }
+                break;
             default:
                 break;
         }
@@ -427,43 +442,54 @@ public class WorldGameSystem {
 
 
     public void draw() {
+
         if (drawStopFlag) {
             return;
         }
 
-        graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
         //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
 
         switch (worldModeAdmin.getMode()) {
             case DUNGEON_SELECT_INIT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 break;
             case DUNGEON_SELECT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 dungeonSelectManager.draw();
                 break;
             case GEO_MAP_SELECT_INIT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 break;
             case GEO_MAP_SELECT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 dungeonSelectManager.draw();
                 break;
             case GEO_MAP_INIT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 break;
             case GEO_MAP:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 effectAdmin.draw();
                 geoSlotAdminManager.draw();
                 playerStatusViewer.draw();
                 break;
             case SHOP_INIT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 break;
             case SHOP:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 itemShopAdmin.draw();
                 playerStatusViewer.draw();
                 break;
             case EQUIP_INIT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 break;
             case TU_EQUIP:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 graphic.bookingDrawBitmapData(tu_equip_img, 0, 0, 1.25f, 1.25f, 0, 255, true);
                 break;
             case EQUIP:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 equipmentInventry.draw();
                 expendItemInventry.draw();
                 palette_admin.draw();
@@ -471,17 +497,22 @@ public class WorldGameSystem {
                 backPlateGroup.draw();
                 break;
             case PRESENT_INIT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 break;
             case PRESENT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 geoPresentManager.draw();
                 break;
             case SELL_INIT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 break;
             case SELL:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 itemSell.draw();
                 playerStatusViewer.draw();
                 break;
             case GEO_MAP_SEE_ONLY:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 effectAdmin.draw();
                 geoSlotAdminManager.drawInStatus();
                 playerStatusViewer.draw();
@@ -489,6 +520,10 @@ public class WorldGameSystem {
             case CREDIT:
                 graphic.bookingDrawBitmapData(credit[credit_num - 1], 0, 0, 1.25f, 1.25f, 0, 255, true);
                 backPlateGroup.draw();
+                break;
+            case ENDING:
+                credits.draw();
+                break;
             default:
                 break;
         }
