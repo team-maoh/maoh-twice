@@ -18,12 +18,16 @@ import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
 import com.maohx2.ina.Arrange.PaletteElement;
+import com.maohx2.ina.Battle.BattleDungeonUnitData;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Battle.BattleUnitDataAdmin;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Draw.ImageContext;
+import com.maohx2.ina.ItemData.EquipmentItemBaseData;
+import com.maohx2.ina.ItemData.EquipmentItemBaseDataAdmin;
 import com.maohx2.ina.ItemData.EquipmentItemDataAdmin;
+import com.maohx2.ina.ItemData.EquipmentItemDataCreater;
 import com.maohx2.ina.Text.ListBoxAdmin;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.DungeonUserInterface;
@@ -43,6 +47,8 @@ import com.maohx2.kmhanko.itemdata.MiningItemDataAdmin;
 import com.maohx2.kmhanko.music.MusicAdmin;
 import com.maohx2.kmhanko.plate.BackPlate;
 import com.maohx2.fuusya.MapInventryAdmin;
+
+import java.util.List;
 
 
 /**
@@ -279,6 +285,42 @@ public class DungeonGameSystem {
             dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAOH_INIT);
         }
 
+
+        //ブキ生成　デバッグよう
+//        BattleDungeonUnitData battleDungeonUnitData = new BattleDungeonUnitData();
+//        battleDungeonUnitData.setName(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getName());
+//        battleDungeonUnitData.setStatus(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getStatus(0));
+//        battleDungeonUnitData.setBonusStatus(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getBonusStatus(0));
+//        battleDungeonUnitData.setBitmapData(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getBitmapData());
+//        EquipmentItemBaseDataAdmin equipmentItemBaseDataAdmin = new EquipmentItemBaseDataAdmin(graphic, my_database_admin);
+//        List<EquipmentItemBaseData> tempEquipmentItemBaseDatas = equipmentItemBaseDataAdmin.getItemDatas();
+//        EquipmentItemBaseData[] equipmentItemBaseDatas = new EquipmentItemBaseData[Constants.Item.EQUIPMENT_KIND.NUM.ordinal()];
+//        for (int i = 0; i < Constants.Item.EQUIPMENT_KIND.NUM.ordinal(); i++) {
+//            equipmentItemBaseDatas[i] = tempEquipmentItemBaseDatas.get(i);
+//        }
+//        EquipmentItemDataCreater equipmentItemDataCreater = new EquipmentItemDataCreater(equipmentItemBaseDatas);
+//        equipmentInventry.addItemData(
+//                equipmentItemDataCreater.getEquipmentItemData(
+//                        Constants.Item.EQUIPMENT_KIND.SWORD,
+//                        battleDungeonUnitData,
+//                        22222
+//                )
+//        );
+//        equipmentInventry.addItemData(
+//                equipmentItemDataCreater.getEquipmentItemData(
+//                        Constants.Item.EQUIPMENT_KIND.BOW,
+//                        battleDungeonUnitData,
+//                        22222
+//                )
+//        );
+//        equipmentInventry.addItemData(
+//                equipmentItemDataCreater.getEquipmentItemData(
+//                        Constants.Item.EQUIPMENT_KIND.AX,
+//                        battleDungeonUnitData,
+//                        22222
+//                )
+//        );//kokomade
+
         //デバッグ用
         //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
 
@@ -392,6 +434,10 @@ public class DungeonGameSystem {
     }
 
     public void draw() {
+        if (drawStopFlag) {
+            return;
+        }
+
 //        for(int i = 0;i < 7;i++) {
 //            System.out.println("ホリエ：is_tf("+i+") = " + map_status.getTutorialFinishStatus(i));
 //        }
@@ -443,7 +489,11 @@ public class DungeonGameSystem {
             resetBossImage = false;
             map_object_admin.setBossBitmap("ボス");
         }
+    }
 
+    boolean drawStopFlag = false;
+    public void drawStop() {
+        drawStopFlag = true;
     }
 
     public void setIsDisplayingMenu(boolean _is_displaying_menu){

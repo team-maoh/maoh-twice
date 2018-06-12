@@ -51,8 +51,15 @@ public class WorldActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        worldSurfaceView = null;
         //worldSurfaceView.graphic.releaseBitmap();
+    }
+
+    @Override
+    public void finish() {
+        worldSurfaceView.my_database_admin.close();
+        worldSurfaceView.world_game_system.drawStop();
+        worldSurfaceView.graphic.releaseBitmap();
+        worldSurfaceView = null;
     }
 
     @Override

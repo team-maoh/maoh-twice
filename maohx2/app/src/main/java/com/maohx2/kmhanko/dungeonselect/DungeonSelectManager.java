@@ -622,6 +622,11 @@ public class DungeonSelectManager {
                 soundAdmin.play("enter00");
                 initUIsFlag = true;
             }
+            if (event.get(focusDungeonButtonID).equals("credit")) {
+                soundAdmin.play("enter00");
+                initUIsFlag = true;
+                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.CREDIT);//TODO : 0612先輩、遷移先のMODEを指定
+            }
             if (event.get(focusDungeonButtonID).equals("loop")) {
                 soundAdmin.play("enter00");
                 //ループ回数セッティング

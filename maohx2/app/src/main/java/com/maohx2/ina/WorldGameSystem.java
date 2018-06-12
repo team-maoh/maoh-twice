@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.horie.EquipTutorial.EquipTutorialSaveData;
+import com.maohx2.horie.EquipTutorial.EquipTutorialSaver;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
@@ -103,6 +105,10 @@ public class WorldGameSystem {
     GeoPresentSaver geoPresentSaver;
     ActivityChange activityChange;
 
+    //EquipTutorial
+    EquipTutorialSaveData equip_tutorial_save_data;
+    EquipTutorialSaver equip_tutorial_saver;
+
     //TODO いな依頼:引数にUI,Graphicが入って居るためGlobalDataに設置できない
     InventryS geoInventry;
     InventryS expendItemInventry;
@@ -114,12 +120,15 @@ public class WorldGameSystem {
 
     BitmapData backGround;
     BitmapData tu_equip_img;
+    BitmapData[] credit = new BitmapData[2];
 
     String talkContent[][] = new String[100][];
     ImageContext talkChara[] = new ImageContext[100];
 
     MapStatus map_status;
     MapStatusSaver map_status_saver;
+
+    int credit_num = 1;
 
     PlayerStatusViewer playerStatusViewer;
 
@@ -141,10 +150,19 @@ public class WorldGameSystem {
         activityChange = _activityChange;
         tu_equip_img = graphic.searchBitmap("tu_equip");
 
-
+        //mapセーブ関係
         map_status = new MapStatus(Constants.STAGE_NUM);
         map_status_saver = new MapStatusSaver(databaseAdmin, "MapSaveData", "MapSaveData.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE, map_status, 7);
         map_status_saver.load();
+
+        //EquipTutorialセーブ関係
+        equip_tutorial_save_data = new EquipTutorialSaveData();
+        equip_tutorial_saver = new EquipTutorialSaver(databaseAdmin, "EquipTutorialSave", "EquipTutorialSave.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE,equip_tutorial_save_data);
+        equip_tutorial_saver.load();
+
+        //クレジット
+        credit[0] = graphic.searchBitmap("クレジット1");
+        credit[1] = graphic.searchBitmap("クレジット2");
 
         worldActivity = _worldActivity;
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
@@ -209,6 +227,8 @@ public class WorldGameSystem {
 
         credits = new Credits(graphic);
 
+
+
         geoPresentManager = new GeoPresentManager(
                 graphic,
                 world_user_interface,
@@ -228,7 +248,7 @@ public class WorldGameSystem {
                 databaseAdmin,
                 "GeoPresentSave",
                 "GeoPresentSave.db",
-                1, Constants.DEBUG_SAVE_MODE
+                Constants.SaveDataVersion.GEO_PRESENT, Constants.DEBUG_SAVE_MODE
         );
 
         geoPresentManager.setGeoPresentSaver(geoPresentSaver);
@@ -352,12 +372,12 @@ public class WorldGameSystem {
             case EQUIP_INIT:
                 backGround = graphic.searchBitmap("equipBackground");//仮
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
-                equipmentInventry.setPosition(800+20,100,1150+20,708, 7);
-                expendItemInventry.setPosition(400+20,100,750+20,708, 7);
+                equipmentInventry.setPosition(825,100,1225,708, 7);
+                expendItemInventry.setPosition(375,100,775,708, 7);
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
-                if(is_equip_tutorial){
+                if(equip_tutorial_save_data.getTutorialFinishStatus() == 0){
                     worldModeAdmin.setMode(WORLD_MODE.TU_EQUIP);
-                    is_equip_tutorial = false;
+                    equip_tutorial_save_data.setTutorialFinishStatus(1);
                 }
             case EQUIP:
                 if (!talkAdmin.isTalking()) {
@@ -372,7 +392,7 @@ public class WorldGameSystem {
             case TU_EQUIP:
                 if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
                     worldModeAdmin.setMode(WORLD_MODE.EQUIP_INIT);
-                    //TODO セーブする
+                    equip_tutorial_saver.save();
                 }
                 break;
             case PRESENT_INIT:
@@ -401,6 +421,12 @@ public class WorldGameSystem {
                 geoSlotAdminManager.updateInStatus();
                 break;
             case CREDIT:
+                backPlateGroup.update();
+                if(world_user_interface.getTouchState() == Constants.Touch.TouchState.UP){
+                    credit_num = 3 - credit_num;
+                }
+                break;
+            case ENDING:
                 credits.update();
                 if(credits.endCheck() == true){
                     worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT_INIT_START);
@@ -417,6 +443,11 @@ public class WorldGameSystem {
 
 
     public void draw() {
+
+        if (drawStopFlag) {
+            return;
+        }
+
         //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
 
         switch (worldModeAdmin.getMode()) {
@@ -488,6 +519,10 @@ public class WorldGameSystem {
                 playerStatusViewer.draw();
                 break;
             case CREDIT:
+                graphic.bookingDrawBitmapData(credit[credit_num - 1], 0, 0, 1.25f, 1.25f, 0, 255, true);
+                backPlateGroup.draw();
+                break;
+            case ENDING:
                 credits.draw();
                 break;
             default:
@@ -503,6 +538,11 @@ public class WorldGameSystem {
         }
 
         graphic.draw();
+    }
+
+    boolean drawStopFlag = false;
+    public void drawStop() {
+        drawStopFlag = true;
     }
 
     //TODO 仮。もどるボタン

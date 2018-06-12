@@ -23,7 +23,7 @@ public class BoxImagePlate extends BoxPlate {
 
         default_image_context = _default_image_context;
         feedback_image_context = _feedback_image_context;
-
+        draw_image_context = default_image_context;
     }
 
 

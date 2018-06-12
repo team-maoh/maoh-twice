@@ -205,7 +205,7 @@ public final class Constants {
     public static class POPUP_WINDOW {
         public static final int MESS_LEFT = 150;
         public static final int MESS_RIGHT = 1450;
-        public static final int MESS_UP = 300;
+        public static final int MESS_UP = 250;
         public static final int MESS_BOTTOM = 500;
 
         public static final int OK_LEFT = 500 + 10;

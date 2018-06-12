@@ -604,7 +604,8 @@ public class Graphic {
     //by kmhanko
     public void releaseBitmap() {
         //global_bitmap_data_admin.releaseBitmap();
-        //local_bitmap_data_admin.releaseBitmap();
+        local_bitmap_data_admin.releaseBitmap();
+        //booking_task_datas.
     }
   
 }

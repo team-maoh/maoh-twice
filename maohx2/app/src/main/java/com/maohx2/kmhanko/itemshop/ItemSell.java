@@ -237,11 +237,12 @@ public class ItemSell {
         checkInventry();
 
 
-
-        geoInventry.updata();
-        expendItemInventry.updata();
-        equipmentInventry.updata();
-        sellItemInventry.updata();
+        if (!sellSelectButtonGroup.getUpdateFlag()) {
+            geoInventry.updata();
+            expendItemInventry.updata();
+            equipmentInventry.updata();
+            sellItemInventry.updata();
+        }
         switchPlateGroup.update();
 
         //sellSelectButtonCheck();

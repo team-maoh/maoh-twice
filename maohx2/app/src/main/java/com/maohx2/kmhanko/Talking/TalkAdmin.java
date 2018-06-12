@@ -39,8 +39,15 @@ public class TalkAdmin {
 
     static final int TALK_CONTENT_MAX = 100;
     String talkContent[][] = new String[TALK_CONTENT_MAX][];
-    ImageContext talkChara[] = new ImageContext[TALK_CONTENT_MAX];
+    //ImageContext talkChara[] = new ImageContext[TALK_CONTENT_MAX];
+
+    String talkCharaName[] = new String[TALK_CONTENT_MAX];
+    boolean leftOrRight[] = new boolean[TALK_CONTENT_MAX];
+
     int talkWaitTime[] = new int[TALK_CONTENT_MAX];
+
+    String talkCharaLeft;
+    String talkCharaRight;
 
     static final float SCALE_X = 2.7f;
     static final float SCALE_Y = 2.7f;
@@ -102,8 +109,9 @@ public class TalkAdmin {
 
         clear();
         talkContent = loadTalkContent(tableName);
-        talkChara = loadTalkChara(tableName);
+        talkCharaName = loadTalkChara(tableName);
         talkWaitTime = loadTalkWaitTime(tableName);
+        leftOrRight = loadLeftOrRight(tableName);
 
         isTalking = true;
         textBoxAdmin.setTextBoxExists(textBoxID, true);
@@ -125,6 +133,7 @@ public class TalkAdmin {
         if (isWait) {
             if (waitCount >= talkWaitTime[count]) {
                 updateTextFinal();
+                updateChara();
                 isWait = false;
                 waitCount = 0;
             } else {
@@ -146,9 +155,34 @@ public class TalkAdmin {
         if (count >= TALK_CONTENT_MAX ) {
             throw new Error("TalkAdmin : countがTALK_CONTENT_MAX以上となった。配列変数の大きさが足りません。(TALK_CONTENT_MAXを増やしなさい)");
         }
-        if (talkChara[count] != null) {
-            graphic.bookingDrawBitmapData(talkChara[count]);
+
+        int alphaLeft, alphaRight;
+        if (leftOrRight[count]) {
+            alphaLeft = 254;
+            alphaRight = 192;
+        } else {
+            alphaLeft = 192;
+            alphaRight = 254;
         }
+        if (talkCharaLeft != null) {
+            graphic.bookingDrawBitmapData(
+                    graphic.searchBitmap(talkCharaLeft),
+                    300, 450,
+                    SCALE_X, SCALE_Y,
+                    0, alphaLeft,
+                    false
+            );
+        }
+        if (talkCharaRight != null) {
+            graphic.bookingDrawBitmapData(
+                    graphic.searchBitmap(talkCharaRight),
+                    1300, 450,
+                    SCALE_X, SCALE_Y,
+                    0, alphaRight,
+                    false
+            );
+        }
+
     }
 
     public void clear() {
@@ -200,12 +234,21 @@ public class TalkAdmin {
             textBoxAdmin.setTextBoxExists(textBoxID, false);
         } else {
             updateTextFinal();
+            updateChara();
         }
     }
 
     private void updateTextFinal() {
         textBoxAdmin.setTextBoxExists(textBoxID, true);
         isUpdateThisFrame = true;
+    }
+
+    private void updateChara() {
+        if (leftOrRight[count]) {
+            talkCharaLeft = talkCharaName[count];
+        } else {
+            talkCharaRight = talkCharaName[count];
+        }
     }
 
 
@@ -261,17 +304,45 @@ public class TalkAdmin {
         return tempTalkWaitTime;
     }
 
-    private ImageContext[] loadTalkChara(String tableName) {
+    private boolean[] loadLeftOrRight(String tableName) {
+        talkSize = database.getSize(tableName);
+        if (talkSize >= TALK_CONTENT_MAX) {
+            throw new Error("TalkAdmin : 会話文の数がTALK_CONTENT_MAX以上となった。配列変数の大きさが足りません。(TALK_CONTENT_MAXを増やしなさい) : " + talkSize);
+        }
+        List<Integer> left_or_right = database.getInt(tableName, "left_or_right");
+        boolean tempLeftOrRight[] = new boolean[TALK_CONTENT_MAX];
+        for (int i = 0; i < talkSize; i++) {
+            tempLeftOrRight[i] = (left_or_right.get(i) == 0);
+        }
+        return tempLeftOrRight;
+    }
+
+    private String[] loadTalkChara(String tableName) {
+        talkSize = database.getSize(tableName);
+        if (talkSize >= TALK_CONTENT_MAX) {
+            throw new Error("TalkAdmin : 会話文の数がTALK_CONTENT_MAX以上となった。配列変数の大きさが足りません。(TALK_CONTENT_MAXを増やしなさい) : " + talkSize);
+        }
+        List<String> imageName = database.getString(tableName, "person_image_name");
+        String tempTalkCharaName[] = new String[TALK_CONTENT_MAX];
+        for (int i = 0; i < talkSize; i++) {
+            tempTalkCharaName[i] = imageName.get(i);
+        }
+        return tempTalkCharaName;
+    }
+
+    /*
+    private String[] loadTalkChara(String tableName) {
         //DBから画像名を読み出す。左右を見て、ImageContextを作成、セットする
         talkSize = database.getSize(tableName);
         if (talkSize >= TALK_CONTENT_MAX) {
             throw new Error("TalkAdmin : 会話文の数がTALK_CONTENT_MAX以上となった。配列変数の大きさが足りません。(TALK_CONTENT_MAXを増やしなさい) : " + talkSize);
         }
 
-        List<String> imageName = database.getString(tableName, "person_image_name");
-        List<Integer> leftOrRight = database.getInt(tableName, "left_or_right");// 0 = left, 1 = right
-        ImageContext tempTalkChara[] = new ImageContext[TALK_CONTENT_MAX];
+        imageName = database.getString(tableName, "person_image_name");
+        leftOrRight = database.getInt(tableName, "left_or_right");// 0 = left, 1 = right
+        //ImageContext tempTalkChara[] = new ImageContext[TALK_CONTENT_MAX];
 
+        /*
         //立ち絵のImageContext作成
         for (int i = 0; i < talkSize; i++) {
             if (leftOrRight.get(i) == 0) {
@@ -291,7 +362,10 @@ public class TalkAdmin {
             }
         }
         return tempTalkChara;
+        *?
     }
+    */
+
 
     // *** Getter, Setter ***
     public boolean isTalking() {
