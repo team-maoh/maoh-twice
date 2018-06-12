@@ -231,11 +231,6 @@ public class MapObjectBitmap {
 
     }
 
-    public void release() {
-        bitmap_data = null;
-        raw_bitmap_data = null;
-    }
-
 
 //    private void storeEightBD(BitmapData _raw_bitmap_data) {
 //

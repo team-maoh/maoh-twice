@@ -573,6 +573,7 @@ public class WorldGameSystem {
 
     public void release() {
         playerStatusViewer.release();
+        itemShopAdmin.release();
     }
 
 /*

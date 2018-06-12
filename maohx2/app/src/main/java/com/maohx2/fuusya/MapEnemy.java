@@ -32,8 +32,8 @@ import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
 
 public class MapEnemy extends MapUnit {
 
-//    double DEFAULT_STEP = 3;//プレイヤー未発見時の歩幅
-    double DEFAULT_STEP = 12;//プレイヤー未発見時の歩幅 爆速
+    double DEFAULT_STEP = 6;//プレイヤー未発見時の歩幅
+//    double DEFAULT_STEP = 12;//プレイヤー未発見時の歩幅 爆速
     int chase_count;
     double REACH_FOR_PLAYER = 160;
     int total_dirs;//画像が1方位なのか、4方位なのか、8方位なのか(Playerの視界に入っているかどうかの判定に使う)

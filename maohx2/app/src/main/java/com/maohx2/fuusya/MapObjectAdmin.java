@@ -39,7 +39,7 @@ import static java.lang.Math.subtractExact;
 
 public class MapObjectAdmin {
 
-    int NUM_OF_ENEMY = 3;
+    int NUM_OF_ENEMY = 2;
     //    int NUM_OF_ITEM = 10;// > 2
     int NUM_OF_TRAP = 10;
     int NUM_OF_MINE = 5;

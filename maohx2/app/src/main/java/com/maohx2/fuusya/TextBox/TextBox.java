@@ -148,6 +148,7 @@ public class TextBox {
     }
 
     public void update(boolean touch_state) {
+
         if (touch_state == false) {//タッチしていない
             box_paint.setColor(Color.argb(100, 0, 0, 0));
 
@@ -174,6 +175,7 @@ public class TextBox {
 //
 //                }
                 has_updated_text = true;
+
             }
         } else {//タッチしている
             //by kmhank　一度でも描画されたら
@@ -181,7 +183,6 @@ public class TextBox {
                 box_paint.setColor(Color.argb(100, 100, 0, 0));
                 has_updated_text = false;
             }
-
         }
     }
 
