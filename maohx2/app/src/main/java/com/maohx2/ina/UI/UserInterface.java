@@ -43,6 +43,7 @@ public class UserInterface {
     InventryData inventry_data;
     PaletteElement palette_element;
     boolean ui_palette_draw_falag = true;
+    boolean up_check = true;
 
     public UserInterface(GlobalConstants global_constants, Graphic _graphic){
         DISP_X = global_constants.DISP_X;
@@ -74,25 +75,29 @@ public class UserInterface {
         if (_touch_state == TouchState.DOWN) {
             if (touch_state == TouchState.AWAY) {
                 touch_state = TouchState.DOWN;
+                up_check = false;
             } else if (touch_state == TouchState.DOWN) {
                 touch_state = TouchState.DOWN_MOVE;
+                up_check = false;
             }
 
 
         } else if (_touch_state == TouchState.MOVE) {
             if (touch_state == TouchState.DOWN_MOVE) {
                 touch_state = TouchState.MOVE;
+                up_check = false;
             }
 
 
         } else if (_touch_state == TouchState.UP) {
-            if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
+            if (((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) && up_check == false) {
                 touch_state = TouchState.UP;
-            } else if (touch_state == TouchState.UP) {
+                up_check = true;
+            } else {
                 touch_state = TouchState.AWAY;
+                up_check = true;
             }
         }
-
     }
 
     public void draw(){
