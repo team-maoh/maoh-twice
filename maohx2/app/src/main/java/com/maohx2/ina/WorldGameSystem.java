@@ -11,12 +11,18 @@ import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
 import com.maohx2.ina.Arrange.PaletteElement;
+import com.maohx2.ina.Battle.BattleDungeonUnitData;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
+import com.maohx2.ina.Battle.BattleUnitDataAdmin;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Draw.ImageContext;
 import com.maohx2.ina.ItemData.EquipmentInventrySaver;
+import com.maohx2.ina.ItemData.EquipmentItemBaseData;
+import com.maohx2.ina.ItemData.EquipmentItemBaseDataAdmin;
+import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.ItemData.EquipmentItemDataAdmin;
+import com.maohx2.ina.ItemData.EquipmentItemDataCreater;
 import com.maohx2.ina.Text.ListBoxAdmin;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.BattleUserInterface;
@@ -128,6 +134,7 @@ public class WorldGameSystem {
     TalkAdmin talkAdmin;
 
     boolean is_equip_tutorial = true;
+    BattleUnitDataAdmin battleUnitDataAdmin;
 
     public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
         graphic = _graphic;
@@ -256,6 +263,44 @@ public class WorldGameSystem {
 
         //OP判定。まだOPを流していないならOP会話イベントを発動する。
         talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される
+
+        battleUnitDataAdmin = new BattleUnitDataAdmin(databaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
+        battleUnitDataAdmin.loadBattleUnitData(Constants.DungeonKind.DUNGEON_KIND.FOREST);//敵読み込み
+
+        //ブキ生成 デバッグよう
+        BattleDungeonUnitData battleDungeonUnitData = new BattleDungeonUnitData();
+        battleDungeonUnitData.setName(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getName());
+        battleDungeonUnitData.setStatus(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getStatus(0));
+        battleDungeonUnitData.setBonusStatus(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getBonusStatus(0));
+        battleDungeonUnitData.setBitmapData(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getBitmapData());
+        EquipmentItemBaseDataAdmin equipmentItemBaseDataAdmin = new EquipmentItemBaseDataAdmin(graphic, databaseAdmin);
+        List<EquipmentItemBaseData> tempEquipmentItemBaseDatas = equipmentItemBaseDataAdmin.getItemDatas();
+        EquipmentItemBaseData[] equipmentItemBaseDatas = new EquipmentItemBaseData[Constants.Item.EQUIPMENT_KIND.NUM.ordinal()];
+        for (int i = 0; i < Constants.Item.EQUIPMENT_KIND.NUM.ordinal(); i++) {
+            equipmentItemBaseDatas[i] = tempEquipmentItemBaseDatas.get(i);
+        }
+        EquipmentItemDataCreater equipmentItemDataCreater = new EquipmentItemDataCreater(equipmentItemBaseDatas);
+        equipmentInventry.addItemData(
+                equipmentItemDataCreater.getEquipmentItemData(
+                        Constants.Item.EQUIPMENT_KIND.SWORD,
+                        battleDungeonUnitData,
+                        22222
+                )
+        );
+        equipmentInventry.addItemData(
+                equipmentItemDataCreater.getEquipmentItemData(
+                        Constants.Item.EQUIPMENT_KIND.BOW,
+                        battleDungeonUnitData,
+                        22222
+                )
+        );
+        equipmentInventry.addItemData(
+                equipmentItemDataCreater.getEquipmentItemData(
+                        Constants.Item.EQUIPMENT_KIND.AX,
+                        battleDungeonUnitData,
+                        22222
+                )
+        );//kokomade
     }
 
 

@@ -91,6 +91,14 @@ class WorldSurfaceView extends BaseSurfaceView {
         my_database_admin.addMyDatabase("WorldDB", "LocalWorldImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("WorldDB"), "World");
 
+        my_database_admin.addMyDatabase("ForestDB", "LocalForestImage.db", 1, "r");
+        graphic.loadLocalImages(my_database_admin.getMyDatabase("ForestDB"), "Forest");
+
+        my_database_admin.addMyDatabase("DungeonDB", "LocalDungeonImage.db", 1, "r");
+        graphic.loadLocalImages(my_database_admin.getMyDatabase("DungeonDB"), "Dungeon");
+
+        my_database_admin.addMyDatabase("BattleDB", "LocalBattleImage.db", 1, "r");
+        graphic.loadLocalImages(my_database_admin.getMyDatabase("BattleDB"), "Battle");
 
 
         map_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
@@ -124,7 +132,6 @@ class WorldSurfaceView extends BaseSurfaceView {
         if(openingFlag == true){
             world_game_system.openningInit();
         }*/
-
     }
 
     public void runGameSystem() {
