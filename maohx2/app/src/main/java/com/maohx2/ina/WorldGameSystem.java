@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.horie.EquipTutorial.EquipTutorialSaveData;
+import com.maohx2.horie.EquipTutorial.EquipTutorialSaver;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
@@ -96,6 +98,10 @@ public class WorldGameSystem {
     GeoPresentSaver geoPresentSaver;
     ActivityChange activityChange;
 
+    //EquipTutorial
+    EquipTutorialSaveData equip_tutorial_save_data;
+    EquipTutorialSaver equip_tutorial_saver;
+
     //TODO いな依頼:引数にUI,Graphicが入って居るためGlobalDataに設置できない
     InventryS geoInventry;
     InventryS expendItemInventry;
@@ -131,10 +137,15 @@ public class WorldGameSystem {
         activityChange = _activityChange;
         tu_equip_img = graphic.searchBitmap("tu_equip");
 
-
+        //mapセーブ関係
         map_status = new MapStatus(Constants.STAGE_NUM);
         map_status_saver = new MapStatusSaver(databaseAdmin, "MapSaveData", "MapSaveData.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE, map_status, 7);
         map_status_saver.load();
+
+        //EquipTutorialセーブ関係
+        equip_tutorial_save_data = new EquipTutorialSaveData();
+        equip_tutorial_saver = new EquipTutorialSaver(databaseAdmin, "EquipTutorialSave", "EquipTutorialSave.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE,equip_tutorial_save_data);
+        equip_tutorial_saver.load();
 
         worldActivity = _worldActivity;
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
@@ -302,9 +313,9 @@ public class WorldGameSystem {
                 equipmentInventry.setPosition(800+20,100,1150+20,708, 7);
                 expendItemInventry.setPosition(400+20,100,750+20,708, 7);
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
-                if(is_equip_tutorial){
+                if(equip_tutorial_save_data.getTutorialFinishStatus() == 0){
                     worldModeAdmin.setMode(WORLD_MODE.TU_EQUIP);
-                    is_equip_tutorial = false;
+                    equip_tutorial_save_data.setTutorialFinishStatus(1);
                 }
             case EQUIP:
                 if (!talkAdmin.isTalking()) {
@@ -319,7 +330,7 @@ public class WorldGameSystem {
             case TU_EQUIP:
                 if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
                     worldModeAdmin.setMode(WORLD_MODE.EQUIP_INIT);
-                    //TODO セーブする
+                    equip_tutorial_saver.save();
                 }
                 break;
             case PRESENT_INIT:
