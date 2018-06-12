@@ -39,6 +39,9 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     private final Context mContext;
     private final File mDatabasePath;
 
+    private int newVer;
+    private int oldVer;
+
     //コンストラクタ
     public MySQLiteOpenHelper(Context context, String _db_name, String _db_asset, int _db_version) {
         // 任意のデータベースファイル名と、バージョンを指定する。第二引数ではファイル名を指定しており、
@@ -190,8 +193,18 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        System.out.println("☆タカノ:"+db_name+" onUpgrade.");
+        System.out.println("☆タカノ:"+db_name+" onUpgrade. " + oldVersion + " to " + newVersion);
+        newVer = newVersion;
+        oldVer = oldVersion;
     }
+
+    @Override
+    public void onDowngrade (SQLiteDatabase db, int oldVersion, int newVersion) {
+        System.out.println("☆タカノ:"+db_name+" onDowngrade. " + oldVersion + " to " + newVersion);
+        newVer = newVersion;
+        oldVer = oldVersion;
+    }
+
 
     @Override
     public synchronized void close() {
@@ -258,6 +271,9 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     //assets/databaseディレクトリ下から、fileNameを検索し、assetsからの相対パスを返すメソッド
     //public String searchFileFromDatabase(String fileName) {
     //}
+
+    public int getNewVer() { return newVer; }
+    public int getOldVer() { return oldVer; }
 
 }
 

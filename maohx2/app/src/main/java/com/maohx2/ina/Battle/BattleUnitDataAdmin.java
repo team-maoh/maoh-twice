@@ -352,6 +352,23 @@ public class BattleUnitDataAdmin {
         throw new Error("その名前のユニットは存在しません : " + bitmap_name);
     }
 
+    public List<BattleBaseUnitData> getBattleBaseUnitData() {
+        return battle_base_unit_datas;
+    }
+
+    public List<BattleBaseUnitData> getBattleBaseUnitDataExceptBoss(DungeonMonsterDataAdmin dungeonMonsterDataAdmin) {
+        List<DungeonMonsterData> dungeonMonsterData = dungeonMonsterDataAdmin.getDungeon_monster_data();
+        List<BattleBaseUnitData> tempBattleBaseUnitData = new ArrayList<>();
+        for(int i = 0 ; i < dungeonMonsterData.size(); i++) {
+            if (dungeonMonsterData.get(i).getType() == 0) {
+                tempBattleBaseUnitData.add(
+                        getBattleUnitDataNum(dungeonMonsterData.get(i).getMonsterName())
+                );
+            }
+        }
+        return tempBattleBaseUnitData;
+    }
+
     public List<String> getMaohUnitNames() {
         return battle_unit_data_database.getString("maoh_unit_data", "name");
     }
@@ -377,7 +394,6 @@ public class BattleUnitDataAdmin {
         Random random = new Random();
         int i = random.nextInt(tempDungeonMonsterData.size() - 1);
         return battle_base_unit_datas.get(i);
-
     }
 
     /*

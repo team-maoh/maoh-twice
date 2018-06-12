@@ -382,15 +382,15 @@ public class GeoSlotAdmin {
 
             textBoxAdmin.resetTextBox(releaseTextBoxID);
 
-            textBoxAdmin.bookingDrawText(releaseTextBoxID, "このスロットを解放するには ", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, "ガイア「ごめ〜ん、ここを使うなら、 ", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, focusGeoSlot.getReleaseEvent(), releaseTextPaint);//TODO:イベント名そのままになっているが、これは仮
-            textBoxAdmin.bookingDrawText(releaseTextBoxID, " が必要です。", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, " を私に献上しなさい！」", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "\n", releaseTextPaint);
-            textBoxAdmin.bookingDrawText(releaseTextBoxID, "条件がジオの場合は今ホールドしているジオを消費します。", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, "※条件がジオの場合は今ホールドしているジオを消費します。", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "\n", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "お金の場合は所持金から消費します。", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "\n", releaseTextPaint);
-            textBoxAdmin.bookingDrawText(releaseTextBoxID, "解放しますか？", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, "献上してこのジオスロットを解放しますか？", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "MOP", releaseTextPaint);
 
             textBoxAdmin.updateText(releaseTextBoxID);
@@ -414,10 +414,8 @@ public class GeoSlotAdmin {
                 case (0)://解放する
                     //解放するための色々な処理
                     if (focusGeoSlot.geoSlotRelease()) {
-                        //TODO 解放したことを通知
                         soundAdmin.play("levelup00");
                     } else {
-                        //TODO 条件を満たしていないことを通知
                         soundAdmin.play("cancel00");
                     }
                     releasePlateGroup.setDrawFlag(false);
@@ -479,11 +477,13 @@ public class GeoSlotAdmin {
     public void checkInventrySelect() {
         InventryData inventryData = userInterface.getInventryData();
         if (inventryData != null) {
-            if (inventryData.getItemData().getItemKind() == Constants.Item.ITEM_KIND.GEO) {
-                GeoObjectData tmp = (GeoObjectData) inventryData.getItemData();
-                if (inventryData.getItemNum() > 0 && tmp.getName() != null && tmp.getSlotSetName().equals("noSet")) {
-                    setHoldGeoObject((GeoObjectData) inventryData.getItemData());
-                    userInterface.setInventryData(null);
+            if (inventryData.getItemData() != null) {
+                if (inventryData.getItemData().getItemKind() == Constants.Item.ITEM_KIND.GEO) {
+                    GeoObjectData tmp = (GeoObjectData) inventryData.getItemData();
+                    if (inventryData.getItemNum() > 0 && tmp.getName() != null && tmp.getSlotSetName().equals("noSet")) {
+                        setHoldGeoObject((GeoObjectData) inventryData.getItemData());
+                        userInterface.setInventryData(null);
+                    }
                 }
             }
         }

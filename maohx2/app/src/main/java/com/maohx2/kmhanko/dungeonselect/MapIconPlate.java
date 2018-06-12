@@ -19,6 +19,7 @@ public class MapIconPlate extends CircleImagePlate {
     String event;
 
     boolean enterFlag;
+    boolean geoEnterFlag;
 
     public MapIconPlate(Graphic _graphic, UserInterface _user_interface, Constants.Touch.TouchWay _judge_way, Constants.Touch.TouchWay _feedback_way, int[] _position, ImageContext _default_image_context, ImageContext _feedback_image_context, String _mapIconName, String _dungeonName, String _event) {
         super(_graphic, _user_interface, _judge_way, _feedback_way, _position, _default_image_context, _feedback_image_context);
@@ -56,5 +57,13 @@ public class MapIconPlate extends CircleImagePlate {
     public boolean getEnterFlag() {
         return enterFlag;
     }
+
+    public void setGeoEnterFlag(boolean _geoEnterFlag) {
+        geoEnterFlag = _geoEnterFlag;
+    }
+    public boolean getGeoEnterFlag() {
+        return geoEnterFlag;
+    }
+
 
 }

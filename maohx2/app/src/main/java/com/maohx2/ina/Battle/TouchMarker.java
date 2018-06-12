@@ -46,14 +46,11 @@ public class TouchMarker {
 
     void update(){
 
-        radius = (int)(radius*decay_rate);
-
-        if(radius < 1){
-            exist = false;
-            position_x = 0;
-            position_y = 0;
-            radius = 0;
-            decay_rate = 0;
+        //by kmhanko マーカーが消滅しないバグ
+        if(radius*decay_rate < 1.0f){
+            clear();
+        } else {
+            radius = (int) (radius * decay_rate);
         }
     }
 

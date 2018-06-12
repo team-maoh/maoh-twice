@@ -54,7 +54,7 @@ public class BackPlate extends BoxImagePlate {
                 _graphic.makeImageContext(
                         _graphic.searchBitmap("backPlate01"),
                         1500, 100,
-                        0.75f, 0.75f, 0,
+                        0.85f, 0.85f, 0,
                         255, false
                 )
         );

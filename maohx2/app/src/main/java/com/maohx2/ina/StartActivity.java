@@ -23,6 +23,7 @@ import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.Saver.ExpendItemInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoInventrySaver;
+import com.maohx2.kmhanko.Talking.TalkSaveDataAdmin;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.music.MusicAdmin;
 import com.maohx2.kmhanko.sound.SoundAdmin;
@@ -82,6 +83,8 @@ class StartSurfaceView extends BaseSurfaceView {
     Graphic graphic;
     StartGameSystem start_game_system;
     BattleUserInterface start_user_interface;
+
+    boolean openingFlag;
 
     PlateGroup<CircleImagePlate> image_list;
 
@@ -163,7 +166,15 @@ class StartSurfaceView extends BaseSurfaceView {
         musicAdmin.loadMusic("title", true);
         */
 
-        global_data.getPlayerStatus().setTutorialInDungeon(1);
+        //global_data.getPlayerStatus().setTutorialInDungeon(1);
+
+        TalkSaveDataAdmin talkSaveDataAdmin = new TalkSaveDataAdmin(my_database_admin);
+        talkSaveDataAdmin.load();
+        openingFlag = !talkSaveDataAdmin.getTalkFlagByName("Opening_in_dungeon"); //openingFlag = true ならOpeningを実行
+
+        //デバッグ用
+        //openingFlag = false;
+
 
         //todo:こいつは一番下
         thread = new Thread(this);
@@ -191,8 +202,7 @@ class StartSurfaceView extends BaseSurfaceView {
        }
         touchWaitcount++;
 
-       //by kmhanko デバッグ用
-        global_data.getPlayerStatus().setTutorialInDungeon(1);
+       //デバッグ用OP切り替えは176行目へ移動した
 
         switch (downCount) {
             case 0:
@@ -205,9 +215,10 @@ class StartSurfaceView extends BaseSurfaceView {
                 break;
             case 2:
                 soundAdmin.play("opening01");
-                if(global_data.getPlayerStatus().getTutorialInDungeon() == 1) {
+                //初めてゲームを開始下ならDungeonへ。そうでないならワールドへ。
+                if (!openingFlag) {
                     activityChange.toWorldActivity();
-                }else{
+                } else {
                     activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.OPENING);
                 }
                 break;

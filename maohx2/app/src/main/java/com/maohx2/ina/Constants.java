@@ -49,6 +49,19 @@ public final class Constants {
 
     public static final int STAGE_NUM = 7;
 
+    public static final String DEBUG_SAVE_MODE = "ns";
+    public static class SaveDataVersion {
+        public static final int EQUIPMENT_INVENTRY = 1;
+        public static final int EXPEND_INVENTRY = 1;
+        public static final int GEO_INVENTRY = 1;
+        public static final int GEO_PRESENT = 1;
+        public static final int GEO_SLOT = 1;
+        public static final int MAP_SAVE_DATA = 1;
+        public static final int PLAYER_STATUS = 1;
+        public static final int TALK = 1;
+    }
+
+
 
     public static class Touch {
         public enum TouchState {
@@ -71,6 +84,15 @@ public final class Constants {
         public static final int BITMAP_DATA_INSTANCE = 1000;
         public static final int BOOKING_DATA_INSTANCE = 1000;
     }
+
+    /*
+    public static class EffectConstant {
+        public static final int EFFECT_ANIME_MAX = 50;
+    }
+    */
+
+
+
 
     public static class BattleUnit {
         public static final int BATTLE_UNIT_MAX = 15;
@@ -180,8 +202,8 @@ public final class Constants {
     }
 
     public static class POPUP_WINDOW {
-        public static final int MESS_LEFT = 200;
-        public static final int MESS_RIGHT = 1400;
+        public static final int MESS_LEFT = 150;
+        public static final int MESS_RIGHT = 1450;
         public static final int MESS_UP = 300;
         public static final int MESS_BOTTOM = 500;
 
@@ -361,6 +383,7 @@ public final class Constants {
 
     public static class GeoSlotParam {
         public static final float GEO_SLOT_SCALE = 4.0f;
+        public static final float GEO_STOP_SCALE = 3.0f;
     }
 
     // *** takanoここまで ***

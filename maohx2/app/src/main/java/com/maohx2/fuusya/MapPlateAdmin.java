@@ -84,13 +84,6 @@ public class MapPlateAdmin {
     //
     Paint text_paint = new Paint();
     Paint floor_bg = new Paint();
-
-
-    //
-    int RETIRE_TOP = 200;
-    int RETIRE_RIGHT = 400;
-    int RETIRE_LEFT = 100;
-    int RETIRE_BOTTOM = 400;
     //
     double hp_ratio;//0.00 ~ 1.00
 
@@ -169,6 +162,8 @@ public class MapPlateAdmin {
         inventry.updata();
 
         int pre_displaying_content = displaying_content;
+
+        max_hp = playerStatus.getHP();//最大HPは毎フレームupdateする（でないとHPが枠をオーバーする）
 
         Constants.Touch.TouchState touch_state = dungeon_user_interface.getTouchState();
         switch (displaying_content) {
@@ -339,7 +334,7 @@ public class MapPlateAdmin {
             BitmapData tutorial_bitmap = graphic.searchBitmap(bitmap_name);
 
             if (tutorial_bitmap != null) {
-                graphic.bookingDrawBitmapData(tutorial_bitmap, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(tutorial_bitmap, 0, 0, 1.0f, 1.0f, 0, 254, true);
             }
 
             Constants.Touch.TouchState touch_state = dungeon_user_interface.getTouchState();

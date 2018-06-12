@@ -264,7 +264,6 @@ public class GeoSlot extends CircleImagePlate {
 
     //GeoSlotの計算を行うメソッド。再帰ライクの終着点に該当する。
     private void calc(GeoCalcSaverAdmin geo_calc_saver_admin) {
-        //TODO: ステータス加算を書き連ねる。,正式なGeoObjectが完成してから書き直す。
         geo_calc_saver_admin.getGeoCalcSaver("HP").calc(geoObjectData.getHp(),geoObjectData.getHpRate());
         geo_calc_saver_admin.getGeoCalcSaver("Attack").calc(geoObjectData.getAttack(),geoObjectData.getAttackRate());
         geo_calc_saver_admin.getGeoCalcSaver("Defence").calc(geoObjectData.getDefence(),geoObjectData.getDefenceRate());
@@ -559,9 +558,9 @@ public class GeoSlot extends CircleImagePlate {
                         geoSlotAdmin.setHoldGeoObject(null);
                         isReleased = true;
                         System.out.println("GeoSlot#geoSlotRelease　ジオオブジェクトを支払う　" + release_event);
+                        return true;
                     }
                 }
-                return true;
             }
         }
 
@@ -614,7 +613,7 @@ public class GeoSlot extends CircleImagePlate {
         touch_id = user_interface.setCircleTouchUI(x, y, radius);
         //TODO: 前の奴を消せないので格納上の問題あり
 
-        notEventCrearImageContext = graphic.makeImageContext(graphic.searchBitmap("apple"), x , y, GeoSlotParam.GEO_SLOT_SCALE, GeoSlotParam.GEO_SLOT_SCALE, 0.0f, 255, false);
+        notEventCrearImageContext = graphic.makeImageContext(graphic.searchBitmap("GeoStop"), x , y, GeoSlotParam.GEO_STOP_SCALE, GeoSlotParam.GEO_STOP_SCALE, 0.0f, 255, false);
         if (grandFlag) {
             slotHoleImageContext = graphic.makeImageContext(graphic.searchBitmap("GeoSlotHoleGreen"), x, y, GeoSlotParam.GEO_SLOT_SCALE, GeoSlotParam.GEO_SLOT_SCALE, 0.0f, 255, false);
         } else {

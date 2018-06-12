@@ -31,6 +31,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import static java.lang.Math.pow;
 import static com.maohx2.ina.Constants.Touch.TouchState;
+import static java.lang.Math.subtractExact;
 
 /**
  * Created by ina on 2017/09/05.
@@ -42,7 +43,7 @@ public class MapObjectAdmin {
     //    int NUM_OF_ITEM = 10;// > 2
     int NUM_OF_TRAP = 10;
     int NUM_OF_MINE = 5;
-    int NUM_OF_BOSS = 2;
+    int NUM_OF_BOSS = 1;
 
     int PLAYER_DIR = 8;
     int ENEMY_DIR = 8;
@@ -439,15 +440,22 @@ public class MapObjectAdmin {
             for (int i = 0; i < NUM_OF_ENEMY; i++) {
 
 //                tmp_enemy_name[0] = map_admin.getMonsterName(1)[local_i];
-                if (i == 2 && map_mine[0].exists() == true) {
-                    map_enemy[i].setPosition((int) map_mine[0].getWorldX(), (int) map_mine[0].getWorldY());//採掘スポットの近く
-                } else {
-                    Point room_point = map_admin.getRoomPoint();
-                    map_enemy[i].setPosition(room_point.x + magnification / 2, room_point.y + magnification / 2);
+//                if (i == 2 && map_mine[0].exists() == true) {
+//                    map_enemy[i].setPosition((int) map_mine[0].getWorldX(), (int) map_mine[0].getWorldY());
+//                } else {
+                Point room_point;
+                while (true) {
+                    room_point = map_admin.getRoomPoint();
+                    if (isGoodSpawnPoint(room_point)) {
+                        break;
+                    }
                 }
+                map_enemy[i].setPosition(room_point.x + magnification / 2, room_point.y + magnification / 2);
+//                }
                 map_enemy[i].setExists(true);
 
                 tmp_enemy_name[0] = map_admin.getMonsterName(1)[i % un_null];
+//                tmp_enemy_name[0] = "火山(1)";
                 map_enemy[i].setName(tmp_enemy_name);
             }
         }
@@ -581,7 +589,33 @@ public class MapObjectAdmin {
         text_box_admin.resetTextBox(textbox_id);
     }
 
-    public int getKindOfZako(){
+    public int getKindOfZako() {
         return kind_of_zako;
     }
+
+    //0:壁なし, 1: －, 2: |
+    private int detectWall(double x1, double y1, double x2, double y2) {
+        return map_admin.detectWallDirection(x1, y1, x2, y2);
+    }
+
+    private boolean isGoodSpawnPoint(Point _room_point) {
+        int spawn_x = _room_point.x + magnification / 2;
+        int spawn_y = _room_point.y + magnification / 2;
+        boolean wall_check_1 = detectWall(spawn_x, spawn_y, spawn_x + magnification, spawn_y) == 0;
+        boolean wall_check_2 = detectWall(spawn_x, spawn_y, spawn_x, spawn_y + magnification) == 0;
+        boolean wall_check_3 = detectWall(spawn_x, spawn_y, spawn_x - magnification, spawn_y) == 0;
+        boolean wall_check_4 = detectWall(spawn_x, spawn_y, spawn_x, spawn_y - magnification) == 0;
+        return wall_check_1 && wall_check_2 && wall_check_3 && wall_check_4;// 至近距離に壁がない
+    }
+
+    private boolean isGoodSpawnPoint(int _x, int _y) {
+        int spawn_x = _x + magnification / 2;
+        int spawn_y = _y + magnification / 2;
+        boolean wall_check_1 = detectWall(spawn_x, spawn_y, spawn_x + magnification, spawn_y) == 0;
+        boolean wall_check_2 = detectWall(spawn_x, spawn_y, spawn_x, spawn_y + magnification) == 0;
+        boolean wall_check_3 = detectWall(spawn_x, spawn_y, spawn_x - magnification, spawn_y) == 0;
+        boolean wall_check_4 = detectWall(spawn_x, spawn_y, spawn_x, spawn_y - magnification) == 0;
+        return wall_check_1 && wall_check_2 && wall_check_3 && wall_check_4;// 至近距離に壁がない
+    }
+
 }

@@ -245,36 +245,45 @@ public class DungeonSelectManager {
 
 
         MapIconPlate mapIconPlates[] = mapIconPlateGroup.getPlates();
-        boolean alphaFlag;
+        boolean alphaFlag, geoEnterFlag;
         int clear = 0;
         for (int i = 0; i < mapIconPlates.length; i++) {
             switch (mapIconPlates[i].getMapIconName()) {
                 case "Forest":
                     clear = 1;//mapStatus.getMapClearStatus(DUNGEON_KIND.FOREST.ordinal());
+                    geoEnterFlag = (mapStatus.getMapClearStatus(DUNGEON_KIND.FOREST.ordinal()) == 1 || (playerStatus.getClearCount() > 0));
                     break;
                 case "Lava":
                     clear = mapStatus.getMapClearStatus(DUNGEON_KIND.FOREST.ordinal());
+                    geoEnterFlag = (mapStatus.getMapClearStatus(DUNGEON_KIND.LAVA.ordinal()) == 1 || (playerStatus.getClearCount() > 0));
                     break;
                 case "Sea":
                     clear = mapStatus.getMapClearStatus(DUNGEON_KIND.LAVA.ordinal());
+                    geoEnterFlag = (mapStatus.getMapClearStatus(DUNGEON_KIND.SEA.ordinal()) == 1 || (playerStatus.getClearCount() > 0));
                     break;
                 case "Chess":
                     clear = mapStatus.getMapClearStatus(DUNGEON_KIND.SEA.ordinal());
+                    geoEnterFlag = (mapStatus.getMapClearStatus(DUNGEON_KIND.SEA.ordinal()) == 1 || (playerStatus.getClearCount() > 0));
                     break;
                 case "Swamp":
                     clear = mapStatus.getMapClearStatus(DUNGEON_KIND.CHESS.ordinal());
+                    geoEnterFlag = (mapStatus.getMapClearStatus(DUNGEON_KIND.CHESS.ordinal()) == 1 || (playerStatus.getClearCount() > 0));
                     break;
                 case "Haunted":
                     clear = mapStatus.getMapClearStatus(DUNGEON_KIND.SWAMP.ordinal());
+                    geoEnterFlag = (mapStatus.getMapClearStatus(DUNGEON_KIND.SWAMP.ordinal()) == 1 || (playerStatus.getClearCount() > 0));
                     break;
                 case "Dragon":
                     clear = mapStatus.getMapClearStatus(DUNGEON_KIND.HAUNTED.ordinal());
+                    geoEnterFlag = (mapStatus.getMapClearStatus(DUNGEON_KIND.HAUNTED.ordinal()) == 1 || (playerStatus.getClearCount() > 0));
                     break;
                 case "Maoh":
                     clear = 1;
+                    geoEnterFlag = true;
                     break;
                 default:
                     clear = 1;
+                    geoEnterFlag = true;
                     break;
             }
             alphaFlag = (clear != 1) && (playerStatus.getNowClearCount() == playerStatus.getClearCount());
@@ -283,6 +292,7 @@ public class DungeonSelectManager {
                     imageName.get(i),x.get(i), y.get(i), scale.get(i), scale.get(i), scale_feed.get(i), scale_feed.get(i), alphaFlag
             );
             mapIconPlates[i].setEnterFlag(!alphaFlag);
+            mapIconPlates[i].setGeoEnterFlag(geoEnterFlag);
         }
     }
 
@@ -381,7 +391,7 @@ public class DungeonSelectManager {
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{ LOOP_WINDOW.MENOS_X, LOOP_WINDOW.MENOS_Y, LOOP_WINDOW.MENOS_R },
                                 graphic.makeImageContext(graphic.searchBitmap("矢印左"), LOOP_WINDOW.MENOS_X, LOOP_WINDOW.MENOS_Y, tempScale, tempScale, 0.0f, 254, false),
-                                graphic.makeImageContext(graphic.searchBitmap("矢印左"), LOOP_WINDOW.MENOS_X, LOOP_WINDOW.MENOS_Y, tempScale, tempScale, 0.0f, 254, false)
+                                graphic.makeImageContext(graphic.searchBitmap("矢印左"), LOOP_WINDOW.MENOS_X - 30, LOOP_WINDOW.MENOS_Y, tempScale, tempScale, 0.0f, 254, false)
                         ) {
                             @Override
                             public void callBackEvent() {
@@ -398,7 +408,7 @@ public class DungeonSelectManager {
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{ LOOP_WINDOW.PLUS_X, LOOP_WINDOW.PLUS_Y, LOOP_WINDOW.PLUS_R },
                                 graphic.makeImageContext(graphic.searchBitmap("矢印右"), LOOP_WINDOW.PLUS_X, LOOP_WINDOW.PLUS_Y, tempScale, tempScale, 0.0f, 254, false),
-                                graphic.makeImageContext(graphic.searchBitmap("矢印右"), LOOP_WINDOW.PLUS_X, LOOP_WINDOW.PLUS_Y, tempScale, tempScale, 0.0f, 254, false)
+                                graphic.makeImageContext(graphic.searchBitmap("矢印右"), LOOP_WINDOW.PLUS_X + 30, LOOP_WINDOW.PLUS_Y, tempScale, tempScale, 0.0f, 254, false)
 
                         ) {
                             @Override
@@ -557,7 +567,7 @@ public class DungeonSelectManager {
                 if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
                     soundAdmin.play("enter00");
                     geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
-                    if (mapIconPlateGroup.getPlates(focusDungeonButtonID).getEnterFlag()) {
+                    if (mapIconPlateGroup.getPlates(focusDungeonButtonID).getGeoEnterFlag()) {
                         worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
                     } else {
                         worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SEE_ONLY_INIT);
