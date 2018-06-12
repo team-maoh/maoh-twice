@@ -386,4 +386,16 @@ public abstract class ItemShop {
         textBoxAdmin.setTextBoxExists(buyTextBoxID, false);
     }
 
+    public void release() {
+        productPlateGroup.release();
+        productPlateGroup = null;
+        buySelectPlateGroup.release();
+        buySelectPlateGroup = null;
+        backPlateGroup.release();
+        backPlateGroup = null;
+        switchPlateGroup.release();
+        switchPlateGroup = null;
+        buyTextBoxPaint = null;
+    }
+
 }

@@ -1246,6 +1246,10 @@ public class BattleUnitAdmin {
         }
     }
 
+    public void release() {
+
+    }
+
     // *** オープニング戦闘の会話文関係 ここまで ***
 }
 

@@ -36,8 +36,6 @@ public class EquipmentItemDataCreater {
         newEquipmentItemData.setAutoFrequencyRate(equipmentItemBaseDatas[_equipmentKind.ordinal()].autoFrequencyRate);
         newEquipmentItemData.setDefence(equipmentItemBaseDatas[_equipmentKind.ordinal()].getDefence());
 
-
-        newEquipmentItemData.setPrice(_battleDungeonUnitData.getStatus(Constants.UnitStatus.Status.ATTACK) * equipmentItemBaseDatas[_equipmentKind.ordinal()].getPrice());
 //        double weapon_rate;
 //        switch (_equipmentKind) {
 //            case SWORD:
@@ -96,6 +94,8 @@ public class EquipmentItemDataCreater {
         luck_rate = (luck_rate / 0.13) / 10.0;
 
         newEquipmentItemData.setAttack((int) (set_double * (1.0 + luck_rate) * 0.3));
+
+        newEquipmentItemData.setPrice(newEquipmentItemData.getAttack() * 7);
 
         return newEquipmentItemData;
     }
