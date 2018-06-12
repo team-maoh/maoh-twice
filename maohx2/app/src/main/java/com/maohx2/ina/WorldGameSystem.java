@@ -119,12 +119,15 @@ public class WorldGameSystem {
 
     BitmapData backGround;
     BitmapData tu_equip_img;
+    BitmapData[] credit = new BitmapData[2];
 
     String talkContent[][] = new String[100][];
     ImageContext talkChara[] = new ImageContext[100];
 
     MapStatus map_status;
     MapStatusSaver map_status_saver;
+
+    int credit_num = 1;
 
     PlayerStatusViewer playerStatusViewer;
 
@@ -153,6 +156,10 @@ public class WorldGameSystem {
         equip_tutorial_save_data = new EquipTutorialSaveData();
         equip_tutorial_saver = new EquipTutorialSaver(databaseAdmin, "EquipTutorialSave", "EquipTutorialSave.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE,equip_tutorial_save_data);
         equip_tutorial_saver.load();
+
+        //クレジット
+        credit[0] = graphic.searchBitmap("クレジット1");
+        credit[1] = graphic.searchBitmap("クレジット2");
 
         worldActivity = _worldActivity;
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
@@ -405,6 +412,11 @@ public class WorldGameSystem {
             case GEO_MAP_SEE_ONLY:
                 geoSlotAdminManager.updateInStatus();
                 break;
+            case CREDIT:
+                backPlateGroup.update();
+                if(world_user_interface.getTouchState() == Constants.Touch.TouchState.UP){
+                    credit_num = 3 - credit_num;
+                }
             default:
                 break;
         }
@@ -475,6 +487,9 @@ public class WorldGameSystem {
                 geoSlotAdminManager.drawInStatus();
                 playerStatusViewer.draw();
                 break;
+            case CREDIT:
+                graphic.bookingDrawBitmapData(credit[credit_num - 1], 0, 0, 1.25f, 1.25f, 0, 255, true);
+                backPlateGroup.draw();
             default:
                 break;
         }
