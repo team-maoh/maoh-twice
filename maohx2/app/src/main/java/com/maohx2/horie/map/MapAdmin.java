@@ -1663,6 +1663,7 @@ public class MapAdmin {
         mine_point = null;
         opening_map_size = null;
 
+        camera.release();
         camera = null;
         section_admin.release();
         section_admin = null;

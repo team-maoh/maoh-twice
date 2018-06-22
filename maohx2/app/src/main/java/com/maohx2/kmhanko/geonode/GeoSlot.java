@@ -41,6 +41,19 @@ public class GeoSlot extends CircleImagePlate {
 
     //** Created by kmhanko **//
 
+    @Override
+    public void release() {
+        children_slot.clear();
+        children_slot = null;
+        parent_slot = null;
+        release_event = null;
+        restriction = null;
+        geoObjectData = null;
+        notEventCrearImageContext.release();
+        slotHoleImageContext.release();
+        geoImageContext.release();
+    }
+
     static final int GEO_SLOT_CHILDREN_MAX = 8;
 
     static final int GEO_LINE_DISTANCE = 100;

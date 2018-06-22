@@ -151,4 +151,9 @@ public class PaletteElement {
     public int getTouchID(){return touch_id;}
     public int getElementNum(){return element_num;}
 
+
+    public void release() {
+        paint = null;
+        textPaint = null;
+    }
 }

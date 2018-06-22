@@ -51,6 +51,12 @@ public class Effect {
     private boolean exist;
     private boolean isDraw;
 
+    public void release() {
+        for ( int i = 0; i < bitmapData.size(); i++) {
+            bitmapData.get(i).releaseBitmap();
+        }
+        bitmapData = null;
+    }
 
     public Effect() {
         exist = false;
@@ -78,6 +84,7 @@ public class Effect {
         original_angle = 0.0f;
         original_angle_deg = 0.0f;
         for (int i = 0; i < bitmapData.size(); i++) {
+            bitmapData.get(i).releaseBitmap();
             bitmapData.set(i,null);
         }
         bitmapData.clear();

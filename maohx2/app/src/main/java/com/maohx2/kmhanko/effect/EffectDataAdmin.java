@@ -43,6 +43,17 @@ public class EffectDataAdmin {
     }
 
 
+    public void release() {
+        for (int i = 0; i < effectData.size(); i++) {
+            effectData.get(i).release();
+        }
+        effectData.clear();
+        effectData = null;
+
+        tables.clear();
+        tables = null;
+    }
+
 
 
 

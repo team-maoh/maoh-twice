@@ -8,6 +8,12 @@ public class Camera {
     Point normalize_size = new Point(1600, 900);
     int map_magnification;
 
+    public void release() {
+        map_size = null;
+        camera_offset = null;
+        normalize_size = null;
+    }
+
     public  Camera(Point m_map_size, int m_map_magnification){
         map_size.set(m_map_size.x,m_map_size.y);
         map_magnification = m_map_magnification;

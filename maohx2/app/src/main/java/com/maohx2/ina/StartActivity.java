@@ -73,6 +73,15 @@ public class StartActivity extends BaseActivity {
     public String getActivityName() {
         return "StartActivity";
     }
+
+
+    @Override
+    public void finish() {
+        super.finish();
+        start_surface_view.my_database_admin.close();
+        start_surface_view.release();
+        start_surface_view = null;
+    }
 }
 
 
@@ -86,10 +95,21 @@ class StartSurfaceView extends BaseSurfaceView {
 
     boolean openingFlag;
 
-    PlateGroup<CircleImagePlate> image_list;
+    //PlateGroup<CircleImagePlate> image_list;
 
-    MusicAdmin musicAdmin;
+    //MusicAdmin musicAdmin;
     SoundAdmin soundAdmin;
+
+    @Override
+    public void release() {
+        super.release();
+        start_game_system.drawStop();
+        start_game_system.updateStop();
+        start_game_system.release();
+        my_database_admin.release();
+        start_user_interface.release();
+        graphic.releaseBitmap();
+    }
 
     public StartSurfaceView(StartActivity _start_activity, BackSurfaceView _backSurfaceView) {
         super(_start_activity, _backSurfaceView);

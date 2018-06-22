@@ -39,4 +39,8 @@ public class MapStatus {
                 is_tutorial_finish[_stage_num]
         };
     }
+    public void release() {
+        is_clear = null;
+        is_tutorial_finish = null;
+    }
 }

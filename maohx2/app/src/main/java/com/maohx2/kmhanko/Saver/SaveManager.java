@@ -61,4 +61,8 @@ public abstract class SaveManager {
     public void deleteTableAll() {
         database.deleteTableAll();
     }
+
+    public void release() {
+        loadMode = null;
+    }
 }

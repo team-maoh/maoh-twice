@@ -42,6 +42,11 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     Graphic graphic;
     boolean back_ground_flag = false;
 
+    public void release() {
+        paint = null;
+        thread = null;
+        global_data.release();
+    }
 
     public BaseSurfaceView(Activity _currentActivity, BackSurfaceView _backSurfaceView) {
         super(_currentActivity);

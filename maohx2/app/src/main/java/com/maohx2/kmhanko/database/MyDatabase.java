@@ -45,6 +45,15 @@ public class MyDatabase {
         mContext = context;
     }
 
+    public void release() {
+        db.close();
+        db = null;
+        mDbHelper.close();
+        mDbHelper = null;
+        db_asset = null;
+        db_name = null;
+    }
+
     public boolean init(String _db_name, String _db_asset, int _db_version, String loadMode) {
         if (loadMode != "r" && loadMode != "s" && loadMode != "ds" && loadMode != "ns") {
             throw new Error("☆タカノ : MyDatabase#init " + "please set r or s or ds or ns");

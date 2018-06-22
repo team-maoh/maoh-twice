@@ -206,4 +206,15 @@ public class PaletteAdmin {
         }
     }
 
+    public void release() {
+        for (int i = 0 ; i < palettes.length; i++) {
+            if (palettes[i] != null) {
+                palettes[i].release();
+            }
+        }
+        palettes = null;
+        palettesFlag = null;
+
+    }
+
 }

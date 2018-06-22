@@ -26,6 +26,22 @@ public class EffectData {
     List<String> soundName = new ArrayList<String>(); //登録されている鳴らす効果音name
     List<Integer> nextID = new ArrayList<Integer>(); //次のIDを示す。-1の場合は現在のID+1,
 
+    public void release(){
+        name = null;
+        imageID = null;
+        x = null;
+        y = null;
+        extend_x = null;
+        extend_y = null;
+        angle = null;
+        alpha = null;
+        time = null;
+        switch_gr = null;
+        upLeft = null;
+        soundName = null;
+        nextID = null;
+    }
+
     public EffectData(MyDatabase database, String t_name) {
         loadDatabase(database, t_name);
     }

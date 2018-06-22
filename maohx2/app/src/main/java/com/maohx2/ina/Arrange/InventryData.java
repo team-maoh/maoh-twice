@@ -47,5 +47,8 @@ public class InventryData {
         item_num = 0;
         sold_num = 0;
     }
+    public void release() {
+        this.delete();
+    }
 
 }

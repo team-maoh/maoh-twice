@@ -618,4 +618,74 @@ public class MapObjectAdmin {
         return wall_check_1 && wall_check_2 && wall_check_3 && wall_check_4;// 至近距離に壁がない
     }
 
+
+    public void release() {
+        map_player.release();
+        map_player = null;
+        map_player_bitmap.release();
+        map_player_bitmap = null;
+        random = null;
+        for (int i = 0; i < map_trap.length; i++) {
+            if (map_trap[i] != null) {
+                map_trap[i].release();
+            }
+        }
+        map_trap = null;
+
+        for (int i = 0; i < map_trap_bitmap.length; i++) {
+            if (map_trap_bitmap[i] != null) {
+                map_trap_bitmap[i].release();
+            }
+        }
+        map_trap_bitmap = null;
+
+        for (int i = 0; i < map_mine.length; i++) {
+            if (map_mine[i] != null) {
+                map_mine[i].release();
+            }
+        }
+        map_mine = null;
+
+        for (int i = 0; i < map_mine_bitmap.length; i++) {
+            if (map_mine_bitmap[i] != null) {
+                map_mine_bitmap[i].release();
+            }
+        }
+        map_mine_bitmap = null;
+
+        for (int i = 0; i < map_boss.length; i++) {
+            if (map_boss[i] != null) {
+                map_boss[i].release();
+            }
+        }
+        map_boss = null;
+
+        for (int i = 0; i < map_boss_bitmap.length; i++) {
+            if (map_boss_bitmap[i] != null) {
+                map_boss_bitmap[i].release();
+            }
+        }
+        map_boss_bitmap = null;
+
+        for (int i = 0; i < map_enemy.length; i++) {
+            if (map_enemy[i] != null) {
+                map_enemy[i].release();
+            }
+        }
+        map_enemy = null;
+
+        for (int i = 0; i < map_enemy_bitmap.length; i++) {
+            if (map_enemy_bitmap[i] != null) {
+                map_enemy_bitmap[i].release();
+            }
+        }
+        map_enemy_bitmap = null;
+
+        bag_item_admin.release();
+        bag_item_admin = null;
+        paint = null;
+
+    }
+
+
 }

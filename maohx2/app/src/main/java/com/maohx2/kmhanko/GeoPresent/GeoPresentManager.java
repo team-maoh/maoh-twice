@@ -138,6 +138,7 @@ public class GeoPresentManager {
         presentTextPaint.setColor(Color.WHITE);
     }
 
+
     public void setGeoPresentSaver(GeoPresentSaver _geoPresentSaver) {
         geoPresentSaver = _geoPresentSaver;
         geoPresentSaver.load();
@@ -169,6 +170,7 @@ public class GeoPresentManager {
         textBoxAdmin.bookingDrawText(messageBoxID, "MOP");
         textBoxAdmin.updateText(messageBoxID);
     }
+
 
     private void initPlateGroup() {
         Paint textPaint = new Paint();
@@ -513,6 +515,16 @@ public class GeoPresentManager {
         presentSelectPlateGroup.setUpdateFlag(false);
         presentSelectPlateGroup.setDrawFlag(false);
         textBoxAdmin.setTextBoxExists(presentTextBoxID, false);
+    }
+
+    public void release() {
+        presentTextPaint = null;
+        presentSelectPlateGroup.release();
+        presentSelectPlateGroup = null;
+        backPlateGroup.release();
+        backPlateGroup = null;
+        presentGetCounts.clear();
+        presentGetCounts = null;
     }
 
 }

@@ -360,4 +360,31 @@ public class Inventry {
             operate_inventry_list_box.setInventryData(inventry_datas[page * contentNum + i], i);
         }
     }
+
+
+    public void release() {
+        operate_inventry_list_box.release();
+        operate_inventry_list_box = null;
+        inventry_datas = null;
+        paint = null;
+        position = null;
+        operate_inventry_list_box.release();
+        operate_inventry_list_box = null;
+        leftPlate.release();
+        leftPlate = null;
+        rightPlate.release();
+        rightPlate = null;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                flameElement[i][j].releaseBitmap();
+            }
+        }
+        flameElement = null;
+        for (int i = 0; i < inventry_datas.length; i++) {
+            if (inventry_datas[i] != null) {
+                inventry_datas[i].release();
+            }
+        }
+    }
+
 }

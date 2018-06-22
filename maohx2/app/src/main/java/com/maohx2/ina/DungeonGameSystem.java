@@ -65,7 +65,7 @@ public class DungeonGameSystem {
     Paint paint;
     BattleUnitAdmin battle_unit_admin;
     TextBoxAdmin text_box_admin;
-    ListBoxAdmin list_box_admin;
+    //ListBoxAdmin list_box_admin;
     DungeonDataAdmin dungeon_data_admin;
     Camera camera;
     Point map_size = new Point(0, 0);//カメラのインスタンス化に必要
@@ -125,9 +125,9 @@ public class DungeonGameSystem {
 
         battle_unit_admin = new BattleUnitAdmin();
         text_box_admin = new TextBoxAdmin(graphic, soundAdmin);
-        list_box_admin = new ListBoxAdmin();
+        //list_box_admin = new ListBoxAdmin();
         text_box_admin.init(dungeon_user_interface);
-        list_box_admin.init(dungeon_user_interface, graphic);
+        //list_box_admin.init(dungeon_user_interface, graphic);
 
         talkAdmin = new TalkAdmin(graphic, dungeon_user_interface, _myDatabaseAdmin, text_box_admin , soundAdmin);
 
@@ -335,6 +335,10 @@ public class DungeonGameSystem {
 
 
     public void update() {
+        if (updateStopFlag) {
+            return;
+        }
+
         switch (dungeonModeManage.getMode()) {
             case MAP_INIT:
                 playMapBGM();
@@ -427,6 +431,10 @@ public class DungeonGameSystem {
                 break;
 
         }
+        if (updateStopFlag) {
+            return;
+        }
+
         talkAdmin.update();
         text_box_admin.update();
         effectAdmin.update();
@@ -491,6 +499,11 @@ public class DungeonGameSystem {
         }
     }
 
+    boolean updateStopFlag = false;
+    public void updateStop() {
+        updateStopFlag = true;
+    }
+
     boolean drawStopFlag = false;
     public void drawStop() {
         drawStopFlag = true;
@@ -543,6 +556,27 @@ public class DungeonGameSystem {
         map_admin.release();
         dungeonMonsterDataAdmin.release();
         battle_unit_admin.release();
+        palette_admin.release();
+        map_object_admin.release();
+        dungeon_user_interface.release();
+        battle_user_interface.release();
+        text_box_admin.release();
+        dungeon_data_admin.release();
+        talkAdmin.release();
+        effectAdmin.release();
+        //dungeonModeManage
+        map_plate_admin.release();
+        //map_inventry_admin
+        map_status.release();
+        map_status_saver.release();
+        paint.reset();
+        paint = null;
+        equipment_item_data_admin.release();
+        miningItemDataAdmin.release();
+        playerStatusViewer.release();
+        geoSlotSaver.release();
+        geoSlotAdminManager.release();
+        dungeonModeManage.release();
     }
 
 

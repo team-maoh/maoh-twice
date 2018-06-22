@@ -104,6 +104,9 @@ public class StartGameSystem {
 
 
     public void updata() {
+        if (updateStopFlag) {
+            return;
+        }
         n++;
 
 
@@ -153,6 +156,10 @@ public class StartGameSystem {
     }
 
     public void draw() {
+        if (drawStopFlag) {
+            return;
+        }
+
         graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
         /*
         equipmentInventry.draw();
@@ -166,6 +173,9 @@ public class StartGameSystem {
     }
 
     public void openingUpdate(){
+        if (updateStopFlag) {
+            return;
+        }
 
         paint.setARGB(255,0,0,0);
         graphic.bookingDrawRect(0,0,1600,900,paint);
@@ -207,5 +217,22 @@ public class StartGameSystem {
         }
 
         graphic.draw();
+    }
+
+    public void release() {
+        equipment_item_data_admin.release();
+        paint = null;
+        credis.release();
+    }
+
+
+    boolean updateStopFlag = false;
+    public void updateStop() {
+        updateStopFlag = true;
+    }
+
+    boolean drawStopFlag = false;
+    public void drawStop() {
+        drawStopFlag = true;
     }
 }

@@ -73,4 +73,12 @@ public class DungeonData {
     public void setMap_size_y(int _map_size_y){
         map_size.y = _map_size_y;
     }
+
+    public void release() {
+        map_size = null;
+        dungeon_name = null;
+        floor_tile_name = null;
+        wall_tile_name = null;
+        sidewall_tile_name = null;
+    }
 }

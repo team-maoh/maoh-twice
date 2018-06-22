@@ -96,4 +96,9 @@ public class Text {
         return isMOP;
     }
 
+    public void release() {
+        paint = null;
+        sentence = null;
+    }
+
 }

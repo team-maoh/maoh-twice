@@ -16,6 +16,7 @@ public class Credit {
     Paint paint;
     boolean endFlag;
 
+
     public Credit(Graphic _graphic, Paint _paint, String _text, int _position_x, int _position_y){
         graphic = _graphic;
         paint = new Paint();
@@ -48,5 +49,10 @@ public class Credit {
 
     public boolean endCheck(){
         return endFlag;
+    }
+
+    public void release() {
+        paint = null;
+        text = null;
     }
 }

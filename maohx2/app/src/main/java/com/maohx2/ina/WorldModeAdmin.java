@@ -31,6 +31,10 @@ public class WorldModeAdmin {
         this.mode = mode;
     }
 
+    public void release() {
+        mode = null;
+    }
+
 /*
 
 

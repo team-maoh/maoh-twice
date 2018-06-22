@@ -102,4 +102,20 @@ public class GlobalData extends Application {
     public MaohMenosStatus getMaohMenosStatus() { return maohMenosStatus; }
 
     public MusicAdmin getMusicAdmin() { return musicAdmin; }
+
+    public void release() {
+        g_my_database_admin.release();
+        g_bitmap_data_admin.releaseBitmap();
+        playerStatusSaver.release();
+        playerStatus.release();
+        maohMenosStatus.release();
+        musicAdmin.close();
+        equipmentInventrySaver.release();
+        equipmentInventry.release();
+        geoInventrySaver.release();
+        geoInventry.release();
+        expendItemInventrySaver.release();
+        expendItemInventry.release();
+        itemDataAdminManager.release();
+    }
 }

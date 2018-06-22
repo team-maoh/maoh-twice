@@ -256,6 +256,7 @@ public class BattleBaseUnitData {
         bitmap_data = null;
         dropItemEquipmentKind = null;
         dropItemName = null;
+        dropItemRate = null;
         dropItemKind = null;
     }
 

@@ -134,4 +134,8 @@ public class PaletteCenter extends PaletteElement{
 
     public int getPrePos(){return prePos;}
 
+    public void release() {
+
+    }
+
 }

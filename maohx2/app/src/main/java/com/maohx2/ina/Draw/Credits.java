@@ -93,4 +93,15 @@ public class Credits {
     public boolean endCheck() {
         return credits[creditNum-1].endCheck();
     }
+
+    public void release() {
+        for (int i = 0; i < credits.length; i++) {
+            if (credits[i] != null) {
+                credits[i].release();
+            }
+        }
+        credits = null;
+        paint = null;
+    }
+
 }

@@ -350,6 +350,19 @@ public class Palette {
     public ItemData getItemData(int _paletteIndex){
         return palette_elements[_paletteIndex].getItemData();
     }
+
+    public void release() {
+        direction_section_check = null;
+        palette_center.release();
+        palette_center = null;
+        for (int i = 0; i < palette_elements.length; i++) {
+            if (palette_elements != null) {
+                palette_elements[i].release();
+            }
+        }
+        palette_elements = null;
+        paint = null;
+    }
 }
 
 

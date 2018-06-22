@@ -169,4 +169,15 @@ public class EffectAdmin {
     public EffectDataAdmin getEffectDataAdmin() {
         return effectDataAdmin;
     }
+
+    public void release() {
+        effectDataAdmin.release();
+        for (int i = 0; i < effect.size(); i++) {
+            if (effect.get(i) != null) {
+                effect.get(i).release();
+            }
+        }
+        effect = null;
+    }
+
 }

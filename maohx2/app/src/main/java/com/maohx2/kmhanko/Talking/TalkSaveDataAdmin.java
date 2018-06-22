@@ -81,4 +81,23 @@ public class TalkSaveDataAdmin {
     }
 
 
+    public void release() {
+        for (int i = 0; i < talkName.size(); i++) {
+            talkName.set(i, null);
+
+        }
+        talkName.clear();
+        talkName = null;
+
+        for (int i = 0; i < talkFlag.size(); i++) {
+            talkFlag.set(i, null);
+
+        }
+        talkFlag.clear();
+        talkFlag = null;
+
+        talkSaver.release();
+        talkSaver = null;
+    }
+
 }

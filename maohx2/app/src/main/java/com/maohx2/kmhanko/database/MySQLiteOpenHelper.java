@@ -210,6 +210,8 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     @Override
     public synchronized void close() {
         //データベースが読み込まれている場合にのみクローズする
+        db_asset = null;
+        db_name = null;
         if (mDatabase != null) {
             super.close();
         }

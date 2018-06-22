@@ -50,6 +50,7 @@ public class DungeonSelectManager {
     //DungeonSelectButtonAdmin dungeonSelectButtonAdmin;
     //LoopSelectButtonAdmin loopSelectButtonAdmin;
 
+
     static final float DUNGEON_SELECT_BUTTON_RATE_DEFAULT = 4.0f;
     static final float DUNGEON_SELECT_BUTTON_RATE_FEEDBACK = 5.0f;
     static final int DUNGEON_SELECT_BUTTON_RATE_TOURH_R = 110;
@@ -101,10 +102,6 @@ public class DungeonSelectManager {
 
 
     int focusDungeonButtonID;
-
-    //SELECT_MODE selectMode = SELECT_MODE.DUNGEON_SELECT;
-
-    Paint paint = new Paint(); //TODO GeoMapとDungeonSelectの切り替え表示用。いつか消える
 
     PlayerStatus playerStatus;
 
@@ -868,6 +865,27 @@ public class DungeonSelectManager {
                 });
         OkButtonGroup.setUpdateFlag(false);
         OkButtonGroup.setDrawFlag(false);
+    }
+
+    public void release() {
+        loopCountTextPaint = null;
+        enterTextPaint = null;
+        dungeonName.clear();
+        dungeonName = null;
+        dungeonNameExpress.clear();
+        dungeonNameExpress = null;
+        event.clear();
+        event = null;
+        mapIconPlateGroup.release();
+        mapIconPlateGroup = null;
+        dungeonEnterSelectButtonGroup.release();
+        dungeonEnterSelectButtonGroup = null;
+        maohEnterSelectButtonGroup.release();
+        maohEnterSelectButtonGroup = null;
+        loopCountSelectButtonGroup.release();
+        loopCountSelectButtonGroup = null;
+        OkButtonGroup.release();
+        OkButtonGroup = null;
     }
 
 

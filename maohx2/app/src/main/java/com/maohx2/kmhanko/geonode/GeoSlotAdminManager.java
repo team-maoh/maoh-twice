@@ -63,7 +63,7 @@ public class GeoSlotAdminManager {
     static final String DB_NAME_GEOSLOTEVENT = "GeoSlotEventDB";
     static final String DB_ASSET_GEOSLOTEVENT = "GeoSlotEvent.db";
 
-    public final int GEO_SLOT_ADMIN_MAX = 16;
+    static public final int GEO_SLOT_ADMIN_MAX = 16;
     List<GeoSlotAdmin> geoSlotAdmins = new ArrayList<GeoSlotAdmin>(GEO_SLOT_ADMIN_MAX);
     GeoSlotAdmin activeGeoSlotAdmin = null;
 
@@ -94,6 +94,22 @@ public class GeoSlotAdminManager {
     }
 
     MODE mode;
+
+    public void release() {
+        activeGeoSlotAdmin = null;
+        for (int i = 0 ; i < geoSlotAdmins.size(); i++) {
+            geoSlotAdmins.get(i).release();
+        }
+        geoSlotAdmins.clear();
+        geoSlotAdmins = null;
+        mode = null;
+        mapIconPlateGroup.release();
+        mapIconPlateGroup = null;
+        backPlateGroup.release();
+        backPlateGroup = null;
+        dungeonName.clear();
+        dungeonName = null;
+    }
 
     public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver, MaohMenosStatus _maohMenosStatus, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin, DungeonModeManage _dungeonModeManage) {
         this(_graphic, _userInterface, null, _databaseAdmin, _textBoxAdmin, _playerStatus, _geoInventry, _geoSlotSaver,_maohMenosStatus,_soundAdmin, _effectAdmin);

@@ -155,6 +155,12 @@ public class BattleUserInterface extends UserInterface {
         }
     }
 
+    @Override
+    public void release() {
+        super.release();
+        direction_section_check = null;
+        paint = null;
+    }
 
 
 

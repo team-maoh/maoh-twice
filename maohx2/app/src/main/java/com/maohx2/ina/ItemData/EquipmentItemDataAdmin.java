@@ -70,4 +70,9 @@ public class EquipmentItemDataAdmin extends ItemDataAdmin<EquipmentItemData> {
         return debug_item;
     }
 
+    public void release() {
+        super.release();
+        itoe = null;
+    }
+
 }

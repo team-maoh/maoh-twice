@@ -151,6 +151,10 @@ abstract public class MapObject {
 //    public void setMapAdmin(MapAdmin _map_admin){
 //    }
 
+    public void release() {
+        random = null;
+        name = null;
+    }
 
 }
 

@@ -43,6 +43,7 @@ public abstract class ItemShop {
     PlateGroup<BoxImageTextPlate> buySelectPlateGroup;
     PlateGroup<BackPlate> backPlateGroup;
 
+
     int textBoxID;
 
     //boolean isListBoxItemActive = true;

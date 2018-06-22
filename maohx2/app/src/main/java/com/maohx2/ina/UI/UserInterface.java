@@ -300,4 +300,14 @@ public class UserInterface {
         return ui_palette_draw_falag;
     }
 
+    public void release() {
+        circle_center_list_x = null;
+        circle_center_list_y = null;
+        circle_radius_list = null;
+        box_left_list = null;
+        box_top_list = null;
+        box_right_list = null;
+        box_down_list = null;
+    }
+
 }

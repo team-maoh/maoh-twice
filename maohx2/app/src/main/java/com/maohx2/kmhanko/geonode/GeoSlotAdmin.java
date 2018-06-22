@@ -74,8 +74,8 @@ public class GeoSlotAdmin {
     static MyDatabase geoSlotEventDB;
 
 
-    public final int GEO_SLOT_MAX = 64;
-    public final int TOUCH_R = 90;
+    static public final int GEO_SLOT_MAX = 64;
+    static public final int TOUCH_R = 90;
 
     String t_name; //このGeoSlotAdmin = ジオマップの名称 = Table名
 
@@ -117,6 +117,24 @@ public class GeoSlotAdmin {
     SoundAdmin soundAdmin;
 
     EffectAdmin effectAdmin;
+
+    public void release() {
+        tree_code.clear();
+        tree_code = null;
+        for (int i = 0; i < geoSlots.size(); i++) {
+            if (geoSlots.get(i) != null) {
+                geoSlots.get(i).release();
+            }
+        }
+        geoSlots.clear();
+        geoSlots = null;
+        geoSlotGroup.release();
+        geoSlotGroup = null;
+        releasePlateGroup.release();
+        releasePlateGroup = null;
+        holdGeoPlateGroup.release();
+        holdGeoPlateGroup = null;
+    }
 
     //Rewrite by kmhanko
     public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, TextBoxAdmin _textBoxAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, InventryS _geoInventry, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin) {

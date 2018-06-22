@@ -400,4 +400,26 @@ public class TalkAdmin {
         return isWait || !isTalking;
     }
 
+
+
+    public void release() {
+        for (int i = 0; i < talkContent.length; i++) {
+            for (int j = 0; j < talkContent[i].length; j++) {
+                talkContent[i] = null;
+            }
+        }
+        talkContent = null;
+        for (int i = 0; i < talkCharaName.length; i++) {
+            talkCharaName[i] = null;
+        }
+        talkCharaName = null;
+        leftOrRight = null;
+        talkWaitTime = null;
+        talkCharaLeft = null;
+        talkCharaRight = null;
+        paint = null;
+
+        talkSaveDataAdmin.release();
+    }
+
 }

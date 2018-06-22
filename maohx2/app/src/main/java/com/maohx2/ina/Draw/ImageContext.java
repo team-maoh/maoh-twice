@@ -44,4 +44,12 @@ public class ImageContext {
     public void setPaint(Paint _paint) {
         paint = _paint;
     }
+
+    public void release() {
+        bitmap_data.releaseBitmap();;
+        bitmap_data = null;
+        matrix = null;
+        paint = null;
+    }
+
 }

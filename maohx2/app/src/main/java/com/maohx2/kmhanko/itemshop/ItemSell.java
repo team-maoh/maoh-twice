@@ -274,6 +274,7 @@ public class ItemSell {
         expendItemInventry.setPosition(1210,SIDE_INVENTRY.INV_UP,1600,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
     }
 
+
     //***テキストボックス関係
     int sellConfirmTextBoxID;
     Paint sellConfirmTextBoxPaint;
@@ -298,6 +299,7 @@ public class ItemSell {
 
         textBoxAdmin.updateText(sellConfirmTextBoxID);
     }
+
 
     //***ボタン関係
     PlateGroup<BackPlate> backPlateGroup;
@@ -360,8 +362,6 @@ public class ItemSell {
         switchPlateGroup.setUpdateFlag(true);
         switchPlateGroup.setDrawFlag(true);
     }
-
-
 
 
     PlateGroup<BoxImageTextPlate> sellSelectButtonGroup;
@@ -444,6 +444,8 @@ public class ItemSell {
     }
     */
 
+
+
     PlateGroup<BoxImagePlate> sellEnterPlateGroup;
     private void initsellEnterPlate() {
         Paint textPaint = new Paint();
@@ -489,6 +491,21 @@ public class ItemSell {
         sellEnterPlateGroup.setUpdateFlag(true);
         sellEnterPlateGroup.setDrawFlag(true);
     }
+
+
+    public void release() {
+        sellItemInventry.release();
+        sellConfirmTextBoxPaint = null;
+        backPlateGroup.release();
+        backPlateGroup = null;
+        switchPlateGroup.release();
+        switchPlateGroup = null;
+        sellSelectButtonGroup.release();
+        sellSelectButtonGroup = null;
+        sellEnterPlateGroup.release();
+        sellEnterPlateGroup = null;
+    }
+
 
         /*
     public void sellSelectButtonCheck() {

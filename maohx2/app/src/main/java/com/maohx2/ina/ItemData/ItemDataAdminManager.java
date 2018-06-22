@@ -34,4 +34,11 @@ public class ItemDataAdminManager {
         return geoObjectDataAdmin;
     }
 
+    public void release() {
+        expendItemDataAdmin.release();
+        geoObjectDataAdmin.release();
+        expendItemDataAdmin = null;
+        geoObjectDataAdmin = null;
+    }
+
 }
