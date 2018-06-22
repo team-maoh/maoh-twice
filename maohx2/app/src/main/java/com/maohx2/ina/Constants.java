@@ -49,6 +49,19 @@ public final class Constants {
 
     public static final int STAGE_NUM = 7;
 
+    public static final String DEBUG_SAVE_MODE = "ns";
+    public static class SaveDataVersion {
+        public static final int EQUIPMENT_INVENTRY = 1;
+        public static final int EXPEND_INVENTRY = 1;
+        public static final int GEO_INVENTRY = 1;
+        public static final int GEO_PRESENT = 1;
+        public static final int GEO_SLOT = 1;
+        public static final int MAP_SAVE_DATA = 1;
+        public static final int PLAYER_STATUS = 1;
+        public static final int TALK = 1;
+    }
+
+
 
     public static class Touch {
         public enum TouchState {
@@ -71,6 +84,15 @@ public final class Constants {
         public static final int BITMAP_DATA_INSTANCE = 1000;
         public static final int BOOKING_DATA_INSTANCE = 1000;
     }
+
+    /*
+    public static class EffectConstant {
+        public static final int EFFECT_ANIME_MAX = 50;
+    }
+    */
+
+
+
 
     public static class BattleUnit {
         public static final int BATTLE_UNIT_MAX = 15;
@@ -163,6 +185,7 @@ public final class Constants {
             EQUIP,
             PRESENT,
             SELL,
+            GEO_MAP_SEE_ONLY,
 
             DUNGEON_SELECT_INIT,
             GEO_MAP_SELECT_INIT,
@@ -171,25 +194,37 @@ public final class Constants {
             EQUIP_INIT,
             PRESENT_INIT,
             SELL_INIT,
+            GEO_MAP_SEE_ONLY_INIT,
 
             DUNGEON_SELECT_INIT_START,
+            TU_EQUIP,
+            CREDIT,
+            ENDING,
         }
     }
 
     public static class POPUP_WINDOW {
-        public static final int MESS_LEFT = 200;
-        public static final int MESS_RIGHT = 1400;
-        public static final int MESS_UP = 300;
+        public static final int MESS_LEFT = 150;
+        public static final int MESS_RIGHT = 1450;
+        public static final int MESS_UP = 250;
         public static final int MESS_BOTTOM = 500;
 
-        public static final int OK_LEFT = 200;
-        public static final int OK_RIGHT = 1400;
-        public static final int OK_UP = 500;
-        public static final int OK_BOTTOM = 600;
+        public static final int OK_LEFT = 500 + 10;
+        public static final int OK_RIGHT = 1100 - 10;
+        public static final int OK_UP = 500 + 10;
+        public static final int OK_BOTTOM = 600 - 10;
 
         public static final float TEXT_SIZE = 40f;
         public static final float TEXT_SIZE_BIG = 80f;
         public static final int MESS_ROW = 5;
+    }
+
+    public static class SIDE_INVENTRY {
+        public static final int INV_LEFT = 1200;
+        public static final int INV_RIGHT = 1600;
+        public static final int INV_UP = 200;
+        public static final int INV_BOTTOM = 760;
+        public static final int INV_CONTENT_NUM = 7;
     }
 
     public static class SELECT_WINDOW {
@@ -198,15 +233,15 @@ public final class Constants {
         public static final int MESS_UP = 300;
         public static final int MESS_BOTTOM = 500;
 
-        public static final int YES_LEFT = 200;
-        public static final int YES_RIGHT = 800;
-        public static final int YES_UP = 500;
-        public static final int YES_BOTTOM = 600;
+        public static final int YES_LEFT = 200+ 50;
+        public static final int YES_RIGHT = 800- 50;
+        public static final int YES_UP = 500+ 10;
+        public static final int YES_BOTTOM = 600- 10;
 
-        public static final int NO_LEFT = 800;
-        public static final int NO_RIGHT = 1400;
-        public static final int NO_UP = 500;
-        public static final int NO_BOTTOM = 600;
+        public static final int NO_LEFT = 800+ 50;
+        public static final int NO_RIGHT = 1400- 50;
+        public static final int NO_UP = 500+ 10;
+        public static final int NO_BOTTOM = 600- 10;
 
         public static final float TEXT_SIZE = 40f;
         public static final float TEXT_SIZE_BIG = 80f;
@@ -219,6 +254,15 @@ public final class Constants {
         public static final int COUNT_UP = 200;
         public static final int COUNT_BOTTOM = 400;
 
+        public static final int MENOS_X = 500;
+        public static final int MENOS_Y = 300;
+        public static final int MENOS_R = 100;
+
+        public static final int PLUS_X = 1100;
+        public static final int PLUS_Y = 300;
+        public static final int PLUS_R = 100;
+
+        /*
         public static final int MENOS_LEFT = 200;
         public static final int MENOS_RIGHT = 400;
         public static final int MENOS_UP = 200;
@@ -228,9 +272,10 @@ public final class Constants {
         public static final int PLUS_RIGHT = 1400;
         public static final int PLUS_UP = 200;
         public static final int PLUS_BOTTOM = 400;
+        */
 
         public static final float TEXT_SIZE = 80f;
-        public static final int MESS_ROW = 1;
+        public static final int MESS_ROW = 2;
     }
 
     public static class Item {
@@ -340,6 +385,7 @@ public final class Constants {
 
     public static class GeoSlotParam {
         public static final float GEO_SLOT_SCALE = 4.0f;
+        public static final float GEO_STOP_SCALE = 3.0f;
     }
 
     // *** takanoここまで ***

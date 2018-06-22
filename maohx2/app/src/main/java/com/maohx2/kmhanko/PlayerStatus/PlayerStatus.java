@@ -39,6 +39,8 @@ public class PlayerStatus {
     private int expendInvetryMaxNum;
     private int equipmentInventryMaxNum;
 
+    private int endingFlag;
+
     //Record
 
     private int maohWinCount;
@@ -138,6 +140,7 @@ public class PlayerStatus {
     public int getGeoInventryMaxNum() { return geoInventryMaxNum; }
     public int getExpendInvetryMaxNum() { return expendInvetryMaxNum; }
     public int getEquipmentInventryMaxNum() { return equipmentInventryMaxNum; }
+    public int getEndingFlag() {return endingFlag;}
 
     public void setHP(int x) { hp = x; }
     public void setNowHP(int x) { nowHp = x; }
@@ -152,6 +155,7 @@ public class PlayerStatus {
     public void setGeoInventryMaxNum(int x) { geoInventryMaxNum = x; }
     public void setExpendInvetryMaxNum(int x) {  expendInvetryMaxNum = x; }
     public void setEquipmentInventryMaxNum(int x){  equipmentInventryMaxNum = x;}
+    public void setEndingFlag(int _endingFlag) {endingFlag = _endingFlag;}
 
     public void addClearCount() {
         clearCount++;
@@ -217,7 +221,8 @@ public class PlayerStatus {
                 tutorialInDungeon,
                 geoInventryMaxNum,
                 expendInvetryMaxNum,
-                equipmentInventryMaxNum
+                equipmentInventryMaxNum,
+                endingFlag
         };
     }
 

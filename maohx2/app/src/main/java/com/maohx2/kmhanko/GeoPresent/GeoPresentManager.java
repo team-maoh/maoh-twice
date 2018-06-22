@@ -7,6 +7,7 @@ import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Arrange.InventryData;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Constants.SELECT_WINDOW;
+import com.maohx2.ina.Constants.SIDE_INVENTRY;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.PlateGroup;
@@ -25,7 +26,10 @@ import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.plate.BackPlate;
+import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
+
+import com.maohx2.ina.Draw.ImageContext;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -86,7 +90,7 @@ public class GeoPresentManager {
     InventryS expendItemInventry;
     ExpendItemDataAdmin expendItemDataAdmin;
 
-    PlateGroup<BoxTextPlate> presentSelectPlateGroup;
+    PlateGroup<BoxImageTextPlate> presentSelectPlateGroup;
 
     WorldModeAdmin worldModeAdmin;
 
@@ -96,12 +100,13 @@ public class GeoPresentManager {
 
     SoundAdmin soundAdmin;
 
+    ImageContext gaiaImage;
+
     public GeoPresentManager(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, InventryS _geoInventry, InventryS _expendItemInventry, ExpendItemDataAdmin _expendItemDataAdmin, PlayerStatus _playerStatus, SoundAdmin _soundAdmin) {
         userInterface = _user_interface;
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
         textBoxAdmin = _textBoxAdmin;
-        loadDatabase(databaseAdmin);
         geoInventry = _geoInventry; //TODO globalから
         expendItemInventry = _expendItemInventry;
         expendItemDataAdmin = _expendItemDataAdmin;
@@ -109,6 +114,7 @@ public class GeoPresentManager {
         worldModeAdmin = _worldModeAdmin;
         soundAdmin = _soundAdmin;
 
+        loadDatabase(databaseAdmin);
         initTextBox();
         initPlateGroup();
         initPresentTextBox();
@@ -117,8 +123,10 @@ public class GeoPresentManager {
     }
 
     public void start() {
-        geoInventry.setPosition( 1200, 100 , 1600, 600,10);
+        geoInventry.setPosition(SIDE_INVENTRY.INV_LEFT, SIDE_INVENTRY.INV_UP, SIDE_INVENTRY.INV_RIGHT,SIDE_INVENTRY.INV_BOTTOM,SIDE_INVENTRY.INV_CONTENT_NUM);
+        gaiaImage = graphic.makeImageContext(graphic.searchBitmap("gaia0r"), 300, 450, 2.7f, 2.7f, 0, 255, false);
         scoreTextBoxUpdate();
+        updateTextBox();
     }
 
     private void initPresentTextBox() {
@@ -144,15 +152,18 @@ public class GeoPresentManager {
     }
 
     private void initTextBox() {
-        scoreTextBoxID = textBoxAdmin.createTextBox(0,0,300,500,6);
+        scoreTextBoxID = textBoxAdmin.createTextBox(600,100,1000,660,6);
         textBoxAdmin.setTextBoxUpdateTextByTouching(scoreTextBoxID, false);
         textBoxAdmin.setTextBoxExists(scoreTextBoxID, false);
         scoreTextBoxUpdate();
 
-        messageBoxID = textBoxAdmin.createTextBox(0,600,1000,900,3);
+        messageBoxID = textBoxAdmin.createTextBox(50, 700, 1150, 880,3);
         textBoxAdmin.setTextBoxExists(messageBoxID, false);
+        updateTextBox();
+    }
 
-
+    private void updateTextBox() {
+        textBoxAdmin.resetTextBox(messageBoxID);
         textBoxAdmin.setTextBoxUpdateTextByTouching(messageBoxID, false);
         textBoxAdmin.bookingDrawText(messageBoxID, "ジオオブジェクトちょうだ〜い");
         textBoxAdmin.bookingDrawText(messageBoxID, "MOP");
@@ -163,18 +174,18 @@ public class GeoPresentManager {
         Paint textPaint = new Paint();
         textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
         textPaint.setARGB(255,255,255,255);
-        presentSelectPlateGroup = new PlateGroup<BoxTextPlate>(
-                new BoxTextPlate[]{
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+        presentSelectPlateGroup = new PlateGroup<BoxImageTextPlate>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.YES_LEFT, SELECT_WINDOW.YES_UP, SELECT_WINDOW.YES_RIGHT, SELECT_WINDOW.YES_BOTTOM},
                                 "献上する",
                                 textPaint
                         ),
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.NO_LEFT, SELECT_WINDOW.NO_UP, SELECT_WINDOW.NO_RIGHT, SELECT_WINDOW.NO_BOTTOM},
@@ -201,8 +212,8 @@ public class GeoPresentManager {
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "Deffence " + defenceScore);
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "\n");
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "Luck " + luckScore);
-        textBoxAdmin.bookingDrawText(scoreTextBoxID, "\n");
-        textBoxAdmin.bookingDrawText(scoreTextBoxID, "Special " + specialScore);
+        //textBoxAdmin.bookingDrawText(scoreTextBoxID, "\n");
+        //textBoxAdmin.bookingDrawText(scoreTextBoxID, "Special " + specialScore);
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "MOP");
         textBoxAdmin.updateText(scoreTextBoxID);
     }
@@ -231,15 +242,14 @@ public class GeoPresentManager {
     }
 
     private void presentGeoObject(GeoObjectData geoObjectData) {
-        //TODO:計算が適当なので直す
         hpScore += geoObjectData.getHp();
         attackScore += geoObjectData.getAttack();
         defenceScore += geoObjectData.getDefence();
         luckScore += geoObjectData.getLuck();
-        specialScore += (geoObjectData.getHpRate() - 1.0) * 10;
-        specialScore += (geoObjectData.getAttackRate() - 1.0) * 10;
-        specialScore += (geoObjectData.getDefenceRate() - 1.0) * 10;
-        specialScore += (geoObjectData.getLuckRate() - 1.0) * 10;
+        hpScore += (geoObjectData.getHpRate() - 1.0) * 30 * Math.pow(2,playerStatus.getClearCount());
+        attackScore += (geoObjectData.getAttackRate() - 1.0) * 30 * Math.pow(2,playerStatus.getClearCount());
+        defenceScore += (geoObjectData.getDefenceRate() - 1.0) * 30 * Math.pow(2,playerStatus.getClearCount());
+        luckScore += (geoObjectData.getLuckRate() - 1.0) * 30 * Math.pow(2,playerStatus.getClearCount());
 
         sumScore = hpScore + attackScore + defenceScore + luckScore + specialScore;
 
@@ -358,6 +368,8 @@ public class GeoPresentManager {
                 name = bufItemData.getName();
             }
             presentGetMessage(name);
+            gaiaImage = graphic.makeImageContext(graphic.searchBitmap("gaia22r"), 300, 450, 2.7f, 2.7f, 0, 255, false);
+
             System.out.println("takano:GeoPresentManager#presentToInventry : 献上により獲得 : " + name);
 
             //セーブのために格納
@@ -413,6 +425,7 @@ public class GeoPresentManager {
 
 
     public void draw() {
+        graphic.bookingDrawBitmapData(gaiaImage);
         geoInventry.draw();
         presentSelectPlateGroup.draw();
         backPlateGroup.draw();
@@ -422,7 +435,7 @@ public class GeoPresentManager {
         backPlateGroup = new PlateGroup<BackPlate>(
                 new BackPlate[] {
                         new BackPlate(
-                                graphic, userInterface, worldModeAdmin
+                                graphic, userInterface
                         ) {
                             @Override
                             public void callBackEvent() {

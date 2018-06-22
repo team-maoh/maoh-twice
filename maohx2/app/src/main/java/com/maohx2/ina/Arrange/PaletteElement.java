@@ -20,6 +20,7 @@ import static com.maohx2.ina.Constants.Palette.PALETTE_ELEMENT_RADIUS_SMALL;
 public class PaletteElement {
 
     Paint paint;
+    Paint textPaint;
     int x,y;
     int element_num;
     static Graphic graphic;
@@ -33,6 +34,7 @@ public class PaletteElement {
         element_num = _element_num;
         touch_id = _touch_id;
         paint = new Paint();
+        textPaint = new Paint();
         soundAdmin = _soundAdmin;
 
         if(element_num == 0) {
@@ -42,6 +44,9 @@ public class PaletteElement {
         }
 
         paint.setAlpha(255);
+
+        textPaint.setARGB(255,0,0,0);
+        textPaint.setTextSize(30);
     }
 
     public static void initStatic(Graphic _graphic){
@@ -56,7 +61,7 @@ public class PaletteElement {
     public void drawSmallAndItem() {
         graphic.bookingDrawCircle(x, y, PALETTE_ELEMENT_RADIUS_SMALL, paint);
         if(item_data != null){
-            graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y,1,1,0,255,false);
+            graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y,1,1,0,254,false);
         }
     }
 
@@ -67,7 +72,7 @@ public class PaletteElement {
     public void drawBigAndItem(){
         graphic.bookingDrawCircle(x, y, PALETTE_ELEMENT_RADIUS_BIG, paint);
         if(item_data != null){
-            graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y,1.5f,1.5f,0,255,false);
+            graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y,1.5f,1.5f,0,254,false);
         }
     }
 
@@ -85,12 +90,12 @@ public class PaletteElement {
         if(_select_circle_num == element_num) {
             graphic.bookingDrawCircle(x, y, PALETTE_ELEMENT_RADIUS_BIG+10, paint);
             if (item_data != null) {
-                graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y, 1.5f, 1.5f, 0, 255, false);
+                graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y, 1.5f, 1.5f, 0, 254, false);
             }
         }else{
             graphic.bookingDrawCircle(x, y, PALETTE_ELEMENT_RADIUS_BIG, paint);
             if (item_data != null) {
-                graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y, 1.5f, 1.5f, 0, 255, false);
+                graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y, 1.5f, 1.5f, 0, 254, false);
             }
         }
     }

@@ -14,6 +14,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.view.SurfaceHolder;
 
+import com.maohx2.ina.BaseActivity;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.GlobalConstants;
 import com.maohx2.ina.GlobalData;
@@ -147,6 +148,7 @@ public class Graphic {
         canvas = holder.lockCanvas();
 
         //System.out.println("booking_num:"+booking_num);
+
 
         if(canvas != null) {
             //canvas.drawColor(Color.WHITE);
@@ -598,4 +600,21 @@ public class Graphic {
     }
 
     public SurfaceHolder getHolder(){return holder;}
+
+    //by kmhanko
+    public void releaseBitmap() {
+        //global_bitmap_data_admin.releaseBitmap();
+        local_bitmap_data_admin.releaseBitmap();
+        for (int i = 0; i < BOOKING_DATA_INSTANCE; i++ ) {
+            booking_circle_datas.get(i).release();
+            booking_rect_datas.get(i).release();
+            booking_text_datas.get(i).release();
+            booking_bitmap_datas.get(i).release();
+        }
+        for (int i = 0; i < booking_task_datas.size(); i++ ) {
+            booking_task_datas.get(i).release();
+        }
+
+    }
+  
 }

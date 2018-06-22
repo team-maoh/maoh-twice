@@ -7,6 +7,7 @@ import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.GlobalData;
+import com.maohx2.ina.Text.BoxImagePlate;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.UserInterface;
@@ -23,11 +24,13 @@ import com.maohx2.kmhanko.itemdata.ExpendItemData;
 import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.plate.BackPlate;
+import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Constants.SELECT_WINDOW;
 import com.maohx2.ina.Constants.GAMESYSTEN_MODE.WORLD_MODE;
 import static com.maohx2.ina.Constants.Inventry.*;
+import com.maohx2.ina.Constants.SIDE_INVENTRY;
 
 /**
  * Created by user on 2018/05/21.
@@ -172,7 +175,7 @@ public class ItemSell {
             //売却インベントリからの場合。そのInventryDataを売却インベントリから1つ削除する
             //さらに、同一ItemDataを各種インベントリから探し、その売却個数に-1する
             if (tempInventryData.getItemNum() > 0) {
-                tempInventryData.setItemNum(tempInventryData.getItemNum() - 1);
+                tempInventryData.getParentInventry().subItemData(tempInventryData.getItemData());
                 switch (tempInventryData.getItemData().getItemKind()) {
                     case GEO:
                         geoInventry.searchInventryData(tempInventryData.getItemData()).subSoldNum();
@@ -234,11 +237,12 @@ public class ItemSell {
         checkInventry();
 
 
-
-        geoInventry.updata();
-        expendItemInventry.updata();
-        equipmentInventry.updata();
-        sellItemInventry.updata();
+        if (!sellSelectButtonGroup.getUpdateFlag()) {
+            geoInventry.updata();
+            expendItemInventry.updata();
+            equipmentInventry.updata();
+            sellItemInventry.updata();
+        }
         switchPlateGroup.update();
 
         //sellSelectButtonCheck();
@@ -264,10 +268,10 @@ public class ItemSell {
         geoInventry.setPosition(700,50,1000,500);
         expendItemInventry.setPosition(1000,50,1300,500);
         */
-        sellItemInventry.setPosition(50,50,350,600, 10);
-        equipmentInventry.setPosition(400,50,700,600, 10);
-        geoInventry.setPosition(700,50,1000,600,10);
-        expendItemInventry.setPosition(1000,50,1300,600,10);
+        sellItemInventry.setPosition(0,SIDE_INVENTRY.INV_UP,390,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
+        equipmentInventry.setPosition(430,SIDE_INVENTRY.INV_UP,820,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
+        geoInventry.setPosition(820,SIDE_INVENTRY.INV_UP,1210,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
+        expendItemInventry.setPosition(1210,SIDE_INVENTRY.INV_UP,1600,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
     }
 
     //***テキストボックス関係
@@ -285,8 +289,9 @@ public class ItemSell {
 
     private void updateSellConformTextBox(int _sellMoney) {
         textBoxAdmin.setTextBoxExists(sellConfirmTextBoxID, true);
+        textBoxAdmin.resetTextBox(sellConfirmTextBoxID);
 
-        textBoxAdmin.bookingDrawText(sellConfirmTextBoxID, "売却価格は " + _sellMoney + " G です．", sellConfirmTextBoxPaint);
+        textBoxAdmin.bookingDrawText(sellConfirmTextBoxID, "売却価格は " + _sellMoney + " Maon です．", sellConfirmTextBoxPaint);
         textBoxAdmin.bookingDrawText(sellConfirmTextBoxID, "\n", sellConfirmTextBoxPaint);
         textBoxAdmin.bookingDrawText(sellConfirmTextBoxID, "売却しますか？", sellConfirmTextBoxPaint);
         textBoxAdmin.bookingDrawText(sellConfirmTextBoxID, "MOP", sellConfirmTextBoxPaint);
@@ -300,7 +305,7 @@ public class ItemSell {
         backPlateGroup = new PlateGroup<BackPlate>(
                 new BackPlate[] {
                         new BackPlate(
-                                graphic, userInterface, worldModeAdmin
+                                graphic, userInterface
                         ) {
                             @Override
                             public void callBackEvent() {
@@ -317,21 +322,30 @@ public class ItemSell {
         backPlateGroup.setDrawFlag(true);
     }
 
-    PlateGroup<BoxTextPlate> switchPlateGroup;
+    PlateGroup<BoxImagePlate> switchPlateGroup;
     private void initSwitchPlate() {
-        Paint textPaint = new Paint();
-        textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
-        textPaint.setARGB(255,255,255,255);
-
-        switchPlateGroup = new PlateGroup<BoxTextPlate>(
-                new BoxTextPlate[]{
-                        new BoxTextPlate(
+        int position[] = new int[] {
+                1250, 50, 1350, 150
+        };
+        switchPlateGroup = new PlateGroup<BoxImagePlate>(
+                new BoxImagePlate[]{
+                        new BoxImagePlate(
                                 graphic, userInterface, new Paint(),
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
-                                new int[]{ 1300, 700, 1500, 800 },
-                                "購入画面へ",
-                                textPaint
+                                position,
+                                graphic.makeImageContext(
+                                        graphic.searchBitmap("buyPlate"),
+                                        (position[0] + position[2])/2, (position[1] + position[3])/2,
+                                        5.0f, 5.0f, 0,
+                                        255, false
+                                ),
+                                graphic.makeImageContext(
+                                        graphic.searchBitmap("buyPlate"),
+                                        (position[0] + position[2])/2, (position[1] + position[3])/2,
+                                        7.0f, 7.0f, 0,
+                                        255, false
+                                )
                         ) {
                             @Override
                             public void callBackEvent() {
@@ -347,16 +361,20 @@ public class ItemSell {
         switchPlateGroup.setDrawFlag(true);
     }
 
-    PlateGroup<BoxTextPlate> sellSelectButtonGroup;
+
+
+
+    PlateGroup<BoxImageTextPlate> sellSelectButtonGroup;
     private void initSellSelectButton(){
         Paint textPaint = new Paint();
         textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
         textPaint.setARGB(255,255,255,255);
 
-        sellSelectButtonGroup = new PlateGroup<BoxTextPlate>(
-                new BoxTextPlate[]{
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+
+        sellSelectButtonGroup = new PlateGroup<BoxImageTextPlate>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.YES_LEFT, SELECT_WINDOW.YES_UP, SELECT_WINDOW.YES_RIGHT, SELECT_WINDOW.YES_BOTTOM},
@@ -371,8 +389,8 @@ public class ItemSell {
                                 initUIs();
                             }
                         },
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.NO_LEFT, SELECT_WINDOW.NO_UP, SELECT_WINDOW.NO_RIGHT, SELECT_WINDOW.NO_BOTTOM},
@@ -392,6 +410,7 @@ public class ItemSell {
         sellSelectButtonGroup.setDrawFlag(false);
     }
 
+/*
     PlateGroup<BoxTextPlate> sellEnterPlateGroup;
     private void initsellEnterPlate() {
         Paint textPaint = new Paint();
@@ -407,6 +426,53 @@ public class ItemSell {
                                 new int[]{ 50, 750, 350, 850 },
                                 "売却",
                                 textPaint
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //売却ボタンが押された時の処理
+                                soundAdmin.play("enter00");
+                                updateSellConformTextBox(calcSellMoney());
+                                sellSelectButtonGroup.setUpdateFlag(true);
+                                sellSelectButtonGroup.setDrawFlag(true);
+                                sellEnterPlateGroup.setUpdateFlag(false);
+                            }
+                        }
+                }
+        );
+        sellEnterPlateGroup.setUpdateFlag(true);
+        sellEnterPlateGroup.setDrawFlag(true);
+    }
+    */
+
+    PlateGroup<BoxImagePlate> sellEnterPlateGroup;
+    private void initsellEnterPlate() {
+        Paint textPaint = new Paint();
+        textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
+        textPaint.setARGB(255,255,255,255);
+
+        int position[] = new int[] {
+                50, 50, 150, 150
+        };
+
+        sellEnterPlateGroup = new PlateGroup<BoxImagePlate>(
+                new BoxImagePlate[] {
+                        new BoxImagePlate(
+                                graphic, userInterface, new Paint(),
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                position,
+                                graphic.makeImageContext(
+                                        graphic.searchBitmap("sellPlate2"),
+                                        (position[0] + position[2])/2, (position[1] + position[3])/2,
+                                        5.0f, 5.0f, 0,
+                                        255, false
+                                ),
+                                graphic.makeImageContext(
+                                        graphic.searchBitmap("sellPlate2"),
+                                        (position[0] + position[2])/2, (position[1] + position[3])/2,
+                                        7.0f, 7.0f, 0,
+                                        255, false
+                                )
                         ) {
                             @Override
                             public void callBackEvent() {

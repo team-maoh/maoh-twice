@@ -67,11 +67,16 @@ public class MapPlateAdmin {
     int HP_BG_LEFT = 1570;
     int HP_BG_BOTTOM = 35;
     //
-    int ITEM_LEFT = 1200;
-    int ITEM_TOP = 50;
-    int ITEM_RIGHT = 1550;
-    int ITEM_BOTTOM = 450;
+//    int ITEM_LEFT = 1200;
+//    int ITEM_TOP = 50;
+//    int ITEM_RIGHT = 1550;
+//    int ITEM_BOTTOM = 450;
+//    int ITEM_CONTENTS_NUM = 10;
     int ITEM_CONTENTS_NUM = 10;
+    int ITEM_LEFT = LEFT_COORD;
+    int ITEM_TOP = UP_COORD;
+    int ITEM_RIGHT = RIGHT_COORD;
+    int ITEM_BOTTOM = UP_COORD + 70 * ITEM_CONTENTS_NUM;
     //
     int HP_RIGHT = 120;
     int HP_LEFT = 1560;
@@ -84,13 +89,6 @@ public class MapPlateAdmin {
     //
     Paint text_paint = new Paint();
     Paint floor_bg = new Paint();
-
-
-    //
-    int RETIRE_TOP = 200;
-    int RETIRE_RIGHT = 400;
-    int RETIRE_LEFT = 100;
-    int RETIRE_BOTTOM = 400;
     //
     double hp_ratio;//0.00 ~ 1.00
 
@@ -169,6 +167,8 @@ public class MapPlateAdmin {
         inventry.updata();
 
         int pre_displaying_content = displaying_content;
+
+        max_hp = playerStatus.getHP();//最大HPは毎フレームupdateする（でないとHPが枠をオーバーする）
 
         Constants.Touch.TouchState touch_state = dungeon_user_interface.getTouchState();
         switch (displaying_content) {

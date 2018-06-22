@@ -55,10 +55,19 @@ public class BookingBitmapData extends BookingTaskData {
                 System.out.println("BookingBitMapData#draw MyERROR!!! ☆タカノ: draw_bitmap_data == null");
                 return;
             }
-            canvas.drawBitmap(draw_bitmap_data.getBitmap(), new Rect(0,0,draw_bitmap_data.getWidth(),draw_bitmap_data.getHeight()), draw_rect,null);
+            canvas.drawBitmap(draw_bitmap_data.getBitmap(), new Rect(0,0, draw_bitmap_data.getWidth(),draw_bitmap_data.getHeight()), draw_rect,null);
             //canvas.drawBitmap(draw_bitmap_data.getBitmap(),0,0,paint);
         }else{
             canvas.drawBitmap(draw_bitmap_data.getBitmap(), draw_matrix, paint);
         }
+    }
+
+    @Override
+    public void release() {
+        super.release();
+        draw_bitmap_data = null;
+        draw_matrix = null;
+        draw_rect = null;
+        isRect = false;
     }
 }

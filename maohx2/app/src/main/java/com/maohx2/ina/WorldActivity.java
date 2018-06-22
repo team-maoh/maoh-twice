@@ -48,6 +48,26 @@ public class WorldActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //worldSurfaceView.graphic.releaseBitmap();
+    }
+
+    @Override
+    public void finish() {
+        worldSurfaceView.my_database_admin.close();
+        worldSurfaceView.world_game_system.drawStop();
+        worldSurfaceView.world_game_system.release();
+        worldSurfaceView.graphic.releaseBitmap();
+        worldSurfaceView = null;
+    }
+
+    @Override
+    public String getActivityName() {
+        return "WorldActivity";
+    }
+
 }
 
 
@@ -72,6 +92,16 @@ class WorldSurfaceView extends BaseSurfaceView {
         my_database_admin.addMyDatabase("WorldDB", "LocalWorldImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("WorldDB"), "World");
 
+        /*
+        my_database_admin.addMyDatabase("ForestDB", "LocalForestImage.db", 1, "r");
+        graphic.loadLocalImages(my_database_admin.getMyDatabase("ForestDB"), "Forest");
+
+        my_database_admin.addMyDatabase("DungeonDB", "LocalDungeonImage.db", 1, "r");
+        graphic.loadLocalImages(my_database_admin.getMyDatabase("DungeonDB"), "Dungeon");
+
+        my_database_admin.addMyDatabase("BattleDB", "LocalBattleImage.db", 1, "r");
+        graphic.loadLocalImages(my_database_admin.getMyDatabase("BattleDB"), "Battle");
+        */
 
 
         map_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
@@ -92,18 +122,19 @@ class WorldSurfaceView extends BaseSurfaceView {
         global_data.getGeoInventry().sortItemDatabyKind();
         global_data.getExpendItemInventry().sortItemData();
 
-
+        /*by kmhanko OPであるかどうかはworldGameSystemのinitで判定するよう変更
+        openingFlag = true;
         if(global_data.getPlayerStatus().getTutorialInDungeon() == 0) {
             openingFlag = true;
         }
-
+        */
 
         world_game_system.init(map_user_interface, graphic, my_database_admin, soundAdmin, _map_activity, activityChange);
 
+        /*
         if(openingFlag == true){
             world_game_system.openningInit();
-        }
-
+        }*/
     }
 
     public void runGameSystem() {
@@ -122,6 +153,7 @@ class WorldSurfaceView extends BaseSurfaceView {
 
         map_user_interface.updateTouchState(touch_x, touch_y, touch_state);
 
+        /*
         if(openingFlag == true) {
             world_game_system.openningUpdate();
             world_game_system.openningDraw();
@@ -129,9 +161,12 @@ class WorldSurfaceView extends BaseSurfaceView {
             world_game_system.update();
             world_game_system.draw();
         }
+        */
+        world_game_system.update();
+        world_game_system.draw();
 
     }
 
-    public void setOpenningFlag(boolean _openningFlag) {openingFlag = _openningFlag;}
+    //public void setOpenningFlag(boolean _openningFlag) {openingFlag = _openningFlag;}
 
 }

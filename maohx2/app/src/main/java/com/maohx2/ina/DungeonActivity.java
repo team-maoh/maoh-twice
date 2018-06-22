@@ -30,7 +30,6 @@ public class DungeonActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("DungeonActivity : onCreate ");
         dungeon_surface_view = new DungeonSurfaceView(this, backSurfaceView);
         layout.addView(dungeon_surface_view);
 
@@ -58,6 +57,26 @@ public class DungeonActivity extends BaseActivity {
             dungeon_surface_view.runGameSystem();
             game_system_flag = true;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //dungeon_surface_view.graphic.releaseBitmap();
+    }
+
+    @Override
+    public void finish() {
+        dungeon_surface_view.my_database_admin.close();
+        dungeon_surface_view.game_system.drawStop();
+        dungeon_surface_view.graphic.releaseBitmap();
+        dungeon_surface_view.game_system.release();
+        dungeon_surface_view = null;
+    }
+
+    @Override
+    public String getActivityName() {
+        return "WorldActivity";
     }
 }
 
@@ -158,7 +177,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
         global_data.getExpendItemInventry().init(battle_user_interface, graphic,200,100,600,508, 10);
 
 
-        game_system.init(dungeon_user_interface, graphic, sound_admin, my_database_admin, battle_user_interface, dungeon_activity, my_database_admin, activityChange,1, dungeon_kind);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
+        game_system.init(dungeon_user_interface, graphic, sound_admin, my_database_admin, battle_user_interface, dungeon_activity, my_database_admin, activityChange, dungeon_kind);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
 
         if(openingFlag == true){
             game_system.openningInit();

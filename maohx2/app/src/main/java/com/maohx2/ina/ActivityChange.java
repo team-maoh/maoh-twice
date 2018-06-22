@@ -24,6 +24,7 @@ public class ActivityChange {
         Intent intent = new Intent(currentActivity, StartActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         currentActivity.finish();
+        //currentActivity.finishAndRemoveTask();
         currentActivity.startActivity(intent);
         currentActivity.overridePendingTransition(0, 0);
     }

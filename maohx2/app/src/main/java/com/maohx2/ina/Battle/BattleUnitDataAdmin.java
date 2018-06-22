@@ -1,5 +1,7 @@
 package com.maohx2.ina.Battle;
 
+import com.maohx2.horie.map.DungeonMonsterData;
+import com.maohx2.horie.map.DungeonMonsterDataAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Constants.Item.*;
 import com.maohx2.ina.Draw.Graphic;
@@ -127,6 +129,8 @@ public class BattleUnitDataAdmin {
 
         //for(int k = 0; k < tableName.length; k++) {
 
+
+        /*
             List<String>[] drop_item = new ArrayList[Constants.Item.DROP_NUM];
             for (int i = 0; i < drop_item.length; i++) {
                 drop_item[i] = new ArrayList<String>();
@@ -135,6 +139,7 @@ public class BattleUnitDataAdmin {
             for (int i = 0; i < drop_item_percent.length; i++) {
                 drop_item_percent[i] = new ArrayList<Double>();
             }
+            */
 
             name = battle_unit_data_database.getString(tableName, "name", null);
             List<Integer> attack_frame = battle_unit_data_database.getInt(tableName, "attack_frame", null);
@@ -180,11 +185,20 @@ public class BattleUnitDataAdmin {
 
             List<Integer> power = battle_unit_data_database.getInt(tableName, "power", null);
 
+        List<String> drop_item1 = battle_unit_data_database.getString(tableName, "drop_item01", null);
+        List<String> drop_item2 = battle_unit_data_database.getString(tableName, "drop_item02", null);
+        List<String> drop_item3 = battle_unit_data_database.getString(tableName, "drop_item03", null);
 
-        for (int i = 0; i < drop_item.length; i++) {
+        List<Double> drop_item_percent1 = battle_unit_data_database.getDouble(tableName, "drop_item01_percent", null);
+        List<Double> drop_item_percent2 = battle_unit_data_database.getDouble(tableName, "drop_item02_percent", null);
+        List<Double> drop_item_percent3 = battle_unit_data_database.getDouble(tableName, "drop_item03_percent", null);
+
+
+/*
+            for (int i = 0; i < drop_item.length; i++) {
                 drop_item[i] = battle_unit_data_database.getString(tableName, "drop_item0" + String.valueOf(i + 1), null);
                 drop_item_percent[i] = battle_unit_data_database.getDouble(tableName, "drop_item0" + String.valueOf(i + 1) + "_percent", null);
-            }
+            }*/
 
             for (int i = 0; i < name.size(); i++) {
                 battle_base_unit_datas.add(new BattleBaseUnitData());
@@ -241,13 +255,37 @@ public class BattleUnitDataAdmin {
 
                 tempBattleBaseUnitData.setPower(power.get(i));
 
-                for (int j = 0; j < drop_item.length; j++) {
-                    if (drop_item[j].get(i) == null) {
+                List<String> tempDropItem;
+                List<Double> tempDropItemPercent;
+                for (int j = 0; j < 3 ; j++) {
+                    switch (j) {
+                        case 1:
+                            tempDropItem = drop_item1;
+                            tempDropItemPercent = drop_item_percent1;
+                            break;
+                        case 2:
+                            tempDropItem = drop_item2;
+                            tempDropItemPercent = drop_item_percent2;
+                            break;
+                        case 3:
+                            tempDropItem = drop_item3;
+                            tempDropItemPercent = drop_item_percent3;
+                            break;
+                        default:
+                            tempDropItem = null;
+                            tempDropItemPercent = null;
+                            break;
+                    }
+
+                    if (tempDropItem == null) {
+                        continue;
+                    }
+                    if (tempDropItem.get(i) == null) {
                         continue;
                     }
                     //武器の場合
                     EQUIPMENT_KIND bufEK;
-                    switch (drop_item[j].get(i)) {
+                    switch (tempDropItem.get(i)) {
                         case "剣":
                             bufEK = EQUIPMENT_KIND.SWORD;
                             break;
@@ -288,14 +326,14 @@ public class BattleUnitDataAdmin {
                     if (bufEK != null) {
                         tempBattleBaseUnitData.setDropItemEquipmentKind(j, bufEK);
 
-                        tempBattleBaseUnitData.setDropItemName(j, drop_item[j].get(i));
+                        tempBattleBaseUnitData.setDropItemName(j, tempDropItem.get(i));
                         tempBattleBaseUnitData.setDropItemKind(j, Constants.Item.ITEM_KIND.EQUIPMENT);
-                        tempBattleBaseUnitData.setDropItemRate(j, drop_item_percent[j].get(i));
+                        tempBattleBaseUnitData.setDropItemRate(j, tempDropItemPercent.get(i));
                     } else {
                         //消費アイテムの場合
-                        tempBattleBaseUnitData.setDropItemName(j, drop_item[j].get(i));
+                        tempBattleBaseUnitData.setDropItemName(j, tempDropItem.get(i));
                         tempBattleBaseUnitData.setDropItemKind(j, Constants.Item.ITEM_KIND.EXPEND);
-                        tempBattleBaseUnitData.setDropItemRate(j, drop_item_percent[j].get(i));
+                        tempBattleBaseUnitData.setDropItemRate(j, tempDropItemPercent.get(i));
                     }
                 }
             }
@@ -314,6 +352,23 @@ public class BattleUnitDataAdmin {
         throw new Error("その名前のユニットは存在しません : " + bitmap_name);
     }
 
+    public List<BattleBaseUnitData> getBattleBaseUnitData() {
+        return battle_base_unit_datas;
+    }
+
+    public List<BattleBaseUnitData> getBattleBaseUnitDataExceptBoss(DungeonMonsterDataAdmin dungeonMonsterDataAdmin) {
+        List<DungeonMonsterData> dungeonMonsterData = dungeonMonsterDataAdmin.getDungeon_monster_data();
+        List<BattleBaseUnitData> tempBattleBaseUnitData = new ArrayList<>();
+        for(int i = 0 ; i < dungeonMonsterData.size(); i++) {
+            if (dungeonMonsterData.get(i).getType() == 0) {
+                tempBattleBaseUnitData.add(
+                        getBattleUnitDataNum(dungeonMonsterData.get(i).getMonsterName())
+                );
+            }
+        }
+        return tempBattleBaseUnitData;
+    }
+
     public List<String> getMaohUnitNames() {
         return battle_unit_data_database.getString("maoh_unit_data", "name");
     }
@@ -325,6 +380,19 @@ public class BattleUnitDataAdmin {
     public BattleBaseUnitData getRandomBattleBaseUnitData() {
         Random random = new Random();
         int i = random.nextInt(battle_base_unit_datas.size() - 1);
+        return battle_base_unit_datas.get(i);
+    }
+
+    public BattleBaseUnitData getRandomBattleBaseUnitDataExceptBoss(DungeonMonsterDataAdmin dungeonMonsterDataAdmin) {
+        List<DungeonMonsterData> dungeonMonsterData = dungeonMonsterDataAdmin.getDungeon_monster_data();
+        List<DungeonMonsterData> tempDungeonMonsterData = new ArrayList<>();
+        for(int i = 0 ; i < dungeonMonsterData.size(); i++) {
+            if (dungeonMonsterData.get(i).getType() == 0) {
+                tempDungeonMonsterData.add(dungeonMonsterData.get(i));
+            }
+        }
+        Random random = new Random();
+        int i = random.nextInt(tempDungeonMonsterData.size() - 1);
         return battle_base_unit_datas.get(i);
     }
 

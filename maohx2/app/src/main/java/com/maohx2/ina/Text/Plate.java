@@ -111,4 +111,7 @@ public abstract class Plate {
 
     public void releaseTouchID() {};
 
+    public void release() {
+    }
+
 }

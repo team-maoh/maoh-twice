@@ -360,4 +360,17 @@ public class Section {
             System.out.println("area = " + area);
         }
     }
+
+    public void release() {
+        connected_upper_leaf_num = null;
+        connected_lower_leaf_num = null;
+        connected_left_leaf_num = null;
+        connected_right_leaf_num = null;
+        children = null;
+        upper_neighbor = null;
+        lower_neighbor = null;
+        left_neighbor = null;
+        right_neighbor = null;
+        room = null;
+    }
 }

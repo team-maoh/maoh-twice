@@ -26,8 +26,8 @@ public final class GlobalConstants {
         DISP_X = disp_x;
         DISP_Y = disp_y;
 
-        NORMARIZED_DISP_RATE = new PointF((float)DISP_X/1600, (float)DISP_Y/900);
-        DISP_NORMARIZED_RATE = new PointF((float)1600/DISP_X, (float)900/DISP_Y);
+        NORMARIZED_DISP_RATE = new PointF((float)DISP_X/(float)1600, (float)DISP_Y/(float)900);
+        DISP_NORMARIZED_RATE = new PointF((float)1600/(float)DISP_X, (float)900/(float)DISP_Y);
 
         DENSITY = Math.min(NORMARIZED_DISP_RATE.x, NORMARIZED_DISP_RATE.y);
         NORMARIZED_DRAW_RATE = new PointF((float)(DENSITY*0.98), ((float)(DENSITY*0.98)));

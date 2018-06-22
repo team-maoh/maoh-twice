@@ -5,16 +5,25 @@ import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.horie.EquipTutorial.EquipTutorialSaveData;
+import com.maohx2.horie.EquipTutorial.EquipTutorialSaver;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
 import com.maohx2.ina.Arrange.PaletteElement;
+import com.maohx2.ina.Battle.BattleDungeonUnitData;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
+import com.maohx2.ina.Battle.BattleUnitDataAdmin;
 import com.maohx2.ina.Draw.BitmapData;
+import com.maohx2.ina.Draw.Credits;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Draw.ImageContext;
 import com.maohx2.ina.ItemData.EquipmentInventrySaver;
+import com.maohx2.ina.ItemData.EquipmentItemBaseData;
+import com.maohx2.ina.ItemData.EquipmentItemBaseDataAdmin;
+import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.ItemData.EquipmentItemDataAdmin;
+import com.maohx2.ina.ItemData.EquipmentItemDataCreater;
 import com.maohx2.ina.Text.ListBoxAdmin;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.BattleUserInterface;
@@ -31,6 +40,7 @@ import com.maohx2.kmhanko.Saver.ExpendItemInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoSlotSaver;
 import com.maohx2.kmhanko.Saver.GeoPresentSaver;
+import com.maohx2.kmhanko.Talking.TalkAdmin;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
 import com.maohx2.kmhanko.effect.EffectAdmin;
@@ -47,6 +57,7 @@ import com.maohx2.kmhanko.music.MusicAdmin;
 import com.maohx2.kmhanko.itemshop.ItemSell;
 import com.maohx2.horie.map.MapStatus;
 import com.maohx2.horie.map.MapStatusSaver;
+import com.maohx2.kmhanko.Talking.TalkSaveDataAdmin;
 
 
 import java.util.ArrayList;
@@ -62,10 +73,8 @@ import android.graphics.Paint;
 public class WorldGameSystem {
 
     SurfaceHolder holder;
-    Paint paint = new Paint();
     Canvas canvas;
     TextBoxAdmin text_box_admin;
-    //ListBoxAdmin list_box_admin;
 
     GeoSlotAdminManager geoSlotAdminManager;
     MyDatabaseAdmin databaseAdmin;
@@ -95,6 +104,10 @@ public class WorldGameSystem {
     GeoPresentSaver geoPresentSaver;
     ActivityChange activityChange;
 
+    //EquipTutorial
+    EquipTutorialSaveData equip_tutorial_save_data;
+    EquipTutorialSaver equip_tutorial_saver;
+
     //TODO いな依頼:引数にUI,Graphicが入って居るためGlobalDataに設置できない
     InventryS geoInventry;
     InventryS expendItemInventry;
@@ -105,6 +118,8 @@ public class WorldGameSystem {
     InventryS equipmentInventry;
 
     BitmapData backGround;
+    BitmapData tu_equip_img;
+    BitmapData[] credit = new BitmapData[2];
 
     String talkContent[][] = new String[100][];
     ImageContext talkChara[] = new ImageContext[100];
@@ -112,10 +127,19 @@ public class WorldGameSystem {
     MapStatus map_status;
     MapStatusSaver map_status_saver;
 
+    int credit_num = 1;
+
     PlayerStatusViewer playerStatusViewer;
 
     MusicAdmin musicAdmin;
     EquipmentItemDataAdmin equipment_item_data_admin;
+
+    TalkAdmin talkAdmin;
+
+    boolean is_equip_tutorial = true;
+    BattleUnitDataAdmin battleUnitDataAdmin;
+
+    Credits credits;
 
     public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
         graphic = _graphic;
@@ -123,11 +147,21 @@ public class WorldGameSystem {
         soundAdmin = _soundAdmin;
         world_user_interface = _world_user_interface;
         activityChange = _activityChange;
+        tu_equip_img = graphic.searchBitmap("tu_equip");
 
-
+        //mapセーブ関係
         map_status = new MapStatus(Constants.STAGE_NUM);
-        map_status_saver = new MapStatusSaver(databaseAdmin, "MapSaveData", "MapSaveData.db", 1, "ns", map_status, 7);
+        map_status_saver = new MapStatusSaver(databaseAdmin, "MapSaveData", "MapSaveData.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE, map_status, 7);
         map_status_saver.load();
+
+        //EquipTutorialセーブ関係
+        equip_tutorial_save_data = new EquipTutorialSaveData();
+        equip_tutorial_saver = new EquipTutorialSaver(databaseAdmin, "EquipTutorialSave", "EquipTutorialSave.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE,equip_tutorial_save_data);
+        equip_tutorial_saver.load();
+
+        //クレジット
+        credit[0] = graphic.searchBitmap("クレジット1");
+        credit[1] = graphic.searchBitmap("クレジット2");
 
         worldActivity = _worldActivity;
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
@@ -146,6 +180,8 @@ public class WorldGameSystem {
         text_box_admin = new TextBoxAdmin(graphic, soundAdmin);
         text_box_admin.init(world_user_interface);
 
+        talkAdmin = new TalkAdmin(graphic, world_user_interface, databaseAdmin, text_box_admin , soundAdmin);
+
         itemDataAdminManager = new ItemDataAdminManager();
         itemShopAdmin = new ItemShopAdmin();
 
@@ -158,7 +194,7 @@ public class WorldGameSystem {
         expendItemInventrySaver = globalData.getExpendItemInventrySaver();
         expendItemInventry = globalData.getExpendItemInventry();
 
-        geoSlotSaver = new GeoSlotSaver(databaseAdmin, "GeoSlotSave", "GeoSlotSave.db", 1, "ns", graphic);
+        geoSlotSaver = new GeoSlotSaver(databaseAdmin, "GeoSlotSave", "GeoSlotSave.db", Constants.SaveDataVersion.GEO_SLOT, Constants.DEBUG_SAVE_MODE, graphic);
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin);
 
 
@@ -167,23 +203,29 @@ public class WorldGameSystem {
         geoSlotAdminManager.loadGeoSlot();
 
         itemShopAdmin.init(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager, expendItemInventry, geoInventry, playerStatus, soundAdmin);
-        itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "debug");
+        itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "expendBasic");
 
         itemSell = new ItemSell(graphic, world_user_interface, worldActivity, text_box_admin, worldModeAdmin, soundAdmin);
 
         canvas = null;
 
         GeoObjectDataCreater.setGraphic(graphic);
-        // 仮。適当にGeo入れる GEO1が上がる能力は単一
-        //TODO 同じの追加されたら個数とかないのに2とかになりそう
-        for (int i = 0; i < 5; i++) {
-            geoInventry.addItemData(GeoObjectDataCreater.getGeoObjectData(100));
 
-            geoInventry.addItemData(GeoObjectDataCreater.getGeoObjectData(
-                    new int[] { 100, 0, 0, 0},
-                    new double[] { 1.0, 1.0, 1.0, 1.0}
-            ));
+        //by kmhanko デバッグ用削除
+
+        // 仮。適当にGeo入れる GEO1が上がる能力は単一
+        /*
+        for (int i = 0; i < 50; i++) {
+            geoInventry.addItemData(GeoObjectDataCreater.getGeoObjectData(1000000));
+            //デバッグ用
+            playerStatus.addMoney(100000000);
+            //playerStatus.calcStatus();
         }
+        */
+
+
+        credits = new Credits(graphic);
+
 
 
         geoPresentManager = new GeoPresentManager(
@@ -205,7 +247,7 @@ public class WorldGameSystem {
                 databaseAdmin,
                 "GeoPresentSave",
                 "GeoPresentSave.db",
-                1, "ns"
+                Constants.SaveDataVersion.GEO_PRESENT, Constants.DEBUG_SAVE_MODE
         );
 
         geoPresentManager.setGeoPresentSaver(geoPresentSaver);
@@ -228,10 +270,53 @@ public class WorldGameSystem {
         worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT_INIT_START);
 
 
-
-
         //TODO かり。戻るボタン
         initBackPlate();
+
+        //OP判定。まだOPを流していないならOP会話イベントを発動する。
+        //talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される
+
+
+
+        /*
+        battleUnitDataAdmin = new BattleUnitDataAdmin(databaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
+        battleUnitDataAdmin.loadBattleUnitData(Constants.DungeonKind.DUNGEON_KIND.FOREST);//敵読み込み
+
+        //ブキ生成 デバッグよう
+        BattleDungeonUnitData battleDungeonUnitData = new BattleDungeonUnitData();
+        battleDungeonUnitData.setName(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getName());
+        battleDungeonUnitData.setStatus(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getStatus(0));
+        battleDungeonUnitData.setBonusStatus(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getBonusStatus(0));
+        battleDungeonUnitData.setBitmapData(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getBitmapData());
+        EquipmentItemBaseDataAdmin equipmentItemBaseDataAdmin = new EquipmentItemBaseDataAdmin(graphic, databaseAdmin);
+        List<EquipmentItemBaseData> tempEquipmentItemBaseDatas = equipmentItemBaseDataAdmin.getItemDatas();
+        EquipmentItemBaseData[] equipmentItemBaseDatas = new EquipmentItemBaseData[Constants.Item.EQUIPMENT_KIND.NUM.ordinal()];
+        for (int i = 0; i < Constants.Item.EQUIPMENT_KIND.NUM.ordinal(); i++) {
+            equipmentItemBaseDatas[i] = tempEquipmentItemBaseDatas.get(i);
+        }
+        EquipmentItemDataCreater equipmentItemDataCreater = new EquipmentItemDataCreater(equipmentItemBaseDatas);
+        equipmentInventry.addItemData(
+                equipmentItemDataCreater.getEquipmentItemData(
+                        Constants.Item.EQUIPMENT_KIND.SWORD,
+                        battleDungeonUnitData,
+                        22222
+                )
+        );
+        equipmentInventry.addItemData(
+                equipmentItemDataCreater.getEquipmentItemData(
+                        Constants.Item.EQUIPMENT_KIND.BOW,
+                        battleDungeonUnitData,
+                        22222
+                )
+        );
+        equipmentInventry.addItemData(
+                equipmentItemDataCreater.getEquipmentItemData(
+                        Constants.Item.EQUIPMENT_KIND.AX,
+                        battleDungeonUnitData,
+                        22222
+                )
+        );//kokomade
+        */
     }
 
 
@@ -245,7 +330,6 @@ public class WorldGameSystem {
         }
 */
 
-
         switch (worldModeAdmin.getMode()) {
             case DUNGEON_SELECT_INIT_START:
                 musicAdmin.loadMusic("world00",true);
@@ -254,80 +338,103 @@ public class WorldGameSystem {
                 worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT);
                 dungeonSelectManager.start();
             case DUNGEON_SELECT:
-                dungeonSelectManager.update();
+                if (!talkAdmin.isTalking()) {
+                    dungeonSelectManager.update();
+                }
                 break;
             case GEO_MAP_SELECT_INIT:
                 backGround = graphic.searchBitmap("GeoMap");
                 worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT);
             case GEO_MAP_SELECT:
-                dungeonSelectManager.update();
+                if (!talkAdmin.isTalking()) {
+                    dungeonSelectManager.update();
+                }
                 break;
             case GEO_MAP_INIT:
                 backGround = graphic.searchBitmap("GeoMap");
                 worldModeAdmin.setMode(WORLD_MODE.GEO_MAP);
                 geoSlotAdminManager.start();
             case GEO_MAP:
-                geoSlotAdminManager.update();
+                if (!talkAdmin.isTalking()) {
+                    geoSlotAdminManager.update();
+                }
                 break;
             case SHOP_INIT:
                 itemShopAdmin.start();
                 backGround = graphic.searchBitmap("City");
                 worldModeAdmin.setMode(WORLD_MODE.SHOP);
             case SHOP:
-                itemShopAdmin.update();
+                if (!talkAdmin.isTalking()) {
+                    itemShopAdmin.update();
+                }
                 break;
             case EQUIP_INIT:
-                backGround = graphic.searchBitmap("firstBackground");//仮
+                backGround = graphic.searchBitmap("equipBackground");//仮
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
-                equipmentInventry.setPosition(800+20,100,1150+20,708, 7);
-                expendItemInventry.setPosition(400+20,100,750+20,708, 7);
+                equipmentInventry.setPosition(825,100,1225,708, 7);
+                expendItemInventry.setPosition(375,100,775,708, 7);
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
+                if(equip_tutorial_save_data.getTutorialFinishStatus() == 0){
+                    worldModeAdmin.setMode(WORLD_MODE.TU_EQUIP);
+                    equip_tutorial_save_data.setTutorialFinishStatus(1);
+                }
             case EQUIP:
-                equipmentInventry.updata();
-                expendItemInventry.updata();
-                palette_admin.update(false);
-                backPlateGroup.update();
-                //equipmentInventry.onArrow();
-                //expendItemInventry.onArrow();
+                if (!talkAdmin.isTalking()) {
+                    equipmentInventry.updata();
+                    expendItemInventry.updata();
+                    palette_admin.update(false);
+                    backPlateGroup.update();
+                    //equipmentInventry.onArrow();
+                    //expendItemInventry.onArrow();
+                }
+                break;
+            case TU_EQUIP:
+                if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
+                    worldModeAdmin.setMode(WORLD_MODE.EQUIP_INIT);
+                    equip_tutorial_saver.save();
+                }
                 break;
             case PRESENT_INIT:
                 geoPresentManager.start();
                 backGround = graphic.searchBitmap("firstBackground");//TODO 仮
                 worldModeAdmin.setMode(WORLD_MODE.PRESENT);
             case PRESENT:
-                geoPresentManager.update();
+                if (!talkAdmin.isTalking()) {
+                    geoPresentManager.update();
+                }
                 break;
             case SELL_INIT:
                 itemSell.start();
                 backGround = graphic.searchBitmap("City");
                 worldModeAdmin.setMode(WORLD_MODE.SELL);
             case SELL:
-                itemSell.update();
+                if (!talkAdmin.isTalking()) {
+                    itemSell.update();
+                }
+                break;
+            case GEO_MAP_SEE_ONLY_INIT:
+                initBackPlate();
+                geoSlotAdminManager.start();
+                worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SEE_ONLY);
+            case GEO_MAP_SEE_ONLY:
+                geoSlotAdminManager.updateInStatus();
+                break;
+            case CREDIT:
+                backPlateGroup.update();
+                if(world_user_interface.getTouchState() == Constants.Touch.TouchState.UP){
+                    credit_num = 3 - credit_num;
+                }
+                break;
+            case ENDING:
+                credits.update();
+                if(credits.endCheck() == true){
+                    worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT_INIT_START);
+                }
                 break;
             default:
                 break;
         }
-/*
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getGetSlotMap())) {
-            geoSlotAdminManager.update();
-        }
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getWorldMap())) {
-            dungeonSelectManager.update();
-        }
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getShop())) {
-            itemShopAdmin.update();
-        }
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getPresent())) {
-            geoPresentManager.update();
-        }
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getEquip())) {
-            equipmentInventry.updata();
-            expendItemInventry.updata();
-            palette_admin.update(false);
-            backPlateGroup.update();
-        }
-        */
-
+        talkAdmin.update();
         text_box_admin.update();
         effectAdmin.update();
         //musicAdmin.update();
@@ -335,35 +442,54 @@ public class WorldGameSystem {
 
 
     public void draw() {
-        graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+
+        if (drawStopFlag) {
+            return;
+        }
+
         //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
 
         switch (worldModeAdmin.getMode()) {
             case DUNGEON_SELECT_INIT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 break;
             case DUNGEON_SELECT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 dungeonSelectManager.draw();
                 break;
             case GEO_MAP_SELECT_INIT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 break;
             case GEO_MAP_SELECT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 dungeonSelectManager.draw();
                 break;
             case GEO_MAP_INIT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 break;
             case GEO_MAP:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                effectAdmin.draw();
                 geoSlotAdminManager.draw();
                 playerStatusViewer.draw();
                 break;
             case SHOP_INIT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 break;
             case SHOP:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 itemShopAdmin.draw();
                 playerStatusViewer.draw();
                 break;
             case EQUIP_INIT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                break;
+            case TU_EQUIP:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(tu_equip_img, 0, 0, 1.25f, 1.25f, 0, 255, true);
                 break;
             case EQUIP:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 equipmentInventry.draw();
                 expendItemInventry.draw();
                 palette_admin.draw();
@@ -371,47 +497,51 @@ public class WorldGameSystem {
                 backPlateGroup.draw();
                 break;
             case PRESENT_INIT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 break;
             case PRESENT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 geoPresentManager.draw();
                 break;
             case SELL_INIT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 break;
             case SELL:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 itemSell.draw();
                 playerStatusViewer.draw();
+                break;
+            case GEO_MAP_SEE_ONLY:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                effectAdmin.draw();
+                geoSlotAdminManager.drawInStatus();
+                playerStatusViewer.draw();
+                break;
+            case CREDIT:
+                graphic.bookingDrawBitmapData(credit[credit_num - 1], 0, 0, 1.25f, 1.25f, 0, 255, true);
+                backPlateGroup.draw();
+                break;
+            case ENDING:
+                credits.draw();
                 break;
             default:
                 break;
         }
-        /*
-        if (worldModeAdmin.getIsDraw(worldModeAdmin.getGetSlotMap())) {
-            geoSlotAdminManager.draw();
-        }
-        if (worldModeAdmin.getIsDraw(worldModeAdmin.getWorldMap())) {
-            dungeonSelectManager.draw();
-        }
-        if (worldModeAdmin.getIsDraw(worldModeAdmin.getShop())) {
-            itemShopAdmin.draw();
-        }
-        if (worldModeAdmin.getIsDraw(worldModeAdmin.getPresent())) {
-            geoPresentManager.draw();
-        }
 
-        if (worldModeAdmin.getIsUpdate(worldModeAdmin.getEquip())) {
-            equipmentInventry.draw();
-            expendItemInventry.draw();
-            palette_admin.draw();
-            world_user_interface.draw();
-
-            backPlateGroup.draw();
-        }
-        */
-
+        talkAdmin.draw(); //分岐は特に必要ない
         text_box_admin.draw();
-        effectAdmin.draw();
+
+        //GEOMAPでは諸事情により、エフェクトを背後に描画したいため
+        if (worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP && worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP_SEE_ONLY) {
+            effectAdmin.draw();
+        }
 
         graphic.draw();
+    }
+
+    boolean drawStopFlag = false;
+    public void drawStop() {
+        drawStopFlag = true;
     }
 
     //TODO 仮。もどるボタン
@@ -421,7 +551,7 @@ public class WorldGameSystem {
         backPlateGroup = new PlateGroup<BackPlate>(
                 new BackPlate[]{
                         new BackPlate(
-                                graphic, world_user_interface, worldModeAdmin
+                                graphic, world_user_interface
                         ) {
                             @Override
                             public void callBackEvent() {
@@ -441,10 +571,16 @@ public class WorldGameSystem {
         );
     }
 
+    public void release() {
+        playerStatusViewer.release();
+        itemShopAdmin.release();
+    }
 
+/*
     int count = 0;
     int openningTextBoxID;
     boolean text_mode = false;
+
 
     public void openningInit() {
 
@@ -462,31 +598,31 @@ public class WorldGameSystem {
 
 
         talkContent[0] = new String[2];
-        talkChara[0] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[0] = graphic.makeImageContext(graphic.searchBitmap("syujinko7r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[0][0] = "あいたた，なんだあいつ，ひどい目にあったな・・・．";
         talkContent[0][1] = "MOP";
 
 
         talkContent[1] = new String[4];
-        talkChara[1] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[1] = graphic.makeImageContext(graphic.searchBitmap("gaia13l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[1][0] = "あらら，やられちゃったかぁ．";
         talkContent[1][1] = "\n";
-        talkContent[1][2] = "もしかしたらうまくやってくれると思ったのに・・・．";
+        talkContent[1][2] = "もしかしたらうまくやってくれるかもと思ったのに・・・．";
         talkContent[1][3] = "MOP";
 
 
-        talkContent[2] = new String[6];
-        talkChara[2] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkContent[2] = new String[4];
+        talkChara[2] = graphic.makeImageContext(graphic.searchBitmap("syujinko3r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[2][0] = "うわっ，だれ！？．";
         talkContent[2][1] = "\n";
         talkContent[2][2] = "びっくりしたー．";
-        talkContent[2][3] = "\n";
-        talkContent[2][4] = "うまくやるって何？";
-        talkContent[2][5] = "MOP";
+        //talkContent[2][3] = "\n";
+        //talkContent[2][4] = "うまくやるって何？";
+        talkContent[2][3] = "MOP";
 
 
         talkContent[3] = new String[8];
-        talkChara[3] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[3] = graphic.makeImageContext(graphic.searchBitmap("gaia15l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[3][0] = "私はガイアよ．";
         talkContent[3][1] = "\n";
         talkContent[3][2] = "あなたが生まれたときからずっとあなたのことを見ていたわ．";
@@ -498,7 +634,7 @@ public class WorldGameSystem {
 
 
         talkContent[4] = new String[6];
-        talkChara[4] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[4] = graphic.makeImageContext(graphic.searchBitmap("syujinko3r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[4][0] = "魔王！？";
         talkContent[4][1] = "\n";
         talkContent[4][2] = "魔王ってなにいっているんだ，突然だな．";
@@ -508,7 +644,7 @@ public class WorldGameSystem {
 
 
         talkContent[5] = new String[4];
-        talkChara[5] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[5] = graphic.makeImageContext(graphic.searchBitmap("gaia12l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[5][0] = "それはあなたがこの世界を流れる地脈のエネルギー．";
         talkContent[5][1] = "\n";
         talkContent[5][2] = "ジオエネルギーの加護を受けるものだからよ！！";
@@ -516,13 +652,13 @@ public class WorldGameSystem {
 
 
         talkContent[6] = new String[2];
-        talkChara[6] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[6] = graphic.makeImageContext(graphic.searchBitmap("syujinko5r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[6][0] = "・・・．";
         talkContent[6][1] = "MOP";
 
 
         talkContent[7] = new String[4];
-        talkChara[7] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[7] = graphic.makeImageContext(graphic.searchBitmap("gaia14l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[7][0] = "あと，ストーカーはやめて．";
         talkContent[7][1] = "\n";
         talkContent[7][2] = "これでも女神様なんだから，あなたのことをずっと加護してたのよ，感謝しなさい．";
@@ -530,7 +666,7 @@ public class WorldGameSystem {
 
 
         talkContent[8] = new String[4];
-        talkChara[8] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[8] = graphic.makeImageContext(graphic.searchBitmap("syujinko5r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[8][0] = "加護だか何だかわからないけど，図々しい女神さまだな．";
         talkContent[8][1] = "\n";
         talkContent[8][2] = "俺は加護なんてなくても生きていけるし，そんなものあったって何の得にもならない．";
@@ -538,7 +674,7 @@ public class WorldGameSystem {
 
 
         talkContent[9] = new String[6];
-        talkChara[9] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[9] = graphic.makeImageContext(graphic.searchBitmap("gaia15l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[9][0] = "何よ，失礼な．";
         talkContent[9][1] = "\n";
         talkContent[9][2] = "ほら，最近いいことあったんじゃない？";
@@ -548,43 +684,43 @@ public class WorldGameSystem {
 
 
         talkContent[10] = new String[2];
-        talkChara[10] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[10] = graphic.makeImageContext(graphic.searchBitmap("syujinko7r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[10][0] = "俺は宝くじも買わなければ，好きな女の子もいない．";
         talkContent[10][1] = "MOP";
 
 
         talkContent[11] = new String[2];
-        talkChara[11] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[11] = graphic.makeImageContext(graphic.searchBitmap("gaia20l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[11][0] = "なによ，夢も何もないのね．悲しい子．";
         talkContent[11][1] = "MOP";
 
 
         talkContent[12] = new String[2];
-        talkChara[12] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[12] = graphic.makeImageContext(graphic.searchBitmap("gaia8l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[12][0] = "平和ねぇ・・・．最近はそんなことも言ってられないのよね．";
         talkContent[12][1] = "MOP";
 
 
         talkContent[13] = new String[2];
-        talkChara[13] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[13] = graphic.makeImageContext(graphic.searchBitmap("syujinko3r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[13][0] = "ん？今日もこんなにのどかなのに?";
         talkContent[13][1] = "MOP";
 
 
         talkContent[14] = new String[2];
-        talkChara[14] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[14] = graphic.makeImageContext(graphic.searchBitmap("gaia11l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[14][0] = "さっき，あなたもあったでしょ?魔王よ，魔王．";
         talkContent[14][1] = "MOP";
 
 
         talkContent[15] = new String[2];
-        talkChara[15] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[15] = graphic.makeImageContext(graphic.searchBitmap("syujinko8r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[15][0] = "・・・．";
         talkContent[15][1] = "MOP";
 
 
         talkContent[16] = new String[4];
-        talkChara[16] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[16] = graphic.makeImageContext(graphic.searchBitmap("gaia24l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[16][0] = "今まで頑張って抑えてきたけど，もう限界が来ちゃったのよね．";
         talkContent[16][1] = "\n";
         talkContent[16][2] = "それがさっきの魔王よ．";
@@ -592,13 +728,13 @@ public class WorldGameSystem {
 
 
         talkContent[17] = new String[2];
-        talkChara[17] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[17] = graphic.makeImageContext(graphic.searchBitmap("syujinko6r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[17][0] = "ふーん，なんか大変だね．";
         talkContent[17][1] = "MOP";
 
 
         talkContent[18] = new String[4];
-        talkChara[18] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[18] = graphic.makeImageContext(graphic.searchBitmap("gaia22l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[18][0] = "そうなの，すごく大変．";
         talkContent[18][1] = "\n";
         talkContent[18][2] = "どこかに，ジオの加護を受けた屈強な戦士でもいないかなって思っていたのよ．";
@@ -606,7 +742,7 @@ public class WorldGameSystem {
 
 
         talkContent[19] = new String[4];
-        talkChara[19] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[19] = graphic.makeImageContext(graphic.searchBitmap("syujinko6r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[19][0] = "そっかぁ，見つかるといいね．";
         talkContent[19][1] = "\n";
         talkContent[19][2] = "それじゃあ，俺は忙しいからこれで．";
@@ -614,7 +750,7 @@ public class WorldGameSystem {
 
 
         talkContent[20] = new String[4];
-        talkChara[20] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[20] = graphic.makeImageContext(graphic.searchBitmap("gaia20l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[20][0] = "あらそう？";
         talkContent[20][1] = "\n";
         talkContent[20][2] = "残念だけど，また会いましょうね．";
@@ -622,26 +758,26 @@ public class WorldGameSystem {
 
 
         talkContent[21] = new String[2];
-        talkChara[21] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[21] = graphic.makeImageContext(graphic.searchBitmap("syujinko6r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[21][0] = "おう，頑張れよ，見つかるといいな．";
         talkContent[21][1] = "MOP";
 
 
         talkContent[22] = new String[2];
-        talkChara[22] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[22] = graphic.makeImageContext(graphic.searchBitmap("gaia12l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[22][0] = "って！待ちなさいよ！";
         talkContent[22][1] = "MOP";
 
 
         talkContent[23] = new String[4];
-        talkChara[23] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[23] = graphic.makeImageContext(graphic.searchBitmap("syujinko5r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[23][0] = "おお，どうした？";
         talkContent[23][1] = "\n";
         talkContent[23][2] = "なにかあったか？";
         talkContent[23][3] = "MOP";
 
         talkContent[24] = new String[6];
-        talkChara[24] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[24] = graphic.makeImageContext(graphic.searchBitmap("gaia12l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[24][0] = "なにが「なにかあったか？」よ！";
         talkContent[24][1] = "\n";
         talkContent[24][2] = "おおありよ！";
@@ -651,13 +787,13 @@ public class WorldGameSystem {
 
 
         talkContent[25] = new String[2];
-        talkChara[25] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[25] = graphic.makeImageContext(graphic.searchBitmap("syujinko6r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[25][0] = "あー，今日は疲れたな，もう帰ろう．";
         talkContent[25][1] = "MOP";
 
 
         talkContent[26] = new String[6];
-        talkChara[26] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[26] = graphic.makeImageContext(graphic.searchBitmap("gaia16l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[26][0] = "まってまって，帰らないで！";
         talkContent[26][1] = "\n";
         talkContent[26][2] = "このままだと，大変なことになっちゃうの！";
@@ -667,14 +803,14 @@ public class WorldGameSystem {
 
 
         talkContent[27] = new String[4];
-        talkChara[27] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[27] = graphic.makeImageContext(graphic.searchBitmap("syujinko8r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[27][0] = "そんなこと言ったって・・・．さっきの見ただろ？";
         talkContent[27][1] = "\n";
         talkContent[27][2] = "あんな奴と戦ったら，今度こそ死んじまう・・・．";
         talkContent[27][3] = "MOP";
 
         talkContent[28] = new String[4];
-        talkChara[28] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[28] = graphic.makeImageContext(graphic.searchBitmap("gaia22l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[28][0] = "あー，それね，それは大丈夫よ．";
         talkContent[28][1] = "\n";
         talkContent[28][2] = "第一，あなたに屈強さなんて期待してないし．";
@@ -682,7 +818,7 @@ public class WorldGameSystem {
 
 
         talkContent[29] = new String[4];
-        talkChara[29] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[29] = graphic.makeImageContext(graphic.searchBitmap("syujinko3r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[29][0] = "えっ，大丈夫なの！？";
         talkContent[29][1] = "\n";
         talkContent[29][2] = "てか，期待してなかったのかい！";
@@ -690,18 +826,18 @@ public class WorldGameSystem {
 
 
         talkContent[30] = new String[2];
-        talkChara[30] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[30] = graphic.makeImageContext(graphic.searchBitmap("gaia14l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[30][0] = "だって，あなた見るからにしょぼそうじゃない．";
         talkContent[30][1] = "MOP";
 
         talkContent[31] = new String[2];
-        talkChara[31] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[31] = graphic.makeImageContext(graphic.searchBitmap("syujinko7r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[31][0] = "がーん・・・．";
         talkContent[31][1] = "MOP";
 
 
         talkContent[31] = new String[4];
-        talkChara[31] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[31] = graphic.makeImageContext(graphic.searchBitmap("gaia15l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[31][0] = "まぁ，そんなしょぼいあなたでも大丈夫よ．";
         talkContent[31][1] = "\n";
         talkContent[31][2] = "なんたってジオの加護を受けてるんだから．";
@@ -709,13 +845,13 @@ public class WorldGameSystem {
 
 
         talkContent[32] = new String[2];
-        talkChara[32] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[32] = graphic.makeImageContext(graphic.searchBitmap("syujinko3r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[32][0] = "そのさっきから言ってる「ジオの加護」ってなんだ？";
         talkContent[32][1] = "MOP";
 
 
         talkContent[33] = new String[6];
-        talkChara[33] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[33] = graphic.makeImageContext(graphic.searchBitmap("gaia22l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[33][0] = "ああ、説明してなかったわね．";
         talkContent[33][1] = "\n";
         talkContent[33][2] = "あなたはこの世界の地脈を流れるジオエネルギーの加護を受けてるの．";
@@ -724,7 +860,7 @@ public class WorldGameSystem {
         talkContent[33][5] = "MOP";
 
         talkContent[34] = new String[6];
-        talkChara[34] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[34] = graphic.makeImageContext(graphic.searchBitmap("syujinko3r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[34][0] = "え，俺そうだったの！？";
         talkContent[34][1] = "\n";
         talkContent[34][2] = "ん・・・？";
@@ -733,14 +869,14 @@ public class WorldGameSystem {
         talkContent[34][5] = "MOP";
 
         talkContent[35] = new String[4];
-        talkChara[35] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[35] = graphic.makeImageContext(graphic.searchBitmap("gaia13l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[35][0] = "そりゃそうよ．";
         talkContent[35][1] = "\n";
         talkContent[35][2] = "あなたジオスロットにジオオブジェクトをささげてないから．";
         talkContent[35][3] = "MOP";
 
         talkContent[36] = new String[6];
-        talkChara[36] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[36] = graphic.makeImageContext(graphic.searchBitmap("syujinko3r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[36][0] = "ジオスロット？";
         talkContent[36][1] = "\n";
         talkContent[36][2] = "ジオオブジェクト？";
@@ -749,7 +885,7 @@ public class WorldGameSystem {
         talkContent[36][5] = "MOP";
 
         talkContent[37] = new String[6];
-        talkChara[37] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[37] = graphic.makeImageContext(graphic.searchBitmap("gaia22l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[37][0] = "画面の右上に「MAP」って書いてあるでしょ？";
         talkContent[37][1] = "\n";
         talkContent[37][2] = "そこからジオマップに行けるの．";
@@ -758,12 +894,12 @@ public class WorldGameSystem {
         talkContent[37][5] = "MOP";
 
         talkContent[38] = new String[2];
-        talkChara[38] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[38] = graphic.makeImageContext(graphic.searchBitmap("syujinko3r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[38][0] = "MAP・・・?";
         talkContent[38][1] = "MOP";
 
         talkContent[39] = new String[6];
-        talkChara[39] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[39] = graphic.makeImageContext(graphic.searchBitmap("gaia22l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[39][0] = "まぁ，細かいことはいいの．";
         talkContent[39][1] = "\n";
         talkContent[39][2] = "多分伝わる人には伝わったし．";
@@ -772,7 +908,7 @@ public class WorldGameSystem {
         talkContent[39][5] = "MOP";
 
         talkContent[40] = new String[6];
-        talkChara[40] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[40] = graphic.makeImageContext(graphic.searchBitmap("syujinko8r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[40][0] = "そうか，大丈夫ならいいけど．";
         talkContent[40][1] = "\n";
         talkContent[40][2] = "というか，それにもっと早く気づいてれば・・・．";
@@ -781,31 +917,31 @@ public class WorldGameSystem {
         talkContent[40][5] = "MOP";
 
         talkContent[41] = new String[4];
-        talkChara[41] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[41] = graphic.makeImageContext(graphic.searchBitmap("gaia14l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[41][0] = "・・・．";
         talkContent[41][1] = "\n";
         talkContent[41][2] = "女の子に興味がないなんて，やっぱ嘘だったのね．";
         talkContent[41][3] = "MOP";
 
         talkContent[42] = new String[4];
-        talkChara[42] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[42] = graphic.makeImageContext(graphic.searchBitmap("syujinko4r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[42][0] = "な，なんだよ．";
         talkContent[42][1] = "\n";
         talkContent[42][2] = "悪いか！";
         talkContent[42][3] = "MOP";
 
         talkContent[43] = new String[2];
-        talkChara[43] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[43] = graphic.makeImageContext(graphic.searchBitmap("gaia22l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[43][0] = "いやー，別に悪くなんてないけど，嘘はいけないわね．";
         talkContent[43][1] = "MOP";
 
         talkContent[44] = new String[2];
-        talkChara[44] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[44] = graphic.makeImageContext(graphic.searchBitmap("syujinko7r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[44][0] = "そ，それは，悪かったな・・・．";
         talkContent[44][1] = "MOP";
 
         talkContent[45] = new String[6];
-        talkChara[45] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[45] = graphic.makeImageContext(graphic.searchBitmap("gaia8l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[45][0] = "まぁ，そんなことはどうでもいいのよ．";
         talkContent[45][1] = "\n";
         talkContent[45][2] = "そんなことより，ほかに問題があったわ．";
@@ -814,31 +950,31 @@ public class WorldGameSystem {
         talkContent[45][5] = "MOP";
 
         talkContent[46] = new String[2];
-        talkChara[46] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[46] = graphic.makeImageContext(graphic.searchBitmap("syujinko3r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[46][0] = "ん，それは困ることなのか？";
         talkContent[46][1] = "MOP";
 
         talkContent[47] = new String[4];
-        talkChara[47] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[47] = graphic.makeImageContext(graphic.searchBitmap("gaia8l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[47][0] = "そのモンスターのせいで，エネルギーの流れがさえぎられちゃってるの．";
         talkContent[47][1] = "\n";
         talkContent[47][2] = "多分ジオオブジェクトを献上してもあなたは，加護を受けることができないかも・・・．";
         talkContent[47][3] = "MOP";
 
         talkContent[48] = new String[4];
-        talkChara[48] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[48] = graphic.makeImageContext(graphic.searchBitmap("syujinko3r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[48][0] = "そうなのか？";
         talkContent[48][1] = "\n";
         talkContent[48][2] = "じゃあ，どうすれば？";
         talkContent[48][3] = "MOP";
 
         talkContent[49] = new String[2];
-        talkChara[49] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[49] = graphic.makeImageContext(graphic.searchBitmap("gaia22l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[49][0] = "そうね，まずは手始めにそのモンスターを倒してもらおうかしら．";
         talkContent[49][1] = "MOP";
 
         talkContent[50] = new String[6];
-        talkChara[50] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[50] = graphic.makeImageContext(graphic.searchBitmap("syujinko7r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[50][0] = "え！？";
         talkContent[50][1] = "\n";
         talkContent[50][2] = "モンスター倒すの！？";
@@ -847,7 +983,7 @@ public class WorldGameSystem {
         talkContent[50][5] = "MOP";
 
         talkContent[51] = new String[6];
-        talkChara[51] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[51] = graphic.makeImageContext(graphic.searchBitmap("gaia9l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[51][0] = "大丈夫よ，私がついてるし，問題ないわ．";
         talkContent[51][1] = "\n";
         talkContent[51][2] = "私の加護を受けると，倒したモンスターの強さを吸収できるの．";
@@ -856,12 +992,12 @@ public class WorldGameSystem {
         talkContent[51][5] = "MOP";
 
         talkContent[52] = new String[2];
-        talkChara[52] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[52] = graphic.makeImageContext(graphic.searchBitmap("syujinko3r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[52][0] = "お前すごいな・・・．";
         talkContent[52][1] = "MOP";
 
         talkContent[53] = new String[6];
-        talkChara[53] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[53] = graphic.makeImageContext(graphic.searchBitmap("gaia8l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[53][0] = "まぁ，女神だしこれくらいは当然よ．";
         talkContent[53][1] = "\n";
         talkContent[53][2] = "でも，魔王は注意してね，あれはそこら辺のモンスターとは違うから．";
@@ -870,24 +1006,24 @@ public class WorldGameSystem {
         talkContent[53][5] = "MOP";
 
         talkContent[54] = new String[2];
-        talkChara[54] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[54] = graphic.makeImageContext(graphic.searchBitmap("syujinko3r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[54][0] = "こっわ・・・．";
         talkContent[54][1] = "MOP";
 
         talkContent[55] = new String[2];
-        talkChara[55] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[55] = graphic.makeImageContext(graphic.searchBitmap("gaia22l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[55][0] = "それじゃあ，そうと決まったらダンジョンに行きましょ．";
         talkContent[55][1] = "MOP";
 
         talkContent[56] = new String[4];
-        talkChara[56] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[56] = graphic.makeImageContext(graphic.searchBitmap("syujinko3r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[56][0] = "おう，そうしよう．";
         talkContent[56][1] = "\n";
         talkContent[56][2] = "でも，どうやって行くんだ？";
         talkContent[56][3] = "MOP";
 
         talkContent[57] = new String[6];
-        talkChara[57] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[57] = graphic.makeImageContext(graphic.searchBitmap("gaia18l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[57][0] = "なに，あなたそんなことも知らないの？";
         talkContent[57][1] = "\n";
         talkContent[57][2] = "あなたの頭にちょうどくっついている";
@@ -896,17 +1032,17 @@ public class WorldGameSystem {
         talkContent[57][5] = "MOP";
 
         talkContent[58] = new String[2];
-        talkChara[58] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[58] = graphic.makeImageContext(graphic.searchBitmap("syujinko3r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[58][0] = "アイコン？タッチ？";
         talkContent[58][1] = "MOP";
 
         talkContent[59] = new String[2];
-        talkChara[59] = graphic.makeImageContext(graphic.searchBitmap("ガイア立ち絵左向"), 1300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[59] = graphic.makeImageContext(graphic.searchBitmap("gaia22l"), 1300, 450, 2.7f, 2.7f, 0, 255, false);
         talkContent[59][0] = "いいの，わかる人にはわかったはずだから．";
         talkContent[59][1] = "MOP";
 
         talkContent[60] = new String[2];
-        talkChara[60] = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
+        talkChara[60] = graphic.makeImageContext(graphic.searchBitmap("syujinko1r"), 300, 450, 3.0f, 3.0f, 0, 255, false);
         talkContent[60][0] = "そうか，大丈夫ならいいや．";
         talkContent[60][1] = "MOP";
         
@@ -934,18 +1070,15 @@ public class WorldGameSystem {
         text_box_admin.update();
         text_box_admin.draw();
         //musicAdmin.update();
-    }
 
+        System.out.println(world_user_interface.getTouchState());
+
+    }
 
     public void openningDraw() {
 
         graphic.draw();
     }
-
-
-
-
-
     public void talk(String[] talkContent) {
 
         for(int i = 0; i < talkContent.length; i++){
@@ -965,6 +1098,7 @@ public class WorldGameSystem {
             count++;
         }
     }
+    */
 }
 
 

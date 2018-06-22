@@ -19,4 +19,8 @@ public abstract class BookingTaskData{
 
     public abstract void draw(Canvas canvas);
 
+    public void release() {
+        paint = null;
+    }
+
 }

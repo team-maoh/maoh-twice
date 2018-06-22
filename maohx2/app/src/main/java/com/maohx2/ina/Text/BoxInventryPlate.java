@@ -40,8 +40,6 @@ public class BoxInventryPlate extends BoxPlate {
                 image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left+50, (up+down)/2, 1.7f, 1.7f, 0, 255, false);
             }
         }
-
-
     }
 
     @Override
@@ -70,15 +68,15 @@ public class BoxInventryPlate extends BoxPlate {
                 text_paint.setARGB(255,0,255,255);
                 switch(inventry_data.getItemData().getItemKind()){
                     case GEO:
-                        graphic.bookingDrawText(inventry_data.getItemData().getName(), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 2.0 + (int) ((down - up) * (1.0 / 5))), (int) (down - (down - up) * (1.0 / 5)), text_paint);
+                        graphic.bookingDrawText(inventry_data.getItemData().getName(), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 2.0 + (int) ((down - up) * (1.0 / 5))), up + (int) ((down - up + text_paint.getTextSize()) / 2), text_paint);
                         break;
 
                     case EQUIPMENT:
-                        graphic.bookingDrawText(inventry_data.getItemData().getName()+" +"+String.valueOf(((EquipmentItemData)(inventry_data.getItemData())).getAttack()), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 2.0 + (int) ((down - up) * (1.0 / 5))), (int) (down - (down - up) * (1.0 / 5)), text_paint);
+                        graphic.bookingDrawText(inventry_data.getItemData().getName()+" +"+String.valueOf(((EquipmentItemData)(inventry_data.getItemData())).getAttack()), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 2.0 + (int) ((down - up) * (1.0 / 5))), up + (int)((down - up + text_paint.getTextSize()) / 2), text_paint);
                         break;
 
                     case EXPEND:
-                        graphic.bookingDrawText(inventry_data.getItemData().getName(), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 2.0 + (int) ((down - up) * (1.0 / 5))), (int) (down - (down - up) * (1.0 / 5)), text_paint);
+                        graphic.bookingDrawText(inventry_data.getItemData().getName(), left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 2.0 + (int) ((down - up) * (1.0 / 5))), up + (int)((down - up) / 2 + text_paint.getTextSize()), text_paint);
                         break;
                 }
 
@@ -87,23 +85,23 @@ public class BoxInventryPlate extends BoxPlate {
                         if(((EquipmentItemData)(inventry_data.getItemData())).getPalettePosition() != 0) {
                             text_paint.setColor(CIRCLE_COLOR[((EquipmentItemData)(inventry_data.getItemData())).getPalettePosition()-1]);
                             text_paint.setAlpha(255);
-                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1 + (int) ((down - up) * (1.0 / 5))) + 200, (int) (down - (down - up) * (1.0 / 5)), text_paint);
+                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1 + (int) ((down - up) * (1.0 / 5))) + 200, up + (int)((down - up + text_paint.getTextSize()) / 2), text_paint);
                         }
                     }else if(inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.GEO){
                         if(((GeoObjectData)(inventry_data.getItemData())).getSlotSetName().equals("noSet") == false) {
                             text_paint.setARGB(255,255,255,255);
-                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1 + (int) ((down - up) * (1.0 / 5))) + 200, (int) (down - (down - up) * (1.0 / 5)), text_paint);
+                            graphic.bookingDrawText("E", right - 50, up + (int)((down - up + text_paint.getTextSize()) / 2), text_paint);
                         }
                     }
                 }else{
-                    graphic.bookingDrawText(String.valueOf(inventry_data.getItemNum() - ((ExpendItemData)inventry_data.getItemData()).getPalettePositionNum()), left + (int) (inventry_data.getItemData().getItemImage().getWidth() + (int) ((down - up) * (1.0 / 5))) + 270, (int) (down - (down - up) * (1.0 / 5)), text_paint);
+                    graphic.bookingDrawText(String.valueOf(inventry_data.getItemNum() - ((ExpendItemData)inventry_data.getItemData()).getPalettePositionNum()), left + (int) (inventry_data.getItemData().getItemImage().getWidth() + (int) ((down - up) * (1.0 / 5))) + 270, up + (int)((down - up + text_paint.getTextSize()) / 2), text_paint);
                     if(((ExpendItemData)(inventry_data.getItemData())).getPalettePosition() != 0) {
                         for(int i = 0; i < ((ExpendItemData)(inventry_data.getItemData())).getPalettePositionNum(); i++) {
                             int offSet = i*30;
                             int palette_position = ((ExpendItemData)(inventry_data.getItemData())).getPalettePosition(i+1);
                             text_paint.setColor(CIRCLE_COLOR[palette_position]);
                             text_paint.setAlpha(255);
-                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() + (int) ((down - up) * (1.0 / 5))) + 100 + offSet, (int) (down - (down - up) * (2.3 / 5)), text_paint);
+                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() + (int) ((down - up) * (1.0 / 5))) + 50 + offSet, up + (int)((down - up) / 2), text_paint);
                         }
                     }
                 }
@@ -123,14 +121,24 @@ public class BoxInventryPlate extends BoxPlate {
 
         if(inventry_data != null) {
             if(inventry_data.getItemData() != null) {
-                image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left, up, 1.7f, 1.7f, 0, 255, true);
+                image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left+50, (up+down)/2, 1.7f, 1.7f, 0, 255, false);
             }
         }
     }
 
     @Override
     public void changeInventryData(){
-        image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left, up, 1.7f, 1.7f, 0, 255, true);
+        image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left+50, (up+down)/2, 1.7f, 1.7f, 0, 255, false);
+    }
+
+    @Override
+    public void release() {
+        /*
+        super.release();
+        text_paint = null;
+        button_paint = null;
+        image_context = null;
+        */
     }
 
 }

@@ -7,6 +7,7 @@ import com.maohx2.ina.Constants;
 import com.maohx2.ina.Constants.SELECT_WINDOW;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.ImageContext;
+import com.maohx2.ina.Text.BoxItemPlate;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.UI.UserInterface;
 
@@ -23,6 +24,7 @@ import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.myavail.MyAvail;
 import com.maohx2.kmhanko.plate.BackPlate;
 import com.maohx2.kmhanko.Arrange.InventryS;
+import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
 // *** Graphic関係 ***
@@ -53,12 +55,24 @@ import com.maohx2.ina.Text.ListBox;
 
     //imageMagic
 
+    /*
+
+    スロットで使える範囲
+
+    (0, 100) - ( 1200, 850 )が最大なので
+    (50, 150) - ( 1150, 800 )　が実質の範囲になる。
+
+
+
+     */
+
 public class GeoSlotAdmin {
 
     //** Created by kmhanko **//
 
     static MyDatabase geoSlotMapDB;
     static MyDatabase geoSlotEventDB;
+
 
     public final int GEO_SLOT_MAX = 64;
     public final int TOUCH_R = 90;
@@ -82,8 +96,10 @@ public class GeoSlotAdmin {
     //int statusTextBoxID;
 
     PlateGroup<GeoSlot> geoSlotGroup;
-    PlateGroup<BoxTextPlate> releasePlateGroup;//解放する/やめる　の選択
+    PlateGroup<BoxImageTextPlate> releasePlateGroup;//解放する/やめる　の選択
     //PlateGroup<BackPlate> backPlateGroup;
+
+    PlateGroup<BoxItemPlate> holdGeoPlateGroup;
 
     Paint releaseTextPaint;
 
@@ -118,6 +134,7 @@ public class GeoSlotAdmin {
         initTextBox();
         //initBackPlate();
         initReleasePlate();
+        initHoldGeoPlateGroup();
     }
 
     /*
@@ -167,7 +184,11 @@ public class GeoSlotAdmin {
         GeoSlot.staticInit(textBoxAdmin, geoSlotEventDB, geoInventry, soundAdmin, effectAdmin);
 
         for(int i = 0; i < geoSlots.size(); i++) {
-            geoSlots.get(i).setParam(xs.get(i), ys.get(i), TOUCH_R);
+            if ( i == 0 ) {
+                geoSlots.get(i).setParam(xs.get(i), ys.get(i), TOUCH_R, true);
+            } else {
+                geoSlots.get(i).setParam(xs.get(i), ys.get(i), TOUCH_R, false);
+            }
             //TouchIDセット
             //geoSlots.get(i).setTouchID(userInterface.setCircleTouchUI(xs.get(i), ys.get(i), 100));
             geoSlots.get(i).setReleaseEvent(release_events.get(i));
@@ -223,18 +244,18 @@ public class GeoSlotAdmin {
         textPaint.setARGB(255,255,255,255);
 
         //「解放する」「解放しない」ボタン表示　→　ListBox<Button>の完成待ち
-        releasePlateGroup = new PlateGroup<BoxTextPlate>(
-                new BoxTextPlate[]{
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+        releasePlateGroup = new PlateGroup<BoxImageTextPlate>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.YES_LEFT, SELECT_WINDOW.YES_UP, SELECT_WINDOW.YES_RIGHT, SELECT_WINDOW.YES_BOTTOM},
                                 "解放する",
                                 textPaint
                         ),
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
+                        new BoxImageTextPlate(
+                                graphic, userInterface,
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 new int[]{SELECT_WINDOW.NO_LEFT, SELECT_WINDOW.NO_UP, SELECT_WINDOW.NO_RIGHT, SELECT_WINDOW.NO_BOTTOM},
@@ -245,6 +266,35 @@ public class GeoSlotAdmin {
         );
         releasePlateGroup.setDrawFlag(false);
         releasePlateGroup.setUpdateFlag(false);
+
+    }
+
+    private void initHoldGeoPlateGroup() {
+
+        Paint textPaint = new Paint();
+        textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
+        textPaint.setARGB(255,255,255,255);
+
+        //「解放する」「解放しない」ボタン表示　→　ListBox<Button>の完成待ち
+        holdGeoPlateGroup = new PlateGroup<BoxItemPlate>(
+                new BoxItemPlate[]{
+                        new BoxItemPlate(
+                                graphic, userInterface, new Paint(),
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{ 0, 0, 400, 100},
+                                null
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                soundAdmin.play("equip00");
+                                setHoldGeoObject(null);
+                            }
+                        }
+                }
+        );
+        holdGeoPlateGroup.setDrawFlag(true);
+        holdGeoPlateGroup.setUpdateFlag(true);
 
     }
 
@@ -330,15 +380,18 @@ public class GeoSlotAdmin {
 
             textBoxAdmin.setTextBoxExists(releaseTextBoxID, true);
 
-            textBoxAdmin.bookingDrawText(releaseTextBoxID, "このスロットを解放するには ", releaseTextPaint);
-            textBoxAdmin.bookingDrawText(releaseTextBoxID, focusGeoSlot.getReleaseEvent(), releaseTextPaint);//TODO:イベント名そのままになっているが、これは仮
-            textBoxAdmin.bookingDrawText(releaseTextBoxID, " が必要です。", releaseTextPaint);
+            textBoxAdmin.resetTextBox(releaseTextBoxID);
+
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, "ガイア「ごめ〜ん、ここを使うなら、 ", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "\n", releaseTextPaint);
-            textBoxAdmin.bookingDrawText(releaseTextBoxID, "条件がジオの場合は今ホールドしているジオを消費します。", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, focusGeoSlot.getReleaseEvent(), releaseTextPaint);//TODO:イベント名そのままになっているが、これは仮
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, " を私に献上しなさい！」", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, "\n", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, "※条件がジオの場合は今ホールドしているジオを消費します。", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "\n", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "お金の場合は所持金から消費します。", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "\n", releaseTextPaint);
-            textBoxAdmin.bookingDrawText(releaseTextBoxID, "解放しますか？", releaseTextPaint);
+            textBoxAdmin.bookingDrawText(releaseTextBoxID, "献上してこのジオスロットを解放しますか？", releaseTextPaint);
             textBoxAdmin.bookingDrawText(releaseTextBoxID, "MOP", releaseTextPaint);
 
             textBoxAdmin.updateText(releaseTextBoxID);
@@ -353,18 +406,17 @@ public class GeoSlotAdmin {
 
     public void update(){
         geoSlotGroup.update();
-
+        holdGeoPlateGroup.update();
         releasePlateGroup.update();
+
         if (releasePlateGroup.getUpdateFlag()) {
             int content = releasePlateGroup.getTouchContentNum();
             switch (content) {
                 case (0)://解放する
                     //解放するための色々な処理
                     if (focusGeoSlot.geoSlotRelease()) {
-                        //TODO 解放したことを通知
                         soundAdmin.play("levelup00");
                     } else {
-                        //TODO 条件を満たしていないことを通知
                         soundAdmin.play("cancel00");
                     }
                     releasePlateGroup.setDrawFlag(false);
@@ -402,11 +454,15 @@ public class GeoSlotAdmin {
         geoSlotGroup.draw();
 
         //Holdの表示
+        /*
         if (isHoldGeoObject()) {
             graphic.bookingDrawBitmapData(
                     graphic.makeImageContext(holdGeoObject.getItemImage(), 100, 100, Constants.GeoSlotParam.GEO_SLOT_SCALE, Constants.GeoSlotParam.GEO_SLOT_SCALE, 0, 255, false)
             );
         }
+        */
+
+        holdGeoPlateGroup.draw();
 
         //ListBox
         releasePlateGroup.draw();
@@ -422,11 +478,21 @@ public class GeoSlotAdmin {
     public void checkInventrySelect() {
         InventryData inventryData = userInterface.getInventryData();
         if (inventryData != null) {
-            GeoObjectData tmp = (GeoObjectData)inventryData.getItemData();
-            if (inventryData.getItemNum() > 0 && tmp.getName() != null && tmp.getSlotSetName().equals("noSet")) {
-                setHoldGeoObject((GeoObjectData) inventryData.getItemData());
-                userInterface.setInventryData(null);
+            if (inventryData.getItemData() != null) {
+                if (inventryData.getItemData().getItemKind() == Constants.Item.ITEM_KIND.GEO) {
+                    GeoObjectData tmp = (GeoObjectData) inventryData.getItemData();
+                    if (inventryData.getItemNum() > 0 && tmp.getName() != null && tmp.getSlotSetName().equals("noSet")) {
+                        setHoldGeoObject((GeoObjectData) inventryData.getItemData());
+                        userInterface.setInventryData(null);
+                    }
+                }
             }
+        }
+    }
+
+    public void clearGeoSlotLineEffect() {
+        for(int i = 0; i < geoSlots.size(); i++) {
+            geoSlots.get(i).clearGeoSlotLineEffect();
         }
     }
 
@@ -484,6 +550,7 @@ public class GeoSlotAdmin {
     // ***** Setter *****
     public void setHoldGeoObject(GeoObjectData geoObjectData) {
         holdGeoObject = geoObjectData;
+        holdGeoPlateGroup.setContentItem(geoObjectData,0);
     }
     public void setFocusGeoSlot(GeoSlot _focusGeoSlot) {
         focusGeoSlot = _focusGeoSlot;

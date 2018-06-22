@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Constants;
+import com.maohx2.ina.Constants.SIDE_INVENTRY;
 import com.maohx2.ina.DungeonModeManage;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.UserInterface;
@@ -97,7 +98,6 @@ public class GeoSlotAdminManager {
     public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver, MaohMenosStatus _maohMenosStatus, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin, DungeonModeManage _dungeonModeManage) {
         this(_graphic, _userInterface, null, _databaseAdmin, _textBoxAdmin, _playerStatus, _geoInventry, _geoSlotSaver,_maohMenosStatus,_soundAdmin, _effectAdmin);
         mode = MODE.DUNGEON;
-        initMapIconPlate();
         dungeonModeManage = _dungeonModeManage;
     }
 
@@ -122,6 +122,8 @@ public class GeoSlotAdminManager {
         setSlot();
         //initStatusTextBox();
         initBackPlate();
+        initMapIconPlate();
+
         mode = MODE.WORLD;
 
     }
@@ -130,7 +132,7 @@ public class GeoSlotAdminManager {
     public void start() {
         //activeGeoSlotAdmin.start();
         calcStatus();
-        geoInventry.setPosition(1200, 100, 1600, 700, 10);
+        geoInventry.setPosition(SIDE_INVENTRY.INV_LEFT, SIDE_INVENTRY.INV_UP, SIDE_INVENTRY.INV_RIGHT,SIDE_INVENTRY.INV_BOTTOM,SIDE_INVENTRY.INV_CONTENT_NUM);
     }
 
 
@@ -147,7 +149,7 @@ public class GeoSlotAdminManager {
         backPlateGroup = new PlateGroup<BackPlate>(
                 new BackPlate[] {
                         new BackPlate(
-                                graphic, userInterface, worldModeAdmin
+                                graphic, userInterface
                         ) {
                             @Override
                             public void callBackEvent() {
@@ -155,9 +157,7 @@ public class GeoSlotAdminManager {
                                 soundAdmin.play("cancel00");
 
                                 if ( activeGeoSlotAdmin != null) {
-                                    for (int i = 0; i < activeGeoSlotAdmin.getGeoSlots().size(); i++) {
-                                        activeGeoSlotAdmin.getGeoSlots().get(i).clearGeoSlotLineEffect();
-                                    }
+                                    activeGeoSlotAdmin.clearGeoSlotLineEffect();
                                 }
 
                                 if (getMode() == GeoSlotAdminManager.MODE.WORLD) {
@@ -187,6 +187,7 @@ public class GeoSlotAdminManager {
         String w_script = "event = " + MyDatabase.s_quo("dungeon");
 
         dungeonName = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "name", w_script);
+        List<String> dungeonNameExpress = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "dungeonName", w_script);
         List<String> imageName = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "image_name", w_script);
         List<Integer> x = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "statusX", w_script);
         List<Integer> y = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "statusY", w_script);
@@ -207,6 +208,7 @@ public class GeoSlotAdminManager {
                     graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale.get(i), scale.get(i), 0.0f, 255, false),
                     graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale_feed.get(i), scale_feed.get(i), 0.0f, 255, false),
                     dungeonName.get(i),
+                    dungeonNameExpress.get(i),
                     "dungeon"
             ));
         }
@@ -220,6 +222,9 @@ public class GeoSlotAdminManager {
         int buttonID = mapIconPlateGroup.getTouchContentNum();
         if (buttonID != -1 ) {
             soundAdmin.play("enter00");
+            if ( activeGeoSlotAdmin != null) {
+                activeGeoSlotAdmin.clearGeoSlotLineEffect();
+            }
             this.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
             //statusTextBoxUpdate();
         }

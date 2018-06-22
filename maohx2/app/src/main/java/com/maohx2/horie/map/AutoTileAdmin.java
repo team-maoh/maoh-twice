@@ -447,4 +447,11 @@ public class AutoTileAdmin {
         }
         //graphic.bookingDrawBitmapData(m_auto_tile.auto_tile[3], 100, 100, 3, 3 , 0, 255, true);
     }
+
+    public void release() {
+        auto_tile_parts = null;
+        test = null;
+        test2 = null;
+        test3 = null;
+    }
 }

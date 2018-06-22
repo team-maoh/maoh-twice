@@ -1,6 +1,7 @@
 package com.maohx2.kmhanko.itemdata;
 
 import com.maohx2.ina.ItemData.ItemData;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 
 /**
  * Created by user on 2017/11/05.
@@ -77,6 +78,14 @@ public class ExpendItemData extends ItemData {
         }
 
         return -1;
+    }
+
+    public int getPriceByPlayerStatus(PlayerStatus playerStatus) {
+        int tmpPrice = 0;
+        tmpPrice = (int)((float)price * (float)(playerStatus.getBaseAttack() + playerStatus.getBaseDefence() + playerStatus.getBaseLuck())/60.0f);
+
+
+        return tmpPrice;
     }
 
 }

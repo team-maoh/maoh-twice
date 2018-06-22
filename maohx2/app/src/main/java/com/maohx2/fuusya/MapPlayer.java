@@ -25,6 +25,7 @@ import static java.lang.Math.PI;
 import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.log;
+import static java.lang.Math.min;
 import static java.lang.Math.pow;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
@@ -53,7 +54,7 @@ public class MapPlayer extends MapUnit {
     int kind_of_enemy;
 
     //    int PLAYER_STEP = 26;//プレイヤーの歩幅
-    int PLAYER_STEP = 100;//プレイヤーの歩幅 //デバッグ用
+    int PLAYER_STEP = 50;//プレイヤーの歩幅 //デバッグ用
 
     double touch_w_x, touch_w_y, touch_n_x, touch_n_y, pre_w_x, pre_w_y;
     boolean is_moving;
@@ -63,10 +64,12 @@ public class MapPlayer extends MapUnit {
     TouchState touch_state;
     boolean avoid_battle_for_debug;
 
-    boolean will_cancel_step_sound;
+    boolean has_touched_within_player;
 
     boolean debug_first = false;
     boolean player_touch_refresh;//Playerを二度タッチしたら二度目でMenuが消える
+
+    int menu_frame;
 
     public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, MapPlateAdmin _map_plate_admin, BattleUnitAdmin _battle_unit_admin, DungeonModeManage _dungeon_mode_manage, boolean _avoid_battle_for_debug) {
         super(graphic, _map_object_admin, _camera);
@@ -83,7 +86,7 @@ public class MapPlayer extends MapUnit {
 
         sound_admin = _sound_admin;
 
-        mean_encount_steps = 80;
+        mean_encount_steps = 40;//80
         var_encount_steps = 0;
         th_encount_steps = makeThresholdEncountSteps();
 
@@ -101,8 +104,10 @@ public class MapPlayer extends MapUnit {
 
         avoid_battle_for_debug = _avoid_battle_for_debug;
 
-        will_cancel_step_sound = false;
+        has_touched_within_player = false;
         player_touch_refresh = true;
+
+        menu_frame = 0;
     }
 
     public void init() {
@@ -122,7 +127,7 @@ public class MapPlayer extends MapUnit {
     public void update() {
         super.update();
 
-        will_cancel_step_sound = false;
+        has_touched_within_player = false;
 
         touch_state = dungeon_user_interface.getTouchState();
 
@@ -137,20 +142,30 @@ public class MapPlayer extends MapUnit {
             if (map_plate_admin.isTouchingList(touch_n_x, touch_n_y) == false) {
 
 //                int pre_content = map_plate_admin.getDisplayingContent();
+//                map_plate_admin.setDisplayingContent(-1);
 
-                map_plate_admin.setDisplayingContent(-1);
+                if (map_plate_admin.getDisplayingContent() == 0 || map_plate_admin.getDisplayingContent() == 2) {
+                    menu_frame++;
+                    if (menu_frame > 12) {
+                        menu_frame = 0;
+                        map_plate_admin.setDisplayingContent(-1);
+                    }
+                }
 
                 //Player(画面中央)をタッチしたらMENUを表示する
 //                if (touch_state != TouchState.MOVE) {
-                if (isWithinReach(touch_w_x, touch_w_y, 80) == true) {
-                    if (touch_state == TouchState.UP && player_touch_refresh == true) {
-                        map_plate_admin.setDisplayingContent(0);
-                        sound_admin.play("enter00");
-                        player_touch_refresh = false;
+                if (touch_state == TouchState.UP) {
+                    if (map_plate_admin.getDisplayingContent() == -1) {
+                        if (isWithinReach(touch_w_x, touch_w_y, 80) == true) {
+                            map_plate_admin.setDisplayingContent(0);
+                            sound_admin.play("enter00");
+//                        player_touch_refresh = false;
+                        }
+                    } else if (map_plate_admin.getDisplayingContent() == 0 || map_plate_admin.getDisplayingContent() == 2) {
+                        map_plate_admin.setDisplayingContent(-1);
                     }
-                } else {
-                    player_touch_refresh = true;
                 }
+
 
                 //タッチ座標が現在位置からある程度離れていたら、その座標を目標座標とする
                 //（近いと walkOneStep() の仕様上、足が早くなってしまう）
@@ -159,7 +174,7 @@ public class MapPlayer extends MapUnit {
                     dst_w_x = touch_w_x;
                     dst_w_y = touch_w_y;
                 } else {
-                    will_cancel_step_sound = true;
+                    has_touched_within_player = true;
                 }
 
                 touching_frame_count++;
@@ -220,42 +235,53 @@ public class MapPlayer extends MapUnit {
             //壁との衝突を考慮した上で、タッチ座標に向かって１歩進む
             walkOneStep(dst_w_x, dst_w_y, step);
 
-            encount_steps++;
-//            System.out.println("encount_step_desudesu  " + (th_encount_steps - encount_steps));
-            if (encount_steps >= th_encount_steps && map_admin.getNow_floor_num() != map_admin.getBoss_floor_num()) {
-                System.out.println("◆一定歩数 歩いたので敵と遭遇");
-                encount_steps = 0;
-                //遭遇の瞬間に、次の遭遇までに要する歩数を乱数で決める
-                th_encount_steps = makeThresholdEncountSteps();
+            if (map_admin.getNow_floor_num() != map_admin.getBoss_floor_num()) {
 
-                int now_floor_num = map_admin.getNow_floor_num();//nullが返ってくる
-                int boss_floor_num = map_admin.getBoss_floor_num();//nullが返ってくる
+                if (has_touched_within_player == false) {//直前にPlayerをタッチしていない場合に限り、エンカウント処理をする
 
-                int max_of_num_of_zako = 10;
-                int num_of_zako = max_of_num_of_zako * now_floor_num / boss_floor_num;
+                    encount_steps++;
 
-                String[] tmp_zako = new String[num_of_zako];
+                    if (encount_steps >= th_encount_steps && avoid_battle_for_debug == false) {
+                        System.out.println("◆一定歩数 歩いたので敵と遭遇");
+                        encount_steps = 0;
+                        //遭遇の瞬間に、次の遭遇までに要する歩数を乱数で決める
+                        th_encount_steps = makeThresholdEncountSteps();
 
-                int kind_of_zako = map_object_admin.getKindOfZako();
+                        int now_floor_num = map_admin.getNow_floor_num();//nullが返ってくる
+                        int boss_floor_num = map_admin.getBoss_floor_num();//nullが返ってくる
 
-                for (int i = 0; i < num_of_zako; i++) {
-                    double ran1 = kind_of_zako * random.nextDouble();
-                    tmp_zako[i] = map_admin.getMonsterName(0)[(int) ran1 % kind_of_zako];
+//                        int max_of_num_of_zako = 5;
+//                        int num_of_zako = max_of_num_of_zako * now_floor_num / boss_floor_num + 2;
+                        int num_of_zako = min(5, (int) (now_floor_num * 0.5) + 1);
+
+//                        num_of_zako = max_of_num_of_zako;//fuusya_debug
+
+                        String[] tmp_zako = new String[num_of_zako];
+
+                        int kind_of_zako = map_object_admin.getKindOfZako();
+
+                        for (int i = 0; i < num_of_zako; i++) {
+                            double ran1 = kind_of_zako * random.nextDouble();
+                            tmp_zako[i] = map_admin.getMonsterName(0)[(int) ran1 % kind_of_zako];
+//                            tmp_zako[i] = "dwarf";
+                        }
+
+                        //戦闘画面では「罠だ！」のTextBoxを出さない
+                        map_object_admin.eraseEffectBox();
+
+                        //デバッグ時にエンカウントすると鬱陶しいのでコメントアウト
+                        battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
+                        battle_unit_admin.spawnEnemy(tmp_zako);//
+                        dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+
+                    }
                 }
-
-                //デバッグ時にエンカウントすると鬱陶しいのでコメントアウト
-                if (avoid_battle_for_debug == false) {
-                    battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
-                    battle_unit_admin.spawnEnemy(tmp_zako);//
-                    dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
-                }
-
             }
 
-            if (will_cancel_step_sound == false) {
+            if (has_touched_within_player == false) {
                 sound_steps = (sound_steps + 1) % SOUND_STEPS_PERIOD;
                 //壁にぶつかり続けてるときに音がなり続けるのはおかしいので、
-                //if(will_cancel_step_sound == false) の中に入れる
+                //if(has_touched_within_player == false) の中に入れる
                 if (sound_steps == 0) {
                     sound_admin.play("step07");//足音SE
                 }
