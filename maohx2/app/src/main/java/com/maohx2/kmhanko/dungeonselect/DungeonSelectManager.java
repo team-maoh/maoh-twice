@@ -44,6 +44,7 @@ import android.content.Intent;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.maohx2.kmhanko.Talking.TalkAdmin;
 
 //TODO 指を離すと元に戻ってしまうので、どこを選択したのかわかりにくい。説明プレートを出せばわかるけど
 public class DungeonSelectManager {
@@ -121,7 +122,9 @@ public class DungeonSelectManager {
     MapStatus mapStatus;
     MapStatusSaver mapStatusSaver;
 
-    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, ActivityChange _activityChange, SoundAdmin _soundAdmin, WorldActivity _worldActivity, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver) {
+    TalkAdmin talkAdmin;
+
+    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, ActivityChange _activityChange, SoundAdmin _soundAdmin, WorldActivity _worldActivity, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver, TalkAdmin _talkAdmin) {
         graphic = _graphic;
         userInterface = _userInterface;
         textBoxAdmin = _textBoxAdmin;
@@ -134,6 +137,7 @@ public class DungeonSelectManager {
         soundAdmin = _soundAdmin;
         mapStatus = _mapStatus;
         mapStatusSaver = _mapStatusSaver;
+        talkAdmin = _talkAdmin;
 
         worldActivity = _worldActivity;
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
@@ -165,6 +169,60 @@ public class DungeonSelectManager {
             worldModeAdmin.setMode(WORLD_MODE.ENDING);
         }
 
+
+        //各ダンジョン初クリア時のイベント発生。
+        if (playerStatus.getClearCount() == 0) {
+            for (int i = Constants.STAGE_NUM - 1; i >= 0; i--) {
+                if (mapStatus.getMapClearStatus(i) == 1) {
+                    switch(i) {
+                        case 0:
+                            talkAdmin.start("ClearForest", false);
+                            break;
+                        case 1:
+                            talkAdmin.start("ClearLava", false);
+                            break;
+                        case 2:
+                            talkAdmin.start("ClearSea", false);
+                            break;
+                        case 3:
+                            talkAdmin.start("ClearChess", false);
+                            break;
+                        case 4:
+                            talkAdmin.start("ClearSwamp", false);
+                            break;
+                        case 5:
+                            talkAdmin.start("ClearHaunted", false);
+                            break;
+                        case 6:
+                            talkAdmin.start("ClearDragon", false);
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                }
+            }
+        }
+        //各種魔王討伐時のイベント発生。
+        switch(playerStatus.getMaohWinCount()) {
+            case 1:
+                talkAdmin.start("AfterMaoh001", false);
+                break;
+            case 3:
+                talkAdmin.start("AfterMaoh003", false);
+                break;
+            case 6:
+                talkAdmin.start("AfterMaoh006", false);
+                break;
+            case 9:
+                talkAdmin.start("AfterMaoh009", false);
+                break;
+            case 10:
+                talkAdmin.start("AfterMaoh010", false);
+                break;
+        }
+
+
         //前ダンジョンクリアかつ魔王討伐回数＝Clear+1なら、Clearを+1
         boolean flag = true;
         for (int i = 0; i < Constants.STAGE_NUM; i++) {
@@ -187,6 +245,7 @@ public class DungeonSelectManager {
             }
             playerStatus.save();
         }
+
     }
 
     private void setDatabase(MyDatabaseAdmin databaseAdmin) {

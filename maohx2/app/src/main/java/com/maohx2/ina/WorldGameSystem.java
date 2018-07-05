@@ -198,7 +198,7 @@ public class WorldGameSystem {
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin);
 
 
-        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, activityChange, soundAdmin, worldActivity, map_status,map_status_saver);
+        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, activityChange, soundAdmin, worldActivity, map_status,map_status_saver, talkAdmin);
 
         geoSlotAdminManager.loadGeoSlot();
 
@@ -274,7 +274,7 @@ public class WorldGameSystem {
         initBackPlate();
 
         //OP判定。まだOPを流していないならOP会話イベントを発動する。
-        //talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される
+        talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される
 
 
 
