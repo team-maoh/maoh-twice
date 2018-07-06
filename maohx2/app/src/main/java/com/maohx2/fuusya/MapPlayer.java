@@ -86,7 +86,7 @@ public class MapPlayer extends MapUnit {
 
         sound_admin = _sound_admin;
 
-        mean_encount_steps = 40;//80
+        mean_encount_steps = 120;//80
         var_encount_steps = 0;
         th_encount_steps = makeThresholdEncountSteps();
 

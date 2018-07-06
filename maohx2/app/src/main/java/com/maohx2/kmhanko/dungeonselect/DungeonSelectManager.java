@@ -171,7 +171,7 @@ public class DungeonSelectManager {
 
 
         //各ダンジョン初クリア時のイベント発生。
-        if (playerStatus.getClearCount() == 0) {
+        //if (playerStatus.getClearCount() == 0) {
             for (int i = Constants.STAGE_NUM - 1; i >= 0; i--) {
                 if (mapStatus.getMapClearStatus(i) == 1) {
                     switch(i) {
@@ -199,10 +199,9 @@ public class DungeonSelectManager {
                         default:
                             break;
                     }
-                    break;
                 }
             }
-        }
+        //}
         //各種魔王討伐時のイベント発生。
         switch(playerStatus.getMaohWinCount()) {
             case 1:

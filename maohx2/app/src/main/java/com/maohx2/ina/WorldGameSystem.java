@@ -277,7 +277,6 @@ public class WorldGameSystem {
         talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される
 
 
-
         /*
         battleUnitDataAdmin = new BattleUnitDataAdmin(databaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
         battleUnitDataAdmin.loadBattleUnitData(Constants.DungeonKind.DUNGEON_KIND.FOREST);//敵読み込み
