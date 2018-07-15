@@ -45,8 +45,7 @@ public class StartActivity extends BaseActivity {
         start_surface_view = new StartSurfaceView(this, backSurfaceView);
         //layout.addView(backSurfaceView);
         layout.addView(start_surface_view);
-
-
+        
     }
 
     @Override
