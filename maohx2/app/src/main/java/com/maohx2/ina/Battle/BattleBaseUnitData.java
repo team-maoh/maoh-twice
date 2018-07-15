@@ -253,9 +253,11 @@ public class BattleBaseUnitData {
 
 
     public void release() {
+        System.out.println("takanoRelease : BattleBaseUnitData");
         bitmap_data = null;
         dropItemEquipmentKind = null;
         dropItemName = null;
+        dropItemRate = null;
         dropItemKind = null;
     }
 

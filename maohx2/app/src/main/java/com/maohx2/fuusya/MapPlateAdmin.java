@@ -37,6 +37,7 @@ import static com.maohx2.ina.Constants.Touch.TouchWay.UP_MOMENT;
 
 public class MapPlateAdmin {
 
+
     Graphic graphic;
     DungeonUserInterface dungeon_user_interface;
     Inventry inventry;
@@ -392,6 +393,23 @@ public class MapPlateAdmin {
             graphic.bookingDrawText(now_floor, 20, 40, text_paint);
         }
 
+    }
+
+    public void release() {
+        System.out.println("takanoRelease : MapPlateAdmin");
+        blue_paint = null;
+        green_paint = null;
+        red_paint = null;
+        text_paint = null;
+        floor_bg = null;
+
+        if (menuGroup != null) {
+            menuGroup.release();
+            menuGroup = null;
+        }
+
+        //TODO 心配
+        //inentry.release();
     }
 
 }

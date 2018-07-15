@@ -206,4 +206,18 @@ public class PaletteAdmin {
         }
     }
 
+    public void release() {
+        System.out.println("takanoRelease : PaletteAdmin");
+        if (palettes != null) {
+            for (int i = 0; i < palettes.length; i++) {
+                if (palettes[i] != null) {
+                    palettes[i].release();
+                }
+            }
+            palettes = null;
+        }
+        palettesFlag = null;
+
+    }
+
 }

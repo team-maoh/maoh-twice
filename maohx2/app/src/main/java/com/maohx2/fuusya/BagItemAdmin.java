@@ -12,6 +12,7 @@ public class BagItemAdmin {
     BagItem[] bag_item = new BagItem[SIZE_OF_POCKET];
     int num_of_kinds;//所持アイテムの種類の数
 
+
     public void init() {
 
         num_of_kinds = 0;
@@ -85,6 +86,15 @@ public class BagItemAdmin {
 
     }
 
+    public void release() {
+        System.out.println("takanoRelease : BagItemAdmin");
+        for (int i = 0; i < bag_item.length; i++) {
+            if (bag_item[i] != null) {
+                bag_item[i].release();
+            }
+        }
+        bag_item = null;
+    }
 
 
 }

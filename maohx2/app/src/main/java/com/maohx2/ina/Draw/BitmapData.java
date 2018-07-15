@@ -39,6 +39,7 @@ public class BitmapData{
 
     //by kmhanko
     public void releaseBitmap() {
+        System.out.println("takanoRelease : BitmapData");
         if (bitmap != null) {
             bitmap.recycle();
             bitmap = null;

@@ -121,8 +121,8 @@ public class WorldGameSystem {
     BitmapData tu_equip_img;
     BitmapData[] credit = new BitmapData[2];
 
-    String talkContent[][] = new String[100][];
-    ImageContext talkChara[] = new ImageContext[100];
+    //String talkContent[][] = new String[100][];
+    //ImageContext talkChara[] = new ImageContext[100];
 
     MapStatus map_status;
     MapStatusSaver map_status_saver;
@@ -317,9 +317,11 @@ public class WorldGameSystem {
         );//kokomade
         */
     }
-
-
+    ;
     public void update() {
+        if (updateStopFlag) {
+            return;
+        }
 /*
         if (world_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN) {
             List<BitmapData> testBitmapData = new ArrayList<BitmapData>();
@@ -433,10 +435,15 @@ public class WorldGameSystem {
             default:
                 break;
         }
+        if (updateStopFlag) {
+            return;
+        }
         talkAdmin.update();
         text_box_admin.update();
         effectAdmin.update();
         //musicAdmin.update();
+
+        activityChange.toChangeActivity();
     }
 
 
@@ -538,10 +545,16 @@ public class WorldGameSystem {
         graphic.draw();
     }
 
+    boolean updateStopFlag = false;
+    public void updateStop() {
+        updateStopFlag = true;
+    }
+
     boolean drawStopFlag = false;
     public void drawStop() {
         drawStopFlag = true;
     }
+
 
     //TODO 仮。もどるボタン
     PlateGroup<BackPlate> backPlateGroup;
@@ -571,8 +584,29 @@ public class WorldGameSystem {
     }
 
     public void release() {
+        System.out.println("takanoRelease : WorldGameSystem");
+        palette_admin.release();
+        world_user_interface.release();
+
+        map_status.release();
+        map_status_saver.release();
         playerStatusViewer.release();
+        worldModeAdmin.release();
+        text_box_admin.release();
+        talkAdmin.release();
+        itemDataAdminManager.release();
         itemShopAdmin.release();
+        effectAdmin.release();
+        geoSlotSaver.release();
+        geoSlotAdminManager.release();
+        dungeonSelectManager.release();
+        itemSell.release();
+        geoPresentManager.release();
+        geoPresentSaver.release();
+        equipment_item_data_admin.release();
+        backPlateGroup.release();
+        backPlateGroup = null;
+        credit = null;
     }
 
 /*

@@ -300,6 +300,14 @@ public class MapEnemy extends MapUnit {
         kind_of_enemy = _kind_of_enemy;
     }
 
+    @Override
+    public void release() {
+        System.out.println("takanoRelease : MapEnemy");
+        super.release();
+        chase_w_x = null;
+        chase_w_y = null;
+    }
+
 }
 
 

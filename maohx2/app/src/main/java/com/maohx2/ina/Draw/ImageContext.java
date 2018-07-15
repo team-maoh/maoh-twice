@@ -44,4 +44,9 @@ public class ImageContext {
     public void setPaint(Paint _paint) {
         paint = _paint;
     }
+
+    public void release() {
+        System.out.println("takanoRelease : ImageContext");
+    }
+
 }

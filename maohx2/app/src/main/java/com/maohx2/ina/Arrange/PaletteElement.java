@@ -151,4 +151,10 @@ public class PaletteElement {
     public int getTouchID(){return touch_id;}
     public int getElementNum(){return element_num;}
 
+
+    public void release() {
+        System.out.println("takanoRelease : PaletteElement");
+        paint = null;
+        textPaint = null;
+    }
 }

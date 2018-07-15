@@ -449,6 +449,7 @@ public class AutoTileAdmin {
     }
 
     public void release() {
+        System.out.println("takanoRelease : AutoTileAdmin");
         auto_tile_parts = null;
         test = null;
         test2 = null;

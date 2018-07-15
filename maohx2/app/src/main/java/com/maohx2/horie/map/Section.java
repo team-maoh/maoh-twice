@@ -362,6 +362,7 @@ public class Section {
     }
 
     public void release() {
+        System.out.println("takanoRelease : Section");
         connected_upper_leaf_num = null;
         connected_lower_leaf_num = null;
         connected_left_leaf_num = null;

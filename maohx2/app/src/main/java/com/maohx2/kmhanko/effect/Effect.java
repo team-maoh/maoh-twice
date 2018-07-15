@@ -51,6 +51,13 @@ public class Effect {
     private boolean exist;
     private boolean isDraw;
 
+    public void release() {
+        System.out.println("takanoRelease : Effect");
+        if (bitmapData != null) {
+            bitmapData.clear();
+            bitmapData = null;
+        }
+    }
 
     public Effect() {
         exist = false;
@@ -77,9 +84,6 @@ public class Effect {
         effectData = null;
         original_angle = 0.0f;
         original_angle_deg = 0.0f;
-        for (int i = 0; i < bitmapData.size(); i++) {
-            bitmapData.set(i,null);
-        }
         bitmapData.clear();
     }
 

@@ -1647,6 +1647,7 @@ public class MapAdmin {
     }
 
     public void release() {
+        System.out.println("takanoRelease : MapAdmin");
         map_data_int = null;
         t_map_data_int = null;
 
@@ -1663,9 +1664,14 @@ public class MapAdmin {
         mine_point = null;
         opening_map_size = null;
 
-        camera = null;
-        section_admin.release();
-        section_admin = null;
+        if ( camera != null) {
+            camera.release();
+            camera = null;
+        }
+        if (section_admin != null) {
+            section_admin.release();
+            section_admin = null;
+        }
         canvas = null;
         holder = null;
         map_player = null;
@@ -1674,32 +1680,47 @@ public class MapAdmin {
         dungeon_monster_data = null;
 
         //auto_tile用
-        auto_tile_wall.release();
-        auto_tile_wall = null;
-        auto_tile_side_wall.release();
-        auto_tile_side_wall = null;
-        for (int i = 0; i<at_wall.length; i++) {
-            if (at_wall[i] != null) {
-                at_wall[i].release();
-            }
+        if (auto_tile_wall != null) {
+            auto_tile_wall.release();
+            auto_tile_wall = null;
         }
-        at_wall = null;
-        for (int i = 0; i<at_side_wall.length; i++) {
-            if (at_side_wall[i] != null) {
-                at_side_wall[i].release();
-            }
+        if (auto_tile_side_wall != null) {
+            auto_tile_side_wall.release();
+            auto_tile_side_wall = null;
         }
-        at_side_wall = null;
-        at_floor.release();
-        at_floor = null;
-        for (int i = 0; i<auto_tile_cave_hole.length; i++) {
-            if (auto_tile_cave_hole[i] != null) {
-                auto_tile_cave_hole[i].release();
+        if (at_wall != null) {
+            for (int i = 0; i < at_wall.length; i++) {
+                if (at_wall[i] != null) {
+                    at_wall[i].release();
+                }
             }
+            at_wall = null;
         }
-        auto_tile_cave_hole = null;
-        auto_tile_admin.release();
-        auto_tile_admin = null;
+        if (at_side_wall != null) {
+            for (int i = 0; i < at_side_wall.length; i++) {
+                if (at_side_wall[i] != null) {
+                    at_side_wall[i].release();
+                }
+            }
+            at_side_wall = null;
+        }
+        if (at_floor != null) {
+            at_floor.release();
+            at_floor = null;
+        }
+        if (auto_tile_cave_hole != null) {
+            for (int i = 0; i < auto_tile_cave_hole.length; i++) {
+                if (auto_tile_cave_hole[i] != null) {
+                    auto_tile_cave_hole[i].release();
+                }
+            }
+            auto_tile_cave_hole = null;
+        }
+        if (auto_tile_admin != null) {
+            auto_tile_admin.release();
+            auto_tile_admin = null;
+        }
+
         is_map_data_wall = null;
         is_map_data_sidewall = null;
 

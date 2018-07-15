@@ -194,6 +194,7 @@ public class PlayerStatusViewer {
     }
 
     public void release() {
+        System.out.println("takanoRelease : PlayerStatusViewer");
         for (int i = 0; i < statusIcon.length; i++) {
             statusIcon[i] = null;
         }

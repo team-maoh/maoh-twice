@@ -21,4 +21,9 @@ public class DungeonModeManage {
     public void setMode(DUNGEON_MODE mode) {
         this.mode = mode;
     }
+
+    public void release() {
+        System.out.println("takanoRelease : DungeonModeManage");
+        mode = null;
+    }
 }

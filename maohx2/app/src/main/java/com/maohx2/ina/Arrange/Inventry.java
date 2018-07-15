@@ -360,4 +360,42 @@ public class Inventry {
             operate_inventry_list_box.setInventryData(inventry_datas[page * contentNum + i], i);
         }
     }
+
+
+    public void release() {
+        System.out.println("takanoRelease : Inventry");
+        operate_inventry_list_box.release();
+        operate_inventry_list_box = null;
+        inventry_datas = null;
+        paint = null;
+        position = null;
+        if (operate_inventry_list_box != null) {
+            operate_inventry_list_box.release();
+            operate_inventry_list_box = null;
+        }
+        if (leftPlate != null) {
+            leftPlate.release();
+            leftPlate = null;
+        }
+        if (rightPlate != null) {
+            rightPlate.release();
+            rightPlate = null;
+        }
+        if (flameElement != null) {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    flameElement[i][j].releaseBitmap();
+                }
+            }
+            flameElement = null;
+        }
+        if (inventry_datas != null) {
+            for (int i = 0; i < inventry_datas.length; i++) {
+                if (inventry_datas[i] != null) {
+                    inventry_datas[i].release();
+                }
+            }
+        }
+    }
+
 }

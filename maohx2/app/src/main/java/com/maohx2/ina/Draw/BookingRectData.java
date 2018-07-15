@@ -29,6 +29,7 @@ public class BookingRectData extends BookingTaskData{
 
     @Override
     public void release() {
+        System.out.println("takanoRelease : BookingRectData");
         super.release();
         rect = null;
     }

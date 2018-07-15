@@ -115,8 +115,11 @@ public class BitmapDataAdmin {
 
     //by kmhanko
     public void releaseBitmap() {
-        for(int i = 0; i < bitmap_data.length; i++) {
-            bitmap_data[i].releaseBitmap();
+        System.out.println("takanoRelease : BitMapDataAdmin");
+        if (bitmap_data != null) {
+            for (int i = 0; i < bitmap_data.length; i++) {
+                bitmap_data[i].releaseBitmap();
+            }
         }
     }
 

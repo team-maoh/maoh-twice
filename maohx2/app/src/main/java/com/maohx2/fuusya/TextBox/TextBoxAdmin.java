@@ -330,4 +330,14 @@ public class TextBoxAdmin {
     }
 
 
+    public void release() {
+        System.out.println("takanoRelease : TextBoxAdmin");
+        for (int i = 0; i < text_box.length; i++) {
+            if (text_box[i] != null) {
+                text_box[i].release();
+            }
+        }
+        text_box = null;
+    }
+
 }

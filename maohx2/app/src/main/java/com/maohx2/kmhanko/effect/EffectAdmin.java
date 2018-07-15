@@ -169,4 +169,20 @@ public class EffectAdmin {
     public EffectDataAdmin getEffectDataAdmin() {
         return effectDataAdmin;
     }
+
+    public void release() {
+        System.out.println("takanoRelease : EffectAdmin");
+        if (effectDataAdmin != null) {
+            effectDataAdmin.release();
+        }
+        if (effect != null) {
+            for (int i = 0; i < effect.size(); i++) {
+                if (effect.get(i) != null) {
+                    effect.get(i).release();
+                }
+            }
+            effect = null;
+        }
+    }
+
 }

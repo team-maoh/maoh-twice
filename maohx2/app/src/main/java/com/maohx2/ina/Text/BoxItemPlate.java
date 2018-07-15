@@ -76,11 +76,11 @@ public class BoxItemPlate extends BoxPlate {
 
     @Override
     public void release() {
-        /*
+        System.out.println("takanoRelease : BoxItemPlate");
         super.release();
         text_paint = null;
         button_paint = null;
         image_context = null;
-        */
+
     }
 }

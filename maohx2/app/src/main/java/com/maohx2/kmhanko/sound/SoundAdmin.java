@@ -174,6 +174,7 @@ public class SoundAdmin {
     }
 
     public void release() {
+        System.out.println("takanoRelease : SoundAdmin");
         sp.release();
     }
 

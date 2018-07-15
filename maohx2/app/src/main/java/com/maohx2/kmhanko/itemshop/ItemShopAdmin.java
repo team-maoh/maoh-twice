@@ -158,6 +158,7 @@ public class ItemShopAdmin {
     }
 
     public void release() {
+        System.out.println("takanoRelease : ItemShopAdmin");
         itemShop.release();
         itemShop = null;
     }

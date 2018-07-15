@@ -41,4 +41,8 @@ public class BagItem {
         num += add_num;
     }
 
+    public void release() {
+        System.out.println("takanoRelease : BagItem");
+    }
+
 }
