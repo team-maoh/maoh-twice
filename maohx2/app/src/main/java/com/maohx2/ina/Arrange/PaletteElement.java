@@ -153,6 +153,7 @@ public class PaletteElement {
 
 
     public void release() {
+        System.out.println("takanoRelease : PaletteElement");
         paint = null;
         textPaint = null;
     }

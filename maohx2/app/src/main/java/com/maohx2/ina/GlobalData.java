@@ -104,6 +104,7 @@ public class GlobalData extends Application {
     public MusicAdmin getMusicAdmin() { return musicAdmin; }
 
     public void release() {
+        System.out.println("takanoRelease : GlobalData");
         g_my_database_admin.release();
         g_bitmap_data_admin.releaseBitmap();
         playerStatusSaver.release();

@@ -81,6 +81,7 @@ class WorldSurfaceView extends BaseSurfaceView {
 
     @Override
     public void release() {
+        System.out.println("takanoRelease : WorldSurfaceView");
         super.release();
         world_game_system.drawStop();;
         world_game_system.updateStop();

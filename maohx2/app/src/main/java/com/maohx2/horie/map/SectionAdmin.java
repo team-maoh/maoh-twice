@@ -703,13 +703,16 @@ public class SectionAdmin {
     }
 
     public void release() {
-        for (int i = 0; i < leaves.length; i++) {
-            if (leaves[i] != null) {
-                leaves[i].release();
-                leaves[i] = null;
+        System.out.println("takanoRelease : SectionAdmin");
+        if (leaves != null) {
+            for (int i = 0; i < leaves.length; i++) {
+                if (leaves[i] != null) {
+                    leaves[i].release();
+                    leaves[i] = null;
+                }
             }
+            leaves = null;
         }
-        leaves = null;
         is_leaves_connected = null;
         is_leaves_checked = null;
     }

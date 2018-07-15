@@ -102,6 +102,7 @@ class StartSurfaceView extends BaseSurfaceView {
 
     @Override
     public void release() {
+        System.out.println("takanoRelease : StartSurfaceview");
         super.release();
         start_game_system.drawStop();
         start_game_system.updateStop();
@@ -244,6 +245,7 @@ class StartSurfaceView extends BaseSurfaceView {
                 }
                 break;
         }
+        activityChange.toChangeActivity();
     }
 
     public void setDownCount(int _downCount) {

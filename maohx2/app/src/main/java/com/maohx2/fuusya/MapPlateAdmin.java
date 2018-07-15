@@ -396,14 +396,17 @@ public class MapPlateAdmin {
     }
 
     public void release() {
+        System.out.println("takanoRelease : MapPlateAdmin");
         blue_paint = null;
         green_paint = null;
         red_paint = null;
         text_paint = null;
         floor_bg = null;
 
-        menuGroup.release();
-        menuGroup = null;
+        if (menuGroup != null) {
+            menuGroup.release();
+            menuGroup = null;
+        }
 
         //TODO 心配
         //inentry.release();

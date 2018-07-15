@@ -44,14 +44,18 @@ public class EffectDataAdmin {
 
 
     public void release() {
-        for (int i = 0; i < effectData.size(); i++) {
-            effectData.get(i).release();
+        System.out.println("takanoRelease : EffectDataAdmin");
+        if (effectData != null) {
+            for (int i = 0; i < effectData.size(); i++) {
+                effectData.get(i).release();
+            }
+            effectData.clear();
+            effectData = null;
         }
-        effectData.clear();
-        effectData = null;
-
-        tables.clear();
-        tables = null;
+        if (tables != null) {
+            tables.clear();
+            tables = null;
+        }
     }
 
 

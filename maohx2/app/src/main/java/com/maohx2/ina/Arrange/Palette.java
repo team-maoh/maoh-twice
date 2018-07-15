@@ -352,15 +352,20 @@ public class Palette {
     }
 
     public void release() {
+        System.out.println("takanoRelease : Pallete");
         direction_section_check = null;
-        palette_center.release();
-        palette_center = null;
-        for (int i = 0; i < palette_elements.length; i++) {
-            if (palette_elements != null) {
-                palette_elements[i].release();
-            }
+        if (palette_center != null) {
+            palette_center.release();
+            palette_center = null;
         }
-        palette_elements = null;
+        if (palette_elements != null) {
+            for (int i = 0; i < palette_elements.length; i++) {
+                if (palette_elements != null) {
+                    palette_elements[i].release();
+                }
+            }
+            palette_elements = null;
+        }
         paint = null;
     }
 }

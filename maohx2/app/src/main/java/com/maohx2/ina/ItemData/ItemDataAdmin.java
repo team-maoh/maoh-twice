@@ -88,13 +88,16 @@ public abstract class ItemDataAdmin<T extends ItemData>  {
     public List<T> getItemDatas() {return datas;}
 
     public void release() {
-        for (int i = 0; i < datas.size(); i++) {
-            if (datas.get(i) != null) {
-                datas.get(i).release();
+        System.out.println("takanoRelease : ItemDataAdmin");
+        if (datas != null) {
+            for (int i = 0; i < datas.size(); i++) {
+                if (datas.get(i) != null) {
+                    datas.get(i).release();
+                }
             }
+            datas.clear();
+            datas = null;
         }
-        datas.clear();
-        datas = null;
         dbName = null;
         dbAsset = null;
         tableName = null;

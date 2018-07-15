@@ -124,10 +124,13 @@ public class PlateGroup<T extends Plate> {
     }
 
     public void release() {
-        for (int i = 0; i < plates.length; i++) {
-            plates[i].release();
+        System.out.println("takanoRelease : PlateGroup");
+        if (plates != null) {
+            for (int i = 0; i < plates.length; i++) {
+                plates[i].release();
+            }
+            plates = null;
         }
-        plates = null;
     }
 
 }

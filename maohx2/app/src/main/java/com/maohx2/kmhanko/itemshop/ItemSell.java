@@ -494,6 +494,7 @@ public class ItemSell {
 
 
     public void release() {
+        System.out.println("takanoRelease : ItemSell");
         sellItemInventry.release();
         sellConfirmTextBoxPaint = null;
         backPlateGroup.release();

@@ -23,6 +23,7 @@ public class DungeonModeManage {
     }
 
     public void release() {
+        System.out.println("takanoRelease : DungeonModeManage");
         mode = null;
     }
 }

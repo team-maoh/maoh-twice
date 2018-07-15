@@ -157,6 +157,7 @@ public class BattleUserInterface extends UserInterface {
 
     @Override
     public void release() {
+        System.out.println("takanoRelease : BattleUserInterface");
         super.release();
         direction_section_check = null;
         paint = null;

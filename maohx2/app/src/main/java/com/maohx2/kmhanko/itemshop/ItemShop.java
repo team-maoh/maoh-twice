@@ -388,6 +388,7 @@ public abstract class ItemShop {
     }
 
     public void release() {
+        System.out.println("takanoRelease : ItemShop");
         productPlateGroup.release();
         productPlateGroup = null;
         buySelectPlateGroup.release();

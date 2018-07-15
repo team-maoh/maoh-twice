@@ -46,6 +46,7 @@ public class MyDatabase {
     }
 
     public void release() {
+        System.out.println("takanoRelease : MyDatabase");
         db.close();
         db = null;
         mDbHelper.close();
@@ -80,7 +81,7 @@ public class MyDatabase {
                 mDbHelper.getReadableDatabase();
                 //assets内のDBファイルを、内部DBのファイルにコピーする
                 mDbHelper.copyDataBaseFromAssets("r");
-                mDbHelper.close();//TODO 初回起動時に落ちるバグの対症療法
+                mDbHelper.close2();//TODO 初回起動時に落ちるバグの対症療法
                 mDbHelper.getReadableDatabase();
                 mDbHelper.copyDataBaseFromAssets("r");
                 //assets内のDBファイルを、内部DBのファイルにコピーする

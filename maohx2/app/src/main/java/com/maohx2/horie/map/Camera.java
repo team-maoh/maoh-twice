@@ -9,6 +9,7 @@ public class Camera {
     int map_magnification;
 
     public void release() {
+        System.out.println("takanoRelease : Camera");
         map_size = null;
         camera_offset = null;
         normalize_size = null;

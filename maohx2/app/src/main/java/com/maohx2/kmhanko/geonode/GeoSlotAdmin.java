@@ -119,21 +119,32 @@ public class GeoSlotAdmin {
     EffectAdmin effectAdmin;
 
     public void release() {
-        tree_code.clear();
-        tree_code = null;
-        for (int i = 0; i < geoSlots.size(); i++) {
-            if (geoSlots.get(i) != null) {
-                geoSlots.get(i).release();
-            }
+        System.out.println("takanoRelease : GeoSlotAdmin");
+        if (tree_code != null) {
+            tree_code.clear();
+            tree_code = null;
         }
-        geoSlots.clear();
-        geoSlots = null;
-        geoSlotGroup.release();
-        geoSlotGroup = null;
-        releasePlateGroup.release();
-        releasePlateGroup = null;
-        holdGeoPlateGroup.release();
-        holdGeoPlateGroup = null;
+        if (geoSlots != null) {
+            for (int i = 0; i < geoSlots.size(); i++) {
+                if (geoSlots.get(i) != null) {
+                    geoSlots.get(i).release();
+                }
+            }
+            geoSlots.clear();
+            geoSlots = null;
+        }
+        if (geoSlotGroup != null) {
+            geoSlotGroup.release();
+            geoSlotGroup = null;
+        }
+        if (releasePlateGroup != null) {
+            releasePlateGroup.release();
+            releasePlateGroup = null;
+        }
+        if (holdGeoPlateGroup != null) {
+            holdGeoPlateGroup.release();
+            holdGeoPlateGroup = null;
+        }
     }
 
     //Rewrite by kmhanko

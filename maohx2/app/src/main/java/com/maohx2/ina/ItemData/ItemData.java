@@ -52,10 +52,10 @@ public abstract class ItemData {
     }
 
     public void release() {
+        System.out.println("takanoRelease : ItemData");
         image_name = null;
         name = null;
         item_kind = null;
-        item_image.releaseBitmap();
         item_image = null;
     }
 

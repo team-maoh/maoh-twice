@@ -135,7 +135,7 @@ public class PaletteCenter extends PaletteElement{
     public int getPrePos(){return prePos;}
 
     public void release() {
-
+        System.out.println("takanoRelease : PaletteCenter");
     }
 
 }

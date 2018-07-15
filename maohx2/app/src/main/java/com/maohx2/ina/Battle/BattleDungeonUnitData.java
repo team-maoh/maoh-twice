@@ -66,6 +66,7 @@ public class BattleDungeonUnitData {
     public int getAlimentTime(ActionID _actionRateID) { return alimentTime[_actionRateID.ordinal()]; }
 
     public void release() {
+        System.out.println("takanoRelease : BattleDungeonUnitData");
         bitmap_data = null;
         status = null;
         bonus_status = null;

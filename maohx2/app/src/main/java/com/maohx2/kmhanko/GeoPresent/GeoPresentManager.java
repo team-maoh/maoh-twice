@@ -518,13 +518,20 @@ public class GeoPresentManager {
     }
 
     public void release() {
+        System.out.println("takanoRelease : GeoPresentManager");
         presentTextPaint = null;
-        presentSelectPlateGroup.release();
-        presentSelectPlateGroup = null;
-        backPlateGroup.release();
-        backPlateGroup = null;
-        presentGetCounts.clear();
-        presentGetCounts = null;
+        if (presentSelectPlateGroup != null) {
+            presentSelectPlateGroup.release();
+            presentSelectPlateGroup = null;
+        }
+        if (backPlateGroup != null) {
+            backPlateGroup.release();
+            backPlateGroup = null;
+        }
+        if (presentGetCounts != null) {
+            presentGetCounts.clear();
+            presentGetCounts = null;
+        }
     }
 
 }

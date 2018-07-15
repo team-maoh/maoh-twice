@@ -301,6 +301,7 @@ public class UserInterface {
     }
 
     public void release() {
+        System.out.println("takanoRelease : UserInterface");
         circle_center_list_x = null;
         circle_center_list_y = null;
         circle_radius_list = null;

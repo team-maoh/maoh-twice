@@ -217,10 +217,11 @@ public class StartGameSystem {
         }
 
         graphic.draw();
+
     }
 
     public void release() {
-        equipment_item_data_admin.release();
+        System.out.println("takanoRelease : StartSur");
         paint = null;
         credis.release();
     }

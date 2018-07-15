@@ -96,19 +96,28 @@ public class GeoSlotAdminManager {
     MODE mode;
 
     public void release() {
+        System.out.println("takanoRelease : GeoSlotAdminManager");
         activeGeoSlotAdmin = null;
-        for (int i = 0 ; i < geoSlotAdmins.size(); i++) {
-            geoSlotAdmins.get(i).release();
+        if (geoSlotAdmins != null) {
+            for (int i = 0; i < geoSlotAdmins.size(); i++) {
+                geoSlotAdmins.get(i).release();
+            }
+            geoSlotAdmins.clear();
+            geoSlotAdmins = null;
         }
-        geoSlotAdmins.clear();
-        geoSlotAdmins = null;
         mode = null;
-        mapIconPlateGroup.release();
-        mapIconPlateGroup = null;
-        backPlateGroup.release();
-        backPlateGroup = null;
-        dungeonName.clear();
-        dungeonName = null;
+        if (mapIconPlateGroup != null) {
+            mapIconPlateGroup.release();
+            mapIconPlateGroup = null;
+        }
+        if (backPlateGroup != null) {
+            backPlateGroup.release();
+            backPlateGroup = null;
+        }
+        if (dungeonName != null) {
+            dungeonName.clear();
+            dungeonName = null;
+        }
     }
 
     public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver, MaohMenosStatus _maohMenosStatus, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin, DungeonModeManage _dungeonModeManage) {

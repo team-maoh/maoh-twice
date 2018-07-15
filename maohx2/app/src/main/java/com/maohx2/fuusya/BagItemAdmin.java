@@ -87,6 +87,7 @@ public class BagItemAdmin {
     }
 
     public void release() {
+        System.out.println("takanoRelease : BagItemAdmin");
         for (int i = 0; i < bag_item.length; i++) {
             if (bag_item[i] != null) {
                 bag_item[i].release();

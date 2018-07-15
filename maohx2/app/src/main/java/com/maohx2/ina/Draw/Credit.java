@@ -52,6 +52,7 @@ public class Credit {
     }
 
     public void release() {
+        System.out.println("takanoRelease : Credit");
         paint = null;
         text = null;
     }

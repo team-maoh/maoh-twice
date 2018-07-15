@@ -59,6 +59,7 @@ public class BoxImagePlate extends BoxPlate {
 
     @Override
     public void release() {
+        System.out.println("takanoRelease : BoxImagePlate");
         super.release();
         draw_image_context = null;
         default_image_context = null;

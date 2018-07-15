@@ -232,6 +232,8 @@ public class MapObjectBitmap {
     }
 
     public void release() {
+        System.out.println("takanoRelease : MapObjectBitmap");
+        /*
         for (int i = 0; i < bitmap_data.length; i++) {
             for (int j = 0; j < bitmap_data[i].length; i++) {
                 if (bitmap_data[i][j] != null) {
@@ -241,6 +243,7 @@ public class MapObjectBitmap {
         }
         bitmap_data = null;
         raw_bitmap_data = null;
+        */
         object_name = null;
     }
 

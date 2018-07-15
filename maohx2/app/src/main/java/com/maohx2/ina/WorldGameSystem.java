@@ -443,6 +443,8 @@ public class WorldGameSystem {
         text_box_admin.update();
         effectAdmin.update();
         //musicAdmin.update();
+
+        activityChange.toChangeActivity();
     }
 
 
@@ -583,6 +585,7 @@ public class WorldGameSystem {
     }
 
     public void release() {
+        System.out.println("takanoRelease : WorldGameSystem");
         palette_admin.release();
         world_user_interface.release();
 

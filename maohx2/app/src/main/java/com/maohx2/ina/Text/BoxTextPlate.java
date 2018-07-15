@@ -48,6 +48,7 @@ public class BoxTextPlate extends BoxPlate {
 
     @Override
     public void release() {
+        System.out.println("takanoRelease : BoxTextPlate");
         super.release();
         text_paint = null;
         button_paint = null;

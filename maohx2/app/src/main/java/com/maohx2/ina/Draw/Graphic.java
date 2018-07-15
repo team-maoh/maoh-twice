@@ -603,6 +603,7 @@ public class Graphic {
 
     //by kmhanko
     public void releaseBitmap() {
+        System.out.println("takanoRelease(releaseBitmap) : Graphic");
         //global_bitmap_data_admin.releaseBitmap();
         local_bitmap_data_admin.releaseBitmap();
         for (int i = 0; i < BOOKING_DATA_INSTANCE; i++ ) {

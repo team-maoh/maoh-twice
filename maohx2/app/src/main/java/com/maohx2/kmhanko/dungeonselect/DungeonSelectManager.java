@@ -868,24 +868,41 @@ public class DungeonSelectManager {
     }
 
     public void release() {
+        System.out.println("takanoRelease : DungeonSelectManager");
         loopCountTextPaint = null;
         enterTextPaint = null;
-        dungeonName.clear();
-        dungeonName = null;
-        dungeonNameExpress.clear();
-        dungeonNameExpress = null;
-        event.clear();
-        event = null;
-        mapIconPlateGroup.release();
-        mapIconPlateGroup = null;
-        dungeonEnterSelectButtonGroup.release();
-        dungeonEnterSelectButtonGroup = null;
-        maohEnterSelectButtonGroup.release();
-        maohEnterSelectButtonGroup = null;
-        loopCountSelectButtonGroup.release();
-        loopCountSelectButtonGroup = null;
-        OkButtonGroup.release();
-        OkButtonGroup = null;
+        if (dungeonName != null) {
+            dungeonName.clear();
+            dungeonName = null;
+        }
+        if (dungeonNameExpress != null) {
+            dungeonNameExpress.clear();
+            dungeonNameExpress = null;
+        }
+        if (event != null) {
+            event.clear();
+            event = null;
+        }
+        if (mapIconPlateGroup != null) {
+            mapIconPlateGroup.release();
+            mapIconPlateGroup = null;
+        }
+        if (dungeonEnterSelectButtonGroup !=null ) {
+            dungeonEnterSelectButtonGroup.release();
+            dungeonEnterSelectButtonGroup = null;
+        }
+        if (maohEnterSelectButtonGroup != null) {
+            maohEnterSelectButtonGroup.release();
+            maohEnterSelectButtonGroup = null;
+        }
+        if (loopCountSelectButtonGroup != null) {
+            loopCountSelectButtonGroup.release();
+            loopCountSelectButtonGroup = null;
+        }
+        if (OkButtonGroup != null) {
+            OkButtonGroup.release();
+            OkButtonGroup = null;
+        }
     }
 
 

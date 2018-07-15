@@ -40,6 +40,7 @@ public class MapStatus {
         };
     }
     public void release() {
+        System.out.println("takanoRelease : MapStatus");
         is_clear = null;
         is_tutorial_finish = null;
     }

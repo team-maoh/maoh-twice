@@ -75,7 +75,7 @@ public class DungeonActivity extends BaseActivity {
 
     @Override
     public String getActivityName() {
-        return "WorldActivity";
+        return "DungeonActivity";
     }
 }
 
@@ -92,6 +92,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
 
     @Override
     public void release() {
+        System.out.println("takanoRelease : DungeonSurfaceview");
         super.release();
         game_system.drawStop();;
         game_system.updateStop();

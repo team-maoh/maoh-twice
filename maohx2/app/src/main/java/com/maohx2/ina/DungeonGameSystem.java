@@ -439,6 +439,8 @@ public class DungeonGameSystem {
         text_box_admin.update();
         effectAdmin.update();
         //musicAdmin.update();
+
+        activityChange.toChangeActivity();
     }
 
     public void draw() {
@@ -553,6 +555,7 @@ public class DungeonGameSystem {
     }
 
     public void release() {
+        System.out.println("takanoRelease : DungeonGameSystem");
         map_admin.release();
         dungeonMonsterDataAdmin.release();
         battle_unit_admin.release();

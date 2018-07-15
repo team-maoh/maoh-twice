@@ -32,6 +32,7 @@ public class WorldModeAdmin {
     }
 
     public void release() {
+        System.out.println("takanoRelease : WorldModeAdmin");
         mode = null;
     }
 

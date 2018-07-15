@@ -152,6 +152,7 @@ abstract public class MapObject {
 //    }
 
     public void release() {
+        System.out.println("takanoRelease : MapObject");
         random = null;
         name = null;
     }

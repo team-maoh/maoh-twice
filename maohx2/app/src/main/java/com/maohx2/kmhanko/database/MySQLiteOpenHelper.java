@@ -217,6 +217,12 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         }
     }
 
+    public synchronized void close2() {
+        if (mDatabase != null) {
+            super.close();
+        }
+    }
+
     private String getFolderName(String loadMode) {
         if (loadMode.equals("r")) {
             return FOLDER_NAME;

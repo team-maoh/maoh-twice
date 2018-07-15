@@ -27,6 +27,7 @@ public class EffectData {
     List<Integer> nextID = new ArrayList<Integer>(); //次のIDを示す。-1の場合は現在のID+1,
 
     public void release(){
+        System.out.println("takanoRelease : EffectData");
         name = null;
         imageID = null;
         x = null;

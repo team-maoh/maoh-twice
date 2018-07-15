@@ -97,6 +97,7 @@ public class Text {
     }
 
     public void release() {
+        System.out.println("takanoRelease : Text");
         paint = null;
         sentence = null;
     }

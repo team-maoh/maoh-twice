@@ -42,7 +42,7 @@ public class BagItem {
     }
 
     public void release() {
-
+        System.out.println("takanoRelease : BagItem");
     }
 
 }

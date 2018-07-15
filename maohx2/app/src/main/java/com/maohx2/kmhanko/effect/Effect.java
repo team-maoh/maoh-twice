@@ -52,10 +52,11 @@ public class Effect {
     private boolean isDraw;
 
     public void release() {
-        for ( int i = 0; i < bitmapData.size(); i++) {
-            bitmapData.get(i).releaseBitmap();
+        System.out.println("takanoRelease : Effect");
+        if (bitmapData != null) {
+            bitmapData.clear();
+            bitmapData = null;
         }
-        bitmapData = null;
     }
 
     public Effect() {
@@ -83,10 +84,6 @@ public class Effect {
         effectData = null;
         original_angle = 0.0f;
         original_angle_deg = 0.0f;
-        for (int i = 0; i < bitmapData.size(); i++) {
-            bitmapData.get(i).releaseBitmap();
-            bitmapData.set(i,null);
-        }
         bitmapData.clear();
     }
 

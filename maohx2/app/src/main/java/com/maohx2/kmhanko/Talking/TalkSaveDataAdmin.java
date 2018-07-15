@@ -82,22 +82,28 @@ public class TalkSaveDataAdmin {
 
 
     public void release() {
-        for (int i = 0; i < talkName.size(); i++) {
-            talkName.set(i, null);
+        System.out.println("takanoRelease : TalkSaveDataAdmin");
+        if (talkName != null) {
+            for (int i = 0; i < talkName.size(); i++) {
+                talkName.set(i, null);
 
+            }
+            talkName.clear();
+            talkName = null;
         }
-        talkName.clear();
-        talkName = null;
+        if (talkFlag != null) {
+            for (int i = 0; i < talkFlag.size(); i++) {
+                talkFlag.set(i, null);
 
-        for (int i = 0; i < talkFlag.size(); i++) {
-            talkFlag.set(i, null);
-
+            }
+            talkFlag.clear();
+            talkFlag = null;
         }
-        talkFlag.clear();
-        talkFlag = null;
 
-        talkSaver.release();
-        talkSaver = null;
+        if (talkSaver != null) {
+            talkSaver.release();
+            talkSaver = null;
+        }
     }
 
 }

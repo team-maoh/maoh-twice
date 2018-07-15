@@ -46,10 +46,7 @@ public class ImageContext {
     }
 
     public void release() {
-        bitmap_data.releaseBitmap();;
-        bitmap_data = null;
-        matrix = null;
-        paint = null;
+        System.out.println("takanoRelease : ImageContext");
     }
 
 }

@@ -95,12 +95,15 @@ public class Credits {
     }
 
     public void release() {
-        for (int i = 0; i < credits.length; i++) {
-            if (credits[i] != null) {
-                credits[i].release();
+        System.out.println("takanoRelease : Credits");
+        if (credits != null) {
+            for (int i = 0; i < credits.length; i++) {
+                if (credits[i] != null) {
+                    credits[i].release();
+                }
             }
+            credits = null;
         }
-        credits = null;
         paint = null;
     }
 

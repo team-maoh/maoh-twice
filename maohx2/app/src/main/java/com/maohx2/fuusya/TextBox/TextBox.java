@@ -524,6 +524,7 @@ public class TextBox {
 
 
     public void release() {
+        System.out.println("takanoRelease : TextBox");
         box_paint = null;
         for (int i = 0; i < queue.length ; i++) {
             if (queue[i] != null) {

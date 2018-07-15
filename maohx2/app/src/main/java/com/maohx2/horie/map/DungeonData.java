@@ -75,6 +75,7 @@ public class DungeonData {
     }
 
     public void release() {
+        System.out.println("takanoRelease : DungeonData");
         map_size = null;
         dungeon_name = null;
         floor_tile_name = null;

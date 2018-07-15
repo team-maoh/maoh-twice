@@ -302,6 +302,7 @@ public class MapEnemy extends MapUnit {
 
     @Override
     public void release() {
+        System.out.println("takanoRelease : MapEnemy");
         super.release();
         chase_w_x = null;
         chase_w_y = null;

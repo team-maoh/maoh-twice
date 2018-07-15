@@ -71,6 +71,7 @@ public class EquipmentItemDataAdmin extends ItemDataAdmin<EquipmentItemData> {
     }
 
     public void release() {
+        System.out.println("takanoRelease : EquipmentItemDataAdmin");
         super.release();
         itoe = null;
     }
