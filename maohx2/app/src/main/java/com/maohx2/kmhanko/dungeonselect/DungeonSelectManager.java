@@ -210,6 +210,9 @@ public class DungeonSelectManager {
             case 6:
                 talkAdmin.start("AfterMaoh006", false);
                 break;
+            case 8:
+                talkAdmin.start("AfterMaoh008", false);
+                break;
             case 9:
                 talkAdmin.start("AfterMaoh009", false);
                 break;

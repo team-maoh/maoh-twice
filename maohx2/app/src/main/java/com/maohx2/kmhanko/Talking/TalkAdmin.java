@@ -408,7 +408,9 @@ public class TalkAdmin {
             for (int i = 0; i < talkContent.length; i++) {
                 if (talkContent[i] != null) {
                     for (int j = 0; j < talkContent[i].length; j++) {
-                        talkContent[i] = null;
+                        if (talkContent[i][j] != null) {
+                            talkContent[i][j] = null;
+                        }
                     }
                 }
             }
@@ -416,7 +418,9 @@ public class TalkAdmin {
         }
         if (talkCharaName != null) {
             for (int i = 0; i < talkCharaName.length; i++) {
-                talkCharaName[i] = null;
+                if (talkCharaName[i] != null) {
+                    talkCharaName[i] = null;
+                }
             }
             talkCharaName = null;
         }
