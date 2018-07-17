@@ -357,13 +357,13 @@ public class BattleUnitAdmin {
         List<BattleBaseUnitData> battleBaseUnitData = battleUnitDataAdmin.getBattleBaseUnitDataExceptBoss(dungeonMonsterDataAdmin);
         int maxMinParam[][] = new int[4][2];
 
-        for (int i = 1; i < battleBaseUnitData.size(); i++) {
+        for (int i = 0; i < battleBaseUnitData.size(); i++) {
             int tempParam[] = battleBaseUnitData.get(i).getStatus(repeat_count, 5.042);
             for (int j = 0; j < maxMinParam.length; j++) {
-                if (tempParam[j] * battleBaseUnitData.get(i).getPower() > maxMinParam[j][0]) {
+                if (tempParam[j] * battleBaseUnitData.get(i).getPower() > maxMinParam[j][0] || i == 0) {
                     maxMinParam[j][0] = tempParam[j] * battleBaseUnitData.get(i).getPower();
                 }
-                if (tempParam[j] * battleBaseUnitData.get(i).getPower() < maxMinParam[j][1]) {
+                if (tempParam[j] * battleBaseUnitData.get(i).getPower() < maxMinParam[j][1] || i == 0) {
                     maxMinParam[j][1] = tempParam[j] * battleBaseUnitData.get(i).getPower();
                 }
             }
@@ -378,19 +378,19 @@ public class BattleUnitAdmin {
                 switch (dropGeoObjectKind.get(i - 1)) {
                     case HP:
                     case HP_RATE:
-                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[0][1]) / (float) (maxMinParam[0][0] - maxMinParam[0][1]);
+                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[0][0]) / (float) (maxMinParam[0][0] - maxMinParam[0][1]);
                         break;
                     case ATTACK:
                     case ATTACK_RATE:
-                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[1][1]) / (float) (maxMinParam[1][0] - maxMinParam[1][1]);
+                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[1][0]) / (float) (maxMinParam[1][0] - maxMinParam[1][1]);
                         break;
                     case DEFENCE:
                     case DEFENCE_RATE:
-                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[2][1]) / (float) (maxMinParam[2][0] - maxMinParam[2][1]);
+                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[2][0]) / (float) (maxMinParam[2][0] - maxMinParam[2][1]);
                         break;
                     case LUCK:
                     case LUCK_RATE:
-                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[3][1]) / (float) (maxMinParam[3][0] - maxMinParam[3][1]);
+                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[3][0]) / (float) (maxMinParam[3][0] - maxMinParam[3][1]);
                         break;
                 }
                 int hp = bBUD.getStatus(repeat_count, 5.042)[1];
