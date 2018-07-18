@@ -20,7 +20,8 @@ public class Effect {
     static private SoundAdmin soundAdmin;
 
     //private List<String> soundName = new ArrayList<String>();
-    private List<BitmapData> bitmapData = new ArrayList<BitmapData>();
+    //private List<BitmapData> bitmapData = new ArrayList<BitmapData>();
+    BitmapData[] bitmapData;
 
     private int steps;
 
@@ -52,11 +53,7 @@ public class Effect {
     private boolean isDraw;
 
     public void release() {
-        System.out.println("takanoRelease : Effect");
-        if (bitmapData != null) {
-            bitmapData.clear();
-            bitmapData = null;
-        }
+        //System.out.println("takanoRelease : Effect");
     }
 
     public Effect() {
@@ -84,7 +81,7 @@ public class Effect {
         effectData = null;
         original_angle = 0.0f;
         original_angle_deg = 0.0f;
-        bitmapData.clear();
+        release();
     }
 
     public void start() {
@@ -195,7 +192,7 @@ public class Effect {
         }
         //Graphicに描画を依頼
         //graphic.bookingDrawBitmapData(bitmapData.get(imageID), original_x + x, original_y + y, extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
-        graphic.bookingDrawBitmapData(bitmapData.get(imageID), original_x + (int)(r * Math.cos(anime_angle + original_angle)), original_y  + (int)(r * Math.sin(anime_angle + original_angle)), extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
+        graphic.bookingDrawBitmapData(bitmapData[imageID], original_x + (int)(r * Math.cos(anime_angle + original_angle)), original_y  + (int)(r * Math.sin(anime_angle + original_angle)), extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
     }
 
     //ステップ遷移するメソッド
@@ -263,17 +260,13 @@ public class Effect {
     }
     */
     public boolean setBitmapData(int i, BitmapData _bitmapData) {
-        bitmapData.set(i, _bitmapData);
-        if (i > 0 && i < bitmapData.size()) {
-            bitmapData.set(i, _bitmapData);
+        if (i > 0 && i < bitmapData.length) {
+            bitmapData[i] = _bitmapData;
             return true;
         }
         return false;
     }
-    public boolean addBitmapData(BitmapData _bitmapData) {
-        return bitmapData.add(_bitmapData);
-    }
-    public boolean setBitmapData(List<BitmapData> _bitmapData) {
+    public boolean setBitmapData(BitmapData[] _bitmapData) {
         bitmapData = _bitmapData;
         return true;
     }
@@ -285,10 +278,13 @@ public class Effect {
 */
     public String getSoundName() { return soundName; }
 
-    public List<BitmapData> getBitmapData() {
+    /*public List<BitmapData> getBitmapData() {
+        return bitmapData;
+    }*/
+
+    public BitmapData[] getBitmapData() {
         return bitmapData;
     }
-
 
     public boolean isExist() {
         return exist;

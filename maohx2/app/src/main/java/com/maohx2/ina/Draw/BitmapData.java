@@ -46,4 +46,8 @@ public class BitmapData{
         }
     }
 
+    public void release() {
+        releaseBitmap();
+    }
+
 }
