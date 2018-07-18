@@ -316,8 +316,10 @@ public class MapObjectAdmin {
             map_boss[i].initClass(map_admin);
         }
 
-        while (true) {
-            if (map_admin.getMonsterName(0)[kind_of_zako] == null) {
+        //by kmhanko
+        String mosnterName[] = map_admin.getMonsterName(0);
+        for (int i = 0 ; i < mosnterName.length; i++) {
+            if (mosnterName[kind_of_zako] == null) {
                 break;
             }
             kind_of_zako++;
@@ -430,7 +432,7 @@ public class MapObjectAdmin {
 
 //            map_admin.getMonsterName(1)[local_i];
             int un_null = 1;
-            while (true) {
+            for (int j = 0 ; j < 5; j++) {
                 if (map_admin.getMonsterName(1)[un_null % 5] == null) {
                     break;
                 }
@@ -443,13 +445,15 @@ public class MapObjectAdmin {
 //                if (i == 2 && map_mine[0].exists() == true) {
 //                    map_enemy[i].setPosition((int) map_mine[0].getWorldX(), (int) map_mine[0].getWorldY());
 //                } else {
-                Point room_point;
+                Point room_point = map_admin.getGoodSpawnRoomPoint();
+                /* by kmhanko
                 while (true) {
                     room_point = map_admin.getRoomPoint();
                     if (isGoodSpawnPoint(room_point)) {
                         break;
                     }
                 }
+                */
                 map_enemy[i].setPosition(room_point.x + magnification / 2, room_point.y + magnification / 2);
 //                }
                 map_enemy[i].setExists(true);
@@ -598,7 +602,7 @@ public class MapObjectAdmin {
         return map_admin.detectWallDirection(x1, y1, x2, y2);
     }
 
-    private boolean isGoodSpawnPoint(Point _room_point) {
+    public boolean isGoodSpawnPoint(Point _room_point) {
         int spawn_x = _room_point.x + magnification / 2;
         int spawn_y = _room_point.y + magnification / 2;
         boolean wall_check_1 = detectWall(spawn_x, spawn_y, spawn_x + magnification, spawn_y) == 0;
@@ -608,7 +612,7 @@ public class MapObjectAdmin {
         return wall_check_1 && wall_check_2 && wall_check_3 && wall_check_4;// 至近距離に壁がない
     }
 
-    private boolean isGoodSpawnPoint(int _x, int _y) {
+    public boolean isGoodSpawnPoint(int _x, int _y) {
         int spawn_x = _x + magnification / 2;
         int spawn_y = _y + magnification / 2;
         boolean wall_check_1 = detectWall(spawn_x, spawn_y, spawn_x + magnification, spawn_y) == 0;

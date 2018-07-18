@@ -294,7 +294,8 @@ public class BattleUnitAdmin {
 
     public void setPlayer(PlayerStatus playerStatus) {
         playerStatus.calcStatus();
-        battle_units[0].setBattleUnitDataPlayer(playerStatus.makeBattleDungeonUnitData());//TODO なぜかコメントアウトされてた
+        battle_units[0].setBattleUnitDataPlayer(playerStatus.makeBattleDungeonUnitData());
+        battle_units[0].setHitPoint(playerStatus.getNowHP());
     }
 
     public void spawnEnemy(String[] monsters) {

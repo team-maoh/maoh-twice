@@ -10,6 +10,7 @@ import com.maohx2.fuusya.MapObjectAdmin;
 import com.maohx2.fuusya.MapPlayer;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.kmhanko.myavail.MyAvail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -406,11 +407,36 @@ public class MapAdmin {
     //部屋のある一点を返す(magnificationをかけてある)
     public Point getRoomPoint() {
         Point point = new Point(0, 0);
-        for (; ; ) {
-            Random rnd = new Random();
-            int x = rnd.nextInt(map_size.x);
-            int y = rnd.nextInt(map_size.y);
-            if (map_data[x][y].isRoom()) {
+        int raw[] = MyAvail.shuffle(map_size.x * map_size.y - 1);
+        // by kmhanko
+        for (int i = 0; i < raw.length ; i++) {
+            //Random rnd = new Random();
+            //int x = rnd.nextInt(map_size.x);
+            //int y = rnd.nextInt(map_size.y);
+            int x = raw[i]/map_size.y;
+            int y = raw[i]%map_size.y;
+
+            if (map_data[x][y].isRoom() && !map_data[x][y].isWall()) {
+                point.set(x * magnification, y * magnification);
+                break;
+            }
+        }
+        return point;
+    }
+
+    //部屋のある一点の、スポーンに相応しい位置を返す(magnificationをかけてある)
+    public Point getGoodSpawnRoomPoint() {
+        Point point = new Point(0, 0);
+        int raw[] = MyAvail.shuffle(map_size.x * map_size.y - 1);
+        // by kmhanko
+        for (int i = 0; i < raw.length ; i++) {
+            //Random rnd = new Random();
+            //int x = rnd.nextInt(map_size.x);
+            //int y = rnd.nextInt(map_size.y);
+            int x = raw[i]/map_size.y;
+            int y = raw[i]%map_size.y;
+
+            if (map_object_admin.isGoodSpawnPoint(x, y) && map_data[x][y].isRoom() && !map_data[x][y].isWall() && !map_data[x][y].isStairs() && !map_data[x][y].isMine()) {
                 point.set(x * magnification, y * magnification);
                 break;
             }
@@ -421,11 +447,37 @@ public class MapAdmin {
     //部屋の壁際の座標を返す
     private Point getRoomEdgePoint() {
         Point point = new Point(0, 0);
-        for (; ; ) {
-            Random rnd = new Random();
-            int x = rnd.nextInt(map_size.x);
-            int y = rnd.nextInt(map_size.y);
-            if (map_data[x][y].isRoom() && (map_data[x - 1][y].isWall() || map_data[x + 1][y].isWall() || map_data[x][y - 1].isWall() || map_data[x][y + 1].isWall())) {
+        int raw[] = MyAvail.shuffle(map_size.x * map_size.y - 1);
+        // by kmhanko
+        for (int i = 0; i < raw.length ; i++) {
+            //Random rnd = new Random();
+            //int x = rnd.nextInt(map_size.x);
+            //int y = rnd.nextInt(map_size.y);
+            int x = raw[i]/map_size.y;
+            int y = raw[i]%map_size.y;
+
+            if (map_data[x][y].isRoom() && !map_data[x][y].isWall() && (map_data[x - 1][y].isWall() || map_data[x + 1][y].isWall() || map_data[x][y - 1].isWall() || map_data[x][y + 1].isWall())) {
+                point.set(x * magnification, y * magnification);
+                break;
+            }
+        }
+        return point;
+    }
+
+    //部屋の壁際の座標かつ採掘ポイントでもなく、階段ポイントでもない地点を返す
+    // by kmhanko
+    private Point getMinePoint() {
+        Point point = new Point(0, 0);
+        int raw[] = MyAvail.shuffle(map_size.x * map_size.y - 1);
+        // by kmhanko
+        for (int i = 0; i < raw.length ; i++) {
+            //Random rnd = new Random();
+            //int x = rnd.nextInt(map_size.x);
+            //int y = rnd.nextInt(map_size.y);
+            int x = raw[i]/map_size.y;
+            int y = raw[i]%map_size.y;
+
+            if (!map_data[x][y].isStairs() && !map_data[x][y].isMine() && map_data[x][y].isRoom() && !map_data[x][y].isWall() && (map_data[x - 1][y].isWall() || map_data[x + 1][y].isWall() || map_data[x][y - 1].isWall() || map_data[x][y + 1].isWall())) {
                 point.set(x * magnification, y * magnification);
                 break;
             }
@@ -436,11 +488,15 @@ public class MapAdmin {
     //部屋の壁際以外の座標を返す
     private Point getRoomNotEdgePoint() {
         Point point = new Point(0, 0);
-        for (; ; ) {
-            Random rnd = new Random();
-            int x = rnd.nextInt(map_size.x);
-            int y = rnd.nextInt(map_size.y);
-            if (map_data[x][y].isRoom() && (!map_data[x - 1][y].isWall() && !map_data[x + 1][y].isWall() && !map_data[x][y - 1].isWall() && !map_data[x][y + 1].isWall())) {
+        // by kmhanko
+        int raw[] = MyAvail.shuffle(map_size.x * map_size.y - 1);
+        for (int i = 0; i < raw.length ; i++) {
+            //Random rnd = new Random();
+            //int x = rnd.nextInt(map_size.x);
+            //int y = rnd.nextInt(map_size.y);
+            int x = raw[i]/map_size.y;
+            int y = raw[i]%map_size.y;
+            if (map_data[x][y].isRoom() && !map_data[x][y].isWall() && (!map_data[x - 1][y].isWall() && !map_data[x + 1][y].isWall() && !map_data[x][y - 1].isWall() && !map_data[x][y + 1].isWall())) {
                 point.set(x * magnification, y * magnification);
                 break;
             }
@@ -587,6 +643,7 @@ public class MapAdmin {
         Random rnd = new Random();
         int mine_num = rnd.nextInt(max_num - min_num + 1) + min_num;
         for (int i = 0; i < mine_num; i++) {
+            /*
             while (true) {
                 setRoomPoint();
                 if (!map_data[room_point.x][room_point.y].isMine() && !map_data[room_point.x][room_point.y].isStairs()) {
@@ -594,7 +651,11 @@ public class MapAdmin {
                     mine_point[i].set(room_point.x, room_point.y);
                     break;
                 }
-            }
+            }*/
+            Point point = getMinePoint();
+            room_point.set(point.x / magnification, point.y / magnification);
+            map_data[room_point.x][room_point.y].setMineFlag(true);
+            mine_point[i].set(room_point.x, room_point.y);
         }
     }
 
