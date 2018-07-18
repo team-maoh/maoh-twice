@@ -880,6 +880,8 @@ public class MapAdmin {
         int mx = worldToMap(camera.getCameraOffset().x + 800);
         int my = worldToMap(camera.getCameraOffset().y + 450);
 //        int count = 0;
+
+        /* MapPlayerクラスのupdate関数に移動
         if (map_data[mx][my].isStairs()) {
             goNextFloor();
         }
@@ -888,6 +890,7 @@ public class MapAdmin {
         if (map_data[mx][my].isGate()) {
             map_object_admin.escapeDungeon();
         }
+        */
 
         //周りを黒くする
 //        graphic.bookingDrawBitmapData(auto_tile_wall.raw_auto_tile[4], 0, 0, 1600/32, 900/32, 0, 255, true);

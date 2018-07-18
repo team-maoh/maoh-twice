@@ -301,6 +301,16 @@ public class MapPlayer extends MapUnit {
         pre_w_x = w_x;
         pre_w_y = w_y;
 
+        System.out.println("x_y = " + (int)(w_x/map_admin.getMagnification()) + " / " + (int)(w_y/map_admin.getMagnification()));
+        if (map_admin.isStairs((int)(w_x/map_admin.getMagnification()), (int)(w_y/map_admin.getMagnification()))) {
+            map_admin.goNextFloor();
+        }
+
+        //ゲート脱出
+        if (map_admin.isGate((int)(w_x/map_admin.getMagnification()), (int)(w_y/map_admin.getMagnification()))) {
+            map_object_admin.escapeDungeon();
+        }
+
     }
 
     public void setMeanEncountSteps(int _mean) {

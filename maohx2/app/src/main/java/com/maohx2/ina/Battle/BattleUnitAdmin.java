@@ -249,7 +249,7 @@ public class BattleUnitAdmin {
             palette_admin.setPalettesFlags(new boolean[]{false, false, true});
             dropGeoObject.clear();
             spawnRock();
-            timeLimitBar.reset(30 * 60);
+            timeLimitBar.reset(30 * 30);
         }
 
         textBoxAdmin.resetTextBox(resultTextBoxID);

@@ -322,7 +322,7 @@ public class DungeonGameSystem {
 //        );//kokomade
 
         //デバッグ用
-        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
+        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
 
 
         //
@@ -441,7 +441,7 @@ public class DungeonGameSystem {
         text_box_admin.update();
         //GEOMAPでは諸事情により、エフェクトを背後に描画したいため
         if (dungeonModeManage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP) {
-            effectAdmin.draw();
+            effectAdmin.update();
         }
         //musicAdmin.update();
 
