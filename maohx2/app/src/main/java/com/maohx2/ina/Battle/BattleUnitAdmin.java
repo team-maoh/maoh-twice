@@ -343,7 +343,7 @@ public class BattleUnitAdmin {
 
         //岩に対応する敵を決定し、その対応する敵データからHPを決める
         for (int i = 0; i < r.nextInt(3) + 1; i++) {
-            setRockUnitData(battleUnitDataAdmin.getRandomBattleBaseUnitDataExceptBoss(dungeonMonsterDataAdmin));
+            setRockUnitData();
         }
     }
 
@@ -353,18 +353,19 @@ public class BattleUnitAdmin {
         }
     }
 
-    public int setRockUnitData(BattleBaseUnitData bBUD) {
+    public int setRockUnitData() {
         List<BattleBaseUnitData> battleBaseUnitData = battleUnitDataAdmin.getBattleBaseUnitDataExceptBoss(dungeonMonsterDataAdmin);
-        int maxMinParam[][] = new int[4][2];
+        BattleBaseUnitData bBUD = battleUnitDataAdmin.getRandomBattleBaseUnitDataExceptBoss(dungeonMonsterDataAdmin);
+        int maxMinParam[][] = new int[4][2];// 第二引数は0がMAX,1がMIN
 
         for (int i = 0; i < battleBaseUnitData.size(); i++) {
             int tempParam[] = battleBaseUnitData.get(i).getStatus(repeat_count, 5.042);
             for (int j = 0; j < maxMinParam.length; j++) {
-                if (tempParam[j] * battleBaseUnitData.get(i).getPower() > maxMinParam[j][0] || i == 0) {
-                    maxMinParam[j][0] = tempParam[j] * battleBaseUnitData.get(i).getPower();
+                if (tempParam[1+j] * battleBaseUnitData.get(i).getPower() > maxMinParam[j][0] || i == 0) {
+                    maxMinParam[j][0] = tempParam[1+j] * battleBaseUnitData.get(i).getPower();
                 }
-                if (tempParam[j] * battleBaseUnitData.get(i).getPower() < maxMinParam[j][1] || i == 0) {
-                    maxMinParam[j][1] = tempParam[j] * battleBaseUnitData.get(i).getPower();
+                if (tempParam[1+j] * battleBaseUnitData.get(i).getPower() < maxMinParam[j][1] || i == 0) {
+                    maxMinParam[j][1] = tempParam[1+j] * battleBaseUnitData.get(i).getPower();
                 }
             }
         }
@@ -373,24 +374,24 @@ public class BattleUnitAdmin {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (!battle_units[i].isExist()) {
                 ((BattleEnemy) battle_units[i]).setBattleBaseUnitDataForRock(bBUD);
-                getDropGeoBefore(battle_units[i]);
+                int dropGeoNum = getDropGeoBefore(battle_units[i]);
                 float rareRate = 0.0f;
-                switch (dropGeoObjectKind.get(i - 1)) {
+                switch (dropGeoObjectKind.get(dropGeoNum)) {
                     case HP:
                     case HP_RATE:
-                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[0][0]) / (float) (maxMinParam[0][0] - maxMinParam[0][1]);
+                        rareRate = (float) (dropGeoObject.get(dropGeoNum) - maxMinParam[0][1]) / (float) (maxMinParam[0][0] - maxMinParam[0][1]);
                         break;
                     case ATTACK:
                     case ATTACK_RATE:
-                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[1][0]) / (float) (maxMinParam[1][0] - maxMinParam[1][1]);
+                        rareRate = (float) (dropGeoObject.get(dropGeoNum) - maxMinParam[1][1]) / (float) (maxMinParam[1][0] - maxMinParam[1][1]);
                         break;
                     case DEFENCE:
                     case DEFENCE_RATE:
-                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[2][0]) / (float) (maxMinParam[2][0] - maxMinParam[2][1]);
+                        rareRate = (float) (dropGeoObject.get(dropGeoNum) - maxMinParam[2][1]) / (float) (maxMinParam[2][0] - maxMinParam[2][1]);
                         break;
                     case LUCK:
                     case LUCK_RATE:
-                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[3][0]) / (float) (maxMinParam[3][0] - maxMinParam[3][1]);
+                        rareRate = (float) (dropGeoObject.get(dropGeoNum) - maxMinParam[3][1]) / (float) (maxMinParam[3][0] - maxMinParam[3][1]);
                         break;
                 }
                 int hp = bBUD.getStatus(repeat_count, 5.042)[1];
@@ -916,7 +917,7 @@ public class BattleUnitAdmin {
     List<Integer> dropGeoObject = new ArrayList<>();
     List<Constants.Item.GEO_KIND_ALL> dropGeoObjectKind = new ArrayList<>();
 
-    private void getDropGeoBefore(BattleUnit tempBattleUnit) {
+    private int getDropGeoBefore(BattleUnit tempBattleUnit) {
         //岩からのジオドロップ
         BattleBaseUnitData bBUDforRock = ((BattleEnemy) tempBattleUnit).getBattleBaseUnitDataForRock();
         int[] status = bBUDforRock.getStatus(repeat_count, 5.042);
@@ -964,6 +965,7 @@ public class BattleUnitAdmin {
                     break;
             }
         }
+        return dropGeoObject.size() - 1;
     }
 
     private void getDropGeoAfter() {

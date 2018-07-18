@@ -473,7 +473,6 @@ public class GeoSlotAdmin {
     }
 
 
-
     public void updateInStatus(){
         geoSlotGroup.update();
         //backPlateGroup.update();

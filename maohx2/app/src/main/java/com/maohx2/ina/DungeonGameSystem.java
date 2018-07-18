@@ -423,10 +423,12 @@ public class DungeonGameSystem {
             case GEO_MAP_INIT:
                 initBackPlate();
                 geoSlotAdminManager.start();
+                geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.DUNGEON);
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP);
             case GEO_MAP:
+                effectAdmin.draw();
                 if (!talkAdmin.isTalking()) {
-                    geoSlotAdminManager.updateInStatus();
+                    geoSlotAdminManager.update();
                 }
                 break;
 
@@ -437,7 +439,10 @@ public class DungeonGameSystem {
 
         talkAdmin.update();
         text_box_admin.update();
-        effectAdmin.update();
+        //GEOMAPでは諸事情により、エフェクトを背後に描画したいため
+        if (dungeonModeManage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP) {
+            effectAdmin.draw();
+        }
         //musicAdmin.update();
 
         activityChange.toChangeActivity();
@@ -484,7 +489,7 @@ public class DungeonGameSystem {
                 break;
 
             case GEO_MAP:
-                geoSlotAdminManager.drawInStatus();
+                geoSlotAdminManager.draw();
                 playerStatusViewer.draw();
                 break;
 

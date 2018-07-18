@@ -17,6 +17,7 @@ import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+import com.maohx2.kmhanko.geonode.GeoSlotAdmin;
 import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 
 import com.maohx2.ina.Constants.POPUP_WINDOW;
@@ -633,10 +634,11 @@ public class DungeonSelectManager {
                 if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
                     soundAdmin.play("enter00");
                     geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
+                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
                     if (mapIconPlateGroup.getPlates(focusDungeonButtonID).getGeoEnterFlag()) {
-                        worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
+                        geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_NORMAL);
                     } else {
-                        worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SEE_ONLY_INIT);
+                        geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_SEE_ONLY);
                     }
                     initUIsFlag = true;
                 }

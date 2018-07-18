@@ -167,7 +167,6 @@ public class WorldGameSystem {
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
         playerStatus = globalData.getPlayerStatus();
         maohMenosStatus = globalData.getMaohMenosStatus();
-        //GeoInventry = globalData.getGeoInventry();
         musicAdmin = globalData.getMusicAdmin();
 
         playerStatusViewer = new PlayerStatusViewer(graphic, world_user_interface, playerStatus);
@@ -223,10 +222,7 @@ public class WorldGameSystem {
         }
         */
 
-
         credits = new Credits(graphic);
-
-
 
         geoPresentManager = new GeoPresentManager(
                 graphic,
@@ -274,11 +270,11 @@ public class WorldGameSystem {
         initBackPlate();
 
         //OP判定。まだOPを流していないならOP会話イベントを発動する。
-        talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される
+        //talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される
 
 
         /*
-        battleUnitDataAdmin = new BattleUnitDataAdmin(databaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
+        battleUnitDataAdmin = new BattleUnitDataAdmin(databaseAdmin, graphic);
         battleUnitDataAdmin.loadBattleUnitData(Constants.DungeonKind.DUNGEON_KIND.FOREST);//敵読み込み
 
         //ブキ生成 デバッグよう
@@ -413,6 +409,7 @@ public class WorldGameSystem {
                     itemSell.update();
                 }
                 break;
+                /*
             case GEO_MAP_SEE_ONLY_INIT:
                 initBackPlate();
                 geoSlotAdminManager.start();
@@ -420,6 +417,7 @@ public class WorldGameSystem {
             case GEO_MAP_SEE_ONLY:
                 geoSlotAdminManager.updateInStatus();
                 break;
+                */
             case CREDIT:
                 backPlateGroup.update();
                 if(world_user_interface.getTouchState() == Constants.Touch.TouchState.UP){
@@ -517,12 +515,14 @@ public class WorldGameSystem {
                 itemSell.draw();
                 playerStatusViewer.draw();
                 break;
+                /*
             case GEO_MAP_SEE_ONLY:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 effectAdmin.draw();
                 geoSlotAdminManager.drawInStatus();
                 playerStatusViewer.draw();
                 break;
+                */
             case CREDIT:
                 graphic.bookingDrawBitmapData(credit[credit_num - 1], 0, 0, 1.25f, 1.25f, 0, 255, true);
                 backPlateGroup.draw();
@@ -538,7 +538,7 @@ public class WorldGameSystem {
         text_box_admin.draw();
 
         //GEOMAPでは諸事情により、エフェクトを背後に描画したいため
-        if (worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP && worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP_SEE_ONLY) {
+        if (worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP) {
             effectAdmin.draw();
         }
 

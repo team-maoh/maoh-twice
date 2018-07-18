@@ -33,6 +33,7 @@ public abstract class BaseActivity extends Activity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         layout = new RelativeLayout(this);
         setContentView(layout);
+        overridePendingTransition(0,0);
 
         //音量調整ボタンを使用できるようにする
         System.out.println("talano : setVolumeControlStream");

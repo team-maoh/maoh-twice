@@ -463,7 +463,7 @@ public class GeoSlot extends CircleImagePlate {
     @Override
     //タッチされた時の処理
     public void callBackEvent() {
-        if (geoSlotAdmin.getMode() == GeoSlotAdminManager.MODE.WORLD) {
+        if (geoSlotAdmin.getMode() == GeoSlotAdminManager.MODE.WORLD_NORMAL) {
             geoSlotAdmin.setFocusGeoSlot(this);
             geoSlotAdmin.geoSlotReleaseChoice();
             if (isEventClearAll()) {

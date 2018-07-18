@@ -89,8 +89,8 @@ public class GeoSlotAdminManager {
 
     boolean is_load_database;
 
-    enum MODE {
-        WORLD, DUNGEON
+    public enum MODE {
+        WORLD_NORMAL, WORLD_SEE_ONLY, DUNGEON
     }
 
     MODE mode;
@@ -122,8 +122,8 @@ public class GeoSlotAdminManager {
 
     public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver, MaohMenosStatus _maohMenosStatus, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin, DungeonModeManage _dungeonModeManage) {
         this(_graphic, _userInterface, null, _databaseAdmin, _textBoxAdmin, _playerStatus, _geoInventry, _geoSlotSaver,_maohMenosStatus,_soundAdmin, _effectAdmin);
-        mode = MODE.DUNGEON;
         dungeonModeManage = _dungeonModeManage;
+        mode = MODE.DUNGEON;
     }
 
 
@@ -148,8 +148,6 @@ public class GeoSlotAdminManager {
         //initStatusTextBox();
         initBackPlate();
         initMapIconPlate();
-
-        mode = MODE.WORLD;
 
     }
 
@@ -185,7 +183,7 @@ public class GeoSlotAdminManager {
                                     activeGeoSlotAdmin.clearGeoSlotLineEffect();
                                 }
 
-                                if (getMode() == GeoSlotAdminManager.MODE.WORLD) {
+                                if (getMode() == GeoSlotAdminManager.MODE.WORLD_NORMAL || getMode() == GeoSlotAdminManager.MODE.WORLD_SEE_ONLY) {
                                     if (activeGeoSlotAdmin !=null) {
                                         activeGeoSlotAdmin.initUIs();
                                     }
@@ -256,19 +254,22 @@ public class GeoSlotAdminManager {
     }
 
     public void update() {
-        geoInventry.updata();
-        if (activeGeoSlotAdmin != null) {
-            activeGeoSlotAdmin.update();
+        if (mode == MODE.WORLD_NORMAL) {
+            geoInventry.updata();
+            if (activeGeoSlotAdmin != null) {
+                activeGeoSlotAdmin.update();
+            }
+            //textBoxAdmin.setTextBoxExists(statusTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.GEO_MAP);
+            backPlateGroup.update();
+        } else {
+            updateSeeOnly();
         }
-        //textBoxAdmin.setTextBoxExists(statusTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.GEO_MAP);
-        backPlateGroup.update();
     }
 
-    public void updateInStatus() {
+    private void updateSeeOnly() {
         if (activeGeoSlotAdmin != null) {
             activeGeoSlotAdmin.updateInStatus();
         }
-
         mapIconPlateCheck();
         mapIconPlateGroup.update();
         backPlateGroup.update();
@@ -276,16 +277,20 @@ public class GeoSlotAdminManager {
     }
 
     public void draw() {
-        //effectAdmin.draw();
-        geoInventry.draw();
+        if (mode == MODE.WORLD_NORMAL) {
+            //effectAdmin.draw();
+            geoInventry.draw();
 
-        if (activeGeoSlotAdmin != null) {
-            activeGeoSlotAdmin.draw();
+            if (activeGeoSlotAdmin != null) {
+                activeGeoSlotAdmin.draw();
+            }
+            backPlateGroup.draw();
+        } else {
+            drawSeeOnly();
         }
-        backPlateGroup.draw();
     }
 
-    public void drawInStatus() {
+    private void drawSeeOnly() {
         //effectAdmin.draw();
         if (activeGeoSlotAdmin != null) {
             activeGeoSlotAdmin.drawInStatus();
@@ -484,6 +489,9 @@ public class GeoSlotAdminManager {
 */
     public MODE getMode() {
         return mode;
+    }
+    public void setMode(MODE _mode) {
+        mode = _mode;
     }
 
     public DungeonModeManage getDungeonModeManage() {

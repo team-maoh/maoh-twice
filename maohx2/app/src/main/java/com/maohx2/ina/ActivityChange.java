@@ -45,25 +45,23 @@ public class ActivityChange {
         if (reserveActivityName == ActivityName.Start) {
             currentSurfaceView.stopThread();
             Intent intent = new Intent(currentActivity, StartActivity.class);
-            currentActivity.finish();
             currentActivity.startActivity(intent);
-            currentActivity.overridePendingTransition(0, 0);
+            currentActivity.finish();
             reserveActivityName = ActivityName.None;
         } else if (reserveActivityName == ActivityName.World) {
             currentSurfaceView.stopThread();
             Intent intent = new Intent(currentActivity, WorldActivity.class);
-            currentActivity.finish();
             currentActivity.startActivity(intent);
-            currentActivity.overridePendingTransition(0, 0);
+            currentActivity.finish();
             reserveActivityName = ActivityName.None;
         } else if (reserveActivityName == ActivityName.Dungeon) {
             currentSurfaceView.stopThread();
             Intent intent = new Intent(currentActivity, DungeonActivity.class);
             intent.putExtra("DungeonKind", dungeon_kind);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            currentActivity.finish();
             currentActivity.startActivity(intent);
-            currentActivity.overridePendingTransition(0, 0);
+            currentActivity.finish();
+
             reserveActivityName = ActivityName.None;
         }
     }
