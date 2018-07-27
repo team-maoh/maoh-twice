@@ -721,7 +721,7 @@ public class BattleUnitAdmin {
                         level_rate = Math.pow(level_rate, 0.4);//0.4だと、自他のStatusが定数倍になっても、敵を倒すための確定数はほぼ変化しない
 //                        System.out.println("level_pl_2_" + level_rate);
 
-                        int new_hp = battle_units[0].getHitPoint() - (int) ((133.0 * strong_ratio) * level_rate * damage_rate + heel_to_player);
+                        int new_hp = battle_units[0].getHitPoint() - (int) ((133.0 * strong_ratio) * level_rate * damage_rate - heel_to_player);
 //                        int new_hp = battle_units[0].getHitPoint() - (int) ((real_atk * exp * 0.295 / (real_def + 1) * damage_rate) + heel_to_player);
 
 //                        System.out.println("strong_ratio_pl" + strong_ratio);
