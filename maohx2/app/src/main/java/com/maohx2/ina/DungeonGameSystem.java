@@ -373,6 +373,8 @@ public class DungeonGameSystem {
                 break;
 
             case MAOH_INIT:
+                playerStatus.calcStatus();
+                playerStatus.setNowHP(playerStatus.getHP());
                 battle_unit_admin.reset(BattleUnitAdmin.MODE.MAOH);
                 int size = battleUnitDataAdmin.getMaohUnitNames().size();
                 battle_unit_admin.spawnMaoh(
