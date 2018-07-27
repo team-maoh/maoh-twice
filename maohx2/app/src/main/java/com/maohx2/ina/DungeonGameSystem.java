@@ -482,6 +482,13 @@ public class DungeonGameSystem {
                 break;
 
             case EQUIP_EXPEND_INIT:
+                map_admin.drawMap_for_autotile_light_animation();
+                map_object_admin.draw();
+                map_plate_admin.draw();
+                palette_admin.drawOnly();
+                playerStatusViewer.draw();
+                break;
+
             case EQUIP_EXPEND:
                 map_admin.drawMap_for_autotile_light_animation();
                 map_object_admin.draw();

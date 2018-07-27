@@ -31,6 +31,8 @@ public class PaletteAdmin {
     boolean palettesFlag[] = new boolean[palettes.length]; //palettesより下に配置すること
     EquipmentItemDataAdmin equipmentItemDataAdmin;
 
+    InventryS expendInventry;
+
     /*
     public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic){
         palettes[0] = new Palette(_battle_user_interface, _graphic, 1400,750,0);
@@ -40,11 +42,13 @@ public class PaletteAdmin {
         palettes[2] = new Palette(_battle_user_interface, _graphic,  1400,750,2);
     }
 */
-    public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic, InventryS equipmentInventry, InventryS expendInventry, EquipmentItemDataAdmin _equipmentItemDataAdmin, SoundAdmin _soundAdmin){
+    public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic, InventryS equipmentInventry, InventryS _expendInventry, EquipmentItemDataAdmin _equipmentItemDataAdmin, SoundAdmin _soundAdmin){
         palettes[0] = new Palette(_battle_user_interface, _graphic, PALETTE_DEFAULT_X_RIGHT,PALETTE_DEFAULT_Y_RIGHT,0, _soundAdmin);
         palettes[1] = new Palette(_battle_user_interface, _graphic, PALETTE_DEFAULT_X_LEFT,PALETTE_DEFAULT_Y_LEFT,1, _soundAdmin);
         //by kmhanko ジオ採掘パレット
         palettes[2] = new Palette(_battle_user_interface, _graphic, PALETTE_DEFAULT_X_RIGHT,PALETTE_DEFAULT_Y_RIGHT,2, _soundAdmin);
+
+        expendInventry = _expendInventry;
 
         for(int i = 0; i < INVENTRY_DATA_MAX; i++){
             EquipmentItemData checkEquipmentItem = ((EquipmentItemData)(equipmentInventry.getItemData(i)));
@@ -205,6 +209,13 @@ public class PaletteAdmin {
     }
 
     public void deleteExpendItemData(){
+
+        //kmhanko inventryから装備をfalseにする処理
+        int prePos = palettes[1].getPalettePrePos();
+        ItemData itemdata = palettes[1].getSelectedItemData();
+        ExpendItemData expendItemData = (ExpendItemData)itemdata;
+        expendItemData.setPalettePosition(prePos,false);
+
         palettes[1].setPaletteCenter(null, false);
     }
 
