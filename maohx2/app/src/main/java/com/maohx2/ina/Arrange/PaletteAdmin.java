@@ -14,6 +14,10 @@ import com.maohx2.kmhanko.sound.SoundAdmin;
 import java.util.List;
 
 import static com.maohx2.ina.Constants.Inventry.INVENTRY_DATA_MAX;
+import static com.maohx2.ina.Constants.Palette.PALETTE_DEFAULT_X_LEFT;
+import static com.maohx2.ina.Constants.Palette.PALETTE_DEFAULT_Y_LEFT;
+import static com.maohx2.ina.Constants.Palette.PALETTE_DEFAULT_X_RIGHT;
+import static com.maohx2.ina.Constants.Palette.PALETTE_DEFAULT_Y_RIGHT;
 
 /**
  * Created by ina on 2017/11/10.
@@ -37,10 +41,11 @@ public class PaletteAdmin {
     }
 */
     public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic, InventryS equipmentInventry, InventryS expendInventry, EquipmentItemDataAdmin _equipmentItemDataAdmin, SoundAdmin _soundAdmin){
-        palettes[0] = new Palette(_battle_user_interface, _graphic, 1400,700,0, _soundAdmin);
-        palettes[1] = new Palette(_battle_user_interface, _graphic,  200,700,1, _soundAdmin);
+        palettes[0] = new Palette(_battle_user_interface, _graphic, PALETTE_DEFAULT_X_RIGHT,PALETTE_DEFAULT_Y_RIGHT,0, _soundAdmin);
+        palettes[1] = new Palette(_battle_user_interface, _graphic, PALETTE_DEFAULT_X_LEFT,PALETTE_DEFAULT_Y_LEFT,1, _soundAdmin);
         //by kmhanko ジオ採掘パレット
-        palettes[2] = new Palette(_battle_user_interface, _graphic,  1400,700,2, _soundAdmin);
+        palettes[2] = new Palette(_battle_user_interface, _graphic, PALETTE_DEFAULT_X_RIGHT,PALETTE_DEFAULT_Y_RIGHT,2, _soundAdmin);
+
         for(int i = 0; i < INVENTRY_DATA_MAX; i++){
             EquipmentItemData checkEquipmentItem = ((EquipmentItemData)(equipmentInventry.getItemData(i)));
             if(checkEquipmentItem != null) {
@@ -102,6 +107,26 @@ public class PaletteAdmin {
 
     }
     */
+
+    //by kmhanko
+    public void setPalletPosition(int id, int x, int y) {
+        palettes[id].setPosition(x, y);
+    }
+
+    //by kmhanko
+    public void setPalletPosition(int id) {
+        if (id == 0 || id == 2) {
+            palettes[id].setPosition(PALETTE_DEFAULT_X_RIGHT, PALETTE_DEFAULT_Y_RIGHT);
+        } else {
+            palettes[id].setPosition(PALETTE_DEFAULT_X_LEFT, PALETTE_DEFAULT_Y_LEFT);
+        }
+    }
+
+    public void setPalletPosition() {
+        palettes[0].setPosition(PALETTE_DEFAULT_X_RIGHT, PALETTE_DEFAULT_Y_RIGHT);
+        palettes[1].setPosition(PALETTE_DEFAULT_X_LEFT, PALETTE_DEFAULT_Y_LEFT);
+        palettes[2].setPosition(PALETTE_DEFAULT_X_RIGHT, PALETTE_DEFAULT_Y_RIGHT);
+    }
 
     public void setMiningItems(MiningItemDataAdmin miningItemDataAdmin) {
         //by kmhanko 採掘パレットへ道具を格納

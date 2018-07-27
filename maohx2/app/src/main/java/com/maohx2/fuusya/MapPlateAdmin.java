@@ -78,7 +78,7 @@ public class MapPlateAdmin {
     int ITEM_TOP = UP_COORD;
     int ITEM_RIGHT = RIGHT_COORD;
     int ITEM_BOTTOM = UP_COORD + 70 * ITEM_CONTENTS_NUM;
-    //by kmhanko
+
     int ITEM_BOTTOM_WITH_SWITCH = ITEM_BOTTOM + 100;
     //
     int HP_RIGHT = 120;

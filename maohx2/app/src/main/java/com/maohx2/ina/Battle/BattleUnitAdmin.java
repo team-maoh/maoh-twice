@@ -233,6 +233,8 @@ public class BattleUnitAdmin {
         //プレイヤーデータのコンバート
         setPlayer(playerStatus);
 
+        palette_admin.setPalletPosition();
+
         //TODO タッチマーカー残骸を消す
 
         if (mode == MODE.BATTLE || mode == MODE.MAOH || mode == MODE.BOSS || mode == MODE.OPENING) {

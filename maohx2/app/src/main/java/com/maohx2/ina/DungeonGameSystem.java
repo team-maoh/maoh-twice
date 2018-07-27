@@ -414,6 +414,8 @@ public class DungeonGameSystem {
 
             case EQUIP_EXPEND_INIT:
                 initBackPlate();
+                palette_admin.setPalletPosition(0, 200, 450);
+                palette_admin.setPalletPosition(1, 1400, 450);
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.EQUIP_EXPEND);
 
             case EQUIP_EXPEND:
@@ -480,15 +482,15 @@ public class DungeonGameSystem {
                 break;
 
             case EQUIP_EXPEND_INIT:
-                break;
-
             case EQUIP_EXPEND:
+                map_admin.drawMap_for_autotile_light_animation();
+                map_object_admin.draw();
+                map_plate_admin.draw();
                 //equipmentInventry.drawOnly();
                 //expendInventry.drawOnly();
-                palette_admin.drawOnly();
                 //dungeon_user_interface.draw();
+                palette_admin.drawOnly();
                 backPlateGroup.draw();
-                //backPlateGroup.draw();
                 playerStatusViewer.draw();
                 break;
 
