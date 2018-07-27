@@ -101,8 +101,8 @@ public class DungeonGameSystem {
     MusicAdmin musicAdmin;
     SoundAdmin soundAdmin;
 
-    GeoSlotSaver geoSlotSaver;
-    GeoSlotAdminManager geoSlotAdminManager;
+    //GeoSlotSaver geoSlotSaver;
+    //GeoSlotAdminManager geoSlotAdminManager;
 
     Constants.DungeonKind.DUNGEON_KIND dungeon_kind;
 
@@ -274,9 +274,11 @@ public class DungeonGameSystem {
         backGround = graphic.searchBitmap("firstBackground");
 
 
+        /*
         geoSlotSaver = new GeoSlotSaver(my_database_admin, "GeoSlotSave", "GeoSlotSave.db", Constants.SaveDataVersion.GEO_SLOT, Constants.DEBUG_SAVE_MODE, graphic);
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, dungeon_user_interface, my_database_admin, text_box_admin, playerStatus, globalData.getGeoInventry(), geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin, dungeonModeManage);
         geoSlotAdminManager.loadGeoSlot();
+        */
 
         dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
 
@@ -424,13 +426,13 @@ public class DungeonGameSystem {
                 break;
             case GEO_MAP_INIT:
                 initBackPlate();
-                geoSlotAdminManager.start();
-                geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.DUNGEON);
+                //geoSlotAdminManager.start();
+                //geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.DUNGEON);
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP);
             case GEO_MAP:
                 effectAdmin.draw();
                 if (!talkAdmin.isTalking()) {
-                    geoSlotAdminManager.update();
+                    //geoSlotAdminManager.update();
                 }
                 break;
 
@@ -491,7 +493,7 @@ public class DungeonGameSystem {
                 break;
 
             case GEO_MAP:
-                geoSlotAdminManager.draw();
+                //geoSlotAdminManager.draw();
                 playerStatusViewer.draw();
                 break;
 
@@ -620,15 +622,18 @@ public class DungeonGameSystem {
         if (playerStatusViewer != null) {
             playerStatusViewer.release();
         }
+        /*
         if (geoSlotSaver != null) {
             geoSlotSaver.release();
         }
         if (geoSlotAdminManager != null) {
             geoSlotAdminManager.release();
         }
+        */
         if (dungeonModeManage != null) {
             dungeonModeManage.release();
         }
+        System.gc();
     }
 
 

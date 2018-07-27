@@ -58,8 +58,8 @@ public class MapPlateAdmin {
     // 2  : アイテム（inventory）
     // 3  : 本当にリタイアしますか？[はい][いいえ]
 
-    int LEFT_COORD = 1300;
-    int RIGHT_COORD = 1550;
+    int LEFT_COORD = 1100;
+    int RIGHT_COORD = 1600;
     int UP_COORD = 50;
     int BUTTON_HEIGHT = 100;
     //
@@ -78,6 +78,8 @@ public class MapPlateAdmin {
     int ITEM_TOP = UP_COORD;
     int ITEM_RIGHT = RIGHT_COORD;
     int ITEM_BOTTOM = UP_COORD + 70 * ITEM_CONTENTS_NUM;
+    //by kmhanko
+    int ITEM_BOTTOM_WITH_SWITCH = ITEM_BOTTOM + 100;
     //
     int HP_RIGHT = 120;
     int HP_LEFT = 1560;
@@ -280,7 +282,7 @@ public class MapPlateAdmin {
             case 0:
                 return LEFT_COORD <= touch_n_x && touch_n_x <= RIGHT_COORD && UP_COORD <= touch_n_y && touch_n_y <= UP_COORD + BUTTON_HEIGHT * 3;
             case 2:
-                return ITEM_LEFT <= touch_n_x && touch_n_x <= ITEM_RIGHT && ITEM_TOP <= touch_n_y && touch_n_y <= ITEM_BOTTOM;
+                return ITEM_LEFT <= touch_n_x && touch_n_x <= ITEM_RIGHT && ITEM_TOP <= touch_n_y && touch_n_y <= ITEM_BOTTOM_WITH_SWITCH;
             default:
                 return false;
         }

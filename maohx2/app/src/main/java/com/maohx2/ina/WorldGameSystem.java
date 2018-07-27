@@ -645,6 +645,7 @@ public class WorldGameSystem {
             backPlateGroup = null;
         }
         credit = null;
+        System.gc();
     }
 
 /*
