@@ -683,6 +683,18 @@ public class BattleUnitAdmin {
                 }
             }
 
+            //ポーションなどの使用の処理
+            if (palette_admin.checkSelectedExpendItemData() != null) {
+                int heel_to_player = (int) (battle_units[0].getMaxHitPoint() * palette_admin.checkSelectedExpendItemData().getHp() / 100.0f);
+                palette_admin.deleteExpendItemData();
+                soundAdmin.play("cure00");
+                int new_hp = heel_to_player + battle_units[0].getHitPoint();
+                if (new_hp > battle_units[0].getMaxHitPoint()) {
+                    new_hp = battle_units[0].getMaxHitPoint();
+                }
+                battle_units[0].setHitPoint(new_hp);
+            }
+
             //敵の更新と攻撃処理
             for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
                 if (battle_units[i].isExist() == true) {
@@ -694,11 +706,14 @@ public class BattleUnitAdmin {
                             damage_rate = (1 - (float) defense_equipment.getDefence() / 100.0f);
                         }
 
+                        /*
                         int heel_to_player = 0;
                         if (palette_admin.checkSelectedExpendItemData() != null) {
                             heel_to_player = (int)(battle_units[0].getMaxHitPoint() * palette_admin.checkSelectedExpendItemData().getHp() / 100.0f);
                             palette_admin.deleteExpendItemData();
+                            soundAdmin.play("cure00");
                         }
+                        */
 /*
                         int new_hp = battle_units[0].getHitPoint() - (int) ((damage_to_player/(battle_units[0].getDefence()*battle_units[0].getDefence()*battle_units[0].getDefence())) * damage_rate) + heel_to_player;
                         if (new_hp > battle_units[0].getMaxHitPoint()) {
@@ -723,7 +738,8 @@ public class BattleUnitAdmin {
                         level_rate = Math.pow(level_rate, 0.4);//0.4だと、自他のStatusが定数倍になっても、敵を倒すための確定数はほぼ変化しない
 //                        System.out.println("level_pl_2_" + level_rate);
 
-                        int new_hp = battle_units[0].getHitPoint() - (int) ((133.0 * strong_ratio) * level_rate * damage_rate - heel_to_player);
+                        int new_hp = battle_units[0].getHitPoint() - (int) ((133.0 * strong_ratio) * level_rate * damage_rate);
+                        //int new_hp = battle_units[0].getHitPoint() - (int) ((133.0 * strong_ratio) * level_rate * damage_rate - heel_to_player);
 //                        int new_hp = battle_units[0].getHitPoint() - (int) ((real_atk * exp * 0.295 / (real_def + 1) * damage_rate) + heel_to_player);
 
 //                        System.out.println("strong_ratio_pl" + strong_ratio);
