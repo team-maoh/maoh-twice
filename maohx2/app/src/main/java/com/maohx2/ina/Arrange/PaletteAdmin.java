@@ -37,10 +37,10 @@ public class PaletteAdmin {
     }
 */
     public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic, InventryS equipmentInventry, InventryS expendInventry, EquipmentItemDataAdmin _equipmentItemDataAdmin, SoundAdmin _soundAdmin){
-        palettes[0] = new Palette(_battle_user_interface, _graphic, 1400,750,0, _soundAdmin);
-        palettes[1] = new Palette(_battle_user_interface, _graphic,  200,750,1, _soundAdmin);
+        palettes[0] = new Palette(_battle_user_interface, _graphic, 1400,700,0, _soundAdmin);
+        palettes[1] = new Palette(_battle_user_interface, _graphic,  200,700,1, _soundAdmin);
         //by kmhanko ジオ採掘パレット
-        palettes[2] = new Palette(_battle_user_interface, _graphic,  1400,750,2, _soundAdmin);
+        palettes[2] = new Palette(_battle_user_interface, _graphic,  1400,700,2, _soundAdmin);
         for(int i = 0; i < INVENTRY_DATA_MAX; i++){
             EquipmentItemData checkEquipmentItem = ((EquipmentItemData)(equipmentInventry.getItemData(i)));
             if(checkEquipmentItem != null) {
