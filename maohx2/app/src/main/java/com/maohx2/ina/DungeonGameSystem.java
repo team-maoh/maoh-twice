@@ -268,7 +268,8 @@ public class DungeonGameSystem {
                 map_status_saver,
                 dungeon_kind,
                 dungeonMonsterDataAdmin,
-                talkAdmin
+                talkAdmin,
+                expendInventry
         );
 
         backGround = graphic.searchBitmap("firstBackground");
@@ -414,8 +415,8 @@ public class DungeonGameSystem {
 
             case EQUIP_EXPEND_INIT:
                 initBackPlate();
-                palette_admin.setPalletPosition(0, 200, 450);
-                palette_admin.setPalletPosition(1, 1400, 450);
+                palette_admin.setPalletPosition(0, 1400, 450);
+                palette_admin.setPalletPosition(1, 200, 450);
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.EQUIP_EXPEND);
 
             case EQUIP_EXPEND:
@@ -423,6 +424,17 @@ public class DungeonGameSystem {
                     //equipmentInventry.updata();
                     //expendInventry.updata();
                     //palette_admin.update(false);
+                    palette_admin.update(true);//便宜上
+
+                    //TODO by kmhanko あまり良くない書き方
+                    if (palette_admin.checkSelectedExpendItemData() != null) {
+                        int heel_to_player = (int) (playerStatus.getHP() * palette_admin.checkSelectedExpendItemData().getHp() / 100.0f);
+                        palette_admin.deleteExpendItemData();
+                        soundAdmin.play("cure00");
+                        playerStatus.setNowHP(playerStatus.getNowHP() + heel_to_player);
+                        expendInventry.save();
+                    }
+
                     backPlateGroup.update();
                 }
                 break;
@@ -496,7 +508,7 @@ public class DungeonGameSystem {
                 //equipmentInventry.drawOnly();
                 //expendInventry.drawOnly();
                 //dungeon_user_interface.draw();
-                palette_admin.drawOnly();
+                palette_admin.draw();
                 backPlateGroup.draw();
                 playerStatusViewer.draw();
                 break;

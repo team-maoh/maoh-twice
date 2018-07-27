@@ -26,6 +26,7 @@ import com.maohx2.ina.ItemData.EquipmentItemBaseDataAdmin;
 import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.ItemData.EquipmentItemDataCreater;
 import com.maohx2.ina.UI.BattleUserInterface;
+import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatus;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 
@@ -128,6 +129,8 @@ public class BattleUnitAdmin {
     boolean resultOperatedFlag;//リザルト関係の処理を一度だけ呼ぶためのフラグ
     boolean battleEndFlag;//戦闘が終わったかどうか
 
+    InventryS expendInventry;
+
     //by kmhanko BattleUnitDataAdmin追加
     public void init(
             Graphic _graphic,
@@ -147,7 +150,8 @@ public class BattleUnitAdmin {
             MapStatusSaver _mapStatusSaver,
             DUNGEON_KIND _dungeonKind,
             DungeonMonsterDataAdmin _dungeonMonsterDataAdmin,
-            TalkAdmin _talkAdmin
+            TalkAdmin _talkAdmin,
+            InventryS _expendInventry
     ) {
         //引数の代入
         graphic = _graphic;
@@ -169,6 +173,8 @@ public class BattleUnitAdmin {
 
         dungeonMonsterDataAdmin = _dungeonMonsterDataAdmin;
         talkAdmin = _talkAdmin;
+
+        expendInventry = _expendInventry;
 
         textBoxAdmin = _textBoxAdmin;
         initResultTextBox();
@@ -1193,6 +1199,8 @@ public class BattleUnitAdmin {
     public void battleEnd() {
         deleteEnemy();
         playerStatus.setNowHP(battle_units[0].getHitPoint());
+        expendInventry.save();
+
 
         if (winFlag) {
             switch (mode) {
