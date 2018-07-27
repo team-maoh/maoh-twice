@@ -561,30 +561,72 @@ public class DungeonGameSystem {
 
     public void release() {
         System.out.println("takanoRelease : DungeonGameSystem");
-        map_admin.release();
-        dungeonMonsterDataAdmin.release();
-        battle_unit_admin.release();
-        palette_admin.release();
-        map_object_admin.release();
-        dungeon_user_interface.release();
-        battle_user_interface.release();
-        text_box_admin.release();
-        dungeon_data_admin.release();
-        talkAdmin.release();
-        effectAdmin.release();
+        if (map_admin != null) {
+            map_admin.release();
+        }
+        if (dungeonMonsterDataAdmin != null) {
+            dungeonMonsterDataAdmin.release();
+        }
+        if (battle_unit_admin != null) {
+            battle_unit_admin.release();
+        }
+        if (palette_admin != null) {
+            palette_admin.release();
+        }
+        if (map_object_admin != null) {
+            map_object_admin.release();
+        }
+        if (dungeon_user_interface != null) {
+            dungeon_user_interface.release();
+        }
+        if (battle_user_interface != null) {
+            battle_user_interface.release();
+        }
+        if (text_box_admin != null) {
+            text_box_admin.release();
+        }
+        if (dungeon_data_admin != null) {
+            dungeon_data_admin.release();
+        }
+        if (talkAdmin != null) {
+            talkAdmin.release();
+        }
+        if (effectAdmin != null) {
+            effectAdmin.release();
+        }
         //dungeonModeManage
-        map_plate_admin.release();
+        if (map_plate_admin != null) {
+            map_plate_admin.release();
+        }
         //map_inventry_admin
-        map_status.release();
-        map_status_saver.release();
-        paint.reset();
-        paint = null;
-        equipment_item_data_admin.release();
-        miningItemDataAdmin.release();
-        playerStatusViewer.release();
-        geoSlotSaver.release();
-        geoSlotAdminManager.release();
-        dungeonModeManage.release();
+        if (map_status != null) {
+            map_status.release();
+        }
+        if (map_status_saver != null) {
+            map_status_saver.release();
+        }
+        if (paint != null) {
+            paint.reset();
+            paint = null;
+        }
+        if (equipment_item_data_admin != null) {
+            equipment_item_data_admin.release();
+        }
+        if (miningItemDataAdmin != null) {
+            miningItemDataAdmin.release();
+        }
+        if (playerStatusViewer != null) {
+            playerStatusViewer.release();
+        }
+        if (geoSlotSaver != null) {
+            geoSlotSaver.release();
+        }
+        if (geoSlotAdminManager != null) {
+            geoSlotAdminManager.release();
+        }
+        if (dungeonModeManage != null) {
+            dungeonModeManage.release();
+        }
     }
 
 

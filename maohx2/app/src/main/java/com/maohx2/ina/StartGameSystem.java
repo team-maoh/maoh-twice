@@ -223,7 +223,9 @@ public class StartGameSystem {
     public void release() {
         System.out.println("takanoRelease : StartSur");
         paint = null;
-        credis.release();
+        if (credis != null) {
+            credis.release();
+        }
     }
 
 

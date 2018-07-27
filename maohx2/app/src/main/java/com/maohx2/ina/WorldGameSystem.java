@@ -585,27 +585,65 @@ public class WorldGameSystem {
 
     public void release() {
         System.out.println("takanoRelease : WorldGameSystem");
-        palette_admin.release();
-        world_user_interface.release();
+        if (palette_admin != null) {
+            palette_admin.release();
+        }
+        if (world_user_interface != null) {
+            world_user_interface.release();
+        }
 
-        map_status.release();
-        map_status_saver.release();
-        playerStatusViewer.release();
-        worldModeAdmin.release();
-        text_box_admin.release();
-        talkAdmin.release();
-        itemDataAdminManager.release();
-        itemShopAdmin.release();
-        effectAdmin.release();
-        geoSlotSaver.release();
-        geoSlotAdminManager.release();
-        dungeonSelectManager.release();
-        itemSell.release();
-        geoPresentManager.release();
-        geoPresentSaver.release();
-        equipment_item_data_admin.release();
-        backPlateGroup.release();
-        backPlateGroup = null;
+        if (map_status != null) {
+            map_status.release();
+        }
+        if (map_status_saver != null) {
+            map_status_saver.release();
+        }
+        if (playerStatusViewer != null) {
+            playerStatusViewer.release();
+        }
+        if (worldModeAdmin != null) {
+            worldModeAdmin.release();
+        }
+        if (text_box_admin != null) {
+            text_box_admin.release();
+        }
+        if (talkAdmin != null) {
+            talkAdmin.release();
+        }
+        if (itemDataAdminManager != null) {
+            itemDataAdminManager.release();
+        }
+        if (itemShopAdmin != null) {
+            itemShopAdmin.release();
+        }
+        if (effectAdmin != null) {
+            effectAdmin.release();
+        }
+        if (geoSlotSaver != null) {
+            geoSlotSaver.release();
+        }
+        if (geoSlotAdminManager != null) {
+            geoSlotAdminManager.release();
+        }
+        if (dungeonSelectManager != null) {
+            dungeonSelectManager.release();
+        }
+        if (itemSell != null) {
+            itemSell.release();
+        }
+        if (geoPresentManager != null) {
+            geoPresentManager.release();
+        }
+        if (geoPresentSaver != null) {
+            geoPresentSaver.release();
+        }
+        if (equipment_item_data_admin != null) {
+            equipment_item_data_admin.release();
+        }
+        if (backPlateGroup != null) {
+            backPlateGroup.release();
+            backPlateGroup = null;
+        }
         credit = null;
     }
 
