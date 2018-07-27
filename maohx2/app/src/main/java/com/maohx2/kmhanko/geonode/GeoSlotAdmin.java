@@ -194,8 +194,8 @@ public class GeoSlotAdmin {
                 Constants.Touch.TouchWay.UP_MOMENT,
                 Constants.Touch.TouchWay.MOVE,
                 new int[] { 0, 0, 100 },
-                graphic.makeImageContext(graphic.searchBitmap("neco"), 0, 0, 5.0f, 5.0f, 0.0f, 128, false),
-                graphic.makeImageContext(graphic.searchBitmap("neco"), 0, 0, 6.0f, 6.0f, 0.0f, 128, false)
+                graphic.makeImageContext(graphic.searchBitmap("apple"), 0, 0, 5.0f, 5.0f, 0.0f, 128, false),
+                graphic.makeImageContext(graphic.searchBitmap("apple"), 0, 0, 6.0f, 6.0f, 0.0f, 128, false)
         );
         //TODO 配列の位置はタッチ座標用、COntextの位置は表示用
         //TODO 拡大縮小を動的に行う場合は毎回このmakeImageContextを呼ぶと言うことになるわけだが。
