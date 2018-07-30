@@ -138,7 +138,7 @@ public class Palette {
             }
 
             if(palette_elements[select_circle_num].getItemData() != null) {
-                palette_center.changeElement(select_circle_num);
+                palette_center.changeElement(select_circle_num + 1);//by kmhanko 0731
                 palette_center.setItemData(palette_elements[select_circle_num].getItemData(), select_circle_num, isSound);
                 isSound = false;
                 if (palette_elements[select_circle_num].getItemData().getItemKind() == Constants.Item.ITEM_KIND.EXPEND) {
@@ -221,14 +221,16 @@ public class Palette {
                 if (battle_user_interface.checkUI(palette_center.getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
                     ItemData a = palette_center.getItemData();
                     //palette_center.setItemData(battle_user_interface.getPaletteElement().getItemData());
+
+                    //中央にアイテムセット
                     palette_center.setItemData(battle_user_interface.getPaletteElement().getItemData(),battle_user_interface.getPaletteElement().getElementNum(), false);
                     battle_user_interface.getPaletteElement().setItemData(a, true);
                     battle_user_interface.setPaletteElement(null);
                 }
 
 
-                 if(paletteNum == 0) {
-                    for (int i = 0; i < 6; i++) {
+                 if(paletteNum == 0) {//武器の場合
+                    for (int i = 0; i < 6; i++) {//素手と盾は固定なので6
                         if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
                             ItemData a = palette_elements[i].getItemData();
                             //palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData());
@@ -237,7 +239,7 @@ public class Palette {
                             battle_user_interface.setPaletteElement(null);
                         }
                     }
-                }else{
+                }else{//武器以外
 
                     for (int i = 0; i < 8; i++) {
                         if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {

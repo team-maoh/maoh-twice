@@ -34,8 +34,8 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 
 //バグ
 //ダンジョン画面、アイテムでの個数が装備個数分引かれた値が表示されている
-//ダンジョンから帰還した時、中央にセットしてあった装備がパレット上から外れ、未装備状態となる
 //ジオ献上にて、同名アイテムが存在した場合、その全てが献上されてしまい、かつ上昇数値は一個分でしかないバグ
+//発掘ジオの偏りバグ
 
 //改善点
 //音量調節
@@ -44,6 +44,7 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 //階層移動時に効果音を鳴らす
 //緑色のEが、背景の大陸の緑と同化してわかりにくい
 //音楽のループタイミングがおかしいものがある(ワールドマップなど)
+//弓のエフェクト
 
 //タイトル画面など
 public class StartActivity extends BaseActivity {
