@@ -221,7 +221,6 @@ public class Inventry {
 
     public void addItemData(ItemData _item_data, int num) {
         int i = 0;
-        int count = num;
 
         if (_item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT || _item_data.getItemKind() == Constants.Item.ITEM_KIND.GEO) {
             i = INVENTRY_DATA_MAX;
@@ -229,11 +228,8 @@ public class Inventry {
             for (i = 0; i < INVENTRY_DATA_MAX; i++) {
                 if (inventry_datas[i].getItemData() != null) {
                     if (inventry_datas[i].getItemData().getName().equals(_item_data.getName())) {
-                        inventry_datas[i].setItemNum(inventry_datas[i].getItemNum() + 1);
-                        count--;
-                        if (count <= 0) {
-                            break;
-                        }
+                        inventry_datas[i].setItemNum(inventry_datas[i].getItemNum() + num);
+                        break;
                     }
                 }
             }
@@ -248,8 +244,8 @@ public class Inventry {
                     if (i < contentNum) {
                         operate_inventry_list_box.getPlate(i).changeInventryData();
                     }
-                    count--;
-                    if (count <= 0) {
+                    num--;
+                    if (num <= 0) {
                         break;
                     }
                 }
@@ -302,6 +298,7 @@ public class Inventry {
             if (inventry_datas[i].getItemData() != null) {
                 if (inventry_datas[i].getItemData().getName().equals(name)) {
                     inventry_datas[i].delete();
+                    break;
                 }
             }
         }

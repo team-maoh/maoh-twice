@@ -37,7 +37,11 @@ public class BoxInventryPlate extends BoxPlate {
 
         if(inventry_data != null) {
             if(inventry_data.getItemData() != null) {
-                image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left+50, (up+down)/2, 1.7f, 1.7f, 0, 255, false);
+                if(inventry_data.getItemData().getItemImage() !=null) {
+                    image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left + 50, (up + down) / 2, 1.7f, 1.7f, 0, 255, false);
+                } else {
+                    System.out.println("takano: BoxInventryPlate getItemImage == null");
+                }
             }
         }
     }

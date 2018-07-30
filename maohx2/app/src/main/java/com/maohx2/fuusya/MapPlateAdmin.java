@@ -212,6 +212,7 @@ public class MapPlateAdmin {
 
             case 3://[リタイア]
 //                map_inventry_admin.storageMapInventry();
+                globalData.getExpendItemInventry().save();
                 activityChange.toWorldActivity();
 
                 break;

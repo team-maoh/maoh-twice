@@ -45,7 +45,7 @@ public class PaletteElement {
 
         paint.setAlpha(255);
 
-        textPaint.setARGB(255,0,0,0);
+        textPaint.setARGB(255, 255,255,255);
         textPaint.setTextSize(30);
     }
 

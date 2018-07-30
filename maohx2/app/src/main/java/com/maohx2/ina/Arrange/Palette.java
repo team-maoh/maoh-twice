@@ -222,7 +222,6 @@ public class Palette {
                     ItemData a = palette_center.getItemData();
                     //palette_center.setItemData(battle_user_interface.getPaletteElement().getItemData());
 
-                    //中央にアイテムセット
                     palette_center.setItemData(battle_user_interface.getPaletteElement().getItemData(),battle_user_interface.getPaletteElement().getElementNum(), false);
                     battle_user_interface.getPaletteElement().setItemData(a, true);
                     battle_user_interface.setPaletteElement(null);

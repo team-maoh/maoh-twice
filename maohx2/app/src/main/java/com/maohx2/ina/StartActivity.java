@@ -33,11 +33,9 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 //memo
 
 //バグ
-//ジオ献上にて、同名アイテムが存在した場合、その全てが献上されてしまい、かつ上昇数値は一個分でしかないバグ
 //発掘ジオの偏りバグ
-//ポーションを持ち帰れない //要確認
-//ハイぽが消えない //要確認
-//ジオイーターが左上に固まっているバグ
+//テキストを全部流す作業
+//ゲームクリアまで行けるのか
 
 
 //改善点
@@ -48,7 +46,6 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 //階層移動時に効果音を鳴らす
 //緑色のEが、背景の大陸の緑と同化してわかりにくい
 //音楽のループタイミングがおかしいものがある(ワールドマップなど)
-//弓のエフェクト
 
 //タイトル画面など
 public class StartActivity extends BaseActivity {
