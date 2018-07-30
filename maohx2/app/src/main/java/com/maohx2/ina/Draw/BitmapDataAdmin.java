@@ -9,6 +9,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import android.graphics.Bitmap;
 
 import static com.maohx2.ina.Constants.Bitmap.*;
 
@@ -24,6 +25,10 @@ public class BitmapDataAdmin {
     int next_load_point;
 
 
+    //kmhanko
+    //画像読み込み時に縮小して(容量節約して)読むかどうか。
+    boolean optionFlag = false;
+
     //コンストラクタ
     public BitmapDataAdmin() {}
 
@@ -33,6 +38,7 @@ public class BitmapDataAdmin {
         for (int i = 0; i < BITMAP_DATA_INSTANCE; i++) {
             bitmap_data[i] = new BitmapData();
         }
+
     }
 
 
@@ -53,9 +59,20 @@ public class BitmapDataAdmin {
                 for (int j = 0; j < file_name.size(); j++) {
                     try {
                         bis = new BufferedInputStream(assetManager.open("image/global/" + ltable_names.get(i) + "/" + file_name.get(j)));
-                        bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis));
+                        if (optionFlag) { //by kmhanko
+                            BitmapFactory.Options options = new BitmapFactory.Options();
+
+                            //optionsをいじって縮小処理を行う
+                            options.inPreferredConfig = Bitmap.Config.ARGB_4444; //8888
+
+                            options.inJustDecodeBounds = false;
+                            bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis, null, options));
+                        } else {
+                            bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis));
+                        }
                         bitmap_data[next_load_point].setImageName(image_name.get(j));
                         next_load_point++;
+                        bis.close();
                     } catch (IOException e) {
                         System.out.println("%☆イナガキ：画像の取り込みに失敗しました"+image_name.get(j));
                     }
@@ -84,10 +101,21 @@ public class BitmapDataAdmin {
             for (int j = 0; j < file_name.size(); j++) {
                 try {
                     bis = new BufferedInputStream(assetManager.open("image/local/" + table_folder + "/" + table_names.get(i) + "/" + file_name.get(j)));
-                    bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis));
+                    if (optionFlag) { //by kmhanko
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+
+                        //optionsをいじって縮小処理を行う
+                        options.inPreferredConfig = Bitmap.Config.ARGB_4444;// 8888
+
+                        options.inJustDecodeBounds = false;
+                        bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis, null, options));
+                    } else {
+                        bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis));
+                    }
                     bitmap_data[next_load_point].setImageName(image_name.get(j));
                     //System.out.println(next_load_point+","+j);
                     next_load_point++;
+                    bis.close();
                 } catch (IOException e) {
                     System.out.println("%☆イナガキ：画像の取り込みに失敗しました"+image_name.get(j));
                 }
