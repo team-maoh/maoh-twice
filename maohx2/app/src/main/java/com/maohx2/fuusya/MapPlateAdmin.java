@@ -237,7 +237,7 @@ public class MapPlateAdmin {
             case 1:
                 break;
             case 2:
-                inventry.draw();
+                inventry.drawExceptEquip();
                 break;
             case 3:
                 break;

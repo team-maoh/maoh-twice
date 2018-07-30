@@ -209,12 +209,11 @@ public class PaletteAdmin {
     }
 
     public void deleteExpendItemData(){
-
-        //kmhanko inventryから装備をfalseにする処理
         int prePos = palettes[1].getPalettePrePos();
         ItemData itemdata = palettes[1].getSelectedItemData();
         ExpendItemData expendItemData = (ExpendItemData)itemdata;
         expendItemData.setPalettePosition(prePos,false);
+        expendInventry.subItemData(itemdata);
 
         palettes[1].setPaletteCenter(null, false);
     }

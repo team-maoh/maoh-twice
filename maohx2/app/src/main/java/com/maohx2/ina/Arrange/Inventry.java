@@ -189,7 +189,15 @@ public class Inventry {
 
     public void draw() {
         operate_inventry_list_box.draw();
+        drawShare();
+    }
 
+    public void drawExceptEquip() {
+        operate_inventry_list_box.drawExceptEquip();
+        drawShare();
+    }
+
+    private void drawShare() {
         for (int i = 0; i < contentNum; i++) {
             graphic.bookingDrawBitmapData(flameElement[0][0], position[i][0], position[i][1], 1.0f, 1.0f, 0, 254, true);
             graphic.bookingDrawBitmapData(flameElement[1][0], position[i][0], position[i][1] + height / 3, 1.0f, 1.0f, 0, 254, true);
@@ -211,8 +219,9 @@ public class Inventry {
         operate_inventry_list_box.draw();
     }
 
-    public void addItemData(ItemData _item_data) {
+    public void addItemData(ItemData _item_data, int num) {
         int i = 0;
+        int count = num;
 
         if (_item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT || _item_data.getItemKind() == Constants.Item.ITEM_KIND.GEO) {
             i = INVENTRY_DATA_MAX;
@@ -221,7 +230,10 @@ public class Inventry {
                 if (inventry_datas[i].getItemData() != null) {
                     if (inventry_datas[i].getItemData().getName().equals(_item_data.getName())) {
                         inventry_datas[i].setItemNum(inventry_datas[i].getItemNum() + 1);
-                        break;
+                        count--;
+                        if (count <= 0) {
+                            break;
+                        }
                     }
                 }
             }
@@ -236,10 +248,17 @@ public class Inventry {
                     if (i < contentNum) {
                         operate_inventry_list_box.getPlate(i).changeInventryData();
                     }
-                    break;
+                    count--;
+                    if (count <= 0) {
+                        break;
+                    }
                 }
             }
         }
+    }
+
+    public void addItemData(ItemData _item_data) {
+        addItemData(_item_data, 1);
     }
 
     public void subItemData(ItemData _item_data) {

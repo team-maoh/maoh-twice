@@ -34,7 +34,7 @@ public class PaletteCenter extends PaletteElement{
     public void changeElement(int _element_num){
 
         element_num = _element_num;
-        paint.setColor(CIRCLE_COLOR[element_num]);
+        paint.setColor(CIRCLE_COLOR[element_num-1]);
         paint.setAlpha(255);
     }
 
