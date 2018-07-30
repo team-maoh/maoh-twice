@@ -87,6 +87,22 @@ public abstract class ItemDataAdmin<T extends ItemData>  {
 */
     public List<T> getItemDatas() {return datas;}
 
+    public void release() {
+        System.out.println("takanoRelease : ItemDataAdmin");
+        if (datas != null) {
+            for (int i = 0; i < datas.size(); i++) {
+                if (datas.get(i) != null) {
+                    datas.get(i).release();
+                }
+            }
+            datas.clear();
+            datas = null;
+        }
+        dbName = null;
+        dbAsset = null;
+        tableName = null;
+    }
+
     //public static ItemData getDebugItem(){return null;}
 
 }

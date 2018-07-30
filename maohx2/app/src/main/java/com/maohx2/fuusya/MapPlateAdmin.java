@@ -37,6 +37,7 @@ import static com.maohx2.ina.Constants.Touch.TouchWay.UP_MOMENT;
 
 public class MapPlateAdmin {
 
+
     Graphic graphic;
     DungeonUserInterface dungeon_user_interface;
     Inventry inventry;
@@ -57,8 +58,8 @@ public class MapPlateAdmin {
     // 2  : アイテム（inventory）
     // 3  : 本当にリタイアしますか？[はい][いいえ]
 
-    int LEFT_COORD = 1300;
-    int RIGHT_COORD = 1550;
+    int LEFT_COORD = 1100;
+    int RIGHT_COORD = 1600;
     int UP_COORD = 50;
     int BUTTON_HEIGHT = 100;
     //
@@ -67,11 +68,18 @@ public class MapPlateAdmin {
     int HP_BG_LEFT = 1570;
     int HP_BG_BOTTOM = 35;
     //
-    int ITEM_LEFT = 1200;
-    int ITEM_TOP = 50;
-    int ITEM_RIGHT = 1550;
-    int ITEM_BOTTOM = 450;
+//    int ITEM_LEFT = 1200;
+//    int ITEM_TOP = 50;
+//    int ITEM_RIGHT = 1550;
+//    int ITEM_BOTTOM = 450;
+//    int ITEM_CONTENTS_NUM = 10;
     int ITEM_CONTENTS_NUM = 10;
+    int ITEM_LEFT = LEFT_COORD;
+    int ITEM_TOP = UP_COORD;
+    int ITEM_RIGHT = RIGHT_COORD;
+    int ITEM_BOTTOM = UP_COORD + 70 * ITEM_CONTENTS_NUM;
+
+    int ITEM_BOTTOM_WITH_SWITCH = ITEM_BOTTOM + 100;
     //
     int HP_RIGHT = 120;
     int HP_LEFT = 1560;
@@ -274,7 +282,7 @@ public class MapPlateAdmin {
             case 0:
                 return LEFT_COORD <= touch_n_x && touch_n_x <= RIGHT_COORD && UP_COORD <= touch_n_y && touch_n_y <= UP_COORD + BUTTON_HEIGHT * 3;
             case 2:
-                return ITEM_LEFT <= touch_n_x && touch_n_x <= ITEM_RIGHT && ITEM_TOP <= touch_n_y && touch_n_y <= ITEM_BOTTOM;
+                return ITEM_LEFT <= touch_n_x && touch_n_x <= ITEM_RIGHT && ITEM_TOP <= touch_n_y && touch_n_y <= ITEM_BOTTOM_WITH_SWITCH;
             default:
                 return false;
         }
@@ -334,7 +342,7 @@ public class MapPlateAdmin {
             BitmapData tutorial_bitmap = graphic.searchBitmap(bitmap_name);
 
             if (tutorial_bitmap != null) {
-                graphic.bookingDrawBitmapData(tutorial_bitmap, 0, 0, 1.0f, 1.0f, 0, 254, true);
+                graphic.bookingDrawBitmapData(tutorial_bitmap, 0, 0, 1, 1, 0, 255, true);
             }
 
             Constants.Touch.TouchState touch_state = dungeon_user_interface.getTouchState();
@@ -345,6 +353,7 @@ public class MapPlateAdmin {
                 if (i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP) {
                     playerStatus.setTutorialInDungeon(1);
                     playerStatusSaver.save();
+
                 }
             }
         }
@@ -385,5 +394,24 @@ public class MapPlateAdmin {
             graphic.bookingDrawRect(5, 5, 100, 50, floor_bg);
             graphic.bookingDrawText(now_floor, 20, 40, text_paint);
         }
+
     }
+
+    public void release() {
+        System.out.println("takanoRelease : MapPlateAdmin");
+        blue_paint = null;
+        green_paint = null;
+        red_paint = null;
+        text_paint = null;
+        floor_bg = null;
+
+        if (menuGroup != null) {
+            menuGroup.release();
+            menuGroup = null;
+        }
+
+        //TODO 心配
+        //inentry.release();
+    }
+
 }

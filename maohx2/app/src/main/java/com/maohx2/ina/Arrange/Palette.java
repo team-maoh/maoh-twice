@@ -63,6 +63,8 @@ public class Palette {
         }
 
         for (int i = 0; i < 8; i++) {
+            //int center_x = position_x + (int) (PALETTE_ARRANGE_RADIUS * Math.cos(2.0*Math.PI*(double)i/8.0));
+            //int center_y = position_y - (int) (PALETTE_ARRANGE_RADIUS * Math.sin(2.0*Math.PI*(double)i/8.0));
             int center_x = position_x + (int) (PALETTE_ARRANGE_RADIUS * COS[i]);
             int center_y = position_y - (int) (PALETTE_ARRANGE_RADIUS * SIN[i]);
             palette_elements[i] = new PaletteElement(center_x, center_y, i + 1, battle_user_interface.setCircleTouchUI(center_x, center_y, PALETTE_ELEMENT_RADIUS_BIG), soundAdmin);
@@ -74,6 +76,19 @@ public class Palette {
         //palette_center.setItemData();
     }
 
+    //by kmhanko
+    public void setPosition(int x, int y) {
+        position_x = x;
+        position_y = y;
+        for (int i = 0; i < 8; i++) {
+            //int center_x = position_x + (int) (PALETTE_ARRANGE_RADIUS * Math.cos(2.0*Math.PI*(double)i/8.0));
+            //int center_y = position_y - (int) (PALETTE_ARRANGE_RADIUS * Math.sin(2.0*Math.PI*(double)i/8.0));
+            int center_x = position_x + (int) (PALETTE_ARRANGE_RADIUS * COS[i]);
+            int center_y = position_y - (int) (PALETTE_ARRANGE_RADIUS * SIN[i]);
+            palette_elements[i].setPosition(center_x, center_y, battle_user_interface.setCircleTouchUI(center_x, center_y, PALETTE_ELEMENT_RADIUS_BIG));
+        }
+        palette_center.setPosition(position_x, position_y, battle_user_interface.setCircleTouchUI(position_x, position_y, PALETTE_ELEMENT_RADIUS_BIG));
+    }
 
     public void update() {
 
@@ -349,6 +364,24 @@ public class Palette {
 
     public ItemData getItemData(int _paletteIndex){
         return palette_elements[_paletteIndex].getItemData();
+    }
+
+    public void release() {
+        System.out.println("takanoRelease : Pallete");
+        direction_section_check = null;
+        if (palette_center != null) {
+            palette_center.release();
+            palette_center = null;
+        }
+        if (palette_elements != null) {
+            for (int i = 0; i < palette_elements.length; i++) {
+                if (palette_elements != null) {
+                    palette_elements[i].release();
+                }
+            }
+            palette_elements = null;
+        }
+        paint = null;
     }
 }
 

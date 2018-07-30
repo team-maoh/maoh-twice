@@ -583,10 +583,10 @@ public class Graphic {
         Bitmap conbine_bitmap;
 
         if(yoko == true) {
-            conbine_bitmap = Bitmap.createBitmap(total_length, constant_length, Bitmap.Config.ARGB_8888);
+            conbine_bitmap = Bitmap.createBitmap(total_length, constant_length, Bitmap.Config.ARGB_8888);//TODO 8888
             conbine_bitmap.setPixels(conbine_pixels, 0, total_length, 0, 0, total_length, constant_length);
         }else {
-            conbine_bitmap = Bitmap.createBitmap(constant_length, total_length, Bitmap.Config.ARGB_8888);
+            conbine_bitmap = Bitmap.createBitmap(constant_length, total_length, Bitmap.Config.ARGB_8888);//TODO 8888
             conbine_bitmap.setPixels(conbine_pixels, 0, constant_length, 0, 0, constant_length, total_length);
         }
 
@@ -603,6 +603,7 @@ public class Graphic {
 
     //by kmhanko
     public void releaseBitmap() {
+        System.out.println("takanoRelease(releaseBitmap) : Graphic");
         //global_bitmap_data_admin.releaseBitmap();
         local_bitmap_data_admin.releaseBitmap();
         for (int i = 0; i < BOOKING_DATA_INSTANCE; i++ ) {

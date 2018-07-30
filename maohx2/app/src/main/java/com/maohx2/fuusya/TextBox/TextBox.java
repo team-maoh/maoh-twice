@@ -33,6 +33,7 @@ public class TextBox {
     int column_of_box;//箱の横幅
     int row_of_box;//箱の縦幅
 
+
     int MAX_QUEUE_TEXT = 500;//下のキューの容量
     Text queue[] = new Text[MAX_QUEUE_TEXT];//もらった文章を格納するキュー
     int last, first;//text_queueの末尾と先頭（末尾にテキストを追加する/先頭のテキストを表示する）
@@ -148,6 +149,7 @@ public class TextBox {
     }
 
     public void update(boolean touch_state) {
+
         if (touch_state == false) {//タッチしていない
             box_paint.setColor(Color.argb(100, 0, 0, 0));
 
@@ -174,6 +176,7 @@ public class TextBox {
 //
 //                }
                 has_updated_text = true;
+
             }
         } else {//タッチしている
             //by kmhank　一度でも描画されたら
@@ -181,7 +184,6 @@ public class TextBox {
                 box_paint.setColor(Color.argb(100, 100, 0, 0));
                 has_updated_text = false;
             }
-
         }
     }
 
@@ -518,6 +520,29 @@ public class TextBox {
 
         return tmp_first == first;
 //        return tmp_first ;
+    }
+
+
+    public void release() {
+        System.out.println("takanoRelease : TextBox");
+        box_paint = null;
+        for (int i = 0; i < queue.length ; i++) {
+            if (queue[i] != null) {
+                queue[i].release();
+            }
+        }
+        tmp_sentence = null;
+        queue = null;
+        sentence_firsts = null;
+        for (int i = 0; i < tmp_paint.length; i++) {
+            if (tmp_paint[i] != null) {
+                tmp_paint[i] = null;
+            }
+        }
+        tmp_paint = null;
+        tmp_num_of_lines = null;
+        tmp_begin_column = null;
+        is_too_long = null;
     }
 
 }

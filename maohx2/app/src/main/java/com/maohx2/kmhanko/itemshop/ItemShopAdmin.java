@@ -66,6 +66,7 @@ public class ItemShopAdmin {
 
     //int moneyTextBoxID;
 
+
     public enum ITEM_KIND {
         EXPEND,
         GEO_OBJECT,
@@ -155,6 +156,14 @@ public class ItemShopAdmin {
     public ItemShop getItemShop() {
         return itemShop;
     }
+
+    public void release() {
+        System.out.println("takanoRelease : ItemShopAdmin");
+        itemShop.release();
+        itemShop = null;
+    }
+
+
 /*
     public void moneyTextBoxUpdate() {
         textBoxAdmin.bookingDrawText(moneyTextBoxID, "所持金 " + playerStatus.getMoney());

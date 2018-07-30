@@ -86,5 +86,10 @@ public class TouchMarker {
     }
     public int getDamage(){return damage;}
 
+    //TODO 配備
+    public void release() {
+        System.out.println("takanoRelease : TouchMarker");
+        paint = null;
+    }
 
 }

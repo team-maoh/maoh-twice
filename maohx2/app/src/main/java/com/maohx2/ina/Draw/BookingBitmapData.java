@@ -64,6 +64,7 @@ public class BookingBitmapData extends BookingTaskData {
 
     @Override
     public void release() {
+        System.out.println("takanoRelease : BookingBitmapData");
         super.release();
         draw_bitmap_data = null;
         draw_matrix = null;

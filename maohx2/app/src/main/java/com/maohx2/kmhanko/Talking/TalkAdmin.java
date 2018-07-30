@@ -400,4 +400,39 @@ public class TalkAdmin {
         return isWait || !isTalking;
     }
 
+
+
+    public void release() {
+        System.out.println("takanoRelease : TalkAdmin");
+        if (talkContent != null) {
+            for (int i = 0; i < talkContent.length; i++) {
+                if (talkContent[i] != null) {
+                    for (int j = 0; j < talkContent[i].length; j++) {
+                        if (talkContent[i][j] != null) {
+                            talkContent[i][j] = null;
+                        }
+                    }
+                }
+            }
+            talkContent = null;
+        }
+        if (talkCharaName != null) {
+            for (int i = 0; i < talkCharaName.length; i++) {
+                if (talkCharaName[i] != null) {
+                    talkCharaName[i] = null;
+                }
+            }
+            talkCharaName = null;
+        }
+        leftOrRight = null;
+        talkWaitTime = null;
+        talkCharaLeft = null;
+        talkCharaRight = null;
+        paint = null;
+
+        if (talkSaveDataAdmin != null) {
+            talkSaveDataAdmin.release();
+        }
+    }
+
 }

@@ -42,6 +42,13 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     Graphic graphic;
     boolean back_ground_flag = false;
 
+    public void release() {
+        System.out.println("takanoRelease : BaseSurfaceView");
+        paint = null;
+        thread = null;
+        //TODO ゲーム終了時に
+        //global_data.release();
+    }
 
     public BaseSurfaceView(Activity _currentActivity, BackSurfaceView _backSurfaceView) {
         super(_currentActivity);

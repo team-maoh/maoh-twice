@@ -38,6 +38,9 @@ public class DungeonMonsterDataAdmin {
     }
 
     public void release() {
-        dungeon_monster_data.clear();
+        System.out.println("takanoRelease : DungeonMonsterDataAdmin");
+        if (dungeon_monster_data != null ) {
+            dungeon_monster_data.clear();
+        }
     }
 }

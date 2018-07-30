@@ -69,7 +69,11 @@ public class PaletteCenter extends PaletteElement{
     @Override
     public void drawBig(){
         graphic.bookingDrawCircle(x, y, PALETTE_CENTER_RADIUS_BIG, paint);
-        graphic.bookingDrawText(String.valueOf(((EquipmentItemData)(item_data)).getDungeonUseNum()), x+offset_x, y+offset_y, textPaint);
+
+        //by kmhanko
+        if (item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT) {
+            graphic.bookingDrawText(String.valueOf(((EquipmentItemData) (item_data)).getDungeonUseNum()), x + offset_x, y + offset_y, textPaint);
+        }
     }
 
     @Override
@@ -133,5 +137,9 @@ public class PaletteCenter extends PaletteElement{
 
 
     public int getPrePos(){return prePos;}
+
+    public void release() {
+        System.out.println("takanoRelease : PaletteCenter");
+    }
 
 }

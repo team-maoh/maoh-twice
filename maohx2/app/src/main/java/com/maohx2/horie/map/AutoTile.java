@@ -30,6 +30,7 @@ public class AutoTile {
     }
 
     public void release() {
+        System.out.println("takanoRelease : AutoTile");
         raw_auto_tile = null;
         auto_tile = null;
         big_auto_tile = null;

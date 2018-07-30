@@ -39,7 +39,7 @@ import static java.lang.Math.subtractExact;
 
 public class MapObjectAdmin {
 
-    int NUM_OF_ENEMY = 3;
+    int NUM_OF_ENEMY = 2;
     //    int NUM_OF_ITEM = 10;// > 2
     int NUM_OF_TRAP = 10;
     int NUM_OF_MINE = 5;
@@ -316,8 +316,10 @@ public class MapObjectAdmin {
             map_boss[i].initClass(map_admin);
         }
 
-        while (true) {
-            if (map_admin.getMonsterName(0)[kind_of_zako] == null) {
+        //by kmhanko
+        String mosnterName[] = map_admin.getMonsterName(0);
+        for (int i = 0 ; i < mosnterName.length; i++) {
+            if (mosnterName[kind_of_zako] == null) {
                 break;
             }
             kind_of_zako++;
@@ -430,7 +432,7 @@ public class MapObjectAdmin {
 
 //            map_admin.getMonsterName(1)[local_i];
             int un_null = 1;
-            while (true) {
+            for (int j = 0 ; j < 5; j++) {
                 if (map_admin.getMonsterName(1)[un_null % 5] == null) {
                     break;
                 }
@@ -443,13 +445,15 @@ public class MapObjectAdmin {
 //                if (i == 2 && map_mine[0].exists() == true) {
 //                    map_enemy[i].setPosition((int) map_mine[0].getWorldX(), (int) map_mine[0].getWorldY());
 //                } else {
-                Point room_point;
+                Point room_point = map_admin.getGoodSpawnRoomPoint();
+                /* by kmhanko
                 while (true) {
                     room_point = map_admin.getRoomPoint();
                     if (isGoodSpawnPoint(room_point)) {
                         break;
                     }
                 }
+                */
                 map_enemy[i].setPosition(room_point.x + magnification / 2, room_point.y + magnification / 2);
 //                }
                 map_enemy[i].setExists(true);
@@ -598,7 +602,7 @@ public class MapObjectAdmin {
         return map_admin.detectWallDirection(x1, y1, x2, y2);
     }
 
-    private boolean isGoodSpawnPoint(Point _room_point) {
+    public boolean isGoodSpawnPoint(Point _room_point) {
         int spawn_x = _room_point.x + magnification / 2;
         int spawn_y = _room_point.y + magnification / 2;
         boolean wall_check_1 = detectWall(spawn_x, spawn_y, spawn_x + magnification, spawn_y) == 0;
@@ -608,7 +612,7 @@ public class MapObjectAdmin {
         return wall_check_1 && wall_check_2 && wall_check_3 && wall_check_4;// 至近距離に壁がない
     }
 
-    private boolean isGoodSpawnPoint(int _x, int _y) {
+    public boolean isGoodSpawnPoint(int _x, int _y) {
         int spawn_x = _x + magnification / 2;
         int spawn_y = _y + magnification / 2;
         boolean wall_check_1 = detectWall(spawn_x, spawn_y, spawn_x + magnification, spawn_y) == 0;
@@ -617,5 +621,93 @@ public class MapObjectAdmin {
         boolean wall_check_4 = detectWall(spawn_x, spawn_y, spawn_x, spawn_y - magnification) == 0;
         return wall_check_1 && wall_check_2 && wall_check_3 && wall_check_4;// 至近距離に壁がない
     }
+
+
+    public void release() {
+        System.out.println("takanoRelease : MapObjectAdmin");
+        if (map_player != null) {
+            map_player.release();
+            map_player = null;
+        }
+
+        if ( map_player_bitmap != null ) {
+            map_player_bitmap.release();
+            map_player_bitmap = null;
+        }
+        random = null;
+        if (map_trap != null) {
+            for (int i = 0; i < map_trap.length; i++) {
+                if (map_trap[i] != null) {
+                    map_trap[i].release();
+                }
+            }
+            map_trap = null;
+        }
+        if (map_trap_bitmap != null) {
+            for (int i = 0; i < map_trap_bitmap.length; i++) {
+                if (map_trap_bitmap[i] != null) {
+                    map_trap_bitmap[i].release();
+                }
+            }
+            map_trap_bitmap = null;
+        }
+        if (map_mine != null) {
+            for (int i = 0; i < map_mine.length; i++) {
+                if (map_mine[i] != null) {
+                    map_mine[i].release();
+                }
+            }
+            map_mine = null;
+        }
+
+        if (map_mine_bitmap != null) {
+            for (int i = 0; i < map_mine_bitmap.length; i++) {
+                if (map_mine_bitmap[i] != null) {
+                    map_mine_bitmap[i].release();
+                }
+            }
+            map_mine_bitmap = null;
+        }
+        if (map_boss != null) {
+            for (int i = 0; i < map_boss.length; i++) {
+                if (map_boss[i] != null) {
+                    map_boss[i].release();
+                }
+            }
+            map_boss = null;
+        }
+
+        if (map_boss_bitmap != null) {
+            for (int i = 0; i < map_boss_bitmap.length; i++) {
+                if (map_boss_bitmap[i] != null) {
+                    map_boss_bitmap[i].release();
+                }
+            }
+            map_boss_bitmap = null;
+        }
+        if (map_enemy != null) {
+            for (int i = 0; i < map_enemy.length; i++) {
+                if (map_enemy[i] != null) {
+                    map_enemy[i].release();
+                }
+            }
+            map_enemy = null;
+        }
+        if (map_enemy_bitmap != null) {
+            for (int i = 0; i < map_enemy_bitmap.length; i++) {
+                if (map_enemy_bitmap[i] != null) {
+                    map_enemy_bitmap[i].release();
+                }
+            }
+            map_enemy_bitmap = null;
+        }
+        if ( bag_item_admin != null) {
+            bag_item_admin.release();
+        }
+        bag_item_admin = null;
+        paint = null;
+
+    }
+
 
 }

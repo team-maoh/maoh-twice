@@ -34,4 +34,16 @@ public class ItemDataAdminManager {
         return geoObjectDataAdmin;
     }
 
+    public void release() {
+        System.out.println("takanoRelease : ItemDataAdminManager");
+        if (expendItemDataAdmin != null) {
+            expendItemDataAdmin.release();
+        }
+        if (geoObjectDataAdmin != null) {
+            geoObjectDataAdmin.release();
+        }
+        expendItemDataAdmin = null;
+        geoObjectDataAdmin = null;
+    }
+
 }

@@ -143,7 +143,12 @@ public class PlayerStatus {
     public int getEndingFlag() {return endingFlag;}
 
     public void setHP(int x) { hp = x; }
-    public void setNowHP(int x) { nowHp = x; }
+    public void setNowHP(int x) {
+        nowHp = x;
+        if (nowHp > hp) {
+            nowHp = hp;
+        }
+    }
     public void setAttack(int x) { attack = x; }
     public void setDefence(int x) { defence = x; }
     public void setLuck(int x) { luck = x; }
@@ -233,6 +238,9 @@ public class PlayerStatus {
     public void load() {
         playerStatusSaver.load();
     }
+
+
+    public void release() {}
 
 
 }

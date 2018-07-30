@@ -14,6 +14,7 @@ import android.graphics.Paint;
 import java.lang.Math;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by user on 2017/10/15.
@@ -23,6 +24,26 @@ public class MyAvail {
     static public void errorMes(Exception e) {
         StackTraceElement[] ste = e.getStackTrace();
         throw new Error(e.getClass().getName() + ": "+ e.getMessage() + "\tat "+ ste[ste.length-1]);
+    }
+
+    static public int[] shuffle(int num) {
+        int raw[] = new int[num];
+        Random rnd = new Random();
+
+        for (int i = 0; i < num ; i++) {
+            raw[i] = i;
+        }
+
+        int temp = 0, t = 0;
+        for (int i = num - 1; i > 0 ; i--) {
+            temp = rnd.nextInt(i);
+            t = raw[i];
+            raw[i] = raw[temp];
+            raw[temp] = t;
+        }
+
+        return raw;
+
     }
 
     static public double distance(int x1, int y1, int x2, int y2) {

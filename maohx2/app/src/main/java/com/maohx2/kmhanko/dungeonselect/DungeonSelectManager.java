@@ -17,6 +17,7 @@ import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
+import com.maohx2.kmhanko.geonode.GeoSlotAdmin;
 import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 
 import com.maohx2.ina.Constants.POPUP_WINDOW;
@@ -44,11 +45,13 @@ import android.content.Intent;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.maohx2.kmhanko.Talking.TalkAdmin;
 
 //TODO 指を離すと元に戻ってしまうので、どこを選択したのかわかりにくい。説明プレートを出せばわかるけど
 public class DungeonSelectManager {
     //DungeonSelectButtonAdmin dungeonSelectButtonAdmin;
     //LoopSelectButtonAdmin loopSelectButtonAdmin;
+
 
     static final float DUNGEON_SELECT_BUTTON_RATE_DEFAULT = 4.0f;
     static final float DUNGEON_SELECT_BUTTON_RATE_FEEDBACK = 5.0f;
@@ -102,10 +105,6 @@ public class DungeonSelectManager {
 
     int focusDungeonButtonID;
 
-    //SELECT_MODE selectMode = SELECT_MODE.DUNGEON_SELECT;
-
-    Paint paint = new Paint(); //TODO GeoMapとDungeonSelectの切り替え表示用。いつか消える
-
     PlayerStatus playerStatus;
 
    //WorldActivity worldActivity;
@@ -121,7 +120,9 @@ public class DungeonSelectManager {
     MapStatus mapStatus;
     MapStatusSaver mapStatusSaver;
 
-    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, ActivityChange _activityChange, SoundAdmin _soundAdmin, WorldActivity _worldActivity, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver) {
+    TalkAdmin talkAdmin;
+
+    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, ActivityChange _activityChange, SoundAdmin _soundAdmin, WorldActivity _worldActivity, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver, TalkAdmin _talkAdmin) {
         graphic = _graphic;
         userInterface = _userInterface;
         textBoxAdmin = _textBoxAdmin;
@@ -134,6 +135,7 @@ public class DungeonSelectManager {
         soundAdmin = _soundAdmin;
         mapStatus = _mapStatus;
         mapStatusSaver = _mapStatusSaver;
+        talkAdmin = _talkAdmin;
 
         worldActivity = _worldActivity;
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
@@ -165,6 +167,62 @@ public class DungeonSelectManager {
             worldModeAdmin.setMode(WORLD_MODE.ENDING);
         }
 
+
+        //各ダンジョン初クリア時のイベント発生。
+        //if (playerStatus.getClearCount() == 0) {
+            for (int i = Constants.STAGE_NUM - 1; i >= 0; i--) {
+                if (mapStatus.getMapClearStatus(i) == 1) {
+                    switch(i) {
+                        case 0:
+                            talkAdmin.start("ClearForest", false);
+                            break;
+                        case 1:
+                            talkAdmin.start("ClearLava", false);
+                            break;
+                        case 2:
+                            talkAdmin.start("ClearSea", false);
+                            break;
+                        case 3:
+                            talkAdmin.start("ClearChess", false);
+                            break;
+                        case 4:
+                            talkAdmin.start("ClearSwamp", false);
+                            break;
+                        case 5:
+                            talkAdmin.start("ClearHaunted", false);
+                            break;
+                        case 6:
+                            talkAdmin.start("ClearDragon", false);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        //}
+        //各種魔王討伐時のイベント発生。
+        switch(playerStatus.getMaohWinCount()) {
+            case 1:
+                talkAdmin.start("AfterMaoh001", false);
+                break;
+            case 3:
+                talkAdmin.start("AfterMaoh003", false);
+                break;
+            case 6:
+                talkAdmin.start("AfterMaoh006", false);
+                break;
+            case 8:
+                talkAdmin.start("AfterMaoh008", false);
+                break;
+            case 9:
+                talkAdmin.start("AfterMaoh009", false);
+                break;
+            case 10:
+                talkAdmin.start("AfterMaoh010", false);
+                break;
+        }
+
+
         //前ダンジョンクリアかつ魔王討伐回数＝Clear+1なら、Clearを+1
         boolean flag = true;
         for (int i = 0; i < Constants.STAGE_NUM; i++) {
@@ -187,6 +245,7 @@ public class DungeonSelectManager {
             }
             playerStatus.save();
         }
+
     }
 
     private void setDatabase(MyDatabaseAdmin databaseAdmin) {
@@ -575,10 +634,11 @@ public class DungeonSelectManager {
                 if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
                     soundAdmin.play("enter00");
                     geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
+                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
                     if (mapIconPlateGroup.getPlates(focusDungeonButtonID).getGeoEnterFlag()) {
-                        worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
+                        geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_NORMAL);
                     } else {
-                        worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SEE_ONLY_INIT);
+                        geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_SEE_ONLY);
                     }
                     initUIsFlag = true;
                 }
@@ -868,6 +928,44 @@ public class DungeonSelectManager {
                 });
         OkButtonGroup.setUpdateFlag(false);
         OkButtonGroup.setDrawFlag(false);
+    }
+
+    public void release() {
+        System.out.println("takanoRelease : DungeonSelectManager");
+        loopCountTextPaint = null;
+        enterTextPaint = null;
+        if (dungeonName != null) {
+            dungeonName.clear();
+            dungeonName = null;
+        }
+        if (dungeonNameExpress != null) {
+            dungeonNameExpress.clear();
+            dungeonNameExpress = null;
+        }
+        if (event != null) {
+            event.clear();
+            event = null;
+        }
+        if (mapIconPlateGroup != null) {
+            mapIconPlateGroup.release();
+            mapIconPlateGroup = null;
+        }
+        if (dungeonEnterSelectButtonGroup !=null ) {
+            dungeonEnterSelectButtonGroup.release();
+            dungeonEnterSelectButtonGroup = null;
+        }
+        if (maohEnterSelectButtonGroup != null) {
+            maohEnterSelectButtonGroup.release();
+            maohEnterSelectButtonGroup = null;
+        }
+        if (loopCountSelectButtonGroup != null) {
+            loopCountSelectButtonGroup.release();
+            loopCountSelectButtonGroup = null;
+        }
+        if (OkButtonGroup != null) {
+            OkButtonGroup.release();
+            OkButtonGroup = null;
+        }
     }
 
 

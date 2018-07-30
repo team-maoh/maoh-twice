@@ -145,10 +145,21 @@ public class PaletteElement {
         item_data = _item_data;
     }
 
-
+    //by kmhanko
+    public void setPosition(int _x, int _y, int _touch_id) {
+        x = _x;
+        y = _y;
+        touch_id = _touch_id;
+    }
 
     public ItemData getItemData(){return item_data;}
     public int getTouchID(){return touch_id;}
     public int getElementNum(){return element_num;}
 
+
+    public void release() {
+        System.out.println("takanoRelease : PaletteElement");
+        paint = null;
+        textPaint = null;
+    }
 }

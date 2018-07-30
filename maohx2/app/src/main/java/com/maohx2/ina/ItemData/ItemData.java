@@ -51,6 +51,14 @@ public abstract class ItemData {
         return 0;
     }
 
+    public void release() {
+        System.out.println("takanoRelease : ItemData");
+        image_name = null;
+        name = null;
+        item_kind = null;
+        item_image = null;
+    }
+
 }
 
 /*

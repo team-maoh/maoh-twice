@@ -12,13 +12,62 @@ public class ActivityChange {
     Activity currentActivity;
     BaseSurfaceView currentSurfaceView;
 
+    enum ActivityName {
+        None,
+        Start,
+        World,
+        Dungeon
+    }
+
+    ActivityName reserveActivityName = ActivityName.None;
+    Constants.DungeonKind.DUNGEON_KIND dungeon_kind;
+
+
     ActivityChange(BaseSurfaceView _currentSurfaceView, Activity _currentActivity){
 
         currentSurfaceView = _currentSurfaceView;
         currentActivity = _currentActivity;
     }
 
+    public void toStartActivity() {
+        reserveActivityName = ActivityName.Dungeon;
+    }
+    public void toWorldActivity() {
+        reserveActivityName = ActivityName.World;
+    }
+    public void toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND _dungeon_kind) {
+        reserveActivityName = ActivityName.Dungeon;
+        dungeon_kind = _dungeon_kind;
+    }
 
+
+    public void toChangeActivity() {
+        if (reserveActivityName == ActivityName.Start) {
+            currentSurfaceView.stopThread();
+            Intent intent = new Intent(currentActivity, StartActivity.class);
+            currentActivity.startActivity(intent);
+            currentActivity.finish();
+            reserveActivityName = ActivityName.None;
+        } else if (reserveActivityName == ActivityName.World) {
+            currentSurfaceView.stopThread();
+            Intent intent = new Intent(currentActivity, WorldActivity.class);
+            currentActivity.startActivity(intent);
+            currentActivity.finish();
+            reserveActivityName = ActivityName.None;
+        } else if (reserveActivityName == ActivityName.Dungeon) {
+            currentSurfaceView.stopThread();
+            Intent intent = new Intent(currentActivity, DungeonActivity.class);
+            intent.putExtra("DungeonKind", dungeon_kind);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            currentActivity.startActivity(intent);
+            currentActivity.finish();
+
+            reserveActivityName = ActivityName.None;
+        }
+    }
+
+
+/*
     public void toStartActivity() {
         currentSurfaceView.stopThread();
         Intent intent = new Intent(currentActivity, StartActivity.class);
@@ -48,6 +97,8 @@ public class ActivityChange {
         currentActivity.startActivity(intent);
         currentActivity.overridePendingTransition(0, 0);
     }
+    */
+
 }
 
 //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

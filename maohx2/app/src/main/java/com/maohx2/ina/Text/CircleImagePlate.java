@@ -56,6 +56,7 @@ public class CircleImagePlate extends CirclePlate {
     }
     @Override
     public void release() {
+        System.out.println("takanoRelease : CircleImagePlate");
         super.release();
         draw_image_context = null;
         default_image_context = null;

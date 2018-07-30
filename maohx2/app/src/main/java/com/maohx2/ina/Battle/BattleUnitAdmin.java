@@ -26,6 +26,7 @@ import com.maohx2.ina.ItemData.EquipmentItemBaseDataAdmin;
 import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.ItemData.EquipmentItemDataCreater;
 import com.maohx2.ina.UI.BattleUserInterface;
+import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatus;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 
@@ -128,6 +129,8 @@ public class BattleUnitAdmin {
     boolean resultOperatedFlag;//リザルト関係の処理を一度だけ呼ぶためのフラグ
     boolean battleEndFlag;//戦闘が終わったかどうか
 
+    InventryS expendInventry;
+
     //by kmhanko BattleUnitDataAdmin追加
     public void init(
             Graphic _graphic,
@@ -147,7 +150,8 @@ public class BattleUnitAdmin {
             MapStatusSaver _mapStatusSaver,
             DUNGEON_KIND _dungeonKind,
             DungeonMonsterDataAdmin _dungeonMonsterDataAdmin,
-            TalkAdmin _talkAdmin
+            TalkAdmin _talkAdmin,
+            InventryS _expendInventry
     ) {
         //引数の代入
         graphic = _graphic;
@@ -169,6 +173,8 @@ public class BattleUnitAdmin {
 
         dungeonMonsterDataAdmin = _dungeonMonsterDataAdmin;
         talkAdmin = _talkAdmin;
+
+        expendInventry = _expendInventry;
 
         textBoxAdmin = _textBoxAdmin;
         initResultTextBox();
@@ -233,6 +239,8 @@ public class BattleUnitAdmin {
         //プレイヤーデータのコンバート
         setPlayer(playerStatus);
 
+        palette_admin.setPalletPosition();
+
         //TODO タッチマーカー残骸を消す
 
         if (mode == MODE.BATTLE || mode == MODE.MAOH || mode == MODE.BOSS || mode == MODE.OPENING) {
@@ -249,7 +257,7 @@ public class BattleUnitAdmin {
             palette_admin.setPalettesFlags(new boolean[]{false, false, true});
             dropGeoObject.clear();
             spawnRock();
-            timeLimitBar.reset(30 * 60);
+            timeLimitBar.reset(30 * 30);
         }
 
         textBoxAdmin.resetTextBox(resultTextBoxID);
@@ -294,7 +302,8 @@ public class BattleUnitAdmin {
 
     public void setPlayer(PlayerStatus playerStatus) {
         playerStatus.calcStatus();
-        battle_units[0].setBattleUnitDataPlayer(playerStatus.makeBattleDungeonUnitData());//TODO なぜかコメントアウトされてた
+        battle_units[0].setBattleUnitDataPlayer(playerStatus.makeBattleDungeonUnitData());
+        battle_units[0].setHitPoint(playerStatus.getNowHP());
     }
 
     public void spawnEnemy(String[] monsters) {
@@ -343,7 +352,7 @@ public class BattleUnitAdmin {
 
         //岩に対応する敵を決定し、その対応する敵データからHPを決める
         for (int i = 0; i < r.nextInt(3) + 1; i++) {
-            setRockUnitData(battleUnitDataAdmin.getRandomBattleBaseUnitDataExceptBoss(dungeonMonsterDataAdmin));
+            setRockUnitData();
         }
     }
 
@@ -353,18 +362,19 @@ public class BattleUnitAdmin {
         }
     }
 
-    public int setRockUnitData(BattleBaseUnitData bBUD) {
+    public int setRockUnitData() {
         List<BattleBaseUnitData> battleBaseUnitData = battleUnitDataAdmin.getBattleBaseUnitDataExceptBoss(dungeonMonsterDataAdmin);
-        int maxMinParam[][] = new int[4][2];
+        BattleBaseUnitData bBUD = battleUnitDataAdmin.getRandomBattleBaseUnitDataExceptBoss(dungeonMonsterDataAdmin);
+        int maxMinParam[][] = new int[4][2];// 第二引数は0がMAX,1がMIN
 
-        for (int i = 1; i < battleBaseUnitData.size(); i++) {
+        for (int i = 0; i < battleBaseUnitData.size(); i++) {
             int tempParam[] = battleBaseUnitData.get(i).getStatus(repeat_count, 5.042);
             for (int j = 0; j < maxMinParam.length; j++) {
-                if (tempParam[j] * battleBaseUnitData.get(i).getPower() > maxMinParam[j][0]) {
-                    maxMinParam[j][0] = tempParam[j] * battleBaseUnitData.get(i).getPower();
+                if (tempParam[1+j] * battleBaseUnitData.get(i).getPower() > maxMinParam[j][0] || i == 0) {
+                    maxMinParam[j][0] = tempParam[1+j] * battleBaseUnitData.get(i).getPower();
                 }
-                if (tempParam[j] * battleBaseUnitData.get(i).getPower() < maxMinParam[j][1]) {
-                    maxMinParam[j][1] = tempParam[j] * battleBaseUnitData.get(i).getPower();
+                if (tempParam[1+j] * battleBaseUnitData.get(i).getPower() < maxMinParam[j][1] || i == 0) {
+                    maxMinParam[j][1] = tempParam[1+j] * battleBaseUnitData.get(i).getPower();
                 }
             }
         }
@@ -373,24 +383,24 @@ public class BattleUnitAdmin {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (!battle_units[i].isExist()) {
                 ((BattleEnemy) battle_units[i]).setBattleBaseUnitDataForRock(bBUD);
-                getDropGeoBefore(battle_units[i]);
+                int dropGeoNum = getDropGeoBefore(battle_units[i]);
                 float rareRate = 0.0f;
-                switch (dropGeoObjectKind.get(i - 1)) {
+                switch (dropGeoObjectKind.get(dropGeoNum)) {
                     case HP:
                     case HP_RATE:
-                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[0][1]) / (float) (maxMinParam[0][0] - maxMinParam[0][1]);
+                        rareRate = (float) (dropGeoObject.get(dropGeoNum) - maxMinParam[0][1]) / (float) (maxMinParam[0][0] - maxMinParam[0][1]);
                         break;
                     case ATTACK:
                     case ATTACK_RATE:
-                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[1][1]) / (float) (maxMinParam[1][0] - maxMinParam[1][1]);
+                        rareRate = (float) (dropGeoObject.get(dropGeoNum) - maxMinParam[1][1]) / (float) (maxMinParam[1][0] - maxMinParam[1][1]);
                         break;
                     case DEFENCE:
                     case DEFENCE_RATE:
-                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[2][1]) / (float) (maxMinParam[2][0] - maxMinParam[2][1]);
+                        rareRate = (float) (dropGeoObject.get(dropGeoNum) - maxMinParam[2][1]) / (float) (maxMinParam[2][0] - maxMinParam[2][1]);
                         break;
                     case LUCK:
                     case LUCK_RATE:
-                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[3][1]) / (float) (maxMinParam[3][0] - maxMinParam[3][1]);
+                        rareRate = (float) (dropGeoObject.get(dropGeoNum) - maxMinParam[3][1]) / (float) (maxMinParam[3][0] - maxMinParam[3][1]);
                         break;
                 }
                 int hp = bBUD.getStatus(repeat_count, 5.042)[1];
@@ -679,6 +689,18 @@ public class BattleUnitAdmin {
                 }
             }
 
+            //ポーションなどの使用の処理
+            if (palette_admin.checkSelectedExpendItemData() != null) {
+                int heel_to_player = (int) (battle_units[0].getMaxHitPoint() * palette_admin.checkSelectedExpendItemData().getHp() / 100.0f);
+                palette_admin.deleteExpendItemData();
+                soundAdmin.play("cure00");
+                int new_hp = heel_to_player + battle_units[0].getHitPoint();
+                if (new_hp > battle_units[0].getMaxHitPoint()) {
+                    new_hp = battle_units[0].getMaxHitPoint();
+                }
+                battle_units[0].setHitPoint(new_hp);
+            }
+
             //敵の更新と攻撃処理
             for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
                 if (battle_units[i].isExist() == true) {
@@ -690,11 +712,14 @@ public class BattleUnitAdmin {
                             damage_rate = (1 - (float) defense_equipment.getDefence() / 100.0f);
                         }
 
+                        /*
                         int heel_to_player = 0;
                         if (palette_admin.checkSelectedExpendItemData() != null) {
                             heel_to_player = (int)(battle_units[0].getMaxHitPoint() * palette_admin.checkSelectedExpendItemData().getHp() / 100.0f);
                             palette_admin.deleteExpendItemData();
+                            soundAdmin.play("cure00");
                         }
+                        */
 /*
                         int new_hp = battle_units[0].getHitPoint() - (int) ((damage_to_player/(battle_units[0].getDefence()*battle_units[0].getDefence()*battle_units[0].getDefence())) * damage_rate) + heel_to_player;
                         if (new_hp > battle_units[0].getMaxHitPoint()) {
@@ -719,7 +744,8 @@ public class BattleUnitAdmin {
                         level_rate = Math.pow(level_rate, 0.4);//0.4だと、自他のStatusが定数倍になっても、敵を倒すための確定数はほぼ変化しない
 //                        System.out.println("level_pl_2_" + level_rate);
 
-                        int new_hp = battle_units[0].getHitPoint() - (int) ((133.0 * strong_ratio) * level_rate * damage_rate + heel_to_player);
+                        int new_hp = battle_units[0].getHitPoint() - (int) ((133.0 * strong_ratio) * level_rate * damage_rate);
+                        //int new_hp = battle_units[0].getHitPoint() - (int) ((133.0 * strong_ratio) * level_rate * damage_rate - heel_to_player);
 //                        int new_hp = battle_units[0].getHitPoint() - (int) ((real_atk * exp * 0.295 / (real_def + 1) * damage_rate) + heel_to_player);
 
 //                        System.out.println("strong_ratio_pl" + strong_ratio);
@@ -916,7 +942,7 @@ public class BattleUnitAdmin {
     List<Integer> dropGeoObject = new ArrayList<>();
     List<Constants.Item.GEO_KIND_ALL> dropGeoObjectKind = new ArrayList<>();
 
-    private void getDropGeoBefore(BattleUnit tempBattleUnit) {
+    private int getDropGeoBefore(BattleUnit tempBattleUnit) {
         //岩からのジオドロップ
         BattleBaseUnitData bBUDforRock = ((BattleEnemy) tempBattleUnit).getBattleBaseUnitDataForRock();
         int[] status = bBUDforRock.getStatus(repeat_count, 5.042);
@@ -964,6 +990,7 @@ public class BattleUnitAdmin {
                     break;
             }
         }
+        return dropGeoObject.size() - 1;
     }
 
     private void getDropGeoAfter() {
@@ -1172,6 +1199,8 @@ public class BattleUnitAdmin {
     public void battleEnd() {
         deleteEnemy();
         playerStatus.setNowHP(battle_units[0].getHitPoint());
+        expendInventry.save();
+
 
         if (winFlag) {
             switch (mode) {

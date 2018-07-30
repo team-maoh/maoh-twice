@@ -121,8 +121,8 @@ public class WorldGameSystem {
     BitmapData tu_equip_img;
     BitmapData[] credit = new BitmapData[2];
 
-    String talkContent[][] = new String[100][];
-    ImageContext talkChara[] = new ImageContext[100];
+    //String talkContent[][] = new String[100][];
+    //ImageContext talkChara[] = new ImageContext[100];
 
     MapStatus map_status;
     MapStatusSaver map_status_saver;
@@ -167,7 +167,6 @@ public class WorldGameSystem {
         GlobalData globalData = (GlobalData) worldActivity.getApplication();
         playerStatus = globalData.getPlayerStatus();
         maohMenosStatus = globalData.getMaohMenosStatus();
-        //GeoInventry = globalData.getGeoInventry();
         musicAdmin = globalData.getMusicAdmin();
 
         playerStatusViewer = new PlayerStatusViewer(graphic, world_user_interface, playerStatus);
@@ -198,7 +197,7 @@ public class WorldGameSystem {
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin);
 
 
-        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, activityChange, soundAdmin, worldActivity, map_status,map_status_saver);
+        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, activityChange, soundAdmin, worldActivity, map_status,map_status_saver, talkAdmin);
 
         geoSlotAdminManager.loadGeoSlot();
 
@@ -223,10 +222,7 @@ public class WorldGameSystem {
         }
         */
 
-
         credits = new Credits(graphic);
-
-
 
         geoPresentManager = new GeoPresentManager(
                 graphic,
@@ -277,9 +273,8 @@ public class WorldGameSystem {
         //talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される
 
 
-
         /*
-        battleUnitDataAdmin = new BattleUnitDataAdmin(databaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
+        battleUnitDataAdmin = new BattleUnitDataAdmin(databaseAdmin, graphic);
         battleUnitDataAdmin.loadBattleUnitData(Constants.DungeonKind.DUNGEON_KIND.FOREST);//敵読み込み
 
         //ブキ生成 デバッグよう
@@ -318,9 +313,11 @@ public class WorldGameSystem {
         );//kokomade
         */
     }
-
-
+    ;
     public void update() {
+        if (updateStopFlag) {
+            return;
+        }
 /*
         if (world_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN) {
             List<BitmapData> testBitmapData = new ArrayList<BitmapData>();
@@ -412,6 +409,7 @@ public class WorldGameSystem {
                     itemSell.update();
                 }
                 break;
+                /*
             case GEO_MAP_SEE_ONLY_INIT:
                 initBackPlate();
                 geoSlotAdminManager.start();
@@ -419,6 +417,7 @@ public class WorldGameSystem {
             case GEO_MAP_SEE_ONLY:
                 geoSlotAdminManager.updateInStatus();
                 break;
+                */
             case CREDIT:
                 backPlateGroup.update();
                 if(world_user_interface.getTouchState() == Constants.Touch.TouchState.UP){
@@ -434,10 +433,15 @@ public class WorldGameSystem {
             default:
                 break;
         }
+        if (updateStopFlag) {
+            return;
+        }
         talkAdmin.update();
         text_box_admin.update();
         effectAdmin.update();
         //musicAdmin.update();
+
+        activityChange.toChangeActivity();
     }
 
 
@@ -511,12 +515,14 @@ public class WorldGameSystem {
                 itemSell.draw();
                 playerStatusViewer.draw();
                 break;
+                /*
             case GEO_MAP_SEE_ONLY:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 effectAdmin.draw();
                 geoSlotAdminManager.drawInStatus();
                 playerStatusViewer.draw();
                 break;
+                */
             case CREDIT:
                 graphic.bookingDrawBitmapData(credit[credit_num - 1], 0, 0, 1.25f, 1.25f, 0, 255, true);
                 backPlateGroup.draw();
@@ -532,17 +538,23 @@ public class WorldGameSystem {
         text_box_admin.draw();
 
         //GEOMAPでは諸事情により、エフェクトを背後に描画したいため
-        if (worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP && worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP_SEE_ONLY) {
+        if (worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP) {
             effectAdmin.draw();
         }
 
         graphic.draw();
     }
 
+    boolean updateStopFlag = false;
+    public void updateStop() {
+        updateStopFlag = true;
+    }
+
     boolean drawStopFlag = false;
     public void drawStop() {
         drawStopFlag = true;
     }
+
 
     //TODO 仮。もどるボタン
     PlateGroup<BackPlate> backPlateGroup;
@@ -572,7 +584,68 @@ public class WorldGameSystem {
     }
 
     public void release() {
-        playerStatusViewer.release();
+        System.out.println("takanoRelease : WorldGameSystem");
+        if (palette_admin != null) {
+            palette_admin.release();
+        }
+        if (world_user_interface != null) {
+            world_user_interface.release();
+        }
+
+        if (map_status != null) {
+            map_status.release();
+        }
+        if (map_status_saver != null) {
+            map_status_saver.release();
+        }
+        if (playerStatusViewer != null) {
+            playerStatusViewer.release();
+        }
+        if (worldModeAdmin != null) {
+            worldModeAdmin.release();
+        }
+        if (text_box_admin != null) {
+            text_box_admin.release();
+        }
+        if (talkAdmin != null) {
+            talkAdmin.release();
+        }
+        if (itemDataAdminManager != null) {
+            itemDataAdminManager.release();
+        }
+        if (itemShopAdmin != null) {
+            itemShopAdmin.release();
+        }
+        if (effectAdmin != null) {
+            effectAdmin.release();
+        }
+        if (geoSlotSaver != null) {
+            geoSlotSaver.release();
+        }
+        if (geoSlotAdminManager != null) {
+            geoSlotAdminManager.release();
+        }
+        if (dungeonSelectManager != null) {
+            dungeonSelectManager.release();
+        }
+        if (itemSell != null) {
+            itemSell.release();
+        }
+        if (geoPresentManager != null) {
+            geoPresentManager.release();
+        }
+        if (geoPresentSaver != null) {
+            geoPresentSaver.release();
+        }
+        if (equipment_item_data_admin != null) {
+            equipment_item_data_admin.release();
+        }
+        if (backPlateGroup != null) {
+            backPlateGroup.release();
+            backPlateGroup = null;
+        }
+        credit = null;
+        System.gc();
     }
 
 /*

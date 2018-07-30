@@ -50,4 +50,17 @@ public class DungeonDataAdmin {
     public List<DungeonData> getDungeon_data(){
         return dungeon_data;
     }
+
+    public void release() {
+        System.out.println("takanoRelease : DungeonDataAdmin");
+        if ( dungeon_data != null) {
+            for (int i = 0; i < dungeon_data.size(); i++) {
+                if (dungeon_data.get(i) != null) {
+                    dungeon_data.get(i).release();
+                }
+            }
+            dungeon_data.clear();
+            dungeon_data = null;
+        }
+    }
 }

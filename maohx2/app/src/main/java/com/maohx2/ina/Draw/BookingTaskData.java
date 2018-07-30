@@ -20,6 +20,8 @@ public abstract class BookingTaskData{
     public abstract void draw(Canvas canvas);
 
     public void release() {
+
+        System.out.println("takanoRelease : BookingTaskData");
         paint = null;
     }
 

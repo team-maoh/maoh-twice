@@ -65,7 +65,7 @@ public class DungeonGameSystem {
     Paint paint;
     BattleUnitAdmin battle_unit_admin;
     TextBoxAdmin text_box_admin;
-    ListBoxAdmin list_box_admin;
+    //ListBoxAdmin list_box_admin;
     DungeonDataAdmin dungeon_data_admin;
     Camera camera;
     Point map_size = new Point(0, 0);//カメラのインスタンス化に必要
@@ -101,8 +101,8 @@ public class DungeonGameSystem {
     MusicAdmin musicAdmin;
     SoundAdmin soundAdmin;
 
-    GeoSlotSaver geoSlotSaver;
-    GeoSlotAdminManager geoSlotAdminManager;
+    //GeoSlotSaver geoSlotSaver;
+    //GeoSlotAdminManager geoSlotAdminManager;
 
     Constants.DungeonKind.DUNGEON_KIND dungeon_kind;
 
@@ -125,9 +125,9 @@ public class DungeonGameSystem {
 
         battle_unit_admin = new BattleUnitAdmin();
         text_box_admin = new TextBoxAdmin(graphic, soundAdmin);
-        list_box_admin = new ListBoxAdmin();
+        //list_box_admin = new ListBoxAdmin();
         text_box_admin.init(dungeon_user_interface);
-        list_box_admin.init(dungeon_user_interface, graphic);
+        //list_box_admin.init(dungeon_user_interface, graphic);
 
         talkAdmin = new TalkAdmin(graphic, dungeon_user_interface, _myDatabaseAdmin, text_box_admin , soundAdmin);
 
@@ -268,15 +268,18 @@ public class DungeonGameSystem {
                 map_status_saver,
                 dungeon_kind,
                 dungeonMonsterDataAdmin,
-                talkAdmin
+                talkAdmin,
+                expendInventry
         );
 
         backGround = graphic.searchBitmap("firstBackground");
 
 
+        /*
         geoSlotSaver = new GeoSlotSaver(my_database_admin, "GeoSlotSave", "GeoSlotSave.db", Constants.SaveDataVersion.GEO_SLOT, Constants.DEBUG_SAVE_MODE, graphic);
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, dungeon_user_interface, my_database_admin, text_box_admin, playerStatus, globalData.getGeoInventry(), geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin, dungeonModeManage);
         geoSlotAdminManager.loadGeoSlot();
+        */
 
         dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
 
@@ -335,6 +338,10 @@ public class DungeonGameSystem {
 
 
     public void update() {
+        if (updateStopFlag) {
+            return;
+        }
+
         switch (dungeonModeManage.getMode()) {
             case MAP_INIT:
                 playMapBGM();
@@ -369,6 +376,8 @@ public class DungeonGameSystem {
                 break;
 
             case MAOH_INIT:
+                playerStatus.calcStatus();
+                playerStatus.setNowHP(playerStatus.getHP());
                 battle_unit_admin.reset(BattleUnitAdmin.MODE.MAOH);
                 int size = battleUnitDataAdmin.getMaohUnitNames().size();
                 battle_unit_admin.spawnMaoh(
@@ -406,6 +415,8 @@ public class DungeonGameSystem {
 
             case EQUIP_EXPEND_INIT:
                 initBackPlate();
+                palette_admin.setPalletPosition(0, 1400, 450);
+                palette_admin.setPalletPosition(1, 200, 450);
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.EQUIP_EXPEND);
 
             case EQUIP_EXPEND:
@@ -413,24 +424,46 @@ public class DungeonGameSystem {
                     //equipmentInventry.updata();
                     //expendInventry.updata();
                     //palette_admin.update(false);
+                    palette_admin.update(true);//便宜上
+
+                    //TODO by kmhanko あまり良くない書き方
+                    if (palette_admin.checkSelectedExpendItemData() != null) {
+                        int heel_to_player = (int) (playerStatus.getHP() * palette_admin.checkSelectedExpendItemData().getHp() / 100.0f);
+                        palette_admin.deleteExpendItemData();
+                        soundAdmin.play("cure00");
+                        playerStatus.setNowHP(playerStatus.getNowHP() + heel_to_player);
+                        expendInventry.save();
+                    }
+
                     backPlateGroup.update();
                 }
                 break;
             case GEO_MAP_INIT:
                 initBackPlate();
-                geoSlotAdminManager.start();
+                //geoSlotAdminManager.start();
+                //geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.DUNGEON);
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP);
             case GEO_MAP:
+                effectAdmin.draw();
                 if (!talkAdmin.isTalking()) {
-                    geoSlotAdminManager.updateInStatus();
+                    //geoSlotAdminManager.update();
                 }
                 break;
 
         }
+        if (updateStopFlag) {
+            return;
+        }
+
         talkAdmin.update();
         text_box_admin.update();
-        effectAdmin.update();
+        //GEOMAPでは諸事情により、エフェクトを背後に描画したいため
+        if (dungeonModeManage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP) {
+            effectAdmin.update();
+        }
         //musicAdmin.update();
+
+        activityChange.toChangeActivity();
     }
 
     public void draw() {
@@ -461,20 +494,27 @@ public class DungeonGameSystem {
                 break;
 
             case EQUIP_EXPEND_INIT:
+                map_admin.drawMap_for_autotile_light_animation();
+                map_object_admin.draw();
+                map_plate_admin.draw();
+                palette_admin.drawOnly();
+                playerStatusViewer.draw();
                 break;
 
             case EQUIP_EXPEND:
+                map_admin.drawMap_for_autotile_light_animation();
+                map_object_admin.draw();
+                map_plate_admin.draw();
                 //equipmentInventry.drawOnly();
                 //expendInventry.drawOnly();
-                palette_admin.drawOnly();
                 //dungeon_user_interface.draw();
+                palette_admin.draw();
                 backPlateGroup.draw();
-                //backPlateGroup.draw();
                 playerStatusViewer.draw();
                 break;
 
             case GEO_MAP:
-                geoSlotAdminManager.drawInStatus();
+                //geoSlotAdminManager.draw();
                 playerStatusViewer.draw();
                 break;
 
@@ -489,6 +529,11 @@ public class DungeonGameSystem {
             resetBossImage = false;
             map_object_admin.setBossBitmap("ボス");
         }
+    }
+
+    boolean updateStopFlag = false;
+    public void updateStop() {
+        updateStopFlag = true;
     }
 
     boolean drawStopFlag = false;
@@ -540,9 +585,76 @@ public class DungeonGameSystem {
     }
 
     public void release() {
-        map_admin.release();
-        dungeonMonsterDataAdmin.release();
-//        battle_unit_admin.release();
+        System.out.println("takanoRelease : DungeonGameSystem");
+        if (map_admin != null) {
+            map_admin.release();
+        }
+        if (dungeonMonsterDataAdmin != null) {
+            dungeonMonsterDataAdmin.release();
+        }
+        if (battle_unit_admin != null) {
+            battle_unit_admin.release();
+        }
+        if (palette_admin != null) {
+            palette_admin.release();
+        }
+        if (map_object_admin != null) {
+            map_object_admin.release();
+        }
+        if (dungeon_user_interface != null) {
+            dungeon_user_interface.release();
+        }
+        if (battle_user_interface != null) {
+            battle_user_interface.release();
+        }
+        if (text_box_admin != null) {
+            text_box_admin.release();
+        }
+        if (dungeon_data_admin != null) {
+            dungeon_data_admin.release();
+        }
+        if (talkAdmin != null) {
+            talkAdmin.release();
+        }
+        if (effectAdmin != null) {
+            effectAdmin.release();
+        }
+        //dungeonModeManage
+        if (map_plate_admin != null) {
+            map_plate_admin.release();
+        }
+        //map_inventry_admin
+        if (map_status != null) {
+            map_status.release();
+        }
+        if (map_status_saver != null) {
+            map_status_saver.release();
+        }
+        if (paint != null) {
+            paint.reset();
+            paint = null;
+        }
+        if (equipment_item_data_admin != null) {
+            equipment_item_data_admin.release();
+        }
+        if (miningItemDataAdmin != null) {
+            miningItemDataAdmin.release();
+        }
+        if (playerStatusViewer != null) {
+            playerStatusViewer.release();
+        }
+        /*
+        if (geoSlotSaver != null) {
+            geoSlotSaver.release();
+        }
+        if (geoSlotAdminManager != null) {
+            geoSlotAdminManager.release();
+        }
+        */
+        if (dungeonModeManage != null) {
+            dungeonModeManage.release();
+        }
+        System.gc();
     }
 
 

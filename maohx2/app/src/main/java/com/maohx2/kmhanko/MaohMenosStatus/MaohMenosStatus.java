@@ -52,4 +52,6 @@ public class MaohMenosStatus {
         return geoLuck;
     }
 
+    public void release() {}
+
 }
