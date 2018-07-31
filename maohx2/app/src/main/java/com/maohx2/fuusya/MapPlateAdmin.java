@@ -255,7 +255,7 @@ public class MapPlateAdmin {
 
         drawTutorialImage();
 
-        if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+2) {
+        if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+4) {
             drawFloorAndHP();
         }
 
@@ -342,20 +342,20 @@ public class MapPlateAdmin {
         if (playerStatus.getTutorialInDungeon() == 0) {
             BitmapData tutorial_bitmap;
             if(i_of_tutorial_bitmap == 0){
-                tutorial_bitmap = graphic.searchBitmap("t_dungeon_init");
+                tutorial_bitmap = graphic.searchBitmap("t_dungeon_start");
             }
-            if(i_of_tutorial_bitmap <= NUM_OF_TUTORIAL_BITMAP) {
+            else if(i_of_tutorial_bitmap <= NUM_OF_TUTORIAL_BITMAP) {
                 String bitmap_name = tutorial_name + String.valueOf(i_of_tutorial_bitmap);
                 tutorial_bitmap = graphic.searchBitmap(bitmap_name);
             }
             else if(i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+1){
-                tutorial_bitmap = graphic.searchBitmap("t_battle_init");
+                tutorial_bitmap = graphic.searchBitmap("t_battle_start");
             }
             else if(i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+2) {
                 tutorial_bitmap = graphic.searchBitmap("t_battle");
             }
             else if(i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+3) {
-                tutorial_bitmap = graphic.searchBitmap("t_mine_init");
+                tutorial_bitmap = graphic.searchBitmap("t_mine_start");
             }
             else if(i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+4) {
                 tutorial_bitmap = graphic.searchBitmap("t_mine");
@@ -379,7 +379,7 @@ public class MapPlateAdmin {
             if (touch_state == Constants.Touch.TouchState.UP) {
                 i_of_tutorial_bitmap++;
 
-                if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+2){
+                if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+4){
                     playerStatus.setTutorialInDungeon(1);
                     playerStatusSaver.save();
                 }

@@ -121,10 +121,12 @@ public class WorldGameSystem {
     InventryS equipmentInventry;
 
     BitmapData backGround;
-    BitmapData tu_equip_img;
-    BitmapData tu_shop_img;
+    BitmapData tu_equip_img, tu_equip_start_img;
+    BitmapData tu_shop_img, tu_shop_start_img;
     BitmapData tu_sell_img;
-    BitmapData tu_geo_img;
+    BitmapData tu_geo_img, tu_geo_start_img;
+    int tu_geo_flag, tu_shop_flag, tu_equip_flag;
+
     BitmapData[] credit = new BitmapData[2];
 
     //String talkContent[][] = new String[100][];
@@ -157,6 +159,9 @@ public class WorldGameSystem {
         tu_shop_img = graphic.searchBitmap("t_shop");
         tu_sell_img = graphic.searchBitmap("t_sell");
         tu_geo_img = graphic.searchBitmap("t_geo");
+        tu_geo_start_img = graphic.searchBitmap("t_geo_start");
+        tu_shop_start_img = graphic.searchBitmap("t_shop_start");
+        tu_equip_start_img = graphic.searchBitmap("t_equip_start");
 
         //mapセーブ関係
         map_status = new MapStatus(Constants.STAGE_NUM);
@@ -378,7 +383,10 @@ public class WorldGameSystem {
                 }
                 break;
             case TU_GEO:
-                if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
+                if(world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_geo_flag == 0) {
+                    tu_geo_flag = 1;
+                }
+                else if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_geo_flag == 1) {
                     worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT_INIT);
                     tutorial_flag_saver.save();
                 }
@@ -410,7 +418,10 @@ public class WorldGameSystem {
                 }
                 break;
             case TU_SHOP:
-                if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
+                if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_shop_flag == 0) {
+                    tu_shop_flag = 1;
+                }
+                else if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_shop_flag == 1) {
                     worldModeAdmin.setMode(WORLD_MODE.SHOP_INIT);
                     tutorial_flag_saver.save();
                 }
@@ -442,7 +453,10 @@ public class WorldGameSystem {
                 }
                 break;
             case TU_EQUIP:
-                if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
+                if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_equip_flag == 0) {
+                    tu_equip_flag = 1;
+                }
+                else if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_equip_flag == 1) {
                     worldModeAdmin.setMode(WORLD_MODE.EQUIP_INIT);
                     tutorial_flag_saver.save();
                 }
@@ -534,7 +548,12 @@ public class WorldGameSystem {
                 playerStatusViewer.draw();
                 break;
             case TU_GEO:
-                graphic.bookingDrawBitmapData(tu_geo_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
+                if(tu_geo_flag == 0) {
+                    graphic.bookingDrawBitmapData(tu_geo_start_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
+                }
+                else{
+                    graphic.bookingDrawBitmapData(tu_geo_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
+                }
                 break;
             case SHOP_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
@@ -545,7 +564,12 @@ public class WorldGameSystem {
                 playerStatusViewer.draw();
                 break;
             case TU_SHOP:
-                graphic.bookingDrawBitmapData(tu_shop_img, 0, 0, 0.983f, 0.983f, 0, 254, true);
+                if(tu_shop_flag == 0) {
+                    graphic.bookingDrawBitmapData(tu_shop_start_img, 0, 0, 0.983f, 0.983f, 0, 254, true);
+                }
+                else{
+                    graphic.bookingDrawBitmapData(tu_shop_img, 0, 0, 0.983f, 0.983f, 0, 254, true);
+                }
                 break;
             case TU_SELL:
                 graphic.bookingDrawBitmapData(tu_sell_img, 0, 0, 0.983f, 0.983f, 0, 254, true);
@@ -554,8 +578,12 @@ public class WorldGameSystem {
                 graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 break;
             case TU_EQUIP:
-//                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
-                graphic.bookingDrawBitmapData(tu_equip_img, 0, 0, 0.983f, 0.983f, 0, 254, true);
+                if(tu_equip_flag == 0) {
+                    graphic.bookingDrawBitmapData(tu_equip_start_img, 0, 0, 0.983f, 0.983f, 0, 254, true);
+                }
+                else{
+                    graphic.bookingDrawBitmapData(tu_equip_img, 0, 0, 0.983f, 0.983f, 0, 254, true);
+                }
                 break;
             case EQUIP:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
