@@ -148,7 +148,7 @@ public class MapPlateAdmin {
 //                //↑　HPバー
 //                new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_LEFT, hp_top + HP_HEIGHT, HP_BG_RIGHT, HP_BG_BOTTOM}, " ", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_LEFT, hp_top, HP_LEFT, hp_top + HP_HEIGHT}, " ", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_RIGHT, hp_top, HP_RIGHT, hp_top + HP_HEIGHT}, " ", text_paint)});
 
-        i_of_tutorial_bitmap = 1;
+        i_of_tutorial_bitmap = 0;
 
         max_hp = playerStatus.getHP();
         blue_paint.setColor(Color.BLUE);
@@ -341,14 +341,23 @@ public class MapPlateAdmin {
 
         if (playerStatus.getTutorialInDungeon() == 0) {
             BitmapData tutorial_bitmap;
+            if(i_of_tutorial_bitmap == 0){
+                tutorial_bitmap = graphic.searchBitmap("t_dungeon_init");
+            }
             if(i_of_tutorial_bitmap <= NUM_OF_TUTORIAL_BITMAP) {
                 String bitmap_name = tutorial_name + String.valueOf(i_of_tutorial_bitmap);
                 tutorial_bitmap = graphic.searchBitmap(bitmap_name);
             }
             else if(i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+1){
-                tutorial_bitmap = graphic.searchBitmap("t_battle");
+                tutorial_bitmap = graphic.searchBitmap("t_battle_init");
             }
             else if(i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+2) {
+                tutorial_bitmap = graphic.searchBitmap("t_battle");
+            }
+            else if(i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+3) {
+                tutorial_bitmap = graphic.searchBitmap("t_mine_init");
+            }
+            else if(i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+4) {
                 tutorial_bitmap = graphic.searchBitmap("t_mine");
             }
             else{
@@ -358,10 +367,10 @@ public class MapPlateAdmin {
             if (tutorial_bitmap != null && i_of_tutorial_bitmap <= NUM_OF_TUTORIAL_BITMAP) {
                 graphic.bookingDrawBitmapData(tutorial_bitmap, 0, 0, 1, 1, 0, 255, true);
             }
-            else if (tutorial_bitmap != null && i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+1) {
+            else if (tutorial_bitmap != null && (i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+1 || i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+2)) {
                 graphic.bookingDrawBitmapData(tutorial_bitmap, 0, -1, 0.983f, 0.983f, 0, 255, true);
             }
-            else if (tutorial_bitmap != null && i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+2) {
+            else if (tutorial_bitmap != null && (i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+3 || i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+4)) {
                 graphic.bookingDrawBitmapData(tutorial_bitmap, 0, 0, 0.983f, 0.983f, 0, 255, true);
             }
 
