@@ -25,7 +25,8 @@ public class PlayerStatusViewer {
     static final int TEXT_X_OFFSET_LEFT2 = 125;
 
     static final float TEXT_SIZE_RATE= 0.6f;
-    static final float EXPRESS_RATE = 222.0f;
+    static final float EXPRESS_RATE = 222.22f;
+    static final float EXPRESS_RATE2 = 222.2f;
 
 
     int posX1;
@@ -113,7 +114,7 @@ public class PlayerStatusViewer {
                                             break;
                                         case 2:
                                             statusName = "Def";
-                                            statusFigure = String.format("%.1f",playerStatus.getDefence()/EXPRESS_RATE);
+                                            statusFigure = String.format("%.1f",playerStatus.getDefence()/EXPRESS_RATE2);
                                             paint.setARGB(255,128,128,255);
                                             break;
                                         case 3:
