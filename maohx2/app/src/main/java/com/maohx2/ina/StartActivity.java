@@ -213,7 +213,7 @@ class StartSurfaceView extends BaseSurfaceView {
         openingFlag = !talkSaveDataAdmin.getTalkFlagByName("Opening_in_dungeon"); //openingFlag = true ならOpeningを実行
 
         //デバッグ用
-        openingFlag = false;
+        //openingFlag = false;
 
 
         //todo:こいつは一番下
@@ -242,7 +242,7 @@ class StartSurfaceView extends BaseSurfaceView {
        }
         touchWaitcount++;
 
-       //デバッグ用OP切り替えは176行目へ移動した
+       //デバッグ用OP切り替えは216行目へ移動した
 
         switch (downCount) {
             case 0:

@@ -406,7 +406,7 @@ public class BattleUnitAdmin {
                 int hp = bBUD.getStatus(repeat_count, 5.042)[1];
                 int attack = bBUD.getStatus(repeat_count, 5.042)[2];
                 int defence = bBUD.getStatus(repeat_count, 5.042)[3];
-                BattleBaseUnitData tempBBUD = BattleRockCreater.getBattleBaseUnitData(hp * bBUD.getPower(), attack, defence, rareRate);//ダメージ計算上で攻撃力が必要
+                BattleBaseUnitData tempBBUD = BattleRockCreater.getBattleBaseUnitData(hp, attack, defence, rareRate);//ダメージ計算上で攻撃力が必要
                 battle_units[i].setBattleUnitDataRock(tempBBUD, repeat_count);
                 return i;
             }
@@ -720,11 +720,13 @@ public class BattleUnitAdmin {
                             soundAdmin.play("cure00");
                         }
                         */
-/*
+
+                        /*
                         int new_hp = battle_units[0].getHitPoint() - (int) ((damage_to_player/(battle_units[0].getDefence()*battle_units[0].getDefence()*battle_units[0].getDefence())) * damage_rate) + heel_to_player;
                         if (new_hp > battle_units[0].getMaxHitPoint()) {
                             new_hp = battle_units[0].getMaxHitPoint();
-                        }*/
+                        }
+                        */
 
 
                         double strong_ratio = (damage_to_player * 2222.0) / (battle_units[0].getDefence() * 1000.0 + 1.0);
