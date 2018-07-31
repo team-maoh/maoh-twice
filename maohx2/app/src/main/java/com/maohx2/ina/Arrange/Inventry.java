@@ -240,14 +240,11 @@ public class Inventry {
             for (i = 0; i < INVENTRY_DATA_MAX; i++) {
                 if (inventry_datas[i].getItemNum() == 0) {
                     inventry_datas[i].setItemData(_item_data);
-                    inventry_datas[i].setItemNum(1);
+                    inventry_datas[i].setItemNum(num);
                     if (i < contentNum) {
                         operate_inventry_list_box.getPlate(i).changeInventryData();
                     }
-                    num--;
-                    if (num <= 0) {
-                        break;
-                    }
+                    break;
                 }
             }
         }
