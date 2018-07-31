@@ -5,8 +5,8 @@ import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
-import com.maohx2.horie.EquipTutorial.EquipTutorialSaveData;
-import com.maohx2.horie.EquipTutorial.EquipTutorialSaver;
+//import com.maohx2.horie.EquipTutorial.EquipTutorialSaveData;
+//import com.maohx2.horie.EquipTutorial.EquipTutorialSaver;
 import com.maohx2.horie.Tutorial.TutorialFlagData;
 import com.maohx2.horie.Tutorial.TutorialFlagSaver;
 import com.maohx2.ina.Arrange.Inventry;
@@ -71,7 +71,6 @@ import android.graphics.Paint;
 /**
  * Created by ina on 2017/10/01.
  */
-
 public class WorldGameSystem {
 
     SurfaceHolder holder;
@@ -294,7 +293,7 @@ public class WorldGameSystem {
         initBackPlate();
 
         //OP判定。まだOPを流していないならOP会話イベントを発動する。
-        talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される
+        talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される//堀江デバッグのためにコメントアウト
 
         /*
         battleUnitDataAdmin = new BattleUnitDataAdmin(databaseAdmin, graphic);
@@ -351,7 +350,7 @@ public class WorldGameSystem {
 */
 /*
         if (!talkAdmin.isTalking()) {
-            talkAdmin.debug();
+            talkAdmin.debug();//堀江デバッグのためにコメントアウト
         }
 */
         switch (worldModeAdmin.getMode()) {
@@ -535,7 +534,7 @@ public class WorldGameSystem {
                 playerStatusViewer.draw();
                 break;
             case TU_GEO:
-                graphic.bookingDrawBitmapData(tu_geo_img, 0, 0, 1.25f, 1.25f, 0, 255, true);
+                graphic.bookingDrawBitmapData(tu_geo_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
                 break;
             case SHOP_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
@@ -546,17 +545,17 @@ public class WorldGameSystem {
                 playerStatusViewer.draw();
                 break;
             case TU_SHOP:
-                graphic.bookingDrawBitmapData(tu_shop_img, 0, 0, 1.25f, 1.25f, 0, 255, true);
+                graphic.bookingDrawBitmapData(tu_shop_img, 0, 0, 0.983f, 0.983f, 0, 254, true);
                 break;
             case TU_SELL:
-                graphic.bookingDrawBitmapData(tu_sell_img, 0, 0, 1.25f, 1.25f, 0, 255, true);
+                graphic.bookingDrawBitmapData(tu_sell_img, 0, 0, 0.983f, 0.983f, 0, 254, true);
                 break;
             case EQUIP_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 break;
             case TU_EQUIP:
 //                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
-                graphic.bookingDrawBitmapData(tu_equip_img, 0, 0, 1.25f, 1.25f, 0, 255, true);
+                graphic.bookingDrawBitmapData(tu_equip_img, 0, 0, 0.983f, 0.983f, 0, 254, true);
                 break;
             case EQUIP:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);

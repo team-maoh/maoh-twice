@@ -255,7 +255,9 @@ public class MapPlateAdmin {
 
         drawTutorialImage();
 
-        drawFloorAndHP();
+        if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+2) {
+            drawFloorAndHP();
+        }
 
     }
 
@@ -338,12 +340,29 @@ public class MapPlateAdmin {
     private void drawTutorialImage() {
 
         if (playerStatus.getTutorialInDungeon() == 0) {
+            BitmapData tutorial_bitmap;
+            if(i_of_tutorial_bitmap <= NUM_OF_TUTORIAL_BITMAP) {
+                String bitmap_name = tutorial_name + String.valueOf(i_of_tutorial_bitmap);
+                tutorial_bitmap = graphic.searchBitmap(bitmap_name);
+            }
+            else if(i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+1){
+                tutorial_bitmap = graphic.searchBitmap("t_battle");
+            }
+            else if(i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+2) {
+                tutorial_bitmap = graphic.searchBitmap("t_mine");
+            }
+            else{
+                tutorial_bitmap = null;
+            }
 
-            String bitmap_name = tutorial_name + String.valueOf(i_of_tutorial_bitmap);
-            BitmapData tutorial_bitmap = graphic.searchBitmap(bitmap_name);
-
-            if (tutorial_bitmap != null) {
+            if (tutorial_bitmap != null && i_of_tutorial_bitmap <= NUM_OF_TUTORIAL_BITMAP) {
                 graphic.bookingDrawBitmapData(tutorial_bitmap, 0, 0, 1, 1, 0, 255, true);
+            }
+            else if (tutorial_bitmap != null && i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+1) {
+                graphic.bookingDrawBitmapData(tutorial_bitmap, 0, -1, 0.983f, 0.983f, 0, 255, true);
+            }
+            else if (tutorial_bitmap != null && i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+2) {
+                graphic.bookingDrawBitmapData(tutorial_bitmap, 0, 0, 0.983f, 0.983f, 0, 255, true);
             }
 
             Constants.Touch.TouchState touch_state = dungeon_user_interface.getTouchState();
@@ -351,10 +370,9 @@ public class MapPlateAdmin {
             if (touch_state == Constants.Touch.TouchState.UP) {
                 i_of_tutorial_bitmap++;
 
-                if (i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP) {
+                if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+2){
                     playerStatus.setTutorialInDungeon(1);
                     playerStatusSaver.save();
-
                 }
             }
         }
