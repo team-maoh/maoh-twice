@@ -7,6 +7,8 @@ import android.view.SurfaceHolder;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.horie.EquipTutorial.EquipTutorialSaveData;
 import com.maohx2.horie.EquipTutorial.EquipTutorialSaver;
+import com.maohx2.horie.Tutorial.TutorialFlagData;
+import com.maohx2.horie.Tutorial.TutorialFlagSaver;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
@@ -107,6 +109,8 @@ public class WorldGameSystem {
     //EquipTutorial
     EquipTutorialSaveData equip_tutorial_save_data;
     EquipTutorialSaver equip_tutorial_saver;
+    TutorialFlagData tutorial_flag_data;
+    TutorialFlagSaver tutorial_flag_saver;
 
     //TODO いな依頼:引数にUI,Graphicが入って居るためGlobalDataに設置できない
     InventryS geoInventry;
@@ -154,10 +158,24 @@ public class WorldGameSystem {
         map_status_saver = new MapStatusSaver(databaseAdmin, "MapSaveData", "MapSaveData.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE, map_status, 7);
         map_status_saver.load();
 
-        //EquipTutorialセーブ関係
-        equip_tutorial_save_data = new EquipTutorialSaveData();
-        equip_tutorial_saver = new EquipTutorialSaver(databaseAdmin, "EquipTutorialSave", "EquipTutorialSave.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE,equip_tutorial_save_data);
-        equip_tutorial_saver.load();
+        //TutorialFlagセーブ関係
+//        equip_tutorial_save_data = new EquipTutorialSaveData();
+//        equip_tutorial_saver = new EquipTutorialSaver(databaseAdmin, "EquipTutorialSave", "EquipTutorialSave.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE,equip_tutorial_save_data);
+//        equip_tutorial_saver.load();
+        tutorial_flag_data = new TutorialFlagData();
+        tutorial_flag_saver = new TutorialFlagSaver(databaseAdmin, "FlagSave", "FlagSave.db", Constants.SaveDataVersion.MAP_SAVE_DATA, "ns",tutorial_flag_data);
+        tutorial_flag_saver.load();
+
+        /*tutorial_flagセーブ関係デバッグ用
+        for(int i = 0;i < 3;i++){
+            System.out.println("堀江：flag_data.flag_name["+i+"] = "+tutorial_flag_data.getFlag_name(i)+" ,flag = "+tutorial_flag_data.getIs_tutorial_finished(i));
+        }
+        tutorial_flag_data.setIs_tutorial_finished(1, 0);
+        tutorial_flag_saver.save();
+        tutorial_flag_saver.load();
+        for(int i = 0;i < 3;i++){
+            System.out.println("堀江２：flag_data.flag_name["+i+"] = "+tutorial_flag_data.getFlag_name(i)+" ,flag = "+tutorial_flag_data.getIs_tutorial_finished(i));
+        }*/
 
         //クレジット
         credit[0] = graphic.searchBitmap("クレジット1");

@@ -25,7 +25,7 @@ public class EquipTutorialSaver extends SaveManager {
     public void load() {
         List<Integer> is_tutprial_finished = database.getInt("EquipTutorial", "is_tutorial_finished");
         equip_tutorial_save_data.setTutorialFinishStatus(is_tutprial_finished.get(0));
-    }
+}
 
     @Override
     public void save() {
@@ -34,13 +34,13 @@ public class EquipTutorialSaver extends SaveManager {
                 "EquipTutorial",
                 new String[]{"is_tutorial_finished"},
                 equip_tutorial_save_data.getSaveStatus()
-            );
+        );
     }
 
     @Override
     public void onUpgrade(int oldVersion, int newVersion) {
     };
-    @Override
-    public void onDowngrade (int oldVersion, int newVersion) {
-    };
+@Override
+public void onDowngrade (int oldVersion, int newVersion) {
+        };
 }
