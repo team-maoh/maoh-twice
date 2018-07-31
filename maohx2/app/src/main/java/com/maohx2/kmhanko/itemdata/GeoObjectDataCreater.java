@@ -21,10 +21,8 @@ import static java.lang.Math.sqrt;
 public class GeoObjectDataCreater {
     static Graphic graphic;
 
-    private GeoObjectDataCreater() {
-    }
+    private GeoObjectDataCreater() {}
 
-    ;
 
     public static void setGraphic(Graphic _graphic) {
         graphic = _graphic;
@@ -304,11 +302,16 @@ public class GeoObjectDataCreater {
     }
 
     public static GEO_PARAM_KIND_NORMAL getRandKindNormal() {
-        return GEO_PARAM_KIND_NORMAL.toEnum((int) (GEO_PARAM_KIND_NORMAL.NUM.ordinal() * Math.random()));
+        Random r = new Random();
+        return GEO_PARAM_KIND_NORMAL.toEnum(r.nextInt(GEO_PARAM_KIND_NORMAL.NUM.ordinal()));
+        //return GEO_PARAM_KIND_NORMAL.toEnum((int)(Math.random() * GEO_PARAM_KIND_NORMAL.NUM.ordinal()));
     }
 
     public static GEO_PARAM_KIND_RATE getRandKindRate() {
-        return GEO_PARAM_KIND_RATE.toEnum((int) (GEO_PARAM_KIND_RATE.NUM.ordinal() * Math.random()));
+        Random r = new Random();
+        return GEO_PARAM_KIND_RATE.toEnum(r.nextInt(GEO_PARAM_KIND_RATE.NUM.ordinal()));
+        //return GEO_PARAM_KIND_RATE.toEnum((int)(Math.random() * GEO_PARAM_KIND_RATE.NUM.ordinal()));
+
     }
 
 

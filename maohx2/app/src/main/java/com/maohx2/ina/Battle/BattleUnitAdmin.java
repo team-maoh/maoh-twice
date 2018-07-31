@@ -352,8 +352,12 @@ public class BattleUnitAdmin {
 
         //岩に対応する敵を決定し、その対応する敵データからHPを決める
         for (int i = 0; i < r.nextInt(3) + 1; i++) {
+        //for (int i = 0; i < 50; i++) {
             setRockUnitData();
         }
+
+        //TODO debug
+        //getDropGeoAfter();
     }
 
     public void spawnBoss(String[] monsters) {
@@ -831,17 +835,17 @@ public class BattleUnitAdmin {
         playerStatus.setMoney(playerStatus.getMoney() / 2);
         switch (mode) {
             case BATTLE:
-                battleEnd();
-                break;
             case BOSS:
-                battleEnd();
+                gameoverMessage();
+                //battleEnd();
                 break;
             case MINING:
                 //ここには来ない
                 battleEnd();
                 break;
             case MAOH:
-                battleEnd();
+                gameoverMessage();
+                //battleEnd();
                 break;
             case OPENING:
                 /*
@@ -1139,6 +1143,13 @@ public class BattleUnitAdmin {
                 textBoxAdmin.bookingDrawText(resultTextBoxID, "\n", resultTextPaint);
             }
         }
+    }
+
+    private void gameoverMessage() {
+        resultTextBoxUpdate(new String[]{"あなたはやられてしまった！"});
+        resultButtonGroup.setUpdateFlag(true);
+        resultButtonGroup.setDrawFlag(true);
+        return;
     }
 
     private void resultTextBoxUpdateItems(List<String> itemNames) {

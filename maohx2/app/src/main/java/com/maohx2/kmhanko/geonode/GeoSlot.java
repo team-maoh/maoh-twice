@@ -286,10 +286,10 @@ public class GeoSlot extends CircleImagePlate {
 
     //GeoSlotの計算を行うメソッド。再帰ライクの終着点に該当する。
     private void calc(GeoCalcSaverAdmin geo_calc_saver_admin) {
-        geo_calc_saver_admin.getGeoCalcSaver("HP").calc(geoObjectData.getHp(),geoObjectData.getHpRate());
-        geo_calc_saver_admin.getGeoCalcSaver("Attack").calc(geoObjectData.getAttack(),geoObjectData.getAttackRate());
-        geo_calc_saver_admin.getGeoCalcSaver("Defence").calc(geoObjectData.getDefence(),geoObjectData.getDefenceRate());
-        geo_calc_saver_admin.getGeoCalcSaver("Luck").calc(geoObjectData.getLuck(),geoObjectData.getLuckRate());
+        geo_calc_saver_admin.getGeoCalcSaver("HP").calc(100*geoObjectData.getHp(),geoObjectData.getHpRate());
+        geo_calc_saver_admin.getGeoCalcSaver("Attack").calc(100*geoObjectData.getAttack(),geoObjectData.getAttackRate());
+        geo_calc_saver_admin.getGeoCalcSaver("Defence").calc(100*geoObjectData.getDefence(),geoObjectData.getDefenceRate());
+        geo_calc_saver_admin.getGeoCalcSaver("Luck").calc(100*geoObjectData.getLuck(),geoObjectData.getLuckRate());
     }
 
     List<Integer> geoSlotLineEffect = new ArrayList<Integer>();
