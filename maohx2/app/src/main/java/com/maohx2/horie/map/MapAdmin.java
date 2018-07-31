@@ -353,6 +353,13 @@ public class MapAdmin {
         if(dungeon_name.equals("Dragon")) {
             for (int i = 0; i < map_size.x; i++) {
                 for (int j = 0; j < map_size.y; j++) {
+                    for (int k = 0; k < animation_num; k++) {
+                        map_tile_animation[k][i][j] = null;
+                    }
+                }
+            }
+            for (int i = 0; i < map_size.x; i++) {
+                for (int j = 0; j < map_size.y; j++) {
                     if (!isWall(i, j) && !isStairs(i, j)) {
                         setAutoTile_light_floor(i, j, i, j);
                     } else if (isStairs(i, j) && !isGate(i, j)) {
