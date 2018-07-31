@@ -43,6 +43,10 @@ public abstract class Plate {
 
     abstract public void draw();
 
+    public void drawExceptEquip() {
+        draw();
+    };
+
     public boolean checkTouchContent() {
 
         if (user_interface.checkUI(touch_id, judge_way) == true) {

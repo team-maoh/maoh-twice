@@ -37,7 +37,11 @@ public class BoxInventryPlate extends BoxPlate {
 
         if(inventry_data != null) {
             if(inventry_data.getItemData() != null) {
-                image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left+50, (up+down)/2, 1.7f, 1.7f, 0, 255, false);
+                if(inventry_data.getItemData().getItemImage() !=null) {
+                    image_context = graphic.makeImageContext(inventry_data.getItemData().getItemImage(), left + 50, (up + down) / 2, 1.7f, 1.7f, 0, 255, false);
+                } else {
+                    System.out.println("takano: BoxInventryPlate getItemImage == null");
+                }
             }
         }
     }
@@ -57,7 +61,16 @@ public class BoxInventryPlate extends BoxPlate {
     }
 
     @Override
+    public void drawExceptEquip() {
+        draw(false);
+    }
+
+    @Override
     public void draw() {
+        draw(true);
+    }
+
+    public void draw(boolean equipFlag) {
         if (draw_flag == false){
             return;
         }
@@ -82,20 +95,26 @@ public class BoxInventryPlate extends BoxPlate {
 
                 if((inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT) || (inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.GEO)) {
                     if((inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT)) {
-                        if(((EquipmentItemData)(inventry_data.getItemData())).getPalettePosition() != 0) {
+                        if(((EquipmentItemData)(inventry_data.getItemData())).getPalettePosition() != 0 && equipFlag) {
                             text_paint.setColor(CIRCLE_COLOR[((EquipmentItemData)(inventry_data.getItemData())).getPalettePosition()-1]);
                             text_paint.setAlpha(255);
                             graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1 + (int) ((down - up) * (1.0 / 5))) + 200, up + (int)((down - up + text_paint.getTextSize()) / 2), text_paint);
                         }
                     }else if(inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.GEO){
-                        if(((GeoObjectData)(inventry_data.getItemData())).getSlotSetName().equals("noSet") == false) {
+                        if(((GeoObjectData)(inventry_data.getItemData())).getSlotSetName().equals("noSet") == false && equipFlag) {
                             text_paint.setARGB(255,255,255,255);
                             graphic.bookingDrawText("E", right - 50, up + (int)((down - up + text_paint.getTextSize()) / 2), text_paint);
                         }
                     }
                 }else{
-                    graphic.bookingDrawText(String.valueOf(inventry_data.getItemNum() - ((ExpendItemData)inventry_data.getItemData()).getPalettePositionNum()), left + (int) (inventry_data.getItemData().getItemImage().getWidth() + (int) ((down - up) * (1.0 / 5))) + 270, up + (int)((down - up + text_paint.getTextSize()) / 2), text_paint);
-                    if(((ExpendItemData)(inventry_data.getItemData())).getPalettePosition() != 0) {
+                    String itemText;
+                    if (equipFlag) {
+                        itemText = String.valueOf(inventry_data.getItemNum() - ((ExpendItemData)inventry_data.getItemData()).getPalettePositionNum());
+                    } else {
+                        itemText = String.valueOf(inventry_data.getItemNum());
+                    }
+                    graphic.bookingDrawText(itemText, left + (int) (inventry_data.getItemData().getItemImage().getWidth() + (int) ((down - up) * (1.0 / 5))) + 270, up + (int)((down - up + text_paint.getTextSize()) / 2), text_paint);
+                    if(((ExpendItemData)(inventry_data.getItemData())).getPalettePosition() != 0 && equipFlag) {
                         for(int i = 0; i < ((ExpendItemData)(inventry_data.getItemData())).getPalettePositionNum(); i++) {
                             int offSet = i*30;
                             int palette_position = ((ExpendItemData)(inventry_data.getItemData())).getPalettePosition(i+1);

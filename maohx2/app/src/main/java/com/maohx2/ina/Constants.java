@@ -55,7 +55,7 @@ public final class Constants {
 
     public static final int STAGE_NUM = 7;
 
-    public static final String DEBUG_SAVE_MODE = "s";
+    public static final String DEBUG_SAVE_MODE = "ns";
     public static class SaveDataVersion {
         public static final int EQUIPMENT_INVENTRY = 1;
         public static final int EXPEND_INVENTRY = 1;
@@ -206,6 +206,9 @@ public final class Constants {
             TU_EQUIP,
             CREDIT,
             ENDING,
+            TU_SHOP,
+            TU_GEO,
+            TU_SELL
         }
     }
 
@@ -360,7 +363,6 @@ public final class Constants {
         }
 
         public static final int DROP_NUM = 3;
-
     }
 
 
