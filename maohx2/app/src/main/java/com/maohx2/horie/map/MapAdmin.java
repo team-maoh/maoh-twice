@@ -368,11 +368,11 @@ public class MapAdmin {
                     } else if (isStairs(i, j) && !isGate(i, j)) {
                         map_tile[i][j] = stair_tile;
                     }
-                    if(isGate(i, j)){
-                        for (int k = 0; k < animation_num; k++) {
-                            map_tile_animation[k][i][j] = gate_tile;
-                        }
-                    }
+//                    if(isGate(i, j)){
+//                        for (int k = 0; k < animation_num; k++) {
+//                            map_tile_animation[k][i][j] = gate_tile;
+//                        }
+//                    }
                 }
             }
         }
@@ -933,6 +933,9 @@ public class MapAdmin {
                         camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification &&
                         map_tile[i][j] != null) {
                     graphic.bookingDrawBitmapData(map_tile[i][j], camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+                    if(map_data[i][j].isGate()){
+                        graphic.bookingDrawBitmapData(gate_tile, camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+                    }
                     count++;
                 }
             }
