@@ -161,9 +161,9 @@ public class BattleBaseUnitData {
             bonus_status[BONUS_SPEED.ordinal()] = (int) (dbStatus[DbStatusID.InitialBonusSpeed.ordinal()] + dbStatus[DbStatusID.DeltaBonusSpeed.ordinal()] * Math.pow(2, repeat_count));
         }
         */
-        bonus_status[BONUS_HP.ordinal()] = (int) (dbStatus[DbStatusID.InitialBonusHP.ordinal()] * Math.pow(mag, repeat_count));
-        bonus_status[BONUS_ATTACK.ordinal()] = (int) (dbStatus[DbStatusID.InitialBonusAttack.ordinal()] * Math.pow(mag, repeat_count));
-        bonus_status[BONUS_DEFENSE.ordinal()] = (int) (dbStatus[DbStatusID.InitialBonusDefence.ordinal()] * Math.pow(mag, repeat_count));
+        bonus_status[BONUS_HP.ordinal()] = (int)(5*dbStatus[DbStatusID.InitialBonusHP.ordinal()] * Math.pow(mag, repeat_count));
+        bonus_status[BONUS_ATTACK.ordinal()] = (int) (5*dbStatus[DbStatusID.InitialBonusAttack.ordinal()] * Math.pow(mag, repeat_count));
+        bonus_status[BONUS_DEFENSE.ordinal()] = (int) (5*dbStatus[DbStatusID.InitialBonusDefence.ordinal()] * Math.pow(mag, repeat_count));
         //bonus_status[BONUS_SPEED.ordinal()] = (int) (dbStatus[DbStatusID.InitialBonusSpeed.ordinal()] * Math.pow(mag, repeat_count));
 
 
