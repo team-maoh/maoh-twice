@@ -352,8 +352,12 @@ public class BattleUnitAdmin {
 
         //岩に対応する敵を決定し、その対応する敵データからHPを決める
         for (int i = 0; i < r.nextInt(3) + 1; i++) {
+        //for (int i = 0; i < 50; i++) {
             setRockUnitData();
         }
+
+        //TODO debug
+        //getDropGeoAfter();
     }
 
     public void spawnBoss(String[] monsters) {

@@ -101,7 +101,7 @@ public final class Constants {
 
 
     public static class BattleUnit {
-        public static final int BATTLE_UNIT_MAX = 15;
+        public static final int BATTLE_UNIT_MAX = 50;//15
     }
 
     public static class UnitStatus {

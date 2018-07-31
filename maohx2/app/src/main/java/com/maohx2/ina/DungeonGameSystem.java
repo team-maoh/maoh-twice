@@ -325,7 +325,7 @@ public class DungeonGameSystem {
 //        );//kokomade
 
         //デバッグ用
-        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
+        //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
 
 
         //

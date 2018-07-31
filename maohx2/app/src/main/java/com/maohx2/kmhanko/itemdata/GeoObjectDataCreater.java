@@ -305,12 +305,15 @@ public class GeoObjectDataCreater {
 
     public static GEO_PARAM_KIND_NORMAL getRandKindNormal() {
         Random r = new Random();
-        return GEO_PARAM_KIND_NORMAL.toEnum(r.nextInt(GEO_PARAM_KIND_RATE.NUM.ordinal()));
+        return GEO_PARAM_KIND_NORMAL.toEnum(r.nextInt(GEO_PARAM_KIND_NORMAL.NUM.ordinal()));
+        //return GEO_PARAM_KIND_NORMAL.toEnum((int)(Math.random() * GEO_PARAM_KIND_NORMAL.NUM.ordinal()));
     }
 
     public static GEO_PARAM_KIND_RATE getRandKindRate() {
         Random r = new Random();
         return GEO_PARAM_KIND_RATE.toEnum(r.nextInt(GEO_PARAM_KIND_RATE.NUM.ordinal()));
+        //return GEO_PARAM_KIND_RATE.toEnum((int)(Math.random() * GEO_PARAM_KIND_RATE.NUM.ordinal()));
+
     }
 
 
