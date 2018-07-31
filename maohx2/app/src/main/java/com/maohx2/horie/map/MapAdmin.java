@@ -353,7 +353,10 @@ public class MapAdmin {
         if(dungeon_name.equals("Dragon")) {
             for (int i = 0; i < map_size.x; i++) {
                 for (int j = 0; j < map_size.y; j++) {
+                    map_tile_set[i][j] = null;
+                    map_tile[i][j] = null;
                     for (int k = 0; k < animation_num; k++) {
+                        map_tile_set_animation[k][i][j] = null;
                         map_tile_animation[k][i][j] = null;
                     }
                 }
@@ -1001,121 +1004,121 @@ public class MapAdmin {
 //        graphic.bookingDrawBitmapData(at_floor.big_auto_tile[34], 0, 0, 1, 1, 0, 255, true);
     }
 
-    private void createMapTileSet(boolean lu, boolean u, boolean ru, boolean l, boolean r, boolean ld, boolean d, boolean rd, AutoTile m_auto_tile, int i, int j, BitmapData map_tile_set[][]) {
-        if (lu && u && ru && l && r && ld && d && rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[0];
-        } else if (!lu && u && ru && l && r && ld && d && rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[1];
-        } else if (lu && u && !ru && l && r && ld && d && rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[2];
-        } else if (lu && u && ru && l && r && ld && d && !rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[3];
-        } else if (lu && u && ru && l && r && !ld && d && rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[4];
-        }
-        //5
-        else if (!lu && u && !ru && l && r && ld && d && rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[5];
-        } else if (lu && u && !ru && l && r && ld && d && !rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[6];
-        } else if (lu && u && ru && l && r && !ld && d && !rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[7];
-        } else if (!lu && u && ru && l && r && !ld && d && rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[8];
-        } else if (!lu && u && ru && l && r && ld && d && !rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[9];
-        }
-        //10
-        else if (lu && u && !ru && l && r && !ld && d && rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[10];
-        } else if (lu && u && !ru && l && r && !ld && d && !rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[11];
-        } else if (!lu && u && ru && l && r && !ld && d && !rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[12];
-        } else if (!lu && u && !ru && l && r && !ld && d && rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[13];
-        } else if (!lu && u && !ru && l && r && ld && d && !rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[14];
-        }
-        //15
-        else if (!lu && u && !ru && l && r && !ld && d && !rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[15];
-        } else if (u && ru && !l && r && d && rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[16];
-        } else if (u && !ru && !l && r && d && rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[17];
-        } else if (u && ru && !l && r && d && !rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[18];
-        } else if (u && !ru && !l && r && d && !rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[19];
-        }
-        //20
-        else if (!u && l && r && ld && d && rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[20];
-        } else if (!u && l && r && ld && d && !rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[21];
-        } else if (!u && l && r && !ld && d && rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[22];
-        } else if (!u && l && r && !ld && d && !rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[23];
-        } else if (lu && u && l && !r && ld && d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[24];
-        }
-        //25
-        else if (lu && u && l && !r && !ld && d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[25];
-        } else if (!lu && u && l && !r && ld && d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[26];
-        } else if (!lu && u && l && !r && !ld && d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[27];
-        } else if (lu && u && ru && l && r && !d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[28];
-        } else if (!lu && u && ru && l && r && !d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[29];
-        }
-        //30
-        else if (lu && u && !ru && l && r && !d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[30];
-        } else if (!lu && u && !ru && l && r && !d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[31];
-        } else if (u && !l && !r && d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[32];
-        } else if (!u && l && r && !d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[33];
-        } else if (!u && !l && r && d && rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[34];
-        }
-        //35
-        else if (!u && !l && r && d && !rd) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[35];
-        } else if (!u && l && !r && ld && d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[36];
-        } else if (!u && l && !r && !ld && d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[37];
-        } else if (lu && u && l && !r && !d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[38];
-        } else if (!lu && u && l && !r && !d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[39];
-        }
-        //40
-        else if (u && ru && !l && r && !d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[40];
-        } else if (u && !ru && !l && r && !d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[41];
-        } else if (!u && !l && !r && d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[42];
-        } else if (!u && !l && r && !d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[43];
-        } else if (u && !l && !r && !d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[44];
-        }
-        //45
-        else if (!u && l && !r && !d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[45];
-        } else if (!u && !l && !r && !d) {
-            map_tile_set[i][j] = m_auto_tile.auto_tile[46];
-        }
-    }
+//    private void createMapTileSet(boolean lu, boolean u, boolean ru, boolean l, boolean r, boolean ld, boolean d, boolean rd, AutoTile m_auto_tile, int i, int j, BitmapData map_tile_set[][]) {
+//        if (lu && u && ru && l && r && ld && d && rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[0];
+//        } else if (!lu && u && ru && l && r && ld && d && rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[1];
+//        } else if (lu && u && !ru && l && r && ld && d && rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[2];
+//        } else if (lu && u && ru && l && r && ld && d && !rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[3];
+//        } else if (lu && u && ru && l && r && !ld && d && rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[4];
+//        }
+//        //5
+//        else if (!lu && u && !ru && l && r && ld && d && rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[5];
+//        } else if (lu && u && !ru && l && r && ld && d && !rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[6];
+//        } else if (lu && u && ru && l && r && !ld && d && !rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[7];
+//        } else if (!lu && u && ru && l && r && !ld && d && rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[8];
+//        } else if (!lu && u && ru && l && r && ld && d && !rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[9];
+//        }
+//        //10
+//        else if (lu && u && !ru && l && r && !ld && d && rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[10];
+//        } else if (lu && u && !ru && l && r && !ld && d && !rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[11];
+//        } else if (!lu && u && ru && l && r && !ld && d && !rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[12];
+//        } else if (!lu && u && !ru && l && r && !ld && d && rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[13];
+//        } else if (!lu && u && !ru && l && r && ld && d && !rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[14];
+//        }
+//        //15
+//        else if (!lu && u && !ru && l && r && !ld && d && !rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[15];
+//        } else if (u && ru && !l && r && d && rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[16];
+//        } else if (u && !ru && !l && r && d && rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[17];
+//        } else if (u && ru && !l && r && d && !rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[18];
+//        } else if (u && !ru && !l && r && d && !rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[19];
+//        }
+//        //20
+//        else if (!u && l && r && ld && d && rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[20];
+//        } else if (!u && l && r && ld && d && !rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[21];
+//        } else if (!u && l && r && !ld && d && rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[22];
+//        } else if (!u && l && r && !ld && d && !rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[23];
+//        } else if (lu && u && l && !r && ld && d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[24];
+//        }
+//        //25
+//        else if (lu && u && l && !r && !ld && d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[25];
+//        } else if (!lu && u && l && !r && ld && d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[26];
+//        } else if (!lu && u && l && !r && !ld && d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[27];
+//        } else if (lu && u && ru && l && r && !d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[28];
+//        } else if (!lu && u && ru && l && r && !d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[29];
+//        }
+//        //30
+//        else if (lu && u && !ru && l && r && !d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[30];
+//        } else if (!lu && u && !ru && l && r && !d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[31];
+//        } else if (u && !l && !r && d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[32];
+//        } else if (!u && l && r && !d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[33];
+//        } else if (!u && !l && r && d && rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[34];
+//        }
+//        //35
+//        else if (!u && !l && r && d && !rd) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[35];
+//        } else if (!u && l && !r && ld && d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[36];
+//        } else if (!u && l && !r && !ld && d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[37];
+//        } else if (lu && u && l && !r && !d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[38];
+//        } else if (!lu && u && l && !r && !d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[39];
+//        }
+//        //40
+//        else if (u && ru && !l && r && !d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[40];
+//        } else if (u && !ru && !l && r && !d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[41];
+//        } else if (!u && !l && !r && d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[42];
+//        } else if (!u && !l && r && !d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[43];
+//        } else if (u && !l && !r && !d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[44];
+//        }
+//        //45
+//        else if (!u && l && !r && !d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[45];
+//        } else if (!u && !l && !r && !d) {
+//            map_tile_set[i][j] = m_auto_tile.auto_tile[46];
+//        }
+//    }
 
     private void createMapTileSetForBitmap(boolean lu, boolean u, boolean ru, boolean l, boolean r, boolean ld, boolean d, boolean rd, BitmapData m_auto_tile[], int i, int j, BitmapData map_tile_set[][]) {
         if (lu && u && ru && l && r && ld && d && rd) {
