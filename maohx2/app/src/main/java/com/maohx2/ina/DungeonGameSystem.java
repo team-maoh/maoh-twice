@@ -783,10 +783,12 @@ public class DungeonGameSystem {
             //by kmhanko
             //text_box_admin.setTextBoxExists(openningTextBoxID, false);
 
+            playerStatus.calcStatus();
+            playerStatus.setNowHP(playerStatus.getHP());
             battle_unit_admin.reset(BattleUnitAdmin.MODE.OPENING);
             battle_unit_admin.spawnEnemy(
                     new String[] {
-                            "m014"
+                            "maoh001"
                     }
             );
             ((DungeonActivity)dungeonActivity).dungeon_surface_view.setOpeningFlag(false);////////
