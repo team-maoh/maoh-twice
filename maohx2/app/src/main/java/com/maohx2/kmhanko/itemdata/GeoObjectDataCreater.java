@@ -21,10 +21,8 @@ import static java.lang.Math.sqrt;
 public class GeoObjectDataCreater {
     static Graphic graphic;
 
-    private GeoObjectDataCreater() {
-    }
+    private GeoObjectDataCreater() {}
 
-    ;
 
     public static void setGraphic(Graphic _graphic) {
         graphic = _graphic;
