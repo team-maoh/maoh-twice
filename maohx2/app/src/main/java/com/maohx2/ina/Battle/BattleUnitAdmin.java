@@ -403,9 +403,9 @@ public class BattleUnitAdmin {
                         rareRate = (float) (dropGeoObject.get(dropGeoNum) - maxMinParam[3][1]) / (float) (maxMinParam[3][0] - maxMinParam[3][1]);
                         break;
                 }
-                int hp = bBUD.getStatus(repeat_count, 5.042)[1];
-                int attack = bBUD.getStatus(repeat_count, 5.042)[2];
-                int defence = bBUD.getStatus(repeat_count, 5.042)[3];
+                int hp = bBUD.getDbStatus(BattleBaseUnitData.DbStatusID.InitialHP);
+                int attack = bBUD.getDbStatus(BattleBaseUnitData.DbStatusID.InitialAttack);
+                int defence = bBUD.getDbStatus(BattleBaseUnitData.DbStatusID.InitialDefence);
                 BattleBaseUnitData tempBBUD = BattleRockCreater.getBattleBaseUnitData(hp, attack, defence, rareRate);//ダメージ計算上で攻撃力が必要
                 battle_units[i].setBattleUnitDataRock(tempBBUD, repeat_count);
                 return i;
