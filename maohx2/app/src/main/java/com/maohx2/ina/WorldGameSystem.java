@@ -168,7 +168,7 @@ public class WorldGameSystem {
 //        equip_tutorial_saver = new EquipTutorialSaver(databaseAdmin, "EquipTutorialSave", "EquipTutorialSave.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE,equip_tutorial_save_data);
 //        equip_tutorial_saver.load();
         tutorial_flag_data = new TutorialFlagData();
-        tutorial_flag_saver = new TutorialFlagSaver(databaseAdmin, "FlagSave", "FlagSave.db", Constants.SaveDataVersion.MAP_SAVE_DATA, "ns",tutorial_flag_data);
+        tutorial_flag_saver = new TutorialFlagSaver(databaseAdmin, "FlagSave", "FlagSave.db", Constants.SaveDataVersion.MAP_SAVE_DATA, "s",tutorial_flag_data);
         tutorial_flag_saver.load();
 
 //        /*tutorial_flagセーブ係デバッグ用*/
@@ -293,7 +293,7 @@ public class WorldGameSystem {
         initBackPlate();
 
         //OP判定。まだOPを流していないならOP会話イベントを発動する。
-        talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される//堀江デバッグのためにコメントアウト
+        //talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される//堀江デバッグのためにコメントアウト
 
         /*
         battleUnitDataAdmin = new BattleUnitDataAdmin(databaseAdmin, graphic);
@@ -350,7 +350,7 @@ public class WorldGameSystem {
 */
 /*
         if (!talkAdmin.isTalking()) {
-            talkAdmin.debug();//堀江デバッグのためにコメントアウト
+            //talkAdmin.debug();//堀江デバッグのためにコメントアウト
         }
 */
         switch (worldModeAdmin.getMode()) {
