@@ -293,7 +293,7 @@ public class WorldGameSystem {
         initBackPlate();
 
         //OP判定。まだOPを流していないならOP会話イベントを発動する。
-        talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される//堀江デバッグのためにコメントアウト
+        //talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される//堀江デバッグのためにコメントアウト
 
         /*
         battleUnitDataAdmin = new BattleUnitDataAdmin(databaseAdmin, graphic);
@@ -350,7 +350,7 @@ public class WorldGameSystem {
 */
 /*
         if (!talkAdmin.isTalking()) {
-            talkAdmin.debug();//堀江デバッグのためにコメントアウト
+            //talkAdmin.debug();//堀江デバッグのためにコメントアウト
         }
 */
         switch (worldModeAdmin.getMode()) {
