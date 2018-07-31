@@ -259,8 +259,8 @@ class StartSurfaceView extends BaseSurfaceView {
                 if (!openingFlag) {
                     activityChange.toWorldActivity();
                 } else {
-                    activityChange.toWorldActivity();
-                    //activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.OPENING);
+                    //activityChange.toWorldActivity();
+                    activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.OPENING);
                 }
                 break;
         }
