@@ -9,7 +9,6 @@ public class EquipTutorialSaveData {
 
     public EquipTutorialSaveData(){}
 
-    //マップがクリアされたかどうか返す
     public int getTutorialFinishStatus(){
         return is_tutorial_finish;
     }

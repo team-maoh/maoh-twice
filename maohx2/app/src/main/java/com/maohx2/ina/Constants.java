@@ -206,6 +206,9 @@ public final class Constants {
             TU_EQUIP,
             CREDIT,
             ENDING,
+            TU_SHOP,
+            TU_GEO,
+            TU_SELL
         }
     }
 
@@ -360,7 +363,6 @@ public final class Constants {
         }
 
         public static final int DROP_NUM = 3;
-
     }
 
 
