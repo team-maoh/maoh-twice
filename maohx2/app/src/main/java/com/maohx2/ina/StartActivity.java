@@ -37,6 +37,9 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 //テキストを全部流す作業
 //ゲームクリアまで行けるのか
 
+//プレイyー半透明
+//3つダンジョンクリアして魔王
+//ダンジョンオールクリア
 
 //改善点
 

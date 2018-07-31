@@ -325,11 +325,11 @@ public class WorldGameSystem {
             effectAdmin.getEffect(testID).start();
         }
 */
-
+/*
         if (!talkAdmin.isTalking()) {
             talkAdmin.debug();
         }
-
+*/
         switch (worldModeAdmin.getMode()) {
             case DUNGEON_SELECT_INIT_START:
                 musicAdmin.loadMusic("world00",true);
