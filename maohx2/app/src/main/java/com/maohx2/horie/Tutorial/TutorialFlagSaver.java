@@ -25,7 +25,7 @@ public class TutorialFlagSaver extends SaveManager {
     public void load() {
         List<String> flag_name = database.getString("TutorialFlag", "flag_name");
         List<Integer> is_tutorial_finished = database.getInt("TutorialFlag", "tutorial_flag");
-        for(int i = 0;i < 3;i++) {
+        for(int i = 0;i < 4;i++) {
             tutorial_flag_data.setFlag_name(flag_name.get(i), i);
             tutorial_flag_data.setIs_tutorial_finished(is_tutorial_finished.get(i), i);
         }
@@ -34,7 +34,7 @@ public class TutorialFlagSaver extends SaveManager {
     @Override
     public void save() {
         deleteAll();
-        for(int i = 0;i < 3;i++) {
+        for(int i = 0;i < 4;i++) {
             database.insertLineByArray(
                     "TutorialFlag",
                     new String[]{"flag_name", "tutorial_flag"},

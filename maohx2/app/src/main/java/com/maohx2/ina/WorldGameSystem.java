@@ -123,6 +123,9 @@ public class WorldGameSystem {
 
     BitmapData backGround;
     BitmapData tu_equip_img;
+    BitmapData tu_shop_img;
+    BitmapData tu_sell_img;
+    BitmapData tu_geo_img;
     BitmapData[] credit = new BitmapData[2];
 
     //String talkContent[][] = new String[100][];
@@ -151,7 +154,10 @@ public class WorldGameSystem {
         soundAdmin = _soundAdmin;
         world_user_interface = _world_user_interface;
         activityChange = _activityChange;
-        tu_equip_img = graphic.searchBitmap("tu_equip");
+        tu_equip_img = graphic.searchBitmap("t_equip");
+        tu_shop_img = graphic.searchBitmap("t_shop");
+        tu_sell_img = graphic.searchBitmap("t_sell");
+        tu_geo_img = graphic.searchBitmap("t_geo");
 
         //mapセーブ関係
         map_status = new MapStatus(Constants.STAGE_NUM);
@@ -363,9 +369,9 @@ public class WorldGameSystem {
             case GEO_MAP_SELECT_INIT:
                 backGround = graphic.searchBitmap("GeoMap");
                 worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT);
-                if(tutorial_flag_data.getIs_tutorial_finished(2) == 0){
+                if(tutorial_flag_data.getIs_tutorial_finished(3) == 0){
                     worldModeAdmin.setMode(WORLD_MODE.TU_GEO);
-                    tutorial_flag_data.setIs_tutorial_finished(1, 2);//チュートリアルフラグを立てる
+                    tutorial_flag_data.setIs_tutorial_finished(1, 3);//チュートリアルフラグを立てる
                 }
             case GEO_MAP_SELECT:
                 if (!talkAdmin.isTalking()) {
@@ -391,9 +397,13 @@ public class WorldGameSystem {
                 itemShopAdmin.start();
                 backGround = graphic.searchBitmap("City");
                 worldModeAdmin.setMode(WORLD_MODE.SHOP);
-                if(tutorial_flag_data.getIs_tutorial_finished(1) == 0){
+                if(tutorial_flag_data.getIs_tutorial_finished(1) == 0) {//shopチュートリアル
                     worldModeAdmin.setMode(WORLD_MODE.TU_SHOP);
                     tutorial_flag_data.setIs_tutorial_finished(1, 1);//チュートリアルフラグを立てる
+                }
+                else if(tutorial_flag_data.getIs_tutorial_finished(2) == 0){//sellチュートリアル
+                    worldModeAdmin.setMode(WORLD_MODE.TU_SELL);
+                    tutorial_flag_data.setIs_tutorial_finished(1, 2);
                 }
             case SHOP:
                 if (!talkAdmin.isTalking()) {
@@ -401,6 +411,12 @@ public class WorldGameSystem {
                 }
                 break;
             case TU_SHOP:
+                if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
+                    worldModeAdmin.setMode(WORLD_MODE.SHOP_INIT);
+                    tutorial_flag_saver.save();
+                }
+                break;
+            case TU_SELL:
                 if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
                     worldModeAdmin.setMode(WORLD_MODE.SHOP_INIT);
                     tutorial_flag_saver.save();
@@ -519,7 +535,7 @@ public class WorldGameSystem {
                 playerStatusViewer.draw();
                 break;
             case TU_GEO:
-                graphic.bookingDrawBitmapData(tu_equip_img, 0, 0, 1.25f, 1.25f, 0, 255, true);//TODO：堀江画像差し替え
+                graphic.bookingDrawBitmapData(tu_geo_img, 0, 0, 1.25f, 1.25f, 0, 255, true);
                 break;
             case SHOP_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
@@ -530,7 +546,10 @@ public class WorldGameSystem {
                 playerStatusViewer.draw();
                 break;
             case TU_SHOP:
-                graphic.bookingDrawBitmapData(tu_equip_img, 0, 0, 1.25f, 1.25f, 0, 255, true);//TODO：堀江画像差し替え
+                graphic.bookingDrawBitmapData(tu_shop_img, 0, 0, 1.25f, 1.25f, 0, 255, true);
+                break;
+            case TU_SELL:
+                graphic.bookingDrawBitmapData(tu_sell_img, 0, 0, 1.25f, 1.25f, 0, 255, true);
                 break;
             case EQUIP_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);

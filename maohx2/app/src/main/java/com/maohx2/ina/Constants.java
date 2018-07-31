@@ -207,7 +207,8 @@ public final class Constants {
             CREDIT,
             ENDING,
             TU_SHOP,
-            TU_GEO
+            TU_GEO,
+            TU_SELL
         }
     }
 

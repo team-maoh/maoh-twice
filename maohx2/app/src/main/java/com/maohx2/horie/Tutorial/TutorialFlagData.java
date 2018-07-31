@@ -9,8 +9,8 @@ public class TutorialFlagData {
     int is_tutorial_finished[];
 
     public TutorialFlagData(){
-        flag_name = new String[3];
-        is_tutorial_finished = new int[3];
+        flag_name = new String[4];
+        is_tutorial_finished = new int[4];
     }
 
     //getter
@@ -23,7 +23,7 @@ public class TutorialFlagData {
 
 
     //setter
-    public void setFlag_name(String _flag_name, int num){//0:equip, 1:shop, 2:geo
+    public void setFlag_name(String _flag_name, int num){//0:equip, 1:shop, 2:sell, 3:geo
         flag_name[num] = _flag_name;
     }
     public void setIs_tutorial_finished(int _flag, int flag_num){
