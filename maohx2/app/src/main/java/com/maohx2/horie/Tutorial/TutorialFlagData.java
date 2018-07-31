@@ -23,7 +23,7 @@ public class TutorialFlagData {
 
 
     //setter
-    public void setFlag_name(String _flag_name, int num){
+    public void setFlag_name(String _flag_name, int num){//0:equip, 1:shop, 2:geo
         flag_name[num] = _flag_name;
     }
     public void setIs_tutorial_finished(int _flag, int flag_num){

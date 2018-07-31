@@ -107,8 +107,8 @@ public class WorldGameSystem {
     ActivityChange activityChange;
 
     //EquipTutorial
-    EquipTutorialSaveData equip_tutorial_save_data;
-    EquipTutorialSaver equip_tutorial_saver;
+//    EquipTutorialSaveData equip_tutorial_save_data;
+//    EquipTutorialSaver equip_tutorial_saver;
     TutorialFlagData tutorial_flag_data;
     TutorialFlagSaver tutorial_flag_saver;
 
@@ -166,16 +166,16 @@ public class WorldGameSystem {
         tutorial_flag_saver = new TutorialFlagSaver(databaseAdmin, "FlagSave", "FlagSave.db", Constants.SaveDataVersion.MAP_SAVE_DATA, "ns",tutorial_flag_data);
         tutorial_flag_saver.load();
 
-        /*tutorial_flagセーブ関係デバッグ用
-        for(int i = 0;i < 3;i++){
-            System.out.println("堀江：flag_data.flag_name["+i+"] = "+tutorial_flag_data.getFlag_name(i)+" ,flag = "+tutorial_flag_data.getIs_tutorial_finished(i));
-        }
-        tutorial_flag_data.setIs_tutorial_finished(1, 0);
-        tutorial_flag_saver.save();
-        tutorial_flag_saver.load();
-        for(int i = 0;i < 3;i++){
-            System.out.println("堀江２：flag_data.flag_name["+i+"] = "+tutorial_flag_data.getFlag_name(i)+" ,flag = "+tutorial_flag_data.getIs_tutorial_finished(i));
-        }*/
+//        /*tutorial_flagセーブ係デバッグ用*/
+//        for(int i = 0;i < 3;i++){
+//            System.out.println("堀江：flag_data.flag_name["+i+"] = "+tutorial_flag_data.getFlag_name(i)+" ,flag = "+tutorial_flag_data.getIs_tutorial_finished(i));
+//        }
+//        tutorial_flag_data.setIs_tutorial_finished(1, 0);
+//        tutorial_flag_saver.save();
+//        tutorial_flag_saver.load();
+//        for(int i = 0;i < 3;i++){
+//            System.out.println("堀江２：flag_data.flag_name["+i+"] = "+tutorial_flag_data.getFlag_name(i)+" ,flag = "+tutorial_flag_data.getIs_tutorial_finished(i));
+//        }
 
         //クレジット
         credit[0] = graphic.searchBitmap("クレジット1");
@@ -360,9 +360,19 @@ public class WorldGameSystem {
             case GEO_MAP_SELECT_INIT:
                 backGround = graphic.searchBitmap("GeoMap");
                 worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT);
+                if(tutorial_flag_data.getIs_tutorial_finished(2) == 0){
+                    worldModeAdmin.setMode(WORLD_MODE.TU_GEO);
+                    tutorial_flag_data.setIs_tutorial_finished(1, 2);//チュートリアルフラグを立てる
+                }
             case GEO_MAP_SELECT:
                 if (!talkAdmin.isTalking()) {
                     dungeonSelectManager.update();
+                }
+                break;
+            case TU_GEO:
+                if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
+                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT_INIT);
+                    tutorial_flag_saver.save();
                 }
                 break;
             case GEO_MAP_INIT:
@@ -378,9 +388,19 @@ public class WorldGameSystem {
                 itemShopAdmin.start();
                 backGround = graphic.searchBitmap("City");
                 worldModeAdmin.setMode(WORLD_MODE.SHOP);
+                if(tutorial_flag_data.getIs_tutorial_finished(1) == 0){
+                    worldModeAdmin.setMode(WORLD_MODE.TU_SHOP);
+                    tutorial_flag_data.setIs_tutorial_finished(1, 1);//チュートリアルフラグを立てる
+                }
             case SHOP:
                 if (!talkAdmin.isTalking()) {
                     itemShopAdmin.update();
+                }
+                break;
+            case TU_SHOP:
+                if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
+                    worldModeAdmin.setMode(WORLD_MODE.SHOP_INIT);
+                    tutorial_flag_saver.save();
                 }
                 break;
             case EQUIP_INIT:
@@ -389,9 +409,9 @@ public class WorldGameSystem {
                 equipmentInventry.setPosition(825,100,1225,708, 7);
                 expendItemInventry.setPosition(375,100,775,708, 7);
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
-                if(equip_tutorial_save_data.getTutorialFinishStatus() == 0){
+                if(tutorial_flag_data.getIs_tutorial_finished(0) == 0){
                     worldModeAdmin.setMode(WORLD_MODE.TU_EQUIP);
-                    equip_tutorial_save_data.setTutorialFinishStatus(1);
+                    tutorial_flag_data.setIs_tutorial_finished(1, 0);
                 }
             case EQUIP:
                 if (!talkAdmin.isTalking()) {
@@ -406,7 +426,7 @@ public class WorldGameSystem {
             case TU_EQUIP:
                 if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
                     worldModeAdmin.setMode(WORLD_MODE.EQUIP_INIT);
-                    equip_tutorial_saver.save();
+                    tutorial_flag_saver.save();
                 }
                 break;
             case PRESENT_INIT:
@@ -495,6 +515,9 @@ public class WorldGameSystem {
                 geoSlotAdminManager.draw();
                 playerStatusViewer.draw();
                 break;
+            case TU_GEO:
+                graphic.bookingDrawBitmapData(tu_equip_img, 0, 0, 1.25f, 1.25f, 0, 255, true);//TODO：堀江画像差し替え
+                break;
             case SHOP_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 break;
@@ -503,11 +526,14 @@ public class WorldGameSystem {
                 itemShopAdmin.draw();
                 playerStatusViewer.draw();
                 break;
+            case TU_SHOP:
+                graphic.bookingDrawBitmapData(tu_equip_img, 0, 0, 1.25f, 1.25f, 0, 255, true);//TODO：堀江画像差し替え
+                break;
             case EQUIP_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 break;
             case TU_EQUIP:
-                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+//                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 graphic.bookingDrawBitmapData(tu_equip_img, 0, 0, 1.25f, 1.25f, 0, 255, true);
                 break;
             case EQUIP:
