@@ -670,6 +670,15 @@ public class MapAdmin {
         int player_map_y = worldToMap(player_world_y);//移動前のマップ座標y
         int next_player_map_x = worldToMap(next_player_world_x);//移動後のマップ座標x
         int next_player_map_y = worldToMap(next_player_world_y);//移動後のマップ座標y
+
+        //by kmhanko
+        if (next_player_map_x >= map_size.x || next_player_map_x < 0) {
+            return 1;
+        }
+        if (next_player_map_y >= map_size.y || next_player_map_y < 0) {
+            return 2;
+        }
+
         //プレイヤー座標と移動座標が同じマス
         if (player_map_x == next_player_map_x && player_map_y == next_player_map_y) {
             direction = 0;

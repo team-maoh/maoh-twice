@@ -160,11 +160,12 @@ public class DungeonSelectManager {
 
     public void start() {
 
-        //todo:魔王の種類10を置き換える
+
         if(playerStatus.getMaohWinCount() == 10 && playerStatus.getEndingFlag() == 0){
             playerStatus.setEndingFlag(1);
             playerStatus.save();
             worldModeAdmin.setMode(WORLD_MODE.ENDING);
+            return;
         }
 
 

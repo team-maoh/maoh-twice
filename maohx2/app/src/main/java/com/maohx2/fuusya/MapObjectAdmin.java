@@ -541,7 +541,9 @@ public class MapObjectAdmin {
 
     public void escapeDungeon() {
         map_inventry_admin.storageMapInventry();
+        globalData.getExpendItemInventry().save();
         activityChange.toWorldActivity();
+
     }
 
     public int getMagnification() {
@@ -603,8 +605,9 @@ public class MapObjectAdmin {
     }
 
     public boolean isGoodSpawnPoint(Point _room_point) {
-        int spawn_x = _room_point.x + magnification / 2;
-        int spawn_y = _room_point.y + magnification / 2;
+        //by kmhanko
+        int spawn_x = _room_point.x*magnification + magnification / 2;
+        int spawn_y = _room_point.y*magnification + magnification / 2;
         boolean wall_check_1 = detectWall(spawn_x, spawn_y, spawn_x + magnification, spawn_y) == 0;
         boolean wall_check_2 = detectWall(spawn_x, spawn_y, spawn_x, spawn_y + magnification) == 0;
         boolean wall_check_3 = detectWall(spawn_x, spawn_y, spawn_x - magnification, spawn_y) == 0;
@@ -613,8 +616,9 @@ public class MapObjectAdmin {
     }
 
     public boolean isGoodSpawnPoint(int _x, int _y) {
-        int spawn_x = _x + magnification / 2;
-        int spawn_y = _y + magnification / 2;
+        //by kmhanko
+        int spawn_x = _x*magnification + magnification / 2;
+        int spawn_y = _y*magnification + magnification / 2;
         boolean wall_check_1 = detectWall(spawn_x, spawn_y, spawn_x + magnification, spawn_y) == 0;
         boolean wall_check_2 = detectWall(spawn_x, spawn_y, spawn_x, spawn_y + magnification) == 0;
         boolean wall_check_3 = detectWall(spawn_x, spawn_y, spawn_x - magnification, spawn_y) == 0;

@@ -91,8 +91,7 @@ public class MapInventryAdmin {
 
                 switch (tmp_item_kind) {
                     case EXPEND:
-                        expendItemInventry.addItemData(tmp_item_data);
-
+                        expendItemInventry.addItemData(tmp_item_data, inventry.getItemNum(i));
                         break;
                     case GEO:
                         geoItemInventry.addItemData(tmp_item_data);

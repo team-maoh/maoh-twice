@@ -30,6 +30,26 @@ import com.maohx2.kmhanko.sound.SoundAdmin;
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
 
+//memo
+
+//バグ
+//発掘ジオの偏りバグ
+//テキストを全部流す作業
+//ゲームクリアまで行けるのか
+
+//プレイyー半透明
+//3つダンジョンクリアして魔王
+//ダンジョンオールクリア
+
+//改善点
+
+//音量調節
+//使用回数、色を変えるなどしてわかりやすくする
+//ダンジョンでのポーション使用時、リタイア時、ゲームオーバー時などにメッセージを表示する
+//階層移動時に効果音を鳴らす
+//緑色のEが、背景の大陸の緑と同化してわかりにくい
+//音楽のループタイミングがおかしいものがある(ワールドマップなど)
+
 //タイトル画面など
 public class StartActivity extends BaseActivity {
 

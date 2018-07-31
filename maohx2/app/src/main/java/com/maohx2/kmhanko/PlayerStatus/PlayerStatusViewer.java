@@ -25,6 +25,7 @@ public class PlayerStatusViewer {
     static final int TEXT_X_OFFSET_LEFT2 = 125;
 
     static final float TEXT_SIZE_RATE= 0.6f;
+    static final float EXPRESS_RATE = 0.10f;
 
 
     int posX1;
@@ -102,22 +103,22 @@ public class PlayerStatusViewer {
                                     switch(i) {
                                         case 0:
                                             statusName = "HP";
-                                            statusFigure = String.valueOf(playerStatus.getHP());
+                                            statusFigure = String.valueOf(playerStatus.getHP()*EXPRESS_RATE);
                                             paint.setARGB(255,128,255,255);
                                             break;
                                         case 1:
                                             statusName = "Atk";
-                                            statusFigure = String.valueOf(playerStatus.getAttack());
+                                            statusFigure = String.valueOf(playerStatus.getAttack()*EXPRESS_RATE);
                                             paint.setARGB(255,255,128,128);
                                             break;
                                         case 2:
                                             statusName = "Def";
-                                            statusFigure = String.valueOf(playerStatus.getDefence());
+                                            statusFigure = String.valueOf(playerStatus.getDefence()*EXPRESS_RATE);
                                             paint.setARGB(255,128,128,255);
                                             break;
                                         case 3:
                                             statusName = "Luc";
-                                            statusFigure = String.valueOf(playerStatus.getLuck());
+                                            statusFigure = String.valueOf(playerStatus.getLuck()*EXPRESS_RATE);
                                             paint.setARGB(255,255,128,255);
                                             break;
                                         case 4:
