@@ -172,7 +172,7 @@ public class SectionAdmin {
     //セクションの分割
     public void divideSection(Section m_section) {
         divide_times++;
-        int buf_space = 11;//分割するときに上下左右をどれだけ空けるか
+        int buf_space = 9;//今までは11;//分割するときに上下左右をどれだけ空けるか
         int top = m_section.top;
         int bottom = m_section.bottom;
         int right = m_section.right;
@@ -193,14 +193,14 @@ public class SectionAdmin {
             if (height > 2 * buf_space) {
                 m_section.setHasChildren(true);
                 int divide_number = rnd.nextInt(height - 2 * buf_space) + buf_space + top;
-                //System.out.println("1top = "+top+",bottom = "+bottom+",left = "+left+",right = "+right+",isver = "+isver+",divide_number = "+divide_number+",rnd = "+(bottom - top - (2 * buf_space - 1)));
+//                System.out.println("1top = "+top+",bottom = "+bottom+",left = "+left+",right = "+right+",isver = "+isver+",divide_number = "+divide_number+",rnd = "+(bottom - top - (2 * buf_space - 1)));
                 m_section.children[0].setAll(left, top, right, divide_number);
                 m_section.children[1].setAll(left, divide_number + 1, right, bottom);
             } else if (width > 2 * buf_space) {
                 m_section.setHasChildren(true);
                 isver = 1;
                 int divide_number = rnd.nextInt(width - 2 * buf_space) + buf_space + left;
-                //System.out.println("2top = "+top+",bottom = "+bottom+",left = "+left+",right = "+right+",isver = "+isver+",divide_number = "+divide_number+",rnd = "+(right - left - (2 * buf_space - 1)));
+//                System.out.println("2top = "+top+",bottom = "+bottom+",left = "+left+",right = "+right+",isver = "+isver+",divide_number = "+divide_number+",rnd = "+(right - left - (2 * buf_space - 1)));
                 m_section.children[0].setAll(left, top, divide_number, bottom);
                 m_section.children[1].setAll(divide_number + 1, top, right, bottom);
             }
@@ -208,14 +208,14 @@ public class SectionAdmin {
             if (width > 2 * buf_space) {
                 m_section.setHasChildren(true);
                 int divide_number = rnd.nextInt(width - 2 * buf_space) + buf_space + left;
-                //System.out.println("3top = " + top + ",bottom = " + bottom + ",left = " + left + ",right = " + right + ",isver = " + isver + ",divide_number = " + divide_number + ",rnd = " + (right - left - (2 * buf_space - 1)));
+//                System.out.println("3top = " + top + ",bottom = " + bottom + ",left = " + left + ",right = " + right + ",isver = " + isver + ",divide_number = " + divide_number + ",rnd = " + (right - left - (2 * buf_space - 1)));
                 m_section.children[0].setAll(left, top, divide_number, bottom);
                 m_section.children[1].setAll(divide_number + 1, top, right, bottom);
             } else if (height > 2 * buf_space) {
                 m_section.setHasChildren(true);
                 isver = 0;
                 int divide_number = rnd.nextInt(height - 2 * buf_space) + buf_space + top;
-                //System.out.println("4top = "+top+",bottom = "+bottom+",left = "+left+",right = "+right+",isver = "+isver+",divide_number = "+divide_number+",rnd = "+(bottom - top - (2 * buf_space - 1)));
+//                System.out.println("4top = "+top+",bottom = "+bottom+",left = "+left+",right = "+right+",isver = "+isver+",divide_number = "+divide_number+",rnd = "+(bottom - top - (2 * buf_space - 1)));
                 m_section.children[0].setAll(left, top, right, divide_number);
                 m_section.children[1].setAll(left, divide_number + 1, right, bottom);
             }

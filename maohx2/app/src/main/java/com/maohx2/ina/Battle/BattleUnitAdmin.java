@@ -406,7 +406,7 @@ public class BattleUnitAdmin {
                 int hp = bBUD.getStatus(repeat_count, 5.042)[1];
                 int attack = bBUD.getStatus(repeat_count, 5.042)[2];
                 int defence = bBUD.getStatus(repeat_count, 5.042)[3];
-                BattleBaseUnitData tempBBUD = BattleRockCreater.getBattleBaseUnitData(hp * bBUD.getPower(), attack, defence, rareRate);//ダメージ計算上で攻撃力が必要
+                BattleBaseUnitData tempBBUD = BattleRockCreater.getBattleBaseUnitData(hp, attack, defence, rareRate);//ダメージ計算上で攻撃力が必要
                 battle_units[i].setBattleUnitDataRock(tempBBUD, repeat_count);
                 return i;
             }

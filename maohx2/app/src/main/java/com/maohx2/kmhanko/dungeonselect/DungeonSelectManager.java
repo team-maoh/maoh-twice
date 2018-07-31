@@ -236,9 +236,11 @@ public class DungeonSelectManager {
             playerStatus.addClearCount();
             playerStatus.setNowClearCount(playerStatus.getClearCount());
 
+            /*
             enterTextBoxUpdateCountUp();
             OkButtonGroup.setUpdateFlag(true);
             OkButtonGroup.setDrawFlag(true);
+            */
 
             for (int i = 0; i < Constants.STAGE_NUM; i++) {
                 mapStatus.setMapClearStatus(0,i);
@@ -246,6 +248,8 @@ public class DungeonSelectManager {
             }
             playerStatus.save();
         }
+
+        mapIconPlateListUpdate();
 
     }
 
