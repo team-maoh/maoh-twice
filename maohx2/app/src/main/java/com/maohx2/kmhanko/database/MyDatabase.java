@@ -502,7 +502,9 @@ public class MyDatabase {
         //TODO:例外処理
         long id = db.insert(t_name, null, content_values);
         if (id == -1) {
-            throw new Error("タカノ : MyDatabase#insertLineByArrayString : insert is Error");
+            System.out.println("takano:ERROR! insertLineByArrayString " + c_names + " / "+ values);
+            return false;
+            //throw new Error("タカノ : MyDatabase#insertLineByArrayString : insert is Error");
         }
         return true;
     }

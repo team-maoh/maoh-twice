@@ -346,6 +346,9 @@ public class DungeonGameSystem {
             case MAP_INIT:
                 playMapBGM();
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
+                if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.DRAGON) {
+                    backGround = graphic.searchBitmap("firstBackground");
+                }
             case MAP:
                 if (!talkAdmin.isTalking()) {
                     //map_object_admin.update(is_displaying_menu, is_touching_outside_menu);
@@ -476,6 +479,9 @@ public class DungeonGameSystem {
 //        }
         switch (dungeonModeManage.getMode()) {
             case MAP:
+                if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.DRAGON) {
+                    graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
+                }
                 map_admin.drawMap_for_autotile_light_animation();
                 map_object_admin.draw();
                 map_plate_admin.draw();
