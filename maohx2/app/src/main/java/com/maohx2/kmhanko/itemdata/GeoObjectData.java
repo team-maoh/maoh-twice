@@ -45,6 +45,9 @@ public class GeoObjectData extends ItemData {
         this(_name,_bitmapData, _hp,_attack,_defence,_luck,_hp_rate,_attack_rate,_defence_rate,_luck_rate);
         this.setImageName(_imageName);
 
+        slotSetName = _slotSetName;
+        slotSetID = _slotSetID;
+
         setItemKind(Constants.Item.ITEM_KIND.GEO);
     }
 
