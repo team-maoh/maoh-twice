@@ -27,7 +27,7 @@ public class BitmapDataAdmin {
 
     //kmhanko
     //画像読み込み時に縮小して(容量節約して)読むかどうか。
-    boolean optionFlag = false;
+    boolean optionFlag = true;
 
     //コンストラクタ
     public BitmapDataAdmin() {}
