@@ -288,8 +288,7 @@ public class WorldGameSystem {
         initBackPlate();
 
         //OP判定。まだOPを流していないならOP会話イベントを発動する。
-        //talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される
-
+        talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される
 
         /*
         battleUnitDataAdmin = new BattleUnitDataAdmin(databaseAdmin, graphic);
@@ -344,6 +343,10 @@ public class WorldGameSystem {
             effectAdmin.getEffect(testID).start();
         }
 */
+
+        if (!talkAdmin.isTalking()) {
+            talkAdmin.debug();
+        }
 
         switch (worldModeAdmin.getMode()) {
             case DUNGEON_SELECT_INIT_START:
