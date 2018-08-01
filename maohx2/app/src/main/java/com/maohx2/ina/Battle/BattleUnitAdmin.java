@@ -578,12 +578,7 @@ public class BattleUnitAdmin {
                 marker_flag = false;
             }
 
-            //マーカーの縮小
-            for (int i = 0; i < MAKER_NUM; i++) {
-                if (touch_markers[i].isExist() == true) {
-                    touch_markers[i].update();
-                }
-            }
+
 
 
             //敵HP更新
@@ -712,6 +707,13 @@ public class BattleUnitAdmin {
                             //HPがマイナスになっているはずなので、マイナス分をジオ計算時に反映する
                         }
                     }
+                }
+            }
+
+            //マーカーの縮小 //楽器のdecayRate == 0としたため、一度は攻撃が通るように
+            for (int i = 0; i < MAKER_NUM; i++) {
+                if (touch_markers[i].isExist() == true) {
+                    touch_markers[i].update();
                 }
             }
 
