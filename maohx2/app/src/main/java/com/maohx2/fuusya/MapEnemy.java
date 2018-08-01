@@ -112,6 +112,7 @@ public class MapEnemy extends MapUnit {
                     //found motion(「！」を出すとか)
                     found_dwell_count = FOUND_DWELL_FRAMES;
 
+
                 }
                 if (has_found_player == true && exposedToPlayer() == false) {//発見→未発見（見失う）
                     has_found_player = false;//Playerと自身の間に壁(or玄関マス)がある
