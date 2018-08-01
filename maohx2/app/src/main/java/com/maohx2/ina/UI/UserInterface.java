@@ -66,6 +66,10 @@ public class UserInterface {
     }
 
 
+    public void touchReset() {
+        touch_state = TouchState.AWAY;
+    }
+
     public void updateTouchState(double _touch_x, double _touch_y, TouchState _touch_state) {
 
         touch_x = _touch_x;

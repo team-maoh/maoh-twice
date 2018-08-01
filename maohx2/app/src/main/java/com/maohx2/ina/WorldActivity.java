@@ -66,6 +66,16 @@ public class WorldActivity extends BaseActivity {
         return "WorldActivity";
     }
 
+    @Override
+    public void stopSound() {
+        worldSurfaceView.soundAdmin.stopAll();
+    };
+
+    @Override
+    public void touchReset() {
+        worldSurfaceView.map_user_interface.touchReset();
+    }
+
 }
 
 
@@ -161,7 +171,9 @@ class WorldSurfaceView extends BaseSurfaceView {
 
     @Override
     public void gameLoop() {
-
+        if (currentActivity.isFinishing() || currentActivity.isPaused()) {
+            return;
+        }
         map_user_interface.updateTouchState(touch_x, touch_y, touch_state);
 
         /*

@@ -77,6 +77,19 @@ public class DungeonActivity extends BaseActivity {
     public String getActivityName() {
         return "DungeonActivity";
     }
+
+    @Override
+    public void stopSound() {
+        dungeon_surface_view.sound_admin.stopAll();
+    };
+
+    @Override
+    public void touchReset() {
+        dungeon_surface_view.battle_user_interface.touchReset();
+        dungeon_surface_view.dungeon_user_interface.touchReset();
+
+    }
+
 }
 
 class DungeonSurfaceView extends BaseSurfaceView{
@@ -210,6 +223,9 @@ class DungeonSurfaceView extends BaseSurfaceView{
 
     @Override
     public void gameLoop(){
+        if (currentActivity.isFinishing() || currentActivity.isPaused()) {
+            return;
+        }
 
         dungeon_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         battle_user_interface.updateTouchState(touch_x, touch_y, touch_state);

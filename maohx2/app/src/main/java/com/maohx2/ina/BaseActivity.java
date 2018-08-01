@@ -13,6 +13,8 @@ import android.view.SurfaceView;
 import android.widget.RelativeLayout;
 import com.maohx2.kmhanko.music.MusicAdmin;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.kmhanko.sound.SoundAdmin;
+
 import android.media.AudioManager;
 import static com.maohx2.ina.Constants.Bitmap.*;
 
@@ -24,10 +26,12 @@ public abstract class BaseActivity extends Activity {
 
     RelativeLayout layout;
     BackSurfaceView backSurfaceView;
+    boolean isPaused;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isPaused = false;
 
         //System.out.println("ActLife:" + getActivityName() + " onCreate");
 
@@ -78,7 +82,19 @@ public abstract class BaseActivity extends Activity {
         super.onPause();  // Always call the superclass method first
         System.out.println("ActLife:" + getActivityName() + " onPause");
         MusicAdmin.pauseAll();
+        //stopSound();
+        touchReset();
+        isPaused = true;
     }
+
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    //ポーズ時用
+    abstract public void stopSound();
+    abstract public void touchReset();
+
 
     @Override
     public void finish() {
@@ -133,6 +149,7 @@ public abstract class BaseActivity extends Activity {
 
     protected void onResume() {
         System.out.println("ActLife:" + getActivityName() + " onResume");
+        isPaused = false;
         super.onResume();
     }
 

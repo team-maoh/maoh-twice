@@ -101,6 +101,16 @@ public class StartActivity extends BaseActivity {
         start_surface_view.release();
         start_surface_view = null;
     }
+
+    @Override
+    public void stopSound() {
+        start_surface_view.soundAdmin.stopAll();
+    };
+
+    @Override
+    public void touchReset() {
+        start_surface_view.start_user_interface.touchReset();
+    }
 }
 
 
@@ -233,6 +243,9 @@ class StartSurfaceView extends BaseSurfaceView {
 
     @Override
     public void gameLoop(){
+        if (currentActivity.isFinishing() || currentActivity.isPaused()) {
+            return;
+        }
 
         start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
 

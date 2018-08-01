@@ -21,7 +21,7 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     SurfaceHolder holder;
     Thread thread;
     ActivityChange activityChange;
-    Activity currentActivity;
+    BaseActivity currentActivity;
 
     boolean openingFlag = false;
 
@@ -52,7 +52,7 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     public BaseSurfaceView(Activity _currentActivity, BackSurfaceView _backSurfaceView) {
         super(_currentActivity);
-        currentActivity = _currentActivity;
+        currentActivity = (BaseActivity)_currentActivity;
         backSurfaceView = _backSurfaceView;
         setZOrderOnTop(true);
         holder = getHolder();
@@ -118,7 +118,9 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         }
     }
 
-    public void gameLoop(){}
+    public void gameLoop(){
+
+    }
 
     public void stopThread(){
         thread = null;
