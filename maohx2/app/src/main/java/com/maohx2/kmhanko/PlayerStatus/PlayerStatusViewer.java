@@ -25,7 +25,7 @@ public class PlayerStatusViewer {
     static final int TEXT_X_OFFSET_LEFT2 = 125;
 
     static final float TEXT_SIZE_RATE= 0.6f;
-    static final float EXPRESS_RATE = 222.22f;
+    static public final float EXPRESS_RATE = 222.22f;
     static final float EXPRESS_RATE2 = 222.2f;
 
 

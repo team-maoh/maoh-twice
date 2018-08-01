@@ -42,6 +42,7 @@ import static com.maohx2.ina.Constants.UnitStatus.BonusStatus;
 import static com.maohx2.ina.Constants.DungeonKind.DUNGEON_KIND;
 
 import com.maohx2.ina.Battle.*;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatusViewer;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.effect.Effect;
 import com.maohx2.kmhanko.effect.EffectAdmin;
@@ -111,6 +112,8 @@ public class BattleUnitAdmin {
     int repeat_count;
     int battle_effect_ID;
     int mine_effect_ID;
+
+    String gameoverMes = "";
 
     PlayerStatus playerStatus;
     MaohMenosStatus maohMenosStatus;
@@ -663,15 +666,17 @@ public class BattleUnitAdmin {
                                     } else if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.COUNTER) {
                                         //カウンターでも敵にダメージは入る
                                         if (new_hp > 0) {
-                                            battle_units[0].setHitPoint(new_hp);
+                                            battle_units[i].setHitPoint(new_hp);
                                         } else {
-                                            battle_units[0].existIs(false);
+                                            battle_units[i].existIs(false);
                                         }
 
                                         //プレイヤーも同じだけダメージを食らう
-                                        new_hp = battle_units[0].getHitPoint() - (int) (20 * strong_ratio * level_rate);
+                                        int damage = (int) (20 * strong_ratio * level_rate);
+                                        new_hp = battle_units[0].getHitPoint() - damage;
                                         if (new_hp <= 0) {
                                             //負けたとき
+                                            gameoverMes = "敵のカウンター攻撃で" + String.valueOf((int)((float)(damage) / PlayerStatusViewer.EXPRESS_RATE)) +"ダメージを受けて";
                                             gameOver();
                                             resultOperatedFlag = true;
                                             battleEndFlag = true;
@@ -701,7 +706,7 @@ public class BattleUnitAdmin {
                 }
             }
 
-            //ポーションなどの使用の処理
+            //ポーションなどの使用の処
             if (palette_admin.checkSelectedExpendItemData() != null) {
                 int heel_to_player = (int) (battle_units[0].getMaxHitPoint() * palette_admin.checkSelectedExpendItemData().getHp() / 100.0f);
                 palette_admin.deleteExpendItemData();
@@ -758,7 +763,8 @@ public class BattleUnitAdmin {
                         level_rate = Math.pow(level_rate, 0.4);//0.4だと、自他のStatusが定数倍になっても、敵を倒すための確定数はほぼ変化しない
 //                        System.out.println("level_pl_2_" + level_rate);
 
-                        int new_hp = battle_units[0].getHitPoint() - (int) ((133.0 * strong_ratio) * level_rate * damage_rate);
+                        int damage = (int) ((133.0 * strong_ratio) * level_rate * damage_rate);
+                        int new_hp = battle_units[0].getHitPoint() - damage;
                         //int new_hp = battle_units[0].getHitPoint() - (int) ((133.0 * strong_ratio) * level_rate * damage_rate - heel_to_player);
 //                        int new_hp = battle_units[0].getHitPoint() - (int) ((real_atk * exp * 0.295 / (real_def + 1) * damage_rate) + heel_to_player);
 
@@ -766,6 +772,9 @@ public class BattleUnitAdmin {
 //                        System.out.println("hp_pl_desuyo_" + new_hp);//PlayerのHP22222に対して、133ずつ減る
 //                        System.out.println("damage_pl_desuyo_" + damage_to_player);//1000
 //                        System.out.println("def_pl_desuyo_" + battle_units[0].getDefence());//2222
+
+                        gameoverMes = "敵から" + String.valueOf((int)((float)(damage) / PlayerStatusViewer.EXPRESS_RATE)) + "ダメージを受けて";
+
                         if (new_hp > battle_units[0].getMaxHitPoint()) {
                             new_hp = battle_units[0].getMaxHitPoint();
                         }
@@ -790,6 +799,7 @@ public class BattleUnitAdmin {
 
                         if (battle_units[i].getAlimentCounts(BattleBaseUnitData.ActionID.CURSE.ordinal() - 1) == 0) {
                             new_hp = 0;
+                            gameoverMes = "呪いの状態異常で";
                         }
 
                         if (new_hp <= 0) {
@@ -1154,7 +1164,13 @@ public class BattleUnitAdmin {
     }
 
     private void gameoverMessage() {
-        resultTextBoxUpdate(new String[]{"あなたはやられてしまった！"});
+        resultTextBoxUpdate(
+                new String[]{
+                        "あなたは",
+                        gameoverMes,
+                        "やられてしまった！"
+                })
+        ;
         resultButtonGroup.setUpdateFlag(true);
         resultButtonGroup.setDrawFlag(true);
         return;
