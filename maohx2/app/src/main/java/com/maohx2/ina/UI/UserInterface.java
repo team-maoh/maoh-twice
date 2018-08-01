@@ -92,8 +92,10 @@ public class UserInterface {
                 up_check = false;
             }else if(touch_state == TouchState.UP){
                 touch_state = TouchState.MOVE;
+            }else if (touch_state == TouchState.AWAY) {
+                touch_state = TouchState.MOVE;
+                up_check = false;
             }
-
 
         } else if (_touch_state == TouchState.UP) {
             if (((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) && up_check == false) {
