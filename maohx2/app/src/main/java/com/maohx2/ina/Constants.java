@@ -10,8 +10,7 @@ import android.graphics.Paint;
 
 public final class Constants {
 
-    private Constants() {
-    }
+    private Constants() {}
 
     public static class Math {
         public static final double SIN[] = {0, 0.7071, 1, 0.7071, 0, -0.7071, -1, -0.7071};
@@ -30,7 +29,6 @@ public final class Constants {
         public static final int PALETTE_DEFAULT_Y_LEFT = 750;
         public static final int PALETTE_DEFAULT_X_RIGHT = 1400;
         public static final int PALETTE_DEFAULT_Y_RIGHT = 750;
-
     }
 
     public static class Inventry {
