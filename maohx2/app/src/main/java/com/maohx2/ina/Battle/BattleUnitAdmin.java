@@ -366,6 +366,7 @@ public class BattleUnitAdmin {
     }
 
     public void spawnEnemy(String[] monsters) {
+        deleteEnemy();
         for (int i = 0; i < monsters.length; i++) {
             setBattleUnitData(monsters[i], repeat_count);
         }
