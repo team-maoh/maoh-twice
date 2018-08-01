@@ -109,7 +109,7 @@ public class StartActivity extends BaseActivity {
 
     @Override
     public void touchReset() {
-        start_surface_view.start_user_interface.touchReset();
+        start_surface_view.touch_state = TouchState.AWAY;
     }
 }
 

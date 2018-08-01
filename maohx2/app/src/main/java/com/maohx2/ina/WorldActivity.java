@@ -73,7 +73,7 @@ public class WorldActivity extends BaseActivity {
 
     @Override
     public void touchReset() {
-        worldSurfaceView.map_user_interface.touchReset();
+        worldSurfaceView.touch_state = TouchState.AWAY;
     }
 
 }

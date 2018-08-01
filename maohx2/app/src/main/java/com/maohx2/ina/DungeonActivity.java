@@ -85,8 +85,7 @@ public class DungeonActivity extends BaseActivity {
 
     @Override
     public void touchReset() {
-        dungeon_surface_view.battle_user_interface.touchReset();
-        dungeon_surface_view.dungeon_user_interface.touchReset();
+        dungeon_surface_view.touch_state = TouchState.AWAY;
 
     }
 
