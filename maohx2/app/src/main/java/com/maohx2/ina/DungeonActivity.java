@@ -73,7 +73,7 @@ public class DungeonActivity extends BaseActivity {
         dungeon_surface_view = null;
     }
 
-    //@Override
+    @Override
     public String getActivityName() {
         return "DungeonActivity";
     }

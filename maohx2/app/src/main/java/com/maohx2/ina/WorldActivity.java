@@ -61,7 +61,7 @@ public class WorldActivity extends BaseActivity {
         worldSurfaceView = null;
     }
 
-    //@Override
+    @Override
     public String getActivityName() {
         return "WorldActivity";
     }
