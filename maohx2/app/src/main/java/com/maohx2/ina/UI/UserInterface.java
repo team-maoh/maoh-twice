@@ -100,6 +100,8 @@ public class UserInterface {
                 up_check = true;
             }
         }
+
+        //System.out.println(String.valueOf(touch_state));
     }
 
     public void draw(){

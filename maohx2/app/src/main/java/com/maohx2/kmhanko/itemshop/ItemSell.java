@@ -130,9 +130,9 @@ public class ItemSell {
                     */
                     parentInv = inventry.getInventryData(i).getParentInventry();
                     for (int j = 0; j < inventry.getInventryData(i).getSoldNum(); j++) {
-                        parentInv.subItemData(inventry.getItemData(i));
+                        inventry.getInventryData(i).setSoldNum(0);
+                        parentInv.subItemData(inventry.getItemData(i));//個数が0以下になるとシフトが発生するため、iに意味がなくなるので注意
                     }
-                    inventry.getInventryData(i).setSoldNum(0);
                 }
             }
         }
@@ -195,7 +195,7 @@ public class ItemSell {
             //さらに元のInventryDataの売却個数を+1する。ただし、売却個数が所持個数を上回るような場合には全ての処理を行わない。
             if (tempInventryData.getParentInventry() == geoInventry) {
                 GeoObjectData tempGeo = (GeoObjectData) (tempInventryData.getItemData());
-                if (tempInventryData.getItemNum() > tempInventryData.getSoldNum() && tempGeo.getSlotSetName() == "noSet") {
+                if (tempInventryData.getItemNum() > tempInventryData.getSoldNum() && tempGeo.getSlotSetName().equals("noSet")) {
                     sellItemInventry.addItemData(tempInventryData.getItemData());
                     tempInventryData.addSoldNum();
                 }
@@ -215,6 +215,8 @@ public class ItemSell {
                 }
             }
         }
+
+        userInterface.setInventryData(null);
     }
 
     //***** draw関係 *****
@@ -222,7 +224,7 @@ public class ItemSell {
         geoInventry.draw();
         expendItemInventry.draw();
         equipmentInventry.draw();
-        sellItemInventry.draw();
+        sellItemInventry.drawExceptEquip();
         switchPlateGroup.draw();
 
         sellEnterPlateGroup.draw();
