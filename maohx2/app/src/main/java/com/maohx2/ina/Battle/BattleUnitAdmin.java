@@ -1086,7 +1086,10 @@ public class BattleUnitAdmin {
             if (battle_units[i].getUnitKind() == Constants.UnitKind.ROCK && battle_units[i].isDropFlag()) {
                 int parameter = 0;
                 if (dropGeoObjectKind.get(i - 1) == Constants.Item.GEO_KIND_ALL.ATTACK_RATE || dropGeoObjectKind.get(i - 1) == Constants.Item.GEO_KIND_ALL.DEFENCE_RATE || dropGeoObjectKind.get(i - 1) == Constants.Item.GEO_KIND_ALL.LUCK_RATE || dropGeoObjectKind.get(i - 1) == Constants.Item.GEO_KIND_ALL.HP_RATE) {
-                    parameter = 100;
+                    parameter = (repeat_count+1)*20;
+                    if (parameter > 100) {
+                        parameter = 100;
+                    }
                 } else {
                     parameter = dropGeoObject.get(i - 1);
                 }
