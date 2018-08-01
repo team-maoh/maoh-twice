@@ -88,7 +88,7 @@ public class StartActivity extends BaseActivity {
         //start_surface_view.graphic.releaseBitmap();
     }
 
-    @Override
+    //@Override
     public String getActivityName() {
         return "StartActivity";
     }

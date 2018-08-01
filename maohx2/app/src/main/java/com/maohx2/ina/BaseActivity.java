@@ -28,7 +28,8 @@ public abstract class BaseActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("ActLife:" + getActivityName() + " onCreate");
+
+        //System.out.println("ActLife:" + getActivityName() + " onCreate");
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         layout = new RelativeLayout(this);
@@ -39,6 +40,9 @@ public abstract class BaseActivity extends Activity {
         System.out.println("talano : setVolumeControlStream");
         super.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         //MusicAdmin.setAudioService(this);
+
+
+
         /*
         backSurfaceView = new BackSurfaceView(this);
         layout.addView(backSurfaceView);
@@ -47,10 +51,18 @@ public abstract class BaseActivity extends Activity {
 
     }
 
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return true;
+        //return true; もともとこれしかなかった。これだと全ての端末のキー入力を無視することになる。
+        if(keyCode != KeyEvent.KEYCODE_BACK){
+            return super.onKeyDown(keyCode, event);//バックキーの場合のみ、無視する
+        }else{
+            return false;
+        }
     }
+
+
 
     void setImage(String name, double x, double y) {
         //graphic.setImage(name, x, y);
