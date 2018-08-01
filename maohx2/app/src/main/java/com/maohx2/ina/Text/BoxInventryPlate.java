@@ -120,7 +120,7 @@ public class BoxInventryPlate extends BoxPlate {
                             int palette_position = ((ExpendItemData)(inventry_data.getItemData())).getPalettePosition(i+1);
                             text_paint.setColor(CIRCLE_COLOR[palette_position]);
                             text_paint.setAlpha(255);
-                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() + (int) ((down - up) * (1.0 / 5))) + 50 + offSet, up + (int)((down - up) / 2), text_paint);
+                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() + (int) ((down - up) * (1.0 / 5))) + 35 + offSet, up + (int)((down - up) / 2), text_paint);
                         }
                     }
                 }
