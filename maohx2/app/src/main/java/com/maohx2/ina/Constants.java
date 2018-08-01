@@ -55,7 +55,7 @@ public final class Constants {
 
     public static final int STAGE_NUM = 7;
 
-    public static final String DEBUG_SAVE_MODE = "s";
+    public static final String DEBUG_SAVE_MODE = "ns";
     public static class SaveDataVersion {
         public static final int EQUIPMENT_INVENTRY = 1;
         public static final int EXPEND_INVENTRY = 1;
@@ -101,7 +101,7 @@ public final class Constants {
 
 
     public static class BattleUnit {
-        public static final int BATTLE_UNIT_MAX = 50;//15
+        public static final int BATTLE_UNIT_MAX = 15;//15
     }
 
     public static class UnitStatus {

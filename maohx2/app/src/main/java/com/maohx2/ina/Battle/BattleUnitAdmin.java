@@ -253,11 +253,16 @@ public class BattleUnitAdmin {
         }
         */
 
+
         if (mode == MODE.MINING) {
-            palette_admin.setPalettesFlags(new boolean[]{false, false, true});
-            dropGeoObject.clear();
-            spawnRock();
-            timeLimitBar.reset(30 * 30);
+            //for (int i=0;i<100;i++) {//TODO dbug
+                palette_admin.setPalettesFlags(new boolean[]{false, false, true});
+                dropGeoObject.clear();
+                dropGeoObjectKind.clear();
+                spawnRock();
+                timeLimitBar.reset(30 * 30);
+                //deleteEnemy();
+            //}
         }
 
         textBoxAdmin.resetTextBox(resultTextBoxID);
@@ -320,6 +325,7 @@ public class BattleUnitAdmin {
 
     public void deleteEnemy() {
         for (int i = 0; i < battle_units.length; i++) {
+            //battle_units[i].clear();
             battle_units[i].existIs(false);
             battle_units[i].dropFlagIs(false);
         }
@@ -350,14 +356,16 @@ public class BattleUnitAdmin {
 
         Random r = new Random();
 
+
         //岩に対応する敵を決定し、その対応する敵データからHPを決める
         for (int i = 0; i < r.nextInt(3) + 1; i++) {
-        //for (int i = 0; i < 50; i++) {
+        //for (int i = 0; i < 100; i++) {
             setRockUnitData();
         }
 
         //TODO debug
         //getDropGeoAfter();
+
     }
 
     public void spawnBoss(String[] monsters) {
@@ -953,7 +961,7 @@ public class BattleUnitAdmin {
         BattleBaseUnitData bBUDforRock = ((BattleEnemy) tempBattleUnit).getBattleBaseUnitDataForRock();
         int[] status = bBUDforRock.getStatus(repeat_count, 5.042);
         //このジオは何ジオか決定する
-        if (Math.random() < 0.5) {
+        if (Math.random() < 0.7) {
             //NormalGeo
             GEO_PARAM_KIND_NORMAL kindNormal = GeoObjectDataCreater.getRandKindNormal();
             switch (kindNormal) {

@@ -392,8 +392,9 @@ public class BattleUnitDataAdmin {
             }
         }
         Random random = new Random();
-        int i = random.nextInt(tempDungeonMonsterData.size() - 1);
-        return battle_base_unit_datas.get(i);
+        int i = random.nextInt(tempDungeonMonsterData.size()-1);
+        String name = tempDungeonMonsterData.get(i).getMonsterName();
+        return getBattleUnitDataNum(name);
     }
 
     /*

@@ -33,6 +33,24 @@ public class BattleEnemy extends BattleUnit {
 
     protected BattleBaseUnitData battleBaseUnitDataForRock;
 
+    @Override
+    public void clear() {
+        super.clear();
+        position_x = 0;
+        position_y = 0;
+        radius = 0.0;
+        uiid = 0;
+        attackCount = 0;
+        attack_frame = 0;
+        specialActionCount = 0;
+        float[] actionRate = new float[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
+        int[] alimentTime = new int[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
+        specialAction = SpecialAction.NONE;
+        specialActionPeriod = 0;
+        specialActionWidth = 0;
+        is_damaged = false;
+    }
+
     public BattleEnemy(Graphic _graphic){
         super(_graphic);
         position_x = 0;
