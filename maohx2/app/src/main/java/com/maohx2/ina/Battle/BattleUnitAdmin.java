@@ -314,9 +314,9 @@ public class BattleUnitAdmin {
                 palette_admin.setPalettesFlags(new boolean[]{false, false, true});
                 dropGeoObject.clear();
                 dropGeoObjectKind.clear();
+                deleteEnemy();
                 spawnRock();
                 timeLimitBar.reset(30 * 30);
-                //deleteEnemy();
             //}
         }
 

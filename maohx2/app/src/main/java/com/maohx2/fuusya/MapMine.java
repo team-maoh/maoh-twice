@@ -36,6 +36,7 @@ public class MapMine extends MapInanimate {
 
             if (player.isWithinReach(w_x, w_y, REACH_FOR_PLAYER) == true) {
                 System.out.println("採掘スポットに接触");
+                if (dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE && dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT)
                 dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
                 exists = false;
 
