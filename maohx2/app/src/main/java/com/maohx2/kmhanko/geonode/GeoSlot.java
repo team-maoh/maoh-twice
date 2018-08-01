@@ -293,7 +293,7 @@ public class GeoSlot extends CircleImagePlate {
     }
 
     List<Integer> geoSlotLineEffect = new ArrayList<Integer>();
-    int geoSlotLineColor;//0 = HP 1 = Attack 2 = defence 3 = Luck 4 = none;
+    private int geoSlotLineColor;//0 = HP 1 = Attack 2 = defence 3 = Luck 4 = none;
 
     public void clearGeoSlotLineEffect() {
         for (int i = 0; i < geoSlotLineEffect.size(); i++) {
@@ -381,7 +381,7 @@ public class GeoSlot extends CircleImagePlate {
                     for(int j = 0; j < dotNum; j++) {
 
                         geoSlotLineEffect.add(
-                                effectAdmin.createEffect("geoSlotLine", effectImageName, 3, 1)
+                                effectAdmin.createEffect(effectImageName, effectImageName, 3, 1)
                         );
                         id = geoSlotLineEffect.get(geoSlotLineEffect.size() - 1);
                         effectAdmin.setPosition(

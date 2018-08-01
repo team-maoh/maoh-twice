@@ -28,7 +28,7 @@ public class MapTrap extends MapInanimate {
     int EFFECT_TEXT_FRAMES_MAX = 50;
     int effect_text_frames;
     double REACH_FOR_PLAYER = 25;
-    int CONST_FRAMES_ACTIVATING = 50;
+    int CONST_FRAMES_ACTIVATING = 30 * 4;//トラップ継続時間
     int frames_activating;
     MapPlayer player;
     String name;

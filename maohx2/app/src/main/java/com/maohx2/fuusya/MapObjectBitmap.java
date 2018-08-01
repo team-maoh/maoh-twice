@@ -131,6 +131,9 @@ public class MapObjectBitmap {
 
     // 引数のx, yは画面内の座標
     public void draw(double _dir_on_map, double x, double y) {
+        draw(_dir_on_map, x, y, 255);
+    }
+    public void draw(double _dir_on_map, double x, double y, int alpha) {
 
         int shift_from_width = -unit_width * DRAW_SCALE / 2;
         int shift_from_height = -unit_height * DRAW_SCALE / 2;
@@ -138,7 +141,7 @@ public class MapObjectBitmap {
         switch (total_dirs) {
             case 1:
 //                graphic.bookingDrawBitmapData(raw_bitmap_data, (int) x + shift_from_width, (int) y + shift_from_height, DRAW_SCALE, DRAW_SCALE, 0, 255, true);
-                graphic.bookingDrawBitmapData(raw_bitmap_data, (int) x, (int) y, DRAW_SCALE, DRAW_SCALE, 0, 255, true);
+                graphic.bookingDrawBitmapData(raw_bitmap_data, (int) x, (int) y, DRAW_SCALE, DRAW_SCALE, 0, alpha, true);
                 break;
 
             case 8:
@@ -147,7 +150,7 @@ public class MapObjectBitmap {
                 //[0 ~ 2*PI]を[0 ~ 7]に変換する
                 int int_dir_on_map = ((int) ((_dir_on_map + PI / total_dirs) / (2 * PI / total_dirs))) % total_dirs;
 
-                graphic.bookingDrawBitmapData(bitmap_data[int_dir_on_map][frame], (int) x + shift_from_width, (int) y + shift_from_height * (int) shift_double, DRAW_SCALE, DRAW_SCALE, 0, 255, true);
+                graphic.bookingDrawBitmapData(bitmap_data[int_dir_on_map][frame], (int) x + shift_from_width, (int) y + shift_from_height * (int) shift_double, DRAW_SCALE, DRAW_SCALE, 0, alpha, true);
                 break;
 
             default:

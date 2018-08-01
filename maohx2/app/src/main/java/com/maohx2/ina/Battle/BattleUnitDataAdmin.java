@@ -259,15 +259,15 @@ public class BattleUnitDataAdmin {
                 List<Double> tempDropItemPercent;
                 for (int j = 0; j < 3 ; j++) {
                     switch (j) {
-                        case 1:
+                        case 0:
                             tempDropItem = drop_item1;
                             tempDropItemPercent = drop_item_percent1;
                             break;
-                        case 2:
+                        case 1:
                             tempDropItem = drop_item2;
                             tempDropItemPercent = drop_item_percent2;
                             break;
-                        case 3:
+                        case 2:
                             tempDropItem = drop_item3;
                             tempDropItemPercent = drop_item_percent3;
                             break;

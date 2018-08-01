@@ -664,14 +664,21 @@ public class DungeonSelectManager {
                 soundAdmin.play("enter00");
                 if (worldModeAdmin.getMode() == WORLD_MODE.DUNGEON_SELECT) {
                     if (dungeonEnterCheck()) {
+                        geoSlotAdminManager.calcMaohMenosStatus();
                         enterTextBoxUpdateMaoh();
                         maohEnterSelectButtonGroup.setUpdateFlag(true);
                         maohEnterSelectButtonGroup.setDrawFlag(true);
                     }
                 }
                 if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
+                    soundAdmin.play("enter00");
                     geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
                     worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
+                    if (mapIconPlateGroup.getPlates(focusDungeonButtonID).getGeoEnterFlag()) {
+                        geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_NORMAL);
+                    } else {
+                        geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_SEE_ONLY);
+                    }
                     initUIsFlag = true;
                 }
             }

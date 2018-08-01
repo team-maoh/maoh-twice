@@ -177,6 +177,8 @@ public final class Constants {
             TO_WORLD,
             EQUIP_EXPEND,
             EQUIP_EXPEND_INIT,
+            ITEM_INIT,
+            ITEM,
             GEO_MAP_INIT,
             GEO_MAP,
         }
