@@ -439,7 +439,16 @@ public class BattleUnitAdmin {
         if (!battleEndFlag) {
             //if (!battleEndFlag && !(mode == MODE.OPENING && text_mode)) {
 
-            battle_units[0].update();
+            battle_units[0].update();//この内部で毒の処理も行われている
+            if (battle_units[0].getHitPoint() <= 0) {
+                //毒で死んだ
+                gameoverMes = "毒の状態異常で";
+                gameOver();
+                resultOperatedFlag = true;
+                battleEndFlag = true;
+            }
+        }
+        if (!battleEndFlag) {//毒で死んだ場合のために改めて
 
             if (battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.PARALYSIS.ordinal() - 1) == 0 || battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.PARALYSIS.ordinal() - 1) % 2 == 0) {
                 attack_count++;
