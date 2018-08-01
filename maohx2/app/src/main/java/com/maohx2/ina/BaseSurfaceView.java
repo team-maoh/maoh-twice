@@ -131,21 +131,26 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 touch_state = Constants.Touch.TouchState.DOWN;
                 touch_x = event.getX();
                 touch_y = event.getY();
+                //System.out.println("***ACTION_DOWN");
                 break;
             case MotionEvent.ACTION_MOVE:
                 touch_state = Constants.Touch.TouchState.MOVE;
                 touch_x = event.getX();
                 touch_y = event.getY();
+                //System.out.println("***ACTION_MOVE");
                 break;
             case MotionEvent.ACTION_UP:
                 touch_state = Constants.Touch.TouchState.UP;
+                //System.out.println("***ACTION_UP");
                 break;
             case MotionEvent.ACTION_CANCEL:
+                //System.out.println("***ACTION_CANCEL");
                 break;
         }
         return true;
