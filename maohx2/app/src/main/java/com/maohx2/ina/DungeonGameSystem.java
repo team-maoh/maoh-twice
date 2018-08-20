@@ -190,6 +190,7 @@ public class DungeonGameSystem {
         dungeonModeManage = new DungeonModeManage();
         map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange, globalData, dungeonModeManage, soundAdmin);
         map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, soundAdmin, map_plate_admin, dungeonModeManage, globalData, battle_unit_admin, text_box_admin);
+        map_plate_admin.setMapObjectAdmin(map_object_admin);
         map_inventry_admin = new MapInventryAdmin(globalData, map_plate_admin.getInventry(), map_object_admin, map_plate_admin);
 
         dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
@@ -441,6 +442,16 @@ public class DungeonGameSystem {
                     backPlateGroup.update();
                 }
                 break;
+            case ITEM_INIT:
+                initBackPlate();
+                dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.ITEM);
+
+            case ITEM:
+                if (!talkAdmin.isTalking()) {
+                    map_plate_admin.update();
+                    backPlateGroup.update();
+                }
+                break;
             case GEO_MAP_INIT:
                 initBackPlate();
                 //geoSlotAdminManager.start();
@@ -499,11 +510,24 @@ public class DungeonGameSystem {
                 battle_unit_admin.draw();
                 break;
 
+            case ITEM_INIT:
+                map_admin.drawMap_for_autotile_light_animation();
+                map_object_admin.draw();
+                map_plate_admin.draw();
+                break;
+
+            case ITEM:
+                map_admin.drawMap_for_autotile_light_animation();
+                map_object_admin.draw();
+                map_plate_admin.draw();
+                backPlateGroup.draw();
+                break;
+
             case EQUIP_EXPEND_INIT:
                 map_admin.drawMap_for_autotile_light_animation();
                 map_object_admin.draw();
                 map_plate_admin.draw();
-                palette_admin.drawOnly();
+                //palette_admin.drawOnly();
                 playerStatusViewer.draw();
                 break;
 
@@ -518,7 +542,6 @@ public class DungeonGameSystem {
                 backPlateGroup.draw();
                 playerStatusViewer.draw();
                 break;
-
             case GEO_MAP:
                 //geoSlotAdminManager.draw();
                 playerStatusViewer.draw();
@@ -841,6 +864,7 @@ public class DungeonGameSystem {
                                 //戻るボタンが押された時の処理
                                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
                                 map_plate_admin.initMenu();
+                                soundAdmin.play("cancel00");
                                 /*worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
                                 */

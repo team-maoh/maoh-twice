@@ -270,10 +270,11 @@ public class MapPlayer extends MapUnit {
                         map_object_admin.eraseEffectBox();
 
                         //デバッグ時にエンカウントすると鬱陶しいのでコメントアウト
-                        battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
-                        battle_unit_admin.spawnEnemy(tmp_zako);//
-                        dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
-
+                        if (dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING && dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT) {
+                            battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
+                            battle_unit_admin.spawnEnemy(tmp_zako);//
+                            dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+                        }
                     }
                 }
             }

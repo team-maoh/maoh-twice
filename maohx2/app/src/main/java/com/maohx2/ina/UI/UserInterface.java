@@ -205,6 +205,8 @@ public class UserInterface {
                     break;
                 case UP_MOMENT:
                     if ((touch_state == TouchState.UP) && (Math.pow(circle_center_list_x[index_num] - touch_x, 2) + Math.pow(circle_center_list_y[index_num] - touch_y, 2) <= Math.pow(circle_radius_list[index_num], 2))) {
+                        touch_state = TouchState.MOVE;
+                        up_check = true;//TODO 要チェック kmhanko
                         return true;
                     }
                     break;

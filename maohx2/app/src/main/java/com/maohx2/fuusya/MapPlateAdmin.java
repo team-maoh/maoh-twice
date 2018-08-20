@@ -73,11 +73,11 @@ public class MapPlateAdmin {
 //    int ITEM_RIGHT = 1550;
 //    int ITEM_BOTTOM = 450;
 //    int ITEM_CONTENTS_NUM = 10;
-    int ITEM_CONTENTS_NUM = 10;
+    int ITEM_CONTENTS_NUM = 8;
     int ITEM_LEFT = LEFT_COORD;
-    int ITEM_TOP = UP_COORD;
+    int ITEM_TOP = UP_COORD + 150;
     int ITEM_RIGHT = RIGHT_COORD;
-    int ITEM_BOTTOM = UP_COORD + 70 * ITEM_CONTENTS_NUM;
+    int ITEM_BOTTOM = ITEM_TOP + 70 * ITEM_CONTENTS_NUM;
 
     int ITEM_BOTTOM_WITH_SWITCH = ITEM_BOTTOM + 100;
     //
@@ -104,6 +104,7 @@ public class MapPlateAdmin {
     boolean will_storage_inventry;
     DungeonModeManage dungeon_mode_manage;
     SoundAdmin sound_admin;
+    MapObjectAdmin mapObjectAdmin;
 
     int NUM_OF_TUTORIAL_BITMAP = 3;
     int i_of_tutorial_bitmap;
@@ -159,6 +160,10 @@ public class MapPlateAdmin {
 
     }
 
+    public void setMapObjectAdmin(MapObjectAdmin _mapObjectAdmin) {
+        mapObjectAdmin = _mapObjectAdmin;
+    }
+
     public void init() {
 
     }
@@ -182,11 +187,13 @@ public class MapPlateAdmin {
                 switch (content) {
                     case 0://ステータス
 //                        System.out.println("tatami ステータス");
+                        mapObjectAdmin.setPlayerAlpha(128);
                         displaying_content = 1;
                         is_displaying_list = false;
                         break;
                     case 1://アイテム
 //                        System.out.println("tatami アイテム");
+                        mapObjectAdmin.setPlayerAlpha(128);
                         displaying_content = 2;
                         is_displaying_list = false;
                         break;
@@ -208,6 +215,9 @@ public class MapPlateAdmin {
                 break;
 
             case 2://[アイテム]
+                if (dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.ITEM) {
+                    dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.ITEM_INIT);
+                }
                 break;
 
             case 3://[リタイア]
@@ -225,6 +235,13 @@ public class MapPlateAdmin {
         if (displaying_content != pre_displaying_content) {
             sound_admin.play("cursor00");
         }
+
+        if (displaying_content == -1) {
+            if (mapObjectAdmin.getPlayerAlpha() != 255) {
+                mapObjectAdmin.setPlayerAlpha(255);
+            }
+        }
+
 //        }
 
     }
@@ -255,7 +272,7 @@ public class MapPlateAdmin {
 
         drawTutorialImage();
 
-        if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+4) {
+        if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+4 || playerStatus.getTutorialInDungeon() != 0) {
             drawFloorAndHP();
         }
 

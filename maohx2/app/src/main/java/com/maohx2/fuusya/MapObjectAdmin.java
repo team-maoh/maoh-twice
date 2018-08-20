@@ -88,6 +88,15 @@ public class MapObjectAdmin {
     TextBoxAdmin text_box_admin;
     Paint paint;
 
+    int playerAlpha = 255;
+
+    public void setPlayerAlpha(int _playerAlpha) {
+        playerAlpha = _playerAlpha;
+    }
+    public int getPlayerAlpha() {
+        return playerAlpha;
+    }
+
     boolean is_displaying_menu;
 
     //リリース時にはfalse
@@ -260,7 +269,7 @@ public class MapObjectAdmin {
             }
         }
         if (map_player.exists() == true) {
-            map_player_bitmap.draw(map_player.getDirOnMap(), map_player.getNormX(), map_player.getNormY());
+            map_player_bitmap.draw(map_player.getDirOnMap(), map_player.getNormX(), map_player.getNormY(), playerAlpha);
         }
 
     }

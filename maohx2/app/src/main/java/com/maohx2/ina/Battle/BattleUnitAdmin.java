@@ -229,6 +229,58 @@ public class BattleUnitAdmin {
 
         paint.setARGB(230, 0, 0, 0);
 
+        initEffect();
+    }
+
+    private void initEffect() {
+        effectAdmin.createEffectOnlyTrim("scoop_effect", "scoop_effect", 5, 4);
+        effectAdmin.createEffectOnlyTrim("hammer_effect", "hammer_effect", 5, 1);
+        effectAdmin.createEffectOnlyTrim("bomb_effect", "bomb_effect", 5, 2);
+        effectAdmin.createEffectOnlyTrim("dynamite_effect", "dynamite_effect", 5, 4);
+        effectAdmin.createEffectOnlyTrim("bunch_of_dynamite_effect", "bunch_of_dynamite_effect", 5, 4);
+
+        for (int i = 0; i < 8; i++) {
+            ItemData itemData = palette_admin.getPalettes(0).getItemData(i);
+            EquipmentItemData equipmentItemData = (EquipmentItemData)itemData;
+            if (itemData != null) {
+                switch (equipmentItemData.getEquipmentKind()) {
+                    case AX:
+                        effectAdmin.createEffect("axe_effect", "axe_effect", 3, 5);
+                        break;
+                    case BARE:
+                        effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3);
+                        break;
+                    case BOW:
+                        effectAdmin.createEffect("bow_effect", "bow_effect", 5, 2);
+                        break;
+                    case WAND:
+                        effectAdmin.createEffect("cane_effect", "cane_effect", 14, 1);
+                        break;
+                    case GUN:
+                        effectAdmin.createEffect("gun_effect", "gun_effect", 5, 2);
+                        break;
+                    case FIST:
+                        effectAdmin.createEffect("knuckle_effect", "knuckle_effect", 6, 3);
+                        break;
+                    case CLUB:
+                        effectAdmin.createEffect("mace_effect", "mace_effect", 5, 1);
+                        break;
+                    case MUSIC:
+                        effectAdmin.createEffect("musical_instrument_effect", "musical_instrument_effect", 1, 15);
+                        break;
+                    case SPEAR:
+                        effectAdmin.createEffect("spear_effect", "spear_effect", 5, 3);
+                        break;
+                    case SWORD:
+                        effectAdmin.createEffect("sword_effect", "sword_effect", 9, 1);
+                        break;
+                    case WHIP:
+                        effectAdmin.createEffect("whip_effect", "whip_effect", 5, 5);
+                        break;
+                }
+            }
+        }
+
     }
 
     //by kmhanko
@@ -262,9 +314,9 @@ public class BattleUnitAdmin {
                 palette_admin.setPalettesFlags(new boolean[]{false, false, true});
                 dropGeoObject.clear();
                 dropGeoObjectKind.clear();
+                deleteEnemy();
                 spawnRock();
                 timeLimitBar.reset(30 * 30);
-                //deleteEnemy();
             //}
         }
 
@@ -280,7 +332,6 @@ public class BattleUnitAdmin {
                 battle_units[i].setBattleUnitDataEnemy(tempBattleBaseUnitData, repeatCount, mode == MODE.MAOH);
                 if (mode == MODE.MAOH) {
                     //魔王の弱体化
-
                     battle_units[i].setMaxHitPoint(battle_units[i].getMaxHitPoint() - maohMenosStatus.getGeoHP());
                     if (battle_units[i].getMaxHitPoint() <= 0) {
                         battle_units[i].setMaxHitPoint(1);
@@ -315,6 +366,7 @@ public class BattleUnitAdmin {
     }
 
     public void spawnEnemy(String[] monsters) {
+        deleteEnemy();
         for (int i = 0; i < monsters.length; i++) {
             setBattleUnitData(monsters[i], repeat_count);
         }
@@ -327,8 +379,8 @@ public class BattleUnitAdmin {
     }
 
     public void deleteEnemy() {
-        for (int i = 0; i < battle_units.length; i++) {
-            //battle_units[i].clear();
+        for (int i = 1; i < battle_units.length; i++) {
+            battle_units[i].clear();
             battle_units[i].existIs(false);
             battle_units[i].dropFlagIs(false);
         }
@@ -1033,7 +1085,15 @@ public class BattleUnitAdmin {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             GeoObjectData geoObjectData = null;
             if (battle_units[i].getUnitKind() == Constants.UnitKind.ROCK && battle_units[i].isDropFlag()) {
-                int parameter = dropGeoObject.get(i - 1);
+                int parameter = 0;
+                if (dropGeoObjectKind.get(i - 1) == Constants.Item.GEO_KIND_ALL.ATTACK_RATE || dropGeoObjectKind.get(i - 1) == Constants.Item.GEO_KIND_ALL.DEFENCE_RATE || dropGeoObjectKind.get(i - 1) == Constants.Item.GEO_KIND_ALL.LUCK_RATE || dropGeoObjectKind.get(i - 1) == Constants.Item.GEO_KIND_ALL.HP_RATE) {
+                    parameter = (repeat_count+1)*20;
+                    if (parameter > 100) {
+                        parameter = 100;
+                    }
+                } else {
+                    parameter = dropGeoObject.get(i - 1);
+                }
                 if (battle_units[i].getHitPoint() < 0) {
                     parameter = (int) ((float) parameter * (float) (battle_units[i].getHitPoint() + battle_units[i].getMaxHitPoint()) / (float) battle_units[i].getMaxHitPoint());
                 }
@@ -1098,10 +1158,10 @@ public class BattleUnitAdmin {
                 EquipmentItemData eqTempItemData = null;
                 double tempRand;
                 float rate = 0.0f;
+                tempRand = Math.random();
                 for (int j = 0; j < Constants.Item.DROP_NUM; j++) {
                     rate = 0.0f;
                     if (dropItemName[j] != null) {
-                        tempRand = Math.random();
                         System.out.println("☆タカノ:BattleUnitAdmin#getDropItem : アイテムドロップ率計算 : " + dropItemName[j] + " from " + battle_units[i].getName() + " : " + dropItemRate[j] + " ? " + tempRand);
                         rate += dropItemRate[j];
                         if (rate > tempRand) {

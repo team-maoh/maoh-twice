@@ -98,7 +98,7 @@ public class BoxInventryPlate extends BoxPlate {
                         if(((EquipmentItemData)(inventry_data.getItemData())).getPalettePosition() != 0 && equipFlag) {
                             text_paint.setColor(CIRCLE_COLOR[((EquipmentItemData)(inventry_data.getItemData())).getPalettePosition()-1]);
                             text_paint.setAlpha(255);
-                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1 + (int) ((down - up) * (1.0 / 5))) + 200, up + (int)((down - up + text_paint.getTextSize()) / 2), text_paint);
+                            graphic.bookingDrawText("E", left + (int) (inventry_data.getItemData().getItemImage().getWidth() * 1 + (int) ((down - up) * (1.0 / 5))) + 280, up + (int)((down - up + text_paint.getTextSize()) / 2), text_paint);
                         }
                     }else if(inventry_data.getItemData().getItemKind() == Constants.Item.ITEM_KIND.GEO){
                         if(((GeoObjectData)(inventry_data.getItemData())).getSlotSetName().equals("noSet") == false && equipFlag) {

@@ -249,7 +249,10 @@ public class GeoObjectDataCreater {
         if (randFlag) {
 //            double random_num = sqrt(-2 * log(Math.random())) * cos(2 * PI * Math.random()) / 20.0;// だいたい[-1, +1]の範囲の正規分布
 //            calcParam = status2[parameterKind.ordinal()] = parameter * (1.0 + random_num) / 100.0;
-            calcParam = status2[parameterKind.ordinal()] = (1.1 + 0.9 * Math.random());// * 2.0;//1.1 ~ 2.0倍
+
+            //parameter の最大は100である。
+
+            calcParam = status2[parameterKind.ordinal()] = (1.0 + 1.0 * Math.random() * (double)parameter/100.0);// * 2.0;//1.1 ~ 2.0倍
         } else {
             calcParam = status2[parameterKind.ordinal()] = parameter;
         }

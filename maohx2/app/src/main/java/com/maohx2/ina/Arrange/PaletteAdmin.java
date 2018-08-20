@@ -236,6 +236,10 @@ public class PaletteAdmin {
         return palettesFlag[i];
     }
 
+    public Palette getPalettes(int i) {
+        return palettes[i];
+    }
+
     public void resetDungeonUseNum() {
         for(int i = 0; i < 8; i++) {
             if(palettes[0].getItemData(i) != null) {

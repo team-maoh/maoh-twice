@@ -49,6 +49,16 @@ public class EffectAdmin {
     }
 
     public int createEffect(String _name, String _imageName, int widthNum, int heightNum) {
+        int number = searchEffect(_name);
+        if (number == -1) {
+            BitmapData tempBitmapData[] = createEffectOnlyTrim(_name, _imageName, widthNum, heightNum);
+            return createEffect(_name, tempBitmapData);
+        } else {
+            return createEffect(_name, trimmedBitmapData[number]);
+        }
+    }
+
+    public int searchEffect(String _name) {
         int number = -1;
         for (int i = 0 ; i < trimmedBitmapName.length; i++) {
             if ( trimmedBitmapName[i] != null) {
@@ -57,6 +67,11 @@ public class EffectAdmin {
                 }
             }
         }
+        return number;
+    }
+
+    public BitmapData[] createEffectOnlyTrim(String _name, String _imageName, int widthNum, int heightNum) {
+        int number = searchEffect(_name);
         if (number == -1) {
             BitmapData tempBitmapData[] = new BitmapData[TRIMMED_BITMAP_MAX];
             BitmapData _bitmapData = graphic.searchBitmap(_imageName);
@@ -74,11 +89,9 @@ public class EffectAdmin {
             trimmedBitmapData[dataIndex] = tempBitmapData;
             dataIndex++;
             dataIndex %= EFFECT_MAX;
-
-            return createEffect(_name, tempBitmapData);
-        } else {
-            return createEffect(_name, trimmedBitmapData[number]);
+            return tempBitmapData;
         }
+        return null;
     }
 
     public int createEffect(String _name, String _imageName, int widthNum) {
