@@ -569,7 +569,8 @@ public class BattleUnitAdmin {
                                                             battle_effect_ID = effectAdmin.createEffect("axe_effect", "axe_effect", 3, 5);
                                                             break;
                                                         case BARE:
-                                                            battle_effect_ID = effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3);
+                                                            //battle_effect_ID = effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3);
+                                                            battle_effect_ID = effectAdmin.createEffect("gun_effect", "gun_effect", 5, 2);
                                                             break;
                                                         case BOW:
                                                             battle_effect_ID = effectAdmin.createEffect("bow_effect", "bow_effect", 5, 2);
@@ -590,10 +591,12 @@ public class BattleUnitAdmin {
                                                             battle_effect_ID = effectAdmin.createEffect("musical_instrument_effect", "musical_instrument_effect", 1, 15);
                                                             break;
                                                         case SPEAR:
-                                                            battle_effect_ID = effectAdmin.createEffect("spear_effect", "spear_effect", 5, 3);
+                                                            //battle_effect_ID = effectAdmin.createEffect("spear_effect", "spear_effect", 5, 3);
+                                                            battle_effect_ID = effectAdmin.createEffect("knuckle_effect", "knuckle_effect", 6, 3);
                                                             break;
                                                         case SWORD:
-                                                            battle_effect_ID = effectAdmin.createEffect("sword_effect", "sword_effect", 9, 1);
+                                                            //battle_effect_ID = effectAdmin.createEffect("sword_effect", "sword_effect", 9, 1);
+                                                            battle_effect_ID = effectAdmin.createEffect("whip_effect", "whip_effect", 5, 5);
                                                             break;
                                                         case WHIP:
                                                             battle_effect_ID = effectAdmin.createEffect("whip_effect", "whip_effect", 5, 5);

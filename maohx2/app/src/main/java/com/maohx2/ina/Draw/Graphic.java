@@ -34,7 +34,9 @@ import static com.maohx2.ina.Constants.Bitmap.*;
 //int bitmapMax[] = new int[LAYER_MAX];
 
 
-
+//敵の攻撃ん時ファン
+//敵が食らった時エフェクト
+//エフェクトでかくする
 
 
 //描画の管理方法、自身がなんの予約なのかを示したものだけを共通部分として持つプリモフィズム←これで行く
