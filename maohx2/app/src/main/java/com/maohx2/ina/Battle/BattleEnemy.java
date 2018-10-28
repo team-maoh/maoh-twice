@@ -3,6 +3,8 @@ package com.maohx2.ina.Battle;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 
+import static com.maohx2.ina.Constants.BattleUnit.ATTACK_SCALE;
+import static com.maohx2.ina.Constants.BattleUnit.NORMAL_SCALE;
 import static com.maohx2.ina.Constants.UnitStatus.Status.*;
 
 import static com.maohx2.ina.Battle.BattleBaseUnitData.SpecialAction;
@@ -162,7 +164,7 @@ public class BattleEnemy extends BattleUnit {
         //attackFlameに達したらUnitを対象として攻撃
         if(attackCount == attack_frame){
             if(attack_frame >= 10) {
-                scale = 1.5;
+                scale = ATTACK_SCALE;
             }
             attackCount = 0;
             return attack;
@@ -170,7 +172,7 @@ public class BattleEnemy extends BattleUnit {
 
         if(attackCount == 5){
             if(attack_frame >= 10) {
-                scale = 1.0;
+                scale = NORMAL_SCALE;
             }
         }
 
