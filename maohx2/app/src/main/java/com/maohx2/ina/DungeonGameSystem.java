@@ -107,6 +107,7 @@ public class DungeonGameSystem {
     Constants.DungeonKind.DUNGEON_KIND dungeon_kind;
 
     EffectAdmin effectAdmin;
+    EffectAdmin enemyBackEffectAdmin;
 
     PlayerStatusViewer playerStatusViewer;
 
@@ -137,6 +138,8 @@ public class DungeonGameSystem {
 
         effectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin);
         battle_unit_admin.getEffectAdmin(effectAdmin);
+        enemyBackEffectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin);
+        battle_unit_admin.getEnemyBackEffectAdmin(enemyBackEffectAdmin);
 
         //repeat_count = _repeat_count;
 
@@ -458,7 +461,6 @@ public class DungeonGameSystem {
                 //geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.DUNGEON);
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP);
             case GEO_MAP:
-                effectAdmin.draw();
                 if (!talkAdmin.isTalking()) {
                     //geoSlotAdminManager.update();
                 }
@@ -471,10 +473,10 @@ public class DungeonGameSystem {
 
         talkAdmin.update();
         text_box_admin.update();
-        //GEOMAPでは諸事情により、エフェクトを背後に描画したいため
-        if (dungeonModeManage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP) {
-            effectAdmin.update();
-        }
+
+        effectAdmin.update();
+        enemyBackEffectAdmin.update();
+
         //musicAdmin.update();
 
         activityChange.toChangeActivity();
@@ -502,6 +504,7 @@ public class DungeonGameSystem {
             case BUTTLE:
             case MAOH:
                 graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
+                enemyBackEffectAdmin.draw();
                 battle_unit_admin.draw();
                 break;
 

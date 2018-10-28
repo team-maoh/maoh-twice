@@ -49,12 +49,15 @@ public class EffectAdmin {
     }
 
     public int createEffect(String _name, String _imageName, int widthNum, int heightNum) {
+        return createEffect(_name, _name, _imageName, widthNum, heightNum);
+    }
+    public int createEffect(String _name, String _dataName, String _imageName, int widthNum, int heightNum) {
         int number = searchEffect(_name);
         if (number == -1) {
             BitmapData tempBitmapData[] = createEffectOnlyTrim(_name, _imageName, widthNum, heightNum);
-            return createEffect(_name, tempBitmapData);
+            return createEffect(_name, _dataName, tempBitmapData);
         } else {
-            return createEffect(_name, trimmedBitmapData[number]);
+            return createEffect(_name, _dataName, trimmedBitmapData[number]);
         }
     }
 
@@ -95,10 +98,16 @@ public class EffectAdmin {
     }
 
     public int createEffect(String _name, String _imageName, int widthNum) {
-        return createEffect(_name, _imageName, widthNum, 1);
+        return createEffect(_name, _name, _imageName, widthNum, 1);
+    }
+    public int createEffect(String _name, String _dataName, String _imageName, int widthNum) {
+        return createEffect(_name, _dataName, _imageName, widthNum, 1);
     }
 
     public int createEffect(String _name, BitmapData[] _bitmapData) {
+        return createEffect(_name, _name, _bitmapData);
+    }
+    public int createEffect(String _name, String _dataName, BitmapData[] _bitmapData) {
         Effect _effect = null;
         int effectID = -1;
 
@@ -114,7 +123,7 @@ public class EffectAdmin {
             return effectID;
         }
 
-        _effect.create(effectDataAdmin.getEffectData(_name));
+        _effect.create(effectDataAdmin.getEffectData(_dataName));
         _effect.setBitmapData(_bitmapData);
 
         return effectID;

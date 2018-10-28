@@ -8,6 +8,7 @@ import com.maohx2.ina.Draw.Graphic;
 import java.util.Random;
 
 import com.maohx2.ina.Constants.UnitKind;
+import com.maohx2.kmhanko.effect.EffectAdmin;
 
 import static com.maohx2.ina.Constants.UnitStatus.Status.*;
 
@@ -29,6 +30,8 @@ abstract public class BattleUnit {
     protected boolean dropFlag;
     Random rnd;
     Graphic graphic;
+    EffectAdmin effectAdmin;
+    EffectAdmin backEnemyEffectAdmin;
     Paint paint;
     double dx, dy, dl;
     int move_end ;
@@ -72,8 +75,10 @@ abstract public class BattleUnit {
 
 
     //コンストラクタ
-    public BattleUnit(Graphic _graphic){
+    public BattleUnit(Graphic _graphic, EffectAdmin _effectAdmin, EffectAdmin _backEnemyEffectAdmin){
         graphic = _graphic;
+        effectAdmin = _effectAdmin;
+        backEnemyEffectAdmin = _backEnemyEffectAdmin;
         paint = new Paint();
         speed = 10;
         rnd = new Random();

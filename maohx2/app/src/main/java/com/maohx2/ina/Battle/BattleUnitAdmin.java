@@ -126,6 +126,7 @@ public class BattleUnitAdmin {
     MapStatus mapStatus;
     MapStatusSaver mapStatusSaver;
     EffectAdmin effectAdmin;
+    EffectAdmin enemyBackEffectAdmin;
 
     DUNGEON_KIND dungeonKind;
 
@@ -215,9 +216,9 @@ public class BattleUnitAdmin {
         attack_count = 0;
 
         //BattleUnit配列のインスタンス化・初期化
-        battle_units[0] = new BattlePlayer(graphic);
+        battle_units[0] = new BattlePlayer(graphic, null, null);
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
-            battle_units[i] = new BattleEnemy(graphic);
+            battle_units[i] = new BattleEnemy(graphic, effectAdmin, enemyBackEffectAdmin);
         }
 
         for (int i = 0; i < MAKER_NUM; i++) {
@@ -359,19 +360,7 @@ public class BattleUnitAdmin {
                 }
 
                 //エフェクトの作成
-                int width = ((BattleEnemy)battle_units[i]).getBattleDungeonUnitData().getBitmapDate().getWidth();
-                int height = ((BattleEnemy)battle_units[i]).getBattleDungeonUnitData().getBitmapDate().getHeight();
-                float attackExtendX = (width+height)/2/(768/4*2);
-                float attackExtendY = (width+height)/2/(768/4*2);
-
-                float damagedExtendX = (width+height)/2/(960/5*2);
-                float damagedExtendY = (width+height)/2/(960/5*2);
-
-                enemyDamagedEffect[i] = effectAdmin.createEffect("enemy_damaged_effect", "enemy_damaged_effect", 5, 2);
-                enemyAttackEffect[i] = effectAdmin.createEffect("enemy_attack_effect", "enemy_attack_effect", 4, 2);
-
-                effectAdmin.setExtends(enemyDamagedEffect[i], damagedExtendX, damagedExtendY);
-                effectAdmin.setExtends(enemyAttackEffect[i], attackExtendX, attackExtendY);
+                ((BattleEnemy)battle_units[i]).initEffect(i);
 
                 return i;
             }
@@ -724,6 +713,8 @@ public class BattleUnitAdmin {
 
                                     if (new_hp > 0) {
                                         battle_units[i].setHitPoint(new_hp);
+
+                                        ((BattleEnemy)battle_units[i]).damagedEffectStart();
                                     } else {
                                         //by kmhanko
                                         //岩は特殊行動しないため、死亡判定についてこの位置のみに記述すれば良い。
@@ -743,6 +734,7 @@ public class BattleUnitAdmin {
                                         //カウンターでも敵にダメージは入る
                                         if (new_hp > 0) {
                                             battle_units[i].setHitPoint(new_hp);
+                                            ((BattleEnemy)battle_units[i]).damagedEffectStart();
                                         } else {
                                             battle_units[i].existIs(false);
                                         }
@@ -764,6 +756,7 @@ public class BattleUnitAdmin {
                                     } else if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.STEALTH) {
                                         if (new_hp > 0) {
                                             battle_units[i].setHitPoint(new_hp);
+                                            ((BattleEnemy)battle_units[i]).damagedEffectStart();
                                         } else {
                                             battle_units[i].existIs(false);
                                         }
@@ -1225,6 +1218,10 @@ public class BattleUnitAdmin {
     public void getEffectAdmin(EffectAdmin _effect_admin) {
         effectAdmin = _effect_admin;
     }
+    public void getEnemyBackEffectAdmin(EffectAdmin _enemyBackEffectAdmin) {
+        enemyBackEffectAdmin = _enemyBackEffectAdmin;
+    }
+
 
     // *** リザルトメッセージ関係 ***
 
@@ -1379,6 +1376,8 @@ public class BattleUnitAdmin {
         }
 
         effectAdmin.clearAllEffect();
+        enemyBackEffectAdmin.clearAllEffect();
+
 
     }
 

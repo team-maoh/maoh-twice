@@ -2,6 +2,7 @@ package com.maohx2.ina.Battle;
 
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.kmhanko.effect.EffectAdmin;
 
 import static com.maohx2.ina.Constants.BattleUnit.ATTACK_SCALE;
 import static com.maohx2.ina.Constants.BattleUnit.NORMAL_SCALE;
@@ -55,8 +56,8 @@ public class BattleEnemy extends BattleUnit {
         is_damaged = false;
     }
 
-    public BattleEnemy(Graphic _graphic){
-        super(_graphic);
+    public BattleEnemy(Graphic _graphic, EffectAdmin _effectAdmin, EffectAdmin _backEnemyEffectAdmin){
+        super(_graphic, _effectAdmin, _backEnemyEffectAdmin);
         position_x = 0;
         position_y = 0;
         radius = 0;
@@ -83,6 +84,66 @@ public class BattleEnemy extends BattleUnit {
     }
     */
 
+
+    //--エフェクト関係
+    int damagedEffect;
+    int attackEffect;
+
+    int id;
+
+    int width;
+    int height;
+
+    int damageEffectTime;
+
+    float attackExtendX;
+    float attackExtendY;
+
+    float damagedExtendX;
+    float damagedExtendY;
+
+    protected void initEffect(int _id) {
+
+        //System.out.println("dg_mes" + attackExtendX);
+        //System.out.println("dg_mes" + attackExtendY);
+        //System.out.println("dg_mes" + damagedExtendX);
+        //System.out.println("dg_mes" + damagedExtendY);
+
+        id = _id;
+        damageEffectTime = 0;
+        width = getBattleDungeonUnitData().getBitmapDate().getWidth();
+        height = getBattleDungeonUnitData().getBitmapDate().getHeight();
+
+        attackExtendX = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.5f;
+        attackExtendY = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.5f;
+
+        damagedExtendX = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
+        damagedExtendY = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
+
+
+        damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" + id,"enemy_damaged_effect" , "bomb_effect", 5, 2);
+        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect" + id, "enemy_attack_effect", "enemy_attack", 4, 2);
+
+    }
+    protected void damagedEffectStart() {
+        if (damageEffectTime >= 3) {
+            damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" + id, "enemy_damaged_effect", "bomb_effect", 5, 2);
+            effectAdmin.getEffect(damagedEffect).setPosition((int) position_x + rnd.nextInt(width) - width/2, (int) position_y + rnd.nextInt(height) - height/2);
+            effectAdmin.setExtends(damagedEffect, damagedExtendX, damagedExtendY);
+            effectAdmin.getEffect(damagedEffect).start();
+            damageEffectTime = 0;
+        }
+    }
+    Random rnd = new Random();
+    protected void attackEffectStart() {
+        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect" + id, "enemy_attack_effect", "enemy_attack", 4, 2);
+        backEnemyEffectAdmin.getEffect(attackEffect).setPosition((int) position_x, (int) position_y);
+        backEnemyEffectAdmin.setExtends(attackEffect, attackExtendX, attackExtendY);
+        backEnemyEffectAdmin.getEffect(attackEffect).start();
+    }
+    //エフェクト関係ここまで
+
+
     @Override
     protected void statusInit() {
         super.statusInit();
@@ -105,6 +166,11 @@ public class BattleEnemy extends BattleUnit {
     public int update(){
 
         super.update();
+
+        backEnemyEffectAdmin.getEffect(attackEffect).setPosition((int) position_x, (int) position_y);
+        if (damageEffectTime < 3) {
+            damageEffectTime++;
+        }
 
         //時間経過
         attackCount++;
@@ -167,6 +233,10 @@ public class BattleEnemy extends BattleUnit {
                 scale = ATTACK_SCALE;
             }
             attackCount = 0;
+
+            //敵の攻撃エフェクト
+            this.attackEffectStart();
+
             return attack;
         }
 
