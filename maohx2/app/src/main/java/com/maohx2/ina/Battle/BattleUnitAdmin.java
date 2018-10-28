@@ -85,6 +85,10 @@ public class BattleUnitAdmin {
 
     BattleUserInterface battle_user_interface;
     BattleUnit[] battle_units = new BattleUnit[BATTLE_UNIT_MAX];
+
+    int enemyAttackEffect[] = new int[BATTLE_UNIT_MAX];
+    int enemyDamagedEffect[] = new int[BATTLE_UNIT_MAX];
+
     int battle_palette_mode;
     CalcUnitStatus calc_unit_status;
     Activity battle_activity;
@@ -353,6 +357,22 @@ public class BattleUnitAdmin {
                     }
 
                 }
+
+                //エフェクトの作成
+                int width = ((BattleEnemy)battle_units[i]).getBattleDungeonUnitData().getBitmapDate().getWidth();
+                int height = ((BattleEnemy)battle_units[i]).getBattleDungeonUnitData().getBitmapDate().getHeight();
+                float attackExtendX = (width+height)/2/(768/4*2);
+                float attackExtendY = (width+height)/2/(768/4*2);
+
+                float damagedExtendX = (width+height)/2/(960/5*2);
+                float damagedExtendY = (width+height)/2/(960/5*2);
+
+                enemyDamagedEffect[i] = effectAdmin.createEffect("enemy_damaged_effect", "enemy_damaged_effect", 5, 2);
+                enemyAttackEffect[i] = effectAdmin.createEffect("enemy_attack_effect", "enemy_attack_effect", 4, 2);
+
+                effectAdmin.setExtends(enemyDamagedEffect[i], damagedExtendX, damagedExtendY);
+                effectAdmin.setExtends(enemyAttackEffect[i], attackExtendX, attackExtendY);
+
                 return i;
             }
         }

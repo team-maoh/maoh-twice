@@ -177,6 +177,7 @@ public class EffectAdmin {
     public void setPosition(int i, int x, int y, float rad) {
         effects[i].setPosition(x, y, rad);
     }
+    public void setExtends(int i, float x, float y) {effects[i].setExtends(x, y);}
     public void clearEffect(int i) {
         effects[i].clear();
     }

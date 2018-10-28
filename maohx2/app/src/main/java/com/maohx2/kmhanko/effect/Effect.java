@@ -38,6 +38,10 @@ public class Effect {
     private float r;
     private float extend_x;
     private float extend_y;
+
+    private float setted_extend_x;
+    private float setted_extend_y;
+
     private float original_angle;
     private float original_angle_deg;
 
@@ -81,6 +85,8 @@ public class Effect {
         effectData = null;
         original_angle = 0.0f;
         original_angle_deg = 0.0f;
+        setted_extend_x = 1.0f;
+        setted_extend_y = 1.0f;
         release();
     }
 
@@ -102,6 +108,12 @@ public class Effect {
         //基本座標の更新
         original_x = _original_x;
         original_y = _original_y;
+    }
+
+    public void setExtends(float _setted_extend_x, float _setted_extend_y) {
+        //倍率の変更
+        setted_extend_x = _setted_extend_x;
+        setted_extend_y = _setted_extend_y;
     }
 
     public void setPosition(int _original_x, int _original_y, float _original_angle) {
@@ -213,8 +225,8 @@ public class Effect {
         x = effectData.getX(_step);
         y = effectData.getY(_step);
         r = (float)Math.sqrt(x*x+y*y);
-        extend_x = effectData.getExtendX(_step);
-        extend_y = effectData.getExtendY(_step);
+        extend_x = effectData.getExtendX(_step) * setted_extend_x;
+        extend_y = effectData.getExtendY(_step) * setted_extend_y;
         angle = effectData.getAngle(_step);
         alpha = effectData.getAlpha(_step);
         if (alpha == 255) {
