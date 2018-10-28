@@ -3,6 +3,8 @@ package com.maohx2.ina.Battle;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 
+import static com.maohx2.ina.Constants.BattleUnit.ATTACK_SCALE;
+import static com.maohx2.ina.Constants.BattleUnit.NORMAL_SCALE;
 import static com.maohx2.ina.Constants.UnitStatus.Status.*;
 
 import static com.maohx2.ina.Battle.BattleBaseUnitData.SpecialAction;
@@ -19,6 +21,7 @@ public class BattleEnemy extends BattleUnit {
     double position_x;
     double position_y;
     double radius;
+    double scale;
     int uiid;
     int attackCount;
     int attack_frame;
@@ -43,6 +46,7 @@ public class BattleEnemy extends BattleUnit {
         attackCount = 0;
         attack_frame = 0;
         specialActionCount = 0;
+        scale = 1.0;
         float[] actionRate = new float[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
         int[] alimentTime = new int[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
         specialAction = SpecialAction.NONE;
@@ -159,8 +163,17 @@ public class BattleEnemy extends BattleUnit {
 
         //attackFlameに達したらUnitを対象として攻撃
         if(attackCount == attack_frame){
+            if(attack_frame >= 10) {
+                scale = ATTACK_SCALE;
+            }
             attackCount = 0;
             return attack;
+        }
+
+        if(attackCount == 5){
+            if(attack_frame >= 10) {
+                scale = NORMAL_SCALE;
+            }
         }
 
         return 0;
@@ -175,21 +188,21 @@ public class BattleEnemy extends BattleUnit {
 
             switch (specialAction) {
                 case BARRIER:
-                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1.0f,1.0f,0,254,false);
+                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,(float)scale,(float)scale,0,254,false);
                     paint.setARGB(100,0,0,255);
                     graphic.bookingDrawCircle((int)position_x, (int)position_y, (int)radius, paint);
                     break;
                 case COUNTER:
-                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1.0f,1.0f,0,254,false);
+                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,(float)scale,(float)scale,0,254,false);
                     paint.setARGB(100,255,100,0);
                     graphic.bookingDrawCircle((int)position_x, (int)position_y, (int)radius, paint);
                     break;
                 case STEALTH:
-                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1.0f,1.0f,0,100,false);
+                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,(float)scale,(float)scale,0,100,false);
                     break;
             }
         }else{
-            graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1.0f,1.0f,0,254,false);
+            graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,(float)scale,(float)scale,0,254,false);
         }
 
         //HP表示
