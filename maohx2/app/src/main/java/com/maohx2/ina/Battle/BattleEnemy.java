@@ -102,6 +102,8 @@ public class BattleEnemy extends BattleUnit {
     float damagedExtendX;
     float damagedExtendY;
 
+    final int damageEffectInterval = 6;
+
     protected void initEffect(int _id) {
 
         //System.out.println("dg_mes" + attackExtendX);
@@ -120,13 +122,15 @@ public class BattleEnemy extends BattleUnit {
         damagedExtendX = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
         damagedExtendY = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
 
-
         damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" + id,"enemy_damaged_effect" , "bomb_effect", 5, 2);
         attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect" + id, "enemy_attack_effect", "enemy_attack", 4, 2);
 
     }
     protected void damagedEffectStart() {
-        if (damageEffectTime >= 3) {
+        if (getUnitKind() != Constants.UnitKind.ENEMY) {
+            return;
+        }
+        if (damageEffectTime >= damageEffectInterval) {
             damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" + id, "enemy_damaged_effect", "bomb_effect", 5, 2);
             effectAdmin.getEffect(damagedEffect).setPosition((int) position_x + rnd.nextInt(width) - width/2, (int) position_y + rnd.nextInt(height) - height/2);
             effectAdmin.setExtends(damagedEffect, damagedExtendX, damagedExtendY);
@@ -136,6 +140,9 @@ public class BattleEnemy extends BattleUnit {
     }
     Random rnd = new Random();
     protected void attackEffectStart() {
+        if (getUnitKind() != Constants.UnitKind.ENEMY) {
+            return;
+        }
         attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect" + id, "enemy_attack_effect", "enemy_attack", 4, 2);
         backEnemyEffectAdmin.getEffect(attackEffect).setPosition((int) position_x, (int) position_y);
         backEnemyEffectAdmin.setExtends(attackEffect, attackExtendX, attackExtendY);
@@ -168,7 +175,7 @@ public class BattleEnemy extends BattleUnit {
         super.update();
 
         backEnemyEffectAdmin.getEffect(attackEffect).setPosition((int) position_x, (int) position_y);
-        if (damageEffectTime < 3) {
+        if (damageEffectTime < damageEffectInterval) {
             damageEffectTime++;
         }
 

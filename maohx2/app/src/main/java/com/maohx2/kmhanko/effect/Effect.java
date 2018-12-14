@@ -154,6 +154,10 @@ public class Effect {
             return;
         }
 
+        if (step > effectData.getTest()) {
+            System.out.println("out!!!!");
+        }
+
         if (effectData.isSwitchGr(step)) {
             //徐々に変化する場合
 

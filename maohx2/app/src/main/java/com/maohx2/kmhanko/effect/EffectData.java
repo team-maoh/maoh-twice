@@ -200,4 +200,8 @@ public class EffectData {
         }
     }
 
+    public int getTest() {
+        return switch_gr.size();
+    }
+
 }

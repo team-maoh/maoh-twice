@@ -498,6 +498,7 @@ public class DungeonGameSystem {
                 map_admin.drawMap_for_autotile_light_animation();
                 map_object_admin.draw();
                 map_plate_admin.draw();
+                playerStatusViewer.draw();
                 //graphic.bookingDrawCircle(0,0,10,paint);
                 break;
 
@@ -524,6 +525,7 @@ public class DungeonGameSystem {
                 map_object_admin.draw();
                 map_plate_admin.draw();
                 backPlateGroup.draw();
+                playerStatusViewer.draw();
                 break;
 
             case EQUIP_EXPEND_INIT:

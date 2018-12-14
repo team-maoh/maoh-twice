@@ -530,6 +530,7 @@ public class WorldGameSystem {
             case DUNGEON_SELECT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
                 dungeonSelectManager.draw();
+                playerStatusViewer.draw();
                 break;
             case GEO_MAP_SELECT_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
