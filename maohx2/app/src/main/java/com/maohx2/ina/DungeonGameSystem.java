@@ -714,8 +714,8 @@ public class DungeonGameSystem {
         text_box_admin.setTextBoxExists(openningTextBoxID, false);
         */
         map_admin.createOpeningMap();
-        talkAdmin.start("Opening_in_dungeon");
-        map_object_admin.putPlayer();
+        paint.setTextSize(70);
+        paint.setARGB(255,0,0,0);
     }
 
     /*
@@ -731,129 +731,74 @@ public class DungeonGameSystem {
     }
     */
 
+    int opennigCount = 0;
+    int alpha = 0;
+    int up_down = 5;
+    boolean introFlag = true;
 
     public void openningUpdate() {
-        /*
-        paint.setTextSize(35);
-        paint.setARGB(255, 255, 255, 255);
-        */
-/*
-        if(count == 1){
-            map_object_admin.putPlayer();
+
+        if(introFlag == true) {
+            paint.setARGB(255, 0, 0, 0);
+            graphic.bookingDrawRect(0, 0, 1600, 900, paint);
+
+            paint.setARGB(alpha, 255, 255, 255);
+
+            alpha += up_down;
+            if (alpha < 0 || alpha > 255) {
+                if (alpha < 0) {
+                    introFlag = false;
+                    map_object_admin.putPlayer();
+                    talkAdmin.start("Opening_in_dungeon");
+                }
+                up_down *= -1;
+                alpha += up_down * 2;
+            }
+        }else {
+            talkAdmin.update();//先にやること
+
+            if (talkAdmin.isUpdateThisFrame() && talkAdmin.getID() == 3) {
+                map_object_admin.putBoss();
+                boss_is_running = true;
+            }
+
+            if (map_object_admin.bossIsHitPlayer(160)) {
+                boss_is_running = false;
+                //ボスとの戦闘
+                System.out.println("茶番：ボスとの戦闘");
+
+                playerStatus.calcStatus();
+                playerStatus.setNowHP(playerStatus.getHP());
+                battle_unit_admin.reset(BattleUnitAdmin.MODE.OPENING);
+                battle_unit_admin.spawnEnemy(
+                        new String[]{
+                                "maoh001"
+                        }
+                );
+                ((DungeonActivity) dungeonActivity).dungeon_surface_view.setOpeningFlag(false);////////
+                dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.OPENING_BATTLE_INIT);
+                //text_box_admin.setTextBoxExists(openningTextBoxID, false);
+                resetBossImage = true;
+            }
+            if (talkAdmin.isWaitOrNotTalk()) {
+                map_object_admin.openingUpdate(boss_is_running);
+                //count++;
+            }
+
+            text_box_admin.update();
         }
-
-
-        if (count == 40) {
-            talkChara = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
-            text_box_admin.bookingDrawText(openningTextBoxID, "今日も平和だなぁ", paint);
-            text_box_admin.bookingDrawText(openningTextBoxID, "MOP");
-            text_box_admin.updateText(openningTextBoxID);
-            text_box_admin.setTextBoxExists(openningTextBoxID, true);
-            text_mode = true;
-        }
-
-        if (count == 80) {
-            talkChara = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
-            text_box_admin.bookingDrawText(openningTextBoxID, "暇だなぁ，何か面白いことないかなぁ．", paint);
-            text_box_admin.bookingDrawText(openningTextBoxID, "MOP");
-            text_box_admin.updateText(openningTextBoxID);
-            text_box_admin.setTextBoxExists(openningTextBoxID, true);
-            text_mode = true;
-        }
-
-        if (count == 120) {
-            talkChara = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
-            text_box_admin.bookingDrawText(openningTextBoxID, "ん？何か向こうから向かってくるぞ？", paint);
-            text_box_admin.bookingDrawText(openningTextBoxID, "MOP");
-            text_box_admin.updateText(openningTextBoxID);
-            text_box_admin.setTextBoxExists(openningTextBoxID, true);
-            text_mode = true;
-        }
-
-        if (count == 120) {
-            map_object_admin.putBoss();
-            boss_is_running = true;
-        }
-        */
-        talkAdmin.update();//先にやること
-
-        if (talkAdmin.isUpdateThisFrame() && talkAdmin.getID() == 3) {
-            map_object_admin.putBoss();
-            boss_is_running = true;
-        }
-
-        //ここから先フジワラ，敵と衝突し，戦闘を行い，倒されるということを実現する．
-        //主に，プレイヤーが右に進み続ける，と，敵をちゃんとプレイヤーにぶつけて戦闘に入る，というところをちゃんと実装する．
-        //ぶつかる直前に「うわ，なんだ!?」を入れる．
-
-        //count = 180 でboss_is_running = true としたとすると、
-        //うわ、なんだ、で画面を止めるのは count = 191
-
-        /*
-        if (!flag1 && map_object_admin.bossIsHitPlayer(400)){
-            flag1 = true;
-            talkChara = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
-            text_box_admin.bookingDrawText(openningTextBoxID, "うわ，なんだ!?", paint);
-            text_box_admin.bookingDrawText(openningTextBoxID, "MOP");
-            text_box_admin.updateText(openningTextBoxID);
-            text_box_admin.setTextBoxExists(openningTextBoxID, true);
-
-            //text_mode = true;
-            //System.out.println("count_desudesudesu"+count);
-        }
-        */
-
-        if (map_object_admin.bossIsHitPlayer(160)) {
-            boss_is_running = false;
-            //ボスとの戦闘
-            System.out.println("茶番：ボスとの戦闘");
-
-            //by kmhanko
-            //text_box_admin.setTextBoxExists(openningTextBoxID, false);
-
-            playerStatus.calcStatus();
-            playerStatus.setNowHP(playerStatus.getHP());
-            battle_unit_admin.reset(BattleUnitAdmin.MODE.OPENING);
-            battle_unit_admin.spawnEnemy(
-                    new String[] {
-                            "maoh001"
-                    }
-            );
-            ((DungeonActivity)dungeonActivity).dungeon_surface_view.setOpeningFlag(false);////////
-            dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.OPENING_BATTLE_INIT);
-            //text_box_admin.setTextBoxExists(openningTextBoxID, false);
-            resetBossImage = true;
-        }
-
-        /*
-        charaFlag = false;
-        if (text_mode) {
-            drawCharaAndTouchCheck(talkChara);
-        }//elseにしてはいけない
-        */
-
-
-        //if (!text_mode) {
-        if(talkAdmin.isWaitOrNotTalk()) {
-            map_object_admin.openingUpdate(boss_is_running);
-            //count++;
-        }
-
-        text_box_admin.update();
     }
 
     public void openningDraw() {
-        map_admin.drawOpeningMap();
-        map_object_admin.draw();
-        /*
-        if (charaFlag) {
-            graphic.bookingDrawBitmapData(talkChara);
+        if(introFlag == true) {
+            graphic.bookingDrawText("ある日のこと・・・",350,480, paint);
+        }else {
+            map_admin.drawOpeningMap();
+            map_object_admin.draw();
+            talkAdmin.draw();
+            text_box_admin.draw();
         }
-        */
-        talkAdmin.draw();
-        text_box_admin.draw();
         graphic.draw();
-
     }
 
     PlateGroup<BackPlate> backPlateGroup;

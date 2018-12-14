@@ -122,6 +122,9 @@ public class DungeonSelectManager {
 
     TalkAdmin talkAdmin;
 
+    List<Integer> x;
+    List<Integer> y;
+
     public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, ActivityChange _activityChange, SoundAdmin _soundAdmin, WorldActivity _worldActivity, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver, TalkAdmin _talkAdmin) {
         graphic = _graphic;
         userInterface = _userInterface;
@@ -309,8 +312,8 @@ public class DungeonSelectManager {
         int size = database.getSize(DUNGEON_SELECT_BUTTON_TABLE_NAME);
         dungeonName = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "name");
         List<String> imageName = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "image_name");
-        List<Integer> x = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "x");
-        List<Integer> y = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "y");
+        x = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "x");
+        y = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "y");
         List<Integer> scale = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "scale");
         List<Integer> scale_feed = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "scale_feed");
         event = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "event");
