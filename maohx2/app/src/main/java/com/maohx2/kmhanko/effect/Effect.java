@@ -89,6 +89,7 @@ public class Effect {
         original_angle_deg = 0.0f;
         setted_extend_x = 1.0f;
         setted_extend_y = 1.0f;
+        soundName = "";
         release();
     }
 
@@ -99,6 +100,7 @@ public class Effect {
         isDraw = true;
         is_pause = false;
         steps = effectData.getSteps();
+        soundName = "";
         toStep(0);
     }
     public void hide() {
@@ -154,13 +156,6 @@ public class Effect {
             //ループせず、アニメーションの末端なら更新しない
             clear();
             return;
-        }
-        if (step > effectData.getTest()) {
-            System.out.println("out!!!");
-        }
-
-        if (step > effectData.getTest()) {
-            System.out.println("out!!!!");
         }
 
         if (effectData.isSwitchGr(step)) {

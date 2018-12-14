@@ -16,7 +16,7 @@ import java.util.List;
 //Effectの実体を持つ。外部からの依頼でEffectを生成したりする。Effectのupdate,drawを呼ぶ。
 public class EffectAdmin {
 
-    static final int EFFECT_MAX = 256;
+    static final int EFFECT_MAX = 128;
     static final int TRIMMED_BITMAP_MAX= 64;
 
     //private List<Effect> effect = new ArrayList<Effect>();
