@@ -100,8 +100,8 @@ public final class Constants {
 
     public static class BattleUnit {
         public static final int BATTLE_UNIT_MAX = 15;//15
-        public static final double ATTACK_SCALE = 1.5;
-        public static final double NORMAL_SCALE = 1.0;
+        public static final double ATTACK_SCALE = 2.3;
+        public static final double NORMAL_SCALE = 1.8;
     }
 
     public static class UnitStatus {
