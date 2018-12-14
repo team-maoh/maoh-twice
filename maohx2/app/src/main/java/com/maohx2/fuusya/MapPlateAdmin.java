@@ -63,7 +63,7 @@ public class MapPlateAdmin {
     int UP_COORD = 50;
     int BUTTON_HEIGHT = 100;
     //
-    int HP_BG_TOP = 5;
+    int HP_BG_TOP = 15;
     int HP_BG_RIGHT = 110;
     int HP_BG_LEFT = 1570;
     int HP_BG_BOTTOM = 35;
@@ -81,9 +81,9 @@ public class MapPlateAdmin {
 
     int ITEM_BOTTOM_WITH_SWITCH = ITEM_BOTTOM + 100;
     //
-    int HP_RIGHT = 120;
-    int HP_LEFT = 1560;
-    int HP_HEIGHT = 15;
+    int HP_RIGHT = 200;
+    int HP_LEFT = 1400;
+    int HP_HEIGHT = 20;
     int HP_TOP = HP_BG_TOP + ((HP_BG_BOTTOM - HP_BG_TOP) - HP_HEIGHT) / 2;
 
     Paint blue_paint = new Paint();
@@ -123,7 +123,7 @@ public class MapPlateAdmin {
         inventry = new Inventry();
         inventry.init(dungeon_user_interface, graphic, ITEM_LEFT, ITEM_TOP, ITEM_RIGHT, ITEM_BOTTOM, ITEM_CONTENTS_NUM);
 
-        text_paint.setTextSize(40f);
+        text_paint.setTextSize(50f);
         text_paint.setARGB(255, 255, 255, 255);
 
         is_displaying_list = false;
@@ -429,15 +429,15 @@ public class MapPlateAdmin {
 //        double hp_ratio = 0.7;
         int right_of_green = HP_RIGHT - (int) (hp_ratio * (HP_RIGHT - HP_LEFT));
 
-        graphic.bookingDrawRect(HP_BG_LEFT, HP_BG_TOP, HP_BG_RIGHT, HP_BG_BOTTOM, blue_paint);
+        //graphic.bookingDrawRect(HP_BG_LEFT, HP_BG_TOP, HP_BG_RIGHT, HP_BG_BOTTOM, blue_paint);
         graphic.bookingDrawRect(HP_LEFT, HP_TOP, right_of_green, HP_TOP + HP_HEIGHT, red_paint);
         graphic.bookingDrawRect(right_of_green, HP_TOP, HP_RIGHT, HP_TOP + HP_HEIGHT, green_paint);
 
         if (map_admin != null) {
             String now_floor = String.valueOf(map_admin.getNow_floor_num()) + "F";
 
-            graphic.bookingDrawRect(5, 5, 100, 50, floor_bg);
-            graphic.bookingDrawText(now_floor, 20, 40, text_paint);
+            //graphic.bookingDrawRect(5, 5, 100, 50, floor_bg);
+            graphic.bookingDrawText(now_floor, 70, 45, text_paint);
         }
 
     }
