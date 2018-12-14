@@ -64,6 +64,7 @@ public class Effect {
         exist = false;
         isDraw = false;
         is_pause = false;
+        is_start = false;
     }
 
     public static void staticInit(Graphic _graphic, SoundAdmin _soundAdmin) {
@@ -82,6 +83,7 @@ public class Effect {
         exist = false;
         isDraw = false;
         is_pause = false;
+        is_start = false;
         effectData = null;
         original_angle = 0.0f;
         original_angle_deg = 0.0f;
@@ -152,6 +154,9 @@ public class Effect {
             //ループせず、アニメーションの末端なら更新しない
             clear();
             return;
+        }
+        if (step > effectData.getTest()) {
+            System.out.println("out!!!");
         }
 
         if (step > effectData.getTest()) {

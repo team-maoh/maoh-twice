@@ -47,7 +47,7 @@ public class BattleEnemy extends BattleUnit {
         attackCount = 0;
         attack_frame = 0;
         specialActionCount = 0;
-        scale = 1.0;
+        scale = NORMAL_SCALE;
         float[] actionRate = new float[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
         int[] alimentTime = new int[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
         specialAction = SpecialAction.NONE;
@@ -285,12 +285,12 @@ public class BattleEnemy extends BattleUnit {
         //HP表示
         if (hit_point > 0) {
             paint.setARGB(255, 0, 255, 0);
-            graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 0.8), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) hit_point / (double) max_hit_point))), (int) (position_y + radius * 0.9), paint);
+            graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 1.1), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) hit_point / (double) max_hit_point))), (int) (position_y + radius * 1.2), paint);
         } else {
             if (unitKind == Constants.UnitKind.ROCK) {
                 //オーバーキルゲージの表示
                 paint.setARGB(255, 255, 0, 0);
-                graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 0.8), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) -hit_point / (double) max_hit_point))), (int) (position_y + radius * 0.9), paint);
+                graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 1.1), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) -hit_point / (double) max_hit_point))), (int) (position_y + radius * 1.2), paint);
             }
         }
 
@@ -310,7 +310,7 @@ public class BattleEnemy extends BattleUnit {
 
         if (attack_frame > 0) {
             paint.setARGB(255, 255, 0, 0);
-            graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 0.9), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) attackCount / (double) attack_frame))), (int) (position_y + radius * 1.0), paint);
+            graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 1.2), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) attackCount / (double) attack_frame))), (int) (position_y + radius * 1.3), paint);
         }
     }
 
@@ -335,7 +335,7 @@ public class BattleEnemy extends BattleUnit {
 
     @Override
     public double getRadius() {
-        return radius;
+        return scale*radius;
     }
 
     @Override
