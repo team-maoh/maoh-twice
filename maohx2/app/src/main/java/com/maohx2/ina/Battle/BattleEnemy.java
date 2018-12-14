@@ -261,25 +261,31 @@ public class BattleEnemy extends BattleUnit {
 
         //graphic.bookingDrawText(String.valueOf(hit_point),(int)position_x,(int)position_y);
 
-        if(specialActionFlag == true) {
+        if (getUnitKind() == Constants.UnitKind.ENEMY) {
 
-            switch (specialAction) {
-                case BARRIER:
-                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,(float)scale,(float)scale,0,254,false);
-                    paint.setARGB(100,0,0,255);
-                    graphic.bookingDrawCircle((int)position_x, (int)position_y, (int)radius, paint);
-                    break;
-                case COUNTER:
-                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,(float)scale,(float)scale,0,254,false);
-                    paint.setARGB(100,255,100,0);
-                    graphic.bookingDrawCircle((int)position_x, (int)position_y, (int)radius, paint);
-                    break;
-                case STEALTH:
-                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,(float)scale,(float)scale,0,100,false);
-                    break;
+            if (specialActionFlag == true) {
+
+                switch (specialAction) {
+                    case BARRIER:
+                        graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) scale, (float) scale, 0, 254, false);
+                        paint.setARGB(100, 0, 0, 255);
+                        graphic.bookingDrawCircle((int) position_x, (int) position_y, (int) radius, paint);
+                        break;
+                    case COUNTER:
+                        graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) scale, (float) scale, 0, 254, false);
+                        paint.setARGB(100, 255, 100, 0);
+                        graphic.bookingDrawCircle((int) position_x, (int) position_y, (int) radius, paint);
+                        break;
+                    case STEALTH:
+                        graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) scale, (float) scale, 0, 100, false);
+                        break;
+                }
+            } else {
+                graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) scale, (float) scale, 0, 254, false);
             }
-        }else{
-            graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,(float)scale,(float)scale,0,254,false);
+        }
+        if (getUnitKind() == Constants.UnitKind.ROCK) {
+            graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) 1.0, (float) 1.0, 0, 254, false);
         }
 
         //HP表示

@@ -126,7 +126,7 @@ class StartSurfaceView extends BaseSurfaceView {
 
     //PlateGroup<CircleImagePlate> image_list;
 
-    //MusicAdmin musicAdmin;
+    MusicAdmin musicAdmin;
     SoundAdmin soundAdmin;
 
     @Override
@@ -161,9 +161,7 @@ class StartSurfaceView extends BaseSurfaceView {
         soundAdmin = new SoundAdmin(start_activity, my_database_admin);
         soundAdmin.loadSoundPack("opening");
 
-        //MusicAdmin musicAdmin = new MusicAdmin(currentActivity, my_database_admin);
-        //musicAdmin.setTableName("music_pack");
-        //musicAdmin.loadMusic("title", true);
+        musicAdmin = global_data.getMusicAdmin();
 
 
         start_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
@@ -250,7 +248,11 @@ class StartSurfaceView extends BaseSurfaceView {
         start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
 
        if(touch_state == TouchState.DOWN && touchWaitcount > 15){
-            downCount++;
+           if (downCount == 0) {
+               soundAdmin.play("opening02");
+               musicAdmin.loadMusic("openingbgm00",true);
+           }
+           downCount++;
            touchWaitcount = 0;
        }
         touchWaitcount++;
