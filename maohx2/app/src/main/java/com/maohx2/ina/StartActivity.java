@@ -250,12 +250,16 @@ class StartSurfaceView extends BaseSurfaceView {
        if(touch_state == TouchState.DOWN && touchWaitcount > 15){
            if (downCount == 0) {
                soundAdmin.play("opening02");
-               musicAdmin.loadMusic("openingbgm00",true);
+               musicAdmin.loadMusic("openingbgm00",false);
            }
            downCount++;
            touchWaitcount = 0;
        }
         touchWaitcount++;
+
+       if (touchWaitcount == 30 && downCount == 1) {
+           musicAdmin.play();
+       }
 
        //デバッグ用OP切り替えは216行目へ移動した
 

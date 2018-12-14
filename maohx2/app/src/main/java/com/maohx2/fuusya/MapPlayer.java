@@ -253,6 +253,7 @@ public class MapPlayer extends MapUnit {
 //                        int max_of_num_of_zako = 5;
 //                        int num_of_zako = max_of_num_of_zako * now_floor_num / boss_floor_num + 2;
                         int num_of_zako = min(5, (int) (now_floor_num * 0.5) + 2);
+                        //int num_of_zako = 20;
 
 //                        num_of_zako = max_of_num_of_zako;//fuusya_debug
 

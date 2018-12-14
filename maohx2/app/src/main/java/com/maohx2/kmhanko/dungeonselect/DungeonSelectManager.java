@@ -635,6 +635,7 @@ public class DungeonSelectManager {
                     soundAdmin.play("enter00");
                     if (dungeonEnterCheck()) {
                         enterTextBoxUpdateDungeon();
+                        //TODO: ダンジョン名＋画像背景
                         dungeonEnterSelectButtonGroup.setUpdateFlag(true);
                         dungeonEnterSelectButtonGroup.setDrawFlag(true);
                     };
@@ -851,7 +852,7 @@ public class DungeonSelectManager {
 
         textBoxAdmin.setTextBoxExists(enterTextBoxID, true);
         textBoxAdmin.resetTextBox(enterTextBoxID);
-        textBoxAdmin.bookingDrawText(enterTextBoxID, "ダンジョン名 : ", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, tmp.getDungeonName(), enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "このダンジョンに入りますか？", enterTextPaint);
@@ -865,7 +866,7 @@ public class DungeonSelectManager {
 
         textBoxAdmin.setTextBoxExists(enterTextBoxID, true);
         textBoxAdmin.resetTextBox(enterTextBoxID);
-        textBoxAdmin.bookingDrawText(enterTextBoxID, "ダンジョン名 : ", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, tmp.getDungeonName(), enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "このダンジョンにはまだ侵入できません", enterTextPaint);
