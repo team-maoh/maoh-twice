@@ -51,6 +51,7 @@ import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 
 import com.maohx2.kmhanko.Talking.TalkAdmin;
 
+import com.maohx2.kmhanko.music.MusicAdmin;
 import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
@@ -139,6 +140,8 @@ public class BattleUnitAdmin {
 
     InventryS expendInventry;
 
+    MusicAdmin musicAdmin;
+
     //by kmhanko BattleUnitDataAdmin追加
     public void init(
             Graphic _graphic,
@@ -159,7 +162,8 @@ public class BattleUnitAdmin {
             DUNGEON_KIND _dungeonKind,
             DungeonMonsterDataAdmin _dungeonMonsterDataAdmin,
             TalkAdmin _talkAdmin,
-            InventryS _expendInventry
+            InventryS _expendInventry,
+            MusicAdmin _musicAdmin
     ) {
         //引数の代入
         graphic = _graphic;
@@ -181,6 +185,8 @@ public class BattleUnitAdmin {
 
         dungeonMonsterDataAdmin = _dungeonMonsterDataAdmin;
         talkAdmin = _talkAdmin;
+
+        musicAdmin = _musicAdmin;
 
         expendInventry = _expendInventry;
 
@@ -927,6 +933,8 @@ public class BattleUnitAdmin {
         winFlag = false;
         //死んだらお金を半分にする
         playerStatus.setMoney(playerStatus.getMoney() / 2);
+        musicAdmin.loadMusic("gameover00",true);
+
         switch (mode) {
             case BATTLE:
             case BOSS:
@@ -956,7 +964,15 @@ public class BattleUnitAdmin {
         winFlag = true;
         switch (mode) {
             case BATTLE:
+                musicAdmin.loadMusic("win00",true);
+                getDropItem();
+                getDropMoney();
+                growUp();
+                resultButtonGroup.setUpdateFlag(true);
+                resultButtonGroup.setDrawFlag(true);
+                break;
             case BOSS:
+                musicAdmin.loadMusic("win01",true);
                 getDropItem();
                 getDropMoney();
                 growUp();
@@ -964,6 +980,7 @@ public class BattleUnitAdmin {
                 resultButtonGroup.setDrawFlag(true);
                 break;
             case MINING:
+                musicAdmin.loadMusic("win00",true);
                 if (timeLimitBar.isTimeUp()) {
                     //TODO 時間切れで終了した場合
                     resultTextBoxUpdate(new String[]{"時間切れになってしまった！", "今回の獲得ジオはありません"});
@@ -975,6 +992,7 @@ public class BattleUnitAdmin {
                 resultButtonGroup.setDrawFlag(true);
                 break;
             case MAOH:
+                musicAdmin.loadMusic("win01",true);
                 growUp();
                 resultTextBoxUpdate(new String[]{"魔王を倒した！",});
                 resultButtonGroup.setUpdateFlag(true);

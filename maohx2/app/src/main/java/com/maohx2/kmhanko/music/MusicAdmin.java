@@ -118,6 +118,9 @@ public class MusicAdmin implements OnPreparedListener, Runnable {
                     setupTime = (long)loopstart + System.currentTimeMillis();
                 }
             }
+
+            if (loop_count_mode.equals("single")) {
+            }
         }
 
     }

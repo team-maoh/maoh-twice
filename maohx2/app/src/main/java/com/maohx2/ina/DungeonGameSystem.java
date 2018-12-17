@@ -273,7 +273,8 @@ public class DungeonGameSystem {
                 dungeon_kind,
                 dungeonMonsterDataAdmin,
                 talkAdmin,
-                expendInventry
+                expendInventry,
+                musicAdmin
         );
 
         backGround = graphic.searchBitmap("firstBackground");
