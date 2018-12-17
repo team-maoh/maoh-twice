@@ -144,28 +144,28 @@ public class BoxImageTextPlate extends BoxPlate {
         }
         if (touched) {
             graphic.bookingDrawBitmapData(buttonElementFeed[0][0], position[0], position[1], 1.0f, 1.0f, 0, arpla, true);
-            graphic.bookingDrawBitmapData(buttonElementFeed[1][0], position[0], position[1] + buttonImageHeight / 3, 1.0f, (height - (buttonImageHeight * 2.0f / 3.0f)) / (buttonImageHeight / 3.0f), 0, arpla, true);
-            graphic.bookingDrawBitmapData(buttonElementFeed[2][0], position[0], position[3] - buttonImageHeight / 3, 1.0f, 1.0f, 0, arpla, true);
+            graphic.bookingDrawBitmapData(buttonElementFeed[1][0], position[0], (int)(position[1] + buttonImageHeight / 3.0f), 1.0f, (height - (buttonImageHeight * 2.0f / 3.0f)) / (buttonImageHeight / 3.0f), 0, arpla, true);
+            graphic.bookingDrawBitmapData(buttonElementFeed[2][0], position[0], (int)(position[3] - buttonImageHeight / 3.0f), 1.0f, 1.0f, 0, arpla, true);
 
-            graphic.bookingDrawBitmapData(buttonElementFeed[0][1], position[0] + buttonImageWidth / 3, position[1], (width - buttonImageWidth * 2.0f / 3.0f) / (buttonImageWidth / 3.0f), 1.0f, 0, arpla, true);
-            graphic.bookingDrawBitmapData(buttonElementFeed[1][1], position[0] + buttonImageWidth / 3, position[1] + buttonImageHeight / 3, (width - (buttonImageWidth * 2.0f / 3.0f)) / (buttonImageWidth / 3.0f), (height - (buttonImageHeight * 2.0f / 3.0f)) / (buttonImageHeight / 3.0f), 0, arpla, true);
-            graphic.bookingDrawBitmapData(buttonElementFeed[2][1], position[0] + buttonImageWidth / 3, position[3] - buttonImageHeight / 3, (width - (buttonImageWidth * 2.0f / 3.0f)) / (buttonImageWidth / 3.0f), 1.0f, 0, arpla, true);
+            graphic.bookingDrawBitmapData(buttonElementFeed[0][1], (int)(position[0] + buttonImageWidth / 3.0f), position[1], (width - buttonImageWidth * 2.0f / 3.0f) / (buttonImageWidth / 3.0f), 1.0f, 0, arpla, true);
+            graphic.bookingDrawBitmapData(buttonElementFeed[1][1], (int)(position[0] + buttonImageWidth / 3.0f), (int)(position[1] + buttonImageHeight / 3.0f), (width - (buttonImageWidth * 2.0f / 3.0f)) / (buttonImageWidth / 3.0f), (height - (buttonImageHeight * 2.0f / 3.0f)) / (buttonImageHeight / 3.0f), 0, arpla, true);
+            graphic.bookingDrawBitmapData(buttonElementFeed[2][1], (int)(position[0] + buttonImageWidth / 3.0f), (int)(position[3] - buttonImageHeight / 3.0f), (width - (buttonImageWidth * 2.0f / 3.0f)) / (buttonImageWidth / 3.0f), 1.0f, 0, arpla, true);
 
-            graphic.bookingDrawBitmapData(buttonElementFeed[0][2], position[2] - buttonImageWidth / 3, position[1], 1.0f, 1.0f, 0, arpla, true);
-            graphic.bookingDrawBitmapData(buttonElementFeed[1][2], position[2] - buttonImageWidth / 3, position[1] + buttonImageHeight / 3, 1.0f, (height - (buttonImageHeight * 2.0f / 3.0f)) / (buttonImageHeight / 3.0f), 0, arpla, true);
-            graphic.bookingDrawBitmapData(buttonElementFeed[2][2], position[2] - buttonImageWidth / 3, position[3] - buttonImageHeight / 3, 1.0f, 1.0f, 0, arpla, true);
+            graphic.bookingDrawBitmapData(buttonElementFeed[0][2], (int)(position[2] - buttonImageWidth / 3.0f), position[1], 1.0f, 1.0f, 0, arpla, true);
+            graphic.bookingDrawBitmapData(buttonElementFeed[1][2], (int)(position[2] - buttonImageWidth / 3.0f), (int)(position[1] + buttonImageHeight / 3.0f), 1.0f, (height - (buttonImageHeight * 2.0f / 3.0f)) / (buttonImageHeight / 3.0f), 0, arpla, true);
+            graphic.bookingDrawBitmapData(buttonElementFeed[2][2], (int)(position[2] - buttonImageWidth / 3.0f), (int)(position[3] - buttonImageHeight / 3.0f), 1.0f, 1.0f, 0, arpla, true);
         } else {
             graphic.bookingDrawBitmapData(buttonElement[0][0], position[0], position[1], 1.0f, 1.0f, 0, arpla, true);
-            graphic.bookingDrawBitmapData(buttonElement[1][0], position[0], position[1] + buttonImageHeight / 3, 1.0f, (height - (buttonImageHeight * 2.0f / 3.0f)) / (buttonImageHeight / 3.0f), 0, arpla, true);
-            graphic.bookingDrawBitmapData(buttonElement[2][0], position[0], position[3] - buttonImageHeight / 3, 1.0f, 1.0f, 0, arpla, true);
+            graphic.bookingDrawBitmapData(buttonElement[1][0], position[0], (int)(position[1] + buttonImageHeight / 3.0f), 1.0f, (height - (buttonImageHeight * 2.0f / 3.0f)) / (buttonImageHeight / 3.0f), 0, arpla, true);
+            graphic.bookingDrawBitmapData(buttonElement[2][0], position[0], (int)(position[3] - buttonImageHeight / 3.0f), 1.0f, 1.0f, 0, arpla, true);
 
-            graphic.bookingDrawBitmapData(buttonElement[0][1], position[0] + buttonImageWidth / 3, position[1], (width - buttonImageWidth * 2.0f / 3.0f) / (buttonImageWidth / 3.0f), 1.0f, 0, arpla, true);
-            graphic.bookingDrawBitmapData(buttonElement[1][1], position[0] + buttonImageWidth / 3, position[1] + buttonImageHeight / 3, (width - (buttonImageWidth * 2.0f / 3.0f)) / (buttonImageWidth / 3.0f), (height - (buttonImageHeight * 2.0f / 3.0f)) / (buttonImageHeight / 3.0f), 0, arpla, true);
-            graphic.bookingDrawBitmapData(buttonElement[2][1], position[0] + buttonImageWidth / 3, position[3] - buttonImageHeight / 3, (width - (buttonImageWidth * 2.0f / 3.0f)) / (buttonImageWidth / 3.0f), 1.0f, 0, arpla, true);
+            graphic.bookingDrawBitmapData(buttonElement[0][1], (int)(position[0] + buttonImageWidth / 3.0f), position[1], (width - buttonImageWidth * 2.0f / 3.0f) / (buttonImageWidth / 3.0f), 1.0f, 0, arpla, true);
+            graphic.bookingDrawBitmapData(buttonElement[1][1], (int)(position[0] + buttonImageWidth / 3.0f), (int)(position[1] + buttonImageHeight / 3.0f), (width - (buttonImageWidth * 2.0f / 3.0f)) / (buttonImageWidth / 3.0f), (height - (buttonImageHeight * 2.0f / 3.0f)) / (buttonImageHeight / 3.0f), 0, arpla, true);
+            graphic.bookingDrawBitmapData(buttonElement[2][1], (int)(position[0] + buttonImageWidth / 3.0f), (int)(position[3] - buttonImageHeight / 3.0f), (width - (buttonImageWidth * 2.0f / 3.0f)) / (buttonImageWidth / 3.0f), 1.0f, 0, arpla, true);
 
-            graphic.bookingDrawBitmapData(buttonElement[0][2], position[2] - buttonImageWidth / 3, position[1], 1.0f, 1.0f, 0, arpla, true);
-            graphic.bookingDrawBitmapData(buttonElement[1][2], position[2] - buttonImageWidth / 3, position[1] + buttonImageHeight / 3, 1.0f, (height - (buttonImageHeight * 2.0f / 3.0f)) / (buttonImageHeight / 3.0f), 0, arpla, true);
-            graphic.bookingDrawBitmapData(buttonElement[2][2], position[2] - buttonImageWidth / 3, position[3] - buttonImageHeight / 3, 1.0f, 1.0f, 0, arpla, true);
+            graphic.bookingDrawBitmapData(buttonElement[0][2], (int)(position[2] - buttonImageWidth / 3.0f), position[1], 1.0f, 1.0f, 0, arpla, true);
+            graphic.bookingDrawBitmapData(buttonElement[1][2], (int)(position[2] - buttonImageWidth / 3.0f), (int)(position[1] + buttonImageHeight / 3.0f), 1.0f, (height - (buttonImageHeight * 2.0f / 3.0f)) / (buttonImageHeight / 3.0f), 0, arpla, true);
+            graphic.bookingDrawBitmapData(buttonElement[2][2], (int)(position[2] - buttonImageWidth / 3.0f), (int)(position[3] - buttonImageHeight / 3.0f), 1.0f, 1.0f, 0, arpla, true);
         }
         graphic.bookingDrawText(text,
                 (int)(position[0] + (width - textWidth)/2.0f),

@@ -15,6 +15,7 @@ import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.WorldModeAdmin;
 import com.maohx2.kmhanko.Saver.GeoPresentSaver;
+import com.maohx2.kmhanko.WindowPlate.WindowTextPlate;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.dungeonselect.MapIconPlate;
@@ -102,6 +103,13 @@ public class GeoPresentManager {
 
     ImageContext gaiaImage;
 
+
+    WindowTextPlate scoreTitle;
+    WindowTextPlate scoreWindow[] = new WindowTextPlate[5];
+
+    Paint scoreTitlePaint;
+    Paint scorePaint;
+
     public GeoPresentManager(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, InventryS _geoInventry, InventryS _expendItemInventry, ExpendItemDataAdmin _expendItemDataAdmin, PlayerStatus _playerStatus, SoundAdmin _soundAdmin) {
         userInterface = _user_interface;
         graphic = _graphic;
@@ -118,6 +126,7 @@ public class GeoPresentManager {
         initTextBox();
         initPlateGroup();
         initPresentTextBox();
+        initWindow();
         initUIs();
 
     }
@@ -125,7 +134,7 @@ public class GeoPresentManager {
     public void start() {
         geoInventry.setPosition(SIDE_INVENTRY.INV_LEFT, SIDE_INVENTRY.INV_UP, SIDE_INVENTRY.INV_RIGHT,SIDE_INVENTRY.INV_BOTTOM,SIDE_INVENTRY.INV_CONTENT_NUM);
         gaiaImage = graphic.makeImageContext(graphic.searchBitmap("gaia0r"), 300, 450, 2.7f, 2.7f, 0, 255, false);
-        scoreTextBoxUpdate();
+        scoreWindowUpdate();
         updateTextBox();
     }
 
@@ -142,7 +151,7 @@ public class GeoPresentManager {
     public void setGeoPresentSaver(GeoPresentSaver _geoPresentSaver) {
         geoPresentSaver = _geoPresentSaver;
         geoPresentSaver.load();
-        scoreTextBoxUpdate();
+        scoreWindowUpdate();
     }
 
     private void loadDatabase(MyDatabaseAdmin database_admin) {
@@ -152,11 +161,30 @@ public class GeoPresentManager {
         size = database.getSize(presentListTableName);
     }
 
+    private void initWindow() {
+        scoreTitlePaint = new Paint();
+        scoreTitlePaint.setColor(Color.WHITE);
+        scoreTitlePaint.setTextSize(50);
+
+        scorePaint = new Paint();
+        scorePaint.setColor(Color.WHITE);
+        scorePaint.setTextSize(40);
+
+        for (int i = 0; i < scoreWindow.length; i++) {
+            scoreWindow[i] = new WindowTextPlate(graphic, new int[] {520, 200 + i * 100, 1080, 200 + i * 100 + 80});
+            scoreWindow[i].setDrawFlag(true);
+        }
+        scoreTitle = new WindowTextPlate(graphic, new int[] { 500, 50, 1100, 150}, "献上ポイント", scoreTitlePaint, WindowTextPlate.TextPosition.CENTER);
+        scoreTitle.setDrawFlag(true);
+    }
+
     private void initTextBox() {
+        /*
         scoreTextBoxID = textBoxAdmin.createTextBox(600,100,1000,660,6);
         textBoxAdmin.setTextBoxUpdateTextByTouching(scoreTextBoxID, false);
         textBoxAdmin.setTextBoxExists(scoreTextBoxID, false);
         scoreTextBoxUpdate();
+        */
 
         messageBoxID = textBoxAdmin.createTextBox(50, 700, 1150, 880,3);
         textBoxAdmin.setTextBoxExists(messageBoxID, false);
@@ -203,6 +231,7 @@ public class GeoPresentManager {
     }
 
 
+    /*
     private void scoreTextBoxUpdate() {
         textBoxAdmin.resetTextBox(scoreTextBoxID);
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "献上ポイント");
@@ -218,6 +247,16 @@ public class GeoPresentManager {
         //textBoxAdmin.bookingDrawText(scoreTextBoxID, "Special " + specialScore);
         textBoxAdmin.bookingDrawText(scoreTextBoxID, "MOP");
         textBoxAdmin.updateText(scoreTextBoxID);
+    }
+    */
+
+
+    private void scoreWindowUpdate() {
+        scoreWindow[0].setText("HP "  + hpScore, scorePaint, WindowTextPlate.TextPosition.CENTER);
+        scoreWindow[1].setText("Attack " + attackScore, scorePaint, WindowTextPlate.TextPosition.CENTER);
+        scoreWindow[2].setText("Deffence " + defenceScore, scorePaint, WindowTextPlate.TextPosition.CENTER);
+        scoreWindow[3].setText("Luck " + luckScore, scorePaint, WindowTextPlate.TextPosition.CENTER);
+        scoreWindow[4].setText("Special " + specialScore, scorePaint, WindowTextPlate.TextPosition.CENTER);
     }
 
     public void geoInventryUpdate() {
@@ -401,7 +440,7 @@ public class GeoPresentManager {
                     soundAdmin.play("levelup00");
                     presentAndCheck(holdGeoObbjectData);
                     holdGeoObbjectData = null;
-                    scoreTextBoxUpdate();
+                    scoreWindowUpdate();
                     initUIs();
                     break;
                 case(1) ://キャンセル
@@ -419,7 +458,7 @@ public class GeoPresentManager {
         backPlateGroup.update();
 
         //TODO TextBoxの一括ではないupdate
-        textBoxAdmin.setTextBoxExists(scoreTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.PRESENT);
+        //textBoxAdmin.setTextBoxExists(scoreTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.PRESENT);
         textBoxAdmin.setTextBoxExists(messageBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.PRESENT);
     }
 
@@ -428,6 +467,10 @@ public class GeoPresentManager {
 
     public void draw() {
         graphic.bookingDrawBitmapData(gaiaImage);
+        scoreTitle.draw();
+        for(int i = 0; i < scoreWindow.length; i++) {
+            scoreWindow[i].draw();
+        }
         geoInventry.draw();
         presentSelectPlateGroup.draw();
         backPlateGroup.draw();
@@ -531,6 +574,19 @@ public class GeoPresentManager {
         if (presentGetCounts != null) {
             presentGetCounts.clear();
             presentGetCounts = null;
+        }
+
+        for (int i = 0; i < scoreWindow.length; i++) {
+            if (scoreWindow[i] != null) {
+                scoreWindow[i].release();
+                scoreWindow[i] = null;
+            }
+        }
+        scoreWindow = null;
+
+        if (scoreTitle != null) {
+            scoreTitle.release();
+            scoreTitle = null;
         }
     }
 

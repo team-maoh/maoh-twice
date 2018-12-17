@@ -15,6 +15,7 @@ import com.maohx2.ina.WorldActivity;
 import com.maohx2.ina.WorldModeAdmin;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.WindowPlate.WindowTextPlate;
 import com.maohx2.kmhanko.database.MyDatabase;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlotAdmin;
@@ -68,7 +69,9 @@ public class DungeonSelectManager {
     int enterTextBoxID;
     Paint enterTextPaint;
 
-    int loopCountTextBoxID;
+    Paint dungeonEnterTextPaint;
+
+    //int loopCountTextBoxID;
     Paint loopCountTextPaint;
 
     Graphic graphic;
@@ -96,6 +99,8 @@ public class DungeonSelectManager {
     PlateGroup<BoxImageTextPlate> maohEnterSelectButtonGroup;
 
 
+    WindowTextPlate dungeonEnterNamePlate;
+    WindowTextPlate loopCountWindowPlate;
 
     //PlateGroup<CircleImagePlate> menuButtonGroup;
 
@@ -156,7 +161,9 @@ public class DungeonSelectManager {
         initTextBox();
         initOkButton();
         initLoopCountSelectButton();
-        initUIs();
+        initWindow();
+
+        initUIs();//一番最後
 
         //TODO : Loopselect
     }
@@ -376,29 +383,6 @@ public class DungeonSelectManager {
         textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
         textPaint.setARGB(255,255,255,255);
 
-        /*
-        dungeonEnterSelectButtonGroup = new PlateGroup<BoxTextPlate>(
-                new BoxTextPlate[]{
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
-                                Constants.Touch.TouchWay.UP_MOMENT,
-                                Constants.Touch.TouchWay.MOVE,
-                                new int[]{SELECT_WINDOW.YES_LEFT, SELECT_WINDOW.YES_UP, SELECT_WINDOW.YES_RIGHT, SELECT_WINDOW.YES_BOTTOM},
-                                "侵入する",
-                                textPaint
-                        ),
-                        new BoxTextPlate(
-                                graphic, userInterface, new Paint(),
-                                Constants.Touch.TouchWay.UP_MOMENT,
-                                Constants.Touch.TouchWay.MOVE,
-                                new int[]{SELECT_WINDOW.NO_LEFT, SELECT_WINDOW.NO_UP, SELECT_WINDOW.NO_RIGHT, SELECT_WINDOW.NO_BOTTOM},
-                                "やめる",
-                                textPaint
-                        )
-                }
-        );
-        */
-
         dungeonEnterSelectButtonGroup = new PlateGroup<BoxImageTextPlate>(
                 new BoxImageTextPlate[]{
                         new BoxImageTextPlate(
@@ -473,7 +457,7 @@ public class DungeonSelectManager {
                                 //-ボタンが押された時の処理
                                 soundAdmin.play("enter00");
                                 playerStatus.subNowClearCountLoop();
-                                loopCountTextBoxUpdate();
+                                loopCountWindowPlateUpdate();
                                 mapIconPlateListUpdate();
                             }
                         },
@@ -491,7 +475,7 @@ public class DungeonSelectManager {
                                 //-ボタンが押された時の処理
                                 soundAdmin.play("enter00");
                                 playerStatus.addNowClearCountLoop();
-                                loopCountTextBoxUpdate();
+                                loopCountWindowPlateUpdate();
                                 mapIconPlateListUpdate();
                             }
                         }
@@ -559,12 +543,12 @@ public class DungeonSelectManager {
         enterTextPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
         enterTextPaint.setColor(Color.WHITE);
 
-        loopCountTextBoxID = textBoxAdmin.createTextBox(LOOP_WINDOW.COUNT_LEFT, LOOP_WINDOW.COUNT_UP, LOOP_WINDOW.COUNT_RIGHT, LOOP_WINDOW.COUNT_BOTTOM, LOOP_WINDOW.MESS_ROW);
-        textBoxAdmin.setTextBoxUpdateTextByTouching(loopCountTextBoxID, false);
-        textBoxAdmin.setTextBoxExists(loopCountTextBoxID, false);
-        loopCountTextPaint = new Paint();
-        loopCountTextPaint.setTextSize(LOOP_WINDOW.TEXT_SIZE);
-        loopCountTextPaint.setColor(Color.WHITE);
+        //loopCountTextBoxID = textBoxAdmin.createTextBox(LOOP_WINDOW.COUNT_LEFT, LOOP_WINDOW.COUNT_UP, LOOP_WINDOW.COUNT_RIGHT, LOOP_WINDOW.COUNT_BOTTOM, LOOP_WINDOW.MESS_ROW);
+        //textBoxAdmin.setTextBoxUpdateTextByTouching(loopCountTextBoxID, false);
+        //textBoxAdmin.setTextBoxExists(loopCountTextBoxID, false);
+        //loopCountTextPaint = new Paint();
+        //loopCountTextPaint.setTextSize(LOOP_WINDOW.TEXT_SIZE);
+        //loopCountTextPaint.setColor(Color.WHITE);
     }
 
     //***** draw関係 *****
@@ -577,7 +561,22 @@ public class DungeonSelectManager {
         maohEnterSelectButtonGroup.draw();
         loopCountSelectButtonGroup.draw();
 
+        dungeonEnterNamePlate.draw();
+        loopCountWindowPlate.draw();
+
         OkButtonGroup.draw();
+    }
+
+    public void initWindow() {
+        dungeonEnterNamePlate = new WindowTextPlate(graphic, new int[]{400, 300, 1200, 450});
+        dungeonEnterTextPaint = new Paint();
+        dungeonEnterTextPaint.setTextSize(60);
+        dungeonEnterTextPaint.setColor(Color.WHITE);
+
+        loopCountWindowPlate = new WindowTextPlate(graphic, new int[]{LOOP_WINDOW.COUNT_LEFT, LOOP_WINDOW.COUNT_UP, LOOP_WINDOW.COUNT_RIGHT, LOOP_WINDOW.COUNT_BOTTOM});
+        loopCountTextPaint = new Paint();
+        loopCountTextPaint.setTextSize(LOOP_WINDOW.TEXT_SIZE);
+        loopCountTextPaint.setColor(Color.WHITE);
     }
 
     //***** update関係 *****
@@ -618,6 +617,7 @@ public class DungeonSelectManager {
 
     }
 
+
     //注 : 紛らわしいが、DungeonSelectButtonはGeoMapSelectとDungeonSelectとで共通になっている
     public void mapIconPlateCheck() {
         int buttonID = mapIconPlateGroup.getTouchContentNum();
@@ -634,8 +634,9 @@ public class DungeonSelectManager {
                 if (worldModeAdmin.getMode() == WORLD_MODE.DUNGEON_SELECT) {
                     soundAdmin.play("enter00");
                     if (dungeonEnterCheck()) {
-                        enterTextBoxUpdateDungeon();
-                        //TODO: ダンジョン名＋画像背景
+                        //enterTextBoxUpdateDungeon();
+                        dungeonEnterNamePlateUpdate();
+                        dungeonEnterNamePlate.setDrawFlag(true);//ダンジョン名表示
                         dungeonEnterSelectButtonGroup.setUpdateFlag(true);
                         dungeonEnterSelectButtonGroup.setDrawFlag(true);
                     };
@@ -669,7 +670,9 @@ public class DungeonSelectManager {
                 if (worldModeAdmin.getMode() == WORLD_MODE.DUNGEON_SELECT) {
                     if (dungeonEnterCheck()) {
                         geoSlotAdminManager.calcMaohMenosStatus();
-                        enterTextBoxUpdateMaoh();
+                        //enterTextBoxUpdateMaoh();
+                        dungeonEnterNamePlateUpdateMaoh();
+                        dungeonEnterNamePlate.setDrawFlag(true);//ダンジョン名表示
                         maohEnterSelectButtonGroup.setUpdateFlag(true);
                         maohEnterSelectButtonGroup.setDrawFlag(true);
                     }
@@ -708,7 +711,8 @@ public class DungeonSelectManager {
             if (event.get(focusDungeonButtonID).equals("loop")) {
                 soundAdmin.play("enter00");
                 //ループ回数セッティング
-                loopCountTextBoxUpdate();
+                loopCountWindowPlateUpdate();
+                loopCountWindowPlate.setDrawFlag(true);
                 loopCountSelectButtonGroup.setDrawFlag(true);
                 loopCountSelectButtonGroup.setUpdateFlag(true);
                 OkButtonGroup.setDrawFlag(true);
@@ -845,8 +849,7 @@ public class DungeonSelectManager {
 
         textBoxAdmin.updateText(enterTextBoxID);
     }
-
-
+    /*
     public void enterTextBoxUpdateDungeon() {
         MapIconPlate tmp = (MapIconPlate)mapIconPlateGroup.getPlate(focusDungeonButtonID);
 
@@ -860,15 +863,19 @@ public class DungeonSelectManager {
 
         textBoxAdmin.updateText(enterTextBoxID);
     }
+    */
+
+    public void dungeonEnterNamePlateUpdate() {
+        MapIconPlate tmp = (MapIconPlate)mapIconPlateGroup.getPlate(focusDungeonButtonID);
+        dungeonEnterNamePlate.setText(tmp.getDungeonName(), dungeonEnterTextPaint, WindowTextPlate.TextPosition.CENTER);
+    }
+    public void dungeonEnterNamePlateUpdateMaoh() {
+        dungeonEnterNamePlate.setText("魔王に挑戦", dungeonEnterTextPaint, WindowTextPlate.TextPosition.CENTER);
+    }
 
     public void enterTextBoxUpdateNotAccept() {
-        MapIconPlate tmp = (MapIconPlate)mapIconPlateGroup.getPlate(focusDungeonButtonID);
-
         textBoxAdmin.setTextBoxExists(enterTextBoxID, true);
         textBoxAdmin.resetTextBox(enterTextBoxID);
-        textBoxAdmin.bookingDrawText(enterTextBoxID, "", enterTextPaint);
-        textBoxAdmin.bookingDrawText(enterTextBoxID, tmp.getDungeonName(), enterTextPaint);
-        textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "このダンジョンにはまだ侵入できません", enterTextPaint);
         textBoxAdmin.bookingDrawText(enterTextBoxID, "MOP", enterTextPaint);
 
@@ -897,6 +904,11 @@ public class DungeonSelectManager {
         textBoxAdmin.updateText(enterTextBoxID);
     }
 
+    public void loopCountWindowPlateUpdate() {
+        loopCountWindowPlate.setText("" + playerStatus.getNowClearCount() + " / " + playerStatus.getClearCount(), loopCountTextPaint, WindowTextPlate.TextPosition.CENTER);
+    }
+
+    /*
     public void loopCountTextBoxUpdate() {
         textBoxAdmin.setTextBoxExists(loopCountTextBoxID, true);
 
@@ -906,6 +918,7 @@ public class DungeonSelectManager {
 
         textBoxAdmin.updateText(loopCountTextBoxID);
     }
+    */
 
     private void initUIs() {
         dungeonEnterSelectButtonGroup.setUpdateFlag(false);
@@ -917,10 +930,13 @@ public class DungeonSelectManager {
         OkButtonGroup.setUpdateFlag(false);
         OkButtonGroup.setDrawFlag(false);
         textBoxAdmin.setTextBoxExists(enterTextBoxID, false);
-        textBoxAdmin.setTextBoxExists(loopCountTextBoxID, false);
+        //textBoxAdmin.setTextBoxExists(loopCountTextBoxID, false);
+        dungeonEnterNamePlate.setDrawFlag(false);
+        loopCountWindowPlate.setDrawFlag(false);
 
         //menuButtonGroup.setUpdateFlag(true);
         mapIconPlateGroup.setUpdateFlag(true);
+
     }
 
     PlateGroup<BoxImageTextPlate> OkButtonGroup;
@@ -982,6 +998,16 @@ public class DungeonSelectManager {
             OkButtonGroup.release();
             OkButtonGroup = null;
         }
+
+        if (loopCountWindowPlate != null) {
+            loopCountWindowPlate.release();
+            loopCountWindowPlate = null;
+        }
+        if (dungeonEnterNamePlate != null) {
+            dungeonEnterNamePlate.release();
+            dungeonEnterNamePlate = null;
+        }
+
     }
 
 

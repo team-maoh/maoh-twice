@@ -90,7 +90,7 @@ public class Effect {
         setted_extend_x = 1.0f;
         setted_extend_y = 1.0f;
         soundName = "";
-        release();
+        release();//怪しい
     }
 
     public void start() {
