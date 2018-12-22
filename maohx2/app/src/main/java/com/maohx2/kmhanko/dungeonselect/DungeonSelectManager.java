@@ -68,6 +68,7 @@ public class DungeonSelectManager {
 
     int enterTextBoxID;
     Paint enterTextPaint;
+    Paint popupTextPaint;
 
     Paint dungeonEnterTextPaint;
 
@@ -540,8 +541,9 @@ public class DungeonSelectManager {
         textBoxAdmin.setTextBoxUpdateTextByTouching(enterTextBoxID, false);
         textBoxAdmin.setTextBoxExists(enterTextBoxID, false);
         enterTextPaint = new Paint();
-        enterTextPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
+        enterTextPaint.setTextSize(POPUP_WINDOW.TEXT_SIZE);
         enterTextPaint.setColor(Color.WHITE);
+
 
         //loopCountTextBoxID = textBoxAdmin.createTextBox(LOOP_WINDOW.COUNT_LEFT, LOOP_WINDOW.COUNT_UP, LOOP_WINDOW.COUNT_RIGHT, LOOP_WINDOW.COUNT_BOTTOM, LOOP_WINDOW.MESS_ROW);
         //textBoxAdmin.setTextBoxUpdateTextByTouching(loopCountTextBoxID, false);
@@ -568,9 +570,10 @@ public class DungeonSelectManager {
     }
 
     public void initWindow() {
-        dungeonEnterNamePlate = new WindowTextPlate(graphic, new int[]{400, 300, 1200, 450});
+        dungeonEnterNamePlate = new WindowTextPlate(graphic, new int[]{SELECT_WINDOW.MESS_LEFT, SELECT_WINDOW.MESS_UP, SELECT_WINDOW.MESS_RIGHT, SELECT_WINDOW.MESS_BOTTOM});
         dungeonEnterTextPaint = new Paint();
-        dungeonEnterTextPaint.setTextSize(60);
+        dungeonEnterTextPaint.setTextSize(100);
+        dungeonEnterTextPaint.setStrokeWidth(20);
         dungeonEnterTextPaint.setColor(Color.WHITE);
 
         loopCountWindowPlate = new WindowTextPlate(graphic, new int[]{LOOP_WINDOW.COUNT_LEFT, LOOP_WINDOW.COUNT_UP, LOOP_WINDOW.COUNT_RIGHT, LOOP_WINDOW.COUNT_BOTTOM});

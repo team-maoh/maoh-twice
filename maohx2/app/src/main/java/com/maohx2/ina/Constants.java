@@ -215,15 +215,15 @@ public final class Constants {
     }
 
     public static class POPUP_WINDOW {
-        public static final int MESS_LEFT = 150;
-        public static final int MESS_RIGHT = 1450;
+        public static final int MESS_LEFT = 100;
+        public static final int MESS_RIGHT = 1500;
         public static final int MESS_UP = 250;
-        public static final int MESS_BOTTOM = 500;
+        public static final int MESS_BOTTOM = 450-5;
 
-        public static final int OK_LEFT = 500 + 10;
-        public static final int OK_RIGHT = 1100 - 10;
-        public static final int OK_UP = 500 + 10;
-        public static final int OK_BOTTOM = 600 - 10;
+        public static final int OK_LEFT = 300;
+        public static final int OK_RIGHT = 1300;
+        public static final int OK_UP = 450+5;
+        public static final int OK_BOTTOM = 550;
 
         public static final float TEXT_SIZE = 40f;
         public static final float TEXT_SIZE_BIG = 80f;
@@ -239,22 +239,24 @@ public final class Constants {
     }
 
     public static class SELECT_WINDOW {
-        public static final int MESS_LEFT = 200;
-        public static final int MESS_RIGHT = 1400;
-        public static final int MESS_UP = 300;
-        public static final int MESS_BOTTOM = 500;
+        public static final int MESS_LEFT = 250;
+        public static final int MESS_RIGHT = 1350;
+        public static final int MESS_UP = 250;
+        public static final int MESS_BOTTOM = 450-5;
 
-        public static final int YES_LEFT = 200+ 50;
-        public static final int YES_RIGHT = 800- 50;
-        public static final int YES_UP = 500+ 10;
-        public static final int YES_BOTTOM = 600- 10;
+        public static final int YES_LEFT = 250;
+        public static final int YES_RIGHT = 800-5;
+        public static final int YES_UP = 450+5;
+        public static final int YES_BOTTOM = 550;
 
-        public static final int NO_LEFT = 800+ 50;
-        public static final int NO_RIGHT = 1400- 50;
-        public static final int NO_UP = 500+ 10;
-        public static final int NO_BOTTOM = 600- 10;
+        public static final int NO_LEFT = 800+5;
+        public static final int NO_RIGHT = 1350;
+        public static final int NO_UP = 450+5;
+        public static final int NO_BOTTOM = 550;
+
 
         public static final float TEXT_SIZE = 40f;
+        public static final float BUTTON_TEXT_SIZE = 50f;
         public static final float TEXT_SIZE_BIG = 80f;
         public static final int MESS_ROW = 5;
     }
