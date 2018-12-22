@@ -964,7 +964,7 @@ public class BattleUnitAdmin {
         winFlag = true;
         switch (mode) {
             case BATTLE:
-                musicAdmin.loadMusic("win00",true);
+                musicAdmin.loadMusic("win03",true);
                 getDropItem();
                 getDropMoney();
                 growUp();
@@ -972,7 +972,7 @@ public class BattleUnitAdmin {
                 resultButtonGroup.setDrawFlag(true);
                 break;
             case BOSS:
-                musicAdmin.loadMusic("win01",true);
+                musicAdmin.loadMusic("win04",true);
                 getDropItem();
                 getDropMoney();
                 growUp();
@@ -980,7 +980,7 @@ public class BattleUnitAdmin {
                 resultButtonGroup.setDrawFlag(true);
                 break;
             case MINING:
-                musicAdmin.loadMusic("win00",true);
+                musicAdmin.loadMusic("win03",true);
                 if (timeLimitBar.isTimeUp()) {
                     //TODO 時間切れで終了した場合
                     resultTextBoxUpdate(new String[]{"時間切れになってしまった！", "今回の獲得ジオはありません"});
@@ -992,7 +992,7 @@ public class BattleUnitAdmin {
                 resultButtonGroup.setDrawFlag(true);
                 break;
             case MAOH:
-                musicAdmin.loadMusic("win01",true);
+                musicAdmin.loadMusic("win05",true);
                 growUp();
                 resultTextBoxUpdate(new String[]{"魔王を倒した！",});
                 resultButtonGroup.setUpdateFlag(true);

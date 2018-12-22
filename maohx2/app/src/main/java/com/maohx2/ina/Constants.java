@@ -220,12 +220,13 @@ public final class Constants {
         public static final int MESS_UP = 250;
         public static final int MESS_BOTTOM = 450-5;
 
-        public static final int OK_LEFT = 300;
-        public static final int OK_RIGHT = 1300;
+        public static final int OK_LEFT = 500;
+        public static final int OK_RIGHT = 1100;
         public static final int OK_UP = 450+5;
         public static final int OK_BOTTOM = 550;
 
         public static final float TEXT_SIZE = 40f;
+        public static final float BUTTON_TEXT_SIZE = 50f;
         public static final float TEXT_SIZE_BIG = 80f;
         public static final int MESS_ROW = 5;
     }

@@ -9,7 +9,7 @@ public class WindowPlate {
 
     static final String DEFAULT_WINDOW_NAME = "baseButton00";
 
-    protected String windowImageName = DEFAULT_WINDOW_NAME;
+    protected String windowImageName = null;
 
     protected float width;
     protected float height;
@@ -22,9 +22,23 @@ public class WindowPlate {
 
     protected boolean drawFlag = false;
 
+
     public WindowPlate(Graphic _graphic, int[] _position) {
         graphic = _graphic;
         this.setPosition(_position);
+        windowImageName = DEFAULT_WINDOW_NAME;
+        setWindowImage(windowImageName);
+    }
+
+    public WindowPlate(Graphic _graphic, int[] _position, String _windowImageName) {
+        graphic = _graphic;
+        this.setPosition(_position);
+        windowImageName = _windowImageName;
+        setWindowImage(windowImageName);
+    }
+
+    public void setWindowImage(String _windowImageName) {
+        windowImageName = _windowImageName;
 
         windowElement = new BitmapData[3][3];
         windowImageWidth = graphic.searchBitmap(windowImageName).getWidth();
@@ -48,6 +62,9 @@ public class WindowPlate {
 
     protected void drawWindow() {
         if (drawFlag == false) {
+            return;
+        }
+        if (windowImageName == null) {
             return;
         }
         graphic.bookingDrawBitmapData(windowElement[0][0], position[0], position[1], 1.0f, 1.0f, 0, alpha, true);

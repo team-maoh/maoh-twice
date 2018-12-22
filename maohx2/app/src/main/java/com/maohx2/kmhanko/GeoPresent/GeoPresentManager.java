@@ -202,7 +202,7 @@ public class GeoPresentManager {
 
     private void initPlateGroup() {
         Paint textPaint = new Paint();
-        textPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
+        textPaint.setTextSize(SELECT_WINDOW.BUTTON_TEXT_SIZE);
         textPaint.setARGB(255,255,255,255);
         presentSelectPlateGroup = new PlateGroup<BoxImageTextPlate>(
                 new BoxImageTextPlate[]{

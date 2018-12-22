@@ -5,6 +5,7 @@ import com.maohx2.ina.Draw.Graphic;
 
 public class WindowTextPlate extends WindowPlate {
 
+    protected boolean exist[] ;
     protected String text;
     protected Paint textPaint;
     protected float textWidth;
@@ -34,6 +35,15 @@ public class WindowTextPlate extends WindowPlate {
         setText(_text, _textPaint, _textPosition);
     }
 
+    public WindowTextPlate(Graphic _graphic, int[] _position, String _windowImageName) {
+        super(_graphic, _position, _windowImageName);
+    }
+
+    public WindowTextPlate(Graphic _graphic, int[] _position, String _text, Paint _textPaint, TextPosition _textPosition, String _windowImageName) {
+        super(_graphic, _position, _windowImageName);
+        setText(_text, _textPaint, _textPosition);
+    }
+
     @Override
     public void draw() {
         if (!drawFlag) {
@@ -44,15 +54,23 @@ public class WindowTextPlate extends WindowPlate {
     }
 
     public void setText(String _text, Paint _textPaint, TextPosition _textPosition) {
+        setText(0, _text, _textPaint, _textPosition);
+    }
+
+    public void setText(int id, String _text, Paint _textPaint, TextPosition _textPosition) {
         text = _text;
         textPaint = _textPaint;
         textPosition = _textPosition;
-        textHeight = textPaint.getTextSize();
+        textHeight= textPaint.getTextSize();
         textWidth = textPaint.measureText(text);
-        updateTextPosition();
+        updateTextPosition(id);
     }
 
     protected void updateTextPosition() {
+        updateTextPosition(0);
+    }
+
+    protected void updateTextPosition(int id) {
         if (textPosition == TextPosition.UP || textPosition == TextPosition.UPLEFT || textPosition == TextPosition.UPRIGHT) {
             textY = position[1];
         }
