@@ -84,8 +84,8 @@ public class WindowTextPlate extends WindowPlate {
             textX = (int) (position[0] + width - textWidth);
         }
         if (textPosition == TextPosition.CENTER) {
-            textX = (int)(position[0] + (width - textWidth)/2.0f);
-            textY = (int)(position[1] + (height + textHeight)/2.0f);
+            textX = (int)(position[0] + (width - textWidth)/2.0f - 4);
+            textY = (int)(position[1] + (height + textHeight)/2.0f - 4);
         }
 
     }

@@ -321,7 +321,7 @@ public class DungeonSelectManager {
 
         //ここからアイコンの名前プレート
         Paint dungeonIconNamePaint = new Paint();
-        dungeonIconNamePaint.setTextSize(25);
+        dungeonIconNamePaint.setTextSize(30);
         dungeonIconNamePaint.setColor(Color.WHITE);
 
         int count = 0;
@@ -336,8 +336,8 @@ public class DungeonSelectManager {
                 } else {
                     centerY = y.get(i) + 105;
                 }
-                int width = 180;
-                int height = 50;
+                int width = 200;
+                int height = 40;
                 dungeonIconName[count] = new WindowTextPlate(graphic, new int[]{ centerX-width/2, centerY-height/2, centerX+width/2, centerY+height/2 },dungeonNameExpress.get(i),dungeonIconNamePaint, WindowTextPlate.TextPosition.CENTER, "dungeonIconPlate00");
                 dungeonIconName[count].setDrawFlag(true);
                 count++;
