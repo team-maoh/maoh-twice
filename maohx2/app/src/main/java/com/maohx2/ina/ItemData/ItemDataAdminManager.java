@@ -22,7 +22,6 @@ public class ItemDataAdminManager {
 
     public void init(MyDatabaseAdmin databaseAdmin, Graphic _graphic) {
         expendItemDataAdmin = new ExpendItemDataAdmin(_graphic, databaseAdmin);
-
         geoObjectDataAdmin = new GeoObjectDataAdmin(_graphic, databaseAdmin);
     }
 

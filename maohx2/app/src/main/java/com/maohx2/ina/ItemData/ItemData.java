@@ -12,9 +12,9 @@ import com.maohx2.kmhanko.database.NamedData;
 //test
 
 public abstract class ItemData {
-    protected String image_name;
+    protected String image_name = "";
     protected int price;
-    protected String name;
+    protected String name = "";
     protected ITEM_KIND item_kind;
     protected BitmapData item_image;
 

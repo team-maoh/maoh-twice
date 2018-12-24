@@ -209,7 +209,7 @@ public class WorldGameSystem {
 
         talkAdmin = new TalkAdmin(graphic, world_user_interface, databaseAdmin, text_box_admin , soundAdmin);
 
-        itemDataAdminManager = new ItemDataAdminManager();
+        itemDataAdminManager = globalData.getItemDataAdminManager();//new ItemDataAdminManager();
         itemShopAdmin = new ItemShopAdmin();
 
         effectAdmin = new EffectAdmin(graphic, databaseAdmin, soundAdmin);
@@ -369,6 +369,7 @@ public class WorldGameSystem {
                 if (!talkAdmin.isTalking()) {
                     dungeonSelectManager.update();
                 }
+                playerStatusViewer.update();
                 break;
             case GEO_MAP_SELECT_INIT:
                 backGround = graphic.searchBitmap("GeoMap");
@@ -399,6 +400,7 @@ public class WorldGameSystem {
                 if (!talkAdmin.isTalking()) {
                     geoSlotAdminManager.update();
                 }
+                playerStatusViewer.update();
                 break;
             case SHOP_INIT:
                 itemShopAdmin.start();
@@ -416,6 +418,7 @@ public class WorldGameSystem {
                 if (!talkAdmin.isTalking()) {
                     itemShopAdmin.update();
                 }
+                playerStatusViewer.update();
                 break;
             case TU_SHOP:
                 if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_shop_flag == 0) {
@@ -478,6 +481,7 @@ public class WorldGameSystem {
                 if (!talkAdmin.isTalking()) {
                     itemSell.update();
                 }
+                playerStatusViewer.update();
                 break;
                 /*
             case GEO_MAP_SEE_ONLY_INIT:
@@ -704,9 +708,11 @@ public class WorldGameSystem {
         if (talkAdmin != null) {
             talkAdmin.release();
         }
+        /*
         if (itemDataAdminManager != null) {
             itemDataAdminManager.release();
         }
+        */
         if (itemShopAdmin != null) {
             itemShopAdmin.release();
         }
@@ -731,9 +737,12 @@ public class WorldGameSystem {
         if (geoPresentSaver != null) {
             geoPresentSaver.release();
         }
+        /*
         if (equipment_item_data_admin != null) {
             equipment_item_data_admin.release();
         }
+        */
+
         if (backPlateGroup != null) {
             backPlateGroup.release();
             backPlateGroup = null;

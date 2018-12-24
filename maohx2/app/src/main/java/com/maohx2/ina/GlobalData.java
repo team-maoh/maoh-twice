@@ -10,6 +10,7 @@ import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Draw.BitmapDataAdmin;
 import com.maohx2.ina.ItemData.EquipmentInventrySaver;
 import com.maohx2.ina.ItemData.EquipmentItemData;
+import com.maohx2.ina.ItemData.EquipmentItemDataAdmin;
 import com.maohx2.ina.ItemData.ItemDataAdminManager;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatus;
@@ -49,6 +50,8 @@ public class GlobalData extends Application {
 
     ItemDataAdminManager itemDataAdminManager;
 
+    EquipmentItemDataAdmin equipmentItemDataAdmin;
+
     MusicAdmin musicAdmin;
 
     public void init(int disp_x, int disp_y) {
@@ -78,6 +81,8 @@ public class GlobalData extends Application {
         expendItemInventry = new InventryS(expendItemInventrySaver);
 
         itemDataAdminManager = new ItemDataAdminManager();
+
+        //equipmentItemDataAdmin = new EquipmentItemDataAdmin(graphic, g_my_database_admin);
     }
 
     //ゲッターとか
@@ -95,6 +100,7 @@ public class GlobalData extends Application {
     public InventryS getExpendItemInventry() {return expendItemInventry;}
 
     public ItemDataAdminManager getItemDataAdminManager(){return itemDataAdminManager;}
+    public EquipmentItemDataAdmin getEquipmentItemDataAdmin() { return equipmentItemDataAdmin;}
 
     // by kmhanko
     public PlayerStatus getPlayerStatus() { return playerStatus; }
@@ -118,5 +124,6 @@ public class GlobalData extends Application {
         expendItemInventrySaver.release();
         expendItemInventry.release();
         itemDataAdminManager.release();
+        equipmentItemDataAdmin.release();
     }
 }

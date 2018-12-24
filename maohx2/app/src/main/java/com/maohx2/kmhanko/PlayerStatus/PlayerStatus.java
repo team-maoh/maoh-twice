@@ -56,12 +56,14 @@ public class PlayerStatus {
     PlayerStatusSaver playerStatusSaver;
 
 
+    private boolean effectFlag;
 
 
     public PlayerStatus(MyDatabaseAdmin _myDatabaseAdmin, PlayerStatusSaver _playerStatusSaver) {
         playerStatusSaver = _playerStatusSaver;
         initStatus();
         initGeoStatus();
+        effectFlag = false;
     }
 
     public void calcStatus() {
@@ -70,6 +72,11 @@ public class PlayerStatus {
         attack = baseAttack + geoAttack;
         defence = baseDefence + geoDefence;
         luck = baseLuck + geoLuck;
+
+        //effect呼び出し用
+        effectFlag = true;
+
+        System.out.println("calcStatus");
     }
 
     public void initGeoStatus() {
@@ -153,7 +160,7 @@ public class PlayerStatus {
     public void setDefence(int x) { defence = x; }
     public void setLuck(int x) { luck = x; }
     public void setLevel(int x) { level = x; }
-    public void setMoney(int x) { money = x; }
+    public void setMoney(int x) { money = x; effectFlag = true;}
     public void setClearCount(int x) { clearCount = x; }
     public void setNowClearCount(int x) {  nowClearCount = x; }
     public void setTutorialInDungeon(int x){  tutorialInDungeon = x;}
@@ -205,10 +212,12 @@ public class PlayerStatus {
 
     public int addMoney(int _money) {
         money += _money;
+        effectFlag = true;
         return money;
     }
     public int subMoney(int _money) {
         money -= _money;
+        effectFlag = true;
         return money;
     }
 
@@ -229,6 +238,13 @@ public class PlayerStatus {
                 equipmentInventryMaxNum,
                 endingFlag
         };
+    }
+
+    public boolean getEffectFlag() {
+        return effectFlag;
+    }
+    public void setEffectFlag(boolean x) {
+        effectFlag = x;
     }
 
     public void save() {

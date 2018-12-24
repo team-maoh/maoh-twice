@@ -135,6 +135,8 @@ public class DungeonGameSystem {
         GlobalData globalData = (GlobalData)(dungeon_activity.getApplication());
         musicAdmin = globalData.getMusicAdmin();
 
+        playerStatus = globalData.getPlayerStatus();
+        maohMenosStatus = globalData.getMaohMenosStatus();
 
         effectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin);
         battle_unit_admin.getEffectAdmin(effectAdmin);
@@ -183,6 +185,12 @@ public class DungeonGameSystem {
                 break;
         }
 
+        if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH) {
+            repeat_count = playerStatus.getMaohWinCount();
+        } else {
+            repeat_count = playerStatus.getNowClearCount();
+        }
+
 
 
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
@@ -192,7 +200,7 @@ public class DungeonGameSystem {
         activityChange = _activityChange;
         dungeonModeManage = new DungeonModeManage();
         map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange, globalData, dungeonModeManage, soundAdmin);
-        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, soundAdmin, map_plate_admin, dungeonModeManage, globalData, battle_unit_admin, text_box_admin);
+        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, soundAdmin, map_plate_admin, dungeonModeManage, globalData, battle_unit_admin, text_box_admin,battleUnitDataAdmin,dungeonMonsterDataAdmin,repeat_count,dungeon_kind);
         map_plate_admin.setMapObjectAdmin(map_object_admin);
         map_inventry_admin = new MapInventryAdmin(globalData, map_plate_admin.getInventry(), map_object_admin, map_plate_admin);
 
@@ -219,6 +227,7 @@ public class DungeonGameSystem {
             map_admin = new MapAdmin(graphic, map_object_admin, dungeon_data_admin.getDungeon_data().get(dungeon_num), dungeonMonsterDataAdmin.getDungeon_monster_data(), map_status, map_status_saver);
             map_admin.goNextFloor();
         }
+
 //        map_object_admin.getCamera(map_admin.getCamera());
 
         //map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin,this, dungeonModeManage);
@@ -230,7 +239,7 @@ public class DungeonGameSystem {
         PaletteCenter.initStatic(graphic);miningItemDataAdmin = new MiningItemDataAdmin(graphic, my_database_admin);
         PaletteElement.initStatic(graphic);
 
-        equipment_item_data_admin = new EquipmentItemDataAdmin(graphic, my_database_admin);
+        equipment_item_data_admin = new EquipmentItemDataAdmin(graphic ,my_database_admin);//globalData.getEquipmentItemDataAdmin();
 
         equipmentInventry = globalData.getEquipmentInventry();
         expendInventry = globalData.getExpendItemInventry();
@@ -243,16 +252,7 @@ public class DungeonGameSystem {
         palette_admin.setMiningItems(miningItemDataAdmin);//TODO コンストラクタに入れて居ないためよくない
 
 
-        playerStatus = globalData.getPlayerStatus();
-        maohMenosStatus = globalData.getMaohMenosStatus();
-
         playerStatusViewer = new PlayerStatusViewer(graphic, dungeon_user_interface, playerStatus);
-
-        if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH) {
-            repeat_count = playerStatus.getMaohWinCount();
-        } else {
-            repeat_count = playerStatus.getNowClearCount();
-        }
 
         battle_unit_admin.init(
                 graphic,
@@ -360,6 +360,7 @@ public class DungeonGameSystem {
                     //map_plate_admin.update(is_displaying_menu);
                     map_object_admin.update();
                     map_plate_admin.update();
+                    playerStatusViewer.update();
                 }
                 break;
             case OPENING_BATTLE_INIT:
@@ -414,6 +415,7 @@ public class DungeonGameSystem {
                 if (!talkAdmin.isTalking()) {
                     battle_user_interface.update();
                     battle_unit_admin.update();
+                    playerStatusViewer.update();
                 }
                 break;
 
@@ -442,6 +444,7 @@ public class DungeonGameSystem {
                         playerStatus.setNowHP(playerStatus.getNowHP() + heel_to_player);
                         expendInventry.save();
                     }
+                    playerStatusViewer.update();
 
                     backPlateGroup.update();
                 }
@@ -454,6 +457,7 @@ public class DungeonGameSystem {
                 if (!talkAdmin.isTalking()) {
                     map_plate_admin.update();
                     backPlateGroup.update();
+                    playerStatusViewer.update();
                 }
                 break;
             case GEO_MAP_INIT:
@@ -464,6 +468,7 @@ public class DungeonGameSystem {
             case GEO_MAP:
                 if (!talkAdmin.isTalking()) {
                     //geoSlotAdminManager.update();
+                    playerStatusViewer.update();
                 }
                 break;
 

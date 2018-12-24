@@ -10,9 +10,11 @@ import android.view.SurfaceHolder;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.horie.map.Camera;
+import com.maohx2.horie.map.DungeonMonsterDataAdmin;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.ActivityChange;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
+import com.maohx2.ina.Battle.BattleUnitDataAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
@@ -44,6 +46,7 @@ public class MapObjectAdmin {
     int NUM_OF_TRAP = 10;
     int NUM_OF_MINE = 5;
     int NUM_OF_BOSS = 1;
+    int NUM_OF_ITEM = 20;
 
     int PLAYER_DIR = 8;
     int ENEMY_DIR = 8;
@@ -56,8 +59,8 @@ public class MapObjectAdmin {
     double player_x, player_y;
     Random random;
 
-    //    MapItem[] map_item = new MapItem[NUM_OF_ITEM];
-//    MapObjectBitmap[] map_item_bitmap = new MapObjectBitmap[NUM_OF_ITEM];
+    MapItem[] map_item = new MapItem[NUM_OF_ITEM];
+    MapObjectBitmap[] map_item_bitmap = new MapObjectBitmap[NUM_OF_ITEM];
     MapTrap[] map_trap = new MapTrap[NUM_OF_TRAP];
     MapObjectBitmap[] map_trap_bitmap = new MapObjectBitmap[NUM_OF_TRAP];
     MapMine[] map_mine = new MapMine[NUM_OF_MINE];
@@ -107,7 +110,11 @@ public class MapObjectAdmin {
     ActivityChange activityChange;
     int kind_of_zako;
 
-    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, GlobalData _globalData, BattleUnitAdmin _battle_unit_admin, TextBoxAdmin _text_box_admin) {
+    int repeatCount;
+
+    Constants.DungeonKind.DUNGEON_KIND dungeonKind;
+
+    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, GlobalData _globalData, BattleUnitAdmin _battle_unit_admin, TextBoxAdmin _text_box_admin, BattleUnitDataAdmin _battleUnitDataAdmin, DungeonMonsterDataAdmin _dungeonMonsterDataAdmin, int _repeatCount, Constants.DungeonKind.DUNGEON_KIND _dungeonKind) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
         sound_admin = _sound_admin;
@@ -117,6 +124,8 @@ public class MapObjectAdmin {
         playerStatus = globalData.getPlayerStatus();
         battle_unit_admin = _battle_unit_admin;
         text_box_admin = _text_box_admin;
+        repeatCount = _repeatCount;
+        dungeonKind = _dungeonKind;
 
         is_displaying_menu = false;
         random = new Random();
@@ -157,6 +166,15 @@ public class MapObjectAdmin {
             map_enemy[i].init();
             map_enemy_bitmap[i] = new MapObjectBitmap(ENEMY_DIR, graphic, "ジオイーター");
             map_enemy_bitmap[i].init(3 / 2);
+        }
+
+        //by kmhanko
+        MapItem.setRepeatCount(repeatCount);
+        for (int i = 0; i < NUM_OF_ITEM; i++) {
+            map_item[i] = new MapItem(graphic, this, i, camera, playerStatus, _battleUnitDataAdmin, _dungeonMonsterDataAdmin);
+            map_item[i].init();
+            map_item_bitmap[i] = new MapObjectBitmap(1, graphic, randomItemName());
+            map_item_bitmap[i].init();
         }
 
         for (int i = 0; i < NUM_OF_BOSS; i++) {
@@ -229,7 +247,10 @@ public class MapObjectAdmin {
                 map_enemy[i].update();
                 map_enemy_bitmap[i].update();
             }
-
+            for (int i = 0; i < NUM_OF_ITEM; i++) {//by kmhanko
+                map_item[i].update();
+                map_item_bitmap[i].update();
+            }
             for (int i = 0; i < NUM_OF_BOSS; i++) {
                 map_boss[i].update();
                 map_boss_bitmap[i].update();
@@ -248,6 +269,11 @@ public class MapObjectAdmin {
         for (int i = 0; i < NUM_OF_TRAP; i++) {
             if (map_trap[i].exists() == true && map_trap[i].isVisible() == true) {
                 map_trap_bitmap[i].draw(map_trap[i].getDirOnMap(), map_trap[i].getNormX(), map_trap[i].getNormY());
+            }
+        }
+        for (int i = 0; i < NUM_OF_ITEM; i++) {
+            if (map_item[i].exists()) {
+                map_item_bitmap[i].draw(map_item[i].getDirOnMap(), map_item[i].getNormX(), map_item[i].getNormY(), map_item[i].getExtend());
             }
         }
         for (int i = 0; i < NUM_OF_MINE; i++) {
@@ -325,6 +351,12 @@ public class MapObjectAdmin {
             map_boss[i].initClass(map_admin);
         }
 
+        for (int i = 0; i < NUM_OF_ITEM; i++) {
+            map_item[i].initClass(map_admin);
+        }
+
+        //by takano
+
         //by kmhanko
         String mosnterName[] = map_admin.getMonsterName(0);
         for (int i = 0 ; i < mosnterName.length; i++) {
@@ -345,6 +377,10 @@ public class MapObjectAdmin {
 //    }
 
     public void spawnMapObject(Point[] mine_point) {
+        if (dungeonKind == Constants.DungeonKind.DUNGEON_KIND.OPENING || dungeonKind == Constants.DungeonKind.DUNGEON_KIND.MAOH) {
+            return;
+        }
+
 
         //本当はmap_adminで実行してもらう
         //堀江さんと二人がかりでデバッグするのも何なので、今はここに書く
@@ -359,6 +395,11 @@ public class MapObjectAdmin {
         for (int i = 0; i < NUM_OF_MINE; i++) {
             debug_mine_point[i] = new Point(-1, -1);
         }
+        String[] debug_item_name = new String[NUM_OF_ITEM];//by kmhanko
+        for (int i = 0; i < NUM_OF_ITEM; i++) {
+            debug_item_name[i] = randomItemName();
+        }
+
         //
         Point[] debug_boss_point = new Point[NUM_OF_BOSS];
 
@@ -372,7 +413,7 @@ public class MapObjectAdmin {
         spawnEnemy();
         spawnTrap(debug_trap_name);
         spawnBoss(debug_boss_point);
-
+        spawnItem(debug_item_name);
     }
 
     public void spawnMine(Point[] mine_point) {
@@ -470,9 +511,11 @@ public class MapObjectAdmin {
                 tmp_enemy_name[0] = map_admin.getMonsterName(1)[i % un_null];
 //                tmp_enemy_name[0] = "火山(1)";
                 map_enemy[i].setName(tmp_enemy_name);
+
             }
         }
     }
+
 
     public void spawnTrap(String[] names_of_traps) {
 
@@ -497,6 +540,31 @@ public class MapObjectAdmin {
         }
     }
 
+    //by kmhanko
+    public void spawnItem(String[] names_of_items) {
+
+        for (int i = 0; i < NUM_OF_ITEM; i++) {
+            map_item[i].setExists(false);
+        }
+
+        if (map_admin.getNow_floor_num() != map_admin.getBoss_floor_num()) {
+
+            for (int i = 0; i < NUM_OF_ITEM; i++) {
+
+                if (names_of_items[i].equals("null")) {
+                    break;
+                }
+
+                Point room_point = map_admin.getRoomPoint();
+                map_item[i].setPosition(room_point.x + magnification / 2, room_point.y + magnification / 2);
+                map_item[i].setExists(true);
+                map_item[i].setName(names_of_items[i]);
+                map_item[i].settingPower();//名前の後
+                map_item_bitmap[i].setName(names_of_items[i]);
+            }
+        }
+    }
+
     public void putBoss() {
         map_boss[0].setExists(true);
 //        map_boss[0].putBoss(map_player.getWorldX() + 10 + (140 + map_player.getStep()) * 10, map_player.getWorldY());
@@ -517,10 +585,23 @@ public class MapObjectAdmin {
     public boolean bossIsHitPlayer(int r) {
         return map_player.isWithinReach(map_boss[0].getWorldX(), map_boss[0].getWorldY(), r);
     }
-
+    private String randomItemName() {
+        int kind_of_trap = random.nextInt(4);
+        switch (kind_of_trap) {
+            case 0:
+                return "HpUp";
+            case 1:
+                return "AtkUp";
+            case 2:
+                return "DefUp";
+            case 3:
+                return "LuckUp";
+            default:
+                return "NONE";
+        }
+    }
 
     private String randomTrapName() {
-
         double random_double = 8 * random.nextDouble();
         int kind_of_trap = (int) (random_double);
         switch (kind_of_trap) {
@@ -681,6 +762,24 @@ public class MapObjectAdmin {
             }
             map_mine_bitmap = null;
         }
+        if (map_item != null) {
+            for (int i = 0; i < map_item.length; i++) {
+                if (map_item[i] != null) {
+                    map_item[i].release();
+                }
+            }
+            map_item = null;
+        }
+
+        if (map_item_bitmap != null) {
+            for (int i = 0; i < map_item_bitmap.length; i++) {
+                if (map_item_bitmap[i] != null) {
+                    map_item_bitmap[i].release();
+                }
+            }
+            map_item_bitmap = null;
+        }
+
         if (map_boss != null) {
             for (int i = 0; i < map_boss.length; i++) {
                 if (map_boss[i] != null) {

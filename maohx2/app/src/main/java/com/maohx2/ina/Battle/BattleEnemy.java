@@ -114,6 +114,7 @@ public class BattleEnemy extends BattleUnit {
         id = _id;
         damageEffectTime = 0;
         width = getBattleDungeonUnitData().getBitmapDate().getWidth();
+        width = getBattleDungeonUnitData().getBitmapDate().getWidth();
         height = getBattleDungeonUnitData().getBitmapDate().getHeight();
 
         attackExtendX = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.5f;

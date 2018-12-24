@@ -349,7 +349,7 @@ public class BattleUnitDataAdmin {
                 return battle_base_unit_datas.get(i);
             }
         }
-        throw new Error("その名前のユニットは存在しません : " + bitmap_name);
+        throw new Error("その名前のユニットは存在しません : " + bitmap_name + " : " + battle_base_unit_datas);
     }
 
     public List<BattleBaseUnitData> getBattleBaseUnitData() {
@@ -391,8 +391,12 @@ public class BattleUnitDataAdmin {
                 tempDungeonMonsterData.add(dungeonMonsterData.get(i));
             }
         }
+        if (tempDungeonMonsterData.size() == 0) {
+            return null;
+        }
+
         Random random = new Random();
-        int i = random.nextInt(tempDungeonMonsterData.size()-1);
+        int i = random.nextInt(tempDungeonMonsterData.size());//-1いらなくね
         String name = tempDungeonMonsterData.get(i).getMonsterName();
         return getBattleUnitDataNum(name);
     }

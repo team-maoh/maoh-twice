@@ -447,6 +447,9 @@ public class BattleUnitAdmin {
     public int setRockUnitData() {
         List<BattleBaseUnitData> battleBaseUnitData = battleUnitDataAdmin.getBattleBaseUnitDataExceptBoss(dungeonMonsterDataAdmin);
         BattleBaseUnitData bBUD = battleUnitDataAdmin.getRandomBattleBaseUnitDataExceptBoss(dungeonMonsterDataAdmin);
+        if ( bBUD == null) {
+            return -1;
+        }
         int maxMinParam[][] = new int[4][2];// 第二引数は0がMAX,1がMIN
 
         for (int i = 0; i < battleBaseUnitData.size(); i++) {
@@ -966,7 +969,7 @@ public class BattleUnitAdmin {
             case BATTLE:
                 musicAdmin.loadMusic("win03",true);
                 getDropItem();
-                getDropMoney();
+                playerStatus.addMoney(getDropMoney());
                 growUp();
                 resultButtonGroup.setUpdateFlag(true);
                 resultButtonGroup.setDrawFlag(true);
@@ -974,7 +977,7 @@ public class BattleUnitAdmin {
             case BOSS:
                 musicAdmin.loadMusic("win04",true);
                 getDropItem();
-                getDropMoney();
+                playerStatus.addMoney(getDropMoney());
                 growUp();
                 resultButtonGroup.setUpdateFlag(true);
                 resultButtonGroup.setDrawFlag(true);
@@ -1166,7 +1169,6 @@ public class BattleUnitAdmin {
                 getMoney += (battle_units[i].getAttack() + battle_units[i].getDefence() + battle_units[i].getLuck()) / 3;
             }
         }
-        playerStatus.addMoney(getMoney);
         return getMoney;
     }
 

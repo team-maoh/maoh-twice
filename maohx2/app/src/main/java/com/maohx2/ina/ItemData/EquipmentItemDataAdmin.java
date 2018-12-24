@@ -18,7 +18,6 @@ public class EquipmentItemDataAdmin extends ItemDataAdmin<EquipmentItemData> {
         super(_graphic, _database_admin);
         itoe = EQUIPMENT_KIND.values();
 
-        //loadItemData("EquipmentItemData");
         loadItemData("EquipmentItemDebugData");
     }
 

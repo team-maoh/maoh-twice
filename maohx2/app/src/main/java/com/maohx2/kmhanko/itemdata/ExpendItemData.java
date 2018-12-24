@@ -19,6 +19,11 @@ public class ExpendItemData extends ItemData {
         }
     }
 
+    public void release() {
+        expline = null;
+        palettePositions = null;
+    }
+
     public int getHp() {
         return hp;
     }
