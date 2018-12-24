@@ -286,7 +286,7 @@ public class ItemSell {
         textBoxAdmin.setTextBoxUpdateTextByTouching(sellConfirmTextBoxID, false);
         textBoxAdmin.setTextBoxExists(sellConfirmTextBoxID, false);
         sellConfirmTextBoxPaint = new Paint();
-        sellConfirmTextBoxPaint.setTextSize(Constants.SELECT_WINDOW.BUTTON_TEXT_SIZE);
+        sellConfirmTextBoxPaint.setTextSize(Constants.SELECT_WINDOW_PLATE.BUTTON_TEXT_SIZE);
         sellConfirmTextBoxPaint.setColor(Color.WHITE);
     }
 

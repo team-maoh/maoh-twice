@@ -6,6 +6,7 @@ import com.maohx2.horie.map.MapStatusSaver;
 import com.maohx2.ina.ActivityChange;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Constants.SELECT_WINDOW;
+import com.maohx2.ina.Constants.SELECT_WINDOW_PLATE;
 import com.maohx2.ina.Constants.LOOP_WINDOW;
 import com.maohx2.ina.Constants.GAMESYSTEN_MODE.WORLD_MODE;
 import com.maohx2.ina.Constants.DungeonKind.DUNGEON_KIND;
@@ -413,7 +414,7 @@ public class DungeonSelectManager {
 
     private void initDungeonEnterSelectButton(){
         Paint textPaint = new Paint();
-        textPaint.setTextSize(SELECT_WINDOW.BUTTON_TEXT_SIZE);
+        textPaint.setTextSize(SELECT_WINDOW_PLATE.BUTTON_TEXT_SIZE);
         textPaint.setARGB(255,255,255,255);
 
         dungeonEnterSelectButtonGroup = new PlateGroup<BoxImageTextPlate>(
@@ -443,7 +444,7 @@ public class DungeonSelectManager {
 
     private void initMaohEnterSelectButton(){
         Paint textPaint = new Paint();
-        textPaint.setTextSize(SELECT_WINDOW.BUTTON_TEXT_SIZE);
+        textPaint.setTextSize(SELECT_WINDOW_PLATE.BUTTON_TEXT_SIZE);
         textPaint.setARGB(255,255,255,255);
 
         maohEnterSelectButtonGroup = new PlateGroup<BoxImageTextPlate>(
@@ -610,7 +611,7 @@ public class DungeonSelectManager {
     }
 
     public void initWindow() {
-        dungeonEnterNamePlate = new WindowTextPlate(graphic, new int[]{SELECT_WINDOW.MESS_LEFT, SELECT_WINDOW.MESS_UP, SELECT_WINDOW.MESS_RIGHT, SELECT_WINDOW.MESS_BOTTOM});
+        dungeonEnterNamePlate = new WindowTextPlate(graphic, new int[]{SELECT_WINDOW_PLATE.MESS_LEFT, SELECT_WINDOW_PLATE.MESS_UP, SELECT_WINDOW_PLATE.MESS_RIGHT, SELECT_WINDOW_PLATE.MESS_BOTTOM});
         dungeonEnterTextPaint = new Paint();
         dungeonEnterTextPaint.setTextSize(100);
         dungeonEnterTextPaint.setStrokeWidth(20);
@@ -621,7 +622,7 @@ public class DungeonSelectManager {
         loopCountTextPaint.setTextSize(LOOP_WINDOW.TEXT_SIZE);
         loopCountTextPaint.setColor(Color.WHITE);
 
-        dungeonNotEnterPlate = new WindowTextPlate(graphic, new int[]{SELECT_WINDOW.MESS_LEFT - 50, SELECT_WINDOW.MESS_UP- 25, SELECT_WINDOW.MESS_LEFT + 250, SELECT_WINDOW.MESS_UP+ 75 }, "baseButton01");
+        dungeonNotEnterPlate = new WindowTextPlate(graphic, new int[]{SELECT_WINDOW_PLATE.MESS_LEFT - 50, SELECT_WINDOW_PLATE.MESS_UP- 25, SELECT_WINDOW_PLATE.MESS_LEFT + 250, SELECT_WINDOW_PLATE.MESS_UP+ 75 }, "baseButton01");
         dungeonNotEnterPaint = new Paint();
         dungeonNotEnterPaint.setTextSize(60);
         dungeonNotEnterPaint.setColor(Color.WHITE);

@@ -586,7 +586,7 @@ public class MapObjectAdmin {
         return map_player.isWithinReach(map_boss[0].getWorldX(), map_boss[0].getWorldY(), r);
     }
     private String randomItemName() {
-        int kind_of_trap = random.nextInt(4);
+        int kind_of_trap = random.nextInt(3);//luckはでない
         switch (kind_of_trap) {
             case 0:
                 return "HpUp";

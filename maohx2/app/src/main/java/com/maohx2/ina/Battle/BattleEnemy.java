@@ -133,7 +133,7 @@ public class BattleEnemy extends BattleUnit {
         }
         if (damageEffectTime >= damageEffectInterval) {
             damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" + id, "enemy_damaged_effect", "bomb_effect", 5, 2);
-            effectAdmin.getEffect(damagedEffect).setPosition((int) position_x + rnd.nextInt((int)(width*scale)) - (int)(width*scale)/2, (int) position_y + rnd.nextInt((int)(scale*height)) - (int)(scale*height)/2);
+            effectAdmin.getEffect(damagedEffect).setPosition((int) position_x + rnd.nextInt((int)(width*scale) + 1) - (int)(width*scale)/2, (int) position_y + rnd.nextInt((int)(scale*height) + 1) - (int)(scale*height)/2);
             effectAdmin.setExtends(damagedEffect, damagedExtendX, damagedExtendY);
             effectAdmin.getEffect(damagedEffect).start();
             damageEffectTime = 0;

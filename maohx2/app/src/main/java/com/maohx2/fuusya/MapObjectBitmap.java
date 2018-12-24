@@ -169,7 +169,7 @@ public class MapObjectBitmap {
         switch (total_dirs) {
             case 1:
 //                graphic.bookingDrawBitmapData(raw_bitmap_data, (int) x + shift_from_width, (int) y + shift_from_height, DRAW_SCALE, DRAW_SCALE, 0, 255, true);
-                graphic.bookingDrawBitmapData(raw_bitmap_data, (int) x, (int) y, extend * DRAW_SCALE, extend* DRAW_SCALE, 0, alpha, true);
+                graphic.bookingDrawBitmapData(raw_bitmap_data, (int) x, (int) y, extend * DRAW_SCALE, extend* DRAW_SCALE, 0, alpha, false);
                 break;
 
             case 8:

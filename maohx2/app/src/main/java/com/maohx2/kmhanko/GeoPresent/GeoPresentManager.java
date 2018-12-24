@@ -7,6 +7,7 @@ import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.ina.Arrange.InventryData;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Constants.SELECT_WINDOW;
+import com.maohx2.ina.Constants.SELECT_WINDOW_PLATE;
 import com.maohx2.ina.Constants.SIDE_INVENTRY;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.BoxTextPlate;
@@ -202,7 +203,7 @@ public class GeoPresentManager {
 
     private void initPlateGroup() {
         Paint textPaint = new Paint();
-        textPaint.setTextSize(SELECT_WINDOW.BUTTON_TEXT_SIZE);
+        textPaint.setTextSize(SELECT_WINDOW_PLATE.BUTTON_TEXT_SIZE);
         textPaint.setARGB(255,255,255,255);
         presentSelectPlateGroup = new PlateGroup<BoxImageTextPlate>(
                 new BoxImageTextPlate[]{

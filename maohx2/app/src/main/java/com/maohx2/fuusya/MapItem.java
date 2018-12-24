@@ -24,7 +24,7 @@ import static com.maohx2.ina.Constants.UnitStatus.BonusStatus.NUM_OF_BONUS_STATU
 public class MapItem extends MapInanimate {
 
     //Playerに対する当たり判定の半径
-    double REACH_FOR_PLAYER = 100;
+    double REACH_FOR_PLAYER = 150;
 
     int power = 0;
     int parameter = 0;
