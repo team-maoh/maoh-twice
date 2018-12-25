@@ -534,7 +534,18 @@ public class MapObjectAdmin {
                     break;
                 }
 
-                Point room_point = map_admin.getRoomPoint();
+                Point room_point;
+                boolean flag = false;
+                do {
+                    flag = false;
+                    room_point = map_admin.getRoomPoint();
+                    for (int j = 0; j < i; j++) {
+                        if (map_trap[j].getWorldX() != room_point.x + magnification / 2 && map_trap[j].getWorldY() != room_point.y + magnification / 2) {
+                            flag = true;
+                        }
+                    }
+                } while(flag);
+
                 map_trap[i].setPosition(room_point.x + magnification / 2, room_point.y + magnification / 2);
                 map_trap[i].setExists(true);
                 map_trap[i].setName(names_of_traps[i]);
@@ -558,7 +569,19 @@ public class MapObjectAdmin {
                     break;
                 }
 
-                Point room_point = map_admin.getRoomPoint();
+
+                Point room_point;
+                boolean flag = false;
+                do {
+                    flag = false;
+                    room_point = map_admin.getRoomPoint();
+                    for (int j = 0; j < i; j++) {
+                        if (map_item[j].getWorldX() != room_point.x + magnification / 2 && map_item[j].getWorldY() != room_point.y + magnification / 2) {
+                            flag = true;
+                        }
+                    }
+                } while(flag);
+
                 map_item[i].setPosition(room_point.x + magnification / 2, room_point.y + magnification / 2);
                 map_item[i].setExists(true);
                 map_item[i].setName(names_of_items[i]);
