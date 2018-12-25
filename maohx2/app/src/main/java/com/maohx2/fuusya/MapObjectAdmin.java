@@ -721,14 +721,7 @@ public class MapObjectAdmin {
     }
 
     public boolean isGoodSpawnPoint(Point _room_point) {
-        //by kmhanko
-        int spawn_x = _room_point.x*magnification + magnification / 2;
-        int spawn_y = _room_point.y*magnification + magnification / 2;
-        boolean wall_check_1 = detectWall(spawn_x, spawn_y, spawn_x + magnification, spawn_y) == 0;
-        boolean wall_check_2 = detectWall(spawn_x, spawn_y, spawn_x, spawn_y + magnification) == 0;
-        boolean wall_check_3 = detectWall(spawn_x, spawn_y, spawn_x - magnification, spawn_y) == 0;
-        boolean wall_check_4 = detectWall(spawn_x, spawn_y, spawn_x, spawn_y - magnification) == 0;
-        return wall_check_1 && wall_check_2 && wall_check_3 && wall_check_4;// 至近距離に壁がない
+        return isGoodSpawnPoint(_room_point.x, _room_point.y);
     }
 
     public boolean isGoodSpawnPoint(int _x, int _y) {
@@ -739,6 +732,24 @@ public class MapObjectAdmin {
         boolean wall_check_2 = detectWall(spawn_x, spawn_y, spawn_x, spawn_y + magnification) == 0;
         boolean wall_check_3 = detectWall(spawn_x, spawn_y, spawn_x - magnification, spawn_y) == 0;
         boolean wall_check_4 = detectWall(spawn_x, spawn_y, spawn_x, spawn_y - magnification) == 0;
+        for (int i = 0; i < map_item.length; i++) {
+            if (map_item[i] != null) {
+                if (map_item[i].exists()) {
+                    if (spawn_x == map_item[i].getWorldX() && spawn_y == map_item[i].getWorldY()) {
+                        return false;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < map_trap.length; i++) {
+            if (map_trap[i] != null) {
+                if (map_trap[i].exists()) {
+                    if (spawn_x == map_trap[i].getWorldX() && spawn_y == map_trap[i].getWorldY()) {
+                        return false;
+                    }
+                }
+            }
+        }
         return wall_check_1 && wall_check_2 && wall_check_3 && wall_check_4;// 至近距離に壁がない
     }
 

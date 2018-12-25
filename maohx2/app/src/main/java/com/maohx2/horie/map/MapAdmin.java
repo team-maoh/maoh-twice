@@ -491,7 +491,7 @@ public class MapAdmin {
             int x = raw[i]/map_size.y;
             int y = raw[i]%map_size.y;
 
-            if (map_object_admin.isGoodSpawnPoint(x, y) && map_data[x][y].isRoom() && !map_data[x][y].isWall() && !map_data[x][y].isStairs() && !map_data[x][y].isMine()) {
+            if (map_object_admin.isGoodSpawnPoint(x, y) && map_data[x][y].isRoom() && !map_data[x][y].isGate() && !map_data[x][y].isWall() && !map_data[x][y].isStairs() && !map_data[x][y].isMine()) {
                 point.set(x * magnification, y * magnification);
                 break;
             }
