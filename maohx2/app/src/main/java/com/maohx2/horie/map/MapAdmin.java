@@ -54,6 +54,9 @@ public class MapAdmin {
     int mine_max_num;
     int animation_num;//アニメーション回数
 
+    int accessoryNum;
+    float accessoryRate;
+
     String dungeon_name;
     String floor_tile_name;
     String wall_tile_name;
@@ -95,6 +98,7 @@ public class MapAdmin {
     BitmapData op_map_tile[][][];
 
     BitmapData floor_tile;
+    BitmapData accseccaryFloorTileSet[];
     BitmapData stair_tile;
     BitmapData gate_tile;
     BitmapData stair_tile_div[] = new BitmapData[4];//階段の画像を4分割
@@ -148,6 +152,9 @@ public class MapAdmin {
         wall_tile_name = dungeon_data.getWall_tile_name();
         sidewall_tile_name = dungeon_data.getSidewall_tile_name();
 
+        accessoryNum = dungeon_data.getAccessoryNum();
+        accessoryRate = dungeon_data.getAccessoryRate();
+
         //マップ生成用変数初期化
         camera = new Camera(map_size, magnification);
         is_map_data_wall = new boolean[map_size.x * 2][map_size.y * 2];//表示用に4分割されたmap_data
@@ -196,6 +203,16 @@ public class MapAdmin {
         BitmapData auto_tile_block_wall = graphic.searchBitmap(wall_tile_name);//壁のauto_tile元データ
         BitmapData raw_floor_tile = graphic.searchBitmap(floor_tile_name);
         floor_tile = auto_tile_admin.combineFourAutoTile(raw_floor_tile, raw_floor_tile, raw_floor_tile, raw_floor_tile);
+
+        if (accessoryNum > 0) {
+            accseccaryFloorTileSet = new BitmapData[accessoryNum];
+            for (int i = 0; i < accseccaryFloorTileSet.length; i++) {
+                accseccaryFloorTileSet[i] = graphic.searchBitmap("accessory0" + String.valueOf(i));
+            }
+        } else {
+            accseccaryFloorTileSet = null;
+        }
+
 
 //        BitmapData cave_hole_raw = graphic.searchBitmap("cave_hole_01");//穴（アニメーション）
         //BitmapData dragon_hole_raw = graphic.searchBitmap("Dragon_hole_f_01");//穴（アニメーション）
@@ -344,6 +361,14 @@ public class MapAdmin {
         section_admin.connectRooms(map_data);
         section_admin.makeStairs(map_data);
         section_admin.makeGate(map_data);
+        if (accessoryNum > 0) {
+            if (accseccaryFloorTileSet != null) {
+                if (accseccaryFloorTileSet.length > 0) {
+                    section_admin.makeAccessory(map_data, accessoryRate, accseccaryFloorTileSet.length);//Gate,Stairsより後に呼ぶ
+                }
+            }
+        }
+
 //        createMine(5, 5);
         createMine(mine_min_num, mine_max_num);
         //map_object_adminに採掘場所の座標を渡す
@@ -379,20 +404,20 @@ public class MapAdmin {
         else{
             for (int i = 0; i < map_size.x; i++) {
                 for (int j = 0; j < map_size.y; j++) {
-                    if (!isWall(i, j) && !isStairs(i, j)) {
+                    if (!isWall(i, j) && !isStairs(i, j)) {//床
 //                    map_tile[i][j] = floor_tile;
                         //アニメーション用
                         for (int k = 0; k < animation_num; k++) {
                             map_tile_animation[k][i][j] = floor_tile;
                         }
                         //階段
-                    } else if (isStairs(i, j) && !isGate(i, j)) {
+                    } else if (isStairs(i, j) && !isGate(i, j)) {//階段
 //                    map_tile[i][j] = stair_tile;
                         //アニメーション用
                         for (int k = 0; k < animation_num; k++) {
                             map_tile_animation[k][i][j] = stair_tile;
                         }
-                    } else {
+                    } else {//壁
                         setAutoTile_light_animation(i, j, i, j, map_tile_animation, false);
                     }
 //                    if(isGate(i, j)) {
@@ -984,6 +1009,8 @@ public class MapAdmin {
         }
         else {
             time++;
+
+            int accessory[] = new int[4];
             for (int i = 0; i < map_size.x; i++) {
                 for (int j = 0; j < map_size.y; j++) {
                     if (camera.convertToNormCoordinateXForMap(i * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap(j * magnification) > -1 * magnification && camera.convertToNormCoordinateXForMap((i + 1) * magnification) > -1 * magnification && camera.convertToNormCoordinateYForMap((j + 1) * magnification) > -1 * magnification) {
@@ -991,6 +1018,17 @@ public class MapAdmin {
                         if(map_data[i][j].isGate()){
                             graphic.bookingDrawBitmapData(gate_tile, camera.convertToNormCoordinateXForMap(i * magnification), camera.convertToNormCoordinateYForMap(j * magnification), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
                         }
+
+                        //オブジェクトとして飾りを描画
+                        if (map_data[i][j].isAccessory()) {
+                            accessory = map_data[i][j].getAccessory();
+                            for (int k = 0; k < 4; k++) {
+                                if (accessory[k] >= 0 && accessory[k] < accseccaryFloorTileSet.length) {
+                                    graphic.bookingDrawBitmapData(accseccaryFloorTileSet[accessory[k]], camera.convertToNormCoordinateXForMap(i * magnification + magnification/2*(k/2)), camera.convertToNormCoordinateYForMap(j * magnification + magnification/2*(k%2)), (float) magnification / 64, (float) magnification / 64, 0, 255, true);
+                                }
+                            }
+                        }
+
                     }
                 }
             }

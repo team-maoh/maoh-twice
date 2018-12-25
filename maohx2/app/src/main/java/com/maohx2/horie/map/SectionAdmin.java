@@ -586,6 +586,25 @@ public class SectionAdmin {
         }
     }
 
+    //飾りを配置する(床のみ) ゲート、階段などの後に呼ぶこと
+    public void makeAccessory(Chip[][] map_data, float rate, int accessoryNum) {
+        Random rnd = new Random();
+        for (int i = 0; i < map_data.length; i++) {
+            for (int j = 0; j < map_data[0].length; j++) {
+                if (!map_data[i][j].isWall() && !map_data[i][j].isStairs() && !map_data[i][j].isGate()) {
+                    for (int k = 0; k < 4; k++) {
+                        if (rnd.nextFloat() < rate) {
+                            map_data[i][j].setAccessoryFlag(true);
+                            map_data[i][j].setAccessory(k, rnd.nextInt(accessoryNum));
+                        } else {
+                            map_data[i][j].setAccessory(k, -1);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     //ゲートを作る
     public void makeGate(Chip[][] map_data) {
         int ul, u, ur, l, r, dl, d, dr;

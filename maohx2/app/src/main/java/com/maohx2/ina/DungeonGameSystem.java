@@ -124,6 +124,7 @@ public class DungeonGameSystem {
 
         soundAdmin = _soundAdmin;
 
+        dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
         battle_unit_admin = new BattleUnitAdmin();
         text_box_admin = new TextBoxAdmin(graphic, soundAdmin);
         //list_box_admin = new ListBoxAdmin();
@@ -200,11 +201,10 @@ public class DungeonGameSystem {
         activityChange = _activityChange;
         dungeonModeManage = new DungeonModeManage();
         map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange, globalData, dungeonModeManage, soundAdmin);
-        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, soundAdmin, map_plate_admin, dungeonModeManage, globalData, battle_unit_admin, text_box_admin,battleUnitDataAdmin,dungeonMonsterDataAdmin,repeat_count,dungeon_kind);
+        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, soundAdmin, map_plate_admin, dungeonModeManage, globalData, battle_unit_admin, text_box_admin,battleUnitDataAdmin,dungeonMonsterDataAdmin,repeat_count,dungeon_kind, dungeon_data_admin.getDungeon_data().get(dungeon_num));
         map_plate_admin.setMapObjectAdmin(map_object_admin);
         map_inventry_admin = new MapInventryAdmin(globalData, map_plate_admin.getInventry(), map_object_admin, map_plate_admin);
 
-        dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
 
         map_status = new MapStatus(Constants.STAGE_NUM);//mapのクリア状況,チュートリアルを見たかどうかを記憶しておく
         map_status_saver = new MapStatusSaver(_myDatabaseAdmin, "MapSaveData", "MapSaveData.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE, map_status, Constants.STAGE_NUM);

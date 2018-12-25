@@ -7,14 +7,19 @@ import android.graphics.Point;
  */
 
 public class DungeonData {
-    String dungeon_name;
-    int mine_max_num;
-    int mine_min_num;
-    int floor_num;
-    String floor_tile_name;
-    String wall_tile_name;
-    String sidewall_tile_name;
-    Point map_size = new Point(0, 0);
+    private String dungeon_name;
+    private int mine_max_num;
+    private int mine_min_num;
+    private int floor_num;
+    private String floor_tile_name;
+    private String wall_tile_name;
+    private String sidewall_tile_name;
+    private Point map_size = new Point(0, 0);
+
+    private int accessoryNum;
+    private float accessoryRate;
+    private int itemNum;
+    private int trapNum;
 
     public DungeonData(){}
 
@@ -45,6 +50,10 @@ public class DungeonData {
     public int getMap_size_y(){
         return map_size.y;
     }
+    public int getAccessoryNum() {return accessoryNum;}
+    public float getAccessoryRate() {return accessoryRate;}
+    public int getItemNum() {return itemNum;}
+    public int getTrapNum() {return trapNum;}
 
     public void setDungeon_name(String _dungeon_name){
         dungeon_name = _dungeon_name;
@@ -73,6 +82,11 @@ public class DungeonData {
     public void setMap_size_y(int _map_size_y){
         map_size.y = _map_size_y;
     }
+
+    public void setAccessoryNum(int x) { accessoryNum = x;}
+    public void setAccessoryRate(float x) { accessoryRate = x;}
+    public void setItemNum(int x) { itemNum = x;}
+    public void setTrapNum(int x) { trapNum = x;}
 
     public void release() {
         System.out.println("takanoRelease : DungeonData");

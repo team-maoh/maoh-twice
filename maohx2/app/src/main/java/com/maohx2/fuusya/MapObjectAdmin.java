@@ -20,6 +20,7 @@ import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.DungeonGameSystem;
 import com.maohx2.ina.DungeonModeManage;
+import com.maohx2.horie.map.DungeonData;
 import com.maohx2.ina.GlobalData;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.UI.DungeonUserInterface;
@@ -42,11 +43,10 @@ import static java.lang.Math.subtractExact;
 public class MapObjectAdmin {
 
     int NUM_OF_ENEMY = 2;
-    //    int NUM_OF_ITEM = 10;// > 2
-    int NUM_OF_TRAP = 10;
+    int NUM_OF_TRAP = 64;//最大値
     int NUM_OF_MINE = 5;
     int NUM_OF_BOSS = 1;
-    int NUM_OF_ITEM = 20;
+    int NUM_OF_ITEM = 64;//最大値
 
     int PLAYER_DIR = 8;
     int ENEMY_DIR = 8;
@@ -84,6 +84,8 @@ public class MapObjectAdmin {
     PlayerStatus playerStatus;
     BattleUnitAdmin battle_unit_admin;
 
+    DungeonData dungeonData;
+
     Graphic graphic;
     Camera camera;
 
@@ -114,7 +116,7 @@ public class MapObjectAdmin {
 
     Constants.DungeonKind.DUNGEON_KIND dungeonKind;
 
-    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, GlobalData _globalData, BattleUnitAdmin _battle_unit_admin, TextBoxAdmin _text_box_admin, BattleUnitDataAdmin _battleUnitDataAdmin, DungeonMonsterDataAdmin _dungeonMonsterDataAdmin, int _repeatCount, Constants.DungeonKind.DUNGEON_KIND _dungeonKind) {
+    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, GlobalData _globalData, BattleUnitAdmin _battle_unit_admin, TextBoxAdmin _text_box_admin, BattleUnitDataAdmin _battleUnitDataAdmin, DungeonMonsterDataAdmin _dungeonMonsterDataAdmin, int _repeatCount, Constants.DungeonKind.DUNGEON_KIND _dungeonKind, DungeonData _dungeonData) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
         sound_admin = _sound_admin;
@@ -126,6 +128,7 @@ public class MapObjectAdmin {
         text_box_admin = _text_box_admin;
         repeatCount = _repeatCount;
         dungeonKind = _dungeonKind;
+        dungeonData = _dungeonData;
 
         is_displaying_menu = false;
         random = new Random();
@@ -525,7 +528,7 @@ public class MapObjectAdmin {
 
         if (map_admin.getNow_floor_num() != map_admin.getBoss_floor_num()) {
 
-            for (int i = 0; i < NUM_OF_TRAP; i++) {
+            for (int i = 0; i < dungeonData.getTrapNum(); i++) {
 
                 if (names_of_traps[i].equals("null")) {
                     break;
@@ -549,7 +552,7 @@ public class MapObjectAdmin {
 
         if (map_admin.getNow_floor_num() != map_admin.getBoss_floor_num()) {
 
-            for (int i = 0; i < NUM_OF_ITEM; i++) {
+            for (int i = 0; i < dungeonData.getItemNum(); i++) {
 
                 if (names_of_items[i].equals("null")) {
                     break;
