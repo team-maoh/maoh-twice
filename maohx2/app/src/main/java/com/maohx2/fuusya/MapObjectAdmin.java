@@ -527,6 +527,9 @@ public class MapObjectAdmin {
         }
 
         if (map_admin.getNow_floor_num() != map_admin.getBoss_floor_num()) {
+            if (dungeonData == null) {
+                return;
+            }
 
             for (int i = 0; i < dungeonData.getTrapNum(); i++) {
 
@@ -562,6 +565,9 @@ public class MapObjectAdmin {
         }
 
         if (map_admin.getNow_floor_num() != map_admin.getBoss_floor_num()) {
+            if (dungeonData == null) {
+                return;
+            }
 
             for (int i = 0; i < dungeonData.getItemNum(); i++) {
 

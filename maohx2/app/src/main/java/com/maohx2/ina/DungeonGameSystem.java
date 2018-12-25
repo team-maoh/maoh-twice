@@ -14,6 +14,7 @@ import com.maohx2.horie.map.DungeonMonsterDataAdmin;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.horie.map.MapStatus;
 import com.maohx2.horie.map.MapStatusSaver;
+import com.maohx2.horie.map.DungeonData;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
@@ -192,6 +193,12 @@ public class DungeonGameSystem {
             repeat_count = playerStatus.getNowClearCount();
         }
 
+        DungeonData dungeonData = null;
+        if (!(dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH)) {
+            dungeonData = dungeon_data_admin.getDungeon_data().get(dungeon_num);
+        }
+
+
 
 
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
@@ -201,7 +208,7 @@ public class DungeonGameSystem {
         activityChange = _activityChange;
         dungeonModeManage = new DungeonModeManage();
         map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange, globalData, dungeonModeManage, soundAdmin);
-        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, soundAdmin, map_plate_admin, dungeonModeManage, globalData, battle_unit_admin, text_box_admin,battleUnitDataAdmin,dungeonMonsterDataAdmin,repeat_count,dungeon_kind, dungeon_data_admin.getDungeon_data().get(dungeon_num));
+        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, soundAdmin, map_plate_admin, dungeonModeManage, globalData, battle_unit_admin, text_box_admin, battleUnitDataAdmin, dungeonMonsterDataAdmin, repeat_count, dungeon_kind, dungeonData);
         map_plate_admin.setMapObjectAdmin(map_object_admin);
         map_inventry_admin = new MapInventryAdmin(globalData, map_plate_admin.getInventry(), map_object_admin, map_plate_admin);
 
@@ -221,10 +228,10 @@ public class DungeonGameSystem {
 //        }
 //      camera = new Camera(map_size, 64*4);
 
-
         if (!(dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH)) {
-            map_size.set(dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_y());
-            map_admin = new MapAdmin(graphic, map_object_admin, dungeon_data_admin.getDungeon_data().get(dungeon_num), dungeonMonsterDataAdmin.getDungeon_monster_data(), map_status, map_status_saver);
+            dungeonData = dungeon_data_admin.getDungeon_data().get(dungeon_num);
+            map_size.set(dungeonData.getMap_size_x(), dungeonData.getMap_size_y());
+            map_admin = new MapAdmin(graphic, map_object_admin, dungeonData, dungeonMonsterDataAdmin.getDungeon_monster_data(), map_status, map_status_saver);
             map_admin.goNextFloor();
         }
 
