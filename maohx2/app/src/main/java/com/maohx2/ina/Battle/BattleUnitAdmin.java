@@ -863,6 +863,7 @@ public class BattleUnitAdmin {
 //                        System.out.println("level_pl_2_" + level_rate);
 
                         int damage = (int) ((133.0 * strong_ratio) * level_rate * damage_rate);
+
                         int new_hp = battle_units[0].getHitPoint() - damage;
                         //int new_hp = battle_units[0].getHitPoint() - (int) ((133.0 * strong_ratio) * level_rate * damage_rate - heel_to_player);
 //                        int new_hp = battle_units[0].getHitPoint() - (int) ((real_atk * exp * 0.295 / (real_def + 1) * damage_rate) + heel_to_player);

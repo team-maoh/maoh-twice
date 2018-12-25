@@ -543,7 +543,7 @@ public class MapObjectAdmin {
                     flag = false;
                     room_point = map_admin.getRoomPointNotStairsAndNotGate();
                     for (int j = 0; j < i; j++) {
-                        if (map_trap[j].getWorldX() != room_point.x + magnification / 2 && map_trap[j].getWorldY() != room_point.y + magnification / 2) {
+                        if (map_trap[j].getWorldX() == room_point.x + magnification / 2 && map_trap[j].getWorldY() == room_point.y + magnification / 2) {
                             flag = true;
                         }
                     }
@@ -582,7 +582,7 @@ public class MapObjectAdmin {
                     flag = false;
                     room_point = map_admin.getRoomPointNotStairsAndNotGate();
                     for (int j = 0; j < i; j++) {
-                        if (map_item[j].getWorldX() != room_point.x + magnification / 2 && map_item[j].getWorldY() != room_point.y + magnification / 2) {
+                        if (map_item[j].getWorldX() == room_point.x + magnification / 2 && map_item[j].getWorldY() == room_point.y + magnification / 2) {
                             flag = true;
                         }
                     }

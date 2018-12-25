@@ -182,6 +182,7 @@ public class Effect {
             //待機するだけなので何もない
         }
 
+
         if (effectData.getTime(step) < time) {
             //そのステップのラストに到達した
             do {
