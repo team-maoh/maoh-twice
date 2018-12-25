@@ -238,6 +238,20 @@ public class BattleUnitAdmin {
 
         palette_admin.resetDungeonUseNum();
 
+        //デフォルトで何か武器を装備した状態
+        for (int i = 0; i < 6; i++) {
+            if (palette_admin.getPalettes(0).getItemData(i) != null) {
+                palette_admin.getPaletteCenter(0).changeElement(i + 1);//by kmhanko 0731
+                palette_admin.getPaletteCenter(0).setItemData(palette_admin.getPalettes(0).getItemData(i), i, false);
+                break;
+            }
+            if (i == 5) {//6(盾)を飛ばす
+                palette_admin.getPaletteCenter(0).changeElement(7 + 1);//by kmhanko 0731
+                palette_admin.getPaletteCenter(0).setItemData(palette_admin.getPalettes(0).getItemData(7), 7, false);
+                break;
+            }
+        }
+
         paint.setARGB(230, 0, 0, 0);
 
         initEffect();

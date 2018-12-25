@@ -142,6 +142,7 @@ public class Palette {
                 palette_center.setItemData(palette_elements[select_circle_num].getItemData(), select_circle_num, isSound);
                 isSound = false;
                 if (palette_elements[select_circle_num].getItemData().getItemKind() == Constants.Item.ITEM_KIND.EXPEND) {
+                    //消費アイテム
                     palette_elements[select_circle_num].setItemData(null, false);
                 }
             }
@@ -154,6 +155,10 @@ public class Palette {
             }
             battle_palette_mode = 0;
         }
+    }
+
+    public PaletteCenter getPaletteCenter() {
+        return palette_center;
     }
 
     public int getPalettePrePos(){return palette_center.getPrePos();}

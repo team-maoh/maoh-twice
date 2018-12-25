@@ -109,6 +109,7 @@ public class PaletteElement {
                 soundAdmin.play("equip00");
             }
             if (item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT){
+                //装備アイテムに対しパレット位置を入力
                 ((EquipmentItemData) (item_data)).setPalettePosition(element_num);
             }else if(item_data.getItemKind() == Constants.Item.ITEM_KIND.EXPEND){
                 if(element_num == 0){

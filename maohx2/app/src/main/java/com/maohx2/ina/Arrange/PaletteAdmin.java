@@ -262,4 +262,8 @@ public class PaletteAdmin {
 
     }
 
+    public PaletteCenter getPaletteCenter(int i) {
+        return palettes[i].getPaletteCenter();
+    }
+
 }
