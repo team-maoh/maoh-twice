@@ -49,7 +49,7 @@ public class BattleEnemy extends BattleUnit {
     double position_x;
     double position_y;
     double radius;
-    double scale;
+    private double scale;
     int uiid;
     int attackCount;
     int attack_frame;
@@ -74,6 +74,7 @@ public class BattleEnemy extends BattleUnit {
         attackCount = 0;
         attack_frame = 0;
         specialActionCount = 0;
+        specialActionFlag = false;
         scale = NORMAL_SCALE;
         float[] actionRate = new float[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
         int[] alimentTime = new int[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
@@ -85,11 +86,7 @@ public class BattleEnemy extends BattleUnit {
 
     public BattleEnemy(Graphic _graphic, EffectAdmin _effectAdmin, EffectAdmin _backEnemyEffectAdmin){
         super(_graphic, _effectAdmin, _backEnemyEffectAdmin);
-        position_x = 0;
-        position_y = 0;
-        radius = 0;
-        specialActionCount = 0;
-        specialActionFlag = false;
+        clear();
     }
 
     /*
@@ -264,9 +261,9 @@ public class BattleEnemy extends BattleUnit {
 
         //attackFlameに達したらUnitを対象として攻撃
         if(attackCount == attack_frame){
-            if(attack_frame >= 10) {
+            //if(attack_frame >= 10) {
                 scale = ATTACK_SCALE;
-            }
+            //}
             attackCount = 0;
 
             //敵の攻撃エフェクト
@@ -275,10 +272,10 @@ public class BattleEnemy extends BattleUnit {
             return attack;
         }
 
-        if(attackCount == 5){
-            if(attack_frame >= 10) {
+        if(attackCount == Math.min(attack_frame/2, 5)){
+            //if(attack_frame >= 10) {
                 scale = NORMAL_SCALE;
-            }
+            //}
         }
 
         return 0;
