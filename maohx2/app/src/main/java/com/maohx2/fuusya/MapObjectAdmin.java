@@ -738,6 +738,11 @@ public class MapObjectAdmin {
         boolean wall_check_2 = detectWall(spawn_x, spawn_y, spawn_x, spawn_y + magnification) == 0;
         boolean wall_check_3 = detectWall(spawn_x, spawn_y, spawn_x - magnification, spawn_y) == 0;
         boolean wall_check_4 = detectWall(spawn_x, spawn_y, spawn_x, spawn_y - magnification) == 0;
+
+        if (wall_check_1 && wall_check_2 && wall_check_3 && wall_check_4 == false) {
+            return false;
+        }
+
         for (int i = 0; i < map_item.length; i++) {
             if (map_item[i] != null) {
                 if (map_item[i].exists()) {
@@ -756,7 +761,7 @@ public class MapObjectAdmin {
                 }
             }
         }
-        return wall_check_1 && wall_check_2 && wall_check_3 && wall_check_4;// 至近距離に壁がない
+        return true;
     }
 
 

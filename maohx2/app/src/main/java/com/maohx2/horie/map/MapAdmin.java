@@ -992,12 +992,6 @@ public class MapAdmin {
             paint.setColor(Color.RED);
             graphic.bookingDrawCircle(camera.convertToNormCoordinateX(offset.x), camera.convertToNormCoordinateY(offset.y), 20, paint);
         }
-        if (now_floor_num < boss_floor_num) {
-            //ミニマップの表示
-            updateMiniMapDispState(worldToMap(camera.getNowPoint().x), worldToMap(camera.getNowPoint().y));
-            //drawSmallMap3(camera.getCameraOffset().x+800, camera.getCameraOffset().y+450);
-            drawSmallMap3(camera.getNowPoint().x, camera.getNowPoint().y);
-        }
         //画像表示デバッグ用
         //graphic.bookingDrawBitmapData(auto_tile_wall.big_auto_tile[46], 0, 0, 1, 1, 0, 255, true);
     }
@@ -1053,16 +1047,17 @@ public class MapAdmin {
                 }
             }
 //        System.out.println("draw count = "+count);
-
-            if (now_floor_num < boss_floor_num) {
-                //ミニマップの表示
-                updateMiniMapDispState(worldToMap(camera.getNowPoint().x), worldToMap(camera.getNowPoint().y));
-//                drawSmallMap3(camera.getCameraOffset().x+800, camera.getCameraOffset().y+450);
-                drawSmallMap3(camera.getNowPoint().x, camera.getNowPoint().y);
-            }
         }
         //画像表示デバッグ用
 //        graphic.bookingDrawBitmapData(at_floor.big_auto_tile[34], 0, 0, 1, 1, 0, 255, true);
+    }
+
+    public void drawSmallMap() {
+        if (now_floor_num < boss_floor_num) {
+            //ミニマップの表示
+            updateMiniMapDispState(worldToMap(camera.getNowPoint().x), worldToMap(camera.getNowPoint().y));
+            drawSmallMap3(camera.getNowPoint().x, camera.getNowPoint().y);
+        }
     }
 
 //    private void createMapTileSet(boolean lu, boolean u, boolean ru, boolean l, boolean r, boolean ld, boolean d, boolean rd, AutoTile m_auto_tile, int i, int j, BitmapData map_tile_set[][]) {

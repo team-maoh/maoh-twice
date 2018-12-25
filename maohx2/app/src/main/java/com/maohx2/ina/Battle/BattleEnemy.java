@@ -19,15 +19,15 @@ import java.util.Random;
 
 
 /*　やること
-魔王の画像が出ない問題
 採掘ポイント数を増やす
 ダンジョンの広さが広すぎる
 海あたりからプレイヤーの火力がインフレする。ダメージ式を調整する必要
+ジオの能力アップがややしょぼい
+
 小さいマップがプレイヤーの下に出る問題
 ダンジョンゲートやリタイアで選択肢を出す
 森以外の飾りマス
 装備画面における、ポーションの自動セット
-ジオの能力アップがややしょぼい
 装備スロットの操作性問題
 主人公などの壁との当たり判定
 画面に触れ続けているとボタンを押した判定になる問題
@@ -147,8 +147,8 @@ public class BattleEnemy extends BattleUnit {
         damagedExtendX = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
         damagedExtendY = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
 
-        damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" + id,"enemy_damaged_effect" , "bomb_effect", 5, 2);
-        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect" + id, "enemy_attack_effect", "enemy_attack", 4, 2);
+        damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" + String.valueOf(id),"enemy_damaged_effect" , "bomb_effect", 5, 2);
+        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect" + String.valueOf(id), "enemy_attack_effect", "enemy_attack", 4, 2);
 
     }
     protected void damagedEffectStart() {
@@ -156,7 +156,7 @@ public class BattleEnemy extends BattleUnit {
             return;
         }
         if (damageEffectTime >= damageEffectInterval) {
-            damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" + id, "enemy_damaged_effect", "bomb_effect", 5, 2);
+            damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" + String.valueOf(id), "enemy_damaged_effect", "bomb_effect", 5, 2);
             effectAdmin.getEffect(damagedEffect).setPosition((int) position_x + rnd.nextInt((int)(width*scale) + 1) - (int)(width*scale)/2, (int) position_y + rnd.nextInt((int)(scale*height) + 1) - (int)(scale*height)/2);
             effectAdmin.setExtends(damagedEffect, damagedExtendX, damagedExtendY);
             effectAdmin.getEffect(damagedEffect).start();
@@ -168,7 +168,7 @@ public class BattleEnemy extends BattleUnit {
         if (getUnitKind() != Constants.UnitKind.ENEMY) {
             return;
         }
-        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect" + id, "enemy_attack_effect", "enemy_attack", 4, 2);
+        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect" + String.valueOf(id), "enemy_attack_effect", "enemy_attack", 4, 2);
         backEnemyEffectAdmin.getEffect(attackEffect).setPosition((int) position_x, (int) position_y);
         backEnemyEffectAdmin.setExtends(attackEffect, attackExtendX, attackExtendY);
         backEnemyEffectAdmin.getEffect(attackEffect).start();

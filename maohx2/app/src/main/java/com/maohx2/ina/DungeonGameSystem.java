@@ -510,6 +510,7 @@ public class DungeonGameSystem {
                 }
                 map_admin.drawMap_for_autotile_light_animation();
                 map_object_admin.draw();
+                map_admin.drawSmallMap();
                 map_plate_admin.draw();
                 playerStatusViewer.draw();
                 //graphic.bookingDrawCircle(0,0,10,paint);
@@ -530,12 +531,14 @@ public class DungeonGameSystem {
             case ITEM_INIT:
                 map_admin.drawMap_for_autotile_light_animation();
                 map_object_admin.draw();
+                map_admin.drawSmallMap();
                 map_plate_admin.draw();
                 break;
 
             case ITEM:
                 map_admin.drawMap_for_autotile_light_animation();
                 map_object_admin.draw();
+                map_admin.drawSmallMap();
                 map_plate_admin.draw();
                 backPlateGroup.draw();
                 playerStatusViewer.draw();
@@ -544,6 +547,7 @@ public class DungeonGameSystem {
             case EQUIP_EXPEND_INIT:
                 map_admin.drawMap_for_autotile_light_animation();
                 map_object_admin.draw();
+                map_admin.drawSmallMap();
                 map_plate_admin.draw();
                 //palette_admin.drawOnly();
                 playerStatusViewer.draw();
@@ -552,6 +556,7 @@ public class DungeonGameSystem {
             case EQUIP_EXPEND:
                 map_admin.drawMap_for_autotile_light_animation();
                 map_object_admin.draw();
+                map_admin.drawSmallMap();
                 map_plate_admin.draw();
                 //equipmentInventry.drawOnly();
                 //expendInventry.drawOnly();
