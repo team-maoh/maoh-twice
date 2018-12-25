@@ -459,6 +459,26 @@ public class MapAdmin {
         return point;
     }
 
+    //階段やゲートでない、部屋のある一点を返す(magnificationをかけてある)
+    public Point getRoomPointNotStairsAndNotGate() {
+        Point point = new Point(0, 0);
+        int raw[] = MyAvail.shuffle(map_size.x * map_size.y - 1);
+        // by kmhanko
+        for (int i = 0; i < raw.length ; i++) {
+            //Random rnd = new Random();
+            //int x = rnd.nextInt(map_size.x);
+            //int y = rnd.nextInt(map_size.y);
+            int x = raw[i]/map_size.y;
+            int y = raw[i]%map_size.y;
+
+            if (map_data[x][y].isRoom() && !map_data[x][y].isWall() && !map_data[x][y].isStairs() && !map_data[x][y].isGate()) {
+                point.set(x * magnification, y * magnification);
+                break;
+            }
+        }
+        return point;
+    }
+
     //部屋のある一点の、スポーンに相応しい位置を返す(magnificationをかけてある)
     public Point getGoodSpawnRoomPoint() {
         Point point = new Point(0, 0);
