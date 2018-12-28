@@ -213,19 +213,25 @@ public class PlayerStatusViewer {
 
     public void makePlayerStatusEffect(int statusID, float parameter) {
         String text = "";
+        Paint tempPaint = new Paint();
         if (statusID != 4) {
             if (parameter > 0) {
                 text = "+" + String.format("%.2f", parameter);
+                tempPaint.setColor(Color.rgb(255,0,0));
             }
             if (parameter <= 0) {
                 text = String.format("%.2f", parameter);
+                tempPaint.setColor(Color.rgb(0,0,255));
             }
         } else {
             if (parameter > 0) {
                 text = "+" + String.valueOf((int)parameter);
+                tempPaint.setColor(Color.rgb(255,128,128));
+
             }
             if (parameter <= 0) {
                 text = String.valueOf((int)parameter);
+                tempPaint.setColor(Color.rgb(0,0,255));
             }
         }
 
@@ -234,7 +240,8 @@ public class PlayerStatusViewer {
                 playerStatusEffect[i].start(
                         text,
                         (int)(posX1 + sizeX * statusID + TEXT_X_OFFSET_LEFT1),
-                        (int)(posY1)// + (int)((sizeY + sizeY * TEXT_SIZE_RATE)/2.0f))
+                        (int)(posY1),// + (int)((sizeY + sizeY * TEXT_SIZE_RATE)/2.0f)),
+                        tempPaint
                 );
                 break;
             }

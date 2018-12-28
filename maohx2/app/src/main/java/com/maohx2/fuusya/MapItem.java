@@ -180,7 +180,7 @@ public class MapItem extends MapInanimate {
                 statusID = 2;
                 break;
         }
-        extend = (float)(parameter - statusMaxMin[statusID + 3][1])/(float)(statusMaxMin[statusID + 3][0] - statusMaxMin[statusID + 3][1])/2.0f + 0.5f;
+        extend = (float)(parameter - statusMaxMin[statusID + 3][1])/(float)(statusMaxMin[statusID + 3][0] - statusMaxMin[statusID + 3][1])/3.0f + 0.3f;
 
         if (extend < 1.0f) {
             extend = 1.0f;

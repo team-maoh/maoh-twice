@@ -286,7 +286,7 @@ public class MapObjectAdmin {
         }
         for (int i = 0; i < NUM_OF_ITEM; i++) {
             if (map_item[i].exists()) {
-                map_item_bitmap[i].draw(map_item[i].getDirOnMap(), map_item[i].getNormX(), map_item[i].getNormY(), map_item[i].getExtend());
+                map_item_bitmap[i].draw(map_item[i].getDirOnMap(), map_item[i].getNormX(), map_item[i].getNormY(), 192, map_item[i].getExtend());
             }
         }
         for (int i = 0; i < NUM_OF_MINE; i++) {
