@@ -32,7 +32,7 @@ public class PlayerStatusEffect {
         x = _x;
         y = _y;
         paint.setColor(Color.WHITE);
-        paint.setTextSize(40);
+        paint.setTextSize(35);
         text = _text;
     }
 

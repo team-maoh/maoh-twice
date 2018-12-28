@@ -108,7 +108,7 @@ public class DungeonGameSystem {
     Constants.DungeonKind.DUNGEON_KIND dungeon_kind;
 
     EffectAdmin effectAdmin;
-    EffectAdmin enemyBackEffectAdmin;
+    EffectAdmin backEffectAdmin;
 
     PlayerStatusViewer playerStatusViewer;
 
@@ -142,8 +142,8 @@ public class DungeonGameSystem {
 
         effectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin);
         battle_unit_admin.getEffectAdmin(effectAdmin);
-        enemyBackEffectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin);
-        battle_unit_admin.getEnemyBackEffectAdmin(enemyBackEffectAdmin);
+        backEffectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin);
+        battle_unit_admin.getEnemyBackEffectAdmin(backEffectAdmin);
 
         //repeat_count = _repeat_count;
 
@@ -208,7 +208,23 @@ public class DungeonGameSystem {
         activityChange = _activityChange;
         dungeonModeManage = new DungeonModeManage();
         map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange, globalData, dungeonModeManage, soundAdmin);
-        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, soundAdmin, map_plate_admin, dungeonModeManage, globalData, battle_unit_admin, text_box_admin, battleUnitDataAdmin, dungeonMonsterDataAdmin, repeat_count, dungeon_kind, dungeonData);
+        map_object_admin = new MapObjectAdmin(
+                graphic,
+                dungeon_user_interface,
+                soundAdmin,
+                map_plate_admin,
+                dungeonModeManage,
+                globalData,
+                battle_unit_admin,
+                text_box_admin,
+                battleUnitDataAdmin,
+                dungeonMonsterDataAdmin,
+                repeat_count,
+                dungeon_kind,
+                dungeonData,
+                effectAdmin,
+                backEffectAdmin
+        );
         map_plate_admin.setMapObjectAdmin(map_object_admin);
         map_inventry_admin = new MapInventryAdmin(globalData, map_plate_admin.getInventry(), map_object_admin, map_plate_admin);
 
@@ -488,7 +504,7 @@ public class DungeonGameSystem {
         text_box_admin.update();
 
         effectAdmin.update();
-        enemyBackEffectAdmin.update();
+        backEffectAdmin.update();
 
         //musicAdmin.update();
 
@@ -509,8 +525,10 @@ public class DungeonGameSystem {
                     graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
                 }
                 map_admin.drawMap_for_autotile_light_animation();
+                backEffectAdmin.draw();
                 map_object_admin.draw();
                 map_admin.drawSmallMap();
+                effectAdmin.draw();
                 map_plate_admin.draw();
                 playerStatusViewer.draw();
                 //graphic.bookingDrawCircle(0,0,10,paint);
@@ -519,25 +537,31 @@ public class DungeonGameSystem {
             case BUTTLE:
             case MAOH:
                 graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
-                enemyBackEffectAdmin.draw();
+                backEffectAdmin.draw();
                 battle_unit_admin.draw();
+                effectAdmin.draw();
                 break;
 
             case GEO_MINING:
                 graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
                 battle_unit_admin.draw();
+                effectAdmin.draw();
                 break;
 
             case ITEM_INIT:
                 map_admin.drawMap_for_autotile_light_animation();
+                backEffectAdmin.draw();
                 map_object_admin.draw();
+                effectAdmin.draw();
                 map_admin.drawSmallMap();
                 map_plate_admin.draw();
                 break;
 
             case ITEM:
                 map_admin.drawMap_for_autotile_light_animation();
+                backEffectAdmin.draw();
                 map_object_admin.draw();
+                effectAdmin.draw();
                 map_admin.drawSmallMap();
                 map_plate_admin.draw();
                 backPlateGroup.draw();
@@ -546,7 +570,9 @@ public class DungeonGameSystem {
 
             case EQUIP_EXPEND_INIT:
                 map_admin.drawMap_for_autotile_light_animation();
+                backEffectAdmin.draw();
                 map_object_admin.draw();
+                effectAdmin.draw();
                 map_admin.drawSmallMap();
                 map_plate_admin.draw();
                 //palette_admin.drawOnly();
@@ -555,6 +581,7 @@ public class DungeonGameSystem {
 
             case EQUIP_EXPEND:
                 map_admin.drawMap_for_autotile_light_animation();
+                backEffectAdmin.draw();
                 map_object_admin.draw();
                 map_admin.drawSmallMap();
                 map_plate_admin.draw();
@@ -562,11 +589,13 @@ public class DungeonGameSystem {
                 //expendInventry.drawOnly();
                 //dungeon_user_interface.draw();
                 palette_admin.draw();
+                effectAdmin.draw();
                 backPlateGroup.draw();
                 playerStatusViewer.draw();
                 break;
             case GEO_MAP:
                 //geoSlotAdminManager.draw();
+                effectAdmin.draw();
                 playerStatusViewer.draw();
                 break;
 
@@ -574,7 +603,6 @@ public class DungeonGameSystem {
 
         talkAdmin.draw();
         text_box_admin.draw();
-        effectAdmin.draw();
         graphic.draw();
 
         if (resetBossImage) {

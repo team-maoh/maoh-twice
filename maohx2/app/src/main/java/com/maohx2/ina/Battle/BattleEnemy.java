@@ -31,6 +31,8 @@ import java.util.Random;
 主人公などの壁との当たり判定
 画面に触れ続けているとボタンを押した判定になる問題
 エフェクトの重さ改善
+ジオマップで最初エフェクトが出ない
+ジオマップの未開放感
 
 ローグ
 AIバグ
@@ -146,8 +148,8 @@ public class BattleEnemy extends BattleUnit {
         damagedExtendX = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
         damagedExtendY = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
 
-        damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" + String.valueOf(id),"enemy_damaged_effect" , "bomb_effect", 5, 2);
-        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect" + String.valueOf(id), "enemy_attack_effect", "enemy_attack", 4, 2);
+        damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" , "bomb_effect", 5, 2, 1);
+        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, 1);
 
     }
     protected void damagedEffectStart() {
@@ -155,7 +157,7 @@ public class BattleEnemy extends BattleUnit {
             return;
         }
         if (damageEffectTime >= damageEffectInterval) {
-            damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" + String.valueOf(id), "enemy_damaged_effect", "bomb_effect", 5, 2);
+            damagedEffect = effectAdmin.createEffect("enemy_damaged_effect", "bomb_effect", 5, 2, 1);
             effectAdmin.getEffect(damagedEffect).setPosition((int) position_x + rnd.nextInt((int)(width*scale) + 1) - (int)(width*scale)/2, (int) position_y + rnd.nextInt((int)(scale*height) + 1) - (int)(scale*height)/2);
             effectAdmin.setExtends(damagedEffect, damagedExtendX, damagedExtendY);
             effectAdmin.getEffect(damagedEffect).start();
@@ -167,7 +169,7 @@ public class BattleEnemy extends BattleUnit {
         if (getUnitKind() != Constants.UnitKind.ENEMY) {
             return;
         }
-        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect" + String.valueOf(id), "enemy_attack_effect", "enemy_attack", 4, 2);
+        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, 1);
         backEnemyEffectAdmin.getEffect(attackEffect).setPosition((int) position_x, (int) position_y);
         backEnemyEffectAdmin.setExtends(attackEffect, attackExtendX, attackExtendY);
         backEnemyEffectAdmin.getEffect(attackEffect).start();

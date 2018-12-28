@@ -25,6 +25,8 @@ public class Effect {
 
     private int steps;
 
+    private int kind;// 0 = map 1 = battle
+
     private int time;
     private int step;
 
@@ -72,11 +74,12 @@ public class Effect {
         soundAdmin = _soundAdmin;
     }
 
-    public void create(EffectData _effectData) {
+    public void create(EffectData _effectData, int _kind) {
         exist = true;
         isDraw = false;
         is_pause = false;
         effectData = _effectData;
+        kind = _kind;
     }
 
     public void clear() {
@@ -207,9 +210,12 @@ public class Effect {
         if (!exist || !isDraw) {
             return;
         }
+        //System.out.println("effect:" + original_x + " " + (int) (r * Math.cos(anime_angle + original_angle)) + " " + original_y + " " + (int) (r * Math.sin(anime_angle + original_angle)) + " " + extend_x + " " + extend_y);
         //Graphicに描画を依頼
         //graphic.bookingDrawBitmapData(bitmapData.get(imageID), original_x + x, original_y + y, extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
-        graphic.bookingDrawBitmapData(bitmapData[imageID], original_x + (int)(r * Math.cos(anime_angle + original_angle)), original_y  + (int)(r * Math.sin(anime_angle + original_angle)), extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
+        graphic.bookingDrawBitmapData(bitmapData[imageID], original_x + (int) (r * Math.cos(anime_angle + original_angle)), original_y + (int) (r * Math.sin(anime_angle + original_angle)), extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
+        //graphic.bookingDrawBitmapData(bitmapData[imageID], original_x, original_y, extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
+
     }
 
     //ステップ遷移するメソッド
@@ -314,9 +320,13 @@ public class Effect {
     }
     public void pause() { is_pause = true; }
     public void restart() {
+        isDraw = true;
         is_pause = false;
     }
     public boolean isDraw() { return isDraw; }
     public void drawIs(boolean _isDraw) { isDraw = _isDraw; }
+    public int getKind() {
+        return kind;
+    }
 
 }

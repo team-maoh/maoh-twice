@@ -25,6 +25,7 @@ import com.maohx2.ina.GlobalData;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.effect.EffectAdmin;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 //import com.maohx2.ina.ImageAdmin;
 
@@ -114,9 +115,12 @@ public class MapObjectAdmin {
 
     int repeatCount;
 
+    EffectAdmin effectAdmin;
+    EffectAdmin backEffectAdmin;
+
     Constants.DungeonKind.DUNGEON_KIND dungeonKind;
 
-    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, GlobalData _globalData, BattleUnitAdmin _battle_unit_admin, TextBoxAdmin _text_box_admin, BattleUnitDataAdmin _battleUnitDataAdmin, DungeonMonsterDataAdmin _dungeonMonsterDataAdmin, int _repeatCount, Constants.DungeonKind.DUNGEON_KIND _dungeonKind, DungeonData _dungeonData) {
+    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, GlobalData _globalData, BattleUnitAdmin _battle_unit_admin, TextBoxAdmin _text_box_admin, BattleUnitDataAdmin _battleUnitDataAdmin, DungeonMonsterDataAdmin _dungeonMonsterDataAdmin, int _repeatCount, Constants.DungeonKind.DUNGEON_KIND _dungeonKind, DungeonData _dungeonData, EffectAdmin _effectAdmin, EffectAdmin _backEffectAdmin) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
         sound_admin = _sound_admin;
@@ -129,6 +133,12 @@ public class MapObjectAdmin {
         repeatCount = _repeatCount;
         dungeonKind = _dungeonKind;
         dungeonData = _dungeonData;
+
+        effectAdmin = _effectAdmin;
+        backEffectAdmin = _backEffectAdmin;
+
+        MapItem.setBackEffectAdmin(backEffectAdmin);
+        MapItem.setEffectAdmin(effectAdmin);
 
         is_displaying_menu = false;
         random = new Random();
@@ -552,6 +562,7 @@ public class MapObjectAdmin {
                 map_trap[i].setPosition(room_point.x + magnification / 2, room_point.y + magnification / 2);
                 map_trap[i].setExists(true);
                 map_trap[i].setName(names_of_traps[i]);
+                map_trap[i].setId(i);
                 map_trap_bitmap[i].setName(names_of_traps[i]);
             }
         }
@@ -591,7 +602,9 @@ public class MapObjectAdmin {
                 map_item[i].setPosition(room_point.x + magnification / 2, room_point.y + magnification / 2);
                 map_item[i].setExists(true);
                 map_item[i].setName(names_of_items[i]);
-                map_item[i].settingPower();//名前の後
+                map_item[i].setId(i);
+                map_item[i].settingParameter();//名前の後
+                map_item[i].makeEffect();
                 map_item_bitmap[i].setName(names_of_items[i]);
             }
         }

@@ -11,7 +11,9 @@ import com.maohx2.ina.Battle.BattleEnemy;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.effect.EffectAdmin;
 
+import java.io.PrintStream;
 import java.util.Random;
 
 import static com.maohx2.ina.Constants.BattleUnit.BATTLE_UNIT_MAX;
@@ -26,16 +28,28 @@ public class MapItem extends MapInanimate {
     //Playerに対する当たり判定の半径
     double REACH_FOR_PLAYER = 150;
 
-    int power = 0;
     int parameter = 0;
-    float extend = 0;
+    float extend = 0.0f;
     static int repeatCount;
+
+    int effectID;
 
     String name;
 
     PlayerStatus playerStatus;
     BattleUnitDataAdmin battleUnitDataAdmin;
     DungeonMonsterDataAdmin dungeonMonsterDataAdmin;
+
+    static EffectAdmin backEffectAdmin;
+    static EffectAdmin effectAdmin;
+
+
+    static public void setBackEffectAdmin(EffectAdmin _backEffectAdmin) {
+        backEffectAdmin = _backEffectAdmin;
+    }
+    static public void setEffectAdmin(EffectAdmin _effectAdmin) {
+        effectAdmin = _effectAdmin;
+    }
 
     public MapItem(Graphic graphic, MapObjectAdmin _map_object_admin, int _id, Camera _camera, PlayerStatus _playerStatus, BattleUnitDataAdmin _battleUnitDataAdmin, DungeonMonsterDataAdmin _dungeonMonsterDataAdmin) {
         super(graphic, _map_object_admin, _id, _camera);
@@ -50,6 +64,31 @@ public class MapItem extends MapInanimate {
 
     }
 
+    public void makeEffect() {//settingParaより後、nameより後、IDより後
+        String effectImageName = "";
+        switch (name) {
+            case "HpUp":
+                effectImageName = "hpItemEffect00";
+                break;
+            case "AtkUp":
+                effectImageName = "attackItemEffect00";
+                break;
+            case "DefUp":
+                effectImageName = "defenceItemEffect00";
+                break;
+            default:
+                return;
+        }
+        effectID = effectAdmin.createEffect("itemEffect" ,effectImageName, 5, 3);
+        effectAdmin.getEffect(effectID).setPosition(camera.convertToNormCoordinateX((int)w_x), camera.convertToNormCoordinateY((int)w_y));
+        effectAdmin.getEffect(effectID).setExtends(extend, extend);
+        effectAdmin.getEffect(effectID).start();
+    }
+
+    private void updateEffect() {
+        effectAdmin.getEffect(effectID).setPosition(camera.convertToNormCoordinateX((int)w_x), camera.convertToNormCoordinateY((int)w_y));
+    }
+
     static public void setRepeatCount(int _repeatCount) {
         repeatCount = _repeatCount;
     }
@@ -58,6 +97,8 @@ public class MapItem extends MapInanimate {
         super.update();
 
         if (exists == true) {
+
+            this.updateEffect();
 
             if (player.isWithinReach(w_x, w_y, REACH_FOR_PLAYER) == true) {
                 System.out.println("アイテム獲得");
@@ -78,6 +119,7 @@ public class MapItem extends MapInanimate {
                         playerStatus.addBaseLuck(parameter);
                         break;
                 }
+                effectAdmin.getEffect(effectID).clear();
 
                 playerStatus.calcStatus();
                 playerStatus.save();
@@ -109,24 +151,6 @@ public class MapItem extends MapInanimate {
         }
     }
 
-    Random random = new Random();
-    public void settingPower() {
-        power = random.nextInt(3);
-        switch (power) {
-            case 0 :
-                extend = 0.5f;
-                break;
-            case 1 :
-                extend = 0.7f;
-                break;
-            case 2 :
-                extend = 1.0f;
-                break;
-        }
-
-        settingParameter();
-    }
-
     public float getExtend() {
         return extend;
     }
@@ -139,28 +163,32 @@ public class MapItem extends MapInanimate {
             return;
         }
         bonus_status = tempBattleBaseUnitData.getBonusStatus(repeatCount, 5.024);
+        int[][] statusMaxMin = battleUnitDataAdmin.getStatusMinMaxExceptBoss(dungeonMonsterDataAdmin, repeatCount, 5.024);
+        int statusID = 0;
 
         switch (name) {
             case ("HpUp"):
                 parameter = bonus_status[Constants.UnitStatus.BonusStatus.BONUS_HP.ordinal()];
+                statusID = 0;
                 break;
             case ("AtkUp"):
                 parameter = bonus_status[Constants.UnitStatus.BonusStatus.BONUS_ATTACK.ordinal()];
+                statusID = 1;
                 break;
             case ("DefUp"):
                 parameter = bonus_status[Constants.UnitStatus.BonusStatus.BONUS_DEFENSE.ordinal()];
+                statusID = 2;
                 break;
-            case ("LuckUp"):
-                parameter = bonus_status[Constants.UnitStatus.BonusStatus.BONUS_SPEED.ordinal()];
-                break;
+        }
+        extend = (float)(parameter - statusMaxMin[statusID + 3][1])/(float)(statusMaxMin[statusID + 3][0] - statusMaxMin[statusID + 3][1])/2.0f + 0.5f;
+
+        if (extend < 1.0f) {
+            extend = 1.0f;
+        }
+        if (extend > 2.0f) {
+            extend = 2.0f;
         }
 
-        switch (power) {
-            case 1:
-                parameter = (int)(parameter * 1.3);
-            case 2:
-                parameter = (int)(parameter * 1.5);
-        }
     }
 
 

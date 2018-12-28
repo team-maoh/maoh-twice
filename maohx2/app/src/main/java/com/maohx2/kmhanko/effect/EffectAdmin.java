@@ -48,20 +48,8 @@ public class EffectAdmin {
         effectDataAdmin = _effectDataAdmin;
     }
 
-    public int createEffect(String _name, String _imageName, int widthNum, int heightNum) {
-        return createEffect(_name, _name, _imageName, widthNum, heightNum);
-    }
-    public int createEffect(String _name, String _dataName, String _imageName, int widthNum, int heightNum) {
-        int number = searchEffect(_name);
-        if (number == -1) {
-            BitmapData tempBitmapData[] = createEffectOnlyTrim(_name, _imageName, widthNum, heightNum);
-            return createEffect(_name, _dataName, tempBitmapData);
-        } else {
-            return createEffect(_name, _dataName, trimmedBitmapData[number]);
-        }
-    }
 
-    public int searchEffect(String _name) {
+    private int searchTrimmedBitmapDataID(String _name) {
         int number = -1;
         for (int i = 0 ; i < trimmedBitmapName.length; i++) {
             if ( trimmedBitmapName[i] != null) {
@@ -73,8 +61,22 @@ public class EffectAdmin {
         return number;
     }
 
-    public BitmapData[] createEffectOnlyTrim(String _name, String _imageName, int widthNum, int heightNum) {
-        int number = searchEffect(_name);
+    // *** createEffect ***
+    public int createEffect(String _dataName, String _imageName, int widthNum, int heightNum) {
+        return createEffect(_dataName, _imageName, widthNum, heightNum, 0);
+    }
+
+    public int createEffect(String _dataName, String _imageName, int widthNum, int heightNum, int kind) {
+        int number = searchTrimmedBitmapDataID(_imageName);
+        if (number == -1) {
+            BitmapData tempBitmapData[] = createEffectOnlyTrim(_imageName, widthNum, heightNum);
+            return createEffect(_dataName, tempBitmapData, kind);
+        } else {
+            return createEffect(_dataName, trimmedBitmapData[number], kind);
+        }
+    }
+    public BitmapData[] createEffectOnlyTrim(String _imageName, int widthNum, int heightNum) {
+        int number = searchTrimmedBitmapDataID(_imageName);
         if (number == -1) {
             BitmapData tempBitmapData[] = new BitmapData[TRIMMED_BITMAP_MAX];
             BitmapData _bitmapData = graphic.searchBitmap(_imageName);
@@ -88,7 +90,7 @@ public class EffectAdmin {
                     count++;
                 }
             }
-            trimmedBitmapName[dataIndex] = _name;
+            trimmedBitmapName[dataIndex] = _imageName;
             trimmedBitmapData[dataIndex] = tempBitmapData;
             dataIndex++;
             dataIndex %= EFFECT_MAX;
@@ -97,17 +99,7 @@ public class EffectAdmin {
         return null;
     }
 
-    public int createEffect(String _name, String _imageName, int widthNum) {
-        return createEffect(_name, _name, _imageName, widthNum, 1);
-    }
-    public int createEffect(String _name, String _dataName, String _imageName, int widthNum) {
-        return createEffect(_name, _dataName, _imageName, widthNum, 1);
-    }
-
-    public int createEffect(String _name, BitmapData[] _bitmapData) {
-        return createEffect(_name, _name, _bitmapData);
-    }
-    public int createEffect(String _name, String _dataName, BitmapData[] _bitmapData) {
+    public int createEffect(String _dataName, BitmapData[] _bitmapData, int kind) {
         Effect _effect = null;
         int effectID = -1;
 
@@ -123,11 +115,13 @@ public class EffectAdmin {
             return effectID;
         }
 
-        _effect.create(effectDataAdmin.getEffectData(_dataName));
+        _effect.create(effectDataAdmin.getEffectData(_dataName), kind);
         _effect.setBitmapData(_bitmapData);
 
         return effectID;
     }
+
+    // ** draw, update ***
 
     public void draw() {
         //existかどうかは内部処理している
@@ -143,16 +137,38 @@ public class EffectAdmin {
         }
     }
 
-    public Effect getEffect(int i) {
-        return effects[i];
-    }
-
     //全てのエフェクトを消す
     public void clearAllEffect() {
         for (int i = 0; i < effects.length; i++) {
             effects[i].clear();
         }
     }
+
+    public void clearKindEffect(int kind) {
+        for (int i = 0; i < effects.length; i++) {
+            if (effects[i].getKind() == kind) {
+                effects[i].clear();
+            }
+        }
+    }
+
+    public void hideKindEffect(int kind) {
+        for (int i = 0; i < effects.length; i++) {
+            if (effects[i].getKind() == kind) {
+                effects[i].hide();
+            }
+        }
+    }
+
+
+    public void restartKindEffect(int kind) {
+        for (int i = 0; i < effects.length; i++) {
+            if (effects[i].getKind() == kind) {
+                effects[i].restart();
+            }
+        }
+    }
+
 
     //全てのエフェクトを一時停止する
     //仕様として、一時停止しているエフェクトとそうでないエフェクトが一律で一時停止し、復活させると元から一時停止だったエフェクトも一時停止が解除される
@@ -193,6 +209,9 @@ public class EffectAdmin {
 
     public EffectDataAdmin getEffectDataAdmin() {
         return effectDataAdmin;
+    }
+    public Effect getEffect(int i) {
+        return effects[i];
     }
 
     public void release() {

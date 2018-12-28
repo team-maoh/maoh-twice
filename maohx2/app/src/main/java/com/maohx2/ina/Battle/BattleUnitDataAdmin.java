@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.maohx2.ina.Constants.UnitStatus.BonusStatus.*;
+import static com.maohx2.ina.Constants.UnitStatus.Status.*;
+
 /**
  * Created by ina on 2017/10/29.
  */
@@ -367,6 +370,70 @@ public class BattleUnitDataAdmin {
             }
         }
         return tempBattleBaseUnitData;
+    }
+
+
+    public int[][] getStatusMinMaxExceptBoss(DungeonMonsterDataAdmin dungeonMonsterDataAdmin, int repeatCount, double mag) {
+        //0 = MAX, 1 = MIN;
+        List<BattleBaseUnitData> tempBattleBaseUnitData = getBattleBaseUnitDataExceptBoss(dungeonMonsterDataAdmin);
+        int[] tempBonusStatus;
+        int[] tempStatus;
+        int[][] statusMaxMin = new int[6][2];
+        for (int i = 0; i < statusMaxMin.length; i++) {
+            for (int j = 0; j < statusMaxMin[i].length; j++) {
+                statusMaxMin[i][j] = 0;
+            }
+        }
+
+        for(int i = 0 ; i < tempBattleBaseUnitData.size(); i++) {
+            tempStatus = tempBattleBaseUnitData.get(i).getStatus(repeatCount, mag);
+            tempBonusStatus = tempBattleBaseUnitData.get(i).getBonusStatus(repeatCount, mag);
+
+            if (tempStatus[HP.ordinal()] > statusMaxMin[0][0]) {
+                statusMaxMin[0][0] = tempStatus[HP.ordinal()];
+            }
+            if (tempStatus[HP.ordinal()] < statusMaxMin[0][1]) {
+                statusMaxMin[0][1] = tempStatus[HP.ordinal()];
+            }
+
+            if (tempStatus[ATTACK.ordinal()] > statusMaxMin[1][0]) {
+                statusMaxMin[1][0] = tempStatus[ATTACK.ordinal()];
+            }
+            if (tempStatus[ATTACK.ordinal()] < statusMaxMin[1][1]) {
+                statusMaxMin[1][1] = tempStatus[ATTACK.ordinal()];
+            }
+
+            if (tempStatus[DEFENSE.ordinal()] > statusMaxMin[2][0]) {
+                statusMaxMin[2][0] = tempStatus[DEFENSE.ordinal()];
+            }
+            if (tempStatus[DEFENSE.ordinal()] < statusMaxMin[2][1]) {
+                statusMaxMin[2][1] = tempStatus[DEFENSE.ordinal()];
+            }
+
+
+            if (tempBonusStatus[BONUS_HP.ordinal()] > statusMaxMin[3][0]) {
+                statusMaxMin[3][0] = tempBonusStatus[BONUS_HP.ordinal()];
+            }
+            if (tempBonusStatus[BONUS_HP.ordinal()] < statusMaxMin[3][1]) {
+                statusMaxMin[3][1] = tempBonusStatus[BONUS_HP.ordinal()];
+            }
+
+            if (tempBonusStatus[BONUS_ATTACK.ordinal()] > statusMaxMin[4][0]) {
+                statusMaxMin[4][0] = tempBonusStatus[BONUS_ATTACK.ordinal()];
+            }
+            if (tempBonusStatus[BONUS_ATTACK.ordinal()] < statusMaxMin[4][1]) {
+                statusMaxMin[4][1] = tempBonusStatus[BONUS_ATTACK.ordinal()];
+            }
+
+            if (tempBonusStatus[BONUS_DEFENSE.ordinal()] > statusMaxMin[5][0]) {
+                statusMaxMin[5][0] = tempBonusStatus[BONUS_DEFENSE.ordinal()];
+            }
+            if (tempBonusStatus[BONUS_DEFENSE.ordinal()] < statusMaxMin[5][1]) {
+                statusMaxMin[5][1] = tempBonusStatus[BONUS_DEFENSE.ordinal()];
+            }
+
+        }
+        return statusMaxMin;
     }
 
     public List<String> getMaohUnitNames() {
