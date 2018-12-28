@@ -692,15 +692,17 @@ public class DungeonSelectManager {
                     };
                 }
                 if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
-                    soundAdmin.play("enter00");
-                    geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
-                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
                     if (mapIconPlateGroup.getPlates(focusDungeonButtonID).getGeoEnterFlag()) {
+                        soundAdmin.play("enter00");
+                        geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
+                        worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
                         geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_NORMAL);
+                        initUIsFlag = true;
                     } else {
-                        geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_SEE_ONLY);
+                        soundAdmin.play("cannot_exit_room");
+                        initUIsFlag = true;
+                        //geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_SEE_ONLY);
                     }
-                    initUIsFlag = true;
                 }
             }
 
@@ -728,15 +730,17 @@ public class DungeonSelectManager {
                     }
                 }
                 if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
-                    soundAdmin.play("enter00");
-                    geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
-                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
                     if (mapIconPlateGroup.getPlates(focusDungeonButtonID).getGeoEnterFlag()) {
+                        soundAdmin.play("enter00");
+                        geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
+                        worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
                         geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_NORMAL);
+                        initUIsFlag = true;
                     } else {
-                        geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_SEE_ONLY);
+                        soundAdmin.play("cannot_exit_room");
+                        initUIsFlag = true;
+                        //geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_SEE_ONLY);
                     }
-                    initUIsFlag = true;
                 }
             }
             if (event.get(focusDungeonButtonID).equals("map")) {
