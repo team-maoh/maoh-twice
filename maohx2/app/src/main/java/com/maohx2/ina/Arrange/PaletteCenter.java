@@ -57,7 +57,7 @@ public class PaletteCenter extends PaletteElement{
             //graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y);
             graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y+offset_equip,2.0f,2.0f,0,254,false);
             if(item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT) {
-                if(item_data.getName().equals("素手") == false) {
+                if(item_data.getName().equals("素手") == false && item_data.getName().equals("デバッグ盾") == false) {
                     graphic.bookingDrawText(String.valueOf(((EquipmentItemData) (item_data)).getDungeonUseNum()), x + offset_x, y + offset_y, textPaint);
                 }
             }
@@ -86,7 +86,7 @@ public class PaletteCenter extends PaletteElement{
             //graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y);
             graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y+offset_equip,2.0f,2.0f,0,254,false);
             if(item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT) {
-                if(item_data.getName().equals("素手") == false) {
+                if(item_data.getName().equals("素手") == false && item_data.getName().equals("デバッグ盾") == false) {
                     graphic.bookingDrawText(String.valueOf(((EquipmentItemData) (item_data)).getDungeonUseNum()), x + offset_x, y + offset_y, textPaint);
                 }
             }
@@ -111,7 +111,7 @@ public class PaletteCenter extends PaletteElement{
             if (item_data != null) {
                 graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y+offset_equip, 2.0f, 2.0f, 0, 254, false);
                 if(item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT) {
-                    if(item_data.getName().equals("素手") == false) {
+                    if(item_data.getName().equals("素手") == false && item_data.getName().equals("デバッグ盾") == false) {
                         graphic.bookingDrawText(String.valueOf(((EquipmentItemData) (item_data)).getDungeonUseNum()), x + offset_x, y + offset_y, textPaint);
                     }
                 }
@@ -121,7 +121,7 @@ public class PaletteCenter extends PaletteElement{
             if (item_data != null) {
                 graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y+offset_equip, 2.0f, 2.0f, 0, 254, false);
                 if(item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT) {
-                    if(item_data.getName().equals("素手") == false) {
+                    if(item_data.getName().equals("素手") == false && item_data.getName().equals("デバッグ盾") == false) {
                         graphic.bookingDrawText(String.valueOf(((EquipmentItemData) (item_data)).getDungeonUseNum()), x + offset_x, y + offset_y, textPaint);
                     }
                 }
