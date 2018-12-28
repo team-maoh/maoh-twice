@@ -22,7 +22,6 @@ public class ItemDataAdminManager {
 
     public void init(MyDatabaseAdmin databaseAdmin, Graphic _graphic) {
         expendItemDataAdmin = new ExpendItemDataAdmin(_graphic, databaseAdmin);
-
         geoObjectDataAdmin = new GeoObjectDataAdmin(_graphic, databaseAdmin);
     }
 
@@ -32,6 +31,18 @@ public class ItemDataAdminManager {
 
     public GeoObjectDataAdmin getGeoObjectDataAdmin() {
         return geoObjectDataAdmin;
+    }
+
+    public void release() {
+        System.out.println("takanoRelease : ItemDataAdminManager");
+        if (expendItemDataAdmin != null) {
+            expendItemDataAdmin.release();
+        }
+        if (geoObjectDataAdmin != null) {
+            geoObjectDataAdmin.release();
+        }
+        expendItemDataAdmin = null;
+        geoObjectDataAdmin = null;
     }
 
 }

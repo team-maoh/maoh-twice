@@ -41,6 +41,28 @@ public class GeoSlot extends CircleImagePlate {
 
     //** Created by kmhanko **//
 
+    @Override
+    public void release() {
+        System.out.println("takanoRelease : GeoSlot");
+        if (children_slot != null) {
+            children_slot.clear();
+        }
+        children_slot = null;
+        parent_slot = null;
+        release_event = null;
+        restriction = null;
+        geoObjectData = null;
+        if (notEventCrearImageContext != null) {
+            notEventCrearImageContext.release();
+        }
+        if (slotHoleImageContext != null) {
+            slotHoleImageContext.release();
+        }
+        if ( geoImageContext != null) {
+            geoImageContext.release();
+        }
+    }
+
     static final int GEO_SLOT_CHILDREN_MAX = 8;
 
     static final int GEO_LINE_DISTANCE = 100;
@@ -264,14 +286,14 @@ public class GeoSlot extends CircleImagePlate {
 
     //GeoSlotの計算を行うメソッド。再帰ライクの終着点に該当する。
     private void calc(GeoCalcSaverAdmin geo_calc_saver_admin) {
-        geo_calc_saver_admin.getGeoCalcSaver("HP").calc(geoObjectData.getHp(),geoObjectData.getHpRate());
-        geo_calc_saver_admin.getGeoCalcSaver("Attack").calc(geoObjectData.getAttack(),geoObjectData.getAttackRate());
-        geo_calc_saver_admin.getGeoCalcSaver("Defence").calc(geoObjectData.getDefence(),geoObjectData.getDefenceRate());
-        geo_calc_saver_admin.getGeoCalcSaver("Luck").calc(geoObjectData.getLuck(),geoObjectData.getLuckRate());
+        geo_calc_saver_admin.getGeoCalcSaver("HP").calc(50*geoObjectData.getHp(),geoObjectData.getHpRate());
+        geo_calc_saver_admin.getGeoCalcSaver("Attack").calc(50*geoObjectData.getAttack(),geoObjectData.getAttackRate());
+        geo_calc_saver_admin.getGeoCalcSaver("Defence").calc(50*geoObjectData.getDefence(),geoObjectData.getDefenceRate());
+        geo_calc_saver_admin.getGeoCalcSaver("Luck").calc(50*geoObjectData.getLuck(),geoObjectData.getLuckRate());
     }
 
     List<Integer> geoSlotLineEffect = new ArrayList<Integer>();
-    int geoSlotLineColor;//0 = HP 1 = Attack 2 = defence 3 = Luck 4 = none;
+    private int geoSlotLineColor;//0 = HP 1 = Attack 2 = defence 3 = Luck 4 = none;
 
     public void clearGeoSlotLineEffect() {
         for (int i = 0; i < geoSlotLineEffect.size(); i++) {
@@ -359,7 +381,7 @@ public class GeoSlot extends CircleImagePlate {
                     for(int j = 0; j < dotNum; j++) {
 
                         geoSlotLineEffect.add(
-                                effectAdmin.createEffect("geoSlotLine", effectImageName, 3, 1)
+                                effectAdmin.createEffect(effectImageName, effectImageName, 3, 1)
                         );
                         id = geoSlotLineEffect.get(geoSlotLineEffect.size() - 1);
                         effectAdmin.setPosition(
@@ -441,7 +463,7 @@ public class GeoSlot extends CircleImagePlate {
     @Override
     //タッチされた時の処理
     public void callBackEvent() {
-        if (geoSlotAdmin.getMode() == GeoSlotAdminManager.MODE.WORLD) {
+        if (geoSlotAdmin.getMode() == GeoSlotAdminManager.MODE.WORLD_NORMAL) {
             geoSlotAdmin.setFocusGeoSlot(this);
             geoSlotAdmin.geoSlotReleaseChoice();
             if (isEventClearAll()) {

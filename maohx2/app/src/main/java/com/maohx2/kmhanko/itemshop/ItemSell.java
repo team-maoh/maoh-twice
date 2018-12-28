@@ -130,9 +130,9 @@ public class ItemSell {
                     */
                     parentInv = inventry.getInventryData(i).getParentInventry();
                     for (int j = 0; j < inventry.getInventryData(i).getSoldNum(); j++) {
-                        parentInv.subItemData(inventry.getItemData(i));
+                        inventry.getInventryData(i).setSoldNum(0);
+                        parentInv.subItemData(inventry.getItemData(i));//個数が0以下になるとシフトが発生するため、iに意味がなくなるので注意
                     }
-                    inventry.getInventryData(i).setSoldNum(0);
                 }
             }
         }
@@ -195,7 +195,7 @@ public class ItemSell {
             //さらに元のInventryDataの売却個数を+1する。ただし、売却個数が所持個数を上回るような場合には全ての処理を行わない。
             if (tempInventryData.getParentInventry() == geoInventry) {
                 GeoObjectData tempGeo = (GeoObjectData) (tempInventryData.getItemData());
-                if (tempInventryData.getItemNum() > tempInventryData.getSoldNum() && tempGeo.getSlotSetName() == "noSet") {
+                if (tempInventryData.getItemNum() > tempInventryData.getSoldNum() && tempGeo.getSlotSetName().equals("noSet")) {
                     sellItemInventry.addItemData(tempInventryData.getItemData());
                     tempInventryData.addSoldNum();
                 }
@@ -215,6 +215,8 @@ public class ItemSell {
                 }
             }
         }
+
+        userInterface.setInventryData(null);
     }
 
     //***** draw関係 *****
@@ -222,7 +224,7 @@ public class ItemSell {
         geoInventry.draw();
         expendItemInventry.draw();
         equipmentInventry.draw();
-        sellItemInventry.draw();
+        sellItemInventry.drawExceptEquip();
         switchPlateGroup.draw();
 
         sellEnterPlateGroup.draw();
@@ -274,6 +276,7 @@ public class ItemSell {
         expendItemInventry.setPosition(1210,SIDE_INVENTRY.INV_UP,1600,SIDE_INVENTRY.INV_BOTTOM, SIDE_INVENTRY.INV_CONTENT_NUM);
     }
 
+
     //***テキストボックス関係
     int sellConfirmTextBoxID;
     Paint sellConfirmTextBoxPaint;
@@ -283,7 +286,7 @@ public class ItemSell {
         textBoxAdmin.setTextBoxUpdateTextByTouching(sellConfirmTextBoxID, false);
         textBoxAdmin.setTextBoxExists(sellConfirmTextBoxID, false);
         sellConfirmTextBoxPaint = new Paint();
-        sellConfirmTextBoxPaint.setTextSize(Constants.SELECT_WINDOW.TEXT_SIZE);
+        sellConfirmTextBoxPaint.setTextSize(Constants.SELECT_WINDOW_PLATE.BUTTON_TEXT_SIZE);
         sellConfirmTextBoxPaint.setColor(Color.WHITE);
     }
 
@@ -291,13 +294,14 @@ public class ItemSell {
         textBoxAdmin.setTextBoxExists(sellConfirmTextBoxID, true);
         textBoxAdmin.resetTextBox(sellConfirmTextBoxID);
 
-        textBoxAdmin.bookingDrawText(sellConfirmTextBoxID, "売却価格は " + _sellMoney + " G です．", sellConfirmTextBoxPaint);
+        textBoxAdmin.bookingDrawText(sellConfirmTextBoxID, "売却価格は " + _sellMoney + " Maon です．", sellConfirmTextBoxPaint);
         textBoxAdmin.bookingDrawText(sellConfirmTextBoxID, "\n", sellConfirmTextBoxPaint);
         textBoxAdmin.bookingDrawText(sellConfirmTextBoxID, "売却しますか？", sellConfirmTextBoxPaint);
         textBoxAdmin.bookingDrawText(sellConfirmTextBoxID, "MOP", sellConfirmTextBoxPaint);
 
         textBoxAdmin.updateText(sellConfirmTextBoxID);
     }
+
 
     //***ボタン関係
     PlateGroup<BackPlate> backPlateGroup;
@@ -360,8 +364,6 @@ public class ItemSell {
         switchPlateGroup.setUpdateFlag(true);
         switchPlateGroup.setDrawFlag(true);
     }
-
-
 
 
     PlateGroup<BoxImageTextPlate> sellSelectButtonGroup;
@@ -444,6 +446,8 @@ public class ItemSell {
     }
     */
 
+
+
     PlateGroup<BoxImagePlate> sellEnterPlateGroup;
     private void initsellEnterPlate() {
         Paint textPaint = new Paint();
@@ -489,6 +493,22 @@ public class ItemSell {
         sellEnterPlateGroup.setUpdateFlag(true);
         sellEnterPlateGroup.setDrawFlag(true);
     }
+
+
+    public void release() {
+        System.out.println("takanoRelease : ItemSell");
+        sellItemInventry.release();
+        sellConfirmTextBoxPaint = null;
+        backPlateGroup.release();
+        backPlateGroup = null;
+        switchPlateGroup.release();
+        switchPlateGroup = null;
+        sellSelectButtonGroup.release();
+        sellSelectButtonGroup = null;
+        sellEnterPlateGroup.release();
+        sellEnterPlateGroup = null;
+    }
+
 
         /*
     public void sellSelectButtonCheck() {

@@ -75,6 +75,17 @@ public class TalkAdmin {
         clear();//init群の後
     }
 
+    private void reset() {
+        talkContent = null;
+        talkCharaName = null;
+        leftOrRight = null;
+        talkWaitTime = null;
+        talkContent = new String[TALK_CONTENT_MAX][];
+        talkCharaName = new String[TALK_CONTENT_MAX];
+        leftOrRight = new boolean[TALK_CONTENT_MAX];
+        talkWaitTime = new int[TALK_CONTENT_MAX];
+    }
+
     // *** init関係 ***
     private void initTextBox() {
         //TextBox関係の初期化
@@ -193,8 +204,15 @@ public class TalkAdmin {
         isWait = false;
         isUpdateThisFrame = false;
         waitCount = 0;
+        leftOrRight = null;
+        talkWaitTime = null;
+        talkCharaLeft = null;
+        talkCharaRight = null;
+        talkContent = null;
+
         textBoxAdmin.setTextBoxExists(textBoxID, false);
         textBoxAdmin.resetTextBox(textBoxID);
+        reset();
     }
 
     // *** 内部関数 ***
@@ -398,6 +416,48 @@ public class TalkAdmin {
 
     public boolean isWaitOrNotTalk() {
         return isWait || !isTalking;
+    }
+
+
+
+    public void release() {
+        System.out.println("takanoRelease : TalkAdmin");
+        if (talkContent != null) {
+            for (int i = 0; i < talkContent.length; i++) {
+                if (talkContent[i] != null) {
+                    for (int j = 0; j < talkContent[i].length; j++) {
+                        if (talkContent[i][j] != null) {
+                            talkContent[i][j] = null;
+                        }
+                    }
+                }
+            }
+            talkContent = null;
+        }
+        if (talkCharaName != null) {
+            for (int i = 0; i < talkCharaName.length; i++) {
+                if (talkCharaName[i] != null) {
+                    talkCharaName[i] = null;
+                }
+            }
+            talkCharaName = null;
+        }
+        leftOrRight = null;
+        talkWaitTime = null;
+        talkCharaLeft = null;
+        talkCharaRight = null;
+        paint = null;
+
+        if (talkSaveDataAdmin != null) {
+            talkSaveDataAdmin.release();
+        }
+    }
+
+    public void debug() {
+        List<String> text = database.getTables();
+        for(int i = 0; i < text.size(); i++) {
+            start(text.get(i),false);
+        }
     }
 
 }

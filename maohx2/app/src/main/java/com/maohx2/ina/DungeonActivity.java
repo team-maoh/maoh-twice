@@ -67,16 +67,28 @@ public class DungeonActivity extends BaseActivity {
 
     @Override
     public void finish() {
+        super.finish();
         dungeon_surface_view.my_database_admin.close();
-        dungeon_surface_view.game_system.drawStop();
-        dungeon_surface_view.graphic.releaseBitmap();
+        dungeon_surface_view.release();
         dungeon_surface_view = null;
     }
 
     @Override
     public String getActivityName() {
-        return "WorldActivity";
+        return "DungeonActivity";
     }
+
+    @Override
+    public void stopSound() {
+        dungeon_surface_view.sound_admin.stopAll();
+    };
+
+    @Override
+    public void touchReset() {
+        dungeon_surface_view.touch_state = TouchState.AWAY;
+
+    }
+
 }
 
 class DungeonSurfaceView extends BaseSurfaceView{
@@ -89,6 +101,19 @@ class DungeonSurfaceView extends BaseSurfaceView{
     Activity dungeon_activity;
     BattleUserInterface battle_user_interface;
 
+
+    @Override
+    public void release() {
+        System.out.println("takanoRelease : DungeonSurfaceview");
+        super.release();
+        game_system.drawStop();;
+        game_system.updateStop();
+        game_system.release();
+        graphic.releaseBitmap();
+        my_database_admin.release();
+        dungeon_user_interface.release();
+        battle_user_interface.release();
+    }
 
     public DungeonSurfaceView(Activity _dungeon_activity, BackSurfaceView _backSurfaceView) {
         super(_dungeon_activity, _backSurfaceView);
@@ -197,6 +222,9 @@ class DungeonSurfaceView extends BaseSurfaceView{
 
     @Override
     public void gameLoop(){
+        if (currentActivity.isFinishing() || currentActivity.isPaused()) {
+            return;
+        }
 
         dungeon_user_interface.updateTouchState(touch_x, touch_y, touch_state);
         battle_user_interface.updateTouchState(touch_x, touch_y, touch_state);

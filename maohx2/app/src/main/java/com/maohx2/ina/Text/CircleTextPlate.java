@@ -47,4 +47,11 @@ public class CircleTextPlate extends CirclePlate {
         //TODO:テキスト中央ぞろえ
         //graphic.bookingDrawText(content, left, up + (down - up)*3/4, paint);
     }
+    @Override
+    public void release() {
+        System.out.println("takanoRelease : CircleTextPlate");
+        super.release();
+        text_paint = null;
+        button_paint = null;
+    }
 }

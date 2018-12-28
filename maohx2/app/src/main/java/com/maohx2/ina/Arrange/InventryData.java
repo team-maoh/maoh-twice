@@ -43,9 +43,14 @@ public class InventryData {
 
     //by kmhanko
     public void delete() {
+        System.out.println("takanoRelease(delete) : InventryData");
         item_data = null;
         item_num = 0;
         sold_num = 0;
+    }
+    public void release() {
+        System.out.println("takanoRelease : InventryData");
+        this.delete();
     }
 
 }

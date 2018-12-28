@@ -13,6 +13,8 @@ import android.view.SurfaceView;
 import android.widget.RelativeLayout;
 import com.maohx2.kmhanko.music.MusicAdmin;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.kmhanko.sound.SoundAdmin;
+
 import android.media.AudioManager;
 import static com.maohx2.ina.Constants.Bitmap.*;
 
@@ -24,20 +26,27 @@ public abstract class BaseActivity extends Activity {
 
     RelativeLayout layout;
     BackSurfaceView backSurfaceView;
+    boolean isPaused;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("ActLife:" + getActivityName() + " onCreate");
+        isPaused = false;
+
+        //System.out.println("ActLife:" + getActivityName() + " onCreate");
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         layout = new RelativeLayout(this);
         setContentView(layout);
+        overridePendingTransition(0,0);
 
         //音量調整ボタンを使用できるようにする
         System.out.println("talano : setVolumeControlStream");
         super.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         //MusicAdmin.setAudioService(this);
+
+
+
         /*
         backSurfaceView = new BackSurfaceView(this);
         layout.addView(backSurfaceView);
@@ -46,10 +55,18 @@ public abstract class BaseActivity extends Activity {
 
     }
 
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return true;
+        //return true; もともとこれしかなかった。これだと全ての端末のキー入力を無視することになる。
+        if(keyCode != KeyEvent.KEYCODE_BACK){
+            return super.onKeyDown(keyCode, event);//バックキーの場合のみ、無視する
+        }else{
+            return false;
+        }
     }
+
+
 
     void setImage(String name, double x, double y) {
         //graphic.setImage(name, x, y);
@@ -65,7 +82,19 @@ public abstract class BaseActivity extends Activity {
         super.onPause();  // Always call the superclass method first
         System.out.println("ActLife:" + getActivityName() + " onPause");
         MusicAdmin.pauseAll();
+        //stopSound();
+        touchReset();
+        isPaused = true;
     }
+
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    //ポーズ時用
+    abstract public void stopSound();
+    abstract public void touchReset();
+
 
     @Override
     public void finish() {
@@ -120,6 +149,7 @@ public abstract class BaseActivity extends Activity {
 
     protected void onResume() {
         System.out.println("ActLife:" + getActivityName() + " onResume");
+        isPaused = false;
         super.onResume();
     }
 

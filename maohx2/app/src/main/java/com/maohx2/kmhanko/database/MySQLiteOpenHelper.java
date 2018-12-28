@@ -99,6 +99,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
             output.write(buffer, 0, n);
             count += n;
         }
+        buffer = null;
         return count;
     }
 
@@ -209,6 +210,14 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     @Override
     public synchronized void close() {
         //データベースが読み込まれている場合にのみクローズする
+        db_asset = null;
+        db_name = null;
+        if (mDatabase != null) {
+            super.close();
+        }
+    }
+
+    public synchronized void close2() {
         if (mDatabase != null) {
             super.close();
         }

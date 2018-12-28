@@ -34,7 +34,9 @@ import static com.maohx2.ina.Constants.Bitmap.*;
 //int bitmapMax[] = new int[LAYER_MAX];
 
 
-
+//敵の攻撃ん時ファン
+//敵が食らった時エフェクト
+//エフェクトでかくする OK
 
 
 //描画の管理方法、自身がなんの予約なのかを示したものだけを共通部分として持つプリモフィズム←これで行く
@@ -583,10 +585,10 @@ public class Graphic {
         Bitmap conbine_bitmap;
 
         if(yoko == true) {
-            conbine_bitmap = Bitmap.createBitmap(total_length, constant_length, Bitmap.Config.ARGB_8888);
+            conbine_bitmap = Bitmap.createBitmap(total_length, constant_length, Bitmap.Config.ARGB_8888);//TODO 8888
             conbine_bitmap.setPixels(conbine_pixels, 0, total_length, 0, 0, total_length, constant_length);
         }else {
-            conbine_bitmap = Bitmap.createBitmap(constant_length, total_length, Bitmap.Config.ARGB_8888);
+            conbine_bitmap = Bitmap.createBitmap(constant_length, total_length, Bitmap.Config.ARGB_8888);//TODO 8888
             conbine_bitmap.setPixels(conbine_pixels, 0, constant_length, 0, 0, constant_length, total_length);
         }
 
@@ -603,9 +605,19 @@ public class Graphic {
 
     //by kmhanko
     public void releaseBitmap() {
+        System.out.println("takanoRelease(releaseBitmap) : Graphic");
         //global_bitmap_data_admin.releaseBitmap();
         local_bitmap_data_admin.releaseBitmap();
-        //booking_task_datas.
+        for (int i = 0; i < BOOKING_DATA_INSTANCE; i++ ) {
+            booking_circle_datas.get(i).release();
+            booking_rect_datas.get(i).release();
+            booking_text_datas.get(i).release();
+            booking_bitmap_datas.get(i).release();
+        }
+        for (int i = 0; i < booking_task_datas.size(); i++ ) {
+            booking_task_datas.get(i).release();
+        }
+
     }
   
 }

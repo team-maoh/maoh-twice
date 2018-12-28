@@ -45,7 +45,7 @@ public class PaletteElement {
 
         paint.setAlpha(255);
 
-        textPaint.setARGB(255,0,0,0);
+        textPaint.setARGB(255, 255,255,255);
         textPaint.setTextSize(30);
     }
 
@@ -109,6 +109,7 @@ public class PaletteElement {
                 soundAdmin.play("equip00");
             }
             if (item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT){
+                //装備アイテムに対しパレット位置を入力
                 ((EquipmentItemData) (item_data)).setPalettePosition(element_num);
             }else if(item_data.getItemKind() == Constants.Item.ITEM_KIND.EXPEND){
                 if(element_num == 0){
@@ -145,10 +146,21 @@ public class PaletteElement {
         item_data = _item_data;
     }
 
-
+    //by kmhanko
+    public void setPosition(int _x, int _y, int _touch_id) {
+        x = _x;
+        y = _y;
+        touch_id = _touch_id;
+    }
 
     public ItemData getItemData(){return item_data;}
     public int getTouchID(){return touch_id;}
     public int getElementNum(){return element_num;}
 
+
+    public void release() {
+        System.out.println("takanoRelease : PaletteElement");
+        paint = null;
+        textPaint = null;
+    }
 }

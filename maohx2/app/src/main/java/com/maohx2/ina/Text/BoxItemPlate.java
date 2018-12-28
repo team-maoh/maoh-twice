@@ -73,4 +73,14 @@ public class BoxItemPlate extends BoxPlate {
             image_context = graphic.makeImageContext(content_item.getItemImage(), left, up, 1.7f, 1.7f, 0, 255, true);
         }
     }
+
+    @Override
+    public void release() {
+        System.out.println("takanoRelease : BoxItemPlate");
+        super.release();
+        text_paint = null;
+        button_paint = null;
+        image_context = null;
+
+    }
 }

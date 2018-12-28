@@ -173,7 +173,16 @@ public class SoundAdmin {
         sp.stop(stream_ID.get(id));
     }
 
+    public void stopAll() {
+        for (int i = 0; i < stream_ID.size(); i++) {
+            if (stream_ID.get(i) != null) {
+                sp.stop(stream_ID.get(i));
+            }
+        }
+    }
+
     public void release() {
+        System.out.println("takanoRelease : SoundAdmin");
         sp.release();
     }
 

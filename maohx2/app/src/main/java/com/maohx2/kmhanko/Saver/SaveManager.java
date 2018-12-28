@@ -61,4 +61,9 @@ public abstract class SaveManager {
     public void deleteTableAll() {
         database.deleteTableAll();
     }
+
+    public void release() {
+        System.out.println("takanoRelease : SaveManager");
+        loadMode = null;
+    }
 }

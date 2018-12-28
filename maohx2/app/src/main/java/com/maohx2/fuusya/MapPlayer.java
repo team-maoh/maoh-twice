@@ -25,6 +25,7 @@ import static java.lang.Math.PI;
 import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.log;
+import static java.lang.Math.min;
 import static java.lang.Math.pow;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
@@ -53,7 +54,7 @@ public class MapPlayer extends MapUnit {
     int kind_of_enemy;
 
     //    int PLAYER_STEP = 26;//プレイヤーの歩幅
-    int PLAYER_STEP = 100;//プレイヤーの歩幅 //デバッグ用
+    int PLAYER_STEP = 50;//プレイヤーの歩幅 //デバッグ用
 
     double touch_w_x, touch_w_y, touch_n_x, touch_n_y, pre_w_x, pre_w_y;
     boolean is_moving;
@@ -85,7 +86,7 @@ public class MapPlayer extends MapUnit {
 
         sound_admin = _sound_admin;
 
-        mean_encount_steps = 40;//80
+        mean_encount_steps = 120;//80
         var_encount_steps = 0;
         th_encount_steps = makeThresholdEncountSteps();
 
@@ -143,7 +144,7 @@ public class MapPlayer extends MapUnit {
 //                int pre_content = map_plate_admin.getDisplayingContent();
 //                map_plate_admin.setDisplayingContent(-1);
 
-                if (map_plate_admin.getDisplayingContent() == 0) {
+                if (map_plate_admin.getDisplayingContent() == 0 || map_plate_admin.getDisplayingContent() == 2) {
                     menu_frame++;
                     if (menu_frame > 12) {
                         menu_frame = 0;
@@ -160,7 +161,7 @@ public class MapPlayer extends MapUnit {
                             sound_admin.play("enter00");
 //                        player_touch_refresh = false;
                         }
-                    } else if (map_plate_admin.getDisplayingContent() == 0) {
+                    } else if (map_plate_admin.getDisplayingContent() == 0 || map_plate_admin.getDisplayingContent() == 2) {
                         map_plate_admin.setDisplayingContent(-1);
                     }
                 }
@@ -251,7 +252,8 @@ public class MapPlayer extends MapUnit {
 
 //                        int max_of_num_of_zako = 5;
 //                        int num_of_zako = max_of_num_of_zako * now_floor_num / boss_floor_num + 2;
-                        int num_of_zako = (int) (now_floor_num * 0.7) + 1;
+                        int num_of_zako = min(5, (int) (now_floor_num * 0.5) + 2);
+                        //int num_of_zako = 20;
 
 //                        num_of_zako = max_of_num_of_zako;//fuusya_debug
 
@@ -269,10 +271,11 @@ public class MapPlayer extends MapUnit {
                         map_object_admin.eraseEffectBox();
 
                         //デバッグ時にエンカウントすると鬱陶しいのでコメントアウト
-                        battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
-                        battle_unit_admin.spawnEnemy(tmp_zako);//
-                        dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
-
+                        if (dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING && dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT) {
+                            battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
+                            battle_unit_admin.spawnEnemy(tmp_zako);//
+                            dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
+                        }
                     }
                 }
             }
@@ -299,6 +302,18 @@ public class MapPlayer extends MapUnit {
         }
         pre_w_x = w_x;
         pre_w_y = w_y;
+
+        //System.out.println("x_y = " + (int)(w_x/map_admin.getMagnification()) + " / " + (int)(w_y/map_admin.getMagnification()));
+        if (map_admin.isStairs((int)(w_x/map_admin.getMagnification()), (int)(w_y/map_admin.getMagnification()))) {
+            sound_admin.play("step00");
+            map_admin.goNextFloor();
+        }
+
+        //ゲート脱出
+        if (map_admin.isGate((int)(w_x/map_admin.getMagnification()), (int)(w_y/map_admin.getMagnification()))) {
+            sound_admin.play("step00");
+            map_object_admin.escapeDungeon();
+        }
 
     }
 

@@ -28,7 +28,7 @@ public class Credits {
         paint.setTextSize(40);
         credits[1] = new Credit(graphic, paint, "ina",220,1000);
         credits[2] = new Credit(graphic, paint, "kmhanko",220,1100);
-        credits[3] = new Credit(graphic, paint, "センパイ",220,1200);
+        credits[3] = new Credit(graphic, paint, "せんぱい",220,1200);
         credits[4] = new Credit(graphic, paint, "fuusya",220,1300);
 
         paint.setTextSize(70);
@@ -93,4 +93,18 @@ public class Credits {
     public boolean endCheck() {
         return credits[creditNum-1].endCheck();
     }
+
+    public void release() {
+        System.out.println("takanoRelease : Credits");
+        if (credits != null) {
+            for (int i = 0; i < credits.length; i++) {
+                if (credits[i] != null) {
+                    credits[i].release();
+                }
+            }
+            credits = null;
+        }
+        paint = null;
+    }
+
 }

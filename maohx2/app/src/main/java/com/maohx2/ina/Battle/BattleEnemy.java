@@ -2,7 +2,10 @@ package com.maohx2.ina.Battle;
 
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.kmhanko.effect.EffectAdmin;
 
+import static com.maohx2.ina.Constants.BattleUnit.ATTACK_SCALE;
+import static com.maohx2.ina.Constants.BattleUnit.NORMAL_SCALE;
 import static com.maohx2.ina.Constants.UnitStatus.Status.*;
 
 import static com.maohx2.ina.Battle.BattleBaseUnitData.SpecialAction;
@@ -14,11 +17,40 @@ import java.util.Random;
  * Created by ina on 2017/09/21.
  */
 
+
+/*　やること
+採掘ポイント数を増やす
+ダンジョンの広さが広すぎる
+海あたりからプレイヤーの火力がインフレする。ダメージ式を調整する必要
+ジオの能力アップがややしょぼい
+
+ダンジョンゲートやリタイアで選択肢を出す
+森以外の飾りマス
+装備画面における、ポーションの自動セット
+装備スロットの操作性問題
+主人公などの壁との当たり判定
+画面に触れ続けているとボタンを押した判定になる問題
+エフェクトの重さ改善
+ジオマップで最初エフェクトが出ない
+ジオマップの未開放感
+
+ローグ
+AIバグ
+30Fにする
+敵の強さ調整
+必殺技エフェクト実装
+必殺技実装
+オープニング落下アニメ
+エンディングシーン
+時間回復アイテム
+*/
+
 public class BattleEnemy extends BattleUnit {
 
     double position_x;
     double position_y;
     double radius;
+    private double scale;
     int uiid;
     int attackCount;
     int attack_frame;
@@ -33,13 +65,29 @@ public class BattleEnemy extends BattleUnit {
 
     protected BattleBaseUnitData battleBaseUnitDataForRock;
 
-    public BattleEnemy(Graphic _graphic){
-        super(_graphic);
+    @Override
+    public void clear() {
+        super.clear();
         position_x = 0;
         position_y = 0;
-        radius = 0;
+        radius = 0.0;
+        uiid = 0;
+        attackCount = 0;
+        attack_frame = 0;
         specialActionCount = 0;
         specialActionFlag = false;
+        scale = NORMAL_SCALE;
+        float[] actionRate = new float[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
+        int[] alimentTime = new int[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
+        specialAction = SpecialAction.NONE;
+        specialActionPeriod = 0;
+        specialActionWidth = 0;
+        is_damaged = false;
+    }
+
+    public BattleEnemy(Graphic _graphic, EffectAdmin _effectAdmin, EffectAdmin _backEnemyEffectAdmin){
+        super(_graphic, _effectAdmin, _backEnemyEffectAdmin);
+        clear();
     }
 
     /*
@@ -60,6 +108,74 @@ public class BattleEnemy extends BattleUnit {
         //attack_frame = 100;//データベースからの読み込み、レベルによる補正などもあり
     }
     */
+
+
+    //--エフェクト関係
+    int damagedEffect;
+    int attackEffect;
+
+    int id;
+
+    int width;
+    int height;
+
+    int damageEffectTime;
+
+    float attackExtendX;
+    float attackExtendY;
+
+    float damagedExtendX;
+    float damagedExtendY;
+
+    final int damageEffectInterval = 8;
+
+    protected void initEffect(int _id) {
+
+        //System.out.println("dg_mes" + attackExtendX);
+        //System.out.println("dg_mes" + attackExtendY);
+        //System.out.println("dg_mes" + damagedExtendX);
+        //System.out.println("dg_mes" + damagedExtendY);
+
+        id = _id;
+        damageEffectTime = 0;
+        width = getBattleDungeonUnitData().getBitmapDate().getWidth();
+        width = getBattleDungeonUnitData().getBitmapDate().getWidth();
+        height = getBattleDungeonUnitData().getBitmapDate().getHeight();
+
+        attackExtendX = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.5f;
+        attackExtendY = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.5f;
+
+        damagedExtendX = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
+        damagedExtendY = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
+
+        damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" , "bomb_effect", 5, 2, 1);
+        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, 1);
+
+    }
+    protected void damagedEffectStart() {
+        if (getUnitKind() != Constants.UnitKind.ENEMY) {
+            return;
+        }
+        if (damageEffectTime >= damageEffectInterval) {
+            damagedEffect = effectAdmin.createEffect("enemy_damaged_effect", "bomb_effect", 5, 2, 1);
+            effectAdmin.getEffect(damagedEffect).setPosition((int) position_x + rnd.nextInt((int)(width*scale) + 1) - (int)(width*scale)/2, (int) position_y + rnd.nextInt((int)(scale*height) + 1) - (int)(scale*height)/2);
+            effectAdmin.setExtends(damagedEffect, damagedExtendX, damagedExtendY);
+            effectAdmin.getEffect(damagedEffect).start();
+            damageEffectTime = 0;
+        }
+    }
+    Random rnd = new Random();
+    protected void attackEffectStart() {
+        if (getUnitKind() != Constants.UnitKind.ENEMY) {
+            return;
+        }
+        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, 1);
+        backEnemyEffectAdmin.getEffect(attackEffect).setPosition((int) position_x, (int) position_y);
+        backEnemyEffectAdmin.setExtends(attackEffect, attackExtendX, attackExtendY);
+        backEnemyEffectAdmin.getEffect(attackEffect).start();
+    }
+    //エフェクト関係ここまで
+
 
     @Override
     protected void statusInit() {
@@ -83,6 +199,11 @@ public class BattleEnemy extends BattleUnit {
     public int update(){
 
         super.update();
+
+        backEnemyEffectAdmin.getEffect(attackEffect).setPosition((int) position_x, (int) position_y);
+        if (damageEffectTime < damageEffectInterval) {
+            damageEffectTime++;
+        }
 
         //時間経過
         attackCount++;
@@ -141,8 +262,21 @@ public class BattleEnemy extends BattleUnit {
 
         //attackFlameに達したらUnitを対象として攻撃
         if(attackCount == attack_frame){
+            //if(attack_frame >= 10) {
+                scale = ATTACK_SCALE;
+            //}
             attackCount = 0;
+
+            //敵の攻撃エフェクト
+            this.attackEffectStart();
+
             return attack;
+        }
+
+        if(attackCount == Math.min(attack_frame/2, 5)){
+            //if(attack_frame >= 10) {
+                scale = NORMAL_SCALE;
+            //}
         }
 
         return 0;
@@ -153,36 +287,42 @@ public class BattleEnemy extends BattleUnit {
 
         //graphic.bookingDrawText(String.valueOf(hit_point),(int)position_x,(int)position_y);
 
-        if(specialActionFlag == true) {
+        if (getUnitKind() == Constants.UnitKind.ENEMY) {
 
-            switch (specialAction) {
-                case BARRIER:
-                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1.0f,1.0f,0,254,false);
-                    paint.setARGB(100,0,0,255);
-                    graphic.bookingDrawCircle((int)position_x, (int)position_y, (int)radius, paint);
-                    break;
-                case COUNTER:
-                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1.0f,1.0f,0,254,false);
-                    paint.setARGB(100,255,100,0);
-                    graphic.bookingDrawCircle((int)position_x, (int)position_y, (int)radius, paint);
-                    break;
-                case STEALTH:
-                    graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1.0f,1.0f,0,100,false);
-                    break;
+            if (specialActionFlag == true) {
+
+                switch (specialAction) {
+                    case BARRIER:
+                        graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) scale, (float) scale, 0, 254, false);
+                        paint.setARGB(100, 0, 0, 255);
+                        graphic.bookingDrawCircle((int) position_x, (int) position_y, (int) radius, paint);
+                        break;
+                    case COUNTER:
+                        graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) scale, (float) scale, 0, 254, false);
+                        paint.setARGB(100, 255, 100, 0);
+                        graphic.bookingDrawCircle((int) position_x, (int) position_y, (int) radius, paint);
+                        break;
+                    case STEALTH:
+                        graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) scale, (float) scale, 0, 100, false);
+                        break;
+                }
+            } else {
+                graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) scale, (float) scale, 0, 254, false);
             }
-        }else{
-            graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(),(int)position_x,(int)position_y,1.0f,1.0f,0,254,false);
+        }
+        if (getUnitKind() == Constants.UnitKind.ROCK) {
+            graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) 1.0, (float) 1.0, 0, 254, false);
         }
 
         //HP表示
         if (hit_point > 0) {
             paint.setARGB(255, 0, 255, 0);
-            graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 0.8), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) hit_point / (double) max_hit_point))), (int) (position_y + radius * 0.9), paint);
+            graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 1.1), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) hit_point / (double) max_hit_point))), (int) (position_y + radius * 1.2), paint);
         } else {
             if (unitKind == Constants.UnitKind.ROCK) {
                 //オーバーキルゲージの表示
                 paint.setARGB(255, 255, 0, 0);
-                graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 0.8), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) -hit_point / (double) max_hit_point))), (int) (position_y + radius * 0.9), paint);
+                graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 1.1), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) -hit_point / (double) max_hit_point))), (int) (position_y + radius * 1.2), paint);
             }
         }
 
@@ -202,7 +342,7 @@ public class BattleEnemy extends BattleUnit {
 
         if (attack_frame > 0) {
             paint.setARGB(255, 255, 0, 0);
-            graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 0.9), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) attackCount / (double) attack_frame))), (int) (position_y + radius * 1.0), paint);
+            graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 1.2), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) attackCount / (double) attack_frame))), (int) (position_y + radius * 1.3), paint);
         }
     }
 
@@ -227,7 +367,7 @@ public class BattleEnemy extends BattleUnit {
 
     @Override
     public double getRadius() {
-        return radius;
+        return scale*radius;
     }
 
     @Override

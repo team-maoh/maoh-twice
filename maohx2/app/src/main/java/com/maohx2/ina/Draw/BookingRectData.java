@@ -27,4 +27,11 @@ public class BookingRectData extends BookingTaskData{
         canvas.drawRect(rect, paint);
     }
 
+    @Override
+    public void release() {
+        System.out.println("takanoRelease : BookingRectData");
+        super.release();
+        rect = null;
+    }
+
 }

@@ -45,6 +45,16 @@ public class MyDatabase {
         mContext = context;
     }
 
+    public void release() {
+        System.out.println("takanoRelease : MyDatabase");
+        db.close();
+        db = null;
+        mDbHelper.close();
+        mDbHelper = null;
+        db_asset = null;
+        db_name = null;
+    }
+
     public boolean init(String _db_name, String _db_asset, int _db_version, String loadMode) {
         if (loadMode != "r" && loadMode != "s" && loadMode != "ds" && loadMode != "ns") {
             throw new Error("☆タカノ : MyDatabase#init " + "please set r or s or ds or ns");
@@ -71,7 +81,7 @@ public class MyDatabase {
                 mDbHelper.getReadableDatabase();
                 //assets内のDBファイルを、内部DBのファイルにコピーする
                 mDbHelper.copyDataBaseFromAssets("r");
-                mDbHelper.close();//TODO 初回起動時に落ちるバグの対症療法
+                mDbHelper.close2();//TODO 初回起動時に落ちるバグの対症療法
                 mDbHelper.getReadableDatabase();
                 mDbHelper.copyDataBaseFromAssets("r");
                 //assets内のDBファイルを、内部DBのファイルにコピーする
@@ -492,7 +502,9 @@ public class MyDatabase {
         //TODO:例外処理
         long id = db.insert(t_name, null, content_values);
         if (id == -1) {
-            throw new Error("タカノ : MyDatabase#insertLineByArrayString : insert is Error");
+            System.out.println("takano:ERROR! insertLineByArrayString " + c_names + " / "+ values);
+            return false;
+            //throw new Error("タカノ : MyDatabase#insertLineByArrayString : insert is Error");
         }
         return true;
     }

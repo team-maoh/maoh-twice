@@ -43,6 +43,7 @@ public abstract class ItemShop {
     PlateGroup<BoxImageTextPlate> buySelectPlateGroup;
     PlateGroup<BackPlate> backPlateGroup;
 
+
     int textBoxID;
 
     //boolean isListBoxItemActive = true;
@@ -384,6 +385,19 @@ public abstract class ItemShop {
         buySelectPlateGroup.setUpdateFlag(false);
         buySelectPlateGroup.setDrawFlag(false);
         textBoxAdmin.setTextBoxExists(buyTextBoxID, false);
+    }
+
+    public void release() {
+        System.out.println("takanoRelease : ItemShop");
+        productPlateGroup.release();
+        productPlateGroup = null;
+        buySelectPlateGroup.release();
+        buySelectPlateGroup = null;
+        backPlateGroup.release();
+        backPlateGroup = null;
+        switchPlateGroup.release();
+        switchPlateGroup = null;
+        buyTextBoxPaint = null;
     }
 
 }

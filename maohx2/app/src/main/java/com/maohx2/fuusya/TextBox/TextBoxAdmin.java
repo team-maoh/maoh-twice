@@ -128,6 +128,7 @@ public class TextBoxAdmin {
         frame_count = (frame_count + 1) % 300;
 
         if (frame_count % 5 == 0) {
+
             //テスト用の文章
 //            text_box[0].inputText("え、死んでまんの。ほら、また。", text_paint);
 //            text_box[0].inputText("\n", text_paint);
@@ -328,5 +329,15 @@ public class TextBoxAdmin {
 //        return true;
     }
 
+
+    public void release() {
+        System.out.println("takanoRelease : TextBoxAdmin");
+        for (int i = 0; i < text_box.length; i++) {
+            if (text_box[i] != null) {
+                text_box[i].release();
+            }
+        }
+        text_box = null;
+    }
 
 }

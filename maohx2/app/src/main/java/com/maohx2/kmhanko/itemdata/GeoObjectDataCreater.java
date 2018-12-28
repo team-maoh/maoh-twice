@@ -21,10 +21,8 @@ import static java.lang.Math.sqrt;
 public class GeoObjectDataCreater {
     static Graphic graphic;
 
-    private GeoObjectDataCreater() {
-    }
+    private GeoObjectDataCreater() {}
 
-    ;
 
     public static void setGraphic(Graphic _graphic) {
         graphic = _graphic;
@@ -251,7 +249,10 @@ public class GeoObjectDataCreater {
         if (randFlag) {
 //            double random_num = sqrt(-2 * log(Math.random())) * cos(2 * PI * Math.random()) / 20.0;// だいたい[-1, +1]の範囲の正規分布
 //            calcParam = status2[parameterKind.ordinal()] = parameter * (1.0 + random_num) / 100.0;
-            calcParam = status2[parameterKind.ordinal()] = (1.1 + 0.9 * Math.random());// * 2.0;//1.1 ~ 2.0倍
+
+            //parameter の最大は100である。
+
+            calcParam = status2[parameterKind.ordinal()] = (1.0 + 1.0 * Math.random() * (double)parameter/100.0);// * 2.0;//1.1 ~ 2.0倍
         } else {
             calcParam = status2[parameterKind.ordinal()] = parameter;
         }
@@ -304,11 +305,16 @@ public class GeoObjectDataCreater {
     }
 
     public static GEO_PARAM_KIND_NORMAL getRandKindNormal() {
-        return GEO_PARAM_KIND_NORMAL.toEnum((int) (GEO_PARAM_KIND_NORMAL.NUM.ordinal() * Math.random()));
+        Random r = new Random();
+        return GEO_PARAM_KIND_NORMAL.toEnum(r.nextInt(GEO_PARAM_KIND_NORMAL.NUM.ordinal()));
+        //return GEO_PARAM_KIND_NORMAL.toEnum((int)(Math.random() * GEO_PARAM_KIND_NORMAL.NUM.ordinal()));
     }
 
     public static GEO_PARAM_KIND_RATE getRandKindRate() {
-        return GEO_PARAM_KIND_RATE.toEnum((int) (GEO_PARAM_KIND_RATE.NUM.ordinal() * Math.random()));
+        Random r = new Random();
+        return GEO_PARAM_KIND_RATE.toEnum(r.nextInt(GEO_PARAM_KIND_RATE.NUM.ordinal()));
+        //return GEO_PARAM_KIND_RATE.toEnum((int)(Math.random() * GEO_PARAM_KIND_RATE.NUM.ordinal()));
+
     }
 
 

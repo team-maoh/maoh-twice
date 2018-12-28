@@ -54,5 +54,13 @@ public class CircleImagePlate extends CirclePlate {
         //drawCollisionRange();
         graphic.bookingDrawBitmapData(draw_image_context);
     }
+    @Override
+    public void release() {
+        System.out.println("takanoRelease : CircleImagePlate");
+        super.release();
+        draw_image_context = null;
+        default_image_context = null;
+        feedback_image_context = null;
+    }
 }
 

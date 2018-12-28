@@ -55,7 +55,7 @@ public class EquipmentInventrySaver extends InventrySaver {
                             equipmentItemData.getName(),
                             equipmentItemData.getImageName(),
                             String.valueOf(equipmentItemData.getPrice()),
-                            String.valueOf(equipmentItemData.getEquipmentKind()),
+                            String.valueOf(equipmentItemData.getEquipmentKind().ordinal()),
                             String.valueOf(equipmentItemData.getUseNum()),
                             String.valueOf(equipmentItemData.getRadius()),
                             String.valueOf(equipmentItemData.getDecayRate()),

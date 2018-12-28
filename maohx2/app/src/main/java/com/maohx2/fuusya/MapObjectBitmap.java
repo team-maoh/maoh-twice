@@ -18,7 +18,7 @@ public class MapObjectBitmap {
     Graphic graphic;
     String object_name;
 
-    int DRAW_SCALE = 4;
+    float DRAW_SCALE = 4.0f;
 
     int unit_width, unit_height;
 
@@ -46,11 +46,11 @@ public class MapObjectBitmap {
 
         raw_bitmap_data = graphic.searchBitmap(object_name);
         switch (total_dirs) {
-            case 1:
+            case 1://画像サイズより取得？
                 unit_width = raw_bitmap_data.getWidth();
                 unit_height = raw_bitmap_data.getHeight();
                 break;
-            case 8:
+            case 8://画像サイズより取得して横幅1/6,縦幅1/4?
                 unit_width = raw_bitmap_data.getWidth() / 6;
                 unit_height = raw_bitmap_data.getHeight() / 4;
                 break;
@@ -131,14 +131,17 @@ public class MapObjectBitmap {
 
     // 引数のx, yは画面内の座標
     public void draw(double _dir_on_map, double x, double y) {
+        draw(_dir_on_map, x, y, 255);
+    }
+    public void draw(double _dir_on_map, double x, double y, int alpha) {
 
-        int shift_from_width = -unit_width * DRAW_SCALE / 2;
-        int shift_from_height = -unit_height * DRAW_SCALE / 2;
+        int shift_from_width = (int)(-unit_width * DRAW_SCALE / 2.0f);
+        int shift_from_height = (int)(-unit_height * DRAW_SCALE / 2.0f);
 
         switch (total_dirs) {
             case 1:
 //                graphic.bookingDrawBitmapData(raw_bitmap_data, (int) x + shift_from_width, (int) y + shift_from_height, DRAW_SCALE, DRAW_SCALE, 0, 255, true);
-                graphic.bookingDrawBitmapData(raw_bitmap_data, (int) x, (int) y, DRAW_SCALE, DRAW_SCALE, 0, 255, true);
+                graphic.bookingDrawBitmapData(raw_bitmap_data, (int) x + shift_from_width, (int) y + shift_from_height, DRAW_SCALE, DRAW_SCALE, 0, alpha, true);
                 break;
 
             case 8:
@@ -147,7 +150,7 @@ public class MapObjectBitmap {
                 //[0 ~ 2*PI]を[0 ~ 7]に変換する
                 int int_dir_on_map = ((int) ((_dir_on_map + PI / total_dirs) / (2 * PI / total_dirs))) % total_dirs;
 
-                graphic.bookingDrawBitmapData(bitmap_data[int_dir_on_map][frame], (int) x + shift_from_width, (int) y + shift_from_height * (int) shift_double, DRAW_SCALE, DRAW_SCALE, 0, 255, true);
+                graphic.bookingDrawBitmapData(bitmap_data[int_dir_on_map][frame], (int) x + shift_from_width, (int) y + shift_from_height * (int) shift_double, DRAW_SCALE, DRAW_SCALE, 0, alpha, true);
                 break;
 
             default:
@@ -155,6 +158,35 @@ public class MapObjectBitmap {
         }
 
     }
+    public void draw(double _dir_on_map, double x, double y, float extend) {
+        draw(_dir_on_map, x, y, 255, extend);
+    }
+    public void draw(double _dir_on_map, double x, double y, int alpha, float extend) {
+
+        int shift_from_width = (int)(-unit_width * DRAW_SCALE * extend / 2.0f);
+        int shift_from_height = (int)(-unit_height * DRAW_SCALE * extend / 2.0f);
+
+        switch (total_dirs) {
+            case 1:
+//                graphic.bookingDrawBitmapData(raw_bitmap_data, (int) x + shift_from_width, (int) y + shift_from_height, DRAW_SCALE, DRAW_SCALE, 0, 255, true);
+                graphic.bookingDrawBitmapData(raw_bitmap_data, (int) x + shift_from_width, (int) y + shift_from_height, extend * DRAW_SCALE, extend* DRAW_SCALE, 0, alpha, true);
+                break;
+
+            case 8:
+
+                //マップ上でのオブジェクトの向き
+                //[0 ~ 2*PI]を[0 ~ 7]に変換する
+                int int_dir_on_map = ((int) ((_dir_on_map + PI / total_dirs) / (2 * PI / total_dirs))) % total_dirs;
+
+                graphic.bookingDrawBitmapData(bitmap_data[int_dir_on_map][frame], (int) x + shift_from_width, (int) y + shift_from_height * (int) shift_double, extend * DRAW_SCALE, extend* DRAW_SCALE, 0, alpha, true);
+                break;
+
+            default:
+                break;
+        }
+
+    }
+
 
     //1方位、時間的に変化しない
 //    private void storeOneBD(BitmapData _raw_bitmap_data) {
@@ -230,6 +262,23 @@ public class MapObjectBitmap {
         }
 
     }
+
+    public void release() {
+        System.out.println("takanoRelease : MapObjectBitmap");
+        /*
+        for (int i = 0; i < bitmap_data.length; i++) {
+            for (int j = 0; j < bitmap_data[i].length; i++) {
+                if (bitmap_data[i][j] != null) {
+                    bitmap_data[i][j].releaseBitmap();
+                }
+            }
+        }
+        bitmap_data = null;
+        raw_bitmap_data = null;
+        */
+        object_name = null;
+    }
+
 
 
 //    private void storeEightBD(BitmapData _raw_bitmap_data) {

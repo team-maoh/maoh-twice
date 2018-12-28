@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.maohx2.ina.Constants.UnitStatus.BonusStatus.*;
+import static com.maohx2.ina.Constants.UnitStatus.Status.*;
+
 /**
  * Created by ina on 2017/10/29.
  */
@@ -259,15 +262,15 @@ public class BattleUnitDataAdmin {
                 List<Double> tempDropItemPercent;
                 for (int j = 0; j < 3 ; j++) {
                     switch (j) {
-                        case 1:
+                        case 0:
                             tempDropItem = drop_item1;
                             tempDropItemPercent = drop_item_percent1;
                             break;
-                        case 2:
+                        case 1:
                             tempDropItem = drop_item2;
                             tempDropItemPercent = drop_item_percent2;
                             break;
-                        case 3:
+                        case 2:
                             tempDropItem = drop_item3;
                             tempDropItemPercent = drop_item_percent3;
                             break;
@@ -349,7 +352,7 @@ public class BattleUnitDataAdmin {
                 return battle_base_unit_datas.get(i);
             }
         }
-        throw new Error("その名前のユニットは存在しません : " + bitmap_name);
+        throw new Error("その名前のユニットは存在しません : " + bitmap_name + " : " + battle_base_unit_datas);
     }
 
     public List<BattleBaseUnitData> getBattleBaseUnitData() {
@@ -367,6 +370,70 @@ public class BattleUnitDataAdmin {
             }
         }
         return tempBattleBaseUnitData;
+    }
+
+
+    public int[][] getStatusMinMaxExceptBoss(DungeonMonsterDataAdmin dungeonMonsterDataAdmin, int repeatCount, double mag) {
+        //0 = MAX, 1 = MIN;
+        List<BattleBaseUnitData> tempBattleBaseUnitData = getBattleBaseUnitDataExceptBoss(dungeonMonsterDataAdmin);
+        int[] tempBonusStatus;
+        int[] tempStatus;
+        int[][] statusMaxMin = new int[6][2];
+        for (int i = 0; i < statusMaxMin.length; i++) {
+            for (int j = 0; j < statusMaxMin[i].length; j++) {
+                statusMaxMin[i][j] = 0;
+            }
+        }
+
+        for(int i = 0 ; i < tempBattleBaseUnitData.size(); i++) {
+            tempStatus = tempBattleBaseUnitData.get(i).getStatus(repeatCount, mag);
+            tempBonusStatus = tempBattleBaseUnitData.get(i).getBonusStatus(repeatCount, mag);
+
+            if (tempStatus[HP.ordinal()] > statusMaxMin[0][0]) {
+                statusMaxMin[0][0] = tempStatus[HP.ordinal()];
+            }
+            if (tempStatus[HP.ordinal()] < statusMaxMin[0][1]) {
+                statusMaxMin[0][1] = tempStatus[HP.ordinal()];
+            }
+
+            if (tempStatus[ATTACK.ordinal()] > statusMaxMin[1][0]) {
+                statusMaxMin[1][0] = tempStatus[ATTACK.ordinal()];
+            }
+            if (tempStatus[ATTACK.ordinal()] < statusMaxMin[1][1]) {
+                statusMaxMin[1][1] = tempStatus[ATTACK.ordinal()];
+            }
+
+            if (tempStatus[DEFENSE.ordinal()] > statusMaxMin[2][0]) {
+                statusMaxMin[2][0] = tempStatus[DEFENSE.ordinal()];
+            }
+            if (tempStatus[DEFENSE.ordinal()] < statusMaxMin[2][1]) {
+                statusMaxMin[2][1] = tempStatus[DEFENSE.ordinal()];
+            }
+
+
+            if (tempBonusStatus[BONUS_HP.ordinal()] > statusMaxMin[3][0]) {
+                statusMaxMin[3][0] = tempBonusStatus[BONUS_HP.ordinal()];
+            }
+            if (tempBonusStatus[BONUS_HP.ordinal()] < statusMaxMin[3][1]) {
+                statusMaxMin[3][1] = tempBonusStatus[BONUS_HP.ordinal()];
+            }
+
+            if (tempBonusStatus[BONUS_ATTACK.ordinal()] > statusMaxMin[4][0]) {
+                statusMaxMin[4][0] = tempBonusStatus[BONUS_ATTACK.ordinal()];
+            }
+            if (tempBonusStatus[BONUS_ATTACK.ordinal()] < statusMaxMin[4][1]) {
+                statusMaxMin[4][1] = tempBonusStatus[BONUS_ATTACK.ordinal()];
+            }
+
+            if (tempBonusStatus[BONUS_DEFENSE.ordinal()] > statusMaxMin[5][0]) {
+                statusMaxMin[5][0] = tempBonusStatus[BONUS_DEFENSE.ordinal()];
+            }
+            if (tempBonusStatus[BONUS_DEFENSE.ordinal()] < statusMaxMin[5][1]) {
+                statusMaxMin[5][1] = tempBonusStatus[BONUS_DEFENSE.ordinal()];
+            }
+
+        }
+        return statusMaxMin;
     }
 
     public List<String> getMaohUnitNames() {
@@ -391,9 +458,14 @@ public class BattleUnitDataAdmin {
                 tempDungeonMonsterData.add(dungeonMonsterData.get(i));
             }
         }
+        if (tempDungeonMonsterData.size() == 0) {
+            return null;
+        }
+
         Random random = new Random();
-        int i = random.nextInt(tempDungeonMonsterData.size() - 1);
-        return battle_base_unit_datas.get(i);
+        int i = random.nextInt(tempDungeonMonsterData.size());//-1いらなくね
+        String name = tempDungeonMonsterData.get(i).getMonsterName();
+        return getBattleUnitDataNum(name);
     }
 
     /*

@@ -26,6 +26,7 @@ import com.maohx2.ina.ItemData.EquipmentItemBaseDataAdmin;
 import com.maohx2.ina.ItemData.EquipmentItemData;
 import com.maohx2.ina.ItemData.EquipmentItemDataCreater;
 import com.maohx2.ina.UI.BattleUserInterface;
+import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatus;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 
@@ -41,6 +42,7 @@ import static com.maohx2.ina.Constants.UnitStatus.BonusStatus;
 import static com.maohx2.ina.Constants.DungeonKind.DUNGEON_KIND;
 
 import com.maohx2.ina.Battle.*;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatusViewer;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.effect.Effect;
 import com.maohx2.kmhanko.effect.EffectAdmin;
@@ -49,6 +51,7 @@ import com.maohx2.kmhanko.itemdata.ExpendItemDataAdmin;
 
 import com.maohx2.kmhanko.Talking.TalkAdmin;
 
+import com.maohx2.kmhanko.music.MusicAdmin;
 import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
@@ -83,6 +86,10 @@ public class BattleUnitAdmin {
 
     BattleUserInterface battle_user_interface;
     BattleUnit[] battle_units = new BattleUnit[BATTLE_UNIT_MAX];
+
+    int enemyAttackEffect[] = new int[BATTLE_UNIT_MAX];
+    int enemyDamagedEffect[] = new int[BATTLE_UNIT_MAX];
+
     int battle_palette_mode;
     CalcUnitStatus calc_unit_status;
     Activity battle_activity;
@@ -111,6 +118,8 @@ public class BattleUnitAdmin {
     int battle_effect_ID;
     int mine_effect_ID;
 
+    String gameoverMes = "";
+
     PlayerStatus playerStatus;
     MaohMenosStatus maohMenosStatus;
     SoundAdmin soundAdmin;
@@ -118,6 +127,7 @@ public class BattleUnitAdmin {
     MapStatus mapStatus;
     MapStatusSaver mapStatusSaver;
     EffectAdmin effectAdmin;
+    EffectAdmin enemyBackEffectAdmin;
 
     DUNGEON_KIND dungeonKind;
 
@@ -127,6 +137,10 @@ public class BattleUnitAdmin {
 
     boolean resultOperatedFlag;//リザルト関係の処理を一度だけ呼ぶためのフラグ
     boolean battleEndFlag;//戦闘が終わったかどうか
+
+    InventryS expendInventry;
+
+    MusicAdmin musicAdmin;
 
     //by kmhanko BattleUnitDataAdmin追加
     public void init(
@@ -147,7 +161,9 @@ public class BattleUnitAdmin {
             MapStatusSaver _mapStatusSaver,
             DUNGEON_KIND _dungeonKind,
             DungeonMonsterDataAdmin _dungeonMonsterDataAdmin,
-            TalkAdmin _talkAdmin
+            TalkAdmin _talkAdmin,
+            InventryS _expendInventry,
+            MusicAdmin _musicAdmin
     ) {
         //引数の代入
         graphic = _graphic;
@@ -169,6 +185,10 @@ public class BattleUnitAdmin {
 
         dungeonMonsterDataAdmin = _dungeonMonsterDataAdmin;
         talkAdmin = _talkAdmin;
+
+        musicAdmin = _musicAdmin;
+
+        expendInventry = _expendInventry;
 
         textBoxAdmin = _textBoxAdmin;
         initResultTextBox();
@@ -202,9 +222,9 @@ public class BattleUnitAdmin {
         attack_count = 0;
 
         //BattleUnit配列のインスタンス化・初期化
-        battle_units[0] = new BattlePlayer(graphic);
+        battle_units[0] = new BattlePlayer(graphic, null, null);
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
-            battle_units[i] = new BattleEnemy(graphic);
+            battle_units[i] = new BattleEnemy(graphic, effectAdmin, enemyBackEffectAdmin);
         }
 
         for (int i = 0; i < MAKER_NUM; i++) {
@@ -218,7 +238,74 @@ public class BattleUnitAdmin {
 
         palette_admin.resetDungeonUseNum();
 
+        //デフォルトで何か武器を装備した状態
+        for (int i = 0; i < 6; i++) {
+            if (palette_admin.getPalettes(0).getItemData(i) != null) {
+                palette_admin.getPaletteCenter(0).changeElement(i + 1);//by kmhanko 0731
+                palette_admin.getPaletteCenter(0).setItemData(palette_admin.getPalettes(0).getItemData(i), i, false);
+                break;
+            }
+            if (i == 5) {//6(盾)を飛ばす
+                palette_admin.getPaletteCenter(0).changeElement(7 + 1);//by kmhanko 0731
+                palette_admin.getPaletteCenter(0).setItemData(palette_admin.getPalettes(0).getItemData(7), 7, false);
+                break;
+            }
+        }
+
         paint.setARGB(230, 0, 0, 0);
+
+        initEffect();
+    }
+
+    private void initEffect() {
+
+        effectAdmin.createEffectOnlyTrim("scoop_effect", 5, 4);
+        effectAdmin.createEffectOnlyTrim("hammer_effect", 5, 1);
+        effectAdmin.createEffectOnlyTrim("bomb_effect", 5, 2);
+        effectAdmin.createEffectOnlyTrim("dynamite_effect", 5, 4);
+        effectAdmin.createEffectOnlyTrim("bunch_of_dynamite_effect", 5, 4);
+
+        for (int i = 0; i < 8; i++) {
+            ItemData itemData = palette_admin.getPalettes(0).getItemData(i);
+            EquipmentItemData equipmentItemData = (EquipmentItemData)itemData;
+            if (itemData != null) {
+                switch (equipmentItemData.getEquipmentKind()) {
+                    case AX:
+                        effectAdmin.createEffect("axe_effect", "axe_effect", 3, 5, 1);
+                        break;
+                    case BARE:
+                        effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3, 1);
+                        break;
+                    case BOW:
+                        effectAdmin.createEffect("bow_effect", "bow_effect", 5, 2, 1);
+                        break;
+                    case WAND:
+                        effectAdmin.createEffect("cane_effect", "cane_effect", 14, 1, 1);
+                        break;
+                    case GUN:
+                        effectAdmin.createEffect("gun_effect", "gun_effect", 5, 2, 1);
+                        break;
+                    case FIST:
+                        effectAdmin.createEffect("knuckle_effect", "knuckle_effect", 6, 3, 1);
+                        break;
+                    case CLUB:
+                        effectAdmin.createEffect("mace_effect", "mace_effect", 5, 1, 1);
+                        break;
+                    case MUSIC:
+                        effectAdmin.createEffect("musical_instrument_effect", "musical_instrument_effect", 1, 15, 1);
+                        break;
+                    case SPEAR:
+                        effectAdmin.createEffect("spear_effect", "spear_effect", 5, 3, 1);
+                        break;
+                    case SWORD:
+                        effectAdmin.createEffect("sword_effect", "sword_effect", 9, 1, 1);
+                        break;
+                    case WHIP:
+                        effectAdmin.createEffect("whip_effect", "whip_effect", 5, 5, 1);
+                        break;
+                }
+            }
+        }
 
     }
 
@@ -229,9 +316,14 @@ public class BattleUnitAdmin {
         battleEndFlag = false;
 
         //毎戦闘開始時に、前回の戦闘でのゴミなどを消す処理を行う
+        effectAdmin.hideKindEffect(0);
+        enemyBackEffectAdmin.hideKindEffect(0);
+
 
         //プレイヤーデータのコンバート
         setPlayer(playerStatus);
+
+        palette_admin.setPalletPosition();
 
         //TODO タッチマーカー残骸を消す
 
@@ -245,11 +337,16 @@ public class BattleUnitAdmin {
         }
         */
 
+
         if (mode == MODE.MINING) {
-            palette_admin.setPalettesFlags(new boolean[]{false, false, true});
-            dropGeoObject.clear();
-            spawnRock();
-            timeLimitBar.reset(30 * 60);
+            //for (int i=0;i<100;i++) {//TODO dbug
+                palette_admin.setPalettesFlags(new boolean[]{false, false, true});
+                dropGeoObject.clear();
+                dropGeoObjectKind.clear();
+                deleteEnemy();
+                spawnRock();
+                timeLimitBar.reset(30 * 30);
+            //}
         }
 
         textBoxAdmin.resetTextBox(resultTextBoxID);
@@ -261,10 +358,9 @@ public class BattleUnitAdmin {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (!battle_units[i].isExist()) {
                 BattleBaseUnitData tempBattleBaseUnitData = battleUnitDataAdmin.getBattleUnitDataNum(enemyName);
-                battle_units[i].setBattleUnitDataEnemy(tempBattleBaseUnitData, repeatCount);
+                battle_units[i].setBattleUnitDataEnemy(tempBattleBaseUnitData, repeatCount, mode == MODE.MAOH);
                 if (mode == MODE.MAOH) {
                     //魔王の弱体化
-
                     battle_units[i].setMaxHitPoint(battle_units[i].getMaxHitPoint() - maohMenosStatus.getGeoHP());
                     if (battle_units[i].getMaxHitPoint() <= 0) {
                         battle_units[i].setMaxHitPoint(1);
@@ -286,6 +382,10 @@ public class BattleUnitAdmin {
                     }
 
                 }
+
+                //エフェクトの作成
+                ((BattleEnemy)battle_units[i]).initEffect(i);
+
                 return i;
             }
         }
@@ -294,10 +394,12 @@ public class BattleUnitAdmin {
 
     public void setPlayer(PlayerStatus playerStatus) {
         playerStatus.calcStatus();
-        battle_units[0].setBattleUnitDataPlayer(playerStatus.makeBattleDungeonUnitData());//TODO なぜかコメントアウトされてた
+        battle_units[0].setBattleUnitDataPlayer(playerStatus.makeBattleDungeonUnitData());
+        battle_units[0].setHitPoint(playerStatus.getNowHP());
     }
 
     public void spawnEnemy(String[] monsters) {
+        deleteEnemy();
         for (int i = 0; i < monsters.length; i++) {
             setBattleUnitData(monsters[i], repeat_count);
         }
@@ -310,7 +412,8 @@ public class BattleUnitAdmin {
     }
 
     public void deleteEnemy() {
-        for (int i = 0; i < battle_units.length; i++) {
+        for (int i = 1; i < battle_units.length; i++) {
+            battle_units[i].clear();
             battle_units[i].existIs(false);
             battle_units[i].dropFlagIs(false);
         }
@@ -341,10 +444,16 @@ public class BattleUnitAdmin {
 
         Random r = new Random();
 
+
         //岩に対応する敵を決定し、その対応する敵データからHPを決める
         for (int i = 0; i < r.nextInt(3) + 1; i++) {
-            setRockUnitData(battleUnitDataAdmin.getRandomBattleBaseUnitDataExceptBoss(dungeonMonsterDataAdmin));
+        //for (int i = 0; i < 100; i++) {
+            setRockUnitData();
         }
+
+        //TODO debug
+        //getDropGeoAfter();
+
     }
 
     public void spawnBoss(String[] monsters) {
@@ -353,18 +462,22 @@ public class BattleUnitAdmin {
         }
     }
 
-    public int setRockUnitData(BattleBaseUnitData bBUD) {
+    public int setRockUnitData() {
         List<BattleBaseUnitData> battleBaseUnitData = battleUnitDataAdmin.getBattleBaseUnitDataExceptBoss(dungeonMonsterDataAdmin);
-        int maxMinParam[][] = new int[4][2];
+        BattleBaseUnitData bBUD = battleUnitDataAdmin.getRandomBattleBaseUnitDataExceptBoss(dungeonMonsterDataAdmin);
+        if ( bBUD == null) {
+            return -1;
+        }
+        int maxMinParam[][] = new int[4][2];// 第二引数は0がMAX,1がMIN
 
-        for (int i = 1; i < battleBaseUnitData.size(); i++) {
-            int tempParam[] = battleBaseUnitData.get(i).getStatus(repeat_count);
+        for (int i = 0; i < battleBaseUnitData.size(); i++) {
+            int tempParam[] = battleBaseUnitData.get(i).getStatus(repeat_count, 5.042);
             for (int j = 0; j < maxMinParam.length; j++) {
-                if (tempParam[j] * battleBaseUnitData.get(i).getPower() > maxMinParam[j][0]) {
-                    maxMinParam[j][0] = tempParam[j] * battleBaseUnitData.get(i).getPower();
+                if (tempParam[1+j] * battleBaseUnitData.get(i).getPower() > maxMinParam[j][0] || i == 0) {
+                    maxMinParam[j][0] = tempParam[1+j] * battleBaseUnitData.get(i).getPower();
                 }
-                if (tempParam[j] * battleBaseUnitData.get(i).getPower() < maxMinParam[j][1]) {
-                    maxMinParam[j][1] = tempParam[j] * battleBaseUnitData.get(i).getPower();
+                if (tempParam[1+j] * battleBaseUnitData.get(i).getPower() < maxMinParam[j][1] || i == 0) {
+                    maxMinParam[j][1] = tempParam[1+j] * battleBaseUnitData.get(i).getPower();
                 }
             }
         }
@@ -373,31 +486,31 @@ public class BattleUnitAdmin {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             if (!battle_units[i].isExist()) {
                 ((BattleEnemy) battle_units[i]).setBattleBaseUnitDataForRock(bBUD);
-                getDropGeoBefore(battle_units[i]);
+                int dropGeoNum = getDropGeoBefore(battle_units[i]);
                 float rareRate = 0.0f;
-                switch (dropGeoObjectKind.get(i - 1)) {
+                switch (dropGeoObjectKind.get(dropGeoNum)) {
                     case HP:
                     case HP_RATE:
-                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[0][1]) / (float) (maxMinParam[0][0] - maxMinParam[0][1]);
+                        rareRate = (float) (dropGeoObject.get(dropGeoNum) - maxMinParam[0][1]) / (float) (maxMinParam[0][0] - maxMinParam[0][1]);
                         break;
                     case ATTACK:
                     case ATTACK_RATE:
-                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[1][1]) / (float) (maxMinParam[1][0] - maxMinParam[1][1]);
+                        rareRate = (float) (dropGeoObject.get(dropGeoNum) - maxMinParam[1][1]) / (float) (maxMinParam[1][0] - maxMinParam[1][1]);
                         break;
                     case DEFENCE:
                     case DEFENCE_RATE:
-                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[2][1]) / (float) (maxMinParam[2][0] - maxMinParam[2][1]);
+                        rareRate = (float) (dropGeoObject.get(dropGeoNum) - maxMinParam[2][1]) / (float) (maxMinParam[2][0] - maxMinParam[2][1]);
                         break;
                     case LUCK:
                     case LUCK_RATE:
-                        rareRate = (float) (dropGeoObject.get(i - 1) - maxMinParam[3][1]) / (float) (maxMinParam[3][0] - maxMinParam[3][1]);
+                        rareRate = (float) (dropGeoObject.get(dropGeoNum) - maxMinParam[3][1]) / (float) (maxMinParam[3][0] - maxMinParam[3][1]);
                         break;
                 }
-                int hp = bBUD.getStatus(repeat_count)[1];
-                int attack = bBUD.getStatus(repeat_count)[2];
-                int defence = bBUD.getStatus(repeat_count)[3];
-                BattleBaseUnitData tempBBUD = BattleRockCreater.getBattleBaseUnitData(hp * bBUD.getPower(), attack, defence, rareRate);//ダメージ計算上で攻撃力が必要
-                battle_units[i].setBattleUnitDataRock(tempBBUD);
+                int hp = bBUD.getDbStatus(BattleBaseUnitData.DbStatusID.InitialHP);
+                int attack = bBUD.getDbStatus(BattleBaseUnitData.DbStatusID.InitialAttack);
+                int defence = bBUD.getDbStatus(BattleBaseUnitData.DbStatusID.InitialDefence);
+                BattleBaseUnitData tempBBUD = BattleRockCreater.getBattleBaseUnitData(hp, attack, defence, rareRate);//ダメージ計算上で攻撃力が必要
+                battle_units[i].setBattleUnitDataRock(tempBBUD, repeat_count);
                 return i;
             }
         }
@@ -414,7 +527,16 @@ public class BattleUnitAdmin {
         if (!battleEndFlag) {
             //if (!battleEndFlag && !(mode == MODE.OPENING && text_mode)) {
 
-            battle_units[0].update();
+            battle_units[0].update();//この内部で毒の処理も行われている
+            if (battle_units[0].getHitPoint() <= 0) {
+                //毒で死んだ
+                gameoverMes = "毒の状態異常で";
+                gameOver();
+                resultOperatedFlag = true;
+                battleEndFlag = true;
+            }
+        }
+        if (!battleEndFlag) {//毒で死んだ場合のために改めて
 
             if (battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.PARALYSIS.ordinal() - 1) == 0 || battle_units[0].getAlimentCounts(BattleBaseUnitData.ActionID.PARALYSIS.ordinal() - 1) % 2 == 0) {
                 attack_count++;
@@ -458,19 +580,19 @@ public class BattleUnitAdmin {
                                                 if (mode == MODE.MINING) {
                                                     switch (attack_equipment.getName()) {
                                                         case "スコップ":
-                                                            mine_effect_ID = effectAdmin.createEffect("scoop_effect", "scoop_effect", 5, 4);
+                                                            mine_effect_ID = effectAdmin.createEffect("scoop_effect", "scoop_effect", 5, 4, 1);
                                                             break;
                                                         case "ハンマー":
-                                                            mine_effect_ID = effectAdmin.createEffect("hammer_effect", "hammer_effect", 5, 1);
+                                                            mine_effect_ID = effectAdmin.createEffect("hammer_effect", "hammer_effect", 5, 1, 1);
                                                             break;
                                                         case "爆弾":
-                                                            mine_effect_ID = effectAdmin.createEffect("bomb_effect", "bomb_effect", 5, 2);
+                                                            mine_effect_ID = effectAdmin.createEffect("bomb_effect", "bomb_effect", 5, 2, 1);
                                                             break;
                                                         case "ダイナマイト":
-                                                            mine_effect_ID = effectAdmin.createEffect("dynamite_effect", "dynamite_effect", 5, 4);
+                                                            mine_effect_ID = effectAdmin.createEffect("dynamite_effect", "dynamite_effect", 5, 4, 1);
                                                             break;
                                                         case "ダイナマイト束":
-                                                            mine_effect_ID = effectAdmin.createEffect("bunch_of_dynamite_effect", "bunch_of_dynamite_effect", 5, 4);
+                                                            mine_effect_ID = effectAdmin.createEffect("bunch_of_dynamite_effect", "bunch_of_dynamite_effect", 5, 4, 1);
                                                             break;
                                                     }
                                                     effectAdmin.getEffect(mine_effect_ID).setPosition((int) touch_x, (int) touch_y);
@@ -480,37 +602,37 @@ public class BattleUnitAdmin {
                                                 } else {
                                                     switch (attack_equipment.getEquipmentKind()) {
                                                         case AX:
-                                                            battle_effect_ID = effectAdmin.createEffect("axe_effect", "axe_effect", 3, 5);
+                                                            battle_effect_ID = effectAdmin.createEffect("axe_effect", "axe_effect", 3, 5, 1);
                                                             break;
                                                         case BARE:
-                                                            battle_effect_ID = effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3);
+                                                            battle_effect_ID = effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3, 1);
                                                             break;
                                                         case BOW:
-                                                            battle_effect_ID = effectAdmin.createEffect("bow_effect", "bow_effect", 5, 2);
+                                                            battle_effect_ID = effectAdmin.createEffect("bow_effect", "bow_effect", 5, 2, 1);
                                                             break;
                                                         case WAND:
-                                                            battle_effect_ID = effectAdmin.createEffect("cane_effect", "cane_effect", 14, 1);
+                                                            battle_effect_ID = effectAdmin.createEffect("cane_effect", "cane_effect", 14, 1, 1);
                                                             break;
                                                         case GUN:
-                                                            battle_effect_ID = effectAdmin.createEffect("gun_effect", "gun_effect", 5, 2);
+                                                            battle_effect_ID = effectAdmin.createEffect("gun_effect", "gun_effect", 5, 2, 1);
                                                             break;
                                                         case FIST:
-                                                            battle_effect_ID = effectAdmin.createEffect("knuckle_effect", "knuckle_effect", 6, 3);
+                                                            battle_effect_ID = effectAdmin.createEffect("knuckle_effect", "knuckle_effect", 6, 3, 1);
                                                             break;
                                                         case CLUB:
-                                                            battle_effect_ID = effectAdmin.createEffect("mace_effect", "mace_effect", 5, 1);
+                                                            battle_effect_ID = effectAdmin.createEffect("mace_effect", "mace_effect", 5, 1, 1);
                                                             break;
                                                         case MUSIC:
-                                                            battle_effect_ID = effectAdmin.createEffect("musical_instrument_effect", "musical_instrument_effect", 1, 15);
+                                                            battle_effect_ID = effectAdmin.createEffect("musical_instrument_effect", "musical_instrument_effect", 1, 15, 1);
                                                             break;
                                                         case SPEAR:
-                                                            battle_effect_ID = effectAdmin.createEffect("spear_effect", "spear_effect", 5, 3);
+                                                            battle_effect_ID = effectAdmin.createEffect("spear_effect", "spear_effect", 5, 3, 1);
                                                             break;
                                                         case SWORD:
-                                                            battle_effect_ID = effectAdmin.createEffect("sword_effect", "sword_effect", 9, 1);
+                                                            battle_effect_ID = effectAdmin.createEffect("sword_effect", "sword_effect", 9, 1, 1);
                                                             break;
                                                         case WHIP:
-                                                            battle_effect_ID = effectAdmin.createEffect("whip_effect", "whip_effect", 5, 5);
+                                                            battle_effect_ID = effectAdmin.createEffect("whip_effect", "whip_effect", 5, 5, 1);
                                                             break;
 
 //                                                    case MONSTER:
@@ -544,12 +666,7 @@ public class BattleUnitAdmin {
                 marker_flag = false;
             }
 
-            //マーカーの縮小
-            for (int i = 0; i < MAKER_NUM; i++) {
-                if (touch_markers[i].isExist() == true) {
-                    touch_markers[i].update();
-                }
-            }
+
 
 
             //敵HP更新
@@ -623,6 +740,8 @@ public class BattleUnitAdmin {
 
                                     if (new_hp > 0) {
                                         battle_units[i].setHitPoint(new_hp);
+
+                                        ((BattleEnemy)battle_units[i]).damagedEffectStart();
                                     } else {
                                         //by kmhanko
                                         //岩は特殊行動しないため、死亡判定についてこの位置のみに記述すれば良い。
@@ -641,15 +760,18 @@ public class BattleUnitAdmin {
                                     } else if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.COUNTER) {
                                         //カウンターでも敵にダメージは入る
                                         if (new_hp > 0) {
-                                            battle_units[0].setHitPoint(new_hp);
+                                            battle_units[i].setHitPoint(new_hp);
+                                            ((BattleEnemy)battle_units[i]).damagedEffectStart();
                                         } else {
-                                            battle_units[0].existIs(false);
+                                            battle_units[i].existIs(false);
                                         }
 
                                         //プレイヤーも同じだけダメージを食らう
-                                        new_hp = battle_units[0].getHitPoint() - (int) (20 * strong_ratio * level_rate);
+                                        int damage = (int) (20 * strong_ratio * level_rate);
+                                        new_hp = battle_units[0].getHitPoint() - damage;
                                         if (new_hp <= 0) {
                                             //負けたとき
+                                            gameoverMes = "敵のカウンター攻撃で" + String.valueOf((int)((float)(damage) / PlayerStatusViewer.EXPRESS_RATE)) +"ダメージを受けて";
                                             gameOver();
                                             resultOperatedFlag = true;
                                             battleEndFlag = true;
@@ -661,6 +783,7 @@ public class BattleUnitAdmin {
                                     } else if (((BattleEnemy) (battle_units[i])).getSpecialAction() == BattleBaseUnitData.SpecialAction.STEALTH) {
                                         if (new_hp > 0) {
                                             battle_units[i].setHitPoint(new_hp);
+                                            ((BattleEnemy)battle_units[i]).damagedEffectStart();
                                         } else {
                                             battle_units[i].existIs(false);
                                         }
@@ -679,6 +802,25 @@ public class BattleUnitAdmin {
                 }
             }
 
+            //マーカーの縮小 //楽器のdecayRate == 0としたため、一度は攻撃が通るように
+            for (int i = 0; i < MAKER_NUM; i++) {
+                if (touch_markers[i].isExist() == true) {
+                    touch_markers[i].update();
+                }
+            }
+
+            //ポーションなどの使用の処
+            if (palette_admin.checkSelectedExpendItemData() != null) {
+                int heel_to_player = (int) (battle_units[0].getMaxHitPoint() * palette_admin.checkSelectedExpendItemData().getHp() / 100.0f);
+                palette_admin.deleteExpendItemData();
+                soundAdmin.play("cure00");
+                int new_hp = heel_to_player + battle_units[0].getHitPoint();
+                if (new_hp > battle_units[0].getMaxHitPoint()) {
+                    new_hp = battle_units[0].getMaxHitPoint();
+                }
+                battle_units[0].setHitPoint(new_hp);
+            }
+
             //敵の更新と攻撃処理
             for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
                 if (battle_units[i].isExist() == true) {
@@ -690,16 +832,21 @@ public class BattleUnitAdmin {
                             damage_rate = (1 - (float) defense_equipment.getDefence() / 100.0f);
                         }
 
+                        /*
                         int heel_to_player = 0;
                         if (palette_admin.checkSelectedExpendItemData() != null) {
                             heel_to_player = (int)(battle_units[0].getMaxHitPoint() * palette_admin.checkSelectedExpendItemData().getHp() / 100.0f);
                             palette_admin.deleteExpendItemData();
+                            soundAdmin.play("cure00");
                         }
-/*
+                        */
+
+                        /*
                         int new_hp = battle_units[0].getHitPoint() - (int) ((damage_to_player/(battle_units[0].getDefence()*battle_units[0].getDefence()*battle_units[0].getDefence())) * damage_rate) + heel_to_player;
                         if (new_hp > battle_units[0].getMaxHitPoint()) {
                             new_hp = battle_units[0].getMaxHitPoint();
-                        }*/
+                        }
+                        */
 
 
                         double strong_ratio = (damage_to_player * 2222.0) / (battle_units[0].getDefence() * 1000.0 + 1.0);
@@ -719,13 +866,19 @@ public class BattleUnitAdmin {
                         level_rate = Math.pow(level_rate, 0.4);//0.4だと、自他のStatusが定数倍になっても、敵を倒すための確定数はほぼ変化しない
 //                        System.out.println("level_pl_2_" + level_rate);
 
-                        int new_hp = battle_units[0].getHitPoint() - (int) ((133.0 * strong_ratio) * level_rate * damage_rate + heel_to_player);
+                        int damage = (int) ((133.0 * strong_ratio) * level_rate * damage_rate);
+
+                        int new_hp = battle_units[0].getHitPoint() - damage;
+                        //int new_hp = battle_units[0].getHitPoint() - (int) ((133.0 * strong_ratio) * level_rate * damage_rate - heel_to_player);
 //                        int new_hp = battle_units[0].getHitPoint() - (int) ((real_atk * exp * 0.295 / (real_def + 1) * damage_rate) + heel_to_player);
 
 //                        System.out.println("strong_ratio_pl" + strong_ratio);
 //                        System.out.println("hp_pl_desuyo_" + new_hp);//PlayerのHP22222に対して、133ずつ減る
 //                        System.out.println("damage_pl_desuyo_" + damage_to_player);//1000
 //                        System.out.println("def_pl_desuyo_" + battle_units[0].getDefence());//2222
+
+                        gameoverMes = "敵から" + String.valueOf((int)((float)(damage) / PlayerStatusViewer.EXPRESS_RATE)) + "ダメージを受けて";
+
                         if (new_hp > battle_units[0].getMaxHitPoint()) {
                             new_hp = battle_units[0].getMaxHitPoint();
                         }
@@ -750,6 +903,7 @@ public class BattleUnitAdmin {
 
                         if (battle_units[i].getAlimentCounts(BattleBaseUnitData.ActionID.CURSE.ordinal() - 1) == 0) {
                             new_hp = 0;
+                            gameoverMes = "呪いの状態異常で";
                         }
 
                         if (new_hp <= 0) {
@@ -801,19 +955,21 @@ public class BattleUnitAdmin {
         winFlag = false;
         //死んだらお金を半分にする
         playerStatus.setMoney(playerStatus.getMoney() / 2);
+        musicAdmin.loadMusic("gameover00",true);
+
         switch (mode) {
             case BATTLE:
-                battleEnd();
-                break;
             case BOSS:
-                battleEnd();
+                gameoverMessage();
+                //battleEnd();
                 break;
             case MINING:
                 //ここには来ない
                 battleEnd();
                 break;
             case MAOH:
-                battleEnd();
+                gameoverMessage();
+                //battleEnd();
                 break;
             case OPENING:
                 /*
@@ -830,14 +986,23 @@ public class BattleUnitAdmin {
         winFlag = true;
         switch (mode) {
             case BATTLE:
-            case BOSS:
+                musicAdmin.loadMusic("win03",true);
                 getDropItem();
-                getDropMoney();
+                playerStatus.addMoney(getDropMoney());
+                growUp();
+                resultButtonGroup.setUpdateFlag(true);
+                resultButtonGroup.setDrawFlag(true);
+                break;
+            case BOSS:
+                musicAdmin.loadMusic("win04",true);
+                getDropItem();
+                playerStatus.addMoney(getDropMoney());
                 growUp();
                 resultButtonGroup.setUpdateFlag(true);
                 resultButtonGroup.setDrawFlag(true);
                 break;
             case MINING:
+                musicAdmin.loadMusic("win03",true);
                 if (timeLimitBar.isTimeUp()) {
                     //TODO 時間切れで終了した場合
                     resultTextBoxUpdate(new String[]{"時間切れになってしまった！", "今回の獲得ジオはありません"});
@@ -849,6 +1014,7 @@ public class BattleUnitAdmin {
                 resultButtonGroup.setDrawFlag(true);
                 break;
             case MAOH:
+                musicAdmin.loadMusic("win05",true);
                 growUp();
                 resultTextBoxUpdate(new String[]{"魔王を倒した！",});
                 resultButtonGroup.setUpdateFlag(true);
@@ -916,12 +1082,12 @@ public class BattleUnitAdmin {
     List<Integer> dropGeoObject = new ArrayList<>();
     List<Constants.Item.GEO_KIND_ALL> dropGeoObjectKind = new ArrayList<>();
 
-    private void getDropGeoBefore(BattleUnit tempBattleUnit) {
+    private int getDropGeoBefore(BattleUnit tempBattleUnit) {
         //岩からのジオドロップ
         BattleBaseUnitData bBUDforRock = ((BattleEnemy) tempBattleUnit).getBattleBaseUnitDataForRock();
-        int[] status = bBUDforRock.getStatus(repeat_count);
+        int[] status = bBUDforRock.getStatus(repeat_count, 5.042);
         //このジオは何ジオか決定する
-        if (Math.random() < 0.5) {
+        if (Math.random() < 0.7) {
             //NormalGeo
             GEO_PARAM_KIND_NORMAL kindNormal = GeoObjectDataCreater.getRandKindNormal();
             switch (kindNormal) {
@@ -964,6 +1130,7 @@ public class BattleUnitAdmin {
                     break;
             }
         }
+        return dropGeoObject.size() - 1;
     }
 
     private void getDropGeoAfter() {
@@ -971,7 +1138,15 @@ public class BattleUnitAdmin {
         for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
             GeoObjectData geoObjectData = null;
             if (battle_units[i].getUnitKind() == Constants.UnitKind.ROCK && battle_units[i].isDropFlag()) {
-                int parameter = dropGeoObject.get(i - 1);
+                int parameter = 0;
+                if (dropGeoObjectKind.get(i - 1) == Constants.Item.GEO_KIND_ALL.ATTACK_RATE || dropGeoObjectKind.get(i - 1) == Constants.Item.GEO_KIND_ALL.DEFENCE_RATE || dropGeoObjectKind.get(i - 1) == Constants.Item.GEO_KIND_ALL.LUCK_RATE || dropGeoObjectKind.get(i - 1) == Constants.Item.GEO_KIND_ALL.HP_RATE) {
+                    parameter = (repeat_count+1)*20;
+                    if (parameter > 100) {
+                        parameter = 100;
+                    }
+                } else {
+                    parameter = dropGeoObject.get(i - 1);
+                }
                 if (battle_units[i].getHitPoint() < 0) {
                     parameter = (int) ((float) parameter * (float) (battle_units[i].getHitPoint() + battle_units[i].getMaxHitPoint()) / (float) battle_units[i].getMaxHitPoint());
                 }
@@ -1013,7 +1188,6 @@ public class BattleUnitAdmin {
                 getMoney += (battle_units[i].getAttack() + battle_units[i].getDefence() + battle_units[i].getLuck()) / 3;
             }
         }
-        playerStatus.addMoney(getMoney);
         return getMoney;
     }
 
@@ -1036,10 +1210,10 @@ public class BattleUnitAdmin {
                 EquipmentItemData eqTempItemData = null;
                 double tempRand;
                 float rate = 0.0f;
+                tempRand = Math.random();
                 for (int j = 0; j < Constants.Item.DROP_NUM; j++) {
                     rate = 0.0f;
                     if (dropItemName[j] != null) {
-                        tempRand = Math.random();
                         System.out.println("☆タカノ:BattleUnitAdmin#getDropItem : アイテムドロップ率計算 : " + dropItemName[j] + " from " + battle_units[i].getName() + " : " + dropItemRate[j] + " ? " + tempRand);
                         rate += dropItemRate[j];
                         if (rate > tempRand) {
@@ -1083,6 +1257,10 @@ public class BattleUnitAdmin {
     public void getEffectAdmin(EffectAdmin _effect_admin) {
         effectAdmin = _effect_admin;
     }
+    public void getEnemyBackEffectAdmin(EffectAdmin _enemyBackEffectAdmin) {
+        enemyBackEffectAdmin = _enemyBackEffectAdmin;
+    }
+
 
     // *** リザルトメッセージ関係 ***
 
@@ -1110,6 +1288,19 @@ public class BattleUnitAdmin {
                 textBoxAdmin.bookingDrawText(resultTextBoxID, "\n", resultTextPaint);
             }
         }
+    }
+
+    private void gameoverMessage() {
+        resultTextBoxUpdate(
+                new String[]{
+                        "あなたは",
+                        gameoverMes,
+                        "やられてしまった！"
+                })
+        ;
+        resultButtonGroup.setUpdateFlag(true);
+        resultButtonGroup.setDrawFlag(true);
+        return;
     }
 
     private void resultTextBoxUpdateItems(List<String> itemNames) {
@@ -1172,6 +1363,8 @@ public class BattleUnitAdmin {
     public void battleEnd() {
         deleteEnemy();
         playerStatus.setNowHP(battle_units[0].getHitPoint());
+        expendInventry.save();
+
 
         if (winFlag) {
             switch (mode) {
@@ -1221,7 +1414,10 @@ public class BattleUnitAdmin {
             }
         }
 
-        effectAdmin.clearAllEffect();
+        effectAdmin.clearKindEffect(1);
+        enemyBackEffectAdmin.clearKindEffect(1);
+        effectAdmin.restartKindEffect(0);
+        enemyBackEffectAdmin.restartKindEffect(0);
 
     }
 
@@ -1245,6 +1441,11 @@ public class BattleUnitAdmin {
             battleEnd();
         }
     }
+
+    public void release() {
+
+    }
+
     // *** オープニング戦闘の会話文関係 ここまで ***
 }
 

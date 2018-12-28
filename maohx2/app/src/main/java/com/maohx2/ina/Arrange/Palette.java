@@ -63,6 +63,8 @@ public class Palette {
         }
 
         for (int i = 0; i < 8; i++) {
+            //int center_x = position_x + (int) (PALETTE_ARRANGE_RADIUS * Math.cos(2.0*Math.PI*(double)i/8.0));
+            //int center_y = position_y - (int) (PALETTE_ARRANGE_RADIUS * Math.sin(2.0*Math.PI*(double)i/8.0));
             int center_x = position_x + (int) (PALETTE_ARRANGE_RADIUS * COS[i]);
             int center_y = position_y - (int) (PALETTE_ARRANGE_RADIUS * SIN[i]);
             palette_elements[i] = new PaletteElement(center_x, center_y, i + 1, battle_user_interface.setCircleTouchUI(center_x, center_y, PALETTE_ELEMENT_RADIUS_BIG), soundAdmin);
@@ -74,6 +76,19 @@ public class Palette {
         //palette_center.setItemData();
     }
 
+    //by kmhanko
+    public void setPosition(int x, int y) {
+        position_x = x;
+        position_y = y;
+        for (int i = 0; i < 8; i++) {
+            //int center_x = position_x + (int) (PALETTE_ARRANGE_RADIUS * Math.cos(2.0*Math.PI*(double)i/8.0));
+            //int center_y = position_y - (int) (PALETTE_ARRANGE_RADIUS * Math.sin(2.0*Math.PI*(double)i/8.0));
+            int center_x = position_x + (int) (PALETTE_ARRANGE_RADIUS * COS[i]);
+            int center_y = position_y - (int) (PALETTE_ARRANGE_RADIUS * SIN[i]);
+            palette_elements[i].setPosition(center_x, center_y, battle_user_interface.setCircleTouchUI(center_x, center_y, PALETTE_ELEMENT_RADIUS_BIG));
+        }
+        palette_center.setPosition(position_x, position_y, battle_user_interface.setCircleTouchUI(position_x, position_y, PALETTE_ELEMENT_RADIUS_BIG));
+    }
 
     public void update() {
 
@@ -123,10 +138,11 @@ public class Palette {
             }
 
             if(palette_elements[select_circle_num].getItemData() != null) {
-                palette_center.changeElement(select_circle_num);
+                palette_center.changeElement(select_circle_num + 1);//by kmhanko 0731
                 palette_center.setItemData(palette_elements[select_circle_num].getItemData(), select_circle_num, isSound);
                 isSound = false;
                 if (palette_elements[select_circle_num].getItemData().getItemKind() == Constants.Item.ITEM_KIND.EXPEND) {
+                    //消費アイテム
                     palette_elements[select_circle_num].setItemData(null, false);
                 }
             }
@@ -139,6 +155,10 @@ public class Palette {
             }
             battle_palette_mode = 0;
         }
+    }
+
+    public PaletteCenter getPaletteCenter() {
+        return palette_center;
     }
 
     public int getPalettePrePos(){return palette_center.getPrePos();}
@@ -206,14 +226,15 @@ public class Palette {
                 if (battle_user_interface.checkUI(palette_center.getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
                     ItemData a = palette_center.getItemData();
                     //palette_center.setItemData(battle_user_interface.getPaletteElement().getItemData());
+
                     palette_center.setItemData(battle_user_interface.getPaletteElement().getItemData(),battle_user_interface.getPaletteElement().getElementNum(), false);
                     battle_user_interface.getPaletteElement().setItemData(a, true);
                     battle_user_interface.setPaletteElement(null);
                 }
 
 
-                 if(paletteNum == 0) {
-                    for (int i = 0; i < 6; i++) {
+                 if(paletteNum == 0) {//武器の場合
+                    for (int i = 0; i < 6; i++) {//素手と盾は固定なので6
                         if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
                             ItemData a = palette_elements[i].getItemData();
                             //palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData());
@@ -222,7 +243,7 @@ public class Palette {
                             battle_user_interface.setPaletteElement(null);
                         }
                     }
-                }else{
+                }else{//武器以外
 
                     for (int i = 0; i < 8; i++) {
                         if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.UP_MOMENT) == true) {
@@ -349,6 +370,24 @@ public class Palette {
 
     public ItemData getItemData(int _paletteIndex){
         return palette_elements[_paletteIndex].getItemData();
+    }
+
+    public void release() {
+        System.out.println("takanoRelease : Pallete");
+        direction_section_check = null;
+        if (palette_center != null) {
+            palette_center.release();
+            palette_center = null;
+        }
+        if (palette_elements != null) {
+            for (int i = 0; i < palette_elements.length; i++) {
+                if (palette_elements != null) {
+                    palette_elements[i].release();
+                }
+            }
+            palette_elements = null;
+        }
+        paint = null;
     }
 }
 

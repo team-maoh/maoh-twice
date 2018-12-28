@@ -189,7 +189,15 @@ public class Inventry {
 
     public void draw() {
         operate_inventry_list_box.draw();
+        drawShare();
+    }
 
+    public void drawExceptEquip() {
+        operate_inventry_list_box.drawExceptEquip();
+        drawShare();
+    }
+
+    private void drawShare() {
         for (int i = 0; i < contentNum; i++) {
             graphic.bookingDrawBitmapData(flameElement[0][0], position[i][0], position[i][1], 1.0f, 1.0f, 0, 254, true);
             graphic.bookingDrawBitmapData(flameElement[1][0], position[i][0], position[i][1] + height / 3, 1.0f, 1.0f, 0, 254, true);
@@ -211,7 +219,7 @@ public class Inventry {
         operate_inventry_list_box.draw();
     }
 
-    public void addItemData(ItemData _item_data) {
+    public void addItemData(ItemData _item_data, int num) {
         int i = 0;
 
         if (_item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT || _item_data.getItemKind() == Constants.Item.ITEM_KIND.GEO) {
@@ -220,7 +228,7 @@ public class Inventry {
             for (i = 0; i < INVENTRY_DATA_MAX; i++) {
                 if (inventry_datas[i].getItemData() != null) {
                     if (inventry_datas[i].getItemData().getName().equals(_item_data.getName())) {
-                        inventry_datas[i].setItemNum(inventry_datas[i].getItemNum() + 1);
+                        inventry_datas[i].setItemNum(inventry_datas[i].getItemNum() + num);
                         break;
                     }
                 }
@@ -232,7 +240,7 @@ public class Inventry {
             for (i = 0; i < INVENTRY_DATA_MAX; i++) {
                 if (inventry_datas[i].getItemNum() == 0) {
                     inventry_datas[i].setItemData(_item_data);
-                    inventry_datas[i].setItemNum(1);
+                    inventry_datas[i].setItemNum(num);
                     if (i < contentNum) {
                         operate_inventry_list_box.getPlate(i).changeInventryData();
                     }
@@ -240,6 +248,10 @@ public class Inventry {
                 }
             }
         }
+    }
+
+    public void addItemData(ItemData _item_data) {
+        addItemData(_item_data, 1);
     }
 
     public void subItemData(ItemData _item_data) {
@@ -283,6 +295,7 @@ public class Inventry {
             if (inventry_datas[i].getItemData() != null) {
                 if (inventry_datas[i].getItemData().getName().equals(name)) {
                     inventry_datas[i].delete();
+                    break;
                 }
             }
         }
@@ -360,4 +373,42 @@ public class Inventry {
             operate_inventry_list_box.setInventryData(inventry_datas[page * contentNum + i], i);
         }
     }
+
+
+    public void release() {
+        System.out.println("takanoRelease : Inventry");
+        operate_inventry_list_box.release();
+        operate_inventry_list_box = null;
+        inventry_datas = null;
+        paint = null;
+        position = null;
+        if (operate_inventry_list_box != null) {
+            operate_inventry_list_box.release();
+            operate_inventry_list_box = null;
+        }
+        if (leftPlate != null) {
+            leftPlate.release();
+            leftPlate = null;
+        }
+        if (rightPlate != null) {
+            rightPlate.release();
+            rightPlate = null;
+        }
+        if (flameElement != null) {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    flameElement[i][j].releaseBitmap();
+                }
+            }
+            flameElement = null;
+        }
+        if (inventry_datas != null) {
+            for (int i = 0; i < inventry_datas.length; i++) {
+                if (inventry_datas[i] != null) {
+                    inventry_datas[i].release();
+                }
+            }
+        }
+    }
+
 }

@@ -21,6 +21,14 @@ public class PlateGroup<T extends Plate> {
         plates = _plates;
     }
 
+    public void drawExceptEquip() {
+        if(draw_flag == true) {
+            for (int i = 0; i < plates.length; i++) {
+                plates[i].drawExceptEquip();
+            }
+        }
+    }
+
     public void draw() {
 
         if(draw_flag == true) {
@@ -120,6 +128,16 @@ public class PlateGroup<T extends Plate> {
     public void releaseTouchID() {
         for (int i = 0; i < plates.length; i++) {
             plates[i].releaseTouchID();
+        }
+    }
+
+    public void release() {
+        System.out.println("takanoRelease : PlateGroup");
+        if (plates != null) {
+            for (int i = 0; i < plates.length; i++) {
+                plates[i].release();
+            }
+            plates = null;
         }
     }
 

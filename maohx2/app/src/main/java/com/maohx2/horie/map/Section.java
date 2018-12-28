@@ -104,19 +104,21 @@ public class Section {
         Random rnd = new Random();
         int room_height, room_width, room_top, room_left;
         //roomの幅を決める(section幅の50%以上)
-        for (; ; ) {
+        for (int i = 0;i < 100 ;i++) {
             room_width = rnd.nextInt(width - 4);
-            if (room_width > width * 0.5) {
+            if (room_width >= width * 0.5) {
                 break;
             }
         }
+        room_width = width - 4;
         //roomの高さを決める(section高さの50%以上)
-        for (; ; ) {
+        for (int i = 0;i < 100 ;i++) {
             room_height = rnd.nextInt(height - 4);
-            if (room_height > height * 0.5) {
+            if (room_height >= height * 0.5) {
                 break;
             }
         }
+        room_height = height - 4;
         room_top = rnd.nextInt(height - room_height - 2);
         if (room_top <= 1) {
             room_top = 2;
@@ -359,5 +361,19 @@ public class Section {
         } else {
             System.out.println("area = " + area);
         }
+    }
+
+    public void release() {
+        System.out.println("takanoRelease : Section");
+        connected_upper_leaf_num = null;
+        connected_lower_leaf_num = null;
+        connected_left_leaf_num = null;
+        connected_right_leaf_num = null;
+        children = null;
+        upper_neighbor = null;
+        lower_neighbor = null;
+        left_neighbor = null;
+        right_neighbor = null;
+        room = null;
     }
 }

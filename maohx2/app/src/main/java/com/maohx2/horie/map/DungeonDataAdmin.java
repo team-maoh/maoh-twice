@@ -33,6 +33,13 @@ public class DungeonDataAdmin {
         List<Integer> map_size_x = dungeon_database.getInt(tableName, "map_size_x");
         List<Integer> map_size_y = dungeon_database.getInt(tableName, "map_size_y");
 
+        //by kmhanko
+        List<Integer> accessoryNum = dungeon_database.getInt(tableName, "accessoryNum");
+        List<Float> accessoryRate = dungeon_database.getFloat(tableName, "accessoryRate");
+        List<Integer> itemNum = dungeon_database.getInt(tableName, "itemNum");
+        List<Integer> trapNum = dungeon_database.getInt(tableName, "trapNum");
+
+
         for (int i = 0; i < size; i++) {
             dungeon_data.add(new DungeonData());
             dungeon_data.get(i).setDungeon_name(dungeon_name.get(i));
@@ -44,10 +51,29 @@ public class DungeonDataAdmin {
             dungeon_data.get(i).setSidewall_tile_name(sidewall_tile_name.get(i));
             dungeon_data.get(i).setMap_size_x(map_size_x.get(i));
             dungeon_data.get(i).setMap_size_y(map_size_y.get(i));
+
+            //by kmhanko
+            dungeon_data.get(i).setAccessoryNum(accessoryNum.get(i));
+            dungeon_data.get(i).setAccessoryRate(accessoryRate.get(i));
+            dungeon_data.get(i).setItemNum(itemNum.get(i));
+            dungeon_data.get(i).setTrapNum(trapNum.get(i));
         }
     }
 
     public List<DungeonData> getDungeon_data(){
         return dungeon_data;
+    }
+
+    public void release() {
+        System.out.println("takanoRelease : DungeonDataAdmin");
+        if ( dungeon_data != null) {
+            for (int i = 0; i < dungeon_data.size(); i++) {
+                if (dungeon_data.get(i) != null) {
+                    dungeon_data.get(i).release();
+                }
+            }
+            dungeon_data.clear();
+            dungeon_data = null;
+        }
     }
 }

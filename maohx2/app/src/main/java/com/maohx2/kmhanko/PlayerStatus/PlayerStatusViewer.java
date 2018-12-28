@@ -4,7 +4,6 @@ package com.maohx2.kmhanko.PlayerStatus;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.BoxPlate;
 import com.maohx2.ina.Text.Plate;
 import com.maohx2.ina.Text.PlateGroup;
@@ -25,7 +24,17 @@ public class PlayerStatusViewer {
     static final int TEXT_X_OFFSET_LEFT2 = 125;
 
     static final float TEXT_SIZE_RATE= 0.6f;
+    static public final float EXPRESS_RATE = 222.22f;
+    static final float EXPRESS_RATE2 = 222.2f;
 
+    PlayerStatusEffect[] playerStatusEffect = new PlayerStatusEffect[16];
+
+    //毎回フレームの監視用
+    int hp = 0;
+    int attack = 0;
+    int defence = 0;
+    int luck = 0;
+    int money = 0;
 
     int posX1;
     int posX2;
@@ -51,6 +60,16 @@ public class PlayerStatusViewer {
         userInterface = _userInterface;
         initPosition();
         initStatusPlate();
+
+        for (int i = 0; i < playerStatusEffect.length; i++) {
+            playerStatusEffect[i] = new PlayerStatusEffect(graphic);
+        }
+
+        hp = playerStatus.getHP();
+        attack = playerStatus.getAttack();
+        defence = playerStatus.getDefence();
+        luck = playerStatus.getLuck();
+        money = playerStatus.getMoney();
     }
 
     public void initPosition() {
@@ -102,22 +121,22 @@ public class PlayerStatusViewer {
                                     switch(i) {
                                         case 0:
                                             statusName = "HP";
-                                            statusFigure = String.valueOf(playerStatus.getHP());
+                                            statusFigure = String.format("%.1f",playerStatus.getHP()/EXPRESS_RATE);
                                             paint.setARGB(255,128,255,255);
                                             break;
                                         case 1:
                                             statusName = "Atk";
-                                            statusFigure = String.valueOf(playerStatus.getAttack());
+                                            statusFigure = String.format("%.1f",playerStatus.getAttack()/EXPRESS_RATE);
                                             paint.setARGB(255,255,128,128);
                                             break;
                                         case 2:
                                             statusName = "Def";
-                                            statusFigure = String.valueOf(playerStatus.getDefence());
+                                            statusFigure = String.format("%.1f",playerStatus.getDefence()/EXPRESS_RATE2);
                                             paint.setARGB(255,128,128,255);
                                             break;
                                         case 3:
                                             statusName = "Luc";
-                                            statusFigure = String.valueOf(playerStatus.getLuck());
+                                            statusFigure = String.format("%.1f",playerStatus.getLuck()/EXPRESS_RATE);
                                             paint.setARGB(255,255,128,255);
                                             break;
                                         case 4:
@@ -159,6 +178,74 @@ public class PlayerStatusViewer {
             return;
         }
         //statusPlate.update();あえて呼ばない
+        int parameter;
+        if (playerStatus.getEffectFlag()) {
+            System.out.println("StatusEffectFlag = True");
+            if ((parameter = playerStatus.getHP() - hp) != 0 && hp != 0) {
+                makePlayerStatusEffect(0, parameter/EXPRESS_RATE);
+            }
+            if ((parameter = playerStatus.getAttack() - attack) != 0 && attack != 0) {
+                makePlayerStatusEffect(1, parameter/EXPRESS_RATE);
+            }
+            if ((parameter = playerStatus.getDefence() - defence) != 0 && defence != 0) {
+                makePlayerStatusEffect(2, parameter/EXPRESS_RATE2);
+            }
+            if ((parameter = playerStatus.getLuck() - luck) != 0 && luck != 0) {
+                makePlayerStatusEffect(3, parameter/EXPRESS_RATE);
+            }
+            if ((parameter = playerStatus.getMoney() - money) != 0 && money != 0) {
+                makePlayerStatusEffect(4, parameter);
+            }
+            hp = playerStatus.getHP();
+            attack = playerStatus.getAttack();
+            defence = playerStatus.getDefence();
+            luck = playerStatus.getLuck();
+            money = playerStatus.getMoney();
+
+            playerStatus.setEffectFlag(false);
+        }
+
+
+        for (int i = 0; i < playerStatusEffect.length; i++) {
+            playerStatusEffect[i].update();
+        }
+    }
+
+    public void makePlayerStatusEffect(int statusID, float parameter) {
+        String text = "";
+        Paint tempPaint = new Paint();
+        if (statusID != 4) {
+            if (parameter > 0) {
+                text = "+" + String.format("%.2f", parameter);
+                tempPaint.setColor(Color.rgb(255,0,0));
+            }
+            if (parameter <= 0) {
+                text = String.format("%.2f", parameter);
+                tempPaint.setColor(Color.rgb(0,0,255));
+            }
+        } else {
+            if (parameter > 0) {
+                text = "+" + String.valueOf((int)parameter);
+                tempPaint.setColor(Color.rgb(255,128,128));
+
+            }
+            if (parameter <= 0) {
+                text = String.valueOf((int)parameter);
+                tempPaint.setColor(Color.rgb(0,0,255));
+            }
+        }
+
+        for (int i = 0; i < playerStatusEffect.length; i++) {
+            if (!playerStatusEffect[i].isExist()) {
+                playerStatusEffect[i].start(
+                        text,
+                        (int)(posX1 + sizeX * statusID + TEXT_X_OFFSET_LEFT1),
+                        (int)(posY1),// + (int)((sizeY + sizeY * TEXT_SIZE_RATE)/2.0f)),
+                        tempPaint
+                );
+                break;
+            }
+        }
     }
 
     public void draw() {
@@ -167,6 +254,9 @@ public class PlayerStatusViewer {
         }
         graphic.bookingDrawRect(posX1, posY1, posX2, posY2, boxPaint);
         statusPlate.draw();
+        for (int i = 0; i < playerStatusEffect.length; i++) {
+            playerStatusEffect[i].draw();
+        }
     }
 
     public void statusTextBoxUpdate() {
@@ -191,5 +281,17 @@ public class PlayerStatusViewer {
 
     public boolean isExist() {
         return isExist;
+    }
+
+    public void release() {
+        System.out.println("takanoRelease : PlayerStatusViewer");
+        for (int i = 0; i < statusIcon.length; i++) {
+            statusIcon[i] = null;
+        }
+        statusIcon = null;
+        paint = null;
+        boxPaint = null;
+        statusPlate.release();
+        statusPlate = null;
     }
 }

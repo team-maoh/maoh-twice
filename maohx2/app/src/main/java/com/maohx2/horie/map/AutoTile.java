@@ -28,4 +28,11 @@ public class AutoTile {
     public void drawAutoTile(Graphic graphic, int num, int x, int y, int magnification){
         graphic.bookingDrawBitmapData(raw_auto_tile[num], x, y, magnification, magnification, 0, 255, true);
     }
+
+    public void release() {
+        System.out.println("takanoRelease : AutoTile");
+        raw_auto_tile = null;
+        auto_tile = null;
+        big_auto_tile = null;
+    }
 }

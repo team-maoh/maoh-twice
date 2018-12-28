@@ -30,6 +30,26 @@ import com.maohx2.kmhanko.sound.SoundAdmin;
 import static com.maohx2.ina.Constants.Touch.TouchState;
 
 
+//memo
+
+//バグ
+//発掘ジオの偏りバグ
+//テキストを全部流す作業
+//ゲームクリアまで行けるのか
+
+//プレイyー半透明
+//3つダンジョンクリアして魔王
+//ダンジョンオールクリア
+
+//改善点
+
+//音量調節
+//使用回数、色を変えるなどしてわかりやすくする
+//ダンジョンでのポーション使用時、リタイア時、ゲームオーバー時などにメッセージを表示する
+//階層移動時に効果音を鳴らす
+//緑色のEが、背景の大陸の緑と同化してわかりにくい
+//音楽のループタイミングがおかしいものがある(ワールドマップなど)
+
 //タイトル画面など
 public class StartActivity extends BaseActivity {
 
@@ -45,8 +65,7 @@ public class StartActivity extends BaseActivity {
         start_surface_view = new StartSurfaceView(this, backSurfaceView);
         //layout.addView(backSurfaceView);
         layout.addView(start_surface_view);
-
-
+        
     }
 
     @Override
@@ -73,6 +92,25 @@ public class StartActivity extends BaseActivity {
     public String getActivityName() {
         return "StartActivity";
     }
+
+
+    @Override
+    public void finish() {
+        super.finish();
+        start_surface_view.my_database_admin.close();
+        start_surface_view.release();
+        start_surface_view = null;
+    }
+
+    @Override
+    public void stopSound() {
+        start_surface_view.soundAdmin.stopAll();
+    };
+
+    @Override
+    public void touchReset() {
+        start_surface_view.touch_state = TouchState.AWAY;
+    }
 }
 
 
@@ -86,10 +124,22 @@ class StartSurfaceView extends BaseSurfaceView {
 
     boolean openingFlag;
 
-    PlateGroup<CircleImagePlate> image_list;
+    //PlateGroup<CircleImagePlate> image_list;
 
     MusicAdmin musicAdmin;
     SoundAdmin soundAdmin;
+
+    @Override
+    public void release() {
+        System.out.println("takanoRelease : StartSurfaceview");
+        super.release();
+        start_game_system.drawStop();
+        start_game_system.updateStop();
+        start_game_system.release();
+        my_database_admin.release();
+        start_user_interface.release();
+        graphic.releaseBitmap();
+    }
 
     public StartSurfaceView(StartActivity _start_activity, BackSurfaceView _backSurfaceView) {
         super(_start_activity, _backSurfaceView);
@@ -111,9 +161,7 @@ class StartSurfaceView extends BaseSurfaceView {
         soundAdmin = new SoundAdmin(start_activity, my_database_admin);
         soundAdmin.loadSoundPack("opening");
 
-        //MusicAdmin musicAdmin = new MusicAdmin(currentActivity, my_database_admin);
-        //musicAdmin.setTableName("music_pack");
-        //musicAdmin.loadMusic("title", true);
+        musicAdmin = global_data.getMusicAdmin();
 
 
         start_user_interface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
@@ -170,10 +218,10 @@ class StartSurfaceView extends BaseSurfaceView {
 
         TalkSaveDataAdmin talkSaveDataAdmin = new TalkSaveDataAdmin(my_database_admin);
         talkSaveDataAdmin.load();
-        openingFlag = !talkSaveDataAdmin.getTalkFlagByName("Opening_in_dungeon"); //openingFlag = true ならOpeningを実行
+        openingFlag = !(talkSaveDataAdmin.getTalkFlagByName("Opening_in_dungeon")||talkSaveDataAdmin.getTalkFlagByName("Opening_in_world")); //openingFlag = true ならOpeningを実行
 
         //デバッグ用
-        openingFlag = false;
+        //openingFlag = false;
 
 
         //todo:こいつは一番下
@@ -193,16 +241,27 @@ class StartSurfaceView extends BaseSurfaceView {
 
     @Override
     public void gameLoop(){
+        if (currentActivity.isFinishing() || currentActivity.isPaused()) {
+            return;
+        }
 
         start_user_interface.updateTouchState(touch_x, touch_y, touch_state);
 
        if(touch_state == TouchState.DOWN && touchWaitcount > 15){
-            downCount++;
+           if (downCount == 0) {
+               soundAdmin.play("opening02");
+               musicAdmin.loadMusic("openingbgm00",false);
+           }
+           downCount++;
            touchWaitcount = 0;
        }
         touchWaitcount++;
 
-       //デバッグ用OP切り替えは176行目へ移動した
+       if (touchWaitcount == 30 && downCount == 1) {
+           musicAdmin.play();
+       }
+
+       //デバッグ用OP切り替えは216行目へ移動した
 
         switch (downCount) {
             case 0:
@@ -219,11 +278,12 @@ class StartSurfaceView extends BaseSurfaceView {
                 if (!openingFlag) {
                     activityChange.toWorldActivity();
                 } else {
-                    activityChange.toWorldActivity();
-                    //activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.OPENING);
+                    //activityChange.toWorldActivity();
+                    activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.OPENING);
                 }
                 break;
         }
+        activityChange.toChangeActivity();
     }
 
     public void setDownCount(int _downCount) {

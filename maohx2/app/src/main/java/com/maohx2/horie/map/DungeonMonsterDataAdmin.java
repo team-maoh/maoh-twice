@@ -36,4 +36,11 @@ public class DungeonMonsterDataAdmin {
     public List<DungeonMonsterData> getDungeon_monster_data(){
         return dungeon_monster_data;
     }
+
+    public void release() {
+        System.out.println("takanoRelease : DungeonMonsterDataAdmin");
+        if (dungeon_monster_data != null ) {
+            dungeon_monster_data.clear();
+        }
+    }
 }

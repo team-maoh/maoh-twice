@@ -96,4 +96,10 @@ public class Text {
         return isMOP;
     }
 
+    public void release() {
+        System.out.println("takanoRelease : Text");
+        paint = null;
+        sentence = null;
+    }
+
 }

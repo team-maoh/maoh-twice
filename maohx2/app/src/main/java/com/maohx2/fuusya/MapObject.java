@@ -17,6 +17,7 @@ import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.sound.SoundAdmin;
+import com.maohx2.kmhanko.effect.Effect;
 //import com.maohx2.ina.MySprite;
 
 import java.util.Map;
@@ -42,6 +43,8 @@ abstract public class MapObject {
     SoundAdmin sound_admin;
     MapPlayer player;
     MapAdmin map_admin;
+
+    Effect effect;
 
     String[] name = new String[1];
 
@@ -151,6 +154,15 @@ abstract public class MapObject {
 //    public void setMapAdmin(MapAdmin _map_admin){
 //    }
 
+    public void setEffect(Effect _effect) {
+        effect = effect;
+    }
+
+    public void release() {
+        System.out.println("takanoRelease : MapObject");
+        random = null;
+        name = null;
+    }
 
 }
 

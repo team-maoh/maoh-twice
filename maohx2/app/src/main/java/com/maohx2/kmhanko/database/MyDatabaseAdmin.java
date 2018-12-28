@@ -28,9 +28,20 @@ public class MyDatabaseAdmin {
     }
 
     public void close() {
-        for (int i = 0; i < databases.size(); i++) {
-            databases.get(i).close();
+        if (databases != null) {
+            for (int i = 0; i < databases.size(); i++) {
+                if (databases.get(i) != null) {
+                    databases.get(i).close();
+                }
+            }
+            databases.clear();
+            databases = null;
         }
+    }
+
+    public void release() {
+        System.out.println("takanoRelease : MyDatabaseAdmin");
+        close();
     }
 
     public void addMyDatabase(String db_name, String db_asset, int db_version, String load_mode) {

@@ -1,6 +1,7 @@
 package com.maohx2.ina.Battle;
 
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.kmhanko.effect.EffectAdmin;
 
 import java.util.Random;
 
@@ -13,8 +14,8 @@ public class BattlePlayer extends BattleUnit {
     boolean is_damaged = false;
     int shake_count = 0;
 
-    BattlePlayer(Graphic _graphic){
-        super(_graphic);
+    BattlePlayer(Graphic _graphic, EffectAdmin _effectAdmin, EffectAdmin _backEnemyEffectAdmin){
+        super(_graphic, null, null);
         paint.setARGB(255,0,255,0);
         max_hit_point = 10000;
         hit_point = max_hit_point;

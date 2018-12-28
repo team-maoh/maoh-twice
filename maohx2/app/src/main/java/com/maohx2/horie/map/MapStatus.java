@@ -39,4 +39,9 @@ public class MapStatus {
                 is_tutorial_finish[_stage_num]
         };
     }
+    public void release() {
+        System.out.println("takanoRelease : MapStatus");
+        is_clear = null;
+        is_tutorial_finish = null;
+    }
 }

@@ -74,8 +74,8 @@ public class GeoSlotAdmin {
     static MyDatabase geoSlotEventDB;
 
 
-    public final int GEO_SLOT_MAX = 64;
-    public final int TOUCH_R = 90;
+    static public final int GEO_SLOT_MAX = 64;
+    static public final int TOUCH_R = 90;
 
     String t_name; //このGeoSlotAdmin = ジオマップの名称 = Table名
 
@@ -117,6 +117,35 @@ public class GeoSlotAdmin {
     SoundAdmin soundAdmin;
 
     EffectAdmin effectAdmin;
+
+    public void release() {
+        System.out.println("takanoRelease : GeoSlotAdmin");
+        if (tree_code != null) {
+            tree_code.clear();
+            tree_code = null;
+        }
+        if (geoSlots != null) {
+            for (int i = 0; i < geoSlots.size(); i++) {
+                if (geoSlots.get(i) != null) {
+                    geoSlots.get(i).release();
+                }
+            }
+            geoSlots.clear();
+            geoSlots = null;
+        }
+        if (geoSlotGroup != null) {
+            geoSlotGroup.release();
+            geoSlotGroup = null;
+        }
+        if (releasePlateGroup != null) {
+            releasePlateGroup.release();
+            releasePlateGroup = null;
+        }
+        if (holdGeoPlateGroup != null) {
+            holdGeoPlateGroup.release();
+            holdGeoPlateGroup = null;
+        }
+    }
 
     //Rewrite by kmhanko
     public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, TextBoxAdmin _textBoxAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, InventryS _geoInventry, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin) {
@@ -165,8 +194,8 @@ public class GeoSlotAdmin {
                 Constants.Touch.TouchWay.UP_MOMENT,
                 Constants.Touch.TouchWay.MOVE,
                 new int[] { 0, 0, 100 },
-                graphic.makeImageContext(graphic.searchBitmap("neco"), 0, 0, 5.0f, 5.0f, 0.0f, 128, false),
-                graphic.makeImageContext(graphic.searchBitmap("neco"), 0, 0, 6.0f, 6.0f, 0.0f, 128, false)
+                graphic.makeImageContext(graphic.searchBitmap("apple"), 0, 0, 5.0f, 5.0f, 0.0f, 128, false),
+                graphic.makeImageContext(graphic.searchBitmap("apple"), 0, 0, 6.0f, 6.0f, 0.0f, 128, false)
         );
         //TODO 配列の位置はタッチ座標用、COntextの位置は表示用
         //TODO 拡大縮小を動的に行う場合は毎回このmakeImageContextを呼ぶと言うことになるわけだが。
@@ -442,7 +471,6 @@ public class GeoSlotAdmin {
 
         //textBoxAdmin.update();
     }
-
 
 
     public void updateInStatus(){

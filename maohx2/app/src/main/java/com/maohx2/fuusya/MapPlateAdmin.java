@@ -37,6 +37,7 @@ import static com.maohx2.ina.Constants.Touch.TouchWay.UP_MOMENT;
 
 public class MapPlateAdmin {
 
+
     Graphic graphic;
     DungeonUserInterface dungeon_user_interface;
     Inventry inventry;
@@ -57,25 +58,32 @@ public class MapPlateAdmin {
     // 2  : アイテム（inventory）
     // 3  : 本当にリタイアしますか？[はい][いいえ]
 
-    int LEFT_COORD = 1300;
-    int RIGHT_COORD = 1550;
+    int LEFT_COORD = 1100;
+    int RIGHT_COORD = 1600;
     int UP_COORD = 50;
     int BUTTON_HEIGHT = 100;
     //
-    int HP_BG_TOP = 5;
+    int HP_BG_TOP = 15;
     int HP_BG_RIGHT = 110;
     int HP_BG_LEFT = 1570;
     int HP_BG_BOTTOM = 35;
     //
-    int ITEM_LEFT = 1200;
-    int ITEM_TOP = 50;
-    int ITEM_RIGHT = 1550;
-    int ITEM_BOTTOM = 450;
-    int ITEM_CONTENTS_NUM = 10;
+//    int ITEM_LEFT = 1200;
+//    int ITEM_TOP = 50;
+//    int ITEM_RIGHT = 1550;
+//    int ITEM_BOTTOM = 450;
+//    int ITEM_CONTENTS_NUM = 10;
+    int ITEM_CONTENTS_NUM = 8;
+    int ITEM_LEFT = LEFT_COORD;
+    int ITEM_TOP = UP_COORD + 150;
+    int ITEM_RIGHT = RIGHT_COORD;
+    int ITEM_BOTTOM = ITEM_TOP + 70 * ITEM_CONTENTS_NUM;
+
+    int ITEM_BOTTOM_WITH_SWITCH = ITEM_BOTTOM + 100;
     //
-    int HP_RIGHT = 120;
-    int HP_LEFT = 1560;
-    int HP_HEIGHT = 15;
+    int HP_RIGHT = 200;
+    int HP_LEFT = 1400;
+    int HP_HEIGHT = 20;
     int HP_TOP = HP_BG_TOP + ((HP_BG_BOTTOM - HP_BG_TOP) - HP_HEIGHT) / 2;
 
     Paint blue_paint = new Paint();
@@ -96,6 +104,7 @@ public class MapPlateAdmin {
     boolean will_storage_inventry;
     DungeonModeManage dungeon_mode_manage;
     SoundAdmin sound_admin;
+    MapObjectAdmin mapObjectAdmin;
 
     int NUM_OF_TUTORIAL_BITMAP = 3;
     int i_of_tutorial_bitmap;
@@ -114,7 +123,7 @@ public class MapPlateAdmin {
         inventry = new Inventry();
         inventry.init(dungeon_user_interface, graphic, ITEM_LEFT, ITEM_TOP, ITEM_RIGHT, ITEM_BOTTOM, ITEM_CONTENTS_NUM);
 
-        text_paint.setTextSize(40f);
+        text_paint.setTextSize(50f);
         text_paint.setARGB(255, 255, 255, 255);
 
         is_displaying_list = false;
@@ -140,7 +149,7 @@ public class MapPlateAdmin {
 //                //↑　HPバー
 //                new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_LEFT, hp_top + HP_HEIGHT, HP_BG_RIGHT, HP_BG_BOTTOM}, " ", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_LEFT, hp_top, HP_LEFT, hp_top + HP_HEIGHT}, " ", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_RIGHT, hp_top, HP_RIGHT, hp_top + HP_HEIGHT}, " ", text_paint)});
 
-        i_of_tutorial_bitmap = 1;
+        i_of_tutorial_bitmap = 0;
 
         max_hp = playerStatus.getHP();
         blue_paint.setColor(Color.BLUE);
@@ -149,6 +158,10 @@ public class MapPlateAdmin {
         green_paint.setColor(Color.GREEN);
         floor_bg.setColor(Color.BLUE);
 
+    }
+
+    public void setMapObjectAdmin(MapObjectAdmin _mapObjectAdmin) {
+        mapObjectAdmin = _mapObjectAdmin;
     }
 
     public void init() {
@@ -174,11 +187,13 @@ public class MapPlateAdmin {
                 switch (content) {
                     case 0://ステータス
 //                        System.out.println("tatami ステータス");
+                        mapObjectAdmin.setPlayerAlpha(128);
                         displaying_content = 1;
                         is_displaying_list = false;
                         break;
                     case 1://アイテム
 //                        System.out.println("tatami アイテム");
+                        mapObjectAdmin.setPlayerAlpha(128);
                         displaying_content = 2;
                         is_displaying_list = false;
                         break;
@@ -200,10 +215,14 @@ public class MapPlateAdmin {
                 break;
 
             case 2://[アイテム]
+                if (dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.ITEM) {
+                    dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.ITEM_INIT);
+                }
                 break;
 
             case 3://[リタイア]
 //                map_inventry_admin.storageMapInventry();
+                globalData.getExpendItemInventry().save();
                 activityChange.toWorldActivity();
 
                 break;
@@ -216,6 +235,13 @@ public class MapPlateAdmin {
         if (displaying_content != pre_displaying_content) {
             sound_admin.play("cursor00");
         }
+
+        if (displaying_content == -1) {
+            if (mapObjectAdmin.getPlayerAlpha() != 255) {
+                mapObjectAdmin.setPlayerAlpha(255);
+            }
+        }
+
 //        }
 
     }
@@ -229,7 +255,7 @@ public class MapPlateAdmin {
             case 1:
                 break;
             case 2:
-                inventry.draw();
+                inventry.drawExceptEquip();
                 break;
             case 3:
                 break;
@@ -246,7 +272,9 @@ public class MapPlateAdmin {
 
         drawTutorialImage();
 
-        drawFloorAndHP();
+        if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+4 || playerStatus.getTutorialInDungeon() != 0) {
+            drawFloorAndHP();
+        }
 
     }
 
@@ -274,7 +302,7 @@ public class MapPlateAdmin {
             case 0:
                 return LEFT_COORD <= touch_n_x && touch_n_x <= RIGHT_COORD && UP_COORD <= touch_n_y && touch_n_y <= UP_COORD + BUTTON_HEIGHT * 3;
             case 2:
-                return ITEM_LEFT <= touch_n_x && touch_n_x <= ITEM_RIGHT && ITEM_TOP <= touch_n_y && touch_n_y <= ITEM_BOTTOM;
+                return ITEM_LEFT <= touch_n_x && touch_n_x <= ITEM_RIGHT && ITEM_TOP <= touch_n_y && touch_n_y <= ITEM_BOTTOM_WITH_SWITCH;
             default:
                 return false;
         }
@@ -329,12 +357,38 @@ public class MapPlateAdmin {
     private void drawTutorialImage() {
 
         if (playerStatus.getTutorialInDungeon() == 0) {
+            BitmapData tutorial_bitmap;
+            if(i_of_tutorial_bitmap == 0){
+                tutorial_bitmap = graphic.searchBitmap("t_dungeon_start");
+            }
+            else if(i_of_tutorial_bitmap <= NUM_OF_TUTORIAL_BITMAP) {
+                String bitmap_name = tutorial_name + String.valueOf(i_of_tutorial_bitmap);
+                tutorial_bitmap = graphic.searchBitmap(bitmap_name);
+            }
+            else if(i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+1){
+                tutorial_bitmap = graphic.searchBitmap("t_battle_start");
+            }
+            else if(i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+2) {
+                tutorial_bitmap = graphic.searchBitmap("t_battle");
+            }
+            else if(i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+3) {
+                tutorial_bitmap = graphic.searchBitmap("t_mine_start");
+            }
+            else if(i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+4) {
+                tutorial_bitmap = graphic.searchBitmap("t_mine");
+            }
+            else{
+                tutorial_bitmap = null;
+            }
 
-            String bitmap_name = tutorial_name + String.valueOf(i_of_tutorial_bitmap);
-            BitmapData tutorial_bitmap = graphic.searchBitmap(bitmap_name);
-
-            if (tutorial_bitmap != null) {
-                graphic.bookingDrawBitmapData(tutorial_bitmap, 0, 0, 1.0f, 1.0f, 0, 254, true);
+            if (tutorial_bitmap != null && i_of_tutorial_bitmap <= NUM_OF_TUTORIAL_BITMAP) {
+                graphic.bookingDrawBitmapData(tutorial_bitmap, 0, 0, 1, 1, 0, 255, true);
+            }
+            else if (tutorial_bitmap != null && (i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+1 || i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+2)) {
+                graphic.bookingDrawBitmapData(tutorial_bitmap, 0, -1, 0.983f, 0.983f, 0, 255, true);
+            }
+            else if (tutorial_bitmap != null && (i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+3 || i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+4)) {
+                graphic.bookingDrawBitmapData(tutorial_bitmap, 0, 0, 0.983f, 0.983f, 0, 255, true);
             }
 
             Constants.Touch.TouchState touch_state = dungeon_user_interface.getTouchState();
@@ -342,7 +396,7 @@ public class MapPlateAdmin {
             if (touch_state == Constants.Touch.TouchState.UP) {
                 i_of_tutorial_bitmap++;
 
-                if (i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP) {
+                if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+4){
                     playerStatus.setTutorialInDungeon(1);
                     playerStatusSaver.save();
                 }
@@ -375,15 +429,34 @@ public class MapPlateAdmin {
 //        double hp_ratio = 0.7;
         int right_of_green = HP_RIGHT - (int) (hp_ratio * (HP_RIGHT - HP_LEFT));
 
-        graphic.bookingDrawRect(HP_BG_LEFT, HP_BG_TOP, HP_BG_RIGHT, HP_BG_BOTTOM, blue_paint);
+        //graphic.bookingDrawRect(HP_BG_LEFT, HP_BG_TOP, HP_BG_RIGHT, HP_BG_BOTTOM, blue_paint);
         graphic.bookingDrawRect(HP_LEFT, HP_TOP, right_of_green, HP_TOP + HP_HEIGHT, red_paint);
         graphic.bookingDrawRect(right_of_green, HP_TOP, HP_RIGHT, HP_TOP + HP_HEIGHT, green_paint);
 
         if (map_admin != null) {
             String now_floor = String.valueOf(map_admin.getNow_floor_num()) + "F";
 
-            graphic.bookingDrawRect(5, 5, 100, 50, floor_bg);
-            graphic.bookingDrawText(now_floor, 20, 40, text_paint);
+            //graphic.bookingDrawRect(5, 5, 100, 50, floor_bg);
+            graphic.bookingDrawText(now_floor, 70, 45, text_paint);
         }
+
     }
+
+    public void release() {
+        System.out.println("takanoRelease : MapPlateAdmin");
+        blue_paint = null;
+        green_paint = null;
+        red_paint = null;
+        text_paint = null;
+        floor_bg = null;
+
+        if (menuGroup != null) {
+            menuGroup.release();
+            menuGroup = null;
+        }
+
+        //TODO 心配
+        //inentry.release();
+    }
+
 }

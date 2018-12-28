@@ -45,4 +45,12 @@ public class BoxTextPlate extends BoxPlate {
         graphic.bookingDrawRect(left, up, right, down, button_paint);
         graphic.bookingDrawText(text, left, up + (down - up)*3/4, text_paint);
     }
+
+    @Override
+    public void release() {
+        System.out.println("takanoRelease : BoxTextPlate");
+        super.release();
+        text_paint = null;
+        button_paint = null;
+    }
 }

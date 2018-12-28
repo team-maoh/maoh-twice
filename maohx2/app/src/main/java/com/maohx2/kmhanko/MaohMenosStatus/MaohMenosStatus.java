@@ -24,10 +24,10 @@ public class MaohMenosStatus {
     }
     public void calcGeoStatus(GeoCalcSaverAdmin geoCalcSaverAdmin) {
         initGeoStatus();
-        geoHP += geoCalcSaverAdmin.getParam("HP");
-        geoAttack += geoCalcSaverAdmin.getParam("Attack");
-        geoDefence += geoCalcSaverAdmin.getParam("Defence");
-        geoLuck += geoCalcSaverAdmin.getParam("Luck");
+        geoHP += geoCalcSaverAdmin.getParam("HP")/25;
+        geoAttack += geoCalcSaverAdmin.getParam("Attack")/25;
+        geoDefence += geoCalcSaverAdmin.getParam("Defence")/25;
+        geoLuck += geoCalcSaverAdmin.getParam("Luck")/25;
     }
 
     public int[] getMenosStatuses() {
@@ -51,5 +51,7 @@ public class MaohMenosStatus {
     public int getGeoLuck() {
         return geoLuck;
     }
+
+    public void release() {}
 
 }

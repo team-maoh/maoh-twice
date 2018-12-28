@@ -66,6 +66,10 @@ public class UserInterface {
     }
 
 
+    public void touchReset() {
+        //touch_state = TouchState.AWAY;
+    }
+
     public void updateTouchState(double _touch_x, double _touch_y, TouchState _touch_state) {
 
         touch_x = _touch_x;
@@ -88,8 +92,10 @@ public class UserInterface {
                 up_check = false;
             }else if(touch_state == TouchState.UP){
                 touch_state = TouchState.MOVE;
+            }else if (touch_state == TouchState.AWAY) {
+                touch_state = TouchState.MOVE;
+                up_check = false;
             }
-
 
         } else if (_touch_state == TouchState.UP) {
             if (((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) && up_check == false) {
@@ -100,6 +106,8 @@ public class UserInterface {
                 up_check = true;
             }
         }
+
+        //System.out.println(String.valueOf(touch_state));
     }
 
     public void draw(){
@@ -197,6 +205,8 @@ public class UserInterface {
                     break;
                 case UP_MOMENT:
                     if ((touch_state == TouchState.UP) && (Math.pow(circle_center_list_x[index_num] - touch_x, 2) + Math.pow(circle_center_list_y[index_num] - touch_y, 2) <= Math.pow(circle_radius_list[index_num], 2))) {
+                        touch_state = TouchState.MOVE;
+                        up_check = true;//TODO 要チェック kmhanko
                         return true;
                     }
                     break;
@@ -298,6 +308,17 @@ public class UserInterface {
 
     public boolean isUIPaletteDraw(){
         return ui_palette_draw_falag;
+    }
+
+    public void release() {
+        System.out.println("takanoRelease : UserInterface");
+        circle_center_list_x = null;
+        circle_center_list_y = null;
+        circle_radius_list = null;
+        box_left_list = null;
+        box_top_list = null;
+        box_right_list = null;
+        box_down_list = null;
     }
 
 }

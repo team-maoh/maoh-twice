@@ -56,15 +56,24 @@ public class WorldActivity extends BaseActivity {
 
     @Override
     public void finish() {
-        worldSurfaceView.my_database_admin.close();
-        worldSurfaceView.world_game_system.drawStop();
-        worldSurfaceView.graphic.releaseBitmap();
+        super.finish();
+        worldSurfaceView.release();
         worldSurfaceView = null;
     }
 
     @Override
     public String getActivityName() {
         return "WorldActivity";
+    }
+
+    @Override
+    public void stopSound() {
+        worldSurfaceView.soundAdmin.stopAll();
+    };
+
+    @Override
+    public void touchReset() {
+        worldSurfaceView.touch_state = TouchState.AWAY;
     }
 
 }
@@ -79,6 +88,19 @@ class WorldSurfaceView extends BaseSurfaceView {
     Graphic graphic;
     SoundAdmin soundAdmin;
 
+
+    @Override
+    public void release() {
+        System.out.println("takanoRelease : WorldSurfaceView");
+        super.release();
+        world_game_system.drawStop();;
+        world_game_system.updateStop();
+        world_game_system.release();
+        graphic.releaseBitmap();
+        my_database_admin.release();
+        map_user_interface.release();
+        soundAdmin.release();
+    }
 
     public WorldSurfaceView(WorldActivity _map_activity, BackSurfaceView _backSurfaceView) {
         super(_map_activity, _backSurfaceView);
@@ -149,7 +171,9 @@ class WorldSurfaceView extends BaseSurfaceView {
 
     @Override
     public void gameLoop() {
-
+        if (currentActivity.isFinishing() || currentActivity.isPaused()) {
+            return;
+        }
         map_user_interface.updateTouchState(touch_x, touch_y, touch_state);
 
         /*

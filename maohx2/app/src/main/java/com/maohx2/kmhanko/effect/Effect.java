@@ -20,9 +20,12 @@ public class Effect {
     static private SoundAdmin soundAdmin;
 
     //private List<String> soundName = new ArrayList<String>();
-    private List<BitmapData> bitmapData = new ArrayList<BitmapData>();
+    //private List<BitmapData> bitmapData = new ArrayList<BitmapData>();
+    BitmapData[] bitmapData;
 
     private int steps;
+
+    private int kind;// 0 = map 1 = battle
 
     private int time;
     private int step;
@@ -37,6 +40,10 @@ public class Effect {
     private float r;
     private float extend_x;
     private float extend_y;
+
+    private float setted_extend_x;
+    private float setted_extend_y;
+
     private float original_angle;
     private float original_angle_deg;
 
@@ -51,11 +58,15 @@ public class Effect {
     private boolean exist;
     private boolean isDraw;
 
+    public void release() {
+        //System.out.println("takanoRelease : Effect");
+    }
 
     public Effect() {
         exist = false;
         isDraw = false;
         is_pause = false;
+        is_start = false;
     }
 
     public static void staticInit(Graphic _graphic, SoundAdmin _soundAdmin) {
@@ -63,24 +74,26 @@ public class Effect {
         soundAdmin = _soundAdmin;
     }
 
-    public void create(EffectData _effectData) {
+    public void create(EffectData _effectData, int _kind) {
         exist = true;
         isDraw = false;
         is_pause = false;
         effectData = _effectData;
+        kind = _kind;
     }
 
     public void clear() {
         exist = false;
         isDraw = false;
         is_pause = false;
+        is_start = false;
         effectData = null;
         original_angle = 0.0f;
         original_angle_deg = 0.0f;
-        for (int i = 0; i < bitmapData.size(); i++) {
-            bitmapData.set(i,null);
-        }
-        bitmapData.clear();
+        setted_extend_x = 1.0f;
+        setted_extend_y = 1.0f;
+        soundName = "";
+        release();//怪しい
     }
 
     public void start() {
@@ -90,6 +103,7 @@ public class Effect {
         isDraw = true;
         is_pause = false;
         steps = effectData.getSteps();
+        soundName = "";
         toStep(0);
     }
     public void hide() {
@@ -101,6 +115,12 @@ public class Effect {
         //基本座標の更新
         original_x = _original_x;
         original_y = _original_y;
+    }
+
+    public void setExtends(float _setted_extend_x, float _setted_extend_y) {
+        //倍率の変更
+        setted_extend_x = _setted_extend_x;
+        setted_extend_y = _setted_extend_y;
     }
 
     public void setPosition(int _original_x, int _original_y, float _original_angle) {
@@ -165,6 +185,7 @@ public class Effect {
             //待機するだけなので何もない
         }
 
+
         if (effectData.getTime(step) < time) {
             //そのステップのラストに到達した
             do {
@@ -189,9 +210,12 @@ public class Effect {
         if (!exist || !isDraw) {
             return;
         }
+        //System.out.println("effect:" + original_x + " " + (int) (r * Math.cos(anime_angle + original_angle)) + " " + original_y + " " + (int) (r * Math.sin(anime_angle + original_angle)) + " " + extend_x + " " + extend_y);
         //Graphicに描画を依頼
         //graphic.bookingDrawBitmapData(bitmapData.get(imageID), original_x + x, original_y + y, extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
-        graphic.bookingDrawBitmapData(bitmapData.get(imageID), original_x + (int)(r * Math.cos(anime_angle + original_angle)), original_y  + (int)(r * Math.sin(anime_angle + original_angle)), extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
+        graphic.bookingDrawBitmapData(bitmapData[imageID], original_x + (int) (r * Math.cos(anime_angle + original_angle)), original_y + (int) (r * Math.sin(anime_angle + original_angle)), extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
+        //graphic.bookingDrawBitmapData(bitmapData[imageID], original_x, original_y, extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
+
     }
 
     //ステップ遷移するメソッド
@@ -212,8 +236,8 @@ public class Effect {
         x = effectData.getX(_step);
         y = effectData.getY(_step);
         r = (float)Math.sqrt(x*x+y*y);
-        extend_x = effectData.getExtendX(_step);
-        extend_y = effectData.getExtendY(_step);
+        extend_x = effectData.getExtendX(_step) * setted_extend_x;
+        extend_y = effectData.getExtendY(_step) * setted_extend_y;
         angle = effectData.getAngle(_step);
         alpha = effectData.getAlpha(_step);
         if (alpha == 255) {
@@ -259,17 +283,13 @@ public class Effect {
     }
     */
     public boolean setBitmapData(int i, BitmapData _bitmapData) {
-        bitmapData.set(i, _bitmapData);
-        if (i > 0 && i < bitmapData.size()) {
-            bitmapData.set(i, _bitmapData);
+        if (i > 0 && i < bitmapData.length) {
+            bitmapData[i] = _bitmapData;
             return true;
         }
         return false;
     }
-    public boolean addBitmapData(BitmapData _bitmapData) {
-        return bitmapData.add(_bitmapData);
-    }
-    public boolean setBitmapData(List<BitmapData> _bitmapData) {
+    public boolean setBitmapData(BitmapData[] _bitmapData) {
         bitmapData = _bitmapData;
         return true;
     }
@@ -281,10 +301,13 @@ public class Effect {
 */
     public String getSoundName() { return soundName; }
 
-    public List<BitmapData> getBitmapData() {
+    /*public List<BitmapData> getBitmapData() {
+        return bitmapData;
+    }*/
+
+    public BitmapData[] getBitmapData() {
         return bitmapData;
     }
-
 
     public boolean isExist() {
         return exist;
@@ -297,9 +320,13 @@ public class Effect {
     }
     public void pause() { is_pause = true; }
     public void restart() {
+        isDraw = true;
         is_pause = false;
     }
     public boolean isDraw() { return isDraw; }
     public void drawIs(boolean _isDraw) { isDraw = _isDraw; }
+    public int getKind() {
+        return kind;
+    }
 
 }

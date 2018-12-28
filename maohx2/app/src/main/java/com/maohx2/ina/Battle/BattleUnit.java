@@ -8,6 +8,7 @@ import com.maohx2.ina.Draw.Graphic;
 import java.util.Random;
 
 import com.maohx2.ina.Constants.UnitKind;
+import com.maohx2.kmhanko.effect.EffectAdmin;
 
 import static com.maohx2.ina.Constants.UnitStatus.Status.*;
 
@@ -29,6 +30,8 @@ abstract public class BattleUnit {
     protected boolean dropFlag;
     Random rnd;
     Graphic graphic;
+    EffectAdmin effectAdmin;
+    EffectAdmin backEnemyEffectAdmin;
     Paint paint;
     double dx, dy, dl;
     int move_end ;
@@ -45,10 +48,37 @@ abstract public class BattleUnit {
     protected boolean specialActionFlag;
     protected int[] alimentCounts = new int[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal() -1];
 
+    public void clear() {
+        max_hit_point = 0;
+        hit_point = 0;
+        attack = 0;
+        attack_unit_num = -1;
+        defence = 0;
+        luck = 0;
+        exist = false;
+        dropFlag = false;
+        dx = 0.0;
+        dy = 0.0;
+        dl = 0.0;
+        move_end = 0;
+        speed = 10;
+        move_num = 0;
+        unitKind = UnitKind.NONE;
+        name = "";
+        battleDungeonUnitData = null;
+        specialActionFlag = false;
+        for (int i = 0; i < alimentCounts.length; i++) {
+            alimentCounts[i] = 0;
+        }
+        alimentCounts[BattleBaseUnitData.ActionID.CURSE.ordinal()-1] = -1;
+    }
+
 
     //コンストラクタ
-    public BattleUnit(Graphic _graphic){
+    public BattleUnit(Graphic _graphic, EffectAdmin _effectAdmin, EffectAdmin _backEnemyEffectAdmin){
         graphic = _graphic;
+        effectAdmin = _effectAdmin;
+        backEnemyEffectAdmin = _backEnemyEffectAdmin;
         paint = new Paint();
         speed = 10;
         rnd = new Random();
@@ -118,7 +148,7 @@ abstract public class BattleUnit {
     }
 
     //enemy 用
-    public void setBattleUnitDataEnemy(BattleBaseUnitData _battleBaseUnitData, int repeatCount) {
+    public void setBattleUnitDataEnemy(BattleBaseUnitData _battleBaseUnitData, int repeatCount, boolean maohFlag) {
         //初期化処理 (データに寄らない)
         //init();
 
@@ -133,8 +163,13 @@ abstract public class BattleUnit {
 
         battleDungeonUnitData = new BattleDungeonUnitData();
         battleDungeonUnitData.setName(_battleBaseUnitData.getName());
-        battleDungeonUnitData.setStatus(_battleBaseUnitData.getStatus(repeatCount));
-        battleDungeonUnitData.setBonusStatus(_battleBaseUnitData.getBonusStatus(repeatCount));
+        if (maohFlag) {
+            battleDungeonUnitData.setStatus(_battleBaseUnitData.getStatus(repeatCount, 2.0));
+            battleDungeonUnitData.setBonusStatus(_battleBaseUnitData.getBonusStatus(repeatCount, 2.0));
+        } else {
+            battleDungeonUnitData.setStatus(_battleBaseUnitData.getStatus(repeatCount, 5.042));
+            battleDungeonUnitData.setBonusStatus(_battleBaseUnitData.getBonusStatus(repeatCount, 5.042));
+        }
         battleDungeonUnitData.setBitmapData(_battleBaseUnitData.getBitmapData());
 
         battleDungeonUnitData.setActionRate(_battleBaseUnitData.getActionRate());
@@ -161,7 +196,7 @@ abstract public class BattleUnit {
     }
 
     //rock用
-    public void setBattleUnitDataRock(BattleBaseUnitData _battleBaseUnitData) {
+    public void setBattleUnitDataRock(BattleBaseUnitData _battleBaseUnitData, int repeatCount) {
         exist = true;
         dropFlag = true;
         unitKind = UnitKind.ROCK;
@@ -173,8 +208,8 @@ abstract public class BattleUnit {
 
         battleDungeonUnitData = new BattleDungeonUnitData();
         battleDungeonUnitData.setName(_battleBaseUnitData.getName());
-        battleDungeonUnitData.setStatus(_battleBaseUnitData.getStatus(0));
-        battleDungeonUnitData.setBonusStatus(_battleBaseUnitData.getBonusStatus(0));
+        battleDungeonUnitData.setStatus(_battleBaseUnitData.getStatus(repeatCount, 5.042));
+        battleDungeonUnitData.setBonusStatus(_battleBaseUnitData.getBonusStatus(repeatCount, 5.042));
         battleDungeonUnitData.setBitmapData(_battleBaseUnitData.getBitmapData());
 
         setRadius(_battleBaseUnitData.getRadius());

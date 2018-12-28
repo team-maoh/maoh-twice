@@ -14,6 +14,7 @@ import com.maohx2.horie.map.DungeonMonsterDataAdmin;
 import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.horie.map.MapStatus;
 import com.maohx2.horie.map.MapStatusSaver;
+import com.maohx2.horie.map.DungeonData;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
@@ -65,7 +66,7 @@ public class DungeonGameSystem {
     Paint paint;
     BattleUnitAdmin battle_unit_admin;
     TextBoxAdmin text_box_admin;
-    ListBoxAdmin list_box_admin;
+    //ListBoxAdmin list_box_admin;
     DungeonDataAdmin dungeon_data_admin;
     Camera camera;
     Point map_size = new Point(0, 0);//カメラのインスタンス化に必要
@@ -101,12 +102,13 @@ public class DungeonGameSystem {
     MusicAdmin musicAdmin;
     SoundAdmin soundAdmin;
 
-    GeoSlotSaver geoSlotSaver;
-    GeoSlotAdminManager geoSlotAdminManager;
+    //GeoSlotSaver geoSlotSaver;
+    //GeoSlotAdminManager geoSlotAdminManager;
 
     Constants.DungeonKind.DUNGEON_KIND dungeon_kind;
 
     EffectAdmin effectAdmin;
+    EffectAdmin backEffectAdmin;
 
     PlayerStatusViewer playerStatusViewer;
 
@@ -123,20 +125,25 @@ public class DungeonGameSystem {
 
         soundAdmin = _soundAdmin;
 
+        dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
         battle_unit_admin = new BattleUnitAdmin();
         text_box_admin = new TextBoxAdmin(graphic, soundAdmin);
-        list_box_admin = new ListBoxAdmin();
+        //list_box_admin = new ListBoxAdmin();
         text_box_admin.init(dungeon_user_interface);
-        list_box_admin.init(dungeon_user_interface, graphic);
+        //list_box_admin.init(dungeon_user_interface, graphic);
 
         talkAdmin = new TalkAdmin(graphic, dungeon_user_interface, _myDatabaseAdmin, text_box_admin , soundAdmin);
 
         GlobalData globalData = (GlobalData)(dungeon_activity.getApplication());
         musicAdmin = globalData.getMusicAdmin();
 
+        playerStatus = globalData.getPlayerStatus();
+        maohMenosStatus = globalData.getMaohMenosStatus();
 
         effectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin);
         battle_unit_admin.getEffectAdmin(effectAdmin);
+        backEffectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin);
+        battle_unit_admin.getEnemyBackEffectAdmin(backEffectAdmin);
 
         //repeat_count = _repeat_count;
 
@@ -180,6 +187,18 @@ public class DungeonGameSystem {
                 break;
         }
 
+        if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH) {
+            repeat_count = playerStatus.getMaohWinCount();
+        } else {
+            repeat_count = playerStatus.getNowClearCount();
+        }
+
+        DungeonData dungeonData = null;
+        if (!(dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH)) {
+            dungeonData = dungeon_data_admin.getDungeon_data().get(dungeon_num);
+        }
+
+
 
 
         battleUnitDataAdmin = new BattleUnitDataAdmin(_myDatabaseAdmin, graphic); // TODO : 一度読み出せばいいので、GlobalData管理が良いかもしれない
@@ -189,10 +208,26 @@ public class DungeonGameSystem {
         activityChange = _activityChange;
         dungeonModeManage = new DungeonModeManage();
         map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange, globalData, dungeonModeManage, soundAdmin);
-        map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, soundAdmin, map_plate_admin, dungeonModeManage, globalData, battle_unit_admin, text_box_admin);
+        map_object_admin = new MapObjectAdmin(
+                graphic,
+                dungeon_user_interface,
+                soundAdmin,
+                map_plate_admin,
+                dungeonModeManage,
+                globalData,
+                battle_unit_admin,
+                text_box_admin,
+                battleUnitDataAdmin,
+                dungeonMonsterDataAdmin,
+                repeat_count,
+                dungeon_kind,
+                dungeonData,
+                effectAdmin,
+                backEffectAdmin
+        );
+        map_plate_admin.setMapObjectAdmin(map_object_admin);
         map_inventry_admin = new MapInventryAdmin(globalData, map_plate_admin.getInventry(), map_object_admin, map_plate_admin);
 
-        dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
 
         map_status = new MapStatus(Constants.STAGE_NUM);//mapのクリア状況,チュートリアルを見たかどうかを記憶しておく
         map_status_saver = new MapStatusSaver(_myDatabaseAdmin, "MapSaveData", "MapSaveData.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE, map_status, Constants.STAGE_NUM);
@@ -209,12 +244,13 @@ public class DungeonGameSystem {
 //        }
 //      camera = new Camera(map_size, 64*4);
 
-
         if (!(dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH)) {
-            map_size.set(dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_x(), dungeon_data_admin.getDungeon_data().get(dungeon_num).getMap_size_y());
-            map_admin = new MapAdmin(graphic, map_object_admin, dungeon_data_admin.getDungeon_data().get(dungeon_num), dungeonMonsterDataAdmin.getDungeon_monster_data(), map_status, map_status_saver);
+            dungeonData = dungeon_data_admin.getDungeon_data().get(dungeon_num);
+            map_size.set(dungeonData.getMap_size_x(), dungeonData.getMap_size_y());
+            map_admin = new MapAdmin(graphic, map_object_admin, dungeonData, dungeonMonsterDataAdmin.getDungeon_monster_data(), map_status, map_status_saver);
             map_admin.goNextFloor();
         }
+
 //        map_object_admin.getCamera(map_admin.getCamera());
 
         //map_object_admin = new MapObjectAdmin(graphic, dungeon_user_interface, sound_admin, map_admin,this, dungeonModeManage);
@@ -226,7 +262,7 @@ public class DungeonGameSystem {
         PaletteCenter.initStatic(graphic);miningItemDataAdmin = new MiningItemDataAdmin(graphic, my_database_admin);
         PaletteElement.initStatic(graphic);
 
-        equipment_item_data_admin = new EquipmentItemDataAdmin(graphic, my_database_admin);
+        equipment_item_data_admin = new EquipmentItemDataAdmin(graphic ,my_database_admin);//globalData.getEquipmentItemDataAdmin();
 
         equipmentInventry = globalData.getEquipmentInventry();
         expendInventry = globalData.getExpendItemInventry();
@@ -239,16 +275,7 @@ public class DungeonGameSystem {
         palette_admin.setMiningItems(miningItemDataAdmin);//TODO コンストラクタに入れて居ないためよくない
 
 
-        playerStatus = globalData.getPlayerStatus();
-        maohMenosStatus = globalData.getMaohMenosStatus();
-
         playerStatusViewer = new PlayerStatusViewer(graphic, dungeon_user_interface, playerStatus);
-
-        if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH) {
-            repeat_count = playerStatus.getMaohWinCount();
-        } else {
-            repeat_count = playerStatus.getNowClearCount();
-        }
 
         battle_unit_admin.init(
                 graphic,
@@ -268,15 +295,19 @@ public class DungeonGameSystem {
                 map_status_saver,
                 dungeon_kind,
                 dungeonMonsterDataAdmin,
-                talkAdmin
+                talkAdmin,
+                expendInventry,
+                musicAdmin
         );
 
         backGround = graphic.searchBitmap("firstBackground");
 
 
+        /*
         geoSlotSaver = new GeoSlotSaver(my_database_admin, "GeoSlotSave", "GeoSlotSave.db", Constants.SaveDataVersion.GEO_SLOT, Constants.DEBUG_SAVE_MODE, graphic);
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, dungeon_user_interface, my_database_admin, text_box_admin, playerStatus, globalData.getGeoInventry(), geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin, dungeonModeManage);
         geoSlotAdminManager.loadGeoSlot();
+        */
 
         dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
 
@@ -335,16 +366,24 @@ public class DungeonGameSystem {
 
 
     public void update() {
+        if (updateStopFlag) {
+            return;
+        }
+
         switch (dungeonModeManage.getMode()) {
             case MAP_INIT:
                 playMapBGM();
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
+                if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.DRAGON) {
+                    backGround = graphic.searchBitmap("firstBackground");
+                }
             case MAP:
                 if (!talkAdmin.isTalking()) {
                     //map_object_admin.update(is_displaying_menu, is_touching_outside_menu);
                     //map_plate_admin.update(is_displaying_menu);
                     map_object_admin.update();
                     map_plate_admin.update();
+                    playerStatusViewer.update();
                 }
                 break;
             case OPENING_BATTLE_INIT:
@@ -369,9 +408,11 @@ public class DungeonGameSystem {
                 break;
 
             case MAOH_INIT:
+                playerStatus.calcStatus();
+                playerStatus.setNowHP(playerStatus.getHP());
                 battle_unit_admin.reset(BattleUnitAdmin.MODE.MAOH);
                 int size = battleUnitDataAdmin.getMaohUnitNames().size();
-                battle_unit_admin.spawnEnemy(
+                battle_unit_admin.spawnMaoh(
                         new String[] {
                                 battleUnitDataAdmin.getMaohUnitNames().get(playerStatus.getMaohWinCount()%size)
                         }
@@ -397,6 +438,7 @@ public class DungeonGameSystem {
                 if (!talkAdmin.isTalking()) {
                     battle_user_interface.update();
                     battle_unit_admin.update();
+                    playerStatusViewer.update();
                 }
                 break;
 
@@ -406,6 +448,8 @@ public class DungeonGameSystem {
 
             case EQUIP_EXPEND_INIT:
                 initBackPlate();
+                palette_admin.setPalletPosition(0, 1400, 450);
+                palette_admin.setPalletPosition(1, 200, 450);
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.EQUIP_EXPEND);
 
             case EQUIP_EXPEND:
@@ -413,24 +457,58 @@ public class DungeonGameSystem {
                     //equipmentInventry.updata();
                     //expendInventry.updata();
                     //palette_admin.update(false);
+                    palette_admin.update(true);//便宜上
+
+                    //TODO by kmhanko あまり良くない書き方
+                    if (palette_admin.checkSelectedExpendItemData() != null) {
+                        int heel_to_player = (int) (playerStatus.getHP() * palette_admin.checkSelectedExpendItemData().getHp() / 100.0f);
+                        palette_admin.deleteExpendItemData();
+                        soundAdmin.play("cure00");
+                        playerStatus.setNowHP(playerStatus.getNowHP() + heel_to_player);
+                        expendInventry.save();
+                    }
+                    playerStatusViewer.update();
+
                     backPlateGroup.update();
+                }
+                break;
+            case ITEM_INIT:
+                initBackPlate();
+                dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.ITEM);
+
+            case ITEM:
+                if (!talkAdmin.isTalking()) {
+                    map_plate_admin.update();
+                    backPlateGroup.update();
+                    playerStatusViewer.update();
                 }
                 break;
             case GEO_MAP_INIT:
                 initBackPlate();
-                geoSlotAdminManager.start();
+                //geoSlotAdminManager.start();
+                //geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.DUNGEON);
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP);
             case GEO_MAP:
                 if (!talkAdmin.isTalking()) {
-                    geoSlotAdminManager.updateInStatus();
+                    //geoSlotAdminManager.update();
+                    playerStatusViewer.update();
                 }
                 break;
 
         }
+        if (updateStopFlag) {
+            return;
+        }
+
         talkAdmin.update();
         text_box_admin.update();
+
         effectAdmin.update();
+        backEffectAdmin.update();
+
         //musicAdmin.update();
+
+        activityChange.toChangeActivity();
     }
 
     public void draw() {
@@ -443,38 +521,81 @@ public class DungeonGameSystem {
 //        }
         switch (dungeonModeManage.getMode()) {
             case MAP:
+                if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.DRAGON) {
+                    graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
+                }
                 map_admin.drawMap_for_autotile_light_animation();
+                backEffectAdmin.draw();
                 map_object_admin.draw();
+                map_admin.drawSmallMap();
+                effectAdmin.draw();
                 map_plate_admin.draw();
+                playerStatusViewer.draw();
                 //graphic.bookingDrawCircle(0,0,10,paint);
                 break;
 
             case BUTTLE:
             case MAOH:
                 graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
+                backEffectAdmin.draw();
                 battle_unit_admin.draw();
+                effectAdmin.draw();
                 break;
 
             case GEO_MINING:
                 graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
                 battle_unit_admin.draw();
+                effectAdmin.draw();
                 break;
 
-            case EQUIP_EXPEND_INIT:
+            case ITEM_INIT:
+                map_admin.drawMap_for_autotile_light_animation();
+                backEffectAdmin.draw();
+                map_object_admin.draw();
+                effectAdmin.draw();
+                map_admin.drawSmallMap();
+                map_plate_admin.draw();
                 break;
 
-            case EQUIP_EXPEND:
-                //equipmentInventry.drawOnly();
-                //expendInventry.drawOnly();
-                palette_admin.drawOnly();
-                //dungeon_user_interface.draw();
+            case ITEM:
+                map_admin.drawMap_for_autotile_light_animation();
+                backEffectAdmin.draw();
+                map_object_admin.draw();
+                effectAdmin.draw();
+                map_admin.drawSmallMap();
+                map_plate_admin.draw();
                 backPlateGroup.draw();
-                //backPlateGroup.draw();
                 playerStatusViewer.draw();
                 break;
 
+            case EQUIP_EXPEND_INIT:
+                map_admin.drawMap_for_autotile_light_animation();
+                backEffectAdmin.draw();
+                map_object_admin.draw();
+                effectAdmin.draw();
+                map_admin.drawSmallMap();
+                map_plate_admin.draw();
+                //palette_admin.drawOnly();
+                playerStatusViewer.draw();
+                break;
+
+            case EQUIP_EXPEND:
+                map_admin.drawMap_for_autotile_light_animation();
+                backEffectAdmin.draw();
+                map_object_admin.draw();
+                map_admin.drawSmallMap();
+                map_plate_admin.draw();
+                //equipmentInventry.drawOnly();
+                //expendInventry.drawOnly();
+                //dungeon_user_interface.draw();
+                palette_admin.draw();
+                effectAdmin.draw();
+                backPlateGroup.draw();
+                playerStatusViewer.draw();
+                break;
             case GEO_MAP:
-                geoSlotAdminManager.drawInStatus();
+                //geoSlotAdminManager.draw();
+                effectAdmin.draw();
                 playerStatusViewer.draw();
                 break;
 
@@ -482,13 +603,17 @@ public class DungeonGameSystem {
 
         talkAdmin.draw();
         text_box_admin.draw();
-        effectAdmin.draw();
         graphic.draw();
 
         if (resetBossImage) {
             resetBossImage = false;
             map_object_admin.setBossBitmap("ボス");
         }
+    }
+
+    boolean updateStopFlag = false;
+    public void updateStop() {
+        updateStopFlag = true;
     }
 
     boolean drawStopFlag = false;
@@ -539,6 +664,79 @@ public class DungeonGameSystem {
         }
     }
 
+    public void release() {
+        System.out.println("takanoRelease : DungeonGameSystem");
+        if (map_admin != null) {
+            map_admin.release();
+        }
+        if (dungeonMonsterDataAdmin != null) {
+            dungeonMonsterDataAdmin.release();
+        }
+        if (battle_unit_admin != null) {
+            battle_unit_admin.release();
+        }
+        if (palette_admin != null) {
+            palette_admin.release();
+        }
+        if (map_object_admin != null) {
+            map_object_admin.release();
+        }
+        if (dungeon_user_interface != null) {
+            dungeon_user_interface.release();
+        }
+        if (battle_user_interface != null) {
+            battle_user_interface.release();
+        }
+        if (text_box_admin != null) {
+            text_box_admin.release();
+        }
+        if (dungeon_data_admin != null) {
+            dungeon_data_admin.release();
+        }
+        if (talkAdmin != null) {
+            talkAdmin.release();
+        }
+        if (effectAdmin != null) {
+            effectAdmin.release();
+        }
+        //dungeonModeManage
+        if (map_plate_admin != null) {
+            map_plate_admin.release();
+        }
+        //map_inventry_admin
+        if (map_status != null) {
+            map_status.release();
+        }
+        if (map_status_saver != null) {
+            map_status_saver.release();
+        }
+        if (paint != null) {
+            paint.reset();
+            paint = null;
+        }
+        if (equipment_item_data_admin != null) {
+            equipment_item_data_admin.release();
+        }
+        if (miningItemDataAdmin != null) {
+            miningItemDataAdmin.release();
+        }
+        if (playerStatusViewer != null) {
+            playerStatusViewer.release();
+        }
+        /*
+        if (geoSlotSaver != null) {
+            geoSlotSaver.release();
+        }
+        if (geoSlotAdminManager != null) {
+            geoSlotAdminManager.release();
+        }
+        */
+        if (dungeonModeManage != null) {
+            dungeonModeManage.release();
+        }
+        System.gc();
+    }
+
 
     //オープニング関係
 
@@ -562,8 +760,8 @@ public class DungeonGameSystem {
         text_box_admin.setTextBoxExists(openningTextBoxID, false);
         */
         map_admin.createOpeningMap();
-        talkAdmin.start("Opening_in_dungeon");
-        map_object_admin.putPlayer();
+        paint.setTextSize(70);
+        paint.setARGB(255,0,0,0);
     }
 
     /*
@@ -579,127 +777,74 @@ public class DungeonGameSystem {
     }
     */
 
+    int opennigCount = 0;
+    int alpha = 0;
+    int up_down = 5;
+    boolean introFlag = true;
 
     public void openningUpdate() {
-        /*
-        paint.setTextSize(35);
-        paint.setARGB(255, 255, 255, 255);
-        */
-/*
-        if(count == 1){
-            map_object_admin.putPlayer();
+
+        if(introFlag == true) {
+            paint.setARGB(255, 0, 0, 0);
+            graphic.bookingDrawRect(0, 0, 1600, 900, paint);
+
+            paint.setARGB(alpha, 255, 255, 255);
+
+            alpha += up_down;
+            if (alpha < 0 || alpha > 255) {
+                if (alpha < 0) {
+                    introFlag = false;
+                    map_object_admin.putPlayer();
+                    talkAdmin.start("Opening_in_dungeon");
+                }
+                up_down *= -1;
+                alpha += up_down * 2;
+            }
+        }else {
+            talkAdmin.update();//先にやること
+
+            if (talkAdmin.isUpdateThisFrame() && talkAdmin.getID() == 3) {
+                map_object_admin.putBoss();
+                boss_is_running = true;
+            }
+
+            if (map_object_admin.bossIsHitPlayer(160)) {
+                boss_is_running = false;
+                //ボスとの戦闘
+                System.out.println("茶番：ボスとの戦闘");
+
+                playerStatus.calcStatus();
+                playerStatus.setNowHP(playerStatus.getHP());
+                battle_unit_admin.reset(BattleUnitAdmin.MODE.OPENING);
+                battle_unit_admin.spawnEnemy(
+                        new String[]{
+                                "maoh001"
+                        }
+                );
+                ((DungeonActivity) dungeonActivity).dungeon_surface_view.setOpeningFlag(false);////////
+                dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.OPENING_BATTLE_INIT);
+                //text_box_admin.setTextBoxExists(openningTextBoxID, false);
+                resetBossImage = true;
+            }
+            if (talkAdmin.isWaitOrNotTalk()) {
+                map_object_admin.openingUpdate(boss_is_running);
+                //count++;
+            }
+
+            text_box_admin.update();
         }
-
-
-        if (count == 40) {
-            talkChara = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
-            text_box_admin.bookingDrawText(openningTextBoxID, "今日も平和だなぁ", paint);
-            text_box_admin.bookingDrawText(openningTextBoxID, "MOP");
-            text_box_admin.updateText(openningTextBoxID);
-            text_box_admin.setTextBoxExists(openningTextBoxID, true);
-            text_mode = true;
-        }
-
-        if (count == 80) {
-            talkChara = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
-            text_box_admin.bookingDrawText(openningTextBoxID, "暇だなぁ，何か面白いことないかなぁ．", paint);
-            text_box_admin.bookingDrawText(openningTextBoxID, "MOP");
-            text_box_admin.updateText(openningTextBoxID);
-            text_box_admin.setTextBoxExists(openningTextBoxID, true);
-            text_mode = true;
-        }
-
-        if (count == 120) {
-            talkChara = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
-            text_box_admin.bookingDrawText(openningTextBoxID, "ん？何か向こうから向かってくるぞ？", paint);
-            text_box_admin.bookingDrawText(openningTextBoxID, "MOP");
-            text_box_admin.updateText(openningTextBoxID);
-            text_box_admin.setTextBoxExists(openningTextBoxID, true);
-            text_mode = true;
-        }
-
-        if (count == 120) {
-            map_object_admin.putBoss();
-            boss_is_running = true;
-        }
-        */
-        talkAdmin.update();//先にやること
-
-        if (talkAdmin.isUpdateThisFrame() && talkAdmin.getID() == 3) {
-            map_object_admin.putBoss();
-            boss_is_running = true;
-        }
-
-        //ここから先フジワラ，敵と衝突し，戦闘を行い，倒されるということを実現する．
-        //主に，プレイヤーが右に進み続ける，と，敵をちゃんとプレイヤーにぶつけて戦闘に入る，というところをちゃんと実装する．
-        //ぶつかる直前に「うわ，なんだ!?」を入れる．
-
-        //count = 180 でboss_is_running = true としたとすると、
-        //うわ、なんだ、で画面を止めるのは count = 191
-
-        /*
-        if (!flag1 && map_object_admin.bossIsHitPlayer(400)){
-            flag1 = true;
-            talkChara = graphic.makeImageContext(graphic.searchBitmap("主人公立ち絵右向"), 300, 450, 2.0f, 2.0f, 0, 255, false);
-            text_box_admin.bookingDrawText(openningTextBoxID, "うわ，なんだ!?", paint);
-            text_box_admin.bookingDrawText(openningTextBoxID, "MOP");
-            text_box_admin.updateText(openningTextBoxID);
-            text_box_admin.setTextBoxExists(openningTextBoxID, true);
-
-            //text_mode = true;
-            //System.out.println("count_desudesudesu"+count);
-        }
-        */
-
-        if (map_object_admin.bossIsHitPlayer(160)) {
-            boss_is_running = false;
-            //ボスとの戦闘
-            System.out.println("茶番：ボスとの戦闘");
-
-            //by kmhanko
-            //text_box_admin.setTextBoxExists(openningTextBoxID, false);
-
-            battle_unit_admin.reset(BattleUnitAdmin.MODE.OPENING);
-            battle_unit_admin.spawnEnemy(
-                    new String[] {
-                            "m014"
-                    }
-            );
-            ((DungeonActivity)dungeonActivity).dungeon_surface_view.setOpeningFlag(false);////////
-            dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.OPENING_BATTLE_INIT);
-            //text_box_admin.setTextBoxExists(openningTextBoxID, false);
-            resetBossImage = true;
-        }
-
-        /*
-        charaFlag = false;
-        if (text_mode) {
-            drawCharaAndTouchCheck(talkChara);
-        }//elseにしてはいけない
-        */
-
-
-        //if (!text_mode) {
-        if(talkAdmin.isWaitOrNotTalk()) {
-            map_object_admin.openingUpdate(boss_is_running);
-            //count++;
-        }
-
-        text_box_admin.update();
     }
 
     public void openningDraw() {
-        map_admin.drawOpeningMap();
-        map_object_admin.draw();
-        /*
-        if (charaFlag) {
-            graphic.bookingDrawBitmapData(talkChara);
+        if(introFlag == true) {
+            graphic.bookingDrawText("ある日のこと・・・",350,480, paint);
+        }else {
+            map_admin.drawOpeningMap();
+            map_object_admin.draw();
+            talkAdmin.draw();
+            text_box_admin.draw();
         }
-        */
-        talkAdmin.draw();
-        text_box_admin.draw();
         graphic.draw();
-
     }
 
     PlateGroup<BackPlate> backPlateGroup;
@@ -715,6 +860,7 @@ public class DungeonGameSystem {
                                 //戻るボタンが押された時の処理
                                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
                                 map_plate_admin.initMenu();
+                                soundAdmin.play("cancel00");
                                 /*worldModeAdmin.setEquip(Constants.Mode.ACTIVATE.STOP);
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
                                 */

@@ -19,6 +19,11 @@ public class ExpendItemData extends ItemData {
         }
     }
 
+    public void release() {
+        expline = null;
+        palettePositions = null;
+    }
+
     public int getHp() {
         return hp;
     }
@@ -82,7 +87,7 @@ public class ExpendItemData extends ItemData {
 
     public int getPriceByPlayerStatus(PlayerStatus playerStatus) {
         int tmpPrice = 0;
-        tmpPrice = (int)((float)price * (float)(playerStatus.getBaseAttack() + playerStatus.getBaseDefence() + playerStatus.getBaseLuck())/30.0f);
+        tmpPrice = (int)((float)price * (float)(playerStatus.getBaseAttack() + playerStatus.getBaseDefence() + playerStatus.getBaseLuck())/400.0f);
 
 
         return tmpPrice;

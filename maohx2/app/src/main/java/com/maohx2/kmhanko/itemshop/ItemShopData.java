@@ -83,4 +83,6 @@ public abstract class ItemShopData<T extends ItemData> {
         }
         return buf_data;
     }
+
+    //TODO release
 }

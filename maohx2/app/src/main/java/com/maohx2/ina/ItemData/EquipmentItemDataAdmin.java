@@ -18,7 +18,6 @@ public class EquipmentItemDataAdmin extends ItemDataAdmin<EquipmentItemData> {
         super(_graphic, _database_admin);
         itoe = EQUIPMENT_KIND.values();
 
-        //loadItemData("EquipmentItemData");
         loadItemData("EquipmentItemDebugData");
     }
 
@@ -68,6 +67,12 @@ public class EquipmentItemDataAdmin extends ItemDataAdmin<EquipmentItemData> {
         debug_item.setName("金の斧");
         debug_item.setPrice(30239);
         return debug_item;
+    }
+
+    public void release() {
+        System.out.println("takanoRelease : EquipmentItemDataAdmin");
+        super.release();
+        itoe = null;
     }
 
 }
