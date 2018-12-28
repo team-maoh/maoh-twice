@@ -422,6 +422,9 @@ public class MapObjectAdmin {
             debug_boss_point[i].set((int) (magnification * 7.5), (int) (magnification * 7.5));
         }
 
+        effectAdmin.clearAllEffect();
+        backEffectAdmin.clearAllEffect();
+
         spawnMine(mine_point);
         spawnEnemy();
         spawnTrap(debug_trap_name);
@@ -555,6 +558,7 @@ public class MapObjectAdmin {
                     for (int j = 0; j < i; j++) {
                         if (map_trap[j].getWorldX() == room_point.x + magnification / 2 && map_trap[j].getWorldY() == room_point.y + magnification / 2) {
                             flag = true;
+                            break;
                         }
                     }
                 } while(flag);

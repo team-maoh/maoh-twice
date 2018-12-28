@@ -617,7 +617,7 @@ public class MapAdmin {
             //スタート地点を探す
             searchStartPoint();
             camera.setCameraOffset(start_point.x, start_point.y);
-            map_player.putUnit(start_point.x, start_point.y);
+            map_player.putUnit(start_point.x + magnification / 2, start_point.y + magnification / 2);
         } else {
             goBossFloor();
         }
