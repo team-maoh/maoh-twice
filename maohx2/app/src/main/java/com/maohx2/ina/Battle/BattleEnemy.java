@@ -139,14 +139,16 @@ public class BattleEnemy extends BattleUnit {
         id = _id;
         damageEffectTime = 0;
         width = getBattleDungeonUnitData().getBitmapDate().getWidth();
-        width = getBattleDungeonUnitData().getBitmapDate().getWidth();
         height = getBattleDungeonUnitData().getBitmapDate().getHeight();
 
         attackExtendX = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.5f;
         attackExtendY = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.5f;
 
-        damagedExtendX = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
-        damagedExtendY = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
+        //damagedExtendX = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
+        //damagedExtendY = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
+
+        damagedExtendX = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
+        damagedExtendY = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
 
         damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" , "bomb_effect", 5, 2, 1);
         attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, 1);

@@ -161,6 +161,7 @@ public class Effect {
             return;
         }
 
+
         if (effectData.isSwitchGr(step)) {
             //徐々に変化する場合
 
@@ -184,6 +185,8 @@ public class Effect {
             //即時変化の場合
             //待機するだけなので何もない
         }
+
+
 
 
         if (effectData.getTime(step) < time) {
@@ -216,7 +219,12 @@ public class Effect {
         graphic.bookingDrawBitmapData(bitmapData[imageID], original_x + (int) (r * Math.cos(anime_angle + original_angle)), original_y + (int) (r * Math.sin(anime_angle + original_angle)), extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
         //graphic.bookingDrawBitmapData(bitmapData[imageID], original_x, original_y, extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
 
+
+        //graphic.bookingDrawBitmapData(bitmapData[imageID], original_x, original_y, extend_x, extend_y, 0.0f, 255, isUpLeft);
+
     }
+    //drawしなければ遅くはならない(26-)
+    //4fごとに1つ表示した時。三角関数計算なしで、254=17~20 255=23~
 
     //ステップ遷移するメソッド
     private void toStep(int _step) {
@@ -240,9 +248,11 @@ public class Effect {
         extend_y = effectData.getExtendY(_step) * setted_extend_y;
         angle = effectData.getAngle(_step);
         alpha = effectData.getAlpha(_step);
+        /*
         if (alpha == 255) {
             alpha = 254;
         }
+        */
         anime_angle = (float)Math.atan2((double)y,(double)x);
         isUpLeft = effectData.isUpLeft(_step);
         imageID = effectData.getImageID(_step);
