@@ -269,8 +269,8 @@ public class Graphic {
         setting_matrix.reset();
 
         if(is_upleft == false) {
-            setting_point1.x -= draw_bitmap_data.getBitmap().getWidth() / 2;
-            setting_point1.y -= draw_bitmap_data.getBitmap().getHeight() / 2;
+            setting_point1.x -= scale_x * draw_bitmap_data.getBitmap().getWidth() / 2;
+            setting_point1.y -= scale_y * draw_bitmap_data.getBitmap().getHeight() / 2;
         }
 
         if(booking_bitmap_num >= booking_bitmap_datas.size()){
