@@ -113,7 +113,7 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
             old_frame = now_frame;
 
 
-            System.out.println("fps:"+fps);
+            //System.out.println("fps:"+fps);
 
         }
     }

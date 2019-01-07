@@ -137,6 +137,10 @@ public class Graphic {
         }
     }
 
+    public float getDENSITY() {
+        return DENSITY;
+    }
+
 
     public void init(){}
 
@@ -269,9 +273,8 @@ public class Graphic {
         setting_matrix.reset();
 
         if(is_upleft == false) {
-            System.out.println(""+DENSITY);
-            setting_point1.x -= scale_x * draw_bitmap_data.getBitmap().getWidth() / 2;
-            setting_point1.y -= scale_y * draw_bitmap_data.getBitmap().getHeight() / 2;
+            setting_point1.x -= scale_x * DENSITY * draw_bitmap_data.getBitmap().getWidth() / 2;
+            setting_point1.y -= scale_y * DENSITY * draw_bitmap_data.getBitmap().getHeight() / 2;
         }
 
         if(booking_bitmap_num >= booking_bitmap_datas.size()){
