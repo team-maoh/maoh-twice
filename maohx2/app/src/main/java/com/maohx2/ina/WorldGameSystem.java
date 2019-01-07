@@ -342,6 +342,7 @@ public class WorldGameSystem {
         );//kokomade
         */
 
+        /* エフェクトテスト用
         width = 120;
         height = 150;
 
@@ -353,9 +354,11 @@ public class WorldGameSystem {
 
         damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" , "bomb_effect", 5, 2, 1);
         //attackEffect = effectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, 1);
+        */
 
     }
 
+    /* エフェクトテスト用
     int damagedEffect;
     int attackEffect;
     int id;
@@ -372,7 +375,7 @@ public class WorldGameSystem {
 
     int position_x = 800;
     int position_y = 400;
-
+    */
 
             ;
     public void update() {
@@ -380,6 +383,7 @@ public class WorldGameSystem {
             return;
         }
 
+        /* エフェクトテスト用
         damageEffectTime++;
         if (damageEffectTime >= 4 && worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT) {
             damagedEffect = effectAdmin.createEffect("enemy_damaged_effect", "bomb_effect", 5, 2, 1);
@@ -388,6 +392,7 @@ public class WorldGameSystem {
             effectAdmin.getEffect(damagedEffect).start();
             damageEffectTime = 0;
         }
+        */
 
 /*
         if (world_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN) {
@@ -573,25 +578,25 @@ public class WorldGameSystem {
 
         switch (worldModeAdmin.getMode()) {
             case DUNGEON_SELECT_INIT:
-                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 break;
             case DUNGEON_SELECT:
-                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 dungeonSelectManager.draw();
                 playerStatusViewer.draw();
                 break;
             case GEO_MAP_SELECT_INIT:
-                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 break;
             case GEO_MAP_SELECT:
-                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 dungeonSelectManager.draw();
                 break;
             case GEO_MAP_INIT:
-                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 break;
             case GEO_MAP:
-                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 effectAdmin.draw();
                 geoSlotAdminManager.draw();
                 playerStatusViewer.draw();
@@ -605,37 +610,37 @@ public class WorldGameSystem {
                 }
                 break;
             case SHOP_INIT:
-                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 break;
             case SHOP:
-                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 itemShopAdmin.draw();
                 playerStatusViewer.draw();
                 break;
             case TU_SHOP:
                 if(tu_shop_flag == 0) {
-                    graphic.bookingDrawBitmapData(tu_shop_start_img, 0, 0, 0.983f, 0.983f, 0, 254, true);
+                    graphic.bookingDrawBitmapData(tu_shop_start_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
                 }
                 else{
-                    graphic.bookingDrawBitmapData(tu_shop_img, 0, 0, 0.983f, 0.983f, 0, 254, true);
+                    graphic.bookingDrawBitmapData(tu_shop_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
                 }
                 break;
             case TU_SELL:
-                graphic.bookingDrawBitmapData(tu_sell_img, 0, 0, 0.983f, 0.983f, 0, 254, true);
+                graphic.bookingDrawBitmapData(tu_sell_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
                 break;
             case EQUIP_INIT:
-                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 break;
             case TU_EQUIP:
                 if(tu_equip_flag == 0) {
-                    graphic.bookingDrawBitmapData(tu_equip_start_img, 0, 0, 0.983f, 0.983f, 0, 254, true);
+                    graphic.bookingDrawBitmapData(tu_equip_start_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
                 }
                 else{
-                    graphic.bookingDrawBitmapData(tu_equip_img, 0, 0, 0.983f, 0.983f, 0, 254, true);
+                    graphic.bookingDrawBitmapData(tu_equip_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
                 }
                 break;
             case EQUIP:
-                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 equipmentInventry.draw();
                 expendItemInventry.draw();
                 palette_admin.draw();
@@ -643,17 +648,17 @@ public class WorldGameSystem {
                 backPlateGroup.draw();
                 break;
             case PRESENT_INIT:
-                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(backGround, 0, 0,true);
                 break;
             case PRESENT:
-                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 geoPresentManager.draw();
                 break;
             case SELL_INIT:
-                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 break;
             case SELL:
-                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 itemSell.draw();
                 playerStatusViewer.draw();
                 break;

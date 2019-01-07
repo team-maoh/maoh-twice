@@ -169,11 +169,11 @@ public class TalkAdmin {
 
         int alphaLeft, alphaRight;
         if (leftOrRight[count]) {
-            alphaLeft = 254;
+            alphaLeft = 255;
             alphaRight = 192;
         } else {
             alphaLeft = 192;
-            alphaRight = 254;
+            alphaRight = 255;
         }
         if (talkCharaLeft != null) {
             graphic.bookingDrawBitmapData(

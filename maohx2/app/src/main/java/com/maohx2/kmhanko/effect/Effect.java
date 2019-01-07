@@ -248,11 +248,6 @@ public class Effect {
         extend_y = effectData.getExtendY(_step) * setted_extend_y;
         angle = effectData.getAngle(_step);
         alpha = effectData.getAlpha(_step);
-        /*
-        if (alpha == 255) {
-            alpha = 254;
-        }
-        */
         anime_angle = (float)Math.atan2((double)y,(double)x);
         isUpLeft = effectData.isUpLeft(_step);
         imageID = effectData.getImageID(_step);

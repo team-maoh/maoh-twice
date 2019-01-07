@@ -269,7 +269,7 @@ public class Graphic {
         setting_matrix.reset();
 
         if(is_upleft == false) {
-            setting_point1.x -= draw_bitmap_data.getBitmap().getWidth()*DENSITY*scale_x / 2 ;
+            setting_point1.x -= draw_bitmap_data.getBitmap().getWidth()*DENSITY*scale_x / 2;
             setting_point1.y -= draw_bitmap_data.getBitmap().getHeight()*DENSITY*scale_y / 2;
         }
 
@@ -310,6 +310,11 @@ public class Graphic {
     public void bookingDrawBitmapData(BitmapData bitmap_data, int position_x, int position_y){
         Point position = new Point(position_x, position_y);
         bookingDrawBitmapData(bitmap_data, position,1,1,false);
+    }
+
+    public void bookingDrawBitmapData(BitmapData bitmap_data, int position_x, int position_y, boolean is_upleft){
+        Point position = new Point(position_x, position_y);
+        bookingDrawBitmapData(bitmap_data, position,1,1, is_upleft);
     }
 
     public void bookingDrawBitmapName(String bitmap_name, int position_x, int position_y, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){

@@ -295,12 +295,12 @@ public class BattleEnemy extends BattleUnit {
 
                 switch (specialAction) {
                     case BARRIER:
-                        graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) scale, (float) scale, 0, 254, false);
+                        graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) scale, (float) scale, 0, 255, false);
                         paint.setARGB(100, 0, 0, 255);
                         graphic.bookingDrawCircle((int) position_x, (int) position_y, (int) radius, paint);
                         break;
                     case COUNTER:
-                        graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) scale, (float) scale, 0, 254, false);
+                        graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) scale, (float) scale, 0, 255, false);
                         paint.setARGB(100, 255, 100, 0);
                         graphic.bookingDrawCircle((int) position_x, (int) position_y, (int) radius, paint);
                         break;
@@ -309,11 +309,11 @@ public class BattleEnemy extends BattleUnit {
                         break;
                 }
             } else {
-                graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) scale, (float) scale, 0, 254, false);
+                graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) scale, (float) scale, 0, 255, false);
             }
         }
         if (getUnitKind() == Constants.UnitKind.ROCK) {
-            graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) 1.0, (float) 1.0, 0, 254, false);
+            graphic.bookingDrawBitmapData(battleDungeonUnitData.getBitmapDate(), (int) position_x, (int) position_y, (float) 1.0, (float) 1.0, 0, 255, false);
         }
 
         //HP表示
