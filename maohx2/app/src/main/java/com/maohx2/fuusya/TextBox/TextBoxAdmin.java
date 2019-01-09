@@ -304,7 +304,7 @@ public class TextBoxAdmin {
 
         Paint default_paint = new Paint();
         default_paint.setTextSize(40);
-        default_paint.setColor(Color.GREEN);
+        default_paint.setColor(Color.WHITE);
 
         bookingDrawText(_box_id, _text, default_paint);
 //        text_box[_box_id].inputText(_text, default_paint);

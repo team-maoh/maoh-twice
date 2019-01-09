@@ -4,6 +4,7 @@ package com.maohx2.fuusya;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.view.SurfaceHolder;
@@ -23,9 +24,12 @@ import com.maohx2.ina.DungeonModeManage;
 import com.maohx2.horie.map.DungeonData;
 import com.maohx2.ina.GlobalData;
 import com.maohx2.ina.Text.BoxTextPlate;
+import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.WindowPlate.WindowTextPlate;
 import com.maohx2.kmhanko.effect.EffectAdmin;
+import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 //import com.maohx2.ina.ImageAdmin;
 
@@ -119,6 +123,8 @@ public class MapObjectAdmin {
     EffectAdmin backEffectAdmin;
 
     Constants.DungeonKind.DUNGEON_KIND dungeonKind;
+
+    boolean initUIsFlag;
 
     public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, GlobalData _globalData, BattleUnitAdmin _battle_unit_admin, TextBoxAdmin _text_box_admin, BattleUnitDataAdmin _battleUnitDataAdmin, DungeonMonsterDataAdmin _dungeonMonsterDataAdmin, int _repeatCount, Constants.DungeonKind.DUNGEON_KIND _dungeonKind, DungeonData _dungeonData, EffectAdmin _effectAdmin, EffectAdmin _backEffectAdmin) {
         graphic = _graphic;
@@ -214,6 +220,9 @@ public class MapObjectAdmin {
         paint.setARGB(255, 255, 255, 255);
 
         kind_of_zako = 1;
+
+        initDungeonEscapeSelectButton();
+        initWindowTextPlate();
     }
 
     public void init() {
@@ -234,8 +243,8 @@ public class MapObjectAdmin {
 
     public void update() {
 
-        //チュートリアル中は時が停止する
-        if (playerStatus.getTutorialInDungeon() == 1) {
+        //チュートリアル中と選択肢出現中は時が停止する
+        if (playerStatus.getTutorialInDungeon() == 1 && !dungeonEscapeSelectButtonGroup.getDrawFlag()) {
 
             map_player.update();
             map_player_bitmap.update();
@@ -268,6 +277,15 @@ public class MapObjectAdmin {
                 map_boss[i].update();
                 map_boss_bitmap[i].update();
             }
+        }
+
+
+        dungeonEscapeSelectButtonGroup.update();
+
+        dungeonEscapeSelectButtonCheck();
+        if (initUIsFlag) {
+            initUIs();
+            initUIsFlag = false;
         }
 
     }
@@ -311,6 +329,8 @@ public class MapObjectAdmin {
             map_player_bitmap.draw(map_player.getDirOnMap(), map_player.getNormX(), map_player.getNormY(), playerAlpha);
         }
 
+        dungeonEscapePlate.draw();
+        dungeonEscapeSelectButtonGroup.draw();
     }
 
     public MapPlayer getPlayer() {
@@ -676,6 +696,86 @@ public class MapObjectAdmin {
 
     public void setMapInventryAdmin(MapInventryAdmin _map_inventry_admin) {
         map_inventry_admin = _map_inventry_admin;
+    }
+
+    // *** 選択肢関係
+    PlateGroup<BoxImageTextPlate> dungeonEscapeSelectButtonGroup;
+    WindowTextPlate dungeonEscapePlate;
+    Paint dungeonEnterTextPaint;
+
+    private void initWindowTextPlate() {
+        dungeonEscapePlate = new WindowTextPlate(graphic, new int[]{Constants.SELECT_WINDOW_PLATE.MESS_LEFT, Constants.SELECT_WINDOW_PLATE.MESS_UP, Constants.SELECT_WINDOW_PLATE.MESS_RIGHT, Constants.SELECT_WINDOW_PLATE.MESS_BOTTOM});
+        dungeonEnterTextPaint = new Paint();
+        dungeonEnterTextPaint.setTextSize(45);
+        dungeonEnterTextPaint.setStrokeWidth(20);
+        dungeonEnterTextPaint.setColor(Color.WHITE);
+    }
+
+    private void dungeonEscapePlateUpdate() {
+        dungeonEscapePlate.setText("アイテムを持ってダンジョンを脱出しますか？", dungeonEnterTextPaint, WindowTextPlate.TextPosition.CENTER);
+    }
+
+    private void initDungeonEscapeSelectButton(){
+        Paint textPaint = new Paint();
+        textPaint.setTextSize(Constants.SELECT_WINDOW_PLATE.BUTTON_TEXT_SIZE);
+        textPaint.setARGB(255,255,255,255);
+
+        dungeonEscapeSelectButtonGroup = new PlateGroup<BoxImageTextPlate>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic, dungeon_user_interface,
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{Constants.SELECT_WINDOW.YES_LEFT, Constants.SELECT_WINDOW.YES_UP, Constants.SELECT_WINDOW.YES_RIGHT, Constants.SELECT_WINDOW.YES_BOTTOM},
+                                "はい",
+                                textPaint
+                        ),
+                        new BoxImageTextPlate(
+                                graphic, dungeon_user_interface,
+                                Constants.Touch.TouchWay.UP_MOMENT,
+                                Constants.Touch.TouchWay.MOVE,
+                                new int[]{Constants.SELECT_WINDOW.NO_LEFT, Constants.SELECT_WINDOW.NO_UP, Constants.SELECT_WINDOW.NO_RIGHT, Constants.SELECT_WINDOW.NO_BOTTOM},
+                                "いいえ",
+                                textPaint
+                        )
+                }
+        );
+
+        dungeonEscapeSelectButtonGroup.setUpdateFlag(false);
+        dungeonEscapeSelectButtonGroup.setDrawFlag(false);
+    }
+
+    public void dungeonEscapeSelectButtonCheck() {
+        if (!(dungeonEscapeSelectButtonGroup.getUpdateFlag())) {
+            return;
+        }
+        int buttonID = dungeonEscapeSelectButtonGroup.getTouchContentNum();
+        if (buttonID == 0 ) { //脱出
+            sound_admin.play("enter00");
+            playerStatus.setNowHPMax();
+            initUIsFlag = true;
+            escapeDungeon();
+        }
+        if (buttonID == 1 ) { //やめる
+            sound_admin.play("cancel00");
+            initUIsFlag = true;
+        }
+    }
+
+
+    private void initUIs() {
+        dungeonEscapeSelectButtonGroup.setUpdateFlag(false);
+        dungeonEscapeSelectButtonGroup.setDrawFlag(false);
+        dungeonEscapePlate.setDrawFlag(false);
+    }
+
+    //*** 選択肢関係ここまで
+
+    public void escapeDungeonChoice() {
+        this.dungeonEscapePlateUpdate();
+        this.dungeonEscapeSelectButtonGroup.setUpdateFlag(true);
+        this.dungeonEscapeSelectButtonGroup.setDrawFlag(true);
+        this.dungeonEscapePlate.setDrawFlag(true);
     }
 
     public void escapeDungeon() {
