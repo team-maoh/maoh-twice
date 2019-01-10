@@ -16,6 +16,9 @@ public class BookingBitmapData extends BookingTaskData {
     private Matrix draw_matrix;
     private Rect draw_rect;
     private boolean isRect;
+    private boolean isSimple;
+    private int draw_x;
+    private int draw_y;
 
     BookingBitmapData(){
         super();
@@ -33,6 +36,7 @@ public class BookingBitmapData extends BookingTaskData {
         draw_rect.set(_draw_rect);
         paint.set(_paint);
         isRect = true;
+        isSimple = false;
     }
 
     public void update(BitmapData _draw_bitmap_data, Matrix _draw_matrix, Paint _paint){
@@ -40,11 +44,24 @@ public class BookingBitmapData extends BookingTaskData {
         draw_matrix.set(_draw_matrix);
         paint.set(_paint);
         isRect = false;
+        isSimple = false;
+    }
+
+    public void update(BitmapData _draw_bitmap_data, int _draw_x, int _draw_y, Paint _paint){
+        draw_bitmap_data = _draw_bitmap_data;
+        draw_x = _draw_x;
+        draw_y = _draw_y;
+        paint.set(_paint);
+        isRect = false;
+        isSimple = true;
     }
 
     @Override
     public void draw(Canvas canvas){
 
+        if(isSimple == true){
+            canvas.drawBitmap(draw_bitmap_data.getBitmap(), draw_x, draw_y,null);
+        }else{
         if(isRect == true) {
             //TODO by kmhanko　なんかエラー吐くのでチェック
             if (canvas == null) {
@@ -56,9 +73,11 @@ public class BookingBitmapData extends BookingTaskData {
                 return;
             }
             canvas.drawBitmap(draw_bitmap_data.getBitmap(), new Rect(0,0, draw_bitmap_data.getWidth(),draw_bitmap_data.getHeight()), draw_rect,null);
+            //canvas.drawBitmap(draw_bitmap_data.getBitmap(),draw_rect.left,draw_rect.top,paint);
             //canvas.drawBitmap(draw_bitmap_data.getBitmap(),0,0,paint);
         }else{
             canvas.drawBitmap(draw_bitmap_data.getBitmap(), draw_matrix, paint);
+        }
         }
     }
 

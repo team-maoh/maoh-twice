@@ -80,6 +80,7 @@ public class EffectAdmin {
         if (number == -1) {
             BitmapData tempBitmapData[] = new BitmapData[TRIMMED_BITMAP_MAX];
             BitmapData _bitmapData = graphic.searchBitmap(_imageName);
+            //BitmapData _bitmapData = graphic.searchBitmapWithScale(_imageName,2,2);
             int x = _bitmapData.getWidth();
             int y = _bitmapData.getHeight();
 

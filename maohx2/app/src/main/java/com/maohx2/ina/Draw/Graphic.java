@@ -84,6 +84,8 @@ public class Graphic {
     Matrix setting_matrix;
     Rect settingRect;
 
+    //初期化，描画に必要なActivityやサーフェスをもらっている
+    //また，global_constantsにおいてアプリ起動時に画面の解像度などを取得しているため，どの端末においても同じ見た目になるような倍率や描画矩形の確保もできている
     public Graphic(Activity _activity, SurfaceHolder _holder) {
 
         activity = _activity;
@@ -144,6 +146,7 @@ public class Graphic {
 
     public void init(){}
 
+    //アクティビティ破棄のたびに消えるリソースはここでローカル用としてロードされる
     public void loadLocalImages(MyDatabase image_database, String table_folder){
         local_bitmap_data_admin.loadLocalImages(image_database, table_folder);
     }
@@ -152,9 +155,6 @@ public class Graphic {
     public void draw() {
         Canvas canvas = null;
         canvas = holder.lockCanvas();
-
-        //System.out.println("booking_num:"+booking_num);
-
 
         if(canvas != null) {
             //canvas.drawColor(Color.WHITE);
@@ -185,33 +185,39 @@ public class Graphic {
         booking_num = 0;
     }
 
+    //1600:900の座標を端末のディスプレイに応じて対応位置に座標変換してくれる関数
     public  void transrateNormalizedPositionToDispPosition(Point _normalize_position){
         _normalize_position.set((int)(_normalize_position.x*NORMARIZED_DRAW_RATE.x + DRAW_LEFT_END), (int)(_normalize_position.y*NORMARIZED_DRAW_RATE.y + DRAW_UP_END));
     }
 
+    //transrateNormalizedPositionToDispPositionx座標変換
     public double transrateNormalizedPositionToDispPositionX(int normalized_x){
         return normalized_x*NORMARIZED_DRAW_RATE.x + DRAW_LEFT_END;
     }
 
+    //transrateNormalizedPositionToDispPositiony座標変換
     public double transrateNormalizedPositionToDispPositionY(int normalized_y){
         return normalized_y*NORMARIZED_DRAW_RATE.y + DRAW_UP_END;
     }
 
-
+    //ディスプレイの位置を1600:900に正規化した座標に直す関数
     public Point transrateDispPositionToNormalizedPosition(Point _disp_position){
         return  new Point((int)((_disp_position.x + DRAW_LEFT_END)* DISP_NORMARIZED_RATE.x), (int)((_disp_position.y + DRAW_UP_END) * DISP_NORMARIZED_RATE.y));
     }
 
+    //transrateDispPositionToNormalizedPositionのx座標変換
     public int transrateDispPositionToNormalizedPositionX(int disp_x){
         return (int)((disp_x - DRAW_LEFT_END)/NORMARIZED_DRAW_RATE.x);
         //return (int)((disp_x + DRAW_LEFT_END)* DISP_NORMARIZED_RATE.x);
     }
 
+    //transrateDispPositionToNormalizedPositionのy座標変換
     public int transrateDispPositionToNormalizedPositionY(int disp_y){
         return (int)((disp_y - DRAW_UP_END)/NORMARIZED_DRAW_RATE.y);
         //return  (int)((disp_y + DRAW_UP_END) * DISP_NORMARIZED_RATE.y);
     }
 
+    //ImageContextによる描画予約
     public void bookingDrawBitmapData(ImageContext _image_context){
 
         if(booking_bitmap_num >= booking_bitmap_datas.size()){
@@ -230,7 +236,7 @@ public class Graphic {
 
     }
 
-
+    //Rect描画できないものを行列を使って描画する予約
     public void bookingDrawBitmapDataByMat(BitmapData draw_bitmap_data, Point position, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
 
         setting_point1.set(position.x, position.y);
@@ -265,6 +271,7 @@ public class Graphic {
 
     }
 
+    //Rectを使った描画予約
     public void bookingDrawBitmapData(BitmapData draw_bitmap_data, Point position, float scale_x, float scale_y, boolean is_upleft){
 
         setting_point1.set(position.x, position.y);
@@ -296,10 +303,38 @@ public class Graphic {
 
     }
 
+    public void bookingDrawBitmapDataSimple(BitmapData draw_bitmap_data, int position_x, int position_y, boolean is_upleft){
 
+        setting_point1.set(position_x, position_y);
+        transrateNormalizedPositionToDispPosition(setting_point1);
 
+        setting_matrix.reset();
+
+        if(is_upleft == false) {
+            setting_point1.x -= draw_bitmap_data.getBitmap().getWidth() / 2;
+            setting_point1.y -= draw_bitmap_data.getBitmap().getHeight() / 2;
+        }
+
+        if(booking_bitmap_num >= booking_bitmap_datas.size()){
+            booking_bitmap_datas.add(new BookingBitmapData());
+        }
+
+        ((BookingBitmapData)booking_bitmap_datas.get(booking_bitmap_num)).update(draw_bitmap_data, setting_point1.x, setting_point1.y, draw_paint);
+
+        if(booking_num >= booking_task_datas.size()) {
+            booking_task_datas.add(new BookingBitmapData());
+        }
+
+        booking_task_datas.set(booking_num, booking_bitmap_datas.get(booking_bitmap_num));
+        booking_num++;
+        booking_bitmap_num++;
+
+    }
+
+    //ビットマップ描画予約用の関数
     public void bookingDrawBitmapData(BitmapData bitmap_data, int position_x, int position_y, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
         Point position = new Point(position_x, position_y);
+
         if(degree == 0 && alpha == 255) {
             bookingDrawBitmapData(bitmap_data, position, scale_x, scale_y, is_upleft);
         }else{
@@ -307,20 +342,24 @@ public class Graphic {
         }
     }
 
+    //ビットマップ描画予約用の関数
     public void bookingDrawBitmapData(BitmapData bitmap_data, Point position){
         bookingDrawBitmapData(bitmap_data,position,1,1,false);
     }
 
+    //ビットマップ描画予約用の関数
     public void bookingDrawBitmapData(BitmapData bitmap_data, int position_x, int position_y){
         Point position = new Point(position_x, position_y);
         bookingDrawBitmapData(bitmap_data, position,1,1,false);
     }
 
+    //ビットマップ描画予約用の関数
     public void bookingDrawBitmapData(BitmapData bitmap_data, int position_x, int position_y, boolean is_upleft){
         Point position = new Point(position_x, position_y);
         bookingDrawBitmapData(bitmap_data, position,1,1, is_upleft);
     }
 
+    //名前指定で描画を行う関数，毎回検索がかかるので常に使うのは非推奨（ビットマップを検索保存して，描画を行うのが良い）
     public void bookingDrawBitmapName(String bitmap_name, int position_x, int position_y, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
         Point position = new Point(position_x, position_y);
         if(degree == 0 && alpha == 255) {
@@ -330,20 +369,24 @@ public class Graphic {
         }
     }
 
+    //名前指定で描画を行う関数，毎回検索がかかるので常に使うのは非推奨（ビットマップを検索保存して，描画を行うのが良い）
     public void bookingDrawBitmapName(String bitmap_name, Point position){
         bookingDrawBitmapData(searchBitmap(bitmap_name),position,1,1,false);
     }
 
+    //名前指定で描画を行う関数，毎回検索がかかるので常に使うのは非推奨（ビットマップを検索保存して，描画を行うのが良い）
     public void bookingDrawBitmapName(String bitmap_name, int position_x, int position_y){
         Point position = new Point(position_x, position_y);
         bookingDrawBitmapData(searchBitmap(bitmap_name), position,1,1,false);
     }
 
+    //円を描画する予約関数
     public void bookingDrawCircle(int draw_x, int draw_y, int draw_radius){
         draw_paint.setARGB(100,255,0,0);
         bookingDrawCircle(draw_x, draw_y, draw_radius, draw_paint);
     }
 
+    //円を描画する予約関数
     public void bookingDrawCircle(int draw_x, int draw_y, int draw_radius, Paint paint){
 
         setting_point1.set(draw_x, draw_y);
@@ -366,12 +409,14 @@ public class Graphic {
         booking_circle_num++;
     }
 
+    //四角を描画する予約関数
     public void bookingDrawRect(int draw_left, int draw_up, int draw_right, int draw_down){
         draw_paint.setARGB(100,255,0,0);
         bookingDrawRect(draw_left, draw_up, draw_right, draw_down, draw_paint);
     }
 
 
+    //四角を描画する予約関数
     public void bookingDrawRect(int draw_left, int draw_up, int draw_right, int draw_down, Paint paint){
 
         setting_point1.set(draw_left, draw_up);
@@ -396,6 +441,7 @@ public class Graphic {
         booking_rect_num++;
     }
 
+    //文字を描画する予約関数
     public void bookingDrawText(String draw_string, int draw_left, int draw_down){
 
         draw_paint.setARGB(255,0,255,0);
@@ -403,6 +449,7 @@ public class Graphic {
         bookingDrawText(draw_string, draw_left, draw_down, draw_paint);
     }
 
+    //文字を描画する予約関数
     public void bookingDrawText(String draw_string, int draw_left, int draw_down, Paint paint){
 
         setting_point1.set(draw_left, draw_down);
@@ -427,6 +474,7 @@ public class Graphic {
         booking_text_num++;
     }
 
+    //画像の検索を行う関数（後に描画指定に使うのが良い）
     public BitmapData searchBitmap(String bitmap_name){
 
         //画像の検索
@@ -459,7 +507,52 @@ public class Graphic {
         return hit_bitmap_data;
     }
 
+    //画像の検索を行う関数（後に描画指定に使うのが良い）
+    public BitmapData searchBitmapWithScale(String bitmap_name, float scale_x, float scale_y){
 
+        //画像の検索
+        int draw_bitmap_num = -1;
+        BitmapData hit_bitmap_data = null;
+        if(global_bitmap_data_admin != null){
+            draw_bitmap_num = global_bitmap_data_admin.getBitmapDataNum(bitmap_name);
+
+            if(draw_bitmap_num >= 0) {
+                hit_bitmap_data = global_bitmap_data_admin.getBitmapData(draw_bitmap_num);
+            }
+        }
+
+
+        if(draw_bitmap_num < 0 && local_bitmap_data_admin != null){
+            draw_bitmap_num = local_bitmap_data_admin.getBitmapDataNum(bitmap_name);
+            if(draw_bitmap_num >= 0) {
+                hit_bitmap_data = local_bitmap_data_admin.getBitmapData(draw_bitmap_num);
+            }
+        }
+
+        if(draw_bitmap_num < 0) {
+            throw new Error("%☆イナガキ：drawBooking:画像名「" + bitmap_name + "」がありません     " + "global: " + global_bitmap_data_admin + "local:" + local_bitmap_data_admin);
+        }
+
+        setting_matrix.reset();
+        setting_matrix.postScale(DENSITY * scale_x, DENSITY * scale_y);
+
+        hit_bitmap_data.transBitmap(setting_matrix);
+
+        return hit_bitmap_data;
+    }
+
+    public BitmapData resizeBitmap(BitmapData bitmapData, float scale_x, float scale_y){
+
+        setting_matrix.reset();
+        setting_matrix.postScale(DENSITY * scale_x, DENSITY * scale_y);
+
+        bitmapData.transBitmap(setting_matrix);
+
+        return bitmapData;
+    }
+
+
+    //移動しないものは一度だけ描画方法を指定（ImageContext）して描画を行う（matrixやrectの計算コストを減らせる）
     public ImageContext makeImageContext(BitmapData draw_bitmap_data, Point position, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft) {
 
         setting_point1.set(position.x, position.y);
@@ -483,17 +576,20 @@ public class Graphic {
         return image_context;
     }
 
+    //移動しないものは一度だけ描画方法を指定（ImageContext）して描画を行う（matrixやrectの計算コストを減らせる）
     public ImageContext makeImageContext(BitmapData draw_bitmap_data, int position_x, int position_y , float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
 
         Point position = new Point(position_x, position_y);
         return makeImageContext(draw_bitmap_data, position, scale_x, scale_y, degree, alpha, is_upleft);
     }
 
+    //移動しないものは一度だけ描画方法を指定（ImageContext）して描画を行う（matrixやrectの計算コストを減らせる）
     public ImageContext makeImageContext(BitmapData draw_bitmap_data, int position_x, int position_y){
 
         return makeImageContext(draw_bitmap_data, position_x, position_y, 1, 1, 0, 255, false);
     }
 
+    //移動しないものは一度だけ描画方法を指定（ImageContext）して描画を行う（matrixやrectの計算コストを減らせる）
     public ImageContext makeImageContext(BitmapData draw_bitmap_data, int position_x, int position_y, boolean is_upleft){
 
         return makeImageContext(draw_bitmap_data, position_x, position_y, 1, 1, 0, 255, is_upleft);
@@ -525,6 +621,8 @@ public class Graphic {
 
     }
 */
+
+    //bitmapをトリミングする関数
     public BitmapData processTrimmingBitmapData(BitmapData src_bitmap_data, int x, int y, int width, int height){
 
         BitmapData dst_bitmap_data;
@@ -535,6 +633,7 @@ public class Graphic {
         return dst_bitmap_data;
     }
 
+    //bitmapを結合する関数
     public BitmapData processCombineBitmapData(BitmapData[] src_bitmap_datas, boolean yoko){
 
         BitmapData dst_bitmap_data;
@@ -610,23 +709,22 @@ public class Graphic {
         holder = _holder;
     }
 
+    //マニュアルで描画してもらうときに使う
     public SurfaceHolder getHolder(){return holder;}
 
-    //by kmhanko
+    //ビットマップのリリース最後に行ってガーベッジコレクションに回収してもらう
     public void releaseBitmap() {
         System.out.println("takanoRelease(releaseBitmap) : Graphic");
         //global_bitmap_data_admin.releaseBitmap();
         local_bitmap_data_admin.releaseBitmap();
-        for (int i = 0; i < BOOKING_DATA_INSTANCE; i++ ) {
+        for (int i = 0; i < BOOKING_DATA_INSTANCE; i++) {
             booking_circle_datas.get(i).release();
             booking_rect_datas.get(i).release();
             booking_text_datas.get(i).release();
             booking_bitmap_datas.get(i).release();
         }
-        for (int i = 0; i < booking_task_datas.size(); i++ ) {
+        for (int i = 0; i < booking_task_datas.size(); i++) {
             booking_task_datas.get(i).release();
         }
-
     }
-  
 }

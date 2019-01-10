@@ -1,6 +1,9 @@
 package com.maohx2.ina.Draw;
 
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+
+import com.maohx2.ina.Constants;
 
 /**
  * Created by ina on 2017/10/08.
@@ -36,6 +39,8 @@ public class BitmapData{
     public int getWidth(){return bitmap.getWidth();}
 
     public int getHeight(){return bitmap.getHeight();}
+
+    public void transBitmap(Matrix transMatrix){ bitmap = Bitmap.createBitmap(bitmap, 0,0, bitmap.getWidth(), bitmap.getHeight(), transMatrix, true); }
 
     //by kmhanko
     public void releaseBitmap() {

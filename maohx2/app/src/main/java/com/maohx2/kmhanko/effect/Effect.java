@@ -121,7 +121,7 @@ public class Effect {
         //倍率の変更
         setted_extend_x = _setted_extend_x;
         setted_extend_y = _setted_extend_y;
-    }
+        }
 
     public void setPosition(int _original_x, int _original_y, float _original_angle) {
         //基本座標の更新
@@ -216,12 +216,15 @@ public class Effect {
         //System.out.println("effect:" + original_x + " " + (int) (r * Math.cos(anime_angle + original_angle)) + " " + original_y + " " + (int) (r * Math.sin(anime_angle + original_angle)) + " " + extend_x + " " + extend_y);
         //Graphicに描画を依頼
         //graphic.bookingDrawBitmapData(bitmapData.get(imageID), original_x + x, original_y + y, extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
-        graphic.bookingDrawBitmapData(bitmapData[imageID], original_x + (int) (r * Math.cos(anime_angle + original_angle)), original_y + (int) (r * Math.sin(anime_angle + original_angle)), extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
         //graphic.bookingDrawBitmapData(bitmapData[imageID], original_x, original_y, extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
 
 
         //graphic.bookingDrawBitmapData(bitmapData[imageID], original_x, original_y, extend_x, extend_y, 0.0f, 255, isUpLeft);
 
+
+
+        graphic.bookingDrawBitmapData(bitmapData[imageID], original_x + (int) (r * Math.cos(anime_angle + original_angle)), original_y + (int) (r * Math.sin(anime_angle + original_angle)), extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
+        //graphic.bookingDrawBitmapDataSimple(bitmapData[imageID], original_x + (int) (r * Math.cos(anime_angle + original_angle)), original_y + (int) (r * Math.sin(anime_angle + original_angle)), isUpLeft);
     }
     //drawしなければ遅くはならない(26-)
     //4fごとに1つ表示した時。三角関数計算なしで、254=17~20 255=23~
@@ -252,6 +255,7 @@ public class Effect {
         isUpLeft = effectData.isUpLeft(_step);
         imageID = effectData.getImageID(_step);
         soundName = effectData.getSoundName(_step);
+
     }
 
     //効果音を鳴らすメソッド
@@ -290,6 +294,7 @@ public class Effect {
     public boolean setBitmapData(int i, BitmapData _bitmapData) {
         if (i > 0 && i < bitmapData.length) {
             bitmapData[i] = _bitmapData;
+
             return true;
         }
         return false;
