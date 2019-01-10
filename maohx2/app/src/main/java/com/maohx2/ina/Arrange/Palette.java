@@ -168,18 +168,18 @@ public class Palette {
         battle_palette_mode = 1;
 
         //指がパレットの上に乗った際のチェック
-        if (battle_user_interface.checkUI(palette_center.getTouchID(), Constants.Touch.TouchWay.DOWN_MOMENT) == true) {
+        if (battle_user_interface.checkUI(palette_center.getTouchID(), Constants.Touch.TouchWay.DOWN_MOMENT) == true){
             battle_user_interface.setPaletteElement(palette_center);
         }
 
 
-        if(paletteNum == 0) {
+        if(paletteNum == 0){
             for (int i = 0; i < 6; i++) {
                 if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.DOWN_MOMENT) == true) {
                     battle_user_interface.setPaletteElement(palette_elements[i]);
                 }
             }
-        }else {
+        }else{
             for (int i = 0; i < 8; i++) {
                 if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.DOWN_MOMENT) == true) {
                     battle_user_interface.setPaletteElement(palette_elements[i]);
@@ -320,7 +320,7 @@ public class Palette {
         }
     }
 
-    public void drawOnly() {
+    public void drawOnly(){
 
         if (battle_user_interface.getPaletteElement() != null) {
             if (battle_user_interface.isUIPaletteDraw() == true && battle_user_interface.getPaletteElement().getElementNum() == 0 && checkPaletteNumAndItemKind(battle_user_interface.getPaletteElement().getItemData().getItemKind())) {
