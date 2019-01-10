@@ -164,8 +164,8 @@ public class Graphic {
                booking_task_datas.get(i).draw(canvas);
             }
 
-            //draw_paint.setColor(Color.GREEN);
-            draw_paint.setColor(Color.BLACK);
+            draw_paint.setColor(Color.rgb(50,50,50));
+            //draw_paint.setColor(Color.BLACK);
             canvas.drawRect(0,0,DRAW_RIGHT_END,DRAW_UP_END,draw_paint);
             canvas.drawRect(DISP_X,0,DRAW_RIGHT_END,DRAW_DOWN_END,draw_paint);
             canvas.drawRect(DISP_X,DISP_Y,DRAW_LEFT_END,DRAW_DOWN_END,draw_paint);
@@ -302,6 +302,7 @@ public class Graphic {
         booking_bitmap_num++;
 
     }
+
 
     public void bookingDrawBitmapDataSimple(BitmapData draw_bitmap_data, int position_x, int position_y, boolean is_upleft){
 
