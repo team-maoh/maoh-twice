@@ -342,57 +342,45 @@ public class WorldGameSystem {
         );//kokomade
         */
 
-        /* エフェクトテスト用
+        //エフェクトテスト用
+        /*
         width = 120;
         height = 150;
-
-        attackExtendX = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.5f;
-        attackExtendY = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.5f;
-
         damagedExtendX = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
         damagedExtendY = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
-
         damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" , "bomb_effect", 5, 2, 1);
-        //attackEffect = effectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, 1);
-        */
 
+*/
     }
-
-    /* エフェクトテスト用
+/*
+    //エフェクトテスト用
     int damagedEffect;
-    int attackEffect;
-    int id;
     int width;
     int height;
     int damageEffectTime;
-    float attackExtendX;
-    float attackExtendY;
     float damagedExtendX;
     float damagedExtendY;
     Random rnd = new Random();
-
     double scale = 3.0f;
-
     int position_x = 800;
     int position_y = 400;
-    */
-
-            ;
+*/
     public void update() {
         if (updateStopFlag) {
             return;
         }
 
-        /* エフェクトテスト用
+        /*
+        //エフェクトテスト用
         damageEffectTime++;
         if (damageEffectTime >= 4 && worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT) {
-            damagedEffect = effectAdmin.createEffect("enemy_damaged_effect", "bomb_effect", 5, 2, 1);
+            damagedEffect = effectAdmin.createEffect("enemy_damaged_effect", "bomb_effect", 5, 2, damagedExtendX, damagedExtendY, 1);
             effectAdmin.getEffect(damagedEffect).setPosition((int) position_x + rnd.nextInt((int) (width * scale) + 1) - (int) (width * scale) / 2, (int) position_y + rnd.nextInt((int) (scale * height) + 1) - (int) (scale * height) / 2);
-            effectAdmin.setExtends(damagedEffect, damagedExtendX, damagedExtendY);
             effectAdmin.getEffect(damagedEffect).start();
             damageEffectTime = 0;
         }
         */
+
 
 /*
         if (world_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN) {

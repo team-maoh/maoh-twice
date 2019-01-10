@@ -17,38 +17,56 @@ import java.util.List;
 public class EffectAdmin {
 
     static final int EFFECT_MAX = 128;
-    static final int TRIMMED_BITMAP_MAX= 64;
+    static final int TRIMMED_BITMAP_MAX= 128;
 
     //private List<Effect> effect = new ArrayList<Effect>();
     private EffectDataAdmin effectDataAdmin;
     private Graphic graphic;
     private Effect[] effects = new Effect[EFFECT_MAX];
 
-    private String[] trimmedBitmapName = new String[EFFECT_MAX];
-    private BitmapData[][] trimmedBitmapData = new BitmapData[EFFECT_MAX][TRIMMED_BITMAP_MAX];
+    //private String[] trimmedBitmapName = new String[EFFECT_MAX];
+    //private BitmapData[][] trimmedBitmapData = new BitmapData[EFFECT_MAX][TRIMMED_BITMAP_MAX];
+    private EffectBitmapData effectBitmapDatas[] = new EffectBitmapData[TRIMMED_BITMAP_MAX];
     int dataIndex = 0;
+    int effectIndex = 0;
 
 
+    /*
     public EffectAdmin(Graphic _graphic) {
         graphic = _graphic;
     }
+    */
 
     public EffectAdmin(Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin) {
-        this(_graphic);
+        //this(_graphic);
+        graphic = _graphic;
         Effect.staticInit(_graphic, _soundAdmin);
         effectDataAdmin = new EffectDataAdmin(_databaseAdmin);
         for (int i = 0; i < effects.length; i++) {
             effects[i] = new Effect();
         }
+        for (int i = 0; i < effectBitmapDatas.length; i++) {
+            effectBitmapDatas[i] = new EffectBitmapData();
+        }
+
+        EffectBitmapData.setStatics(graphic, effectDataAdmin);
     }
 
     public EffectAdmin(Graphic _graphic, EffectDataAdmin _effectDataAdmin, SoundAdmin _soundAdmin) {
-        this(_graphic);
+        //this(_graphic);
+        graphic = _graphic;
         Effect.staticInit(_graphic, _soundAdmin);
+        for (int i = 0; i < effects.length; i++) {
+            effects[i] = new Effect();
+        }
+        for (int i = 0; i < effectBitmapDatas.length; i++) {
+            effectBitmapDatas[i] = new EffectBitmapData();
+        }
         effectDataAdmin = _effectDataAdmin;
+        EffectBitmapData.setStatics(graphic, effectDataAdmin);
     }
 
-
+/*
     private int searchTrimmedBitmapDataID(String _name) {
         int number = -1;
         for (int i = 0 ; i < trimmedBitmapName.length; i++) {
@@ -60,26 +78,79 @@ public class EffectAdmin {
         }
         return number;
     }
+*/
+
+    private int searchEffectBitmapDataID(String _dataName, String _imageName) {
+        int number = -1;
+        for (int i = 0 ; i < effectBitmapDatas.length; i++) {
+            if (effectBitmapDatas[i] != null) {
+                if (effectBitmapDatas[i].equals(_dataName, _imageName)) {
+                    number = i;
+                }
+            }
+        }
+        return number;
+    }
 
     // *** createEffect ***
     public int createEffect(String _dataName, String _imageName, int widthNum, int heightNum) {
-        return createEffect(_dataName, _imageName, widthNum, heightNum, 0);
+        return createEffect(_dataName, _imageName, widthNum, heightNum, 1.0f, 1.0f, 0);
     }
 
-    public int createEffect(String _dataName, String _imageName, int widthNum, int heightNum, int kind) {
-        int number = searchTrimmedBitmapDataID(_imageName);
+    public int createEffect(String _dataName, String _imageName, int widthNum, int heightNum, float extendX, float extendY) {
+        return createEffect(_dataName, _imageName, widthNum, heightNum, extendX, extendY, 0);
+    }
+
+    public int createEffect(String _dataName, String _imageName, int widthNum, int heightNum, int _kind) {
+        return createEffect(_dataName, _imageName, widthNum, heightNum, 1.0f, 1.0f, _kind);
+    }
+
+    public int createEffect(String _dataName, String _imageName, int widthNum, int heightNum, float extendX, float extendY, int kind) {
+        int number = searchEffectBitmapDataID(_dataName, _imageName);
+        EffectBitmapData tempEffectBitmapData;
         if (number == -1) {
-            BitmapData tempBitmapData[] = createEffectOnlyTrim(_imageName, widthNum, heightNum);
-            return createEffect(_dataName, tempBitmapData, kind);
+            tempEffectBitmapData = createEffectBitmapData(_dataName, _imageName, widthNum, heightNum, extendX, extendY);
         } else {
-            return createEffect(_dataName, trimmedBitmapData[number], kind);
+            tempEffectBitmapData = effectBitmapDatas[number];
+        }
+
+        int makeEffectID = effectIndex;
+        if (effects[makeEffectID].isExist()) {
+            System.out.println("Takano: EffectAdmin: 表示Effect数の上限オーバーです.");
+            effects[makeEffectID].clear();
+        }
+        effects[makeEffectID].create(tempEffectBitmapData, kind);
+        effectIndex = (effectIndex+1)%EFFECT_MAX;
+
+        return makeEffectID;
+    }
+    public EffectBitmapData createEffectBitmapData(String _dataName, String _imageName, int widthNum, int heightNum) {
+        return createEffectBitmapData(_dataName, _imageName, widthNum, heightNum);
+    }
+
+    public EffectBitmapData createEffectBitmapData(String _dataName, String _imageName, int widthNum, int heightNum, float extendX, float extendY) {
+        int number = searchEffectBitmapDataID(_dataName, _imageName);
+        if (number == -1) {
+            int makeID = dataIndex;
+            if (effectBitmapDatas[makeID].isExist()) {//エフェクトが埋まっている
+                System.out.println("Takano: EffectAdmin: Effect用のBitmap格納個数の上限オーバーにより負荷が掛かっています.");
+            }
+            effectBitmapDatas[makeID].make(_dataName, _imageName, widthNum, heightNum, extendX, extendY);
+            dataIndex = (dataIndex+1)%TRIMMED_BITMAP_MAX;
+            return effectBitmapDatas[makeID];
+        } else {
+            return effectBitmapDatas[number];
         }
     }
-    public BitmapData[] createEffectOnlyTrim(String _imageName, int widthNum, int heightNum) {
+
+    /*
+    public BitmapData[] createEffectOnlyTrim(String _dataName, String _imageName, int widthNum, int heightNum) {
         int number = searchTrimmedBitmapDataID(_imageName);
         if (number == -1) {
+            //
+
             BitmapData tempBitmapData[] = new BitmapData[TRIMMED_BITMAP_MAX];
-            BitmapData _bitmapData = graphic.searchBitmap(_imageName);
+            BitmapData _bitmapData = graphic.searchBitmapWithScale(_imageName,);
             //BitmapData _bitmapData = graphic.searchBitmapWithScale(_imageName,2,2);
             int x = _bitmapData.getWidth();
             int y = _bitmapData.getHeight();
@@ -99,7 +170,9 @@ public class EffectAdmin {
         }
         return null;
     }
+    */
 
+    /*
     public int createEffect(String _dataName, BitmapData[] _bitmapData, int kind) {
         Effect _effect = null;
         int effectID = -1;
@@ -121,6 +194,7 @@ public class EffectAdmin {
 
         return effectID;
     }
+    */
 
     // ** draw, update ***
 
@@ -203,7 +277,7 @@ public class EffectAdmin {
     public void setPosition(int i, int x, int y, float rad) {
         effects[i].setPosition(x, y, rad);
     }
-    public void setExtends(int i, float x, float y) {effects[i].setExtends(x, y);}
+    //public void setExtends(int i, float x, float y) {effects[i].setExtends(x, y);}
     public void clearEffect(int i) {
         effects[i].clear();
     }
@@ -220,15 +294,18 @@ public class EffectAdmin {
         if (effectDataAdmin != null) {
             effectDataAdmin.release();
         }
-        if (effects != null) {
-            for (int i = 0; i < effects.length; i++) {
-                if (effects[i] != null) {
-                    effects[i].release();
+
+        effects = null;
+        if (effectBitmapDatas != null) {
+            for (int i = 0; i < effectBitmapDatas.length; i++) {
+                if (effectBitmapDatas[i] != null) {
+                    effectBitmapDatas[i].release();
                 }
             }
-            effects = null;
+            effectBitmapDatas = null;
         }
 
+        /*
         if (trimmedBitmapData != null) {
             for (int i = 0; i < trimmedBitmapData.length; i++) {
                 for (int j = 0; j < trimmedBitmapData[i].length; j++) {
@@ -248,6 +325,7 @@ public class EffectAdmin {
             }
             trimmedBitmapName = null;
         }
+        */
     }
 
 }

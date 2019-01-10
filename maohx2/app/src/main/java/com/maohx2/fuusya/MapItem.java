@@ -79,9 +79,8 @@ public class MapItem extends MapInanimate {
             default:
                 return;
         }
-        effectID = effectAdmin.createEffect("itemEffect" ,effectImageName, 5, 3);
+        effectID = effectAdmin.createEffect("itemEffect" ,effectImageName, 5, 3, extend, extend);
         effectAdmin.getEffect(effectID).setPosition(camera.convertToNormCoordinateX((int)w_x), camera.convertToNormCoordinateY((int)w_y));
-        effectAdmin.getEffect(effectID).setExtends(extend, extend);
         effectAdmin.getEffect(effectID).start();
     }
 
@@ -188,6 +187,7 @@ public class MapItem extends MapInanimate {
         if (extend > 2.0f) {
             extend = 2.0f;
         }
+        extend = (float)Math.floor(extend * 10.0f) / 1.0f;
 
         parameter *= 5.0f;
 
