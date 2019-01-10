@@ -779,6 +779,7 @@ public class MapObjectAdmin {
     }
 
     public void escapeDungeon() {
+        sound_admin.play("step00");
         map_inventry_admin.storageMapInventry();
         globalData.getExpendItemInventry().save();
         activityChange.toWorldActivity();

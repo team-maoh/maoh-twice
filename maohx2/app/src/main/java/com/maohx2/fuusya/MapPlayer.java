@@ -315,7 +315,6 @@ public class MapPlayer extends MapUnit {
         //ゲート脱出
         if (map_admin.isGate((int)(w_x/map_admin.getMagnification()), (int)(w_y/map_admin.getMagnification()))) {
             if (gateSkipFlag == false) {
-                sound_admin.play("step00");
                 map_object_admin.escapeDungeonChoice();
                 gateSkipFlag = true;
             }
