@@ -69,6 +69,8 @@ public class MapPlayer extends MapUnit {
     boolean debug_first = false;
     boolean player_touch_refresh;//Playerを二度タッチしたら二度目でMenuが消える
 
+    boolean gateSkipFlag = false; //一度ゲートを踏んだら、一度ゲートから出るかではゲートを起動しない、のためのフラグ
+
     int menu_frame;
 
     public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, MapPlateAdmin _map_plate_admin, BattleUnitAdmin _battle_unit_admin, DungeonModeManage _dungeon_mode_manage, boolean _avoid_battle_for_debug) {
@@ -304,6 +306,7 @@ public class MapPlayer extends MapUnit {
         pre_w_y = w_y;
 
         //System.out.println("x_y = " + (int)(w_x/map_admin.getMagnification()) + " / " + (int)(w_y/map_admin.getMagnification()));
+        //階段移動
         if (map_admin.isStairs((int)(w_x/map_admin.getMagnification()), (int)(w_y/map_admin.getMagnification()))) {
             sound_admin.play("step00");
             map_admin.goNextFloor();
@@ -311,10 +314,18 @@ public class MapPlayer extends MapUnit {
 
         //ゲート脱出
         if (map_admin.isGate((int)(w_x/map_admin.getMagnification()), (int)(w_y/map_admin.getMagnification()))) {
-            sound_admin.play("step00");
-            map_object_admin.escapeDungeon();
+            if (gateSkipFlag == false) {
+                sound_admin.play("step00");
+                map_object_admin.escapeDungeonChoice();
+                gateSkipFlag = true;
+            }
+        } else {
+            gateSkipFlag = false;
         }
 
+    }
+    public void setGateSkipFlag(boolean x) {
+        gateSkipFlag = x;
     }
 
     public void setMeanEncountSteps(int _mean) {

@@ -189,6 +189,8 @@ public class MapItem extends MapInanimate {
             extend = 2.0f;
         }
 
+        parameter *= 5.0f;
+
     }
 
 
