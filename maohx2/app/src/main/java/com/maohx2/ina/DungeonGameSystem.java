@@ -530,7 +530,9 @@ public class DungeonGameSystem {
                 map_admin.drawSmallMap();
                 effectAdmin.draw();
                 map_plate_admin.draw();
-                playerStatusViewer.draw();
+                if (playerStatus.getTutorialInDungeon() == 1) {
+                    playerStatusViewer.draw();
+                }
                 //graphic.bookingDrawCircle(0,0,10,paint);
                 break;
 

@@ -10,7 +10,7 @@ public class WindowTextPlate extends WindowPlate {
     protected Paint textPaint;
     protected float textWidth;
     protected float textHeight;
-    protected int textX, textY;
+    protected int textX, textY, textXoffset, textYoffset;
 
     public enum TextPosition {
         CENTER,
@@ -66,6 +66,12 @@ public class WindowTextPlate extends WindowPlate {
         updateTextPosition(id);
     }
 
+    public void setTextOffset(int x, int y) {
+        textXoffset = x;
+        textYoffset = y;
+        this.updateTextPosition();
+    }
+
     protected void updateTextPosition() {
         updateTextPosition(0);
     }
@@ -87,6 +93,8 @@ public class WindowTextPlate extends WindowPlate {
             textX = (int)(position[0] + (width - textWidth)/2.0f - 4);
             textY = (int)(position[1] + (height + textHeight)/2.0f - 4);
         }
+        textX += textXoffset;
+        textY += textYoffset;
 
     }
     protected  void drawText() {

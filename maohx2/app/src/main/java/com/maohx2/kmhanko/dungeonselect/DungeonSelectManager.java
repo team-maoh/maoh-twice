@@ -93,6 +93,7 @@ public class DungeonSelectManager {
     List<String> dungeonName;
     List<String> dungeonNameExpress;
     List<String> event;
+    List<Integer> dungeonNumber;
 
     PlateGroup<MapIconPlate> mapIconPlateGroup;
 
@@ -106,6 +107,7 @@ public class DungeonSelectManager {
     WindowTextPlate dungeonNotEnterPlate;
 
     WindowTextPlate dungeonIconName[];
+    WindowTextPlate dungeonIconNumber[];
 
     //PlateGroup<CircleImagePlate> menuButtonGroup;
 
@@ -294,6 +296,8 @@ public class DungeonSelectManager {
         List<Integer> y = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "y");
         List<Integer> scale = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "scale");
         List<Integer> scale_feed = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "scale_feed");
+        dungeonNumber = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "number");
+
         event = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "event");
 
         List<MapIconPlate> mapIconPlateList = new ArrayList<MapIconPlate>();
@@ -324,11 +328,13 @@ public class DungeonSelectManager {
         dungeonIconNamePaint.setTextSize(30);
         dungeonIconNamePaint.setColor(Color.WHITE);
 
-        int count = 0;
+        int count;
+
+        count = 0;
         dungeonIconName = new WindowTextPlate[size];
         for (int i = 0; i < size; i++) {
             if (dungeonNameExpress.get(i) != null) {
-                int centerX = x.get(i);
+                int centerX = x.get(i) + 0;
                 int centerY;
 
                 if (dungeonName.get(i).equals("Maoh")) {
@@ -336,11 +342,36 @@ public class DungeonSelectManager {
                 } else {
                     centerY = y.get(i) + 105;
                 }
-                int width = 200;
+                int width = 230;
                 int height = 40;
                 dungeonIconName[count] = new WindowTextPlate(graphic, new int[]{ centerX-width/2, centerY-height/2, centerX+width/2, centerY+height/2 },dungeonNameExpress.get(i),dungeonIconNamePaint, WindowTextPlate.TextPosition.CENTER, "dungeonIconPlate00");
                 dungeonIconName[count].setDrawFlag(true);
                 count++;
+            }
+        }
+
+        //ここからアイコンの番号
+        Paint dungeonIconNumberPaint = new Paint();
+        dungeonIconNumberPaint.setTextSize(30);
+        dungeonIconNumberPaint.setColor(Color.WHITE);
+        dungeonIconNumberPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        dungeonIconNumberPaint.setStrokeWidth(1.5f);
+
+        count = 0;
+        dungeonIconNumber = new WindowTextPlate[size];
+        for (int i = 0; i < dungeonIconNumber.length; i++) {
+            if (dungeonNumber.get(i) != null) {
+                if (dungeonNumber.get(i) != 0) {
+                    int centerX = x.get(i) - 115;
+                    int centerY = y.get(i) + 105 - 10;
+
+                    int width = 40;
+                    int height = 40;
+                    dungeonIconNumber[count] = new WindowTextPlate(graphic, new int[]{centerX - width / 2, centerY - height / 2, centerX + width / 2, centerY + height / 2}, String.valueOf(dungeonNumber.get(i)), dungeonIconNumberPaint, WindowTextPlate.TextPosition.CENTER, "dungeonIconPlate00");
+                    dungeonIconNumber[count].setDrawFlag(true);
+                    dungeonIconNumber[count].setTextOffset(4, -1);
+                    count++;
+                }
             }
         }
 
@@ -595,6 +626,12 @@ public class DungeonSelectManager {
                 dungeonIconName[i].draw();
             }
         }
+        for (int i = 0; i < dungeonIconNumber.length; i++) {
+            if (dungeonIconNumber[i] != null) {
+                dungeonIconNumber[i].draw();
+            }
+        }
+
 
         dungeonEnterSelectButtonGroup.draw();
         //menuButtonGroup.draw();

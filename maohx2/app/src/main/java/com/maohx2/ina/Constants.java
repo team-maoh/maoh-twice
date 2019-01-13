@@ -49,15 +49,6 @@ public final class Constants {
             OPENING,
             GOKI,
         }
-        public enum DUNGEON_NUMBER {
-            FOREST,
-            LAVA,
-            SEA,
-            CHESS,
-            SWAMP,
-            HAUNTED,
-            DRAGON,
-        }
     }
 
     public static final int STAGE_NUM = 7;
