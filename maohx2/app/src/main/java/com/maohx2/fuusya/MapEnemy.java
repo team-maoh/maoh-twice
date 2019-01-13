@@ -203,6 +203,8 @@ public class MapEnemy extends MapUnit {
             System.out.println("敵と接触");
             //デバッグのためにコメントアウト
 //            map_object_admin.battleStart();//中身が空なので呼んでも無意味
+            //エンカウントリセット
+            player.setEncountSteps(0);
 
             exists = false;
 

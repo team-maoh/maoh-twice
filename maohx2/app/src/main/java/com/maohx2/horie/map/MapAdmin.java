@@ -499,6 +499,28 @@ public class MapAdmin {
         return point;
     }
 
+    //プレイヤーとは別
+    public Point getGoodSpawnRoomPointWithoutPlayer() {
+        Point point = new Point(0, 0);
+        int raw[] = MyAvail.shuffle(map_size.x * map_size.y - 1);
+        // by kmhanko
+        for (int i = 0; i < raw.length ; i++) {
+            //Random rnd = new Random();
+            //int x = rnd.nextInt(map_size.x);
+            //int y = rnd.nextInt(map_size.y);
+            int x = raw[i]/map_size.y;
+            int y = raw[i]%map_size.y;
+
+
+
+            if (map_object_admin.isGoodSpawnPoint(x, y) && map_data[x][y].isRoom() && !map_data[x][y].isGate() && !map_data[x][y].isWall() && !map_data[x][y].isStairs() && !map_data[x][y].isMine() & !map_player.isWithinReach(x * magnification, y * magnification, 10.0f * magnification)) {
+                point.set(x * magnification, y * magnification);
+                break;
+            }
+        }
+        return point;
+    }
+
     //部屋の壁際の座標を返す
     private Point getRoomEdgePoint() {
         Point point = new Point(0, 0);
@@ -618,6 +640,7 @@ public class MapAdmin {
             searchStartPoint();
             camera.setCameraOffset(start_point.x, start_point.y);
             map_player.putUnit(start_point.x + magnification / 2, start_point.y + magnification / 2);
+            map_player.setDungeonEnterEncountWaitTime(0);
         } else {
             goBossFloor();
         }

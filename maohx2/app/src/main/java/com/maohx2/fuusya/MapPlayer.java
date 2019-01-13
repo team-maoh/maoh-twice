@@ -73,6 +73,9 @@ public class MapPlayer extends MapUnit {
 
     int menu_frame;
 
+    int dungeonEnterEncountWaitTime;//階層移動後するにはエンカウントしないための変数
+    static final int ENCOUNT_START_TIME = 30 * 3;
+
     public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, MapPlateAdmin _map_plate_admin, BattleUnitAdmin _battle_unit_admin, DungeonModeManage _dungeon_mode_manage, boolean _avoid_battle_for_debug) {
         super(graphic, _map_object_admin, _camera);
 
@@ -132,6 +135,10 @@ public class MapPlayer extends MapUnit {
         has_touched_within_player = false;
 
         touch_state = dungeon_user_interface.getTouchState();
+
+        if (dungeonEnterEncountWaitTime < ENCOUNT_START_TIME) {
+            dungeonEnterEncountWaitTime++;
+        }
 
         if (touch_state != Constants.Touch.TouchState.AWAY) {
 
@@ -243,7 +250,7 @@ public class MapPlayer extends MapUnit {
 
                     encount_steps++;
 
-                    if (encount_steps >= th_encount_steps && avoid_battle_for_debug == false) {
+                    if (encount_steps >= th_encount_steps && avoid_battle_for_debug == false && dungeonEnterEncountWaitTime >= ENCOUNT_START_TIME) {
                         System.out.println("◆一定歩数 歩いたので敵と遭遇");
                         encount_steps = 0;
                         //遭遇の瞬間に、次の遭遇までに要する歩数を乱数で決める
@@ -331,8 +338,16 @@ public class MapPlayer extends MapUnit {
         mean_encount_steps = _mean;
     }
 
+    public void setEncountSteps(int x) {
+        encount_steps = x;
+    }
+
     public void setVarEncountSteps(int _var) {
         var_encount_steps = _var;
+    }
+
+    public void setDungeonEnterEncountWaitTime(int x) {
+        dungeonEnterEncountWaitTime = x;
     }
 
     private int makeThresholdEncountSteps() {
