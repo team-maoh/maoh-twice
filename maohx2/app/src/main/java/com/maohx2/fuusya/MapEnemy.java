@@ -111,7 +111,7 @@ public class MapEnemy extends MapUnit {
                 if (has_found_player == false && exposedToPlayer() == true) {//未発見→発見（見つける）
                     if (playerWithinEyesight() == true || has_blind_spot == false) {
                         has_found_player = true;//Playerと自身の間に壁(or玄関マス)が無い && Playerが視野角内に居る
-                        soundAdmin.play("levelup00");
+                        soundAdmin.play("find00");
                     }
 
                     //found motion(「！」を出すとか)
@@ -302,6 +302,10 @@ public class MapEnemy extends MapUnit {
 
     public void setHasFoundPlayer(boolean _has_found_player) {
         has_found_player = _has_found_player;
+    }
+
+    public boolean getHasFoundPlayer() {
+        return has_found_player;
     }
 
     public  void setKindOfEnemy(int _kind_of_enemy){

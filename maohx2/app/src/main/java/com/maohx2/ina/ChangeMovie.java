@@ -22,8 +22,8 @@ public class ChangeMovie {
         rectPaint.setARGB(255,30,30,30);
     }
 
-    boolean update(){
-        if(length == 0){soundAdmin.play("levelup00");}
+    boolean update(boolean soundFlag){
+        if(length == 0 && soundFlag){soundAdmin.play("encount00");}
         length += changeSpeed;
 
         if(length > 1600){

@@ -117,6 +117,7 @@ public class DungeonGameSystem {
     int repeat_count;
 
     ChangeMovie changeMovie;
+    boolean map_init = false;
 
     public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin _soundAdmin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange _activityChange, Constants.DungeonKind.DUNGEON_KIND _dungeon_kind) {
         dungeon_user_interface = _dungeon_user_interface;
@@ -376,11 +377,21 @@ public class DungeonGameSystem {
 
         switch (dungeonModeManage.getMode()) {
             case MAP_INIT:
-                playMapBGM();
-                dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
-                if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.DRAGON) {
-                    backGround = graphic.searchBitmap("firstBackground");
+                if(map_init == false) {
+                    map_init = true;
+                    playMapBGM();
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
+                    if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.DRAGON) {
+                        backGround = graphic.searchBitmap("firstBackground");
+                    }
+                } else if(changeMovie.update(false) == true) {
+                    playMapBGM();
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
+                    if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.DRAGON) {
+                        backGround = graphic.searchBitmap("firstBackground");
+                    }
                 }
+                break;
             case MAP:
                 if (!talkAdmin.isTalking()) {
                     map_object_admin.update();
@@ -397,7 +408,7 @@ public class DungeonGameSystem {
                 break;
 
             case BUTTLE_INIT:
-                if(changeMovie.update() == true) {
+                if(changeMovie.update(true) == true) {
                     dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE);
                     backGround = graphic.searchBitmap("firstBackground");
                     musicAdmin.loadMusic("battle00", true);
@@ -515,6 +526,11 @@ public class DungeonGameSystem {
         }
 
         switch (dungeonModeManage.getMode()) {
+            case MAP_INIT:
+                graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
+                battle_unit_admin.draw();
+                changeMovie.draw();
+                break;
             case MAP:
                 if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.DRAGON) {
                     graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);

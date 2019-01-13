@@ -107,7 +107,7 @@ public class UserInterface {
             }
         }
 
-        System.out.println(touch_state);
+        //   bSystem.out.println(touch_state);
     }
 
     public void draw(){

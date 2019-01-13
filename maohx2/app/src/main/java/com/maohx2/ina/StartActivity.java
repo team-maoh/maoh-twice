@@ -223,6 +223,7 @@ class StartSurfaceView extends BaseSurfaceView {
         //デバッグ用
         //openingFlag = false;
 
+        musicAdmin.loadMusic("openingbgm00",false);
 
         //todo:こいつは一番下
         thread = new Thread(this);
@@ -250,7 +251,6 @@ class StartSurfaceView extends BaseSurfaceView {
        if(touch_state == TouchState.DOWN && touchWaitcount > 15){
            if (downCount == 0) {
                soundAdmin.play("opening02");
-               musicAdmin.loadMusic("openingbgm00",false);
            }
            downCount++;
            touchWaitcount = 0;
