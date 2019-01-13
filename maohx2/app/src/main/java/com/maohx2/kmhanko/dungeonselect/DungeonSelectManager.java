@@ -61,8 +61,7 @@ public class DungeonSelectManager {
 
     static final String DUNGEON_SELECT_BUTTON_TABLE_NAME = "dungeon_select_button";
     //static final String MENU_BUTTON_TABLE_NAME = "menu_button";
-
-
+    
     boolean initUIsFlag = false;
 
     private boolean isDungeonSelectActive = false;
