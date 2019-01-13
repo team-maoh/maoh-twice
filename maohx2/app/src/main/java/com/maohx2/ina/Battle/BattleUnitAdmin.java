@@ -347,6 +347,9 @@ public class BattleUnitAdmin {
                 spawnRock();
                 timeLimitBar.reset(30 * 30);
             //}
+
+            //採掘道具攻撃力算出
+            //miningAttack =
         }
 
         textBoxAdmin.resetTextBox(resultTextBoxID);
@@ -572,12 +575,15 @@ public class BattleUnitAdmin {
                                         for (int i = 0; i < MAKER_NUM; i++) {
                                             if (touch_markers[i].isExist() == false) {
                                                 //todo:attackの計算
-                                                touch_markers[i].generate((int) touch_x, (int) touch_y, attack_equipment.getRadius(), battle_units[0].getAttack() + attack_equipment.getAttack(), attack_equipment.getDecayRate());
-                                                System.out.println("装備攻撃力:" + attack_equipment.getAttack());
-                                                System.out.println("プレーヤー攻撃力:" + battle_units[0].getAttack());
-                                                System.out.println("マーカーダメージ:" + touch_markers[i].getDamage());
                                                 //エフェクト by Horie
                                                 if (mode == MODE.MINING) {
+                                                    int attack;
+                                                    attack = battle_units[0].getAttack() + attack_equipment.getAttack();
+
+                                                    touch_markers[i].generate((int) touch_x, (int) touch_y, attack_equipment.getRadius(), attack, attack_equipment.getDecayRate());
+                                                    System.out.println("装備攻撃力:" + attack_equipment.getAttack());
+                                                    System.out.println("マーカーダメージ:" + touch_markers[i].getDamage());
+
                                                     switch (attack_equipment.getName()) {
                                                         case "スコップ":
                                                             mine_effect_ID = effectAdmin.createEffect("scoop_effect", "scoop_effect", 5, 4, 1);
@@ -600,6 +606,11 @@ public class BattleUnitAdmin {
 
                                                     break;
                                                 } else {
+                                                    touch_markers[i].generate((int) touch_x, (int) touch_y, attack_equipment.getRadius(), battle_units[0].getAttack() + attack_equipment.getAttack(), attack_equipment.getDecayRate());
+                                                    System.out.println("装備攻撃力:" + attack_equipment.getAttack());
+                                                    System.out.println("プレーヤー攻撃力:" + battle_units[0].getAttack());
+                                                    System.out.println("マーカーダメージ:" + touch_markers[i].getDamage());
+
                                                     switch (attack_equipment.getEquipmentKind()) {
                                                         case AX:
                                                             battle_effect_ID = effectAdmin.createEffect("axe_effect", "axe_effect", 3, 5, 1);
