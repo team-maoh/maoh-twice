@@ -38,6 +38,7 @@ public class MapMine extends MapInanimate {
                 System.out.println("採掘スポットに接触");
                 if (dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE && dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT) {
                     //戦闘画面では「罠だ！」のTextBoxを出さない
+                    player.setEncountSteps(0);
                     map_object_admin.eraseEffectBox();
                     dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
                     exists = false;

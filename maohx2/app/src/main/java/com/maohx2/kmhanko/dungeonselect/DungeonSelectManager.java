@@ -735,9 +735,10 @@ public class DungeonSelectManager {
                         geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_NORMAL);
                         initUIsFlag = true;
                     } else {
-                        soundAdmin.play("cannot_exit_room");
+                        //soundAdmin.play("cannot_exit_room");
+                        soundAdmin.play("enter00");
                         initUIsFlag = true;
-                        //geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_SEE_ONLY);
+                        geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_SEE_ONLY);
                     }
                 }
             }
