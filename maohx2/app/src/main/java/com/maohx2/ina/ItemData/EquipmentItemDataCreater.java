@@ -13,10 +13,12 @@ import java.util.Random;
 public class EquipmentItemDataCreater {
 
     EquipmentItemBaseData[] equipmentItemBaseDatas;
+    Random rnd;
 
     public EquipmentItemDataCreater(EquipmentItemBaseData[] _equipmentItemBaseDatas) {
 
         equipmentItemBaseDatas = _equipmentItemBaseDatas;
+        rnd = new Random();
     }
 
     public EquipmentItemData getEquipmentItemData(EQUIPMENT_KIND _equipmentKind, BattleDungeonUnitData _battleDungeonUnitData, int player_luck) {
@@ -93,9 +95,11 @@ public class EquipmentItemDataCreater {
         }
         luck_rate = (luck_rate / 0.13) / 10.0;
 
-        newEquipmentItemData.setAttack((int) (set_double * (1.0 + luck_rate) * 0.3));
+        int luck_atk = (int) (set_double * (1.0 + luck_rate) * 0.3);
+        int atk = luck_atk + rnd.nextInt(luck_atk / 5);
+        newEquipmentItemData.setAttack(atk);
 
-        newEquipmentItemData.setPrice(newEquipmentItemData.getAttack() * 7);
+        newEquipmentItemData.setPrice(atk * 7);
 
         return newEquipmentItemData;
     }

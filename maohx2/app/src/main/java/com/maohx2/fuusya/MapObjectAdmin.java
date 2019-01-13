@@ -181,7 +181,7 @@ public class MapObjectAdmin {
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
 
-            map_enemy[i] = new MapEnemy(graphic, this, camera, ENEMY_DIR, true, true, battle_unit_admin, dungeon_mode_manage, avoid_battle_for_debug);
+            map_enemy[i] = new MapEnemy(graphic, this, camera, ENEMY_DIR, true, true, battle_unit_admin, dungeon_mode_manage, avoid_battle_for_debug, sound_admin);
             map_enemy[i].init();
             map_enemy_bitmap[i] = new MapObjectBitmap(ENEMY_DIR, graphic, "ジオイーター");
             map_enemy_bitmap[i].init(3 / 2);
