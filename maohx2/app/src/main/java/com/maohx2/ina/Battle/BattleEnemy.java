@@ -90,26 +90,6 @@ public class BattleEnemy extends BattleUnit {
         clear();
     }
 
-    /*
-    @Override
-    public void init() {
-        super.init();
-
-    }
-    */
-
-    /*
-    public void initStatus(BattleDungeonUnitData _battleDungeonUnitData) {
-        super.initStatus(_battleDungeonUnitData);
-        Random rnd = new Random();
-        wait_frame = rnd.nextInt(80);
-        //by kmhanko
-        attack_frame = _battleDungeonUnitData.getStatus(ATTACK_FRAME);
-        //attack_frame = 100;//データベースからの読み込み、レベルによる補正などもあり
-    }
-    */
-
-
     //--エフェクト関係
     int damagedEffect;
     int attackEffect;
@@ -131,11 +111,6 @@ public class BattleEnemy extends BattleUnit {
 
     protected void initEffect(int _id) {
 
-        //System.out.println("dg_mes" + attackExtendX);
-        //System.out.println("dg_mes" + attackExtendY);
-        //System.out.println("dg_mes" + damagedExtendX);
-        //System.out.println("dg_mes" + damagedExtendY);
-
         id = _id;
         damageEffectTime = 0;
         width = getBattleDungeonUnitData().getBitmapDate().getWidth();
@@ -143,9 +118,6 @@ public class BattleEnemy extends BattleUnit {
 
         attackExtendX = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.5f;
         attackExtendY = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.5f;
-
-        //damagedExtendX = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
-        //damagedExtendY = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
 
         damagedExtendX = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
         damagedExtendY = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
@@ -191,9 +163,11 @@ public class BattleEnemy extends BattleUnit {
         alimentTime = getAlimentTime();
 
         if (attack_frame > 0 ) {
-            attackCount = rnd.nextInt((int) (getAttackFrame() / 2));
+            attackCount = -40;
+            //attackCount = rnd.nextInt((int) (getAttackFrame() / 2));
         } else {
-            attackCount = 0;
+            attackCount = -40;
+            //attackCount = 0;
         }
     }
 
@@ -344,7 +318,8 @@ public class BattleEnemy extends BattleUnit {
 
         if (attack_frame > 0) {
             paint.setARGB(255, 255, 0, 0);
-            graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 1.2), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) attackCount / (double) attack_frame))), (int) (position_y + radius * 1.3), paint);
+            if(attackCount >= 0){ graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 1.2), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) attackCount / (double) attack_frame))), (int) (position_y + radius * 1.3), paint);}
+            else{graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 1.2), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double)0 / (double) attack_frame))), (int) (position_y + radius * 1.3), paint);}
         }
     }
 

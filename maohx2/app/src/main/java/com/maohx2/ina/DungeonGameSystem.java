@@ -116,6 +116,8 @@ public class DungeonGameSystem {
 
     int repeat_count;
 
+    ChangeMovie changeMovie;
+
     public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin _soundAdmin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange _activityChange, Constants.DungeonKind.DUNGEON_KIND _dungeon_kind) {
         dungeon_user_interface = _dungeon_user_interface;
         battle_user_interface = _battle_user_interface;
@@ -144,6 +146,8 @@ public class DungeonGameSystem {
         battle_unit_admin.getEffectAdmin(effectAdmin);
         backEffectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin);
         battle_unit_admin.getEnemyBackEffectAdmin(backEffectAdmin);
+
+        changeMovie = new ChangeMovie(graphic, soundAdmin);
 
         //repeat_count = _repeat_count;
 
@@ -379,8 +383,6 @@ public class DungeonGameSystem {
                 }
             case MAP:
                 if (!talkAdmin.isTalking()) {
-                    //map_object_admin.update(is_displaying_menu, is_touching_outside_menu);
-                    //map_plate_admin.update(is_displaying_menu);
                     map_object_admin.update();
                     map_plate_admin.update();
                     playerStatusViewer.update();
@@ -395,11 +397,12 @@ public class DungeonGameSystem {
                 break;
 
             case BUTTLE_INIT:
-                //battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
-                //battle_unit_admin.spawnEnemy();
-                dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE);
-                backGround = graphic.searchBitmap("firstBackground");
-                musicAdmin.loadMusic("battle00",true);
+                if(changeMovie.update() == true) {
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE);
+                    backGround = graphic.searchBitmap("firstBackground");
+                    musicAdmin.loadMusic("battle00", true);
+                }
+                break;
             case BUTTLE:
                 if (!talkAdmin.isTalking()) {
                     battle_user_interface.update();
@@ -454,9 +457,6 @@ public class DungeonGameSystem {
 
             case EQUIP_EXPEND:
                 if (!talkAdmin.isTalking()) {
-                    //equipmentInventry.updata();
-                    //expendInventry.updata();
-                    //palette_admin.update(false);
                     palette_admin.update(true);//便宜上
 
                     //TODO by kmhanko あまり良くない書き方
@@ -506,8 +506,6 @@ public class DungeonGameSystem {
         effectAdmin.update();
         backEffectAdmin.update();
 
-        //musicAdmin.update();
-
         activityChange.toChangeActivity();
     }
 
@@ -516,9 +514,6 @@ public class DungeonGameSystem {
             return;
         }
 
-//        for(int i = 0;i < 7;i++) {
-//            System.out.println("ホリエ：is_tf("+i+") = " + map_status.getTutorialFinishStatus(i));
-//        }
         switch (dungeonModeManage.getMode()) {
             case MAP:
                 if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.DRAGON) {
@@ -531,7 +526,20 @@ public class DungeonGameSystem {
                 effectAdmin.draw();
                 map_plate_admin.draw();
                 playerStatusViewer.draw();
-                //graphic.bookingDrawCircle(0,0,10,paint);
+                break;
+
+            case BUTTLE_INIT:
+                if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.DRAGON) {
+                    graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
+                }
+                map_admin.drawMap_for_autotile_light_animation();
+                backEffectAdmin.draw();
+                map_object_admin.draw();
+                map_admin.drawSmallMap();
+                effectAdmin.draw();
+                map_plate_admin.draw();
+                playerStatusViewer.draw();
+                changeMovie.draw();
                 break;
 
             case BUTTLE:
