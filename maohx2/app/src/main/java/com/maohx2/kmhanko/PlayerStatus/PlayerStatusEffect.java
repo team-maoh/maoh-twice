@@ -69,10 +69,6 @@ public class PlayerStatusEffect {
             paintEdge.setAlpha((int)(255.0f * ((float)(DRAW_TIME - time)) / (float)DRAW_TIME));
             graphic.bookingDrawText(text, x, y, paintEdge);
             graphic.bookingDrawText(text, x, y, paint);
-
-
-
-
         }
     }
 
