@@ -193,7 +193,7 @@ public final class Constants {
             EQUIP,
             PRESENT,
             SELL,
-            //GEO_MAP_SEE_ONLY,
+            GEO_MAP_SEE_ONLY,
 
             DUNGEON_SELECT_INIT,
             GEO_MAP_SELECT_INIT,

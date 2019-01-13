@@ -1,5 +1,6 @@
 package com.maohx2.ina.Text;
 
+import android.content.Context;
 import android.graphics.Paint;
 
 import com.maohx2.ina.Constants.Touch.TouchWay;
@@ -64,5 +65,15 @@ public class BoxImagePlate extends BoxPlate {
         draw_image_context = null;
         default_image_context = null;
         feedback_image_context = null;
+    }
+
+    public void setDrawImageContext(ImageContext con) {
+        draw_image_context = con;
+    }
+    public void setDefaultImageContext(ImageContext con) {
+        default_image_context = con;
+    }
+    public void setFeedbackImageContext(ImageContext con) {
+        feedback_image_context = con;
     }
 }

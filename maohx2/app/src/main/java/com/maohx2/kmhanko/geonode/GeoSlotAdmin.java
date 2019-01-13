@@ -166,6 +166,12 @@ public class GeoSlotAdmin {
         initHoldGeoPlateGroup();
     }
 
+    public void start() {
+        for(int i = 0; i < geoSlots.size(); i++) {
+            geoSlots.get(i).updateGeoBaseTileImageContext();
+        }
+    }
+
     /*
     public void start() {
         textBoxAdmin.setTextBoxExists(statusTextBoxID, true);
@@ -227,7 +233,6 @@ public class GeoSlotAdmin {
 
         //plateGroupインスタンス化
         geoSlotGroup = new PlateGroup<GeoSlot>((GeoSlot[])grand_geo_slot.getGeoSlots().toArray(new GeoSlot[0]));
-
     }
 
 /*
@@ -474,7 +479,8 @@ public class GeoSlotAdmin {
 
 
     public void updateInStatus(){
-        geoSlotGroup.update();
+        update();
+        //geoSlotGroup.update();
         //backPlateGroup.update();
     }
 

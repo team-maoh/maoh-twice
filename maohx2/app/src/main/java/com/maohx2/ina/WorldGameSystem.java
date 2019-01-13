@@ -532,6 +532,7 @@ public class WorldGameSystem {
                 }
                 playerStatusViewer.update();
                 break;
+
                 /*
             case GEO_MAP_SEE_ONLY_INIT:
                 initBackPlate();
@@ -540,7 +541,18 @@ public class WorldGameSystem {
             case GEO_MAP_SEE_ONLY:
                 geoSlotAdminManager.updateInStatus();
                 break;
-                */
+*//*
+            case GEO_MAP_SEE_ONLY_INIT:
+                backGround = graphic.searchBitmap("GeoMap");
+                worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SEE_ONLY);
+                geoSlotAdminManager.start();
+            case GEO_MAP_SEE_ONLY:
+                if (!talkAdmin.isTalking()) {
+                    geoSlotAdminManager.update();
+                }
+                playerStatusViewer.update();
+                break;
+*/
             case CREDIT:
                 backPlateGroup.update();
                 if(world_user_interface.getTouchState() == Constants.Touch.TouchState.UP){
@@ -663,10 +675,13 @@ public class WorldGameSystem {
                 playerStatusViewer.draw();
                 break;
                 /*
+            case GEO_MAP_SEE_ONLY_INIT:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, true);
+                break;
             case GEO_MAP_SEE_ONLY:
-                graphic.bookingDrawBitmapData(backGround, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 effectAdmin.draw();
-                geoSlotAdminManager.drawInStatus();
+                geoSlotAdminManager.draw();
                 playerStatusViewer.draw();
                 break;
                 */

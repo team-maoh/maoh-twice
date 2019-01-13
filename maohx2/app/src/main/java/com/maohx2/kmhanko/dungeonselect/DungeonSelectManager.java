@@ -735,10 +735,11 @@ public class DungeonSelectManager {
                         geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_NORMAL);
                         initUIsFlag = true;
                     } else {
-                        //soundAdmin.play("cannot_exit_room");
                         soundAdmin.play("enter00");
-                        initUIsFlag = true;
+                        geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
+                        worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
                         geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_SEE_ONLY);
+                        initUIsFlag = true;
                     }
                 }
             }
@@ -774,9 +775,12 @@ public class DungeonSelectManager {
                         geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_NORMAL);
                         initUIsFlag = true;
                     } else {
-                        soundAdmin.play("cannot_exit_room");
+                        //soundAdmin.play("cannot_exit_room");
+                        soundAdmin.play("enter00");
+                        geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
+                        worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
+                        geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_SEE_ONLY);
                         initUIsFlag = true;
-                        //geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_SEE_ONLY);
                     }
                 }
             }

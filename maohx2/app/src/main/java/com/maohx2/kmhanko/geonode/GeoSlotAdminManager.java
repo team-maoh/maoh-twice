@@ -153,7 +153,7 @@ public class GeoSlotAdminManager {
 
 
     public void start() {
-        //activeGeoSlotAdmin.start();
+        activeGeoSlotAdmin.start();
         calcStatus();
         geoInventry.setPosition(SIDE_INVENTRY.INV_LEFT, SIDE_INVENTRY.INV_UP, SIDE_INVENTRY.INV_RIGHT,SIDE_INVENTRY.INV_BOTTOM,SIDE_INVENTRY.INV_CONTENT_NUM);
     }
@@ -257,7 +257,7 @@ public class GeoSlotAdminManager {
         if (mode == MODE.WORLD_NORMAL) {
             geoInventry.updata();
             if (activeGeoSlotAdmin != null) {
-                activeGeoSlotAdmin.update();
+                activeGeoSlotAdmin.updateInStatus();
             }
             //textBoxAdmin.setTextBoxExists(statusTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.GEO_MAP);
             backPlateGroup.update();
@@ -267,20 +267,19 @@ public class GeoSlotAdminManager {
     }
 
     private void updateSeeOnly() {
+        geoInventry.updata();
         if (activeGeoSlotAdmin != null) {
-            activeGeoSlotAdmin.updateInStatus();
+            activeGeoSlotAdmin.update();
         }
-        mapIconPlateCheck();
-        mapIconPlateGroup.update();
+        //mapIconPlateCheck();
+        //mapIconPlateGroup.update();
         backPlateGroup.update();
         //textBoxAdmin.setTextBoxExists(statusTextBoxID, dungeonModeManage.getMode() == Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP);
     }
 
     public void draw() {
         if (mode == MODE.WORLD_NORMAL) {
-            //effectAdmin.draw();
             geoInventry.draw();
-
             if (activeGeoSlotAdmin != null) {
                 activeGeoSlotAdmin.draw();
             }
@@ -292,10 +291,11 @@ public class GeoSlotAdminManager {
 
     private void drawSeeOnly() {
         //effectAdmin.draw();
+        geoInventry.draw();
         if (activeGeoSlotAdmin != null) {
             activeGeoSlotAdmin.drawInStatus();
         }
-        mapIconPlateGroup.draw();
+        //mapIconPlateGroup.draw();
         backPlateGroup.draw();
         //geoMapSelectButton.draw();
     }
