@@ -125,7 +125,7 @@ public class EffectAdmin {
         return makeEffectID;
     }
     public EffectBitmapData createEffectBitmapData(String _dataName, String _imageName, int widthNum, int heightNum) {
-        return createEffectBitmapData(_dataName, _imageName, widthNum, heightNum);
+        return createEffectBitmapData(_dataName, _imageName, widthNum, heightNum,1.0f, 1.0f);
     }
 
     public EffectBitmapData createEffectBitmapData(String _dataName, String _imageName, int widthNum, int heightNum, float extendX, float extendY) {
