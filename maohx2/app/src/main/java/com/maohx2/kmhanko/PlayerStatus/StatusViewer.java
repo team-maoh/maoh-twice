@@ -15,30 +15,32 @@ import com.maohx2.ina.UI.UserInterface;
  */
 
 abstract public class StatusViewer {
-    boolean isExist;
-    int textNum;
-    static final int TEXT_X_OFFSET_LEFT1 = 65;
-    static final float TEXT_SIZE_RATE = 0.6f;
+    public boolean isExist;
+    public int textNum;
 
-    PlayerStatusEffect[] statusEffect = new PlayerStatusEffect[16];
+    public int textXOffsetLeft1;
+    public int textXOffsetLeft2;
+    public float textSizeRate;
 
-    int posX1;
-    int posX2;
-    int posY1;
-    int posY2;
+    public PlayerStatusEffect[] statusEffect = new PlayerStatusEffect[16];
 
-    int sizeX;
-    int sizeY;
+    public int posX1;
+    public int posX2;
+    public int posY1;
+    public int posY2;
 
-    Paint paint;
-    Paint boxPaint;
+    public int sizeX;
+    public int sizeY;
 
-    Graphic graphic;
-    UserInterface userInterface;
+    public Paint paint;
+    public Paint boxPaint;
 
-    PlateGroup<BoxPlate> statusPlate;
+    public Graphic graphic;
+    public UserInterface userInterface;
 
-    BitmapData statusIcon[];
+    public PlateGroup<BoxPlate> statusPlate;
+
+    public BitmapData statusIcon[];
 
     public StatusViewer(Graphic _graphic, UserInterface _userInterface, int _textNum) {
         textNum = _textNum;
@@ -66,7 +68,7 @@ abstract public class StatusViewer {
         sizeY = (posY2 - posY1);
 
         paint = new Paint();
-        paint.setTextSize(sizeY * TEXT_SIZE_RATE);
+        paint.setTextSize(sizeY * textSizeRate);
     }
 
     abstract public void update();
@@ -99,7 +101,7 @@ abstract public class StatusViewer {
             if (!statusEffect[i].isExist()) {
                 statusEffect[i].start(
                         text,
-                        (int)(posX1 + sizeX * statusID + TEXT_X_OFFSET_LEFT1),
+                        (int)(posX1 + sizeX * statusID + textXOffsetLeft1),
                         (int)(posY1),// + (int)((sizeY + sizeY * TEXT_SIZE_RATE)/2.0f)),
                         tempPaint
                 );
@@ -137,5 +139,11 @@ abstract public class StatusViewer {
         boxPaint = null;
         statusPlate.release();
         statusPlate = null;
+    }
+
+    public void effectClear() {
+        for (int i = 0; i < statusEffect.length; i++) {
+            statusEffect[i].clear();
+        }
     }
 }

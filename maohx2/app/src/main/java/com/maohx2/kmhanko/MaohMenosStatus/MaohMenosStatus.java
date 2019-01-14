@@ -12,8 +12,11 @@ public class MaohMenosStatus {
     private int geoDefence;
     private int geoLuck;
 
+    private boolean effectFlag;
+
     public MaohMenosStatus() {
         initGeoStatus();
+        effectFlag = false;
     }
 
     public void initGeoStatus() {
@@ -28,6 +31,9 @@ public class MaohMenosStatus {
         geoAttack += geoCalcSaverAdmin.getParam("Attack")/25;
         geoDefence += geoCalcSaverAdmin.getParam("Defence")/25;
         geoLuck += geoCalcSaverAdmin.getParam("Luck")/25;
+    }
+    public void calcStatus() {
+        effectFlag = true;
     }
 
     public int[] getMenosStatuses() {
@@ -50,6 +56,13 @@ public class MaohMenosStatus {
     }
     public int getGeoLuck() {
         return geoLuck;
+    }
+
+    public boolean getEffectFlag() {
+        return effectFlag;
+    }
+    public void setEffectFlag(boolean x) {
+        effectFlag = x;
     }
 
     public void release() {}

@@ -19,20 +19,15 @@ import android.graphics.Paint;
 public class PlayerStatusViewer extends StatusViewer {
     static final int TEXT_NUM = 5;
 
-
-    static final int TEXT_X_OFFSET_LEFT1 = 65; //Override
-    static final int TEXT_X_OFFSET_LEFT2 = 125;
-
-    static final float TEXT_SIZE_RATE= 0.6f; //Override
     static public final float EXPRESS_RATE = 222.22f;
     static final float EXPRESS_RATE2 = 222.2f;
 
     //毎回フレームの監視用
-    int hp = 0;
-    int attack = 0;
-    int defence = 0;
-    int luck = 0;
-    int money = 0;
+    float hp = 0;
+    float attack = 0;
+    float defence = 0;
+    float luck = 0;
+    float money = 0;
 
     PlayerStatus playerStatus;
 
@@ -53,12 +48,16 @@ public class PlayerStatusViewer extends StatusViewer {
         posY1 = 850;
         posY2 = 900;
 
+        textXOffsetLeft1 = 65;
+        textXOffsetLeft2 = 125;
+        textSizeRate = 0.6f;
+
         sizeX = (posX2 - posX1)/textNum;
         sizeY = (posY2 - posY1);
 
         isExist = true;
         paint = new Paint();
-        paint.setTextSize(sizeY * TEXT_SIZE_RATE);
+        paint.setTextSize(sizeY * textSizeRate);
         boxPaint = new Paint();
         boxPaint.setARGB(128,0,0,0);
 
@@ -118,8 +117,8 @@ public class PlayerStatusViewer extends StatusViewer {
                                     //graphic.bookingDrawText(statusFigure,posX1 + TEXT_X_OFFSET_LEFT1 + TEXT_X_OFFSET_LEFT2, posY1 + sizeY * i + sizeY, paint);
 
                                     graphic.bookingDrawBitmapData(statusIcon[i],posX1 + sizeX * i , posY1, 1.5f, 1.5f,0,255, true);
-                                    graphic.bookingDrawText(statusName,posX1 + sizeX * i + TEXT_X_OFFSET_LEFT1, posY1 + (int)((sizeY + sizeY * TEXT_SIZE_RATE)/2.0f), paint);
-                                    graphic.bookingDrawText(statusFigure,posX1 + sizeX * i + TEXT_X_OFFSET_LEFT2, posY1 + (int)((sizeY + sizeY * TEXT_SIZE_RATE)/2.0f), paint);
+                                    graphic.bookingDrawText(statusName,posX1 + sizeX * i + textXOffsetLeft1, posY1 + (int)((sizeY + sizeY * textSizeRate)/2.0f), paint);
+                                    graphic.bookingDrawText(statusFigure,posX1 + sizeX * i + textXOffsetLeft2, posY1 + (int)((sizeY + sizeY * textSizeRate)/2.0f), paint);
 
                                 }
                             }
@@ -133,7 +132,7 @@ public class PlayerStatusViewer extends StatusViewer {
             return;
         }
         //statusPlate.update();あえて呼ばない
-        int parameter;
+        float parameter;
         if (playerStatus.getEffectFlag()) {
             System.out.println("StatusEffectFlag = True");
             if ((parameter = playerStatus.getHP() - hp) != 0 && hp != 0) {

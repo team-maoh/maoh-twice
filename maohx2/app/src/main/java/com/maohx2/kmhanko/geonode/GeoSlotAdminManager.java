@@ -397,6 +397,7 @@ public class GeoSlotAdminManager {
                 }
             }
         }
+        maohMenosStatus.calcStatus();
         //statusTextBoxUpdate();
         //activeGeoSlotAdmin.statusTextBoxUpdate();
     }
@@ -443,6 +444,15 @@ public class GeoSlotAdminManager {
             }
         }
 
+    }
+
+    public boolean isMaohGeoMap() {
+        if (activeGeoSlotAdmin != null) {
+            if (activeGeoSlotAdmin.getName().equals("Maoh")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //ステータス表示関係

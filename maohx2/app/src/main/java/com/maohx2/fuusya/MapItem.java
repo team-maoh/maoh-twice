@@ -182,7 +182,6 @@ public class MapItem extends MapInanimate {
         }
         float tempRate =  (float)(parameter - statusMaxMin[statusID + 3][1])/(float)(statusMaxMin[statusID + 3][0] - statusMaxMin[statusID + 3][1]);
         extend = tempRate * 1.4f + 0.1f;
-
         parameter *= 1.5f;
 
     }

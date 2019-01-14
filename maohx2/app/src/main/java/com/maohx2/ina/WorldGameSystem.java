@@ -37,6 +37,7 @@ import com.maohx2.ina.Constants;
 import static com.maohx2.ina.Constants.GAMESYSTEN_MODE.WORLD_MODE;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.GeoPresent.GeoPresentManager;
+import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatusViewer;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.MaohMenosStatus.MaohMenosStatus;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatusViewer;
@@ -140,6 +141,7 @@ public class WorldGameSystem {
     int credit_num = 1;
 
     PlayerStatusViewer playerStatusViewer;
+    MaohMenosStatusViewer maohMenosStatusViewer;
 
     MusicAdmin musicAdmin;
     EquipmentItemDataAdmin equipment_item_data_admin;
@@ -200,6 +202,7 @@ public class WorldGameSystem {
         musicAdmin = globalData.getMusicAdmin();
 
         playerStatusViewer = new PlayerStatusViewer(graphic, world_user_interface, playerStatus);
+        maohMenosStatusViewer = new MaohMenosStatusViewer(graphic, world_user_interface, maohMenosStatus);
 
         worldModeAdmin = new WorldModeAdmin();
         worldModeAdmin.initWorld();
@@ -413,6 +416,7 @@ public class WorldGameSystem {
             case DUNGEON_SELECT_INIT:
                 backGround = graphic.searchBitmap("firstBackground");
                 worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT);
+                //maohMenosStatusViewer.effectClear();
                 dungeonSelectManager.start();
             case DUNGEON_SELECT:
                 if (!talkAdmin.isTalking()) {
@@ -450,6 +454,9 @@ public class WorldGameSystem {
                     geoSlotAdminManager.update();
                 }
                 playerStatusViewer.update();
+                if (geoSlotAdminManager.isMaohGeoMap()) {
+                    maohMenosStatusViewer.update();
+                }
                 break;
             case SHOP_INIT:
                 itemShopAdmin.start();
@@ -612,6 +619,9 @@ public class WorldGameSystem {
                 effectAdmin.draw();
                 geoSlotAdminManager.draw();
                 playerStatusViewer.draw();
+                if (geoSlotAdminManager.isMaohGeoMap()) {
+                    maohMenosStatusViewer.draw();
+                }
                 break;
             case TU_GEO:
                 if(tu_geo_flag == 0) {

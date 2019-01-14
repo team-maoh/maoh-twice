@@ -143,7 +143,7 @@ public class BattleUnitAdmin {
     MusicAdmin musicAdmin;
 
     int resultButtonTimeCount;
-    static final int RESULT_BUTTON_TIME = 30;
+    static final int RESULT_BUTTON_TIME = 15;
 
     //by kmhanko BattleUnitDataAdmin追加
     public void init(

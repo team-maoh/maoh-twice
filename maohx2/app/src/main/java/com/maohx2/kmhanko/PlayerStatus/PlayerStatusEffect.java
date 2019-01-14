@@ -72,6 +72,10 @@ public class PlayerStatusEffect {
         }
     }
 
+    public void clear() {
+        exist = false;
+    }
+
     public boolean isExist() {
         return exist;
     }
