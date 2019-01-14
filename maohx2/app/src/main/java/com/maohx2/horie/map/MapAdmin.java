@@ -1082,6 +1082,10 @@ public class MapAdmin {
         }
         //画像表示デバッグ用
 //        graphic.bookingDrawBitmapData(at_floor.big_auto_tile[34], 0, 0, 1, 1, 0, 255, true);
+        //AutoTile小表示
+//        for(int i = 0;i < 46;i++){
+//            graphic.bookingDrawBitmapData(at_wall[0].auto_tile[i],128+(i%8)*64 +5*(i%8),128+(i/8)*64+5*(i/8),2,2,0,255,true);
+//        }
     }
 
     public void drawSmallMap() {
