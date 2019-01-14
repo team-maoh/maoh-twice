@@ -17,13 +17,13 @@ import android.graphics.Paint;
  */
 
 public class PlayerStatusViewer extends StatusViewer {
-    boolean isExist;
-
     static final int TEXT_NUM = 5;
-    static final int TEXT_X_OFFSET_LEFT1 = 65;
+
+
+    static final int TEXT_X_OFFSET_LEFT1 = 65; //Override
     static final int TEXT_X_OFFSET_LEFT2 = 125;
 
-    static final float TEXT_SIZE_RATE= 0.6f;
+    static final float TEXT_SIZE_RATE= 0.6f; //Override
     static public final float EXPRESS_RATE = 222.22f;
     static final float EXPRESS_RATE2 = 222.2f;
 
@@ -37,7 +37,7 @@ public class PlayerStatusViewer extends StatusViewer {
     PlayerStatus playerStatus;
 
     public PlayerStatusViewer(Graphic _graphic, UserInterface _userInterface, PlayerStatus _playerStatus) {
-        super(_graphic, _userInterface, 5);
+        super(_graphic, _userInterface, TEXT_NUM);
         playerStatus = _playerStatus;
 
         hp = playerStatus.getHP();
@@ -53,7 +53,7 @@ public class PlayerStatusViewer extends StatusViewer {
         posY1 = 850;
         posY2 = 900;
 
-        sizeX = (posX2 - posX1)/TEXT_NUM;
+        sizeX = (posX2 - posX1)/textNum;
         sizeY = (posY2 - posY1);
 
         isExist = true;

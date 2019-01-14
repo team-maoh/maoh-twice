@@ -18,7 +18,7 @@ abstract public class StatusViewer {
     boolean isExist;
     int textNum;
     static final int TEXT_X_OFFSET_LEFT1 = 65;
-    static final float TEXT_SIZE_RATE= 0.6f;
+    static final float TEXT_SIZE_RATE = 0.6f;
 
     PlayerStatusEffect[] statusEffect = new PlayerStatusEffect[16];
 
