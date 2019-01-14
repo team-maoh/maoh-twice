@@ -142,6 +142,9 @@ public class BattleUnitAdmin {
 
     MusicAdmin musicAdmin;
 
+    int resultButtonTimeCount;
+    static final int RESULT_BUTTON_TIME = 30;
+
     //by kmhanko BattleUnitDataAdmin追加
     public void init(
             Graphic _graphic,
@@ -951,6 +954,11 @@ public class BattleUnitAdmin {
 
         //text関係
         if (resultOperatedFlag && battleEndFlag) {
+            resultButtonTimeCount++;
+            if (resultButtonTimeCount > RESULT_BUTTON_TIME) {
+                resultButtonGroup.setUpdateFlag(true);
+                resultButtonGroup.setDrawFlag(true);
+            }
             resultButtonCheck();
             resultButtonGroup.update();
         }
@@ -983,12 +991,6 @@ public class BattleUnitAdmin {
                 //battleEnd();
                 break;
             case OPENING:
-                /*
-                resultTextBoxUpdate(new String[]{"うわあああああああああ！",});
-                resultButtonGroup.setUpdateFlag(true);
-                resultButtonGroup.setDrawFlag(true);
-                */
-                //battleEnd();
                 break;
         }
     }
@@ -1001,16 +1003,14 @@ public class BattleUnitAdmin {
                 getDropItem();
                 playerStatus.addMoney(getDropMoney());
                 growUp();
-                resultButtonGroup.setUpdateFlag(true);
-                resultButtonGroup.setDrawFlag(true);
+                resultButtonTimeCount = 0;
                 break;
             case BOSS:
                 musicAdmin.loadMusic("win04",true);
                 getDropItem();
                 playerStatus.addMoney(getDropMoney());
                 growUp();
-                resultButtonGroup.setUpdateFlag(true);
-                resultButtonGroup.setDrawFlag(true);
+                resultButtonTimeCount = 0;
                 break;
             case MINING:
                 musicAdmin.loadMusic("win03",true);
@@ -1021,21 +1021,18 @@ public class BattleUnitAdmin {
                     //ジオを掘り尽くした場合
                     getDropGeoAfter();
                 }
-                resultButtonGroup.setUpdateFlag(true);
-                resultButtonGroup.setDrawFlag(true);
+                resultButtonTimeCount = 0;
                 break;
             case MAOH:
                 musicAdmin.loadMusic("win05",true);
                 growUp();
                 resultTextBoxUpdate(new String[]{"魔王を倒した！",});
-                resultButtonGroup.setUpdateFlag(true);
-                resultButtonGroup.setDrawFlag(true);
+                resultButtonTimeCount = 0;
                 break;
             case OPENING:
                 //本来来ない場所
                 resultTextBoxUpdate(new String[]{"あれ？なんか！",});
-                resultButtonGroup.setUpdateFlag(true);
-                resultButtonGroup.setDrawFlag(true);
+                resultButtonTimeCount = 0;
                 break;
         }
     }
