@@ -25,6 +25,7 @@ public class MapObjectBitmap {
     int MAX_BITMAP_DIR = 8;//最大で8方位
     int MAX_FRAME = 3;//3枚の画像をループ表示する
     BitmapData bitmap_data[][] = new BitmapData[MAX_BITMAP_DIR][MAX_FRAME];
+    BitmapData bitmap_data_find[][] = new BitmapData[MAX_BITMAP_DIR][MAX_FRAME];
     int FRAME_QUICK_PERIODS = 5;//画像の更新周期(値が小さいほどfpsが上がる)
     int FRAME_SLOW_PERIODS = 10;
     int frame_periods;
@@ -33,6 +34,8 @@ public class MapObjectBitmap {
     boolean is_increasing_frame;//画像番号が増えている最中 or 減っている最中
     int frame;//いま表示しているフレームの番号（０～２）
     BitmapData raw_bitmap_data;
+    BitmapData raw_bitmap_data_find;
+    boolean geoEaterFlag = false;
     double shift_double = 1.0;
 
     public MapObjectBitmap(int _total_dirs, Graphic _graphic, String _object_name) {
@@ -45,6 +48,9 @@ public class MapObjectBitmap {
         object_name = _object_name;
 
         raw_bitmap_data = graphic.searchBitmap(object_name);
+        geoEaterFlag = object_name.equals("ジオイーター");
+        if(geoEaterFlag){ raw_bitmap_data_find = graphic.searchBitmap("ジオイータfind");}
+
         switch (total_dirs) {
             case 1://画像サイズより取得？
                 unit_width = raw_bitmap_data.getWidth();
@@ -73,7 +79,7 @@ public class MapObjectBitmap {
             case 1:
                 break;
             case 8:
-                storeEightBD(raw_bitmap_data);
+                storeEightBD(raw_bitmap_data,raw_bitmap_data_find);
                 break;
             default:
                 System.out.println("Bitmapの方位数（total_dirs）がおかしい");
@@ -130,10 +136,10 @@ public class MapObjectBitmap {
     }
 
     // 引数のx, yは画面内の座標
-    public void draw(double _dir_on_map, double x, double y) {
-        draw(_dir_on_map, x, y, 255);
+    public void draw(double _dir_on_map, double x, double y, boolean findFlag) {
+        draw(_dir_on_map, x, y, 255, findFlag);
     }
-    public void draw(double _dir_on_map, double x, double y, int alpha) {
+    public void draw(double _dir_on_map, double x, double y, int alpha, boolean findFlag) {
 
         int shift_from_width = (int)(-unit_width * DRAW_SCALE / 2.0f);
         int shift_from_height = (int)(-unit_height * DRAW_SCALE / 2.0f);
@@ -150,7 +156,8 @@ public class MapObjectBitmap {
                 //[0 ~ 2*PI]を[0 ~ 7]に変換する
                 int int_dir_on_map = ((int) ((_dir_on_map + PI / total_dirs) / (2 * PI / total_dirs))) % total_dirs;
 
-                graphic.bookingDrawBitmapData(bitmap_data[int_dir_on_map][frame], (int) x + shift_from_width, (int) y + shift_from_height * (int) shift_double, DRAW_SCALE, DRAW_SCALE, 0, alpha, true);
+                if(!findFlag){ graphic.bookingDrawBitmapData(bitmap_data[int_dir_on_map][frame], (int) x + shift_from_width, (int) y + shift_from_height * (int) shift_double, DRAW_SCALE, DRAW_SCALE, 0, alpha, true);}
+                else{graphic.bookingDrawBitmapData(bitmap_data_find[int_dir_on_map][frame], (int) x + shift_from_width, (int) y + shift_from_height * (int) shift_double, DRAW_SCALE, DRAW_SCALE, 0, alpha, true);}
                 break;
 
             default:
@@ -158,10 +165,10 @@ public class MapObjectBitmap {
         }
 
     }
-    public void draw(double _dir_on_map, double x, double y, float extend) {
-        draw(_dir_on_map, x, y, 255, extend);
+    public void draw(double _dir_on_map, double x, double y, float extend, boolean findFlag) {
+        draw(_dir_on_map, x, y, 255, extend, findFlag);
     }
-    public void draw(double _dir_on_map, double x, double y, int alpha, float extend) {
+    public void draw(double _dir_on_map, double x, double y, int alpha, float extend, boolean findFlag) {
 
         int shift_from_width = (int)(-unit_width * DRAW_SCALE * extend / 2.0f);
         int shift_from_height = (int)(-unit_height * DRAW_SCALE * extend / 2.0f);
@@ -177,8 +184,8 @@ public class MapObjectBitmap {
                 //マップ上でのオブジェクトの向き
                 //[0 ~ 2*PI]を[0 ~ 7]に変換する
                 int int_dir_on_map = ((int) ((_dir_on_map + PI / total_dirs) / (2 * PI / total_dirs))) % total_dirs;
-
-                graphic.bookingDrawBitmapData(bitmap_data[int_dir_on_map][frame], (int) x + shift_from_width, (int) y + shift_from_height * (int) shift_double, extend * DRAW_SCALE, extend* DRAW_SCALE, 0, alpha, true);
+                if(!findFlag){ graphic.bookingDrawBitmapData(bitmap_data[int_dir_on_map][frame], (int) x + shift_from_width, (int) y + shift_from_height * (int) shift_double, extend * DRAW_SCALE, extend* DRAW_SCALE, 0, alpha, true);}
+                else{graphic.bookingDrawBitmapData(bitmap_data_find[int_dir_on_map][frame], (int) x + shift_from_width, (int) y + shift_from_height * (int) shift_double, extend * DRAW_SCALE, extend* DRAW_SCALE, 0, alpha, true);}
                 break;
 
             default:
@@ -196,43 +203,46 @@ public class MapObjectBitmap {
 //    }
 
     //8方位、時間的には3フレームの繰り返し
-    private void storeEightBD(BitmapData _raw_bitmap_data) {
+    private void storeEightBD(BitmapData _raw_bitmap_data, BitmapData _raw_bitmap_data_find) {
 
         for (int i = 0; i < 8; i++) {
             switch (i) {
                 case 0:
-                    store3Frames(2, 0, _raw_bitmap_data, i);//2行0列の画像をobject_bitmapに格納
+                    store3Frames(2, 0, _raw_bitmap_data, _raw_bitmap_data_find, i);//2行0列の画像をobject_bitmapに格納
                     break;
                 case 1:
-                    store3Frames(3, 1, _raw_bitmap_data, i);
+                    store3Frames(3, 1, _raw_bitmap_data, _raw_bitmap_data_find, i);
                     break;
                 case 2:
-                    store3Frames(3, 0, _raw_bitmap_data, i);
+                    store3Frames(3, 0, _raw_bitmap_data, _raw_bitmap_data_find, i);
                     break;
                 case 3:
-                    store3Frames(2, 1, _raw_bitmap_data, i);
+                    store3Frames(2, 1, _raw_bitmap_data, _raw_bitmap_data_find, i);
                     break;
                 case 4:
-                    store3Frames(1, 0, _raw_bitmap_data, i);
+                    store3Frames(1, 0, _raw_bitmap_data, _raw_bitmap_data_find, i);
                     break;
                 case 5:
-                    store3Frames(0, 1, _raw_bitmap_data, i);
+                    store3Frames(0, 1, _raw_bitmap_data, _raw_bitmap_data_find, i);
                     break;
                 case 6:
-                    store3Frames(0, 0, _raw_bitmap_data, i);
+                    store3Frames(0, 0, _raw_bitmap_data, _raw_bitmap_data_find, i);
                     break;
                 case 7:
-                    store3Frames(1, 1, _raw_bitmap_data, i);
+                    store3Frames(1, 1, _raw_bitmap_data, _raw_bitmap_data_find, i);
                     break;
             }
         }
     }
 
-    private void store3Frames(int row, int col, BitmapData _raw_bitmap_data, int _object_dir) {
+    private void store3Frames(int row, int col, BitmapData _raw_bitmap_data, BitmapData _raw_bitmap_data_find, int _object_dir) {
 
         for (int i = 0; i < 3; i++) {
 //            public BitmapData processTrimmingBitmapData(BitmapData src_bitmap_data, int x, int y, int width, int height){
             bitmap_data[_object_dir][i] = graphic.processTrimmingBitmapData(_raw_bitmap_data, col * (unit_width * 3) + i * unit_width, row * unit_height, unit_width, unit_height);
+            if(geoEaterFlag == true) {
+                bitmap_data_find[_object_dir][i] = graphic.processTrimmingBitmapData(_raw_bitmap_data_find, col * (unit_width * 3) + i * unit_width, row * unit_height, unit_width, unit_height);
+            }
         }
     }
 

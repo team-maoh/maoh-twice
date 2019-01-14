@@ -181,7 +181,7 @@ public class MapObjectAdmin {
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
 
-            map_enemy[i] = new MapEnemy(graphic, this, camera, ENEMY_DIR, true, true, battle_unit_admin, dungeon_mode_manage, avoid_battle_for_debug);
+            map_enemy[i] = new MapEnemy(graphic, this, camera, ENEMY_DIR, true, true, battle_unit_admin, dungeon_mode_manage, avoid_battle_for_debug, sound_admin);
             map_enemy[i].init();
             map_enemy_bitmap[i] = new MapObjectBitmap(ENEMY_DIR, graphic, "ジオイーター");
             map_enemy_bitmap[i].init(3 / 2);
@@ -299,34 +299,33 @@ public class MapObjectAdmin {
 //        }
         for (int i = 0; i < NUM_OF_TRAP; i++) {
             if (map_trap[i].exists() == true && map_trap[i].isVisible() == true) {
-                map_trap_bitmap[i].draw(map_trap[i].getDirOnMap(), map_trap[i].getNormX(), map_trap[i].getNormY());
+                map_trap_bitmap[i].draw(map_trap[i].getDirOnMap(), map_trap[i].getNormX(), map_trap[i].getNormY(),false);
             }
         }
         for (int i = 0; i < NUM_OF_ITEM; i++) {
             if (map_item[i].exists()) {
-                map_item_bitmap[i].draw(map_item[i].getDirOnMap(), map_item[i].getNormX(), map_item[i].getNormY(), 192, map_item[i].getExtend());
+                map_item_bitmap[i].draw(map_item[i].getDirOnMap(), map_item[i].getNormX(), map_item[i].getNormY(), 192, map_item[i].getExtend(), false);
             }
         }
         for (int i = 0; i < NUM_OF_MINE; i++) {
             if (map_mine[i].exists() == true) {
-                map_mine_bitmap[i].draw(map_mine[i].getDirOnMap(), map_mine[i].getNormX(), map_mine[i].getNormY());
+                map_mine_bitmap[i].draw(map_mine[i].getDirOnMap(), map_mine[i].getNormX(), map_mine[i].getNormY(),false);
             }
         }
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
             if (map_enemy[i].exists() == true) {
-                map_enemy_bitmap[i].draw(map_enemy[i].getDirOnMap(), map_enemy[i].getNormX(), map_enemy[i].getNormY());
-
+                map_enemy_bitmap[i].draw(map_enemy[i].getDirOnMap(), map_enemy[i].getNormX(), map_enemy[i].getNormY(),map_enemy[i].getHasFoundPlayer());
             }
         }
 
         for (int i = 0; i < NUM_OF_BOSS; i++) {
             if (map_boss[i].exists() == true) {
-                map_boss_bitmap[i].draw(map_boss[i].getDirOnMap(), map_boss[i].getNormX(), map_boss[i].getNormY());
+                map_boss_bitmap[i].draw(map_boss[i].getDirOnMap(), map_boss[i].getNormX(), map_boss[i].getNormY(),false);
             }
         }
         if (map_player.exists() == true) {
-            map_player_bitmap.draw(map_player.getDirOnMap(), map_player.getNormX(), map_player.getNormY(), playerAlpha);
+            map_player_bitmap.draw(map_player.getDirOnMap(), map_player.getNormX(), map_player.getNormY(), playerAlpha,false);
         }
 
         dungeonEscapePlate.draw();

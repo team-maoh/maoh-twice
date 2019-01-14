@@ -25,6 +25,7 @@ import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 /**
  * Created by Fuusya on 2017/09/11.
@@ -55,8 +56,9 @@ public class MapEnemy extends MapUnit {
     boolean avoid_battle_for_debug;
 
     int kind_of_enemy;
+    SoundAdmin soundAdmin;
 
-    public MapEnemy(Graphic graphic, MapObjectAdmin map_object_admin, Camera _camera, int _total_dirs, boolean _detect_player, boolean _has_blind_spot, BattleUnitAdmin _battle_unit_admin, DungeonModeManage _dungeon_mode_manage, boolean _avoid_battle_for_debug) {
+    public MapEnemy(Graphic graphic, MapObjectAdmin map_object_admin, Camera _camera, int _total_dirs, boolean _detect_player, boolean _has_blind_spot, BattleUnitAdmin _battle_unit_admin, DungeonModeManage _dungeon_mode_manage, boolean _avoid_battle_for_debug, SoundAdmin _soundAdmin) {
         super(graphic, map_object_admin, _camera);
 
         total_dirs = _total_dirs;
@@ -90,6 +92,8 @@ public class MapEnemy extends MapUnit {
         battle_unit_admin = _battle_unit_admin;
         dungeon_mode_manage = _dungeon_mode_manage;
         avoid_battle_for_debug = _avoid_battle_for_debug;
+
+        soundAdmin = _soundAdmin;
     }
 
     public void init() {
@@ -107,6 +111,7 @@ public class MapEnemy extends MapUnit {
                 if (has_found_player == false && exposedToPlayer() == true) {//未発見→発見（見つける）
                     if (playerWithinEyesight() == true || has_blind_spot == false) {
                         has_found_player = true;//Playerと自身の間に壁(or玄関マス)が無い && Playerが視野角内に居る
+                        soundAdmin.play("find00");
                     }
 
                     //found motion(「！」を出すとか)
@@ -144,7 +149,7 @@ public class MapEnemy extends MapUnit {
 
                 } else {
 
-                    step = 5 * DEFAULT_STEP + incremental_step;
+                    step = 2 * DEFAULT_STEP + incremental_step;
 
                     incremental_step += DEFAULT_STEP / 100;
 
@@ -297,6 +302,10 @@ public class MapEnemy extends MapUnit {
 
     public void setHasFoundPlayer(boolean _has_found_player) {
         has_found_player = _has_found_player;
+    }
+
+    public boolean getHasFoundPlayer() {
+        return has_found_player;
     }
 
     public  void setKindOfEnemy(int _kind_of_enemy){
