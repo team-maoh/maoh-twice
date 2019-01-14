@@ -6,7 +6,7 @@ import com.maohx2.ina.Constants.SELECT_WINDOW;
 import com.maohx2.ina.Text.BoxImagePlate;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemData;
-import com.maohx2.ina.WorldModeAdmin;
+import com.maohx2.ina.GameSystem.WorldModeAdmin;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.Arrange.InventryS;
 

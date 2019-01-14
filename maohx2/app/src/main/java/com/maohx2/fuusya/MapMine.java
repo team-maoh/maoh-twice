@@ -3,7 +3,7 @@ package com.maohx2.fuusya;
 import com.maohx2.horie.map.Camera;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.ina.DungeonModeManage;
+import com.maohx2.ina.GameSystem.DungeonModeManage;
 
 /**
  * Created by Fuusya on 2018/05/01.

@@ -13,14 +13,15 @@ import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.DungeonMonsterDataAdmin;
 import com.maohx2.horie.map.MapAdmin;
-import com.maohx2.ina.ActivityChange;
+//import com.maohx2.ina.ActivityChange;
+import com.maohx2.ina.Activity.UnitedActivity;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Battle.BattleUnitDataAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.ina.DungeonGameSystem;
-import com.maohx2.ina.DungeonModeManage;
+import com.maohx2.ina.GameSystem.DungeonGameSystem;
+import com.maohx2.ina.GameSystem.DungeonModeManage;
 import com.maohx2.horie.map.DungeonData;
 import com.maohx2.ina.GlobalData;
 import com.maohx2.ina.Text.BoxTextPlate;
@@ -114,7 +115,7 @@ public class MapObjectAdmin {
     boolean avoid_battle_for_debug = false;
 
     MapInventryAdmin map_inventry_admin;
-    ActivityChange activityChange;
+    //ActivityChange activityChange;
     int kind_of_zako;
 
     int repeatCount;
@@ -124,15 +125,18 @@ public class MapObjectAdmin {
 
     Constants.DungeonKind.DUNGEON_KIND dungeonKind;
 
+    UnitedActivity unitedActivity;
+
     boolean initUIsFlag;
 
-    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, GlobalData _globalData, BattleUnitAdmin _battle_unit_admin, TextBoxAdmin _text_box_admin, BattleUnitDataAdmin _battleUnitDataAdmin, DungeonMonsterDataAdmin _dungeonMonsterDataAdmin, int _repeatCount, Constants.DungeonKind.DUNGEON_KIND _dungeonKind, DungeonData _dungeonData, EffectAdmin _effectAdmin, EffectAdmin _backEffectAdmin) {
+    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, UnitedActivity _unitedActivity, BattleUnitAdmin _battle_unit_admin, TextBoxAdmin _text_box_admin, BattleUnitDataAdmin _battleUnitDataAdmin, DungeonMonsterDataAdmin _dungeonMonsterDataAdmin, int _repeatCount, Constants.DungeonKind.DUNGEON_KIND _dungeonKind, DungeonData _dungeonData, EffectAdmin _effectAdmin, EffectAdmin _backEffectAdmin) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
         sound_admin = _sound_admin;
         map_plate_admin = _map_plate_admin;
         dungeon_mode_manage = _dungeon_mode_manage;
-        globalData = _globalData;
+        unitedActivity = _unitedActivity;
+        globalData = (GlobalData)unitedActivity.getApplication();
         playerStatus = globalData.getPlayerStatus();
         battle_unit_admin = _battle_unit_admin;
         text_box_admin = _text_box_admin;
@@ -209,7 +213,7 @@ public class MapObjectAdmin {
         bag_item_admin = new BagItemAdmin();
         bag_item_admin.init();
 
-        activityChange = map_plate_admin.getActivityChange();
+        //activityChange = map_plate_admin.getActivityChange();
 
         textbox_id = text_box_admin.createTextBox(100, 700, 1450, 880, 4);
         text_box_admin.setTextBoxUpdateTextByTouching(textbox_id, false);
@@ -687,7 +691,8 @@ public class MapObjectAdmin {
         playerStatus.setNowHPMax();
         map_inventry_admin.storageMapInventry();
         globalData.getExpendItemInventry().save();
-        activityChange.toWorldActivity();
+        //activityChange.toWorldActivity();
+        unitedActivity.getUnitedSurfaceView().toWorldGameMode();
     }
 
     MapMine nowMapMine;

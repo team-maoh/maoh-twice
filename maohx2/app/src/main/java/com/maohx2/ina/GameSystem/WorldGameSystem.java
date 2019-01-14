@@ -1,4 +1,4 @@
-package com.maohx2.ina;
+package com.maohx2.ina.GameSystem;
 
 import android.app.Activity;
 import android.graphics.Canvas;
@@ -11,6 +11,7 @@ import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 //import com.maohx2.horie.EquipTutorial.EquipTutorialSaver;
 import com.maohx2.horie.Tutorial.TutorialFlagData;
 import com.maohx2.horie.Tutorial.TutorialFlagSaver;
+import com.maohx2.ina.Activity.UnitedActivity;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
@@ -63,7 +64,7 @@ import com.maohx2.kmhanko.itemshop.ItemSell;
 import com.maohx2.horie.map.MapStatus;
 import com.maohx2.horie.map.MapStatusSaver;
 import com.maohx2.kmhanko.Talking.TalkSaveDataAdmin;
-
+import com.maohx2.ina.GlobalData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +98,8 @@ public class WorldGameSystem {
 
     WorldModeAdmin worldModeAdmin;
 
-    WorldActivity worldActivity;
+    //WorldActivity worldActivity;
+    UnitedActivity unitedActivity;
 
     PlayerStatus playerStatus;
     MaohMenosStatus maohMenosStatus;
@@ -106,7 +108,7 @@ public class WorldGameSystem {
     ExpendItemInventrySaver expendItemInventrySaver;
     GeoSlotSaver geoSlotSaver;
     GeoPresentSaver geoPresentSaver;
-    ActivityChange activityChange;
+    //ActivityChange activityChange;
 
     //EquipTutorial
 //    EquipTutorialSaveData equip_tutorial_save_data;
@@ -153,12 +155,14 @@ public class WorldGameSystem {
 
     Credits credits;
 
-    public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, WorldActivity _worldActivity, ActivityChange _activityChange) {
+    public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, UnitedActivity _unitedActivity) {
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
         soundAdmin = _soundAdmin;
         world_user_interface = _world_user_interface;
-        activityChange = _activityChange;
+        //activityChange = _activityChange;
+        unitedActivity = _unitedActivity;
+
         tu_equip_img = graphic.searchBitmap("t_equip");
         tu_shop_img = graphic.searchBitmap("t_shop");
         tu_sell_img = graphic.searchBitmap("t_sell");
@@ -195,8 +199,8 @@ public class WorldGameSystem {
         credit[0] = graphic.searchBitmap("クレジット1");
         credit[1] = graphic.searchBitmap("クレジット2");
 
-        worldActivity = _worldActivity;
-        GlobalData globalData = (GlobalData) worldActivity.getApplication();
+
+        GlobalData globalData = (GlobalData) unitedActivity.getApplication();
         playerStatus = globalData.getPlayerStatus();
         maohMenosStatus = globalData.getMaohMenosStatus();
         musicAdmin = globalData.getMusicAdmin();
@@ -207,7 +211,7 @@ public class WorldGameSystem {
         worldModeAdmin = new WorldModeAdmin();
         worldModeAdmin.initWorld();
 
-        soundAdmin.loadSoundPack("basic");
+        //soundAdmin.loadSoundPack("basic");
 
         text_box_admin = new TextBoxAdmin(graphic, soundAdmin);
         text_box_admin.init(world_user_interface);
@@ -230,14 +234,14 @@ public class WorldGameSystem {
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin);
 
 
-        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, activityChange, soundAdmin, worldActivity, map_status,map_status_saver, talkAdmin);
+        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, soundAdmin, unitedActivity, map_status,map_status_saver, talkAdmin);
 
         geoSlotAdminManager.loadGeoSlot();
 
         itemShopAdmin.init(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager, expendItemInventry, geoInventry, playerStatus, soundAdmin);
         itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "expendBasic");
 
-        itemSell = new ItemSell(graphic, world_user_interface, worldActivity, text_box_admin, worldModeAdmin, soundAdmin);
+        itemSell = new ItemSell(graphic, world_user_interface, unitedActivity, text_box_admin, worldModeAdmin, soundAdmin);
 
         canvas = null;
 
@@ -379,6 +383,7 @@ public class WorldGameSystem {
     int position_x = 800;
     int position_y = 400;
     */
+
 
             ;
     public void update() {
@@ -583,7 +588,7 @@ public class WorldGameSystem {
         effectAdmin.update();
         //musicAdmin.update();
 
-        activityChange.toChangeActivity();
+        //activityChange.toChangeActivity();
     }
 
 
@@ -759,9 +764,6 @@ public class WorldGameSystem {
         System.out.println("takanoRelease : WorldGameSystem");
         if (palette_admin != null) {
             palette_admin.release();
-        }
-        if (world_user_interface != null) {
-            world_user_interface.release();
         }
 
         if (map_status != null) {

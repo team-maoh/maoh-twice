@@ -1,4 +1,4 @@
-package com.maohx2.ina;
+package com.maohx2.ina.GameSystem;
 
 import static com.maohx2.ina.Constants.GAMESYSTEN_MODE.*;
 

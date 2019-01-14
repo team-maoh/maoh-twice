@@ -144,6 +144,10 @@ public class UserInterface {
         for(int i = 0 ; i < LIST_MAX ; i++) {
             if (circle_radius_list[i] == 0) {
                 index_num = i;
+                break;
+            }
+            if (i == LIST_MAX - 1) {
+                System.out.println("UserInterface: circleCenterListの上限オーバー");
             }
         }
         circle_center_list_x[index_num] = graphic.transrateNormalizedPositionToDispPositionX((int)center_x);
@@ -159,6 +163,10 @@ public class UserInterface {
         for(int i = 0 ; i < LIST_MAX ; i++) {
             if (box_left_list[i] * box_top_list[i] * box_right_list[i] * box_down_list[i]  == 0) {
                 index_num = i;
+                break;
+            }
+            if (i == LIST_MAX - 1) {
+                System.out.println("UserInterface: circleCenterListの上限オーバー");
             }
         }
         box_left_list[index_num] = graphic.transrateNormalizedPositionToDispPositionX((int)left);

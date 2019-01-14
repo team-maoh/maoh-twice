@@ -76,7 +76,7 @@ public class PlayerStatus {
         //effect呼び出し用
         effectFlag = true;
 
-        System.out.println("calcStatus");
+        System.out.println("PlayerStatus: calcStatus");
     }
 
     public void initGeoStatus() {

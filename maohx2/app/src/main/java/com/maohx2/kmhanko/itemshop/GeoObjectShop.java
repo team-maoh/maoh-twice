@@ -5,7 +5,7 @@ import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.UI.UserInterface;
-import com.maohx2.ina.WorldModeAdmin;
+import com.maohx2.ina.GameSystem.WorldModeAdmin;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;

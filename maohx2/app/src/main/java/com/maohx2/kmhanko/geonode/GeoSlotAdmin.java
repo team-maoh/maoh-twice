@@ -12,7 +12,7 @@ import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.UI.UserInterface;
 
 // Added by kmhanko
-import com.maohx2.ina.WorldModeAdmin;
+import com.maohx2.ina.GameSystem.WorldModeAdmin;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.database.MyDatabase;

@@ -10,7 +10,7 @@ import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.UserInterface;
-import com.maohx2.ina.WorldModeAdmin;
+import com.maohx2.ina.GameSystem.WorldModeAdmin;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;

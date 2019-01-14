@@ -4,7 +4,7 @@ import com.maohx2.horie.map.Camera;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.ina.DungeonModeManage;
+import com.maohx2.ina.GameSystem.DungeonModeManage;
 
 import static android.R.attr.name;
 import static java.lang.Math.cos;

@@ -19,7 +19,7 @@ import static com.maohx2.ina.Constants.Item.GEO_PARAM_KIND_RATE;
 
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Draw.ImageContext;
-import com.maohx2.ina.DungeonModeManage;
+import com.maohx2.ina.GameSystem.DungeonModeManage;
 import com.maohx2.ina.GlobalData;
 import com.maohx2.ina.ItemData.EquipmentItemBaseData;
 import com.maohx2.ina.ItemData.EquipmentItemBaseDataAdmin;

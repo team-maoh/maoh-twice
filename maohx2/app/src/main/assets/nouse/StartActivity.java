@@ -170,7 +170,7 @@ class StartSurfaceView extends BaseSurfaceView {
 
 
 
-        activityChange = new ActivityChange(this, currentActivity);
+        //activityChange = new ActivityChange(this, currentActivity);
 
 
         global_data.getEquipmentInventrySaver().init(graphic);
@@ -202,7 +202,7 @@ class StartSurfaceView extends BaseSurfaceView {
 
 
         start_game_system = new StartGameSystem();
-        start_game_system.init(holder, graphic, start_user_interface, start_activity, my_database_admin);
+        //TODO コンパイルのため//start_game_system.init(holder, graphic, start_user_interface, start_activity, my_database_admin);
 
         /*
         musicAdmin = new MusicAdmin(currentActivity);
@@ -276,14 +276,14 @@ class StartSurfaceView extends BaseSurfaceView {
                 soundAdmin.play("opening01");
                 //初めてゲームを開始下ならDungeonへ。そうでないならワールドへ。
                 if (!openingFlag) {
-                    activityChange.toWorldActivity();
+                    //activityChange.toWorldActivity();
                 } else {
                     //activityChange.toWorldActivity();
-                    activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.OPENING);
+                    //activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.OPENING);
                 }
                 break;
         }
-        activityChange.toChangeActivity();
+        //activityChange.toChangeActivity();
     }
 
     public void setDownCount(int _downCount) {

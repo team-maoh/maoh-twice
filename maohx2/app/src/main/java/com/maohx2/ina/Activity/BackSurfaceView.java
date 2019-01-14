@@ -13,7 +13,7 @@ import com.maohx2.ina.Draw.ImageContext;
  * Created by ina on 2018/05/06.
  */
 
-class BackSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable{
+public class BackSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable{
 
     Paint paint = new Paint();
     SurfaceHolder holder;

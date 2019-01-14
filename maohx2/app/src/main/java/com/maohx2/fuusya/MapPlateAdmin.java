@@ -1,19 +1,21 @@
 package com.maohx2.fuusya;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.maohx2.horie.map.MapAdmin;
-import com.maohx2.ina.ActivityChange;
+import com.maohx2.ina.Activity.UnitedActivity;
+//import com.maohx2.ina.ActivityChange;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.ina.DungeonGameSystem;
-import com.maohx2.ina.DungeonModeManage;
+import com.maohx2.ina.GameSystem.DungeonGameSystem;
+import com.maohx2.ina.GameSystem.DungeonModeManage;
 import com.maohx2.ina.GlobalData;
 import com.maohx2.ina.ItemData.EquipmentItemData;
-import com.maohx2.ina.StartGameSystem;
+import com.maohx2.ina.GameSystem.StartGameSystem;
 import com.maohx2.ina.Text.BoxPlate;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.PlateGroup;
@@ -43,7 +45,7 @@ public class MapPlateAdmin {
     DungeonUserInterface dungeon_user_interface;
     Inventry inventry;
     MapInventryAdmin map_inventry_admin;
-    ActivityChange activityChange;
+    //ActivityChange activityChange;
     GlobalData globalData;
     PlayerStatus playerStatus;
     PlayerStatusSaver playerStatusSaver;
@@ -107,17 +109,22 @@ public class MapPlateAdmin {
     SoundAdmin sound_admin;
     MapObjectAdmin mapObjectAdmin;
 
+    UnitedActivity unitedActivity;
+
     int NUM_OF_TUTORIAL_BITMAP = 3;
     int i_of_tutorial_bitmap;
     String tutorial_name = "スライド";
 
     DungeonSelectWindowAdmin dungeonSelectWindowAdmin;
 
-    public MapPlateAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, ActivityChange _activityChange, GlobalData _globalData, DungeonModeManage _dungeon_mode_manage, SoundAdmin _sound_admin) {
+    public MapPlateAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, UnitedActivity _unitedActivity, DungeonModeManage _dungeon_mode_manage, SoundAdmin _sound_admin) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
-        activityChange = _activityChange;
-        globalData = _globalData;
+        //activityChange = _activityChange;
+        //globalData = _globalData;
+        unitedActivity = _unitedActivity;
+        globalData = (GlobalData)unitedActivity.getApplication();
+
         playerStatus = globalData.getPlayerStatus();
         playerStatusSaver = globalData.getPlayerStatusSaver();
         dungeon_mode_manage = _dungeon_mode_manage;
@@ -316,7 +323,8 @@ public class MapPlateAdmin {
     public void retireDungeon() {
         //map_inventry_admin.storageMapInventry();
         globalData.getExpendItemInventry().save();
-        activityChange.toWorldActivity();
+        //activityChange.toWorldActivity();
+        unitedActivity.getUnitedSurfaceView().toWorldGameMode();
     }
     // ***選択肢関係ここまで
 
@@ -456,9 +464,10 @@ public class MapPlateAdmin {
 
     }
 
-    public ActivityChange getActivityChange() {
+    /*public ActivityChange getActivityChange() {
         return activityChange;
     }
+    */
 
     public void setMapAdmin(MapAdmin _map_admin) {
         map_admin = _map_admin;

@@ -13,7 +13,7 @@ import static java.lang.Math.pow;
 import static java.lang.Math.sin;
 
 import com.maohx2.ina.Battle.BattleUnitAdmin;
-import com.maohx2.ina.DungeonModeManage;
+import com.maohx2.ina.GameSystem.DungeonModeManage;
 
 //import com.maohx2.ina.MySprite;
 // import com.maohx2.ina.waste.MySprite;

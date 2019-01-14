@@ -3,7 +3,8 @@ package com.maohx2.kmhanko.dungeonselect;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.horie.map.MapStatus;
 import com.maohx2.horie.map.MapStatusSaver;
-import com.maohx2.ina.ActivityChange;
+import com.maohx2.ina.Activity.UnitedActivity;
+//import com.maohx2.ina.ActivityChange;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Constants.SELECT_WINDOW;
 import com.maohx2.ina.Constants.SELECT_WINDOW_PLATE;
@@ -12,8 +13,7 @@ import com.maohx2.ina.Constants.GAMESYSTEN_MODE.WORLD_MODE;
 import com.maohx2.ina.Constants.DungeonKind.DUNGEON_KIND;
 import com.maohx2.ina.GlobalData;
 import com.maohx2.ina.UI.UserInterface;
-import com.maohx2.ina.WorldActivity;
-import com.maohx2.ina.WorldModeAdmin;
+import com.maohx2.ina.GameSystem.WorldModeAdmin;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.WindowPlate.WindowTextPlate;
@@ -83,8 +83,6 @@ public class DungeonSelectManager {
     WorldModeAdmin worldModeAdmin;
     TextBoxAdmin textBoxAdmin;
 
-    WorldActivity worldActivity;
-
     MyDatabase database;
 
     SoundAdmin soundAdmin;
@@ -120,7 +118,8 @@ public class DungeonSelectManager {
     PlayerStatus playerStatus;
 
    //WorldActivity worldActivity;
-    ActivityChange activityChange;
+    //ActivityChange activityChange;
+    UnitedActivity unitedActivity;
 
     //いなの実装までの仮置き
     //boolean enterSelectFlag = false;
@@ -137,23 +136,23 @@ public class DungeonSelectManager {
     List<Integer> x;
     List<Integer> y;
 
-    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, ActivityChange _activityChange, SoundAdmin _soundAdmin, WorldActivity _worldActivity, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver, TalkAdmin _talkAdmin) {
+    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, SoundAdmin _soundAdmin, UnitedActivity _unitedActivity, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver, TalkAdmin _talkAdmin) {
         graphic = _graphic;
         userInterface = _userInterface;
         textBoxAdmin = _textBoxAdmin;
         databaseAdmin = _databaseAdmin;
         geoSlotAdminManager = _geoSlotAdminManager;
         worldModeAdmin = _worldModeAdmin;
-        worldActivity = _worldActivity;
-        activityChange = _activityChange;
+        unitedActivity = _unitedActivity;
+
         //playerStatus = _playerStatus;
         soundAdmin = _soundAdmin;
         mapStatus = _mapStatus;
         mapStatusSaver = _mapStatusSaver;
         talkAdmin = _talkAdmin;
 
-        worldActivity = _worldActivity;
-        GlobalData globalData = (GlobalData) worldActivity.getApplication();
+
+        GlobalData globalData = (GlobalData) unitedActivity.getApplication();
         playerStatus = globalData.getPlayerStatus();
 
         geoInventry = globalData.getGeoInventry();
@@ -893,7 +892,8 @@ public class DungeonSelectManager {
                 default: dungeonKind = Constants.DungeonKind.DUNGEON_KIND.GOKI; break;
             }
 
-            activityChange.toDungeonActivity(dungeonKind);
+            //activityChange.toDungeonActivity(dungeonKind);
+            unitedActivity.getUnitedSurfaceView().toDungeonGameMode(dungeonKind);
         }
         if (buttonID == 1 ) { //やめる
             soundAdmin.play("cancel00");
@@ -911,7 +911,8 @@ public class DungeonSelectManager {
             soundAdmin.play("enter00");
             initUIsFlag = true;
 
-            activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.MAOH);
+            //activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.MAOH);
+            unitedActivity.getUnitedSurfaceView().toDungeonGameMode(Constants.DungeonKind.DUNGEON_KIND.MAOH);
 
             //dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
         }

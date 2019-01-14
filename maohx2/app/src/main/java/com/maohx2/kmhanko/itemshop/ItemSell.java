@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.ina.Activity.UnitedActivity;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.GlobalData;
@@ -11,8 +12,7 @@ import com.maohx2.ina.Text.BoxImagePlate;
 import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.UserInterface;
-import com.maohx2.ina.WorldActivity;
-import com.maohx2.ina.WorldModeAdmin;
+import com.maohx2.ina.GameSystem.WorldModeAdmin;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.InventryData;
 import com.maohx2.kmhanko.Arrange.InventryS;
@@ -61,18 +61,19 @@ public class ItemSell {
     PlayerStatus playerStatus;
     PlayerStatusSaver playerStatusSaver;
 
-    WorldActivity worldActivity;
+    //WorldActivity worldActivity;
+    UnitedActivity unitedActivity;
 
     //*** コンストラクタ
-    public ItemSell(Graphic _graphic, UserInterface _userInterface, WorldActivity _worldActivity, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, SoundAdmin _soundAdmin) {
+    public ItemSell(Graphic _graphic, UserInterface _userInterface, UnitedActivity _unitedActivity, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, SoundAdmin _soundAdmin) {
         graphic = _graphic;
         userInterface = _userInterface;
-        worldActivity = _worldActivity;
+        unitedActivity = _unitedActivity;
         textBoxAdmin = _textBoxAdmin;
         worldModeAdmin = _worldModeAdmin;
         soundAdmin = _soundAdmin;
 
-        GlobalData globalData = (GlobalData) worldActivity.getApplication();
+        GlobalData globalData = (GlobalData) unitedActivity.getApplication();
         geoInventry = globalData.getGeoInventry();
         expendItemInventry = globalData.getExpendItemInventry();
         equipmentInventry = globalData.getEquipmentInventry();

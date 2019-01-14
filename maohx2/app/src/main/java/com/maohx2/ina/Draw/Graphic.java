@@ -714,8 +714,8 @@ public class Graphic {
     public SurfaceHolder getHolder(){return holder;}
 
     //ビットマップのリリース最後に行ってガーベッジコレクションに回収してもらう
-    public void releaseBitmap() {
-        System.out.println("takanoRelease(releaseBitmap) : Graphic");
+    public void releaseLocalBitmapData() {
+        System.out.println("takanoRelease(releaseLocalBitmapData) : Graphic");
         //global_bitmap_data_admin.releaseBitmap();
         local_bitmap_data_admin.releaseBitmap();
         for (int i = 0; i < BOOKING_DATA_INSTANCE; i++) {
@@ -727,5 +727,30 @@ public class Graphic {
         for (int i = 0; i < booking_task_datas.size(); i++) {
             booking_task_datas.get(i).release();
         }
+    }
+
+    public void clearLocalBitmapData() {
+        local_bitmap_data_admin.clear();
+        for (int i = 0; i < BOOKING_DATA_INSTANCE; i++) {
+            booking_circle_datas.get(i).clear();
+            booking_rect_datas.get(i).clear();
+            booking_text_datas.get(i).clear();
+            booking_bitmap_datas.get(i).clear();
+        }
+        for (int i = 0; i < booking_task_datas.size(); i++) {
+            booking_task_datas.get(i).clear();
+        }
+
+        booking_circle_num = 0;
+        booking_rect_num = 0;
+        booking_text_num = 0;
+        booking_bitmap_num = 0;
+        booking_num = 0;
+    }
+
+
+
+    public void releaseBitmap() {
+        releaseLocalBitmapData();
     }
 }
