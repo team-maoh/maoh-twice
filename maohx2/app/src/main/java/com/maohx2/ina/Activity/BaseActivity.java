@@ -1,4 +1,4 @@
-package com.maohx2.ina;
+package com.maohx2.ina.Activity;
 
 
 import android.app.Activity;

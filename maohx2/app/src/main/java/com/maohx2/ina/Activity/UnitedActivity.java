@@ -3,7 +3,7 @@ package com.maohx2.ina.Activity;
 import android.os.Bundle;
 import android.view.SurfaceView;
 
-import com.maohx2.ina.BaseActivity;
+import com.maohx2.ina.Activity.BaseActivity;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.GlobalData;
 

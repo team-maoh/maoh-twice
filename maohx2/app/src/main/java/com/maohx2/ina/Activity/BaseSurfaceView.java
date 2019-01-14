@@ -1,4 +1,4 @@
-package com.maohx2.ina;
+package com.maohx2.ina.Activity;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -10,6 +10,8 @@ import android.view.SurfaceView;
 import android.graphics.BitmapFactory;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Draw.ImageContext;
+import com.maohx2.ina.GlobalData;
+import com.maohx2.ina.Constants;
 
 /**
  * Created by ina on 2017/09/20.

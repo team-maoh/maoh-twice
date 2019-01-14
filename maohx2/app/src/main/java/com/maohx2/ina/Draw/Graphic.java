@@ -14,7 +14,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.view.SurfaceHolder;
 
-import com.maohx2.ina.BaseActivity;
+import com.maohx2.ina.Activity.BaseActivity;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.GlobalConstants;
 import com.maohx2.ina.GlobalData;

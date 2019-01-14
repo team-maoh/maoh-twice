@@ -1,8 +1,7 @@
 package com.maohx2.ina.Activity;
 
 import android.view.SurfaceHolder;
-import com.maohx2.ina.BackSurfaceView;
-import com.maohx2.ina.BaseSurfaceView;
+import com.maohx2.ina.Activity.BaseSurfaceView;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.GameSystem.StartGameSystem;
