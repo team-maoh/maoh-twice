@@ -184,6 +184,10 @@ public class MapItem extends MapInanimate {
         extend = tempRate * 1.4f + 0.1f;
         parameter *= 1.5f;
 
+        if ( parameter <= 0) {
+            exists = false;
+        }
+
     }
 
 
