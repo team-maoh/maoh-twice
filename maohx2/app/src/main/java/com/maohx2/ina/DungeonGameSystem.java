@@ -544,7 +544,6 @@ public class DungeonGameSystem {
                 if (playerStatus.getTutorialInDungeon() == 1) {
                     playerStatusViewer.draw();
                 }
-                playerStatusViewer.draw();
                 break;
 
             case BUTTLE_INIT:
@@ -582,6 +581,7 @@ public class DungeonGameSystem {
                 effectAdmin.draw();
                 map_admin.drawSmallMap();
                 map_plate_admin.draw();
+                playerStatusViewer.draw();
                 break;
 
             case ITEM:

@@ -111,6 +111,8 @@ public class MapPlateAdmin {
     int i_of_tutorial_bitmap;
     String tutorial_name = "スライド";
 
+    DungeonSelectWindowAdmin dungeonSelectWindowAdmin;
+
     public MapPlateAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, ActivityChange _activityChange, GlobalData _globalData, DungeonModeManage _dungeon_mode_manage, SoundAdmin _sound_admin) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
@@ -123,6 +125,7 @@ public class MapPlateAdmin {
 
         inventry = new Inventry();
         inventry.init(dungeon_user_interface, graphic, ITEM_LEFT, ITEM_TOP, ITEM_RIGHT, ITEM_BOTTOM, ITEM_CONTENTS_NUM);
+
 
         text_paint.setTextSize(50f);
         text_paint.setARGB(255, 255, 255, 255);
@@ -159,6 +162,9 @@ public class MapPlateAdmin {
         green_paint.setColor(Color.GREEN);
         floor_bg.setColor(Color.BLUE);
 
+        dungeonSelectWindowAdmin = new DungeonSelectWindowAdmin(graphic, dungeon_user_interface, sound_admin, this);
+        dungeonSelectWindowAdmin.init();
+
     }
 
     public void setMapObjectAdmin(MapObjectAdmin _mapObjectAdmin) {
@@ -175,6 +181,8 @@ public class MapPlateAdmin {
 //        hitpoint.update();
         inventry.updata();
 
+        dungeonSelectWindowAdmin.update();
+
         int pre_displaying_content = displaying_content;
 
         max_hp = playerStatus.getHP();//最大HPは毎フレームupdateする（でないとHPが枠をオーバーする）
@@ -185,47 +193,45 @@ public class MapPlateAdmin {
 
                 int content = menuGroup.getTouchContentNum();
 
+                //各画面に遷移した時に一度だけ実行したいものを記述
                 switch (content) {
                     case 0://ステータス
 //                        System.out.println("tatami ステータス");
                         mapObjectAdmin.setPlayerAlpha(128);
+                        dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.EQUIP_EXPEND_INIT);
                         displaying_content = 1;
                         is_displaying_list = false;
                         break;
                     case 1://アイテム
 //                        System.out.println("tatami アイテム");
                         mapObjectAdmin.setPlayerAlpha(128);
+                        if (dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.ITEM) {
+                            dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.ITEM_INIT);
+                        }
                         displaying_content = 2;
                         is_displaying_list = false;
                         break;
                     case 2://（ダンジョンを）リタイア
 //                        System.out.println("tatami リタイア");
+                        this.retireDungeonWindowActivate();
                         displaying_content = 3;
                         is_displaying_list = false;
                         break;
                     default:
-
                         break;
 
                 }
 
                 break;
 
+                //各画面で毎フレーム実行したい物を記述
             case 1://[ステータス]
-                dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.EQUIP_EXPEND_INIT);
                 break;
 
             case 2://[アイテム]
-                if (dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.ITEM) {
-                    dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.ITEM_INIT);
-                }
                 break;
 
             case 3://[リタイア]
-//                map_inventry_admin.storageMapInventry();
-                globalData.getExpendItemInventry().save();
-                activityChange.toWorldActivity();
-
                 break;
 
             default:
@@ -275,9 +281,44 @@ public class MapPlateAdmin {
 
         if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+4 || playerStatus.getTutorialInDungeon() != 0) {
             drawFloorAndHP();
+            dungeonSelectWindowAdmin.draw();
         }
 
     }
+
+    //**選択肢関係ここから
+    public void escapeDungeonWindowActivate() {
+        dungeonSelectWindowAdmin.setDungeonPlateMode(DungeonSelectWindowAdmin.DUNGEON_PLATE_MODE.ESCAPE);
+        dungeonSelectWindowAdmin.dungeonPlateUpdate();
+        dungeonSelectWindowAdmin.activate();
+    }
+
+    public void escapeDungeon() {
+        mapObjectAdmin.escapeDungeon();
+    }
+
+    public void gotoMiningWindowActivate() {
+        dungeonSelectWindowAdmin.setDungeonPlateMode(DungeonSelectWindowAdmin.DUNGEON_PLATE_MODE.MINING);
+        dungeonSelectWindowAdmin.dungeonPlateUpdate();
+        dungeonSelectWindowAdmin.activate();
+    }
+
+    public void gotoMining() {
+        mapObjectAdmin.gotoMining();
+    }
+
+    public void retireDungeonWindowActivate() {
+        dungeonSelectWindowAdmin.setDungeonPlateMode(DungeonSelectWindowAdmin.DUNGEON_PLATE_MODE.RETIRE);
+        dungeonSelectWindowAdmin.dungeonPlateUpdate();
+        dungeonSelectWindowAdmin.activate();
+    }
+
+    public void retireDungeon() {
+        //map_inventry_admin.storageMapInventry();
+        globalData.getExpendItemInventry().save();
+        activityChange.toWorldActivity();
+    }
+    // ***選択肢関係ここまで
 
     public void setIsDisplayingList(boolean _is_displaying_list) {
         is_displaying_list = _is_displaying_list;
@@ -443,6 +484,10 @@ public class MapPlateAdmin {
 
     }
 
+    public DungeonSelectWindowAdmin getDungeonSelectWindowAdmin() {
+        return dungeonSelectWindowAdmin;
+    }
+
     public void release() {
         System.out.println("takanoRelease : MapPlateAdmin");
         blue_paint = null;
@@ -450,6 +495,9 @@ public class MapPlateAdmin {
         red_paint = null;
         text_paint = null;
         floor_bg = null;
+
+        dungeonSelectWindowAdmin.release();
+        dungeonSelectWindowAdmin = null;
 
         if (menuGroup != null) {
             menuGroup.release();

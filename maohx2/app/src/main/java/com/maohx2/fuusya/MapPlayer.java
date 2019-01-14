@@ -170,7 +170,7 @@ public class MapPlayer extends MapUnit {
                             sound_admin.play("enter00");
 //                        player_touch_refresh = false;
                         }
-                    } else if (map_plate_admin.getDisplayingContent() == 0 || map_plate_admin.getDisplayingContent() == 2) {
+                    } else if (map_plate_admin.getDisplayingContent() == 0 || map_plate_admin.getDisplayingContent() == 2 || map_plate_admin.getDisplayingContent() == 3) {
                         map_plate_admin.setDisplayingContent(-1);
                     }
                 }
@@ -322,7 +322,7 @@ public class MapPlayer extends MapUnit {
         //ゲート脱出
         if (map_admin.isGate((int)(w_x/map_admin.getMagnification()), (int)(w_y/map_admin.getMagnification()))) {
             if (gateSkipFlag == false) {
-                map_object_admin.escapeDungeonChoice();
+                map_plate_admin.escapeDungeonWindowActivate();
                 gateSkipFlag = true;
             }
         } else {
