@@ -75,6 +75,9 @@ public class UserInterface {
         touch_x = _touch_x;
         touch_y = _touch_y;
 
+        //Dowmが続く端末のために強制MOVEに変更
+        if (touch_state == TouchState.DOWN) { touch_state = TouchState.MOVE; }
+
         //DOWN,UP判定を1フレームのみにするためのもの
         if (_touch_state == TouchState.DOWN) {
             if (touch_state == TouchState.AWAY) {
@@ -110,24 +113,16 @@ public class UserInterface {
         //   bSystem.out.println(touch_state);
     }
 
-    public void draw(){
+    public void draw() {
 
         ui_palette_draw_falag = false;
-        if(palette_element != null && touch_state != TouchState.DOWN){
-            if(palette_element != null){
-                if(palette_element.getItemData() != null) {
-                    ui_palette_draw_falag = true;
-                    graphic.bookingDrawBitmapData(palette_element.getItemData().getItemImage(), (int) getTouchX(), (int) getTouchY(), 2.0f,2.0f,0,128,false );
-                }
-            }
 
-/*            if(inventry_data != null){
-                graphic.bookingDrawBitmapData(inventry_data.getItemData().getItemImage(),(int)touch_x,(int)touch_y);
+        if (palette_element != null && touch_state != TouchState.DOWN) {
+            if (palette_element.getItemData() != null) {
+                ui_palette_draw_falag = true;
+                graphic.bookingDrawBitmapData(palette_element.getItemData().getItemImage(), (int) getTouchX(), (int) getTouchY(), 3.0f, 3.0f, 0, 128, false);
             }
-*/
-
         }
-
     }
 
 
@@ -309,7 +304,14 @@ public class UserInterface {
 
 
     public PaletteElement getPaletteElement(){return palette_element;}
-    public void setPaletteElement(PaletteElement _palette_element){palette_element = _palette_element;}
+    public void setPaletteElement(PaletteElement _palette_element){
+        palette_element = _palette_element;
+        if(palette_element == null) {
+            System.out.println("set null");
+        }else{
+            System.out.println("set item");
+        }
+    }
 
     public InventryData getInventryData(){return inventry_data;}
     public void setInventryData(InventryData _inventry_data){inventry_data = _inventry_data;}

@@ -170,6 +170,7 @@ public class Palette {
         //指がパレットの上に乗った際のチェック
         if (battle_user_interface.checkUI(palette_center.getTouchID(), Constants.Touch.TouchWay.DOWN_MOMENT) == true){
             battle_user_interface.setPaletteElement(palette_center);
+            System.out.println("notta");
         }
 
 
@@ -177,12 +178,14 @@ public class Palette {
             for (int i = 0; i < 6; i++) {
                 if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.DOWN_MOMENT) == true) {
                     battle_user_interface.setPaletteElement(palette_elements[i]);
+                    System.out.println("notta");
                 }
             }
         }else{
             for (int i = 0; i < 8; i++) {
                 if (battle_user_interface.checkUI(palette_elements[i].getTouchID(), Constants.Touch.TouchWay.DOWN_MOMENT) == true) {
                     battle_user_interface.setPaletteElement(palette_elements[i]);
+                    System.out.println("notta");
                 }
             }
         }
@@ -230,6 +233,7 @@ public class Palette {
                     palette_center.setItemData(battle_user_interface.getPaletteElement().getItemData(),battle_user_interface.getPaletteElement().getElementNum(), false);
                     battle_user_interface.getPaletteElement().setItemData(a, true);
                     battle_user_interface.setPaletteElement(null);
+                    System.out.println("remove_ui_erement");
                 }
 
 
@@ -241,6 +245,7 @@ public class Palette {
                             palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData(), battle_user_interface.getPaletteElement().getElementNum(),true);
                             battle_user_interface.getPaletteElement().setItemData(a, true);
                             battle_user_interface.setPaletteElement(null);
+                            System.out.println("remove_ui_erement");
                         }
                     }
                 }else{//武器以外
@@ -252,6 +257,7 @@ public class Palette {
                             palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData(), battle_user_interface.getPaletteElement().getElementNum(), true);
                             battle_user_interface.getPaletteElement().setItemData(a, true);
                             battle_user_interface.setPaletteElement(null);
+                            System.out.println("remove_ui_erement");
                         }
                     }
                 }
@@ -276,6 +282,7 @@ public class Palette {
                 }
                 battle_user_interface.getPaletteElement().setItemData(null, false);
                 battle_user_interface.setPaletteElement(null);
+                System.out.println("remove_ui_erement");
             }
 
             if (battle_user_interface.getInventryData() != null) {
