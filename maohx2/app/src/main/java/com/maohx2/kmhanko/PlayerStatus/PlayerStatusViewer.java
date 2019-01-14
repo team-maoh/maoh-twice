@@ -16,18 +16,16 @@ import android.graphics.Paint;
  * Created by user on 2018/04/23.
  */
 
-public class PlayerStatusViewer {
-    boolean isExist;
-
+public class PlayerStatusViewer extends StatusViewer {
     static final int TEXT_NUM = 5;
-    static final int TEXT_X_OFFSET_LEFT1 = 65;
+
+
+    static final int TEXT_X_OFFSET_LEFT1 = 65; //Override
     static final int TEXT_X_OFFSET_LEFT2 = 125;
 
-    static final float TEXT_SIZE_RATE= 0.6f;
+    static final float TEXT_SIZE_RATE= 0.6f; //Override
     static public final float EXPRESS_RATE = 222.22f;
     static final float EXPRESS_RATE2 = 222.2f;
-
-    PlayerStatusEffect[] playerStatusEffect = new PlayerStatusEffect[16];
 
     //毎回フレームの監視用
     int hp = 0;
@@ -36,34 +34,11 @@ public class PlayerStatusViewer {
     int luck = 0;
     int money = 0;
 
-    int posX1;
-    int posX2;
-    int posY1;
-    int posY2;
-
-    int sizeX;
-    int sizeY;
-
-    Paint paint;
-    Paint boxPaint;
-
     PlayerStatus playerStatus;
-    Graphic graphic;
-    UserInterface userInterface;
-
-    PlateGroup<BoxPlate> statusPlate;
-    BitmapData statusIcon[] = new BitmapData[TEXT_NUM];
 
     public PlayerStatusViewer(Graphic _graphic, UserInterface _userInterface, PlayerStatus _playerStatus) {
+        super(_graphic, _userInterface, TEXT_NUM);
         playerStatus = _playerStatus;
-        graphic = _graphic;
-        userInterface = _userInterface;
-        initPosition();
-        initStatusPlate();
-
-        for (int i = 0; i < playerStatusEffect.length; i++) {
-            playerStatusEffect[i] = new PlayerStatusEffect(graphic);
-        }
 
         hp = playerStatus.getHP();
         attack = playerStatus.getAttack();
@@ -73,19 +48,12 @@ public class PlayerStatusViewer {
     }
 
     public void initPosition() {
-        /*
-        posX1 = 0;
-        posX2 = 400;
-        posY1 = 550;
-        posY2 = 900;
-        */
-
         posX1 = 0;
         posX2 = 1600;
         posY1 = 850;
         posY2 = 900;
 
-        sizeX = (posX2 - posX1)/TEXT_NUM;
+        sizeX = (posX2 - posX1)/textNum;
         sizeY = (posY2 - posY1);
 
         isExist = true;
@@ -160,19 +128,6 @@ public class PlayerStatusViewer {
         );
     }
 
-    public void setPosition(int x1, int y1, int x2, int y2) {
-        posX1 = x1;
-        posX2 = x2;
-        posY1 = y1;
-        posY2 = y2;
-
-        sizeX = (posX2 - posX1)/TEXT_NUM;
-        sizeY = (posY2 - posY1);
-
-        paint = new Paint();
-        paint.setTextSize(sizeY * TEXT_SIZE_RATE);
-    }
-
     public void update() {
         if (!isExist) {
             return;
@@ -182,19 +137,19 @@ public class PlayerStatusViewer {
         if (playerStatus.getEffectFlag()) {
             System.out.println("StatusEffectFlag = True");
             if ((parameter = playerStatus.getHP() - hp) != 0 && hp != 0) {
-                makePlayerStatusEffect(0, parameter/EXPRESS_RATE);
+                makeStatusEffect(0, parameter/EXPRESS_RATE, true);
             }
             if ((parameter = playerStatus.getAttack() - attack) != 0 && attack != 0) {
-                makePlayerStatusEffect(1, parameter/EXPRESS_RATE);
+                makeStatusEffect(1, parameter/EXPRESS_RATE, true);
             }
             if ((parameter = playerStatus.getDefence() - defence) != 0 && defence != 0) {
-                makePlayerStatusEffect(2, parameter/EXPRESS_RATE2);
+                makeStatusEffect(2, parameter/EXPRESS_RATE2, true);
             }
             if ((parameter = playerStatus.getLuck() - luck) != 0 && luck != 0) {
-                makePlayerStatusEffect(3, parameter/EXPRESS_RATE);
+                makeStatusEffect(3, parameter/EXPRESS_RATE, true);
             }
             if ((parameter = playerStatus.getMoney() - money) != 0 && money != 0) {
-                makePlayerStatusEffect(4, parameter);
+                makeStatusEffect(4, parameter, false);
             }
             hp = playerStatus.getHP();
             attack = playerStatus.getAttack();
@@ -206,73 +161,9 @@ public class PlayerStatusViewer {
         }
 
 
-        for (int i = 0; i < playerStatusEffect.length; i++) {
-            playerStatusEffect[i].update();
+        for (int i = 0; i < statusEffect.length; i++) {
+            statusEffect[i].update();
         }
-    }
-
-    public void makePlayerStatusEffect(int statusID, float parameter) {
-        String text = "";
-        Paint tempPaint = new Paint();
-        if (statusID != 4) {
-            if (parameter > 0) {
-                text = "+" + String.format("%.2f", parameter);
-                tempPaint.setColor(Color.rgb(255,0,0));
-            }
-            if (parameter <= 0) {
-                text = String.format("%.2f", parameter);
-                tempPaint.setColor(Color.rgb(0,0,255));
-            }
-        } else {
-            if (parameter > 0) {
-                text = "+" + String.valueOf((int)parameter);
-                tempPaint.setColor(Color.rgb(255,128,128));
-
-            }
-            if (parameter <= 0) {
-                text = String.valueOf((int)parameter);
-                tempPaint.setColor(Color.rgb(0,0,255));
-            }
-        }
-
-        for (int i = 0; i < playerStatusEffect.length; i++) {
-            if (!playerStatusEffect[i].isExist()) {
-                playerStatusEffect[i].start(
-                        text,
-                        (int)(posX1 + sizeX * statusID + TEXT_X_OFFSET_LEFT1),
-                        (int)(posY1),// + (int)((sizeY + sizeY * TEXT_SIZE_RATE)/2.0f)),
-                        tempPaint
-                );
-                break;
-            }
-        }
-    }
-
-    public void draw() {
-        if (!isExist) {
-            return;
-        }
-        graphic.bookingDrawRect(posX1, posY1, posX2, posY2, boxPaint);
-        statusPlate.draw();
-        for (int i = 0; i < playerStatusEffect.length; i++) {
-            playerStatusEffect[i].draw();
-        }
-    }
-
-    public void statusTextBoxUpdate() {
-        /*
-        textBoxAdmin.bookingDrawText(statusTextBoxID, "Status");
-        textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
-        textBoxAdmin.bookingDrawText(statusTextBoxID, "HP " + playerStatus.getHP());
-        textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
-        textBoxAdmin.bookingDrawText(statusTextBoxID, "Attack " + playerStatus.getAttack());
-        textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
-        textBoxAdmin.bookingDrawText(statusTextBoxID, "Deffence " + playerStatus.getDefence());
-        textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
-        textBoxAdmin.bookingDrawText(statusTextBoxID, "Luck " + playerStatus.getLuck());
-        textBoxAdmin.bookingDrawText(statusTextBoxID, "MOP");
-        textBoxAdmin.updateText(statusTextBoxID);
-        */
     }
 
     public void Existis(boolean f) {
@@ -283,15 +174,8 @@ public class PlayerStatusViewer {
         return isExist;
     }
 
+    @Override
     public void release() {
-        System.out.println("takanoRelease : PlayerStatusViewer");
-        for (int i = 0; i < statusIcon.length; i++) {
-            statusIcon[i] = null;
-        }
-        statusIcon = null;
-        paint = null;
-        boxPaint = null;
-        statusPlate.release();
-        statusPlate = null;
+        super.release();
     }
 }
