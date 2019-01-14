@@ -166,10 +166,10 @@ public class Graphic {
 
             draw_paint.setColor(Color.rgb(50,50,50));
             //draw_paint.setColor(Color.BLACK);
-            canvas.drawRect(0,0,DRAW_RIGHT_END,DRAW_UP_END,draw_paint);
-            canvas.drawRect(DISP_X,0,DRAW_RIGHT_END,DRAW_DOWN_END,draw_paint);
-            canvas.drawRect(DISP_X,DISP_Y,DRAW_LEFT_END,DRAW_DOWN_END,draw_paint);
-            canvas.drawRect(0,DISP_Y,DRAW_LEFT_END,DRAW_UP_END,draw_paint);
+            canvas.drawRect(0,0,DRAW_RIGHT_END,DRAW_UP_END,draw_paint);//上
+            canvas.drawRect(DISP_X-1,0,DRAW_RIGHT_END,DRAW_DOWN_END,draw_paint);//右
+            canvas.drawRect(DISP_X-1,DISP_Y-1,DRAW_LEFT_END,DRAW_DOWN_END,draw_paint);//下
+            canvas.drawRect(0,DISP_Y-1,DRAW_LEFT_END,DRAW_UP_END,draw_paint);//左
 
             //BitmapData bitmapData = searchBitmap("mush");
             //canvas.drawBitmap(bitmapData.getBitmap(), new Rect(0,0,bitmapData.getWidth(),bitmapData.getHeight()), new Rect(100,100,400,400), null);

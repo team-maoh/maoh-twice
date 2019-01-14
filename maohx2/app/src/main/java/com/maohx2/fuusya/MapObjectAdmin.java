@@ -244,7 +244,7 @@ public class MapObjectAdmin {
     public void update() {
 
         //チュートリアル中と選択肢出現中は時が停止する
-        if (playerStatus.getTutorialInDungeon() == 1 && !dungeonEscapeSelectButtonGroup.getDrawFlag()) {
+        if (playerStatus.getTutorialInDungeon() == 1 && !dungeonEscapeSelectButtonGroup.getDrawFlag() && map_plate_admin.getDisplayingContent() != 1) {
 
             map_player.update();
             map_player_bitmap.update();
