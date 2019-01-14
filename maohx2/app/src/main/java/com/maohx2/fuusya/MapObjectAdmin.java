@@ -434,7 +434,6 @@ public class MapObjectAdmin {
         backEffectAdmin.clearAllEffect();
 
         spawnMine(mine_point);
-        spawnEnemy();
         spawnTrap(debug_trap_name);
         spawnBoss(debug_boss_point);
         spawnItem(debug_item_name);

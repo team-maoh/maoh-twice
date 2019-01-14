@@ -637,12 +637,18 @@ public class MapAdmin {
         now_floor_num++;
         if (now_floor_num < boss_floor_num) {
             createMap();
+
+            resetMapObject();//中ボス以外
             //スタート地点を探す
             searchStartPoint();
             camera.setCameraOffset(start_point.x, start_point.y);
             map_player.putUnit(start_point.x + magnification / 2, start_point.y + magnification / 2);
             map_player.setDungeonEnterEncountWaitTime(0);
-            resetMapObject();
+
+            //中ボスだけあとでやる
+            map_object_admin.spawnEnemy();
+
+
         } else {
             goBossFloor();
         }
