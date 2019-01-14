@@ -252,10 +252,10 @@ class StartSurfaceView extends BaseSurfaceView {
            if (downCount == 0) {
                soundAdmin.play("opening02");
            }
-           downCount++;
+           setDownCount(downCount+1);
            touchWaitcount = 0;
        }
-        touchWaitcount++;
+       touchWaitcount++;
 
        if (touchWaitcount == 30 && downCount == 1) {
            musicAdmin.play();
@@ -288,5 +288,8 @@ class StartSurfaceView extends BaseSurfaceView {
 
     public void setDownCount(int _downCount) {
         downCount = _downCount;
+    }
+    public void setTouchWaitcount(int x) {
+        touchWaitcount = x;
     }
 }

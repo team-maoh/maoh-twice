@@ -188,6 +188,7 @@ public class StartGameSystem {
                 messageNum++;
                 if(messageNum == 6){
                     start_activity.start_surface_view.setDownCount(1);
+                    start_activity.start_surface_view.setTouchWaitcount(0);
                 }
             }
             up_down *= -1;
