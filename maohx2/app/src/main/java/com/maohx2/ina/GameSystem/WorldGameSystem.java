@@ -309,6 +309,7 @@ public class WorldGameSystem {
         //OP判定。まだOPを流していないならOP会話イベントを発動する。
         talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される//堀江デバッグのためにコメントアウト
 
+
         /*
         battleUnitDataAdmin = new BattleUnitDataAdmin(databaseAdmin, graphic);
         battleUnitDataAdmin.loadBattleUnitData(Constants.DungeonKind.DUNGEON_KIND.FOREST);//敵読み込み
@@ -385,11 +386,12 @@ public class WorldGameSystem {
     */
 
 
-            ;
+    int count = 0;
     public void update() {
         if (updateStopFlag) {
             return;
         }
+
 
         /* エフェクトテスト用
         damageEffectTime++;

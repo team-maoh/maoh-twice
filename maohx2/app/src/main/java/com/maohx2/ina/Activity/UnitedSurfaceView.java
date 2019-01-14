@@ -38,8 +38,6 @@ public class UnitedSurfaceView extends BaseSurfaceView {
     MusicAdmin musicAdmin;
     SoundAdmin soundAdmin;
 
-    boolean openingFlag;
-
     enum GAME_SYSTEM_MODE {
         START,
         WORLD,

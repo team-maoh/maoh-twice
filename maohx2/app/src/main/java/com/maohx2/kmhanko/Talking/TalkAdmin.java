@@ -460,4 +460,9 @@ public class TalkAdmin {
         }
     }
 
+    public void debug(int i) {
+        List<String> text = database.getTables();
+        start(text.get(i),false);
+    }
+
 }
