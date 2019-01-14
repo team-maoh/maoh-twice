@@ -531,7 +531,7 @@ public class MapObjectAdmin {
 //                if (i == 2 && map_mine[0].exists() == true) {
 //                    map_enemy[i].setPosition((int) map_mine[0].getWorldX(), (int) map_mine[0].getWorldY());
 //                } else {
-                Point room_point = map_admin.getGoodSpawnRoomPoint();
+                Point room_point = map_admin.getGoodSpawnRoomPointWithoutPlayer();
                 /* by kmhanko
                 while (true) {
                     room_point = map_admin.getRoomPoint();

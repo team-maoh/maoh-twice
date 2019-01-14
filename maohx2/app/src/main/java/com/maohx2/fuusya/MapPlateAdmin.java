@@ -234,7 +234,7 @@ public class MapPlateAdmin {
         }
 
         if (displaying_content != pre_displaying_content) {
-            sound_admin.play("Enter00");
+            sound_admin.play("enter00");
         }
 
         if (displaying_content == -1) {
