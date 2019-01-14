@@ -375,7 +375,7 @@ public class MapAdmin {
 
         //createMapTileData_old();//以前のバージョン
 
-        if(dungeon_name.equals("Dragon")) {
+        if (dungeon_name.equals("Dragon")) {
             for (int i = 0; i < map_size.x; i++) {
                 for (int j = 0; j < map_size.y; j++) {
                     map_tile_set[i][j] = null;
@@ -400,8 +400,7 @@ public class MapAdmin {
 //                    }
                 }
             }
-        }
-        else{
+        } else {
             for (int i = 0; i < map_size.x; i++) {
                 for (int j = 0; j < map_size.y; j++) {
                     if (!isWall(i, j) && !isStairs(i, j)) {//床
@@ -428,6 +427,8 @@ public class MapAdmin {
                 }
             }
         }
+    }
+    public void resetMapObject() {
         //map_object_admin初期化
         map_object_admin.setMapAdmin(this);
         map_object_admin.spawnMapObject(mine_point);
@@ -636,11 +637,18 @@ public class MapAdmin {
         now_floor_num++;
         if (now_floor_num < boss_floor_num) {
             createMap();
+
+            resetMapObject();//中ボス以外
             //スタート地点を探す
             searchStartPoint();
             camera.setCameraOffset(start_point.x, start_point.y);
             map_player.putUnit(start_point.x + magnification / 2, start_point.y + magnification / 2);
             map_player.setDungeonEnterEncountWaitTime(0);
+
+            //中ボスだけあとでやる
+            map_object_admin.spawnEnemy();
+
+
         } else {
             goBossFloor();
         }
@@ -709,11 +717,12 @@ public class MapAdmin {
         }
 
         //if(boss_floor_num == 1) {
-            map_object_admin.setMapAdmin(this);
-            map_object_admin.spawnMapObject(mine_point);
+
         //}
         camera.setCameraOffset(7.5 * magnification, 9 * magnification);
         map_player.putUnit(7.5 * magnification, 9 * magnification);
+
+        resetMapObject();
     }
 
     //採掘場所を作る(部屋の淵のみに生成)

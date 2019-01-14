@@ -1,4 +1,4 @@
-package com.maohx2.ina;
+package com.maohx2.nouse;
 
 /**
  * Created by ina on 2017/10/15.
@@ -42,7 +42,6 @@ public class WorldActivity extends BaseActivity {
         super.onWindowFocusChanged(hasFocus);
 
         if(!game_system_flag) {
-
             worldSurfaceView.runGameSystem();
             game_system_flag = true;
         }
@@ -150,7 +149,7 @@ class WorldSurfaceView extends BaseSurfaceView {
         }
         */
 
-        world_game_system.init(map_user_interface, graphic, my_database_admin, soundAdmin, _map_activity, activityChange);
+        //world_game_system.init(map_user_interface, graphic, my_database_admin, soundAdmin, _map_activity, activityChange);
 
         /*
         if(openingFlag == true){

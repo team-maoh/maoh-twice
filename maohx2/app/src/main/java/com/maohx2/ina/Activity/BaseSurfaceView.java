@@ -1,4 +1,4 @@
-package com.maohx2.ina;
+package com.maohx2.ina.Activity;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -10,6 +10,8 @@ import android.view.SurfaceView;
 import android.graphics.BitmapFactory;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Draw.ImageContext;
+import com.maohx2.ina.GlobalData;
+import com.maohx2.ina.Constants;
 
 /**
  * Created by ina on 2017/09/20.
@@ -17,30 +19,30 @@ import com.maohx2.ina.Draw.ImageContext;
 
 public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable{
 
-    Paint paint = new Paint();
-    SurfaceHolder holder;
-    Thread thread;
-    ActivityChange activityChange;
-    BaseActivity currentActivity;
+    public Paint paint = new Paint();
+    public SurfaceHolder holder;
+    public Thread thread;
+    //public ActivityChange activityChange;
+    public BaseActivity currentActivity;
 
-    boolean openingFlag = false;
+    public boolean openingFlag = false;
 
-    double touch_x = 0;
-    double touch_y = 0;
+    public double touch_x = 0;
+    public double touch_y = 0;
 
-    Constants.Touch.TouchState touch_state = Constants.Touch.TouchState.AWAY;
-    GlobalData global_data;
+    public Constants.Touch.TouchState touch_state = Constants.Touch.TouchState.AWAY;
+    public GlobalData global_data;
 
-    long error = 0;
-    int fps = 30;
-    long idealSleep = (1000 << 16) / fps;
-    long oldTime;
-    long newTime = System.currentTimeMillis() << 16;
+    public  long error = 0;
+    public int fps = 30;
+    public long idealSleep = (1000 << 16) / fps;
+    public long oldTime;
+    public long newTime = System.currentTimeMillis() << 16;
 
-    BackSurfaceView backSurfaceView;
+    public BackSurfaceView backSurfaceView;
 
-    Graphic graphic;
-    boolean back_ground_flag = false;
+    public Graphic graphic;
+    public boolean back_ground_flag = false;
 
     public void release() {
         System.out.println("takanoRelease : BaseSurfaceView");
@@ -59,7 +61,7 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         holder.addCallback(this);
         paint.setColor(Color.BLUE);
         global_data = (GlobalData) currentActivity.getApplication();
-        activityChange = new ActivityChange(this, currentActivity);
+        //activityChange = new ActivityChange(this, currentActivity);
 
         //音量調整ボタンを使用できるようにする
         currentActivity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -163,5 +165,12 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     public void setOpeningFlag(boolean _openingFlag) {
         openingFlag = _openingFlag;
+    }
+
+    public Constants.Touch.TouchState getTouchState() {
+        return touch_state;
+    }
+    public void setTouchState(Constants.Touch.TouchState x) {
+        touch_state = x;
     }
 }

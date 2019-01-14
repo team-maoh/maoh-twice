@@ -21,7 +21,7 @@ public class BitmapDataAdmin {
     //メンバ変数
     private Context context;
     private final String FOLDER = "image.item";
-    BitmapData bitmap_data[] = new BitmapData[BITMAP_DATA_INSTANCE];
+    BitmapData bitmap_data[];
     int next_load_point;
 
 
@@ -35,6 +35,7 @@ public class BitmapDataAdmin {
     public void init(Context _context) {
         next_load_point = 0;
         context = _context;
+        bitmap_data = new BitmapData[BITMAP_DATA_INSTANCE];
         for (int i = 0; i < BITMAP_DATA_INSTANCE; i++) {
             bitmap_data[i] = new BitmapData();
         }
@@ -147,9 +148,21 @@ public class BitmapDataAdmin {
         if (bitmap_data != null) {
             for (int i = 0; i < bitmap_data.length; i++) {
                 bitmap_data[i].releaseBitmap();
+                bitmap_data[i] = null;
+            }
+        }
+        bitmap_data = null;
+    }
+
+    public void clear() {
+        System.out.println("takanoRelease : BitMapDataAdmin");
+        if (bitmap_data != null) {
+            for (int i = 0; i < bitmap_data.length; i++) {
+                bitmap_data[i].clear();
             }
         }
     }
+
 
 }
 

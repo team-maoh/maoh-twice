@@ -62,5 +62,15 @@ public class CircleImagePlate extends CirclePlate {
         default_image_context = null;
         feedback_image_context = null;
     }
+
+    public void setDrawImageContext(ImageContext con) {
+        draw_image_context = con;
+    }
+    public void setDefaultImageContext(ImageContext con) {
+        default_image_context = con;
+    }
+    public void setFeedbackImageContext(ImageContext con) {
+        feedback_image_context = con;
+    }
 }
 

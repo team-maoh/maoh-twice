@@ -49,7 +49,7 @@ public class MapObjectBitmap {
 
         raw_bitmap_data = graphic.searchBitmap(object_name);
         geoEaterFlag = object_name.equals("ジオイーター");
-        if(geoEaterFlag){ raw_bitmap_data_find = graphic.searchBitmap("ジオイータfind");}
+        if(geoEaterFlag){ raw_bitmap_data_find = graphic.searchBitmap("ジオイーターfind");}
 
         switch (total_dirs) {
             case 1://画像サイズより取得？

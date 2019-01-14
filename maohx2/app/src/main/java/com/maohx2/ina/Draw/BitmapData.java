@@ -48,11 +48,17 @@ public class BitmapData{
         if (bitmap != null) {
             bitmap.recycle();
             bitmap = null;
+            image_name = null;
         }
     }
 
     public void release() {
         releaseBitmap();
+    }
+
+    public void clear() {
+        bitmap = null;
+        image_name = "";
     }
 
 }

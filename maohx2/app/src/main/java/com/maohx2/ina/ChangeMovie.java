@@ -22,7 +22,7 @@ public class ChangeMovie {
         rectPaint.setARGB(255,30,30,30);
     }
 
-    boolean update(boolean soundFlag){
+    public boolean update(boolean soundFlag){
         if(length == 0 && soundFlag){soundAdmin.play("encount00");}
         length += changeSpeed;
 
@@ -33,7 +33,7 @@ public class ChangeMovie {
         return false;
     }
 
-    void draw(){
+    public void draw(){
         for(int i = 0; i < RECT_SET_NUM; i++) {
             graphic.bookingDrawRect(0, (int)(RECT_HEIGHT*(2*i+0)), length, (int)(RECT_HEIGHT*(2*i+1)), rectPaint);
             graphic.bookingDrawRect(1600 - length,  (int)(RECT_HEIGHT*(2*i+1)), 1600, (int)(RECT_HEIGHT*(2*i+2)), rectPaint);

@@ -1,4 +1,4 @@
-package com.maohx2.ina;
+package com.maohx2.ina.Activity;
 
 
 import android.app.Activity;
@@ -24,9 +24,9 @@ import static com.maohx2.ina.Constants.Bitmap.*;
 
 public abstract class BaseActivity extends Activity {
 
-    RelativeLayout layout;
-    BackSurfaceView backSurfaceView;
-    boolean isPaused;
+    public RelativeLayout layout;
+    public BackSurfaceView backSurfaceView;
+    public boolean isPaused;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

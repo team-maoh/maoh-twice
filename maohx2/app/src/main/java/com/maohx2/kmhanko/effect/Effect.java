@@ -67,6 +67,7 @@ public class Effect {
         isDraw = false;
         is_pause = false;
         is_start = false;
+        clear();
     }
 
     public static void staticInit(Graphic _graphic, SoundAdmin _soundAdmin) {

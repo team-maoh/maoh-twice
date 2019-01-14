@@ -1,4 +1,4 @@
-package com.maohx2.ina;
+package com.maohx2.ina.GameSystem;
 
 
 import android.app.Activity;
@@ -6,6 +6,8 @@ import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.ina.Activity.UnitedActivity;
+import com.maohx2.ina.Activity.UnitedSurfaceView;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
@@ -23,7 +25,7 @@ import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
-
+import com.maohx2.ina.GlobalData;
 
 /**
  * Created by ina on 2017/10/15.
@@ -57,22 +59,23 @@ public class StartGameSystem {
 
     int count = 0;
     int messageNum = 0;
-    StartActivity start_activity;
+    //StartActivity start_activity;
+    UnitedActivity unitedActicity;
 
     Credits credis;
 
-    public void init(SurfaceHolder _holder, Graphic _graphic, BattleUserInterface _start_user_interface, StartActivity _start_activity, MyDatabaseAdmin my_database_admin) {
+    public void init(SurfaceHolder _holder, Graphic _graphic, BattleUserInterface _start_user_interface, UnitedActivity _unitedActicity, MyDatabaseAdmin my_database_admin) {
 
         holder = _holder;
         graphic = _graphic;
         start_user_interface = _start_user_interface;
-        start_activity = _start_activity;
+        unitedActicity = _unitedActicity;
 
         PaletteCenter.initStatic(graphic);
         PaletteElement.initStatic(graphic);
 
 
-        GlobalData globalData = (GlobalData)(start_activity.getApplication());
+        GlobalData globalData = (GlobalData)(unitedActicity.getApplication());
         equipmentInventry = globalData.getEquipmentInventry();
         expendInventry = globalData.getExpendItemInventry();
 
@@ -187,7 +190,8 @@ public class StartGameSystem {
             if(alpha < 0){
                 messageNum++;
                 if(messageNum == 6){
-                    start_activity.start_surface_view.setDownCount(1);
+                    unitedActicity.getUnitedSurfaceView().setDownCount(1);
+                    unitedActicity.getUnitedSurfaceView().setTouchWaitcount(0);
                 }
             }
             up_down *= -1;

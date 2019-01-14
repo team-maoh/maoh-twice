@@ -6,7 +6,7 @@ import android.content.Intent;
 /**
  * Created by ina on 2018/04/01.
  */
-
+/*
 public class ActivityChange {
 
     Activity currentActivity;
@@ -99,7 +99,7 @@ public class ActivityChange {
     }
     */
 
-}
+//}
 
 //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 /*

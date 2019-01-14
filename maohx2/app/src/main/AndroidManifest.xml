@@ -14,7 +14,7 @@
         android:theme="@style/MyTheme"
         >
 
-        <activity android:name=".StartActivity" android:screenOrientation="landscape" android:configChanges="orientation|screenSize|keyboardHidden">
+        <activity android:name=".Activity.UnitedActivity" android:screenOrientation="landscape" android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,19 +22,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="WorldActivity" android:screenOrientation="landscape" android:configChanges="orientation|screenSize|keyboardHidden"></activity>
-        <!--<activity android:name="BattleActivity"></activity>-->
-        <activity android:name="DungeonActivity" android:screenOrientation="landscape" android:configChanges="orientation|screenSize|keyboardHidden"></activity>
-
-<!--
-        <activity android:name=".DungeonActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.DUNGEON" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
--->
 
     </application>
 

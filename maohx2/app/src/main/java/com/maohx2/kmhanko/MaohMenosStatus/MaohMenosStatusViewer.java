@@ -1,52 +1,59 @@
-package com.maohx2.kmhanko.PlayerStatus;
+package com.maohx2.kmhanko.MaohMenosStatus;
 
+import android.graphics.Paint;
 
+import com.maohx2.fuusya.MapPlateAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.BoxPlate;
-import com.maohx2.ina.Text.Plate;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.UserInterface;
 
-import android.graphics.Color;
-import android.graphics.Paint;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
+import com.maohx2.kmhanko.PlayerStatus.PlayerStatusEffect;
+import com.maohx2.kmhanko.PlayerStatus.StatusViewer;
 
 /**
- * Created by user on 2018/04/23.
+ * Created by user on 2019/01/14.
  */
 
-public class PlayerStatusViewer extends StatusViewer {
-    static final int TEXT_NUM = 5;
+public class MaohMenosStatusViewer extends StatusViewer {
+    static final int TEXT_NUM = 3;
 
     static public final float EXPRESS_RATE = 222.22f;
     static final float EXPRESS_RATE2 = 222.2f;
 
     //毎回フレームの監視用
-    float hp = 0;
-    float attack = 0;
-    float defence = 0;
-    float luck = 0;
-    float money = 0;
+    float hp = 1;
+    float attack = 1;
+    float defence = 1;
 
-    PlayerStatus playerStatus;
+    MaohMenosStatus maohMenosStatus;
 
-    public PlayerStatusViewer(Graphic _graphic, UserInterface _userInterface, PlayerStatus _playerStatus) {
+    BitmapData maohIcon;
+
+    int maohIconPosX = 170;
+    int maohIconPosY = 780;
+    float maohIconExtend  = 1.8f;
+
+
+    public MaohMenosStatusViewer(Graphic _graphic, UserInterface _userInterface, MaohMenosStatus _maohMenosStatus) {
         super(_graphic, _userInterface, TEXT_NUM);
-        playerStatus = _playerStatus;
+        maohMenosStatus = _maohMenosStatus;
 
-        hp = playerStatus.getHP();
-        attack = playerStatus.getAttack();
-        defence = playerStatus.getDefence();
-        luck = playerStatus.getLuck();
-        money = playerStatus.getMoney();
+        hp = maohMenosStatus.getGeoHP();
+        attack = maohMenosStatus.getGeoAttack();
+        defence = maohMenosStatus.getGeoDefence();
+
+        maohIcon = graphic.searchBitmap("魔王ボタン");
     }
 
     public void initPosition() {
-        posX1 = 0;
-        posX2 = 1600;
-        posY1 = 850;
-        posY2 = 900;
+        posX1 = 230;
+        posX2 = 1000;
+        posY1 = 780;
+        posY2 = 830;
 
         textXOffsetLeft1 = 65;
         textXOffsetLeft2 = 125;
@@ -64,8 +71,7 @@ public class PlayerStatusViewer extends StatusViewer {
         statusIcon[0] = graphic.searchBitmap("status_hp");
         statusIcon[1] = graphic.searchBitmap("剣");
         statusIcon[2] = graphic.searchBitmap("盾");
-        statusIcon[3] = graphic.searchBitmap("status_luck");
-        statusIcon[4] = graphic.searchBitmap("status_money");
+        //statusIcon[3] = graphic.searchBitmap("status_luck");
 
     }
 
@@ -78,7 +84,7 @@ public class PlayerStatusViewer extends StatusViewer {
                                 Constants.Touch.TouchWay.UP_MOMENT,
                                 Constants.Touch.TouchWay.MOVE,
                                 posX1, posY1, posX2, posY2
-                                ) {
+                        ) {
                             @Override
                             public void draw() {
                                 for (int i = 0; i < TEXT_NUM ; i++) {
@@ -88,38 +94,23 @@ public class PlayerStatusViewer extends StatusViewer {
                                     switch(i) {
                                         case 0:
                                             statusName = "HP";
-                                            statusFigure = String.format("%.1f",playerStatus.getHP()/EXPRESS_RATE);
+                                            statusFigure = String.format("-%.1f",maohMenosStatus.getGeoHP()/EXPRESS_RATE);
                                             paint.setARGB(255,128,255,255);
                                             break;
                                         case 1:
                                             statusName = "Atk";
-                                            statusFigure = String.format("%.1f",playerStatus.getAttack()/EXPRESS_RATE);
+                                            statusFigure = String.format("-%.1f",maohMenosStatus.getGeoAttack()/EXPRESS_RATE);
                                             paint.setARGB(255,255,128,128);
                                             break;
                                         case 2:
                                             statusName = "Def";
-                                            statusFigure = String.format("%.1f",playerStatus.getDefence()/EXPRESS_RATE2);
+                                            statusFigure = String.format("-%.1f",maohMenosStatus.getGeoDefence()/EXPRESS_RATE2);
                                             paint.setARGB(255,128,128,255);
                                             break;
-                                        case 3:
-                                            statusName = "Luc";
-                                            statusFigure = String.format("%.1f",playerStatus.getLuck()/EXPRESS_RATE);
-                                            paint.setARGB(255,255,128,255);
-                                            break;
-                                        case 4:
-                                            statusName = String.valueOf(playerStatus.getMoney() + " Maon");
-                                            statusFigure = "";
-                                            paint.setARGB(255,255,255,255);
-                                            break;
                                     }
-
-                                    //graphic.bookingDrawText(statusName,posX1 + TEXT_X_OFFSET_LEFT1, posY1 + sizeY * i + sizeY, paint);
-                                    //graphic.bookingDrawText(statusFigure,posX1 + TEXT_X_OFFSET_LEFT1 + TEXT_X_OFFSET_LEFT2, posY1 + sizeY * i + sizeY, paint);
-
                                     graphic.bookingDrawBitmapData(statusIcon[i],posX1 + sizeX * i , posY1, 1.5f, 1.5f,0,255, true);
                                     graphic.bookingDrawText(statusName,posX1 + sizeX * i + textXOffsetLeft1, posY1 + (int)((sizeY + sizeY * textSizeRate)/2.0f), paint);
                                     graphic.bookingDrawText(statusFigure,posX1 + sizeX * i + textXOffsetLeft2, posY1 + (int)((sizeY + sizeY * textSizeRate)/2.0f), paint);
-
                                 }
                             }
                         }
@@ -133,36 +124,34 @@ public class PlayerStatusViewer extends StatusViewer {
         }
         //statusPlate.update();あえて呼ばない
         float parameter;
-        if (playerStatus.getEffectFlag()) {
+        if (maohMenosStatus.getEffectFlag()) {
             System.out.println("StatusEffectFlag = True");
-            if ((parameter = playerStatus.getHP() - hp) != 0 && hp != 0) {
+            if ((parameter = maohMenosStatus.getGeoHP() - hp) != 0 && hp != 1) {
                 makeStatusEffect(0, parameter/EXPRESS_RATE, true);
             }
-            if ((parameter = playerStatus.getAttack() - attack) != 0 && attack != 0) {
+            if ((parameter = maohMenosStatus.getGeoAttack() - attack) != 0 && attack != 1) {
                 makeStatusEffect(1, parameter/EXPRESS_RATE, true);
             }
-            if ((parameter = playerStatus.getDefence() - defence) != 0 && defence != 0) {
+            if ((parameter = maohMenosStatus.getGeoDefence() - defence) != 0 && defence != 1) {
                 makeStatusEffect(2, parameter/EXPRESS_RATE2, true);
             }
-            if ((parameter = playerStatus.getLuck() - luck) != 0 && luck != 0) {
-                makeStatusEffect(3, parameter/EXPRESS_RATE, true);
-            }
-            if ((parameter = playerStatus.getMoney() - money) != 0 && money != 0) {
-                makeStatusEffect(4, parameter, false);
-            }
-            hp = playerStatus.getHP();
-            attack = playerStatus.getAttack();
-            defence = playerStatus.getDefence();
-            luck = playerStatus.getLuck();
-            money = playerStatus.getMoney();
+            hp = maohMenosStatus.getGeoHP();
+            attack = maohMenosStatus.getGeoAttack();
+            defence = maohMenosStatus.getGeoDefence();
 
-            playerStatus.setEffectFlag(false);
+            maohMenosStatus.setEffectFlag(false);
         }
 
 
         for (int i = 0; i < statusEffect.length; i++) {
             statusEffect[i].update();
         }
+    }
+
+    @Override
+    public void draw() {
+        super.draw();
+        graphic.bookingDrawBitmapData(maohIcon, maohIconPosX, maohIconPosY, maohIconExtend, maohIconExtend, 0, 255, false);
     }
 
     public void Existis(boolean f) {

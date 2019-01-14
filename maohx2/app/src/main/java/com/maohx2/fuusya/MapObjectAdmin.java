@@ -13,14 +13,15 @@ import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.DungeonMonsterDataAdmin;
 import com.maohx2.horie.map.MapAdmin;
-import com.maohx2.ina.ActivityChange;
+//import com.maohx2.ina.ActivityChange;
+import com.maohx2.ina.Activity.UnitedActivity;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Battle.BattleUnitDataAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
-import com.maohx2.ina.DungeonGameSystem;
-import com.maohx2.ina.DungeonModeManage;
+import com.maohx2.ina.GameSystem.DungeonGameSystem;
+import com.maohx2.ina.GameSystem.DungeonModeManage;
 import com.maohx2.horie.map.DungeonData;
 import com.maohx2.ina.GlobalData;
 import com.maohx2.ina.Text.BoxTextPlate;
@@ -114,7 +115,7 @@ public class MapObjectAdmin {
     boolean avoid_battle_for_debug = false;
 
     MapInventryAdmin map_inventry_admin;
-    ActivityChange activityChange;
+    //ActivityChange activityChange;
     int kind_of_zako;
 
     int repeatCount;
@@ -124,15 +125,18 @@ public class MapObjectAdmin {
 
     Constants.DungeonKind.DUNGEON_KIND dungeonKind;
 
+    UnitedActivity unitedActivity;
+
     boolean initUIsFlag;
 
-    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, GlobalData _globalData, BattleUnitAdmin _battle_unit_admin, TextBoxAdmin _text_box_admin, BattleUnitDataAdmin _battleUnitDataAdmin, DungeonMonsterDataAdmin _dungeonMonsterDataAdmin, int _repeatCount, Constants.DungeonKind.DUNGEON_KIND _dungeonKind, DungeonData _dungeonData, EffectAdmin _effectAdmin, EffectAdmin _backEffectAdmin) {
+    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, UnitedActivity _unitedActivity, BattleUnitAdmin _battle_unit_admin, TextBoxAdmin _text_box_admin, BattleUnitDataAdmin _battleUnitDataAdmin, DungeonMonsterDataAdmin _dungeonMonsterDataAdmin, int _repeatCount, Constants.DungeonKind.DUNGEON_KIND _dungeonKind, DungeonData _dungeonData, EffectAdmin _effectAdmin, EffectAdmin _backEffectAdmin) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
         sound_admin = _sound_admin;
         map_plate_admin = _map_plate_admin;
         dungeon_mode_manage = _dungeon_mode_manage;
-        globalData = _globalData;
+        unitedActivity = _unitedActivity;
+        globalData = (GlobalData)unitedActivity.getApplication();
         playerStatus = globalData.getPlayerStatus();
         battle_unit_admin = _battle_unit_admin;
         text_box_admin = _text_box_admin;
@@ -209,7 +213,7 @@ public class MapObjectAdmin {
         bag_item_admin = new BagItemAdmin();
         bag_item_admin.init();
 
-        activityChange = map_plate_admin.getActivityChange();
+        //activityChange = map_plate_admin.getActivityChange();
 
         textbox_id = text_box_admin.createTextBox(100, 700, 1450, 880, 4);
         text_box_admin.setTextBoxUpdateTextByTouching(textbox_id, false);
@@ -220,9 +224,6 @@ public class MapObjectAdmin {
         paint.setARGB(255, 255, 255, 255);
 
         kind_of_zako = 1;
-
-        initDungeonEscapeSelectButton();
-        initWindowTextPlate();
     }
 
     public void init() {
@@ -244,7 +245,8 @@ public class MapObjectAdmin {
     public void update() {
 
         //チュートリアル中と選択肢出現中は時が停止する
-        if (playerStatus.getTutorialInDungeon() == 1 && !dungeonEscapeSelectButtonGroup.getDrawFlag() && map_plate_admin.getDisplayingContent() != 1) {
+        //if (playerStatus.getTutorialInDungeon() == 1 && !dungeonEscapeSelectButtonGroup.getDrawFlag() && map_plate_admin.getDisplayingContent() != 1) {
+        if (playerStatus.getTutorialInDungeon() == 1 && !map_plate_admin.getDungeonSelectWindowAdmin().isActive()) {
 
             map_player.update();
             map_player_bitmap.update();
@@ -277,15 +279,6 @@ public class MapObjectAdmin {
                 map_boss[i].update();
                 map_boss_bitmap[i].update();
             }
-        }
-
-
-        dungeonEscapeSelectButtonGroup.update();
-
-        dungeonEscapeSelectButtonCheck();
-        if (initUIsFlag) {
-            initUIs();
-            initUIsFlag = false;
         }
 
     }
@@ -327,9 +320,6 @@ public class MapObjectAdmin {
         if (map_player.exists() == true) {
             map_player_bitmap.draw(map_player.getDirOnMap(), map_player.getNormX(), map_player.getNormY(), playerAlpha,false);
         }
-
-        dungeonEscapePlate.draw();
-        dungeonEscapeSelectButtonGroup.draw();
     }
 
     public MapPlayer getPlayer() {
@@ -445,7 +435,6 @@ public class MapObjectAdmin {
         backEffectAdmin.clearAllEffect();
 
         spawnMine(mine_point);
-        spawnEnemy();
         spawnTrap(debug_trap_name);
         spawnBoss(debug_boss_point);
         spawnItem(debug_item_name);
@@ -530,7 +519,7 @@ public class MapObjectAdmin {
 //                if (i == 2 && map_mine[0].exists() == true) {
 //                    map_enemy[i].setPosition((int) map_mine[0].getWorldX(), (int) map_mine[0].getWorldY());
 //                } else {
-                Point room_point = map_admin.getGoodSpawnRoomPoint();
+                Point room_point = map_admin.getGoodSpawnRoomPointWithoutPlayer();
                 /* by kmhanko
                 while (true) {
                     room_point = map_admin.getRoomPoint();
@@ -697,93 +686,27 @@ public class MapObjectAdmin {
         map_inventry_admin = _map_inventry_admin;
     }
 
-    // *** 選択肢関係
-    PlateGroup<BoxImageTextPlate> dungeonEscapeSelectButtonGroup;
-    WindowTextPlate dungeonEscapePlate;
-    Paint dungeonEnterTextPaint;
-
-    private void initWindowTextPlate() {
-        dungeonEscapePlate = new WindowTextPlate(graphic, new int[]{Constants.SELECT_WINDOW_PLATE.MESS_LEFT, Constants.SELECT_WINDOW_PLATE.MESS_UP, Constants.SELECT_WINDOW_PLATE.MESS_RIGHT, Constants.SELECT_WINDOW_PLATE.MESS_BOTTOM});
-        dungeonEnterTextPaint = new Paint();
-        dungeonEnterTextPaint.setTextSize(45);
-        dungeonEnterTextPaint.setStrokeWidth(20);
-        dungeonEnterTextPaint.setColor(Color.WHITE);
-    }
-
-    private void dungeonEscapePlateUpdate() {
-        dungeonEscapePlate.setText("アイテムを持ってダンジョンを脱出しますか？", dungeonEnterTextPaint, WindowTextPlate.TextPosition.CENTER);
-    }
-
-    private void initDungeonEscapeSelectButton(){
-        Paint textPaint = new Paint();
-        textPaint.setTextSize(Constants.SELECT_WINDOW_PLATE.BUTTON_TEXT_SIZE);
-        textPaint.setARGB(255,255,255,255);
-
-        dungeonEscapeSelectButtonGroup = new PlateGroup<BoxImageTextPlate>(
-                new BoxImageTextPlate[]{
-                        new BoxImageTextPlate(
-                                graphic, dungeon_user_interface,
-                                Constants.Touch.TouchWay.UP_MOMENT,
-                                Constants.Touch.TouchWay.MOVE,
-                                new int[]{Constants.SELECT_WINDOW.YES_LEFT, Constants.SELECT_WINDOW.YES_UP, Constants.SELECT_WINDOW.YES_RIGHT, Constants.SELECT_WINDOW.YES_BOTTOM},
-                                "はい",
-                                textPaint
-                        ),
-                        new BoxImageTextPlate(
-                                graphic, dungeon_user_interface,
-                                Constants.Touch.TouchWay.UP_MOMENT,
-                                Constants.Touch.TouchWay.MOVE,
-                                new int[]{Constants.SELECT_WINDOW.NO_LEFT, Constants.SELECT_WINDOW.NO_UP, Constants.SELECT_WINDOW.NO_RIGHT, Constants.SELECT_WINDOW.NO_BOTTOM},
-                                "いいえ",
-                                textPaint
-                        )
-                }
-        );
-
-        dungeonEscapeSelectButtonGroup.setUpdateFlag(false);
-        dungeonEscapeSelectButtonGroup.setDrawFlag(false);
-    }
-
-    public void dungeonEscapeSelectButtonCheck() {
-        if (!(dungeonEscapeSelectButtonGroup.getUpdateFlag())) {
-            return;
-        }
-        int buttonID = dungeonEscapeSelectButtonGroup.getTouchContentNum();
-        if (buttonID == 0 ) { //脱出
-            sound_admin.play("enter00");
-            playerStatus.setNowHPMax();
-            initUIsFlag = true;
-            escapeDungeon();
-        }
-        if (buttonID == 1 ) { //やめる
-            sound_admin.play("cancel00");
-            initUIsFlag = true;
-        }
-    }
-
-
-    private void initUIs() {
-        dungeonEscapeSelectButtonGroup.setUpdateFlag(false);
-        dungeonEscapeSelectButtonGroup.setDrawFlag(false);
-        dungeonEscapePlate.setDrawFlag(false);
-    }
-
-    //*** 選択肢関係ここまで
-
-    public void escapeDungeonChoice() {
-        this.dungeonEscapePlateUpdate();
-        this.dungeonEscapeSelectButtonGroup.setUpdateFlag(true);
-        this.dungeonEscapeSelectButtonGroup.setDrawFlag(true);
-        this.dungeonEscapePlate.setDrawFlag(true);
-    }
-
     public void escapeDungeon() {
         sound_admin.play("step00");
+        playerStatus.setNowHPMax();
         map_inventry_admin.storageMapInventry();
         globalData.getExpendItemInventry().save();
-        activityChange.toWorldActivity();
-
+        //activityChange.toWorldActivity();
+        unitedActivity.getUnitedSurfaceView().toWorldGameMode();
     }
+
+    MapMine nowMapMine;
+    public void gotoMiningWindowActivate(MapMine _nowMapMine) {
+        nowMapMine = _nowMapMine;
+        map_plate_admin.gotoMiningWindowActivate();
+    }
+    public void gotoMining() {
+        nowMapMine.setExists(false);
+        map_player.setEncountSteps(0);
+        this.eraseEffectBox();
+        dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
+    }
+
 
     public int getMagnification() {
         return magnification;

@@ -1,4 +1,4 @@
-package com.maohx2.ina;
+package com.maohx2.ina.GameSystem;
 
 import com.maohx2.ina.Constants.GAMESYSTEN_MODE.WORLD_MODE;
 import com.maohx2.ina.Constants.Mode.ACTIVATE;

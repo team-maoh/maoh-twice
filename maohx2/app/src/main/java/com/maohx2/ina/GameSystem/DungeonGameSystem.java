@@ -1,4 +1,4 @@
-package com.maohx2.ina;
+package com.maohx2.ina.GameSystem;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -24,6 +24,7 @@ import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Battle.BattleUnitDataAdmin;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.Activity.UnitedActivity;
 import com.maohx2.ina.Draw.ImageContext;
 import com.maohx2.ina.ItemData.EquipmentItemBaseData;
 import com.maohx2.ina.ItemData.EquipmentItemBaseDataAdmin;
@@ -48,6 +49,9 @@ import com.maohx2.kmhanko.itemdata.MiningItemDataAdmin;
 import com.maohx2.kmhanko.music.MusicAdmin;
 import com.maohx2.kmhanko.plate.BackPlate;
 import com.maohx2.fuusya.MapInventryAdmin;
+import com.maohx2.ina.Constants;
+import com.maohx2.ina.ChangeMovie;
+import com.maohx2.ina.GlobalData;
 
 import java.util.List;
 
@@ -91,13 +95,14 @@ public class DungeonGameSystem {
     InventryS expendInventry;
     BitmapData backGround;
 
-    ActivityChange activityChange;
+    //ActivityChange activityChange;
     PlayerStatus playerStatus;
     MaohMenosStatus maohMenosStatus;
 
     DungeonMonsterDataAdmin dungeonMonsterDataAdmin;
 
-    Activity dungeonActivity;
+    //Activity dungeonActivity;
+    UnitedActivity unitedActivity;
 
     MusicAdmin musicAdmin;
     SoundAdmin soundAdmin;
@@ -119,10 +124,10 @@ public class DungeonGameSystem {
     ChangeMovie changeMovie;
     boolean map_init = false;
 
-    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin _soundAdmin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, Activity dungeon_activity, MyDatabaseAdmin my_database_admin, ActivityChange _activityChange, Constants.DungeonKind.DUNGEON_KIND _dungeon_kind) {
+    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin _soundAdmin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, UnitedActivity _unitedActivity, MyDatabaseAdmin my_database_admin, Constants.DungeonKind.DUNGEON_KIND _dungeon_kind) {
         dungeon_user_interface = _dungeon_user_interface;
         battle_user_interface = _battle_user_interface;
-        dungeonActivity = dungeon_activity;
+        unitedActivity = _unitedActivity;
         graphic = _graphic;
         dungeon_kind = _dungeon_kind;
 
@@ -137,7 +142,7 @@ public class DungeonGameSystem {
 
         talkAdmin = new TalkAdmin(graphic, dungeon_user_interface, _myDatabaseAdmin, text_box_admin , soundAdmin);
 
-        GlobalData globalData = (GlobalData)(dungeon_activity.getApplication());
+        GlobalData globalData = (GlobalData)(unitedActivity.getApplication());
         musicAdmin = globalData.getMusicAdmin();
 
         playerStatus = globalData.getPlayerStatus();
@@ -210,16 +215,16 @@ public class DungeonGameSystem {
         battleUnitDataAdmin.loadBattleUnitData(dungeon_kind);//敵読み込み
 
 
-        activityChange = _activityChange;
+        //activityChange = _activityChange;
         dungeonModeManage = new DungeonModeManage();
-        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, activityChange, globalData, dungeonModeManage, soundAdmin);
+        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, unitedActivity, dungeonModeManage, soundAdmin);
         map_object_admin = new MapObjectAdmin(
                 graphic,
                 dungeon_user_interface,
                 soundAdmin,
                 map_plate_admin,
                 dungeonModeManage,
-                globalData,
+                unitedActivity,
                 battle_unit_admin,
                 text_box_admin,
                 battleUnitDataAdmin,
@@ -285,7 +290,7 @@ public class DungeonGameSystem {
         battle_unit_admin.init(
                 graphic,
                 battle_user_interface,
-                dungeon_activity,
+                unitedActivity,
                 battleUnitDataAdmin,
                 playerStatus,
                 palette_admin,
@@ -457,7 +462,8 @@ public class DungeonGameSystem {
                 break;
 
             case TO_WORLD:
-                activityChange.toWorldActivity();
+                //activityChange.toWorldActivity();
+                unitedActivity.getUnitedSurfaceView().toWorldGameMode();
                 break;
 
             case EQUIP_EXPEND_INIT:
@@ -517,7 +523,7 @@ public class DungeonGameSystem {
         effectAdmin.update();
         backEffectAdmin.update();
 
-        activityChange.toChangeActivity();
+        //activityChange.toChangeActivity();
     }
 
     public void draw() {
@@ -544,7 +550,6 @@ public class DungeonGameSystem {
                 if (playerStatus.getTutorialInDungeon() == 1) {
                     playerStatusViewer.draw();
                 }
-                playerStatusViewer.draw();
                 break;
 
             case BUTTLE_INIT:
@@ -582,6 +587,7 @@ public class DungeonGameSystem {
                 effectAdmin.draw();
                 map_admin.drawSmallMap();
                 map_plate_admin.draw();
+                playerStatusViewer.draw();
                 break;
 
             case ITEM:
@@ -707,12 +713,6 @@ public class DungeonGameSystem {
         }
         if (map_object_admin != null) {
             map_object_admin.release();
-        }
-        if (dungeon_user_interface != null) {
-            dungeon_user_interface.release();
-        }
-        if (battle_user_interface != null) {
-            battle_user_interface.release();
         }
         if (text_box_admin != null) {
             text_box_admin.release();
@@ -848,7 +848,8 @@ public class DungeonGameSystem {
                                 "maoh001"
                         }
                 );
-                ((DungeonActivity) dungeonActivity).dungeon_surface_view.setOpeningFlag(false);////////
+                //((DungeonActivity) dungeonActivity).dungeon_surface_view.setOpeningFlag(false);////////
+                unitedActivity.getUnitedSurfaceView().setOpeningFlag(false);
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.OPENING_BATTLE_INIT);
                 //text_box_admin.setTextBoxExists(openningTextBoxID, false);
                 resetBossImage = true;

@@ -8,7 +8,7 @@ import com.maohx2.ina.Text.BoxTextPlate;
 import com.maohx2.ina.Text.BoxImagePlate;
 import com.maohx2.ina.Text.CircleImagePlate;
 import com.maohx2.ina.UI.UserInterface;
-import com.maohx2.ina.WorldModeAdmin;
+import com.maohx2.ina.GameSystem.WorldModeAdmin;
 import com.maohx2.ina.Draw.Graphic;
 
 

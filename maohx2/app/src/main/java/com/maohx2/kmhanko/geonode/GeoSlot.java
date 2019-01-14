@@ -89,6 +89,8 @@ public class GeoSlot extends CircleImagePlate {
     ImageContext notEventCrearImageContext;
     ImageContext slotHoleImageContext;
     ImageContext geoImageContext;
+    ImageContext slotHoleImageContextRed;
+    ImageContext slotHoleImageContextGreen;
 
     //TODO:デバッグ用。セーブデータの用意が必要
     boolean isReleased = false;
@@ -426,7 +428,10 @@ public class GeoSlot extends CircleImagePlate {
 
     @Override
     public void draw() {
-        super.draw();
+        if (draw_flag == false){
+            return;
+        }
+        graphic.bookingDrawBitmapData(draw_image_context);
         if (!isEventClear()) {
             graphic.bookingDrawBitmapData(notEventCrearImageContext);
         }
@@ -434,6 +439,25 @@ public class GeoSlot extends CircleImagePlate {
             graphic.bookingDrawBitmapData(geoImageContext);
         }
     }
+
+    public void updateGeoBaseTileImageContext() {
+        if (isAbleToPutGeo()) {
+            if (id == 0) {
+                this.setDefaultImageContext(slotHoleImageContextGreen);
+                this.setDrawImageContext(slotHoleImageContextGreen);
+                this.setFeedbackImageContext(slotHoleImageContextGreen);
+            } else {
+                this.setDefaultImageContext(slotHoleImageContext);
+                this.setDrawImageContext(slotHoleImageContext);
+                this.setFeedbackImageContext(slotHoleImageContext);
+            }
+        } else {
+            this.setDefaultImageContext(slotHoleImageContextRed);
+            this.setDrawImageContext(slotHoleImageContextRed);
+            this.setFeedbackImageContext(slotHoleImageContextRed);
+        }
+    }
+
     /*
     public void draw(boolean isFocused) {
         if (isFocused) {
@@ -469,7 +493,13 @@ public class GeoSlot extends CircleImagePlate {
             if (isEventClearAll()) {
                 setGeoObjectFromHold();
                 geoSlotAdmin.calcStatus();
+            } else {
+                if (this.isEventClear()) {
+                    soundAdmin.play("cannot_exit_room");
+                }
             }
+        } else {
+            soundAdmin.play("cannot_exit_room");
         }
     }
 
@@ -552,6 +582,7 @@ public class GeoSlot extends CircleImagePlate {
                     geoSlotAdmin.getPlayerStatus().subMoney(money);
                     isReleased = true;
                     geoSlotAdmin.calcStatus();
+                    updateGeoBaseTileImageContext();
 
 
                     System.out.println("GeoSlot#geoSlotRelease　金を支払う　" + release_event);
@@ -579,6 +610,7 @@ public class GeoSlot extends CircleImagePlate {
                         geoInventry.deleteItemData(geoSlotAdmin.getHoldGeoObject().getName());
                         geoSlotAdmin.setHoldGeoObject(null);
                         isReleased = true;
+                        updateGeoBaseTileImageContext();
                         System.out.println("GeoSlot#geoSlotRelease　ジオオブジェクトを支払う　" + release_event);
                         return true;
                     }
@@ -635,17 +667,16 @@ public class GeoSlot extends CircleImagePlate {
         touch_id = user_interface.setCircleTouchUI(x, y, radius);
         //TODO: 前の奴を消せないので格納上の問題あり
 
-        notEventCrearImageContext = graphic.makeImageContext(graphic.searchBitmap("GeoStop"), x , y, GeoSlotParam.GEO_STOP_SCALE, GeoSlotParam.GEO_STOP_SCALE, 0.0f, 255, false);
+        notEventCrearImageContext = graphic.makeImageContext(graphic.searchBitmap("GeoStop"), x, y, GeoSlotParam.GEO_STOP_SCALE, GeoSlotParam.GEO_STOP_SCALE, 0.0f, 255, false);
         if (grandFlag) {
-            slotHoleImageContext = graphic.makeImageContext(graphic.searchBitmap("GeoSlotHoleGreen"), x, y, GeoSlotParam.GEO_SLOT_SCALE, GeoSlotParam.GEO_SLOT_SCALE, 0.0f, 255, false);
-        } else {
-            slotHoleImageContext = graphic.makeImageContext(graphic.searchBitmap("GeoSlotHole"), x, y, GeoSlotParam.GEO_SLOT_SCALE, GeoSlotParam.GEO_SLOT_SCALE, 0.0f, 255, false);
+            slotHoleImageContextGreen = graphic.makeImageContext(graphic.searchBitmap("GeoSlotHoleGreen"), x, y, GeoSlotParam.GEO_SLOT_SCALE, GeoSlotParam.GEO_SLOT_SCALE, 0.0f, 255, false);
         }
-        geoImageContext = null;
+        slotHoleImageContext = graphic.makeImageContext(graphic.searchBitmap("GeoSlotHole"), x, y, GeoSlotParam.GEO_SLOT_SCALE, GeoSlotParam.GEO_SLOT_SCALE, 0.0f, 255, false);
 
-        default_image_context = slotHoleImageContext;
-        draw_image_context = slotHoleImageContext;
-        feedback_image_context = slotHoleImageContext;
+        slotHoleImageContextRed = graphic.makeImageContext(graphic.searchBitmap("GeoSlotHoleRed"), x, y, GeoSlotParam.GEO_SLOT_SCALE, GeoSlotParam.GEO_SLOT_SCALE, 0.0f, 255, false);
+
+        geoImageContext = null;
+        updateGeoBaseTileImageContext();
     }
 
     //** Created by ina **//
@@ -702,6 +733,10 @@ public class GeoSlot extends CircleImagePlate {
         radius = _radius;
     }
     */
+
+    public boolean isAbleToPutGeo() {
+        return geoSlotAdmin.getMode() == GeoSlotAdminManager.MODE.WORLD_NORMAL && isEventClearAll();
+    }
 
     public int getTouchID(){
 

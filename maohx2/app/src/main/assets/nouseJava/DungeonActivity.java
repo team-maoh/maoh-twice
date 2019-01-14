@@ -201,7 +201,7 @@ class DungeonSurfaceView extends BaseSurfaceView{
         global_data.getExpendItemInventry().init(battle_user_interface, graphic,200,100,600,508, 10);
 
 
-        game_system.init(dungeon_user_interface, graphic, sound_admin, my_database_admin, battle_user_interface, dungeon_activity, my_database_admin, activityChange, dungeon_kind);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
+        //game_system.init(dungeon_user_interface, graphic, sound_admin, my_database_admin, battle_user_interface, dungeon_activity, my_database_admin, activityChange, dungeon_kind);//GameSystem()の初期化 (= GameSystem.javaのinit()を実行)
 
         if(openingFlag == true){
             game_system.openningInit();
