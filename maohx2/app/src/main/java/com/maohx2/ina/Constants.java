@@ -237,16 +237,16 @@ public final class Constants {
     public static class TUTRIAL_BUTTON {
         public static final int DUNGEON_LEFT = 50;
         public static final int DUNGEON_RIGHT = 350;
-        public static final int DUNGEON_UP = 768;
-        public static final int DUNGEON_BOTTOM = 848;
+        public static final int DUNGEON_UP = 770;
+        public static final int DUNGEON_BOTTOM = 845;
 
         public static final int LEFT = 50;
         public static final int RIGHT = 350;
-        public static final int UP = 20;
+        public static final int UP = 25;
         public static final int BOTTOM = 100;
 
-        public static final float TEXT_SIZE_TU = 30f;
-        public static final float TEXT_SIZE_NAME = 25f;
+        public static final float TEXT_SIZE_TU = 28f;
+        public static final float TEXT_SIZE_NAME = 24f;
     }
 
     public static class SIDE_INVENTRY {
