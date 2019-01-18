@@ -61,6 +61,7 @@ public class MapPlayer extends MapUnit {
     double touch_w_x, touch_w_y, touch_n_x, touch_n_y, pre_w_x, pre_w_y;
     double touch_down_n_x, touch_down_n_y;
     boolean touch_mode;
+    boolean touch_draw;
     boolean move_mode;
     boolean is_moving;
 
@@ -148,6 +149,7 @@ public class MapPlayer extends MapUnit {
         }
 
 
+        touch_draw = false;
 
         if (touch_state != TouchState.AWAY) {
 
@@ -175,10 +177,11 @@ public class MapPlayer extends MapUnit {
 
 
                 if (isWithinReach(touch_w_x, touch_w_y, step * 2) == false) {
-                    if (touch_state == TouchState.DOWN) {
+                    touch_draw = true;
+                    if (touch_mode == false && (touch_state == TouchState.DOWN || touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE)) {
+                        touch_mode = true;
                         touch_down_n_x = touch_n_x;
                         touch_down_n_y = touch_n_y;
-                        touch_mode = true;
                     }
                 }
 
@@ -355,7 +358,7 @@ public class MapPlayer extends MapUnit {
     }
 
     public void draw(){
-        if(touch_mode == true) {
+        if(touch_draw == true) {
             paint.setARGB( 150,255,255,255);
             graphic.bookingDrawCircle((int) touch_down_n_x, (int) touch_down_n_y, 40, paint);
             double directionX = ((touch_n_x - touch_down_n_x) * abs((touch_n_x - touch_down_n_x))) / ((touch_n_x - touch_down_n_x) * (touch_n_x - touch_down_n_x) + (touch_n_y - touch_down_n_y) * (touch_n_y - touch_down_n_y));

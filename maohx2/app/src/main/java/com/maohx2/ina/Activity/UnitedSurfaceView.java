@@ -316,6 +316,7 @@ public class UnitedSurfaceView extends BaseSurfaceView {
         }
 
         graphic.draw();
+        gameModeChanger.toChangeGameMode();
     }
 
     private void startGameLoop() {
@@ -357,8 +358,8 @@ public class UnitedSurfaceView extends BaseSurfaceView {
                 start_game_system.draw();
                 break;
         }
-        gameModeChanger.toChangeGameMode();//これより後にGameSystemを置かないこと これより後にChangerのdrawを置くこと
         gameModeChanger.draw();
+
     }
 
     int downCount = 0;
@@ -375,8 +376,8 @@ public class UnitedSurfaceView extends BaseSurfaceView {
         worldGameSystem.update();
         worldGameSystem.draw();
 
-        gameModeChanger.toChangeGameMode();//これより後にGameSystemを置かないこと これより後にChangerのdrawを置くこと
         gameModeChanger.draw();
+
     }
 
     private void dungeonGameLoop(){
@@ -391,8 +392,8 @@ public class UnitedSurfaceView extends BaseSurfaceView {
             dungeonGameSystem.update();
             dungeonGameSystem.draw();
         }
-        gameModeChanger.toChangeGameMode();//これより後にGameSystemを置かないこと これより後にChangerのdrawを置くこと
         gameModeChanger.draw();
+
     }
 
     private void setGameSystemMode(GAME_SYSTEM_MODE _gameSystemMode) {

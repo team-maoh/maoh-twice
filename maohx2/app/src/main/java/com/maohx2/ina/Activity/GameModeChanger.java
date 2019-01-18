@@ -36,6 +36,8 @@ public class GameModeChanger {
     public void toChangeGameMode() {//これ自体は毎ループ呼ばれている
         if (gameSystemModeReserve != UnitedSurfaceView.GAME_SYSTEM_MODE.NONE) {
             if (changeMovie.update(false, true)) {
+                changeMovie.draw(true);
+                graphic.draw();
                 switch (gameSystemModeReserve) {
                     case START:
                         //ここには来ない(ゲーム画面からスタート画面に戻れるようにするなら必要)
@@ -58,6 +60,7 @@ public class GameModeChanger {
                     default:
                         break;
                 }
+                changeMovie.init();
             }
         }
     }
