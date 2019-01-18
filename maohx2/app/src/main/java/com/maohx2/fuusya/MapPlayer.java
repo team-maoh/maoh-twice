@@ -316,7 +316,7 @@ public class MapPlayer extends MapUnit {
         //階段移動
         if (map_admin.isStairs((int)(w_x/map_admin.getMagnification()), (int)(w_y/map_admin.getMagnification()))) {
             sound_admin.play("step00");
-            map_admin.goNextFloor();
+            map_admin.goNextFloorPrepare();
         }
 
         //ゲート脱出

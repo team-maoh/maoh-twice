@@ -8,8 +8,10 @@ import android.view.SurfaceHolder;
 
 import com.maohx2.fuusya.MapObjectAdmin;
 import com.maohx2.fuusya.MapPlayer;
+import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.ina.GameSystem.DungeonGameSystem;
 import com.maohx2.kmhanko.myavail.MyAvail;
 
 import java.util.ArrayList;
@@ -103,6 +105,8 @@ public class MapAdmin {
     BitmapData gate_tile;
     BitmapData stair_tile_div[] = new BitmapData[4];//階段の画像を4分割
 
+    DungeonGameSystem dungeonGameSystem;
+
     public int getMap_size_x() {
         return map_size.x;
     }
@@ -135,12 +139,13 @@ public class MapAdmin {
         return boss_floor_num;
     }
 
-    public MapAdmin(Graphic m_graphic, MapObjectAdmin m_map_object_admin, DungeonData m_dungeon_data, List<DungeonMonsterData> m_dungeon_monster_data, MapStatus _map_status, MapStatusSaver _map_status_saver) {
+    public MapAdmin(Graphic m_graphic, DungeonGameSystem _dungeonGameSystem, MapObjectAdmin m_map_object_admin, DungeonData m_dungeon_data, List<DungeonMonsterData> m_dungeon_monster_data, MapStatus _map_status, MapStatusSaver _map_status_saver) {
         graphic = m_graphic;
         map_object_admin = m_map_object_admin;
         map_player = map_object_admin.getPlayer();
         dungeon_data = m_dungeon_data;
         dungeon_monster_data = m_dungeon_monster_data;
+        dungeonGameSystem = _dungeonGameSystem;
 
         //データベースからマップ情報の読み込み
         dungeon_name = dungeon_data.getDungeon_name();
@@ -652,6 +657,11 @@ public class MapAdmin {
         return camera.getNowPoint();
     }
 
+
+    public void goNextFloorPrepare() {
+        dungeonGameSystem.getDungeonModeManage().setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT_FROM_BEFORE_FLOOR);
+    }
+
     //階層移動
     public void goNextFloor() {
         now_floor_num++;
@@ -667,11 +677,11 @@ public class MapAdmin {
 
             //中ボスだけあとでやる
             map_object_admin.spawnEnemy();
-
-
         } else {
             goBossFloor();
         }
+
+
     }
 
     //ボスフロアに移動

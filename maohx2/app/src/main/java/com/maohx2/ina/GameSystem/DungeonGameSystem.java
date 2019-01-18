@@ -257,7 +257,7 @@ public class DungeonGameSystem {
         if (!(dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH)) {
             dungeonData = dungeon_data_admin.getDungeon_data().get(dungeon_num);
             map_size.set(dungeonData.getMap_size_x(), dungeonData.getMap_size_y());
-            map_admin = new MapAdmin(graphic, map_object_admin, dungeonData, dungeonMonsterDataAdmin.getDungeon_monster_data(), map_status, map_status_saver);
+            map_admin = new MapAdmin(graphic,this, map_object_admin, dungeonData, dungeonMonsterDataAdmin.getDungeon_monster_data(), map_status, map_status_saver);
             map_admin.goNextFloor();
         }
 
@@ -390,6 +390,16 @@ public class DungeonGameSystem {
                     }
                 }
                 break;
+            case MAP_INIT_FROM_BEFORE_FLOOR:
+                map_object_admin.getPlayer().resetCamera();
+                if(changeMovie.update(false, true) == true) {
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
+                    if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.DRAGON) {
+                        backGround = graphic.searchBitmap("firstBackground");
+                    }
+                    map_admin.goNextFloor();
+                }
+                break;
             case MAP_INIT:
                 map_object_admin.getPlayer().resetCamera();
                 if(changeMovie.update(false, false) == true) {
@@ -465,7 +475,6 @@ public class DungeonGameSystem {
                 break;
 
             case TO_WORLD:
-                //activityChange.toWorldActivity();
                 unitedActivity.getUnitedSurfaceView().toWorldGameMode();
                 break;
 
@@ -540,14 +549,20 @@ public class DungeonGameSystem {
                 battle_unit_admin.draw();
                 changeMovie.draw();
                 break;
-            case MAP_INIT:
-                //graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
-                //battle_unit_admin.draw();
+            case MAP_INIT_FROM_BEFORE_FLOOR:
                 map_admin.drawMap_for_autotile_light_animation();
-                backEffectAdmin.draw();
                 map_object_admin.draw();
                 map_admin.drawSmallMap();
-                effectAdmin.draw();
+                map_plate_admin.draw();
+                if (playerStatus.getTutorialInDungeon() == 1) {
+                    playerStatusViewer.draw();
+                }
+                changeMovie.draw();
+                break;
+            case MAP_INIT:
+                map_admin.drawMap_for_autotile_light_animation();
+                map_object_admin.draw();
+                map_admin.drawSmallMap();
                 map_plate_admin.draw();
                 if (playerStatus.getTutorialInDungeon() == 1) {
                     playerStatusViewer.draw();
@@ -648,6 +663,11 @@ public class DungeonGameSystem {
                 effectAdmin.draw();
                 playerStatusViewer.draw();
                 break;
+            case TO_WORLD:
+                graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
+                battle_unit_admin.draw();
+                break;
+
 
         }
 
@@ -912,6 +932,10 @@ public class DungeonGameSystem {
                         }
                 }
         );
+    }
+
+    public DungeonModeManage getDungeonModeManage() {
+        return dungeonModeManage;
     }
 
     public DungeonGameSystem() {

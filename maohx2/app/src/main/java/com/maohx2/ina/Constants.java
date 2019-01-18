@@ -168,6 +168,7 @@ public final class Constants {
 
         public enum DUNGEON_MODE {
             MAP_INIT_FROM_BATTLE,
+            MAP_INIT_FROM_BEFORE_FLOOR,
             MAP_INIT,
             MAP,
             OPENING_BATTLE_INIT,
