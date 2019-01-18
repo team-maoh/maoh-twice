@@ -19,7 +19,7 @@ public class ChangeMovie {
         graphic = _graphic;
         soundAdmin = _soundAdmin;
         rectPaint = new Paint();
-        rectPaint.setARGB(255,30,30,30);
+        rectPaint.setARGB(255,50,50,50);
     }
 
     public boolean update(boolean soundFlag){

@@ -198,20 +198,21 @@ public class MapPlateAdmin {
         switch (displaying_content) {
             case 0://menu
 
+                mapObjectAdmin.setPlayerAlpha(128);
                 int content = menuGroup.getTouchContentNum();
 
                 //各画面に遷移した時に一度だけ実行したいものを記述
                 switch (content) {
                     case 0://ステータス
 //                        System.out.println("tatami ステータス");
-                        mapObjectAdmin.setPlayerAlpha(128);
+                        //mapObjectAdmin.setPlayerAlpha(128);
                         dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.EQUIP_EXPEND_INIT);
                         displaying_content = 1;
                         is_displaying_list = false;
                         break;
                     case 1://アイテム
 //                        System.out.println("tatami アイテム");
-                        mapObjectAdmin.setPlayerAlpha(128);
+                        //mapObjectAdmin.setPlayerAlpha(128);
                         if (dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.ITEM) {
                             dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.ITEM_INIT);
                         }

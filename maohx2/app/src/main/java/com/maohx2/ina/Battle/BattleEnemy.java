@@ -163,10 +163,10 @@ public class BattleEnemy extends BattleUnit {
         alimentTime = getAlimentTime();
 
         if (attack_frame > 0 ) {
-            attackCount = -40;
+            attackCount = -15;
             //attackCount = rnd.nextInt((int) (getAttackFrame() / 2));
         } else {
-            attackCount = -40;
+            attackCount = -15;
             //attackCount = 0;
         }
     }
