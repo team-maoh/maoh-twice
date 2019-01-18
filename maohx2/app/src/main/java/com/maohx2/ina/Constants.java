@@ -211,6 +211,7 @@ public final class Constants {
             CREDIT,
             ENDING,
             TU_SHOP,
+            TU_SHOP_SELL,
             TU_GEO,
             TU_SELL
         }
@@ -231,6 +232,21 @@ public final class Constants {
         public static final float BUTTON_TEXT_SIZE = 50f;
         public static final float TEXT_SIZE_BIG = 80f;
         public static final int MESS_ROW = 5;
+    }
+
+    public static class TUTRIAL_BUTTON {
+        public static final int DUNGEON_LEFT = 50;
+        public static final int DUNGEON_RIGHT = 350;
+        public static final int DUNGEON_UP = 768;
+        public static final int DUNGEON_BOTTOM = 848;
+
+        public static final int LEFT = 50;
+        public static final int RIGHT = 350;
+        public static final int UP = 20;
+        public static final int BOTTOM = 100;
+
+        public static final float TEXT_SIZE_TU = 30f;
+        public static final float TEXT_SIZE_NAME = 25f;
     }
 
     public static class SIDE_INVENTRY {

@@ -23,9 +23,11 @@ import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatusViewer;
 import com.maohx2.kmhanko.Saver.PlayerStatusSaver;
+import com.maohx2.kmhanko.WindowPlate.WindowTextPlate;
 import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 
 import com.maohx2.ina.Constants.Touch.TouchWay.*;
+import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import static com.maohx2.ina.Constants.Touch.TouchWay.MOVE;
@@ -172,6 +174,8 @@ public class MapPlateAdmin {
         dungeonSelectWindowAdmin = new DungeonSelectWindowAdmin(graphic, dungeon_user_interface, sound_admin, this);
         dungeonSelectWindowAdmin.init();
 
+        initTutorialButton();
+
     }
 
     public void setMapObjectAdmin(MapObjectAdmin _mapObjectAdmin) {
@@ -182,11 +186,49 @@ public class MapPlateAdmin {
 
     }
 
+    PlateGroup<BoxImageTextPlate> tutorialButtonGroup;
+    private void initTutorialButton() {
+        Paint textPaint1 = new Paint();
+        textPaint1.setTextSize(Constants.TUTRIAL_BUTTON.TEXT_SIZE_TU);
+        textPaint1.setARGB(255, 255, 255, 255);
+        Paint textPaint2 = new Paint();
+        textPaint2.setTextSize(Constants.TUTRIAL_BUTTON.TEXT_SIZE_NAME);
+        textPaint2.setARGB(255, 255, 255, 255);
+
+        tutorialButtonGroup = new PlateGroup<>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic, dungeon_user_interface, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE,
+                                new int[]{Constants.TUTRIAL_BUTTON.DUNGEON_LEFT,Constants.TUTRIAL_BUTTON.DUNGEON_UP,Constants.TUTRIAL_BUTTON.DUNGEON_RIGHT,Constants.TUTRIAL_BUTTON.DUNGEON_BOTTOM},
+                                new String[] { "チュートリアル", "- ダンジョン -"},
+                                new Paint[] { textPaint1, textPaint2},
+                                new WindowTextPlate.TextPosition[] { WindowTextPlate.TextPosition.UP, WindowTextPlate.TextPosition.DOWN }
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //OKが押された時の処理
+                                sound_admin.play("enter00");
+                                //チュートリアル表示
+                                i_of_tutorial_bitmap = 0;
+                                playerStatus.setTutorialInDungeon(0);
+                            }
+                        }
+                });
+        tutorialButtonGroup.setUpdateFlag(true);
+        tutorialButtonGroup.setDrawFlag(true);
+    }
+
     public void update() {
+        if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+4 || playerStatus.getTutorialInDungeon() != 0) {
+        } else {
+            return;
+        }
 
         menuGroup.update();
 //        hitpoint.update();
         inventry.updata();
+
+        tutorialButtonGroup.update();
 
         dungeonSelectWindowAdmin.update();
 
@@ -289,7 +331,9 @@ public class MapPlateAdmin {
         if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+4 || playerStatus.getTutorialInDungeon() != 0) {
             drawFloorAndHP();
             dungeonSelectWindowAdmin.draw();
+            tutorialButtonGroup.draw();
         }
+
 
     }
 

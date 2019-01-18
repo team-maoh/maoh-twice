@@ -18,6 +18,7 @@ import com.maohx2.ina.Arrange.InventryData;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.Saver.PlayerStatusSaver;
+import com.maohx2.kmhanko.WindowPlate.WindowTextPlate;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.dungeonselect.MapIconPlate;
 import com.maohx2.kmhanko.itemdata.ExpendItemData;
@@ -494,7 +495,6 @@ public class ItemSell {
         sellEnterPlateGroup.setUpdateFlag(true);
         sellEnterPlateGroup.setDrawFlag(true);
     }
-
 
     public void release() {
         System.out.println("takanoRelease : ItemSell");
