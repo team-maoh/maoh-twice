@@ -226,7 +226,7 @@ public class GeoSlotAdminManager {
                 new BoxImageTextPlate[]{
                         new BoxImageTextPlate(
                                 graphic, userInterface, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE,
-                                new int[]{Constants.TUTRIAL_BUTTON.DUNGEON_LEFT,Constants.TUTRIAL_BUTTON.DUNGEON_UP,Constants.TUTRIAL_BUTTON.DUNGEON_RIGHT,Constants.TUTRIAL_BUTTON.DUNGEON_BOTTOM},
+                                new int[]{Constants.TUTRIAL_BUTTON.UNDER_LEFT,Constants.TUTRIAL_BUTTON.UNDER_UP,Constants.TUTRIAL_BUTTON.UNDER_RIGHT,Constants.TUTRIAL_BUTTON.UNDER_BOTTOM},
                                 new String[] { "チュートリアル", "- ジオ -"},
                                 new Paint[] { textPaint1, textPaint2},
                                 new WindowTextPlate.TextPosition[] { WindowTextPlate.TextPosition.UP, WindowTextPlate.TextPosition.DOWN }
