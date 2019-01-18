@@ -1,6 +1,7 @@
 package com.maohx2.fuusya;
 
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.icu.text.SymbolTable;
 import android.view.SurfaceHolder;
@@ -22,6 +23,7 @@ import static com.maohx2.ina.Constants.Touch.TouchState;
 import javax.microedition.khronos.opengles.GL10;
 
 import static java.lang.Math.PI;
+import static java.lang.Math.abs;
 import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.log;
@@ -53,10 +55,13 @@ public class MapPlayer extends MapUnit {
     DungeonModeManage dungeon_mode_manage;
     int kind_of_enemy;
 
-    //    int PLAYER_STEP = 26;//プレイヤーの歩幅
-    int PLAYER_STEP = 50;//プレイヤーの歩幅 //デバッグ用
+    int PLAYER_STEP = 35;//プレイヤーの歩幅
+    //int PLAYER_STEP = 50;//プレイヤーの歩幅 //デバッグ用
 
     double touch_w_x, touch_w_y, touch_n_x, touch_n_y, pre_w_x, pre_w_y;
+    double touch_down_n_x, touch_down_n_y;
+    boolean touch_mode;
+    boolean move_mode;
     boolean is_moving;
 
     int touching_frame_count;
@@ -71,10 +76,11 @@ public class MapPlayer extends MapUnit {
 
     boolean gateSkipFlag = false; //一度ゲートを踏んだら、一度ゲートから出るかではゲートを起動しない、のためのフラグ
 
-    int menu_frame;
+    int menu_count;
 
     int dungeonEnterEncountWaitTime;//階層移動後するにはエンカウントしないための変数
     static final int ENCOUNT_START_TIME = 30 * 3;
+    Paint paint;
 
     public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, MapPlateAdmin _map_plate_admin, BattleUnitAdmin _battle_unit_admin, DungeonModeManage _dungeon_mode_manage, boolean _avoid_battle_for_debug) {
         super(graphic, _map_object_admin, _camera);
@@ -112,7 +118,8 @@ public class MapPlayer extends MapUnit {
         has_touched_within_player = false;
         player_touch_refresh = true;
 
-        menu_frame = 0;
+        menu_count = 0;
+        paint = new Paint();
     }
 
     public void init() {
@@ -140,35 +147,26 @@ public class MapPlayer extends MapUnit {
             dungeonEnterEncountWaitTime++;
         }
 
-        if (touch_state != Constants.Touch.TouchState.AWAY) {
+
+
+        if (touch_state != TouchState.AWAY) {
 
             touch_n_x = dungeon_user_interface.getTouchX();
             touch_n_y = dungeon_user_interface.getTouchY();
             touch_w_x = camera.convertToWorldCoordinateX((int) touch_n_x);
             touch_w_y = camera.convertToWorldCoordinateY((int) touch_n_y);
+            move_mode = false;
 
-            //Listではない領域をタッチしているとき
+            //Listではない領域をタッチしているとき(listが出ているかでていないかも考慮している)
             if (map_plate_admin.isTouchingList(touch_n_x, touch_n_y) == false) {
 
-//                int pre_content = map_plate_admin.getDisplayingContent();
-//                map_plate_admin.setDisplayingContent(-1);
-
-                if (map_plate_admin.getDisplayingContent() == 0 || map_plate_admin.getDisplayingContent() == 2) {
-                    menu_frame++;
-                    if (menu_frame > 12) {
-                        menu_frame = 0;
-                        map_plate_admin.setDisplayingContent(-1);
-                    }
-                }
-
-                //Player(画面中央)をタッチしたらMENUを表示する
-//                if (touch_state != TouchState.MOVE) {
+                //List関係の処理
                 if (touch_state == TouchState.UP) {
+                    touch_mode = false;
                     if (map_plate_admin.getDisplayingContent() == -1) {
                         if (isWithinReach(touch_w_x, touch_w_y, 80) == true) {
                             map_plate_admin.setDisplayingContent(0);
                             sound_admin.play("enter00");
-//                        player_touch_refresh = false;
                         }
                     } else if (map_plate_admin.getDisplayingContent() == 0 || map_plate_admin.getDisplayingContent() == 2 || map_plate_admin.getDisplayingContent() == 3) {
                         map_plate_admin.setDisplayingContent(-1);
@@ -176,12 +174,35 @@ public class MapPlayer extends MapUnit {
                 }
 
 
+                if (isWithinReach(touch_w_x, touch_w_y, step * 2) == false) {
+                    if (touch_state == TouchState.DOWN) {
+                        touch_down_n_x = touch_n_x;
+                        touch_down_n_y = touch_n_y;
+                        touch_mode = true;
+                    }
+                }
+
+                if(touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE){
+                    if(abs(touch_n_x - touch_down_n_x) + abs(touch_n_y - touch_down_n_y) > 20) {
+                        move_mode = true;
+                        dst_w_x = camera.convertToWorldCoordinateX((int) (800 + touch_n_x - touch_down_n_x));
+                        dst_w_y = camera.convertToWorldCoordinateY((int) (450 + touch_n_y - touch_down_n_y));
+                    }
+                }
+
                 //タッチ座標が現在位置からある程度離れていたら、その座標を目標座標とする
                 //（近いと walkOneStep() の仕様上、足が早くなってしまう）
                 //（[Playerの近くをタッチすれば高速移動できる]という裏技がまかり通ってしまう）
                 if (isWithinReach(touch_w_x, touch_w_y, step * 2) == false) {
-                    dst_w_x = touch_w_x;
-                    dst_w_y = touch_w_y;
+                    /*
+                    if(touch_state != TouchState.UP) {
+                        dst_w_x = touch_w_x;
+                        dst_w_y = touch_w_y;
+                    }
+                    */
+
+
+
                 } else {
                     has_touched_within_player = true;
                 }
@@ -246,11 +267,13 @@ public class MapPlayer extends MapUnit {
 
             if (map_admin.getNow_floor_num() != map_admin.getBoss_floor_num()) {
 
-                if (has_touched_within_player == false) {//直前にPlayerをタッチしていない場合に限り、エンカウント処理をする
+                if (move_mode == true) {//直前にPlayerをタッチしていない場合に限り、エンカウント処理をする
 
                     encount_steps++;
 
                     if (encount_steps >= th_encount_steps && avoid_battle_for_debug == false && dungeonEnterEncountWaitTime >= ENCOUNT_START_TIME) {
+                        touch_mode = false;
+                        move_mode = false;
                         System.out.println("◆一定歩数 歩いたので敵と遭遇");
                         encount_steps = 0;
                         //遭遇の瞬間に、次の遭遇までに要する歩数を乱数で決める
@@ -293,7 +316,7 @@ public class MapPlayer extends MapUnit {
                 sound_steps = (sound_steps + 1) % SOUND_STEPS_PERIOD;
                 //壁にぶつかり続けてるときに音がなり続けるのはおかしいので、
                 //if(has_touched_within_player == false) の中に入れる
-                if (sound_steps == 0) {
+                if (sound_steps == 0 && move_mode == true) {
                     sound_admin.play("step07");//足音SE
                 }
             }
@@ -330,6 +353,21 @@ public class MapPlayer extends MapUnit {
         }
 
     }
+
+    public void draw(){
+        if(touch_mode == true) {
+            paint.setARGB( 150,255,255,255);
+            graphic.bookingDrawCircle((int) touch_down_n_x, (int) touch_down_n_y, 40, paint);
+            double directionX = ((touch_n_x - touch_down_n_x) * abs((touch_n_x - touch_down_n_x))) / ((touch_n_x - touch_down_n_x) * (touch_n_x - touch_down_n_x) + (touch_n_y - touch_down_n_y) * (touch_n_y - touch_down_n_y));
+            double directionY = ((touch_n_y - touch_down_n_y) * abs((touch_n_y - touch_down_n_y))) / ((touch_n_x - touch_down_n_x) * (touch_n_x - touch_down_n_x) + (touch_n_y - touch_down_n_y) * (touch_n_y - touch_down_n_y));
+
+            if(move_mode == true) {
+                paint.setARGB(150, 200, 40, 40);
+                graphic.bookingDrawCircle((int) (touch_down_n_x + 43.0 * directionX), (int) (touch_down_n_y + 43.0 * directionY), 20, paint);
+            }
+        }
+    }
+
     public void setGateSkipFlag(boolean x) {
         gateSkipFlag = x;
     }
@@ -380,7 +418,27 @@ public class MapPlayer extends MapUnit {
 
     }
 
-    public void checkIfTouchingGate() {
+    public void nonactiveMenuCheck() {
+        touch_state = dungeon_user_interface.getTouchState();
+        touch_n_x = dungeon_user_interface.getTouchX();
+        touch_n_y = dungeon_user_interface.getTouchY();
+        if(menu_count < 30) {
+            menu_count++;
+        }
+        if (touch_state == Constants.Touch.TouchState.UP) {
+            if (map_plate_admin.isTouchingList(touch_n_x, touch_n_y) == false) {
+
+                if (map_plate_admin.getDisplayingContent() == 0 || map_plate_admin.getDisplayingContent() == 2) {
+                    if (menu_count > 12) {
+                        menu_count = 0;
+                        map_plate_admin.setDisplayingContent(-1);
+                    }
+                }
+            }
+        }
+    }
+
+        public void checkIfTouchingGate() {
 
 //        double gate_w_x = map_admin.getGate();
 //        double gate_w_y = map_admin.getGate();

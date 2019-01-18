@@ -120,7 +120,7 @@ public class UserInterface {
         if (palette_element != null && touch_state != TouchState.DOWN) {
             if (palette_element.getItemData() != null) {
                 ui_palette_draw_falag = true;
-                graphic.bookingDrawBitmapData(palette_element.getItemData().getItemImage(), (int) getTouchX(), (int) getTouchY(), 3.0f, 3.0f, 0, 128, false);
+                graphic.bookingDrawBitmapData(palette_element.getItemData().getItemImage(), (int) getTouchX(), (int) getTouchY(), 4.0f, 4.0f, 0, 128, false);
             }
         }
     }

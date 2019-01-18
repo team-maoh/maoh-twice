@@ -147,6 +147,7 @@ public class DungeonSelectWindowAdmin {
                 }
                 if (buttonID == 1 ) { //やめる
                     soundAdmin.play("cancel00");
+                    mapPlateAdmin.setDisplayingContent(-1);
                     initUIs();
                 }
                 break;

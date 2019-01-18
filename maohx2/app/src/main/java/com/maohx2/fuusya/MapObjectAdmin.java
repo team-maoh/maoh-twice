@@ -246,7 +246,11 @@ public class MapObjectAdmin {
 
         //チュートリアル中と選択肢出現中は時が停止する
         //if (playerStatus.getTutorialInDungeon() == 1 && !dungeonEscapeSelectButtonGroup.getDrawFlag() && map_plate_admin.getDisplayingContent() != 1) {
-        if (playerStatus.getTutorialInDungeon() == 1 && !map_plate_admin.getDungeonSelectWindowAdmin().isActive()) {
+        //if (playerStatus.getTutorialInDungeon() == 1 && !map_plate_admin.getDungeonSelectWindowAdmin().isActive() && map_plate_admin.getDisplayingContent() == -1) {
+
+        map_player.nonactiveMenuCheck();
+
+        if (playerStatus.getTutorialInDungeon() == 1 && map_plate_admin.getDisplayingContent() == -1) {
 
             map_player.update();
             map_player_bitmap.update();
@@ -280,7 +284,6 @@ public class MapObjectAdmin {
                 map_boss_bitmap[i].update();
             }
         }
-
     }
 
     public void draw() {
@@ -319,6 +322,7 @@ public class MapObjectAdmin {
         }
         if (map_player.exists() == true) {
             map_player_bitmap.draw(map_player.getDirOnMap(), map_player.getNormX(), map_player.getNormY(), playerAlpha,false);
+            map_player.draw();
         }
     }
 
