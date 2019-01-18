@@ -58,16 +58,16 @@ public class UserInterface {
 
 
     public void init() {
-
         touch_x = 0;
         touch_y = 0;
         touch_state = TouchState.AWAY;
-
+        up_check = true;
     }
 
 
     public void touchReset() {
-        //touch_state = TouchState.AWAY;
+        touch_state = TouchState.AWAY;
+        up_check = true;
     }
 
     public void updateTouchState(double _touch_x, double _touch_y, TouchState _touch_state) {

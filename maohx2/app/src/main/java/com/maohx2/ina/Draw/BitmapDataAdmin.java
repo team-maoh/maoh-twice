@@ -67,12 +67,32 @@ public class BitmapDataAdmin {
                             options.inPreferredConfig = Bitmap.Config.ARGB_4444; //8888
 
                             options.inJustDecodeBounds = false;
-                            bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis, null, options));
+                            for(int k = 0; k < BITMAP_DATA_INSTANCE; k++) {
+                                if (bitmap_data[next_load_point].getBitmap() == null) {
+                                    bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis, null, options));
+                                    break;
+                                } else {
+                                    next_load_point = (next_load_point + 1)%BITMAP_DATA_INSTANCE;
+                                }
+                                if (k == BITMAP_DATA_INSTANCE - 1) {
+                                    throw new Error("BitmapDataAdminがバンクしました");
+                                }
+                            }
                         } else {
-                            bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis));
+                            for(int k = 0; k < BITMAP_DATA_INSTANCE; k++) {
+                                if (bitmap_data[next_load_point].getBitmap() == null) {
+                                    bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis));
+                                    break;
+                                } else {
+                                    next_load_point = (next_load_point + 1)%BITMAP_DATA_INSTANCE;
+                                }
+                                if (k == BITMAP_DATA_INSTANCE - 1) {
+                                    throw new Error("BitmapDataAdminがバンクしました");
+                                }
+                            }
                         }
                         bitmap_data[next_load_point].setImageName(image_name.get(j));
-                        next_load_point++;
+                        next_load_point = (next_load_point + 1)%BITMAP_DATA_INSTANCE;
                         bis.close();
                     } catch (IOException e) {
                         System.out.println("%☆イナガキ：画像の取り込みに失敗しました"+image_name.get(j));
@@ -109,13 +129,35 @@ public class BitmapDataAdmin {
                         options.inPreferredConfig = Bitmap.Config.ARGB_4444;// 8888
 
                         options.inJustDecodeBounds = false;
-                        bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis, null, options));
+
+                        for(int k = 0; k < BITMAP_DATA_INSTANCE; k++) {
+                            if (bitmap_data[next_load_point].getBitmap() == null) {
+                                bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis, null, options));
+                                break;
+                            } else {
+                                next_load_point = (next_load_point + 1)%BITMAP_DATA_INSTANCE;
+                            }
+                            if (k == BITMAP_DATA_INSTANCE - 1) {
+                                throw new Error("BitmapDataAdminがバンクしました");
+                            }
+                        }
+
                     } else {
-                        bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis));
+                        for(int k = 0; k < BITMAP_DATA_INSTANCE; k++) {
+                            if (bitmap_data[next_load_point].getBitmap() == null) {
+                                bitmap_data[next_load_point].setBitmap(BitmapFactory.decodeStream(bis));
+                                break;
+                            } else {
+                                next_load_point = (next_load_point + 1)%BITMAP_DATA_INSTANCE;
+                            }
+                            if (k == BITMAP_DATA_INSTANCE - 1) {
+                                throw new Error("BitmapDataAdminがバンクしました");
+                            }
+                        }
                     }
                     bitmap_data[next_load_point].setImageName(image_name.get(j));
                     //System.out.println(next_load_point+","+j);
-                    next_load_point++;
+                    next_load_point = (next_load_point + 1)%BITMAP_DATA_INSTANCE;
                     bis.close();
                 } catch (IOException e) {
                     System.out.println("%☆イナガキ：画像の取り込みに失敗しました"+image_name.get(j));

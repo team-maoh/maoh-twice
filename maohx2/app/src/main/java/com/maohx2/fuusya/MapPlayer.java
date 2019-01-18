@@ -339,7 +339,7 @@ public class MapPlayer extends MapUnit {
         //階段移動
         if (map_admin.isStairs((int)(w_x/map_admin.getMagnification()), (int)(w_y/map_admin.getMagnification()))) {
             sound_admin.play("step00");
-            map_admin.goNextFloor();
+            map_admin.goNextFloorPrepare();
         }
 
         //ゲート脱出
@@ -447,6 +447,10 @@ public class MapPlayer extends MapUnit {
 //            map_object_admin.escapeDungeon();
 //        }
 
+    }
+
+    public void resetCamera() {
+        camera.setCameraOffset(w_x, w_y);
     }
 
 
