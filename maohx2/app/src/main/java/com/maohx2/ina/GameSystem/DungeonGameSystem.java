@@ -747,6 +747,7 @@ public class DungeonGameSystem {
         if (palette_admin != null) {
             palette_admin.release();
         }
+
         if (map_object_admin != null) {
             map_object_admin.release();
         }

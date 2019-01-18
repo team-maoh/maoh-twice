@@ -7,6 +7,7 @@ import com.maohx2.ina.Text.BoxImagePlate;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.GameSystem.WorldModeAdmin;
+import com.maohx2.kmhanko.WindowPlate.WindowTextPlate;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.Arrange.InventryS;
 
@@ -93,6 +94,7 @@ public abstract class ItemShop {
         initBackPlate();
         initTextBox();
         initSwitchPlate();
+        initTutorialButton();
         initUIs();
     }
 
@@ -104,6 +106,8 @@ public abstract class ItemShop {
         buyTextBoxPaint.setTextSize(SELECT_WINDOW.TEXT_SIZE);
         buyTextBoxPaint.setColor(Color.WHITE);
     }
+
+
 
     public void setItemShopData(ItemShopData _itemShopData) {
         itemShopData = _itemShopData;
@@ -187,6 +191,38 @@ public abstract class ItemShop {
         backPlateGroup.setDrawFlag(true);
     }
 
+    PlateGroup<BoxImageTextPlate> tutorialButtonGroup;
+    private void initTutorialButton() {
+        Paint textPaint1 = new Paint();
+        textPaint1.setTextSize(Constants.TUTRIAL_BUTTON.TEXT_SIZE_TU);
+        textPaint1.setARGB(255, 255, 255, 255);
+        Paint textPaint2 = new Paint();
+        textPaint2.setTextSize(Constants.TUTRIAL_BUTTON.TEXT_SIZE_NAME);
+        textPaint2.setARGB(255, 255, 255, 255);
+
+        tutorialButtonGroup = new PlateGroup<>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic, userInterface, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE,
+                                new int[]{Constants.TUTRIAL_BUTTON.UNDER_LEFT,Constants.TUTRIAL_BUTTON.UNDER_UP,Constants.TUTRIAL_BUTTON.UNDER_RIGHT,Constants.TUTRIAL_BUTTON.UNDER_BOTTOM},
+                                new String[] { "チュートリアル", "- ショップ -"},
+                                new Paint[] { textPaint1, textPaint2},
+                                new WindowTextPlate.TextPosition[] { WindowTextPlate.TextPosition.UP, WindowTextPlate.TextPosition.DOWN }
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //OKが押された時の処理
+                                soundAdmin.play("enter00");
+                                //チュートリアル表示
+                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.TU_SHOP_SELL);
+                                initUIs();
+                            }
+                        }
+                });
+        tutorialButtonGroup.setUpdateFlag(true);
+        tutorialButtonGroup.setDrawFlag(true);
+    }
+
     PlateGroup<BoxImagePlate> switchPlateGroup;
     private void initSwitchPlate() {
         int position[] = new int[] {
@@ -268,6 +304,7 @@ public abstract class ItemShop {
         buySelectUpdate();
         backPlateGroup.update();
         switchPlateGroup.update();
+        tutorialButtonGroup.update();
         itemInventry.updata();
 
 
@@ -376,6 +413,7 @@ public abstract class ItemShop {
         productPlateGroup.draw();
         backPlateGroup.draw();
         switchPlateGroup.draw();
+        tutorialButtonGroup.draw();
         itemInventry.draw();
     }
 
@@ -398,6 +436,8 @@ public abstract class ItemShop {
         switchPlateGroup.release();
         switchPlateGroup = null;
         buyTextBoxPaint = null;
+        tutorialButtonGroup.release();
+        tutorialButtonGroup = null;
     }
 
 }

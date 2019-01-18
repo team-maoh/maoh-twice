@@ -19,6 +19,7 @@ public class WindowPlate {
     protected BitmapData[][] windowElement;
     protected float windowImageWidth;
     protected float windowImageHeight;
+    protected float marginLeft = 12, marginRight = 12, marginUp = 12, marginDown = 12;
 
     protected int alpha = 192;
 

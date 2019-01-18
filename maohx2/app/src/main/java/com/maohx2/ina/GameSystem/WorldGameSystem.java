@@ -48,6 +48,7 @@ import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoSlotSaver;
 import com.maohx2.kmhanko.Saver.GeoPresentSaver;
 import com.maohx2.kmhanko.Talking.TalkAdmin;
+import com.maohx2.kmhanko.WindowPlate.WindowTextPlate;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
 import com.maohx2.kmhanko.effect.EffectAdmin;
@@ -59,6 +60,7 @@ import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 import com.maohx2.kmhanko.itemshop.ItemShopAdmin;
 import com.maohx2.kmhanko.effect.*;
 import com.maohx2.kmhanko.plate.BackPlate;
+import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 import com.maohx2.kmhanko.music.MusicAdmin;
 import com.maohx2.kmhanko.itemshop.ItemSell;
@@ -309,6 +311,7 @@ public class WorldGameSystem {
 
         //TODO かり。戻るボタン
         initBackPlate();
+        initTutorialButton();
 
         //OP判定。まだOPを流していないならOP会話イベントを発動する。
         talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される//堀江デバッグのためにコメントアウト
@@ -442,10 +445,6 @@ public class WorldGameSystem {
             case GEO_MAP_SELECT_INIT:
                 backGround = graphic.searchBitmap("GeoMap");
                 worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT);
-                if(tutorial_flag_data.getIs_tutorial_finished(3) == 0){
-                    worldModeAdmin.setMode(WORLD_MODE.TU_GEO);
-                    tutorial_flag_data.setIs_tutorial_finished(1, 3);//チュートリアルフラグを立てる
-                }
             case GEO_MAP_SELECT:
                 if (!talkAdmin.isTalking()) {
                     dungeonSelectManager.update();
@@ -456,7 +455,8 @@ public class WorldGameSystem {
                     tu_geo_flag = 1;
                 }
                 else if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_geo_flag == 1) {
-                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT_INIT);
+                    tu_geo_flag = 0;
+                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
                     tutorial_flag_saver.save();
                 }
                 break;
@@ -464,6 +464,10 @@ public class WorldGameSystem {
                 backGround = graphic.searchBitmap("GeoMap");
                 worldModeAdmin.setMode(WORLD_MODE.GEO_MAP);
                 geoSlotAdminManager.start();
+                if(tutorial_flag_data.getIs_tutorial_finished(3) == 0){
+                    worldModeAdmin.setMode(WORLD_MODE.TU_GEO);
+                    tutorial_flag_data.setIs_tutorial_finished(1, 3);//チュートリアルフラグを立てる
+                }
             case GEO_MAP:
                 if (!talkAdmin.isTalking()) {
                     geoSlotAdminManager.update();
@@ -491,6 +495,15 @@ public class WorldGameSystem {
                 }
                 playerStatusViewer.update();
                 break;
+            case TU_SHOP_SELL:
+                if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_shop_flag == 0) {
+                    tu_shop_flag = 1;
+                }
+                else if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_shop_flag == 1) {
+                    worldModeAdmin.setMode(WORLD_MODE.TU_SELL);
+                    tu_shop_flag = 0;
+                }
+                break;
             case TU_SHOP:
                 if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_shop_flag == 0) {
                     tu_shop_flag = 1;
@@ -498,6 +511,7 @@ public class WorldGameSystem {
                 else if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_shop_flag == 1) {
                     worldModeAdmin.setMode(WORLD_MODE.SHOP_INIT);
                     tutorial_flag_saver.save();
+                    tu_shop_flag = 0;
                 }
                 break;
             case TU_SELL:
@@ -516,12 +530,16 @@ public class WorldGameSystem {
                     worldModeAdmin.setMode(WORLD_MODE.TU_EQUIP);
                     tutorial_flag_data.setIs_tutorial_finished(1, 0);
                 }
+                tutorialButtonGroup.setUpdateFlag(true);
+                tutorialButtonGroup.setDrawFlag(true);
+
             case EQUIP:
                 if (!talkAdmin.isTalking()) {
                     equipmentInventry.updata();
                     expendItemInventry.updata();
                     palette_admin.update(false);
                     backPlateGroup.update();
+                    tutorialButtonGroup.update();
                     //equipmentInventry.onArrow();
                     //expendItemInventry.onArrow();
                 }
@@ -531,6 +549,7 @@ public class WorldGameSystem {
                     tu_equip_flag = 1;
                 }
                 else if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_equip_flag == 1) {
+                    tu_equip_flag = 0;
                     worldModeAdmin.setMode(WORLD_MODE.EQUIP_INIT);
                     tutorial_flag_saver.save();
                 }
@@ -662,6 +681,14 @@ public class WorldGameSystem {
                 itemShopAdmin.draw();
                 playerStatusViewer.draw();
                 break;
+            case TU_SHOP_SELL:
+                if(tu_shop_flag == 0) {
+                    graphic.bookingDrawBitmapData(tu_shop_start_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
+                }
+                else{
+                    graphic.bookingDrawBitmapData(tu_shop_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
+                }
+                break;
             case TU_SHOP:
                 if(tu_shop_flag == 0) {
                     graphic.bookingDrawBitmapData(tu_shop_start_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
@@ -691,6 +718,7 @@ public class WorldGameSystem {
                 palette_admin.draw();
                 world_user_interface.draw();
                 backPlateGroup.draw();
+                tutorialButtonGroup.draw();
                 break;
             case PRESENT_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0,true);
@@ -733,7 +761,7 @@ public class WorldGameSystem {
         text_box_admin.draw();
 
         //GEOMAPでは諸事情により、エフェクトを背後に描画したいため
-        if (worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP) {
+        if (worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP && worldModeAdmin.getMode() != WORLD_MODE.TU_GEO) {
             effectAdmin.draw();
         }
 
@@ -768,6 +796,9 @@ public class WorldGameSystem {
                                 worldModeAdmin.setWorldMap(Constants.Mode.ACTIVATE.ACTIVE);
                                 */
 
+                                tutorialButtonGroup.setUpdateFlag(false);
+                                tutorialButtonGroup.setDrawFlag(false);
+
                                 expendItemInventry.save();
                                 equipmentInventry.save();
 
@@ -776,6 +807,38 @@ public class WorldGameSystem {
                 }
         );
     }
+
+    PlateGroup<BoxImageTextPlate> tutorialButtonGroup;
+    private void initTutorialButton() {
+        Paint textPaint1 = new Paint();
+        textPaint1.setTextSize(Constants.TUTRIAL_BUTTON.TEXT_SIZE_TU);
+        textPaint1.setARGB(255, 255, 255, 255);
+        Paint textPaint2 = new Paint();
+        textPaint2.setTextSize(Constants.TUTRIAL_BUTTON.TEXT_SIZE_NAME);
+        textPaint2.setARGB(255, 255, 255, 255);
+
+        tutorialButtonGroup = new PlateGroup<>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic, world_user_interface, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE,
+                                new int[]{Constants.TUTRIAL_BUTTON.LEFT,Constants.TUTRIAL_BUTTON.UP,Constants.TUTRIAL_BUTTON.RIGHT,Constants.TUTRIAL_BUTTON.BOTTOM},
+                                new String[] { "チュートリアル", "- 装備 -"},
+                                new Paint[] { textPaint1, textPaint2},
+                                new WindowTextPlate.TextPosition[] { WindowTextPlate.TextPosition.UP, WindowTextPlate.TextPosition.DOWN }
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //OKが押された時の処理
+                                soundAdmin.play("enter00");
+                                //チュートリアル表示
+                                worldModeAdmin.setMode(WORLD_MODE.TU_EQUIP);
+                            }
+                        }
+                });
+        tutorialButtonGroup.setUpdateFlag(false);
+        tutorialButtonGroup.setDrawFlag(false);
+    }
+
 
     public void release() {
         System.out.println("takanoRelease : WorldGameSystem");
@@ -845,6 +908,11 @@ public class WorldGameSystem {
             changeMovie.release();
             changeMovie = null;
         }
+        if (tutorialButtonGroup != null) {
+            tutorialButtonGroup.release();
+            tutorialButtonGroup = null;
+        }
+
         credit = null;
         System.gc();
     }

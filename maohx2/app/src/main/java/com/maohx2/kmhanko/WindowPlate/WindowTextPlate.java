@@ -5,12 +5,9 @@ import com.maohx2.ina.Draw.Graphic;
 
 public class WindowTextPlate extends WindowPlate {
 
-    protected boolean exist[] ;
-    protected String text;
-    protected Paint textPaint;
-    protected float textWidth;
-    protected float textHeight;
-    protected int textX, textY, textXoffset, textYoffset;
+    static final int TEXT_MAX = 8;
+    protected TextForPlate textForPlate[] = new TextForPlate[TEXT_MAX];
+
 
     public enum TextPosition {
         CENTER,
@@ -24,24 +21,33 @@ public class WindowTextPlate extends WindowPlate {
         DOWNRIGHT,
     }
 
-    TextPosition textPosition;
 
     public WindowTextPlate(Graphic _graphic, int[] _position) {
         super(_graphic, _position);
+        initText();
     }
 
     public WindowTextPlate(Graphic _graphic, int[] _position, String _text, Paint _textPaint, TextPosition _textPosition) {
         super(_graphic, _position);
+        initText();
         setText(_text, _textPaint, _textPosition);
     }
 
     public WindowTextPlate(Graphic _graphic, int[] _position, String _windowImageName) {
         super(_graphic, _position, _windowImageName);
+        initText();
     }
 
     public WindowTextPlate(Graphic _graphic, int[] _position, String _text, Paint _textPaint, TextPosition _textPosition, String _windowImageName) {
         super(_graphic, _position, _windowImageName);
+        initText();
         setText(_text, _textPaint, _textPosition);
+    }
+
+    private void initText() {
+        for(int i = 0; i < textForPlate.length; i++) {
+            textForPlate[i] = new TextForPlate(graphic);
+        }
     }
 
     @Override
@@ -58,52 +64,36 @@ public class WindowTextPlate extends WindowPlate {
     }
 
     public void setText(int id, String _text, Paint _textPaint, TextPosition _textPosition) {
-        text = _text;
-        textPaint = _textPaint;
-        textPosition = _textPosition;
-        textHeight= textPaint.getTextSize();
-        textWidth = textPaint.measureText(text);
-        updateTextPosition(id);
+        textForPlate[id].existIs(true);
+        textForPlate[id].setText(_text);
+        textForPlate[id].setPaint(_textPaint);
+        textForPlate[id].setTextPosition(_textPosition);
+        textForPlate[id].setWidthAndHeight();
+        textForPlate[id].updateTextPosition(position[0],position[1],width,height,new float[] { marginLeft, marginUp, marginRight, marginDown});
     }
 
     public void setTextOffset(int x, int y) {
-        textXoffset = x;
-        textYoffset = y;
-        this.updateTextPosition();
+        setTextOffset(0, x, y);
     }
 
-    protected void updateTextPosition() {
-        updateTextPosition(0);
+    public void setTextOffset(int id, int x, int y) {
+        textForPlate[id].setOffsetXY(x, y);
+        textForPlate[id].updateTextPosition(position[0],position[1],width,height, new float[] { marginLeft, marginUp, marginRight, marginDown});
     }
 
-    protected void updateTextPosition(int id) {
-        if (textPosition == TextPosition.UP || textPosition == TextPosition.UPLEFT || textPosition == TextPosition.UPRIGHT) {
-            textY = position[1];
-        }
-        if (textPosition == TextPosition.DOWN || textPosition == TextPosition.DOWNLEFT || textPosition == TextPosition.DOWNRIGHT) {
-            textY = (int) (position[1] + height - textHeight);
-        }
-        if (textPosition == TextPosition.RIGHT || textPosition == TextPosition.UPRIGHT || textPosition == TextPosition.DOWNRIGHT) {
-            textX = position[0];
-        }
-        if (textPosition == TextPosition.LEFT || textPosition == TextPosition.DOWNLEFT || textPosition == TextPosition.UPLEFT) {
-            textX = (int) (position[0] + width - textWidth);
-        }
-        if (textPosition == TextPosition.CENTER) {
-            textX = (int)(position[0] + (width - textWidth)/2.0f - 4);
-            textY = (int)(position[1] + (height + textHeight)/2.0f - 4);
-        }
-        textX += textXoffset;
-        textY += textYoffset;
-
-    }
     protected  void drawText() {
-        graphic.bookingDrawText(text, textX, textY, textPaint);
+        for(int i = 0; i < textForPlate.length; i++) {
+            textForPlate[i].draw();
+        }
     }
 
     @Override
     public void release() {
         super.release();
+        for(int i = 0; i < textForPlate.length; i++) {
+            textForPlate[i].release();
+        }
+        textForPlate = null;
     }
 
 }
