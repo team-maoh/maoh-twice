@@ -332,9 +332,11 @@ public class MapPlateAdmin {
         if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+4 || playerStatus.getTutorialInDungeon() != 0) {
             drawFloorAndHP();
             dungeonSelectWindowAdmin.draw();
+
             if (dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.EQUIP_EXPEND) {
                 tutorialButtonGroup.draw();
             }
+
         }
 
 
@@ -559,6 +561,12 @@ public class MapPlateAdmin {
             menuGroup.release();
             menuGroup = null;
         }
+
+        if (tutorialButtonGroup != null) {
+            tutorialButtonGroup.release();
+            tutorialButtonGroup = null;
+        }
+
 
         //TODO 心配
         //inentry.release();
