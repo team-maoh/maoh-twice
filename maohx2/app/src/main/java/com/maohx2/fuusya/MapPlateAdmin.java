@@ -332,7 +332,9 @@ public class MapPlateAdmin {
         if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+4 || playerStatus.getTutorialInDungeon() != 0) {
             drawFloorAndHP();
             dungeonSelectWindowAdmin.draw();
-            tutorialButtonGroup.draw();
+            if (dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.EQUIP_EXPEND) {
+                tutorialButtonGroup.draw();
+            }
         }
 
 

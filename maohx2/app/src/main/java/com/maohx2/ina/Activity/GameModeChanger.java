@@ -3,6 +3,7 @@ package com.maohx2.ina.Activity;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.ChangeMovie;
 import com.maohx2.ina.Draw.Graphic;
+import com.maohx2.kmhanko.music.MusicAdmin;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
 /**
@@ -36,6 +37,7 @@ public class GameModeChanger {
     public void toChangeGameMode() {//これ自体は毎ループ呼ばれている
         if (gameSystemModeReserve != UnitedSurfaceView.GAME_SYSTEM_MODE.NONE) {
             if (changeMovie.update(false, true)) {
+                MusicAdmin.pauseAll();
                 switch (gameSystemModeReserve) {
                     case START:
                         //ここには来ない(ゲーム画面からスタート画面に戻れるようにするなら必要)
