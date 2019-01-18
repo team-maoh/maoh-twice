@@ -237,8 +237,8 @@ public final class Constants {
     public static class TUTRIAL_BUTTON {
         public static final int DUNGEON_LEFT = 50;
         public static final int DUNGEON_RIGHT = 350;
-        public static final int DUNGEON_UP = 40;
-        public static final int DUNGEON_BOTTOM = 115;
+        public static final int DUNGEON_UP = 50;
+        public static final int DUNGEON_BOTTOM = 125;
 
         public static final int UNDER_LEFT = 50;
         public static final int UNDER_RIGHT = 350;

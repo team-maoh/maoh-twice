@@ -1698,7 +1698,7 @@ public class MapAdmin {
         Paint l_glay_paint = new Paint();
         Paint yellow_paint = new Paint();
         int small_map_mag = 8;
-        Point small_map_offset = new Point(0, 120);
+        Point small_map_offset = new Point(0, 130);
 //        int countMiniDrawRect = 0;
         if (map_data[worldToMap(x)][worldToMap(y)].isRoom()) {
             section_admin.getNowRoom(worldToMap(x), worldToMap(y)).setDispflag(true);
