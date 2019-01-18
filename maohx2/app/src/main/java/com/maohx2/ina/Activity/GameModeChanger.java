@@ -38,6 +38,8 @@ public class GameModeChanger {
         if (gameSystemModeReserve != UnitedSurfaceView.GAME_SYSTEM_MODE.NONE) {
             if (changeMovie.update(false, true)) {
                 MusicAdmin.pauseAll();
+                changeMovie.draw(true);
+                graphic.draw();
                 switch (gameSystemModeReserve) {
                     case START:
                         //ここには来ない(ゲーム画面からスタート画面に戻れるようにするなら必要)
@@ -60,6 +62,7 @@ public class GameModeChanger {
                     default:
                         break;
                 }
+                changeMovie.init();
             }
         }
     }

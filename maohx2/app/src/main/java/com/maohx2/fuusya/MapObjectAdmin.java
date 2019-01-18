@@ -250,7 +250,7 @@ public class MapObjectAdmin {
 
         map_player.nonactiveMenuCheck();
 
-        if (playerStatus.getTutorialInDungeon() == 1 && map_plate_admin.getDisplayingContent() == -1) {
+        if (playerStatus.getTutorialInDungeon() == 1 && (map_plate_admin.getDisplayingContent() == -1 && !map_plate_admin.getDungeonSelectWindowAdmin().isActive())) {
 
             map_player.update();
             map_player_bitmap.update();
