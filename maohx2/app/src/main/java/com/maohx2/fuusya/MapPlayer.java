@@ -166,7 +166,8 @@ public class MapPlayer extends MapUnit {
                 if (touch_state == TouchState.UP) {
                     touch_mode = false;
                     if (map_plate_admin.getDisplayingContent() == -1) {
-                        if (isWithinReach(touch_w_x, touch_w_y, 80) == true) {
+                        //プレイヤーをタッチするとメニューを表示
+                        if (move_mode == false && isWithinReach(touch_w_x, touch_w_y, 80) == true) {
                             map_plate_admin.setDisplayingContent(0);
                             sound_admin.play("enter00");
                         }
@@ -176,7 +177,7 @@ public class MapPlayer extends MapUnit {
                 }
 
 
-                if (isWithinReach(touch_w_x, touch_w_y, step * 2) == false) {
+                if (isWithinReach(touch_w_x, touch_w_y, 80) == false) {
                     touch_draw = true;
                     if (touch_mode == false && (touch_state == TouchState.DOWN || touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE)) {
                         touch_mode = true;
@@ -185,8 +186,8 @@ public class MapPlayer extends MapUnit {
                     }
                 }
 
-                if(touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE){
-                    if(abs(touch_n_x - touch_down_n_x) + abs(touch_n_y - touch_down_n_y) > 20) {
+                if(touch_mode == true &&(touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE)){
+                    if(abs(touch_n_x - touch_down_n_x) + abs(touch_n_y - touch_down_n_y) > 30) {
                         move_mode = true;
                         dst_w_x = camera.convertToWorldCoordinateX((int) (800 + touch_n_x - touch_down_n_x));
                         dst_w_y = camera.convertToWorldCoordinateY((int) (450 + touch_n_y - touch_down_n_y));
