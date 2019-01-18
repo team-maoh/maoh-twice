@@ -1377,7 +1377,7 @@ public class BattleUnitAdmin {
         if (winFlag) {
             switch (mode) {
                 case BATTLE:
-                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT_FROM_BATTLE);
                     break;
                 case BOSS:
                     mapPlateAdmin.getMapInventryAdmin().storageMapInventry();
@@ -1388,7 +1388,7 @@ public class BattleUnitAdmin {
                     dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TO_WORLD);
                     break;
                 case MINING:
-                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT);
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT_FROM_BATTLE);
                     break;
                 case MAOH:
                     playerStatus.setMaohWinCount(playerStatus.getMaohWinCount() + 1);

@@ -391,5 +391,9 @@ public class MapPlayer extends MapUnit {
 
     }
 
+    public void resetCamera() {
+        camera.setCameraOffset(w_x, w_y);
+    }
+
 
 }

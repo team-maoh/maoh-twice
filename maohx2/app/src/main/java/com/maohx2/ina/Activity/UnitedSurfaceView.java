@@ -9,6 +9,7 @@ import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.DungeonUserInterface;
 import com.maohx2.ina.GameSystem.WorldGameSystem;
 import com.maohx2.ina.GameSystem.DungeonGameSystem;
+import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.Arrange.InventryS;
 import com.maohx2.kmhanko.Saver.ExpendItemInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoInventrySaver;
@@ -38,6 +39,8 @@ public class UnitedSurfaceView extends BaseSurfaceView {
     MusicAdmin musicAdmin;
     SoundAdmin soundAdmin;
 
+    GameModeChanger gameModeChanger;
+
     enum GAME_SYSTEM_MODE {
         START,
         WORLD,
@@ -47,8 +50,6 @@ public class UnitedSurfaceView extends BaseSurfaceView {
 
     GAME_SYSTEM_MODE gameSystemMode;
 
-    GAME_SYSTEM_MODE gameSystemModeReserve = GAME_SYSTEM_MODE.NONE;
-
     @Override
     public void release() {
         System.out.println("takanoRelease : UnitedSurfaceview");
@@ -56,15 +57,22 @@ public class UnitedSurfaceView extends BaseSurfaceView {
         start_game_system.drawStop();
         start_game_system.updateStop();
         start_game_system.release();
+        start_game_system = null;
         my_database_admin.release();
+        my_database_admin = null;
         userInterface.release();
+        userInterface = null;
         graphic.releaseBitmap();
+        graphic = null;
+        dungeonUserInterface.release();
+        dungeonUserInterface = null;
+        gameModeChanger.release();
+        gameModeChanger = null;
     }
 
     public UnitedSurfaceView(UnitedActivity _unitedActivity, BackSurfaceView _backSurfaceView) {
         super(_unitedActivity, _backSurfaceView);
         unitedActivity = _unitedActivity;
-
     }
 
     @Override
@@ -86,6 +94,8 @@ public class UnitedSurfaceView extends BaseSurfaceView {
         userInterface.init();
         dungeonUserInterface = new DungeonUserInterface(global_data.getGlobalConstants(), graphic);
         dungeonUserInterface.init();
+
+        gameModeChanger = new GameModeChanger(this, graphic, soundAdmin);
 
         //activityChange = new ActivityChange(this, currentActivity);
 
@@ -145,7 +155,7 @@ public class UnitedSurfaceView extends BaseSurfaceView {
         graphic.clearLocalBitmapData();
     }
 
-    private void runWorldGameSystem() {
+    public void runWorldGameSystem() {
         //World画面に遷移する時に一度だけ実行
         this.setGameSystemMode(GAME_SYSTEM_MODE.WORLD);
 
@@ -181,7 +191,8 @@ public class UnitedSurfaceView extends BaseSurfaceView {
         graphic.clearLocalBitmapData();
     }
 
-    private void runDungeonGameSystem() {
+    Constants.DungeonKind.DUNGEON_KIND dungeon_kind;//
+    public void runDungeonGameSystem() {
         this.setGameSystemMode(GAME_SYSTEM_MODE.DUNGEON);
 
         dungeonGameSystem = new DungeonGameSystem();
@@ -268,17 +279,8 @@ public class UnitedSurfaceView extends BaseSurfaceView {
         graphic.clearLocalBitmapData();
     }
 
-    public void toWorldGameMode() {
-        gameSystemModeReserve = GAME_SYSTEM_MODE.WORLD;
-    }
 
-    DUNGEON_KIND dungeon_kind;//
-    public void toDungeonGameMode(DUNGEON_KIND _dungeon_kind) {
-        dungeon_kind = _dungeon_kind;
-        gameSystemModeReserve = GAME_SYSTEM_MODE.DUNGEON;
-    }
-
-    private void releaseNowGameSystem() {
+    public void releaseNowGameSystem() {
         switch (gameSystemMode) {
             case START:
                 releaseStartGameSystem();
@@ -293,28 +295,6 @@ public class UnitedSurfaceView extends BaseSurfaceView {
                 break;
         }
     }
-
-    public void toChangeGameMode() {
-        switch (gameSystemModeReserve) {
-            case START:
-                //ここには来ない(ゲーム画面からスタート画面に戻れるようにするなら必要)
-                gameSystemModeReserve = GAME_SYSTEM_MODE.NONE;
-                break;
-            case WORLD:
-                releaseNowGameSystem();
-                runWorldGameSystem();
-                gameSystemModeReserve = GAME_SYSTEM_MODE.NONE;
-                break;
-            case DUNGEON:
-                releaseNowGameSystem();
-                runDungeonGameSystem();
-                gameSystemModeReserve = GAME_SYSTEM_MODE.NONE;
-                break;
-            default:
-                break;
-        }
-    }
-
     @Override
     public void gameLoop() {
         if (unitedActivity.isFinishing() || unitedActivity.isPaused()) {
@@ -334,6 +314,8 @@ public class UnitedSurfaceView extends BaseSurfaceView {
             default:
                 break;
         }
+
+        graphic.draw();
     }
 
     private void startGameLoop() {
@@ -355,7 +337,6 @@ public class UnitedSurfaceView extends BaseSurfaceView {
         switch (downCount) {
             case 0:
                 start_game_system.openingUpdate();
-                //start_game_system.openingdraw();
                 break;
             case 1:
                 start_game_system.updata();
@@ -365,16 +346,19 @@ public class UnitedSurfaceView extends BaseSurfaceView {
                 soundAdmin.play("opening01");
                 //初めてゲームを開始下ならDungeonへ。そうでないならワールドへ。
                 if (!openingFlag) {
-                    //activityChange.toWorldActivity();
-                    this.toWorldGameMode();
+                    gameModeChanger.toWorldGameMode();
                 } else {
-                    //activityChange.toDungeonActivity(Constants.DungeonKind.DUNGEON_KIND.OPENING);
-                    this.toDungeonGameMode(Constants.DungeonKind.DUNGEON_KIND.OPENING);
+                    gameModeChanger.toDungeonGameMode(Constants.DungeonKind.DUNGEON_KIND.OPENING);
                 }
+                downCount = 3;
+                start_game_system.draw();
+                break;
+            case 3:
+                start_game_system.draw();
                 break;
         }
-        //activityChange.toChangeActivity();
-        toChangeGameMode();
+        gameModeChanger.toChangeGameMode();//これより後にGameSystemを置かないこと これより後にChangerのdrawを置くこと
+        gameModeChanger.draw();
     }
 
     int downCount = 0;
@@ -390,8 +374,9 @@ public class UnitedSurfaceView extends BaseSurfaceView {
         userInterface.updateTouchState(touch_x, touch_y, touch_state);
         worldGameSystem.update();
         worldGameSystem.draw();
-        toChangeGameMode();
 
+        gameModeChanger.toChangeGameMode();//これより後にGameSystemを置かないこと これより後にChangerのdrawを置くこと
+        gameModeChanger.draw();
     }
 
     private void dungeonGameLoop(){
@@ -406,19 +391,44 @@ public class UnitedSurfaceView extends BaseSurfaceView {
             dungeonGameSystem.update();
             dungeonGameSystem.draw();
         }
-        toChangeGameMode();
+        gameModeChanger.toChangeGameMode();//これより後にGameSystemを置かないこと これより後にChangerのdrawを置くこと
+        gameModeChanger.draw();
     }
-
-
-
-
-
 
     private void setGameSystemMode(GAME_SYSTEM_MODE _gameSystemMode) {
         gameSystemMode = _gameSystemMode;
     }
 
+    public void setDungeonKind(DUNGEON_KIND _dungeonKind) {
+        dungeon_kind = _dungeonKind;
+    }
+
+    public UserInterface getUserInterface() {
+        return userInterface;
+    }
+
+    public UserInterface getDungeonUserInterface() {
+        return dungeonUserInterface;
+    }
+
     public SoundAdmin getSoundAdmin() {
         return soundAdmin;
+    }
+
+    public GameModeChanger getGameModeChanger() {
+        return gameModeChanger;
+    }
+
+    //非推奨
+    public void toWorldGameMode() {
+        gameModeChanger.toWorldGameMode();
+    }
+
+    public void toDungeonGameMode(Constants.DungeonKind.DUNGEON_KIND _dungeon_kind) {
+        gameModeChanger.toDungeonGameMode(_dungeon_kind);
+    }
+
+    public void toChangeGameMode() {
+        gameModeChanger.toChangeGameMode();
     }
 }

@@ -13,6 +13,7 @@ public class ChangeMovie {
     int length = 0;
     int changeSpeed = 100;
     int RECT_SET_NUM = 9;
+    boolean startFlag = false;
     float RECT_HEIGHT = (900.0f/RECT_SET_NUM)/2.0f;
 
     public ChangeMovie(Graphic _graphic, SoundAdmin _soundAdmin){
@@ -23,21 +24,50 @@ public class ChangeMovie {
     }
 
     public boolean update(boolean soundFlag){
-        if(length == 0 && soundFlag){soundAdmin.play("encount00");}
-        length += changeSpeed;
+        return update(soundFlag, true);
+    }
 
-        if(length > 1600){
-            length = 0;
-            return true;
+    public boolean update(boolean soundFlag, boolean inOrOut){
+        if (inOrOut == true) {
+            if (!startFlag) {
+                if (soundFlag) { soundAdmin.play("encount00"); };
+                startFlag = true;
+                length = 0;
+            }
+            length += changeSpeed;
+
+            if (length > 1600) {
+                length = 0;
+                startFlag = false;
+                return true;
+            }
+        } else {
+            if (!startFlag) {
+                if (soundFlag) { soundAdmin.play("encount00"); };
+                startFlag = true;
+                length = 1600;
+            }
+            length -= changeSpeed;
+
+            if (length < 0) {
+                length = 0;
+                startFlag = false;
+                return true;
+            }
         }
         return false;
     }
+
 
     public void draw(){
         for(int i = 0; i < RECT_SET_NUM; i++) {
             graphic.bookingDrawRect(0, (int)(RECT_HEIGHT*(2*i+0)), length, (int)(RECT_HEIGHT*(2*i+1)), rectPaint);
             graphic.bookingDrawRect(1600 - length,  (int)(RECT_HEIGHT*(2*i+1)), 1600, (int)(RECT_HEIGHT*(2*i+2)), rectPaint);
         }
+    }
+
+    public void release() {
+        rectPaint = null;
     }
 
 }

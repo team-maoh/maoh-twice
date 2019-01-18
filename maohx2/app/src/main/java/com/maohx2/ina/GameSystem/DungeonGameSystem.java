@@ -381,15 +381,18 @@ public class DungeonGameSystem {
         }
 
         switch (dungeonModeManage.getMode()) {
-            case MAP_INIT:
-                if(map_init == false) {
-                    map_init = true;
+            case MAP_INIT_FROM_BATTLE:
+                if(changeMovie.update(false, true) == true) {
                     playMapBGM();
                     dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
                     if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.DRAGON) {
                         backGround = graphic.searchBitmap("firstBackground");
                     }
-                } else if(changeMovie.update(false) == true) {
+                }
+                break;
+            case MAP_INIT:
+                map_object_admin.getPlayer().resetCamera();
+                if(changeMovie.update(false, false) == true) {
                     playMapBGM();
                     dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
                     if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.DRAGON) {
@@ -532,9 +535,23 @@ public class DungeonGameSystem {
         }
 
         switch (dungeonModeManage.getMode()) {
-            case MAP_INIT:
+            case MAP_INIT_FROM_BATTLE:
                 graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
                 battle_unit_admin.draw();
+                changeMovie.draw();
+                break;
+            case MAP_INIT:
+                //graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
+                //battle_unit_admin.draw();
+                map_admin.drawMap_for_autotile_light_animation();
+                backEffectAdmin.draw();
+                map_object_admin.draw();
+                map_admin.drawSmallMap();
+                effectAdmin.draw();
+                map_plate_admin.draw();
+                if (playerStatus.getTutorialInDungeon() == 1) {
+                    playerStatusViewer.draw();
+                }
                 changeMovie.draw();
                 break;
             case MAP:
@@ -636,7 +653,6 @@ public class DungeonGameSystem {
 
         talkAdmin.draw();
         text_box_admin.draw();
-        graphic.draw();
 
         if (resetBossImage) {
             resetBossImage = false;
@@ -872,7 +888,6 @@ public class DungeonGameSystem {
             talkAdmin.draw();
             text_box_admin.draw();
         }
-        graphic.draw();
     }
 
     PlateGroup<BackPlate> backPlateGroup;

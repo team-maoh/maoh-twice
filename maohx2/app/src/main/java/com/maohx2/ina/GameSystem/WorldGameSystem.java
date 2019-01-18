@@ -19,6 +19,7 @@ import com.maohx2.ina.Arrange.PaletteElement;
 import com.maohx2.ina.Battle.BattleDungeonUnitData;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Battle.BattleUnitDataAdmin;
+import com.maohx2.ina.ChangeMovie;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Credits;
 import com.maohx2.ina.Draw.Graphic;
@@ -154,6 +155,8 @@ public class WorldGameSystem {
     BattleUnitDataAdmin battleUnitDataAdmin;
 
     Credits credits;
+
+    ChangeMovie changeMovie;
 
     public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, UnitedActivity _unitedActivity) {
         graphic = _graphic;
@@ -299,6 +302,7 @@ public class WorldGameSystem {
 
         geoSlotAdminManager.calcPlayerStatus();
 
+        changeMovie = new ChangeMovie(graphic, soundAdmin);
 
         worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT_INIT_START);
 
@@ -419,7 +423,11 @@ public class WorldGameSystem {
 */
         switch (worldModeAdmin.getMode()) {
             case DUNGEON_SELECT_INIT_START:
-                musicAdmin.loadMusic("world00",true);
+                if(changeMovie.update(false, false) == true) {
+                    musicAdmin.loadMusic("world00", true);
+                    worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT_INIT);
+                }
+                break;
             case DUNGEON_SELECT_INIT:
                 backGround = graphic.searchBitmap("firstBackground");
                 worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT);
@@ -603,8 +611,16 @@ public class WorldGameSystem {
         //graphic.bookingDrawBitmapData(graphic.searchBitmap("杖"),300,590);
 
         switch (worldModeAdmin.getMode()) {
+            case DUNGEON_SELECT_INIT_START:
+                graphic.bookingDrawBitmapData(backGround, 0, 0, true);
+                dungeonSelectManager.draw();
+                playerStatusViewer.draw();
+                changeMovie.draw();
+                break;
             case DUNGEON_SELECT_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
+                dungeonSelectManager.draw();
+                playerStatusViewer.draw();
                 break;
             case DUNGEON_SELECT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
@@ -721,7 +737,6 @@ public class WorldGameSystem {
             effectAdmin.draw();
         }
 
-        graphic.draw();
     }
 
     boolean updateStopFlag = false;
@@ -824,6 +839,11 @@ public class WorldGameSystem {
         if (backPlateGroup != null) {
             backPlateGroup.release();
             backPlateGroup = null;
+        }
+
+        if (changeMovie != null) {
+            changeMovie.release();
+            changeMovie = null;
         }
         credit = null;
         System.gc();

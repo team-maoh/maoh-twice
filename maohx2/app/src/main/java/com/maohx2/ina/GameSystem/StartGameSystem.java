@@ -172,7 +172,6 @@ public class StartGameSystem {
         */
         graphic.bookingDrawText("Please Touch!",550,750, paint);
         //textBoxAdmin.draw();
-        graphic.draw();
     }
 
     public void openingUpdate(){
@@ -219,9 +218,6 @@ public class StartGameSystem {
                 graphic.bookingDrawText("平穏を取り戻すことを決意した者の物語である．",80,640, paint);
                 break;
         }
-
-        graphic.draw();
-
     }
 
     public void release() {

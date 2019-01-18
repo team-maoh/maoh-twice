@@ -436,7 +436,7 @@ public class MapAdmin {
 
     //スタート地点を探す
     public void searchStartPoint() {
-        Point point = getRoomNotEdgePoint();
+        Point point = getRoomPointNotStairsAndNotGateAndNotEdgePoint();
         start_point.set(point.x, point.y);
     }
 
@@ -581,6 +581,26 @@ public class MapAdmin {
         }
         return point;
     }
+
+    //階段やゲートでなく端でもない、部屋のある一点を返す(magnificationをかけてある)
+    public Point getRoomPointNotStairsAndNotGateAndNotEdgePoint() {
+        Point point = new Point(0, 0);
+        int raw[] = MyAvail.shuffle(map_size.x * map_size.y - 1);
+        // by kmhanko
+        for (int i = 0; i < raw.length ; i++) {
+            int x = raw[i]/map_size.y;
+            int y = raw[i]%map_size.y;
+
+            if (map_data[x][y].isRoom() && !map_data[x][y].isWall() && !map_data[x][y].isStairs() && !map_data[x][y].isGate()) {
+                if (map_data[x][y].isRoom() && !map_data[x][y].isWall() && (!map_data[x - 1][y].isWall() && !map_data[x + 1][y].isWall() && !map_data[x][y - 1].isWall() && !map_data[x][y + 1].isWall())) {
+                    point.set(x * magnification, y * magnification);
+                    break;
+                }
+            }
+        }
+        return point;
+    }
+
 
     //中ボスを返す関数
     public String[] getMidMonster(int mid_boss_num) {
