@@ -1118,9 +1118,9 @@ public class MapAdmin {
 //        }
 
         //AutoTile大表示
-        for(int i = 0;i < 47;i++){
-            graphic.bookingDrawBitmapData(at_wall[0].big_auto_tile[i],128+(i%8)*128 +5*(i%8),64+(i/8)*128+5*(i/8),2,2,0,255,true);
-        }
+//        for(int i = 0;i < 47;i++){
+//            graphic.bookingDrawBitmapData(at_wall[0].big_auto_tile[i],128+(i%8)*128 +5*(i%8),64+(i/8)*128+5*(i/8),2,2,0,255,true);
+//        }
     }
 
     public void drawSmallMap() {
