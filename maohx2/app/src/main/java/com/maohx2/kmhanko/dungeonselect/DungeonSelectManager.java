@@ -168,6 +168,7 @@ public class DungeonSelectManager {
         initOkButton();
         initLoopCountSelectButton();
         initWindow();
+        initTutorialButton();
 
         initUIs();//一番最後
 
@@ -274,13 +275,48 @@ public class DungeonSelectManager {
         database = databaseAdmin.getMyDatabase(DB_NAME);
     }
 
+    PlateGroup<BoxImageTextPlate> tutorialButtonGroup;
+    private void initTutorialButton() {
+        Paint textPaint1 = new Paint();
+        textPaint1.setTextSize(Constants.TUTRIAL_BUTTON.TEXT_SIZE_TU);
+        textPaint1.setARGB(255, 255, 255, 255);
+        Paint textPaint2 = new Paint();
+        textPaint2.setTextSize(Constants.TUTRIAL_BUTTON.TEXT_SIZE_NAME);
+        textPaint2.setARGB(255, 255, 255, 255);
+
+        tutorialButtonGroup = new PlateGroup<>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic, userInterface, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE,
+                                new int[]{Constants.TUTRIAL_BUTTON.UNDER_LEFT,Constants.TUTRIAL_BUTTON.UNDER_UP,Constants.TUTRIAL_BUTTON.UNDER_RIGHT,Constants.TUTRIAL_BUTTON.UNDER_BOTTOM},
+                                new String[] { "チュートリアル", "- ジオ -"},
+                                new Paint[] { textPaint1, textPaint2},
+                                new WindowTextPlate.TextPosition[] { WindowTextPlate.TextPosition.UP, WindowTextPlate.TextPosition.DOWN }
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //OKが押された時の処理
+                                soundAdmin.play("enter00");
+                                //チュートリアル表示
+                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.TU_GEO);
+                            }
+                        }
+                });
+        tutorialButtonGroup.setUpdateFlag(false);
+        tutorialButtonGroup.setDrawFlag(false);
+    }
+
     //***** GeoMapとDungeonSelectMapの切り替え *****
 
     public void switchSelectMode() {
         if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
             worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT_INIT);
+            tutorialButtonGroup.setDrawFlag(false);
+            tutorialButtonGroup.setUpdateFlag(false);
         } else {
             worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT_INIT);
+            tutorialButtonGroup.setDrawFlag(true);
+            tutorialButtonGroup.setUpdateFlag(true);
         }
     }
 
@@ -644,6 +680,8 @@ public class DungeonSelectManager {
         loopCountWindowPlate.draw();
         dungeonNotEnterPlate.draw();
 
+        tutorialButtonGroup.draw();
+
         OkButtonGroup.draw();
     }
 
@@ -693,6 +731,8 @@ public class DungeonSelectManager {
 
         loopCountSelectButtonGroup.update();
         OkButtonGroup.update();
+
+        tutorialButtonGroup.update();
 
         //modeSelectButtonCheck();
         //menuButtonGroup.update();
@@ -1115,6 +1155,10 @@ public class DungeonSelectManager {
         if (dungeonEnterNamePlate != null) {
             dungeonEnterNamePlate.release();
             dungeonEnterNamePlate = null;
+        }
+        if (tutorialButtonGroup != null) {
+            tutorialButtonGroup.release();
+            tutorialButtonGroup = null;
         }
 
     }

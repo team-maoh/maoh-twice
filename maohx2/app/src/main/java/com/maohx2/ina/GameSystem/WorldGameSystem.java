@@ -314,6 +314,7 @@ public class WorldGameSystem {
         initBackPlate();
         initTutorialButton();
 
+
         //OP判定。まだOPを流していないならOP会話イベントを発動する。
         talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される//堀江デバッグのためにコメントアウト
 
@@ -457,6 +458,7 @@ public class WorldGameSystem {
             case GEO_MAP_SELECT:
                 if (!talkAdmin.isTalking()) {
                     dungeonSelectManager.update();
+                    playerStatusViewer.update();
                 }
                 break;
             case TU_GEO:
@@ -465,7 +467,7 @@ public class WorldGameSystem {
                 }
                 else if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_geo_flag == 1) {
                     tu_geo_flag = 0;
-                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
+                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT_INIT);
                     tutorial_flag_saver.save();
                 }
                 break;
@@ -661,6 +663,7 @@ public class WorldGameSystem {
             case GEO_MAP_SELECT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 dungeonSelectManager.draw();
+                playerStatusViewer.draw();
                 break;
             case GEO_MAP_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
@@ -853,6 +856,7 @@ public class WorldGameSystem {
         tutorialButtonGroup.setUpdateFlag(false);
         tutorialButtonGroup.setDrawFlag(false);
     }
+
 
 
     public void release() {

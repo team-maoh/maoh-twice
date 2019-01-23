@@ -122,11 +122,6 @@ public class GeoSlotAdminManager {
             dungeonName.clear();
             dungeonName = null;
         }
-
-        if (tutorialButtonGroup != null) {
-            tutorialButtonGroup.release();
-            tutorialButtonGroup = null;
-        }
     }
 
     public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver, MaohMenosStatus _maohMenosStatus, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin, DungeonModeManage _dungeonModeManage) {
@@ -157,7 +152,6 @@ public class GeoSlotAdminManager {
         //initStatusTextBox();
         initBackPlate();
         initMapIconPlate();
-        initTutorialButton();
 
     }
 
@@ -213,36 +207,6 @@ public class GeoSlotAdminManager {
         );
     }
 
-    PlateGroup<BoxImageTextPlate> tutorialButtonGroup;
-    private void initTutorialButton() {
-        Paint textPaint1 = new Paint();
-        textPaint1.setTextSize(Constants.TUTRIAL_BUTTON.TEXT_SIZE_TU);
-        textPaint1.setARGB(255, 255, 255, 255);
-        Paint textPaint2 = new Paint();
-        textPaint2.setTextSize(Constants.TUTRIAL_BUTTON.TEXT_SIZE_NAME);
-        textPaint2.setARGB(255, 255, 255, 255);
-
-        tutorialButtonGroup = new PlateGroup<>(
-                new BoxImageTextPlate[]{
-                        new BoxImageTextPlate(
-                                graphic, userInterface, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE,
-                                new int[]{Constants.TUTRIAL_BUTTON.UNDER_LEFT,Constants.TUTRIAL_BUTTON.UNDER_UP,Constants.TUTRIAL_BUTTON.UNDER_RIGHT,Constants.TUTRIAL_BUTTON.UNDER_BOTTOM},
-                                new String[] { "チュートリアル", "- ジオ -"},
-                                new Paint[] { textPaint1, textPaint2},
-                                new WindowTextPlate.TextPosition[] { WindowTextPlate.TextPosition.UP, WindowTextPlate.TextPosition.DOWN }
-                        ) {
-                            @Override
-                            public void callBackEvent() {
-                                //OKが押された時の処理
-                                soundAdmin.play("enter00");
-                                //チュートリアル表示
-                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.TU_GEO);
-                            }
-                        }
-                });
-        tutorialButtonGroup.setUpdateFlag(true);
-        tutorialButtonGroup.setDrawFlag(true);
-    }
 
     private void initMapIconPlate(){
         databaseAdmin.addMyDatabase(DB_NAME, DB_ASSET, 1, "r");
@@ -302,7 +266,6 @@ public class GeoSlotAdminManager {
             }
             //textBoxAdmin.setTextBoxExists(statusTextBoxID, worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.GEO_MAP);
             backPlateGroup.update();
-            tutorialButtonGroup.update();
         } else {
             updateSeeOnly();
         }
@@ -326,7 +289,6 @@ public class GeoSlotAdminManager {
                 activeGeoSlotAdmin.draw();
             }
             backPlateGroup.draw();
-            tutorialButtonGroup.draw();
         } else {
             drawSeeOnly();
         }
