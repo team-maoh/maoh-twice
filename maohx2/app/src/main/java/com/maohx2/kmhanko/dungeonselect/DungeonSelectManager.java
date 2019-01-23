@@ -345,6 +345,7 @@ public class DungeonSelectManager {
                 int height = 40;
                 dungeonIconName[count] = new WindowTextPlate(graphic, new int[]{ centerX-width/2, centerY-height/2, centerX+width/2, centerY+height/2 },dungeonNameExpress.get(i),dungeonIconNamePaint, WindowTextPlate.TextPosition.CENTER, "dungeonIconPlate00");
                 dungeonIconName[count].setDrawFlag(true);
+                dungeonIconName[count].setExtendOffset(1.01f);
                 count++;
             }
         }
@@ -369,6 +370,7 @@ public class DungeonSelectManager {
                     dungeonIconNumber[count] = new WindowTextPlate(graphic, new int[]{centerX - width / 2, centerY - height / 2, centerX + width / 2, centerY + height / 2}, String.valueOf(dungeonNumber.get(i)), dungeonIconNumberPaint, WindowTextPlate.TextPosition.CENTER, "dungeonIconPlate00");
                     dungeonIconNumber[count].setDrawFlag(true);
                     dungeonIconNumber[count].setTextOffset(4, -1);
+                    dungeonIconNumber[count].setExtendOffset(1.01f);
                     count++;
                 }
             }

@@ -81,7 +81,8 @@ public class WindowTextPlate extends WindowPlate {
         textForPlate[id].updateTextPosition(position[0],position[1],width,height, new float[] { marginLeft, marginUp, marginRight, marginDown});
     }
 
-    protected  void drawText() {
+
+    protected void drawText() {
         for(int i = 0; i < textForPlate.length; i++) {
             textForPlate[i].draw();
         }

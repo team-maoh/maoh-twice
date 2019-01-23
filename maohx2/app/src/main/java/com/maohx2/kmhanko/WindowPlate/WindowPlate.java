@@ -27,6 +27,8 @@ public class WindowPlate {
 
     protected float DENSITY;
 
+    protected float extendOffset = 1.0f;
+
 
     public WindowPlate(Graphic _graphic, int[] _position) {
         graphic = _graphic;
@@ -74,18 +76,20 @@ public class WindowPlate {
         if (windowImageName == null) {
             return;
         }
+        //System.out.println("aaaa + " + (width - windowImageWidth * 2.0f / 3.0f) / (windowImageWidth / 3.0f));
+        //System.out.println("bbbb + " + (height - (windowImageHeight * 2.0f / 3.0f)) / (windowImageHeight / 3.0f));
 
-        graphic.bookingDrawBitmapData(windowElement[0][0], position[0], position[1], 1.0f, 1.0f, 0, alpha, true);
-        graphic.bookingDrawBitmapData(windowElement[1][0], position[0], (int)(position[1] + windowImageHeight / 3.0f), 1.0f, (height - (windowImageHeight * 2.0f / 3.0f)) / (windowImageHeight / 3.0f), 0, alpha, true);
-        graphic.bookingDrawBitmapData(windowElement[2][0], position[0], (int)(position[3] - windowImageHeight / 3.0f), 1.0f, 1.0f, 0, alpha, true);
+        graphic.bookingDrawBitmapData(windowElement[0][0], position[0], position[1], 1.0f * extendOffset, 1.0f * extendOffset, 0, alpha, true);
+        graphic.bookingDrawBitmapData(windowElement[1][0], position[0], (int)(position[1] + windowImageHeight / 3.0f), 1.0f * extendOffset, (height - (windowImageHeight * 2.0f / 3.0f)) / (windowImageHeight / 3.0f) * extendOffset, 0, alpha, true);
+        graphic.bookingDrawBitmapData(windowElement[2][0], position[0], (int)(position[3] - windowImageHeight / 3.0f), 1.0f * extendOffset, 1.0f * extendOffset, 0, alpha, true);
 
-        graphic.bookingDrawBitmapData(windowElement[0][1], (int)(position[0] + windowImageWidth / 3.0f), position[1], (width - windowImageWidth * 2.0f / 3.0f) / (windowImageWidth / 3.0f), 1.0f, 0, alpha, true);
-        graphic.bookingDrawBitmapData(windowElement[1][1], (int)(position[0] + windowImageWidth / 3.0f), (int)(position[1] + windowImageHeight / 3.0f), (width - (windowImageWidth * 2.0f / 3.0f)) / (windowImageWidth / 3.0f), (height - (windowImageHeight * 2.0f / 3.0f)) / (windowImageHeight / 3.0f), 0, alpha, true);
-        graphic.bookingDrawBitmapData(windowElement[2][1], (int)(position[0] + windowImageWidth / 3.0f), (int)(position[3] - windowImageHeight / 3.0f), (width - (windowImageWidth * 2.0f / 3.0f)) / (windowImageWidth / 3.0f), 1.0f, 0, alpha, true);
+        graphic.bookingDrawBitmapData(windowElement[0][1], (int)(position[0] + windowImageWidth / 3.0f), position[1], (width - windowImageWidth * 2.0f / 3.0f) / (windowImageWidth / 3.0f) * extendOffset, 1.0f * extendOffset, 0, alpha, true);
+        graphic.bookingDrawBitmapData(windowElement[1][1], (int)(position[0] + windowImageWidth / 3.0f), (int)(position[1] + windowImageHeight / 3.0f), (width - (windowImageWidth * 2.0f / 3.0f)) / (windowImageWidth / 3.0f) * extendOffset, (height - (windowImageHeight * 2.0f / 3.0f)) / (windowImageHeight / 3.0f) * extendOffset, 0, alpha, true);
+        graphic.bookingDrawBitmapData(windowElement[2][1], (int)(position[0] + windowImageWidth / 3.0f), (int)(position[3] - windowImageHeight / 3.0f), (width - (windowImageWidth * 2.0f / 3.0f)) / (windowImageWidth / 3.0f) * extendOffset, 1.0f * extendOffset, 0, alpha, true);
 
-        graphic.bookingDrawBitmapData(windowElement[0][2], (int)(position[2] - windowImageWidth / 3.0f), position[1], 1.0f, 1.0f, 0, alpha, true);
-        graphic.bookingDrawBitmapData(windowElement[1][2], (int)(position[2] - windowImageWidth / 3.0f), (int)(position[1] + windowImageHeight / 3.0f), 1.0f, (height - (windowImageHeight * 2.0f / 3.0f)) / (windowImageHeight / 3.0f), 0, alpha, true);
-        graphic.bookingDrawBitmapData(windowElement[2][2], (int)(position[2] - windowImageWidth / 3.0f), (int)(position[3] - windowImageHeight / 3.0f), 1.0f, 1.0f, 0, alpha, true);
+        graphic.bookingDrawBitmapData(windowElement[0][2], (int)(position[2] - windowImageWidth / 3.0f), position[1], 1.0f * extendOffset, 1.0f * extendOffset, 0, alpha, true);
+        graphic.bookingDrawBitmapData(windowElement[1][2], (int)(position[2] - windowImageWidth / 3.0f), (int)(position[1] + windowImageHeight / 3.0f), 1.0f * extendOffset, (height - (windowImageHeight * 2.0f / 3.0f)) / (windowImageHeight / 3.0f) * extendOffset, 0, alpha, true);
+        graphic.bookingDrawBitmapData(windowElement[2][2], (int)(position[2] - windowImageWidth / 3.0f), (int)(position[3] - windowImageHeight / 3.0f), 1.0f * extendOffset, 1.0f * extendOffset, 0, alpha, true);
     }
 
 
@@ -103,6 +107,10 @@ public class WindowPlate {
         if (_alpha >= 0 && _alpha <= 255) {
             alpha = _alpha;
         }
+    }
+
+    public void setExtendOffset(float x) {
+        extendOffset = x;
     }
 
     public void release() {

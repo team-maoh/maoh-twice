@@ -249,7 +249,7 @@ public class Graphic {
         setting_matrix.reset();
 
         if(is_upleft == false) {
-            setting_matrix.postTranslate(-draw_bitmap_data.getBitmap().getWidth() / 2, -draw_bitmap_data.getBitmap().getHeight() / 2);
+            setting_matrix.postTranslate(-draw_bitmap_data.getBitmap().getWidth() / 2.0f, -draw_bitmap_data.getBitmap().getHeight() / 2.0f);
         }
 
         setting_matrix.postScale(DENSITY*scale_x, DENSITY*scale_y);

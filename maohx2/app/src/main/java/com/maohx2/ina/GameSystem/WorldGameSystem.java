@@ -48,6 +48,7 @@ import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoSlotSaver;
 import com.maohx2.kmhanko.Saver.GeoPresentSaver;
 import com.maohx2.kmhanko.Talking.TalkAdmin;
+import com.maohx2.kmhanko.WindowPlate.WindowPlate;
 import com.maohx2.kmhanko.WindowPlate.WindowTextPlate;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
@@ -371,8 +372,15 @@ public class WorldGameSystem {
         //attackEffect = effectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, 1);
         */
 
+        /*
+        windowPlate = new WindowPlate(graphic, new int[] {0, 0, 1500, 800});
+        windowPlate.setDrawFlag(true);
+        windowPlate2 = new WindowPlate(graphic, new int[] {1500, 0, 1600, 800});
+        windowPlate2.setDrawFlag(true);
+        */
     }
-
+    //WindowPlate windowPlate;
+    //WindowPlate windowPlate2;
     /* エフェクトテスト用
     int damagedEffect;
     int attackEffect;
@@ -391,6 +399,7 @@ public class WorldGameSystem {
     int position_x = 800;
     int position_y = 400;
     */
+
 
 
     int count = 0;
@@ -764,6 +773,12 @@ public class WorldGameSystem {
         if (worldModeAdmin.getMode() != WORLD_MODE.GEO_MAP && worldModeAdmin.getMode() != WORLD_MODE.TU_GEO) {
             effectAdmin.draw();
         }
+
+
+        //windowPlate.draw();
+        //windowPlate2.draw();
+        //graphic.bookingDrawBitmapData(graphic.searchBitmap("dungeonIconPlate00"),0,0,5.0f,15.0f,0.0f,255,true);
+        //graphic.bookingDrawBitmapData(graphic.searchBitmap("dungeonIconPlate00" +""),0,450,5.0f,15.0f,0.0f,255,true);
 
     }
 
