@@ -455,6 +455,10 @@ public class WorldGameSystem {
             case GEO_MAP_SELECT_INIT:
                 backGround = graphic.searchBitmap("GeoMap");
                 worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT);
+                if(tutorial_flag_data.getIs_tutorial_finished(3) == 0){
+                    worldModeAdmin.setMode(WORLD_MODE.TU_GEO);
+                    tutorial_flag_data.setIs_tutorial_finished(1, 3);//チュートリアルフラグを立てる
+                }
             case GEO_MAP_SELECT:
                 if (!talkAdmin.isTalking()) {
                     dungeonSelectManager.update();
@@ -475,10 +479,6 @@ public class WorldGameSystem {
                 backGround = graphic.searchBitmap("GeoMap");
                 worldModeAdmin.setMode(WORLD_MODE.GEO_MAP);
                 geoSlotAdminManager.start();
-                if(tutorial_flag_data.getIs_tutorial_finished(3) == 0){
-                    worldModeAdmin.setMode(WORLD_MODE.TU_GEO);
-                    tutorial_flag_data.setIs_tutorial_finished(1, 3);//チュートリアルフラグを立てる
-                }
             case GEO_MAP:
                 if (!talkAdmin.isTalking()) {
                     geoSlotAdminManager.update();
