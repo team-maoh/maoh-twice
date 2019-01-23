@@ -100,9 +100,13 @@ public class MapPlateAdmin {
     //
     double hp_ratio;//0.00 ~ 1.00
 
-    PlateGroup<BoxTextPlate> menuGroup;//[ステータス][アイテム][リタイア]
+    //PlateGroup<BoxTextPlate> menuGroup;//[ステータス][アイテム][リタイア]
+    PlateGroup<BoxImageTextPlate> menuGroup;
+
 //    PlateGroup<BoxTextPlate> confirmRetireGroup;//リタイアしますか？[はい][いいえ]
 //    PlateGroup<BoxPlate> hitpoint;
+
+    WindowTextPlate menuWindowPlate[];
 
     EquipmentItemData tmpEquipmentItemData;
     int obtained_item_num;
@@ -146,7 +150,37 @@ public class MapPlateAdmin {
         hp_ratio = 1;
         will_storage_inventry = false;
 
-        menuGroup = new PlateGroup<BoxTextPlate>(new BoxTextPlate[]{new BoxTextPlate(graphic, dungeon_user_interface, new Paint(), UP_MOMENT, MOVE, new int[]{LEFT_COORD, UP_COORD, RIGHT_COORD, UP_COORD + BUTTON_HEIGHT}, "ステータス", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, new Paint(), UP_MOMENT, MOVE, new int[]{LEFT_COORD, UP_COORD + BUTTON_HEIGHT, RIGHT_COORD, UP_COORD + BUTTON_HEIGHT * 2}, "アイテム", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, new Paint(), UP_MOMENT, MOVE, new int[]{LEFT_COORD, UP_COORD + BUTTON_HEIGHT * 2, RIGHT_COORD, UP_COORD + BUTTON_HEIGHT * 3}, "リタイア", text_paint)});
+        //menuGroup = new PlateGroup<BoxTextPlate>(new BoxTextPlate[]{new BoxTextPlate(graphic, dungeon_user_interface, new Paint(), UP_MOMENT, MOVE, new int[]{LEFT_COORD, UP_COORD, RIGHT_COORD, UP_COORD + BUTTON_HEIGHT}, "ステータス", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, new Paint(), UP_MOMENT, MOVE, new int[]{LEFT_COORD, UP_COORD + BUTTON_HEIGHT, RIGHT_COORD, UP_COORD + BUTTON_HEIGHT * 2}, "アイテム", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, new Paint(), UP_MOMENT, MOVE, new int[]{LEFT_COORD, UP_COORD + BUTTON_HEIGHT * 2, RIGHT_COORD, UP_COORD + BUTTON_HEIGHT * 3}, "リタイア", text_paint)});
+        menuGroup = new PlateGroup<BoxImageTextPlate>(
+                new BoxImageTextPlate[]{
+                        new BoxImageTextPlate(
+                                graphic,
+                                dungeon_user_interface,
+                                UP_MOMENT,
+                                MOVE,
+                                new int[]{LEFT_COORD, UP_COORD, RIGHT_COORD, UP_COORD + BUTTON_HEIGHT},
+                                "ステータス",
+                                text_paint
+                        ),
+                        new BoxImageTextPlate(
+                                graphic,
+                                dungeon_user_interface,
+                                UP_MOMENT,
+                                MOVE,
+                                new int[]{LEFT_COORD, UP_COORD + BUTTON_HEIGHT, RIGHT_COORD, UP_COORD + BUTTON_HEIGHT * 2},
+                                "アイテム",
+                                text_paint
+                        ),
+                        new BoxImageTextPlate(
+                                graphic,
+                                dungeon_user_interface,
+                                UP_MOMENT,
+                                MOVE,
+                                new int[]{LEFT_COORD, UP_COORD + BUTTON_HEIGHT * 2, RIGHT_COORD, UP_COORD + BUTTON_HEIGHT * 3},
+                                "リタイア",
+                                text_paint)
+                }
+        );
 
 //本当にダンジョンをリタイアしますか？[はい][いいえ]
 //        confirmRetireGroup = new PlateGroup<BoxTextPlate>(new BoxTextPlate[]{new BoxTextPlate(graphic, dungeon_user_interface, new Paint(), UP_MOMENT, MOVE, new int[]{RETIRE_LEFT, RETIRE_TOP, RETIRE_RIGHT, RETIRE_BOTTOM}, "はい", text_paint)});
