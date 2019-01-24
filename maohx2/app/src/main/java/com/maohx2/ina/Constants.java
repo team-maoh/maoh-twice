@@ -60,6 +60,7 @@ public final class Constants {
             OFF,
             ON
         }
+        public static final DEMO_MODE demoMode = DEMO_MODE.OFF;
     }
 
     public static class SaveDataVersion {
