@@ -430,6 +430,14 @@ public class GeoSlotAdminManager {
     public List<GeoSlotAdmin> getGeoSlotAdmins() {
         return geoSlotAdmins;
     }
+    public GeoSlotAdmin getGeoSlotAdmin(String name) {
+        for (int j = 0; j < geoSlotAdmins.size(); j++) {
+            if (name.equals(getGeoSlotAdminNames().get(j))) {
+                return getGeoSlotAdmins().get(j);
+            }
+        }
+        return null;
+    }
 
     //この関数はManagerが作られたあとであって、かつGeoInventryが読まれた後に一度だけ実行する
     public void setSlot() {
@@ -509,6 +517,37 @@ public class GeoSlotAdminManager {
         mode = _mode;
     }
 
+    public String getSlotNameDemo(int i) {
+        String slotName = "";
+        switch (i) {
+            case 0:
+                slotName = "Forest";
+                break;
+            case 1:
+                slotName = "Lava";
+                break;
+            case 2:
+                slotName = "Sea";
+                break;
+            case 3:
+                slotName = "Chess";
+                break;
+            case 4:
+                slotName = "Swamp";
+                break;
+            case 5:
+                slotName = "Haunted";
+                break;
+            case 6:
+                slotName = "Dragon";
+                break;
+            case 7:
+                slotName = "Maoh";
+                break;
+        }
+        return slotName;
+    }
+
     public DungeonModeManage getDungeonModeManage() {
         return dungeonModeManage;
     }
@@ -516,6 +555,8 @@ public class GeoSlotAdminManager {
     public void setStatusTextBoxFlag(boolean flag) {
         textBoxAdmin.setTextBoxExists(statusTextBoxID,flag);
     }
+
+
 */
 
 }

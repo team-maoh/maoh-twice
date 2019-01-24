@@ -301,6 +301,14 @@ public class Inventry {
         }
     }
 
+    public void deleteItemDataAll() {
+        for (int i = 0; i < INVENTRY_DATA_MAX; i++) {
+            if (inventry_datas[i].getItemData() != null) {
+                inventry_datas[i].delete();
+            }
+        }
+    }
+
     public InventryData searchInventryData(ItemData _itemData) {
         for(int i = 0; i < INVENTRY_DATA_MAX; i++) {
             if(inventry_datas[i].getItemData().equals(_itemData)) {

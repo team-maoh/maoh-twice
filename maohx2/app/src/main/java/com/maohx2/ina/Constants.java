@@ -55,13 +55,6 @@ public final class Constants {
 
     public static final String DEBUG_SAVE_MODE = "ns";
 
-    public static class DEMO {
-        public enum DEMO_MODE {
-            OFF,
-            ON
-        }
-        public static final DEMO_MODE demoMode = DEMO_MODE.OFF;
-    }
 
     public static class SaveDataVersion {
         public static final int EQUIPMENT_INVENTRY = 1;
