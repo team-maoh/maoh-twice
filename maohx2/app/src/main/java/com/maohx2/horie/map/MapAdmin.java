@@ -178,7 +178,7 @@ public class MapAdmin {
         }
 
         //採掘場の場所を格納する配列
-        mine_point = new Point[64];
+        mine_point = new Point[128];
         for (int i = 0; i < mine_point.length; i++) {
             mine_point[i] = new Point(-1, -1);
         }
