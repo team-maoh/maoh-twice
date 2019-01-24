@@ -24,6 +24,7 @@ import com.maohx2.ina.ItemData.ItemData;
 import com.maohx2.ina.UI.BattleUserInterface;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.Arrange.InventryS;
+import com.maohx2.kmhanko.Talking.TalkSaveDataAdmin;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.ina.GlobalData;
 
@@ -103,8 +104,9 @@ public class StartGameSystem {
         textBoxAdmin.updateText(itemExplainTextBoxID);
         */
 
-
-        unitedActicity.getUnitedSurfaceView().getDemoManager().startGameDemo();
+        TalkSaveDataAdmin talkSaveDataAdmin = new TalkSaveDataAdmin(my_database_admin);
+        talkSaveDataAdmin.load();
+        unitedActicity.getUnitedSurfaceView().getDemoManager().startGameDemo(talkSaveDataAdmin);
     }
 
 

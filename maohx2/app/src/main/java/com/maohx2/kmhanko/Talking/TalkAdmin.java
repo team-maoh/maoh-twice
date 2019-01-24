@@ -465,4 +465,8 @@ public class TalkAdmin {
         start(text.get(i),false);
     }
 
+    public TalkSaveDataAdmin getTalkSaveDataAdmin() {
+        return talkSaveDataAdmin;
+    }
+
 }
