@@ -23,6 +23,7 @@ public class DungeonSelectWindowAdmin {
     WindowTextPlate dungeonPlate;
     Paint dungeonTextPaint;
     public enum DUNGEON_PLATE_MODE {
+        ADVANCE,
         ESCAPE,
         MINING,
         RETIRE,
@@ -60,6 +61,9 @@ public class DungeonSelectWindowAdmin {
 
     public void dungeonPlateUpdate() {
         switch (dungeonPlateMode) {
+            case ADVANCE:
+                dungeonPlate.setText("次の階層に進みますか？", dungeonTextPaint, WindowTextPlate.TextPosition.CENTER);
+                break;
             case ESCAPE:
                 dungeonPlate.setText("アイテムを持ってダンジョンを脱出しますか？", dungeonTextPaint, WindowTextPlate.TextPosition.CENTER);
                 break;
@@ -115,6 +119,17 @@ public class DungeonSelectWindowAdmin {
         int buttonID = dungeonSelectButtonGroup.getTouchContentNum();
 
         switch (dungeonPlateMode) {
+            case ADVANCE:
+                if (buttonID == 0 ) { //進む
+                    soundAdmin.play("enter00");
+                    mapPlateAdmin.advanceDungeon();
+                    initUIs();
+                }
+                if (buttonID == 1 ) { //やめる
+                    soundAdmin.play("cancel00");
+                    initUIs();
+                }
+                break;
             case ESCAPE:
                 if (buttonID == 0 ) { //脱出
                     soundAdmin.play("enter00");

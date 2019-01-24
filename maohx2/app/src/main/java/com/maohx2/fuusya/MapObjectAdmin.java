@@ -49,7 +49,8 @@ import static java.lang.Math.subtractExact;
 public class MapObjectAdmin {
 
     int NUM_OF_ENEMY = 2;
-    int NUM_OF_TRAP = 64;//最大値
+    //int NUM_OF_TRAP = 64;//最大値
+    int NUM_OF_TRAP = 0;//最大値
     int NUM_OF_MINE = 5;
     int NUM_OF_BOSS = 1;
     int NUM_OF_ITEM = 64;//最大値
@@ -248,6 +249,14 @@ public class MapObjectAdmin {
         //if (playerStatus.getTutorialInDungeon() == 1 && !dungeonEscapeSelectButtonGroup.getDrawFlag() && map_plate_admin.getDisplayingContent() != 1) {
         //if (playerStatus.getTutorialInDungeon() == 1 && !map_plate_admin.getDungeonSelectWindowAdmin().isActive() && map_plate_admin.getDisplayingContent() == -1) {
 
+        if(map_boss[0].exists() == true){
+            for (int i = 0; i < NUM_OF_ENEMY; i++) {
+                map_enemy[i].setExists(false);
+            }
+        }
+
+        if(map_plate_admin.getDungeonSelectWindowAdmin().isActive() == true){map_player.restMove();}
+
         map_player.nonactiveMenuCheck();
 
         if (playerStatus.getTutorialInDungeon() == 1 && (map_plate_admin.getDisplayingContent() == -1 && !map_plate_admin.getDungeonSelectWindowAdmin().isActive())) {
@@ -310,7 +319,7 @@ public class MapObjectAdmin {
         }
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
-            if (map_enemy[i].exists() == true) {
+            if (map_enemy[i].exists() == true && playerStatus.getTutorialInDungeon() == 1) {
                 map_enemy_bitmap[i].draw(map_enemy[i].getDirOnMap(), map_enemy[i].getNormX(), map_enemy[i].getNormY(),map_enemy[i].getHasFoundPlayer());
             }
         }
@@ -439,7 +448,7 @@ public class MapObjectAdmin {
         backEffectAdmin.clearAllEffect();
 
         spawnMine(mine_point);
-        spawnTrap(debug_trap_name);
+        if(debug_trap_name.length > 0) {spawnTrap(debug_trap_name);}
         spawnBoss(debug_boss_point);
         spawnItem(debug_item_name);
     }
@@ -631,7 +640,7 @@ public class MapObjectAdmin {
 //        map_boss[0].putBoss(map_player.getWorldX() + 10 + (140 + map_player.getStep()) * 10, map_player.getWorldY());
         setBossBitmap("maoh_walk");
         map_boss[0].putBoss(map_player.getWorldX() + 170 + (150 + 25) * 10, map_player.getWorldY());
-
+        for (int i = 0; i < NUM_OF_ENEMY; i++) { map_enemy[i].setExists(false); }
     }
 
     public void setBossBitmap(String name) {
@@ -663,7 +672,7 @@ public class MapObjectAdmin {
     }
 
     private String randomTrapName() {
-        double random_double = 8 * random.nextDouble();
+        double random_double = 7 * random.nextDouble();
         int kind_of_trap = (int) (random_double);
         switch (kind_of_trap) {
             case 0:
@@ -674,11 +683,11 @@ public class MapObjectAdmin {
                 return "cannot_walk";
             case 3:
                 return "being_drunk";
+            //case 4:
+            //    return "being_teleported";
             case 4:
-                return "being_teleported";
-            case 5:
                 return "cannot_exit_room";
-            case 6:
+            case 5:
                 return "found_by_enemy";
             default:
                 return "being_blown_away";
@@ -688,6 +697,10 @@ public class MapObjectAdmin {
 
     public void setMapInventryAdmin(MapInventryAdmin _map_inventry_admin) {
         map_inventry_admin = _map_inventry_admin;
+    }
+
+    public void advanceDungeon() {
+        map_player.advanceDungeon();
     }
 
     public void escapeDungeon() {

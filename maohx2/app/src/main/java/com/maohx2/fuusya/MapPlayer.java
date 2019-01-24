@@ -76,10 +76,12 @@ public class MapPlayer extends MapUnit {
     boolean player_touch_refresh;//Playerを二度タッチしたら二度目でMenuが消える
 
     boolean gateSkipFlag = false; //一度ゲートを踏んだら、一度ゲートから出るかではゲートを起動しない、のためのフラグ
+    boolean stepSkipFlag = false;
 
     int menu_count;
 
     int dungeonEnterEncountWaitTime;//階層移動後するにはエンカウントしないための変数
+    //static final int ENCOUNT_START_TIME = 30 * 3;
     static final int ENCOUNT_START_TIME = 30 * 3;
     Paint paint;
 
@@ -165,14 +167,18 @@ public class MapPlayer extends MapUnit {
                 //List関係の処理
                 if (touch_state == TouchState.UP) {
                     touch_mode = false;
-                    if (map_plate_admin.getDisplayingContent() == -1) {
-                        //プレイヤーをタッチするとメニューを表示
-                        if (move_mode == false && isWithinReach(touch_w_x, touch_w_y, 80) == true) {
+                    //プレイヤーをタッチするとメニューを表示
+                    if (map_plate_admin.getDisplayingContent() == -1 && isWithinReach(touch_w_x, touch_w_y, 80) == true) {
+                        if (move_mode == false && menu_count > 5) {
                             map_plate_admin.setDisplayingContent(0);
                             sound_admin.play("enter00");
+                            touch_down_n_x = touch_w_x;
+                            touch_down_n_y = touch_w_y;
                         }
-                    } else if (map_plate_admin.getDisplayingContent() == 0 || map_plate_admin.getDisplayingContent() == 2 || map_plate_admin.getDisplayingContent() == 3) {
+                    } else if (map_plate_admin.getDisplayingContent() == 0  || map_plate_admin.getDisplayingContent() == 1 || map_plate_admin.getDisplayingContent() == 2 || map_plate_admin.getDisplayingContent() == 3) {
                         map_plate_admin.setDisplayingContent(-1);
+                        touch_down_n_x = touch_w_x;
+                        touch_down_n_y = touch_w_y;
                     }
                 }
 
@@ -183,11 +189,13 @@ public class MapPlayer extends MapUnit {
                         touch_mode = true;
                         touch_down_n_x = touch_n_x;
                         touch_down_n_y = touch_n_y;
+                        dst_w_x = camera.convertToWorldCoordinateX(800);
+                        dst_w_y = camera.convertToWorldCoordinateX(450);
                     }
                 }
 
                 if(touch_mode == true &&(touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE)){
-                    if(abs(touch_n_x - touch_down_n_x) + abs(touch_n_y - touch_down_n_y) > 30) {
+                    if(abs(touch_n_x - touch_down_n_x) + abs(touch_n_y - touch_down_n_y) > 100) {
                         move_mode = true;
                         dst_w_x = camera.convertToWorldCoordinateX((int) (800 + touch_n_x - touch_down_n_x));
                         dst_w_y = camera.convertToWorldCoordinateY((int) (450 + touch_n_y - touch_down_n_y));
@@ -261,7 +269,7 @@ public class MapPlayer extends MapUnit {
                 }
             }
 
-        } else if (is_moving == true) {
+        } else if (move_mode == true) {
 
             //Playerアイコンの向きを更新する
             updateDirOnMap(dst_w_x, dst_w_y);
@@ -341,9 +349,20 @@ public class MapPlayer extends MapUnit {
 
         //System.out.println("x_y = " + (int)(w_x/map_admin.getMagnification()) + " / " + (int)(w_y/map_admin.getMagnification()));
         //階段移動
+        /*
         if (map_admin.isStairs((int)(w_x/map_admin.getMagnification()), (int)(w_y/map_admin.getMagnification()))) {
             sound_admin.play("step00");
             map_admin.goNextFloorPrepare();
+        }
+        */
+
+        if (map_admin.isStairs((int)(w_x/map_admin.getMagnification()), (int)(w_y/map_admin.getMagnification()))) {
+            if (stepSkipFlag == false) {
+                map_plate_admin.advanceDungeonWindowActivate();
+                stepSkipFlag = true;
+            }
+        }else{
+            stepSkipFlag = false;
         }
 
         //ゲート脱出
@@ -356,6 +375,16 @@ public class MapPlayer extends MapUnit {
             gateSkipFlag = false;
         }
 
+    }
+
+    public void advanceDungeon(){
+        sound_admin.play("step00");
+        map_admin.goNextFloorPrepare();
+    }
+
+    public void restMove(){
+        touch_mode = false;
+        move_mode = false;
     }
 
     public void draw(){

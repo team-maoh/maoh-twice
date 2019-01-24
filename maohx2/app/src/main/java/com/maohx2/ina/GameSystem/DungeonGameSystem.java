@@ -55,6 +55,8 @@ import com.maohx2.ina.GlobalData;
 
 import java.util.List;
 
+import static com.maohx2.ina.Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE;
+
 
 /**
  * Created by ina on 2017/09/05.
@@ -398,6 +400,9 @@ public class DungeonGameSystem {
                         backGround = graphic.searchBitmap("firstBackground");
                     }
                     map_admin.goNextFloor();
+                    map_object_admin.update();
+                    map_plate_admin.update();
+                    playerStatusViewer.update();
                 }
                 break;
             case MAP_INIT:
@@ -418,7 +423,7 @@ public class DungeonGameSystem {
                 }
                 break;
             case OPENING_BATTLE_INIT:
-                dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE);
+                dungeonModeManage.setMode(BUTTLE);
                 backGround = graphic.searchBitmap("firstBackground");
                 musicAdmin.loadMusic("boss00",true);
                 battle_user_interface.update();
@@ -427,7 +432,7 @@ public class DungeonGameSystem {
 
             case BUTTLE_INIT:
                 if(changeMovie.update(true) == true) {
-                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE);
+                    dungeonModeManage.setMode(BUTTLE);
                     backGround = graphic.searchBitmap("firstBackground");
                     musicAdmin.loadMusic("battle00", true);
                 }
@@ -480,6 +485,7 @@ public class DungeonGameSystem {
 
             case EQUIP_EXPEND_INIT:
                 initBackPlate();
+                battle_unit_admin.reset(BattleUnitAdmin.MODE.BATTLE);
                 palette_admin.setPalletPosition(0, 1400, 450);
                 palette_admin.setPalletPosition(1, 200, 450);
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.EQUIP_EXPEND);
@@ -671,8 +677,8 @@ public class DungeonGameSystem {
 
         }
 
-        talkAdmin.draw();
-        text_box_admin.draw();
+            talkAdmin.draw();
+            text_box_admin.draw();
 
         if (resetBossImage) {
             resetBossImage = false;

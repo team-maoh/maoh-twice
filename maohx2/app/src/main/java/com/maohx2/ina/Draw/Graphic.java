@@ -278,6 +278,11 @@ public class Graphic {
     //Rectを使った描画予約
     public void bookingDrawBitmapData(BitmapData draw_bitmap_data, Point position, float scale_x, float scale_y, boolean is_upleft){
 
+        if (draw_bitmap_data == null) {
+            System.out.println("bookingDrawBitmapData: draw_bitmap_data == null");
+            return;
+        }
+
         setting_point1.set(position.x, position.y);
         transrateNormalizedPositionToDispPosition(setting_point1);
 

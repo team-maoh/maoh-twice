@@ -44,6 +44,7 @@ public class UserInterface {
     PaletteElement palette_element;
     boolean ui_palette_draw_falag = true;
     boolean up_check = true;
+    boolean down_check = false;
 
     public UserInterface(GlobalConstants global_constants, Graphic _graphic){
         DISP_X = global_constants.DISP_X;
@@ -62,12 +63,14 @@ public class UserInterface {
         touch_y = 0;
         touch_state = TouchState.AWAY;
         up_check = true;
+        down_check = false;
     }
 
 
     public void touchReset() {
         touch_state = TouchState.AWAY;
         up_check = true;
+        down_check = false;
     }
 
     public void updateTouchState(double _touch_x, double _touch_y, TouchState _touch_state) {
@@ -80,6 +83,7 @@ public class UserInterface {
 
         //DOWN,UP判定を1フレームのみにするためのもの
         if (_touch_state == TouchState.DOWN) {
+            down_check = true;
             if (touch_state == TouchState.AWAY) {
                 touch_state = TouchState.DOWN;
                 up_check = false;
@@ -90,22 +94,29 @@ public class UserInterface {
 
 
         } else if (_touch_state == TouchState.MOVE) {
-            if (touch_state == TouchState.DOWN_MOVE) {
-                touch_state = TouchState.MOVE;
-                up_check = false;
-            }else if(touch_state == TouchState.UP){
-                touch_state = TouchState.MOVE;
-            }else if (touch_state == TouchState.AWAY) {
-                touch_state = TouchState.MOVE;
+            if(down_check == true) {
+                if (touch_state == TouchState.DOWN_MOVE) {
+                    touch_state = TouchState.MOVE;
+                    up_check = false;
+                } else if (touch_state == TouchState.UP) {
+                    touch_state = TouchState.MOVE;
+                } else if (touch_state == TouchState.AWAY) {
+                    touch_state = TouchState.MOVE;
+                    up_check = false;
+                }
+            }else{
+                touch_state = TouchState.DOWN;
+                down_check = true;
                 up_check = false;
             }
-
         } else if (_touch_state == TouchState.UP) {
             if (((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) && up_check == false) {
                 touch_state = TouchState.UP;
+                down_check = false;
                 up_check = true;
             } else {
                 touch_state = TouchState.AWAY;
+                down_check = false;
                 up_check = true;
             }
         }

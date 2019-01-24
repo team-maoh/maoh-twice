@@ -324,7 +324,8 @@ public class UnitedSurfaceView extends BaseSurfaceView {
     private void startGameLoop() {
         userInterface.updateTouchState(touch_x, touch_y, touch_state);
 
-        if(touch_state == Constants.Touch.TouchState.DOWN && touchWaitcount > 15){
+        //if(touch_state == Constants.Touch.TouchState.DOWN && touchWaitcount > 15){
+        if((touch_state == Constants.Touch.TouchState.DOWN || touch_state == Constants.Touch.TouchState.DOWN_MOVE || touch_state == Constants.Touch.TouchState.MOVE) && touchWaitcount > 15){
             if (downCount == 0) {
                 soundAdmin.play("opening02");
             }
