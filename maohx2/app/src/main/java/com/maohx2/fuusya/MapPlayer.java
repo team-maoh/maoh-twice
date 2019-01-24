@@ -410,6 +410,8 @@ public class MapPlayer extends MapUnit {
     }
 
     public void setEncountSteps(int x) {
+        touch_mode = false;
+        move_mode = false;
         encount_steps = x;
     }
 
@@ -450,6 +452,8 @@ public class MapPlayer extends MapUnit {
         }
 
     }
+
+
 
     public void nonactiveMenuCheck() {
         touch_state = dungeon_user_interface.getTouchState();

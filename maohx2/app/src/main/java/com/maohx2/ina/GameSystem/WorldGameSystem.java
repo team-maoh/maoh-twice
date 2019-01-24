@@ -316,6 +316,11 @@ public class WorldGameSystem {
 
 
         unitedActivity.getUnitedSurfaceView().getDemoManager().worldGameDemo(
+                graphic,
+                equipmentInventry,
+                palette_admin,
+                expendItemInventry,
+                itemDataAdminManager,
                 playerStatus,
                 geoInventry,
                 geoSlotAdminManager,
@@ -328,15 +333,16 @@ public class WorldGameSystem {
         talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される//堀江デバッグのためにコメントアウト
 
 
+
         /*
         battleUnitDataAdmin = new BattleUnitDataAdmin(databaseAdmin, graphic);
-        battleUnitDataAdmin.loadBattleUnitData(Constants.DungeonKind.DUNGEON_KIND.FOREST);//敵読み込み
+        battleUnitDataAdmin.loadBattleUnitData(Constants.DungeonKind.DUNGEON_KIND.SWAMP);//敵読み込み
 
         //ブキ生成 デバッグよう
         BattleDungeonUnitData battleDungeonUnitData = new BattleDungeonUnitData();
         battleDungeonUnitData.setName(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getName());
-        battleDungeonUnitData.setStatus(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getStatus(0));
-        battleDungeonUnitData.setBonusStatus(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getBonusStatus(0));
+        battleDungeonUnitData.setStatus(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getStatus(1,0));
+        battleDungeonUnitData.setBonusStatus(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getBonusStatus(1,0));
         battleDungeonUnitData.setBitmapData(battleUnitDataAdmin.getBattleBaseUnitData().get(0).getBitmapData());
         EquipmentItemBaseDataAdmin equipmentItemBaseDataAdmin = new EquipmentItemBaseDataAdmin(graphic, databaseAdmin);
         List<EquipmentItemBaseData> tempEquipmentItemBaseDatas = equipmentItemBaseDataAdmin.getItemDatas();
@@ -367,6 +373,7 @@ public class WorldGameSystem {
                 )
         );//kokomade
         */
+
 
         /* エフェクトテスト用
         width = 120;

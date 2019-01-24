@@ -112,6 +112,14 @@ public class PaletteAdmin {
     }
     */
 
+    public void setDebugEquipment(ItemData _itemData, int position){
+        palettes[0].setDebugEquipment(_itemData, position);
+    }
+
+    public void setDebugExpend(ItemData _itemData, int position){
+        palettes[1].setDebugExpend(_itemData, position);
+    }
+
     //by kmhanko
     public void setPalletPosition(int id, int x, int y) {
         palettes[id].setPosition(x, y);

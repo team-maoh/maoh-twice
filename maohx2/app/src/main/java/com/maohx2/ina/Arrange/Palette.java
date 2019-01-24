@@ -230,8 +230,8 @@ public class Palette {
                     ItemData a = palette_center.getItemData();
                     //palette_center.setItemData(battle_user_interface.getPaletteElement().getItemData());
 
-                    palette_center.setItemData(battle_user_interface.getPaletteElement().getItemData(),battle_user_interface.getPaletteElement().getElementNum(), false);
-                    battle_user_interface.getPaletteElement().setItemData(a, true);
+                    palette_center.setItemData(battle_user_interface.getPaletteElement().getItemData(),battle_user_interface.getPaletteElement().getElementNum(), true);
+                    battle_user_interface.getPaletteElement().setItemData(a, false);
                     battle_user_interface.setPaletteElement(null);
                     System.out.println("remove_ui_erement");
                 }
@@ -243,7 +243,7 @@ public class Palette {
                             ItemData a = palette_elements[i].getItemData();
                             //palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData());
                             palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData(), battle_user_interface.getPaletteElement().getElementNum(),true);
-                            battle_user_interface.getPaletteElement().setItemData(a, true);
+                            battle_user_interface.getPaletteElement().setItemData(a, false);
                             battle_user_interface.setPaletteElement(null);
                             System.out.println("remove_ui_erement");
                         }
@@ -255,7 +255,7 @@ public class Palette {
                             ItemData a = palette_elements[i].getItemData();
                             //palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData());
                             palette_elements[i].setItemData(battle_user_interface.getPaletteElement().getItemData(), battle_user_interface.getPaletteElement().getElementNum(), true);
-                            battle_user_interface.getPaletteElement().setItemData(a, true);
+                            battle_user_interface.getPaletteElement().setItemData(a, false);
                             battle_user_interface.setPaletteElement(null);
                             System.out.println("remove_ui_erement");
                         }
@@ -289,10 +289,16 @@ public class Palette {
                 battle_user_interface.setInventryData(null);
             }
         }
-
     }
 
 
+    public void setDebugEquipment(ItemData itemData, int position){
+        palette_elements[position].setItemData(itemData, 0, false);
+    }
+
+    public void setDebugExpend(ItemData itemData, int position){
+        palette_elements[position].setItemData(itemData, 0, false);
+    }
 
     public void draw() {
 
