@@ -1371,6 +1371,7 @@ public class BattleUnitAdmin {
         int buttonID = resultButtonGroup.getTouchContentNum();
         if (buttonID == 0) { //OK
             //戦闘画面終了する
+            soundAdmin.play("enter00");
             battleEnd();
         }
     }

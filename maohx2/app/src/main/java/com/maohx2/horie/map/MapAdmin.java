@@ -178,8 +178,8 @@ public class MapAdmin {
         }
 
         //採掘場の場所を格納する配列
-        mine_point = new Point[5];
-        for (int i = 0; i < 5; i++) {
+        mine_point = new Point[64];
+        for (int i = 0; i < mine_point.length; i++) {
             mine_point[i] = new Point(-1, -1);
         }
 
@@ -773,6 +773,7 @@ public class MapAdmin {
             room_point.set(point.x / magnification, point.y / magnification);
             map_data[room_point.x][room_point.y].setMineFlag(true);
             mine_point[i].set(room_point.x, room_point.y);
+            System.out.println("Mine" + room_point.x +","+ room_point.y);
         }
     }
 

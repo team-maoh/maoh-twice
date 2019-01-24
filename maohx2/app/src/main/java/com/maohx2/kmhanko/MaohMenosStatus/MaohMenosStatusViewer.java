@@ -21,8 +21,8 @@ import com.maohx2.kmhanko.PlayerStatus.StatusViewer;
 public class MaohMenosStatusViewer extends StatusViewer {
     static final int TEXT_NUM = 3;
 
-    static public final float EXPRESS_RATE = 222.22f;
-    static final float EXPRESS_RATE2 = 222.2f;
+    static public final float EXPRESS_RATE = 1.0f;
+    static final float EXPRESS_RATE2 = 1.0f;
 
     //毎回フレームの監視用
     float hp = 1;

@@ -644,7 +644,9 @@ public class WorldGameSystem {
 */
             case CREDIT:
                 backPlateGroup.update();
-                if(world_user_interface.getTouchState() == Constants.Touch.TouchState.UP){
+                if(world_user_interface.getTouchState() == Constants.Touch.TouchState.UP &&
+                        (world_user_interface.getTouchX() < 1420 || world_user_interface.getTouchY() > 180)
+                        ){
                     credit_num = 3 - credit_num;
                     soundAdmin.play("enter00");
                 }
