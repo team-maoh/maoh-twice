@@ -1,5 +1,7 @@
 package com.maohx2.ina.Activity;
 
+import com.maohx2.horie.Tutorial.TutorialFlagData;
+import com.maohx2.horie.Tutorial.TutorialFlagSaver;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
@@ -73,11 +75,13 @@ public class DemoManager {
         openingDemo(talkSaveDataAdmin);
     }
 
-    public void worldGameDemo(Graphic graphic, InventryS equipmentInventry, PaletteAdmin paletteAdmin, InventryS expendItemInventry, ItemDataAdminManager itemDataAdminManager, PlayerStatus playerStatus, InventryS geoInventry, GeoSlotAdminManager geoSlotAdminManager, MapStatus mapStatus, MapStatusSaver mapStatusSaver, TalkSaveDataAdmin talkSaveDataAdmin) {
+    public void worldGameDemo(Graphic graphic, InventryS equipmentInventry, PaletteAdmin paletteAdmin, InventryS expendItemInventry, ItemDataAdminManager itemDataAdminManager, PlayerStatus playerStatus, InventryS geoInventry, GeoSlotAdminManager geoSlotAdminManager, MapStatus mapStatus, MapStatusSaver mapStatusSaver, TalkSaveDataAdmin talkSaveDataAdmin, TutorialFlagData tutorialFlagData, TutorialFlagSaver tutorialFlagSaver) {
         if (worldGameDemoEndFlag) {
             return;
         }
         worldGameDemoEndFlag = true;
+
+        //武器・アイテムここから
 
         EquipmentItemData tmpEquipmentItemData = new EquipmentItemData();
 
@@ -192,8 +196,6 @@ public class DemoManager {
 
         equipmentInventry.save();
 
-
-
         ExpendItemData tempExpendItemData = ((ExpendItemData)(itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName("ポーション")));
         paletteAdmin.setDebugExpend(tempExpendItemData, 0);
         paletteAdmin.setDebugExpend(tempExpendItemData, 3);
@@ -216,11 +218,22 @@ public class DemoManager {
             expendItemInventry.addItemData(itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName("エクスポーション"));
         }
 
+        //武器・アイテムここまで
+
+        //ジオ関係
         geoInventryDemo(geoInventry, geoSlotAdminManager);//playerStatusDemoより先に呼ぶ
+
+        //プレイヤーステータス関係
         playerStatusDemo(playerStatus);
+
+        //ダンジョンクリア関係
         mapClearDemo(mapStatus, mapStatusSaver);
+
+        //会話イベント関係
         talkDemo(talkSaveDataAdmin, playerStatus, mapStatus);//playerStatusDemo, mapClearDemoの後に呼ぶこと
 
+        //チュートリアル関係
+        tutorialDemo(tutorialFlagData, tutorialFlagSaver);
     }
 
     public void dungeonGameDemo() {
@@ -230,6 +243,15 @@ public class DemoManager {
         dungeonGameDemoEndFlag = true;
     }
 
+    //チュートリアル管理
+    private void tutorialDemo(TutorialFlagData tutorialFlagData, TutorialFlagSaver tutorialFlagSaver) {
+        //1でチュートリアルを表示しない
+        tutorialFlagData.setIs_tutorial_finished(1, 0);//装備画面
+        tutorialFlagData.setIs_tutorial_finished(1, 1);//ショップ購入
+        tutorialFlagData.setIs_tutorial_finished(1, 2);//ショップ売却
+        tutorialFlagData.setIs_tutorial_finished(1, 3);//ジオ画面
+        tutorialFlagSaver.save();
+    }
 
     // プレイヤーステータス・魔王勝利回数・ダンジョンループクリア回数など
     private void playerStatusDemo(PlayerStatus playerStatus) {

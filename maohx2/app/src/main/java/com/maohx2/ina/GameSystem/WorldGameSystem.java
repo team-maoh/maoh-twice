@@ -326,7 +326,9 @@ public class WorldGameSystem {
                 geoSlotAdminManager,
                 map_status,
                 map_status_saver,
-                talkAdmin.getTalkSaveDataAdmin()
+                talkAdmin.getTalkSaveDataAdmin(),
+                tutorial_flag_data,
+                tutorial_flag_saver
         );
 
         //OP判定。まだOPを流していないならOP会話イベントを発動する。
