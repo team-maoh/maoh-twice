@@ -195,7 +195,7 @@ public class GeoSlotAdminManager {
                                     calcStatus();
                                     saveGeoInventry();
                                     saveGeoSlot();
-                                    worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT_INIT);
+                                    worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.GEO_MAP_SELECT_INIT);
                                 }
                                 if (getMode() == GeoSlotAdminManager.MODE.DUNGEON) {
                                     getDungeonModeManage().setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);

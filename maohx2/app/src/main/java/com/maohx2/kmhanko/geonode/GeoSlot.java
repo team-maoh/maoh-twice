@@ -281,9 +281,10 @@ public class GeoSlot extends CircleImagePlate {
         if (flag == false) {
             geoSlotLineColor = 4;
             return;
+        } else {
+            geoSlotLineColor = MyAvail.maxFromIntArrays(params);
+            return;
         }
-
-        geoSlotLineColor = MyAvail.maxFromIntArrays(params);
     }
 
     //GeoSlotの計算を行うメソッド。再帰ライクの終着点に該当する。
@@ -295,7 +296,7 @@ public class GeoSlot extends CircleImagePlate {
     }
 
     List<Integer> geoSlotLineEffect = new ArrayList<Integer>();
-    private int geoSlotLineColor;//0 = HP 1 = Attack 2 = defence 3 = Luck 4 = none;
+    private int geoSlotLineColor = 4;//0 = HP 1 = Attack 2 = defence 3 = Luck 4 = none;
 
     public void clearGeoSlotLineEffect() {
         for (int i = 0; i < geoSlotLineEffect.size(); i++) {
@@ -374,6 +375,7 @@ public class GeoSlot extends CircleImagePlate {
                             break;
 
                     }
+
                     if (!children_slot.get(i).isInGeoObject()) {
                         effectImageName = "geoEffectGray";
                     }

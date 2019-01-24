@@ -226,7 +226,7 @@ public class DungeonSelectManager {
                 break;
             case 2:
                 if (DemoManager.getDemoMode()) {
-                    talkAdmin.start("AfterMaoh002forDEMO", true);
+                    talkAdmin.start("AfterMaoh002forDEMO", false);
                 }
                 break;
             case 3:

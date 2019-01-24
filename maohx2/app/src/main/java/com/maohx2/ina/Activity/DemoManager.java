@@ -287,28 +287,28 @@ public class DemoManager {
     private void geoInventryDemo(InventryS geoInventry, GeoSlotAdminManager geoSlotAdminManager) {
         GeoObjectData tempGeoObjectData;
         int[][] normalGeo = new int[][] {
-                {5, 10, 15, 20},
-                {5, 10, 15, 20},
-                {5, 10, 15, 20}
+                {5, 8, 10, 12, 15, 18, 20, 25, 30, 35},
+                {5, 8, 10, 12, 15, 18, 20, 25, 30, 35},
+                {5, 8, 10, 12, 15, 18, 20, 25, 30, 35},
         };
         double[][] rateGeo = new double[][] {
-                {1.05, 1.10, 1.15, 1.20},
-                {1.05, 1.10, 1.15, 1.20},
-                {1.05, 1.10, 1.15, 1.20},
+                {1.02, 1.04, 1.06, 1.08, 1.10, 1.15},
+                {1.02, 1.04, 1.06, 1.08, 1.10, 1.15},
+                {1.02, 1.04, 1.06, 1.08, 1.10, 1.15},
         };
 
         //{0, 1} = ForestのID1番にジオをセットするという意味
         //{X, 0} = どこにもセットしないの意味。第一要素の数字は無視される
         int[][][] normalGeoSlot = new int[][][] {
-                {{0, 1}, {0, 4}, {0, 0}, {0, 0}},
-                {{1, 2}, {0, 8}, {0, 5}, {0, 6}},
-                {{1, 1}, {0, 0}, {0, 0}, {0, 0}},
+                {{4, 10}, {4, 11},{0, 1}, {0, 4}, {0, 5}, {0, 6} , {0, 0}, {0, 0}, {0, 0}, {0, 0}},
+                {{1, 2}, {0, 8}, {4, 1}, {4, 4}, {4, 7}, {4, 8}, {0, 0}, {0, 0}, {0, 0}, {0, 0}},
+                {{1, 1}, {4, 3}, {4, 5}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}},
         };
 
         int[][][] rateGeoSlot = new int[][][] {
-                {{1, 1}, {0, 0}, {0, 0}, {0, 0}},
-                {{0, 0}, {0, 7}, {0, 0}, {0, 0}},
-                {{0, 0}, {0, 0}, {0, 0}, {0, 0}},
+                {{0, 0}, {0, 0}, {4, 9}, {0, 0}, {0, 0}, {0, 0}},
+                {{1, 1}, {4, 2}, {4, 6}, {0, 7}, {0, 0}, {0, 0}},
+                {{0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}},
         };
 
         geoInventry.deleteItemDataAll();
@@ -345,7 +345,7 @@ public class DemoManager {
             }
         }
 
-        for (int i = 0; i < normalGeo.length; i++) {
+        for (int i = 0; i < rateGeo.length; i++) {
             switch (i) {
                 case(0):
                     kindRate = Constants.Item.GEO_PARAM_KIND_RATE.HP_RATE;
@@ -358,7 +358,7 @@ public class DemoManager {
                     break;
             }
 
-            for (int j = 0; j < normalGeo[i].length; j++) {
+            for (int j = 0; j < rateGeo[i].length; j++) {
                 tempGeoObjectData = GeoObjectDataCreater.getGeoObjectData(rateGeo[i][j], kindRate, false);
 
                 if (rateGeoSlot[i][j][1] > 0) {
@@ -377,9 +377,9 @@ public class DemoManager {
         int[][][] geoSlotEvent = new int[][][] {
                 {{2, 1}, {8, 1}, {11, 0}, {12, 0}},
                 {{3, 1}, {4, 1}, {5, 1}, {8, 0}, {11, 0}},
-                {{4, 1}, {6, 1}, {8, 1}, {10, 0}, {12, 0}},
+                {{4, 1}, {6, 1}, {8, 1}, {10, 1}, {12, 1}},
                 {{4, 1}, {6, 1}, {8, 0}, {10, 0}},
-                {{2, 1}, {4, 1}, {6, 1}, {9, 0}, {11, 0}},
+                {{2, 1}, {4, 1}, {6, 1}, {9, 1}, {11, 1}},
                 {{3, 1}, {5, 1}, {7, 1}, {9, 0}, {11, 0}, {14, 0}},
                 {{4, 1}, {7, 1}, {8, 1}, {9, 1}, {10, 1}, {11, 0}, {12, 0}, {13, 0}, {14, 0}},
                 {{2, 1}, {3, 1}, {4, 1}, {5, 0}, {6, 0}, {7, 0},
@@ -460,6 +460,8 @@ public class DemoManager {
 
     //会話イベントのフラグ
     private void talkDemo(TalkSaveDataAdmin talkSaveDataAdmin, PlayerStatus playerStatus, MapStatus mapStatus) {
+        talkSaveDataAdmin.setTalkFlagByName("AfterMaoh002forDEMO", false);//falseで実行する
+
         //多くはプレイヤーステータスなどで設定した数値によって自動的に決定される
         if (playerStatus.getMaohWinCount() >= 1) {
             talkSaveDataAdmin.setTalkFlagByName("AfterMaoh001", true);//falseで実行する
