@@ -114,6 +114,7 @@ public class MapPlateAdmin {
     UnitedActivity unitedActivity;
 
     int NUM_OF_TUTORIAL_BITMAP = 3;
+    int tutorial_count = 0;
     int i_of_tutorial_bitmap;
     String tutorial_name = "スライド";
 
@@ -163,6 +164,7 @@ public class MapPlateAdmin {
 //                new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_LEFT, hp_top + HP_HEIGHT, HP_BG_RIGHT, HP_BG_BOTTOM}, " ", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_LEFT, hp_top, HP_LEFT, hp_top + HP_HEIGHT}, " ", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_RIGHT, hp_top, HP_RIGHT, hp_top + HP_HEIGHT}, " ", text_paint)});
 
         i_of_tutorial_bitmap = 0;
+        tutorial_count = 0;
 
         max_hp = playerStatus.getHP();
         blue_paint.setColor(Color.BLUE);
@@ -349,8 +351,18 @@ public class MapPlateAdmin {
         dungeonSelectWindowAdmin.activate();
     }
 
+    public void advanceDungeonWindowActivate() {
+        dungeonSelectWindowAdmin.setDungeonPlateMode(DungeonSelectWindowAdmin.DUNGEON_PLATE_MODE.ADVANCE);
+        dungeonSelectWindowAdmin.dungeonPlateUpdate();
+        dungeonSelectWindowAdmin.activate();
+    }
+
     public void escapeDungeon() {
         mapObjectAdmin.escapeDungeon();
+    }
+
+    public void advanceDungeon(){
+        mapObjectAdmin.advanceDungeon();
     }
 
     public void gotoMiningWindowActivate() {
@@ -481,7 +493,7 @@ public class MapPlateAdmin {
             }
 
             if (tutorial_bitmap != null && i_of_tutorial_bitmap <= NUM_OF_TUTORIAL_BITMAP) {
-                graphic.bookingDrawBitmapData(tutorial_bitmap, 0, 0, 1, 1, 0, 255, true);
+                graphic.bookingDrawBitmapData(tutorial_bitmap, 0, 0, 0.983f, 0.983f, 0, 255, true);
             }
             else if (tutorial_bitmap != null && (i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+1 || i_of_tutorial_bitmap == NUM_OF_TUTORIAL_BITMAP+2)) {
                 graphic.bookingDrawBitmapData(tutorial_bitmap, 0, -1, 0.983f, 0.983f, 0, 255, true);
@@ -492,14 +504,16 @@ public class MapPlateAdmin {
 
             Constants.Touch.TouchState touch_state = dungeon_user_interface.getTouchState();
 
-            if (touch_state == Constants.Touch.TouchState.UP) {
+            if (touch_state == Constants.Touch.TouchState.UP && tutorial_count > 5) {
                 i_of_tutorial_bitmap++;
+                tutorial_count = 0;
 
                 if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+4){
                     playerStatus.setTutorialInDungeon(1);
                     playerStatusSaver.save();
                 }
             }
+            tutorial_count++;
         }
     }
 
