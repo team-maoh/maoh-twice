@@ -315,6 +315,8 @@ public class WorldGameSystem {
         initTutorialButton();
 
 
+        unitedActivity.getUnitedSurfaceView().getDemoManager().worldGameDemo();
+
         //OP判定。まだOPを流していないならOP会話イベントを発動する。
         talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される//堀江デバッグのためにコメントアウト
 

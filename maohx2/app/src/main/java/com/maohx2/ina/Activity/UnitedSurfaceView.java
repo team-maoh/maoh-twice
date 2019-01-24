@@ -41,7 +41,7 @@ public class UnitedSurfaceView extends BaseSurfaceView {
 
     GameModeChanger gameModeChanger;
 
-
+    DemoManager demoManager;
 
     enum GAME_SYSTEM_MODE {
         START,
@@ -128,6 +128,8 @@ public class UnitedSurfaceView extends BaseSurfaceView {
         //新規にここに移した事項
         my_database_admin.addMyDatabase("StartDB", "LocalStartImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("StartDB"), "Start");
+
+        demoManager = new DemoManager();
 
         //Start画面への準備へ
         runStartGameSystem();
@@ -430,6 +432,10 @@ public class UnitedSurfaceView extends BaseSurfaceView {
 
     public void toDungeonGameMode(Constants.DungeonKind.DUNGEON_KIND _dungeon_kind) {
         gameModeChanger.toDungeonGameMode(_dungeon_kind);
+    }
+
+    public DemoManager getDemoManager() {
+        return demoManager;
     }
 
     public void toChangeGameMode() {

@@ -6,10 +6,36 @@ package com.maohx2.ina.Activity;
 
 public class DemoManager {
 
+    boolean startGameDemoEndFlag = false;
+    boolean worldGameDemoEndFlag = false;
+    boolean dungeonGameDemoEndFlag = false;
+
     public DemoManager() {
     }
 
+    public void startGameDemo() {
+        if (startGameDemoEndFlag) {
+            return;
+        }
+        startGameDemoEndFlag = true;
+    }
+    public void worldGameDemo() {
+        if (worldGameDemoEndFlag) {
+            return;
+        }
+        worldGameDemoEndFlag = true;
+    }
+    public void dungeonGameDemo() {
+        if (dungeonGameDemoEndFlag) {
+            return;
+        }
+        dungeonGameDemoEndFlag = true;
+    }
+
+
     // プレイヤーステータス 書き換え
+    public void playerStatusDemo() {
+    }
 
     // 所持アイテム(消費)
 

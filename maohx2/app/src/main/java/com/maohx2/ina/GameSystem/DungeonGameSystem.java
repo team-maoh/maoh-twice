@@ -370,6 +370,10 @@ public class DungeonGameSystem {
 
         //
         //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP_INIT);
+
+
+        unitedActivity.getUnitedSurfaceView().getDemoManager().dungeonGameDemo();
+
     }
 
     public void saveMapSaveData() {

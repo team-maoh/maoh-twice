@@ -103,6 +103,8 @@ public class StartGameSystem {
         textBoxAdmin.updateText(itemExplainTextBoxID);
         */
 
+
+        unitedActicity.getUnitedSurfaceView().getDemoManager().startGameDemo();
     }
 
 
