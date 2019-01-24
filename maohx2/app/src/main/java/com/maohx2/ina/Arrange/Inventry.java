@@ -134,6 +134,7 @@ public class Inventry {
         }
     }
 
+    boolean listBoxSoundFlag = false;
 
     public void updata() {
 
@@ -148,6 +149,12 @@ public class Inventry {
 
         if (touch_inventry_data != null) {
             user_interface.setInventryData(touch_inventry_data);
+            if (!listBoxSoundFlag) {
+                soundAdmin.play("enter00");
+                listBoxSoundFlag = true;
+            }
+        } else {
+            listBoxSoundFlag = false;
         }
 
 

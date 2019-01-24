@@ -477,10 +477,12 @@ public class WorldGameSystem {
             case TU_GEO:
                 if(world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_geo_flag == 0) {
                     tu_geo_flag = 1;
+                    soundAdmin.play("enter00");
                 }
                 else if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_geo_flag == 1) {
                     tu_geo_flag = 0;
                     worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT_INIT);
+                    soundAdmin.play("enter00");
                     tutorial_flag_saver.save();
                 }
                 break;
@@ -518,25 +520,30 @@ public class WorldGameSystem {
             case TU_SHOP_SELL:
                 if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_shop_flag == 0) {
                     tu_shop_flag = 1;
+                    soundAdmin.play("enter00");
                 }
                 else if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_shop_flag == 1) {
                     worldModeAdmin.setMode(WORLD_MODE.TU_SELL);
                     tu_shop_flag = 0;
+                    soundAdmin.play("enter00");
                 }
                 break;
             case TU_SHOP:
                 if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_shop_flag == 0) {
                     tu_shop_flag = 1;
+                    soundAdmin.play("enter00");
                 }
                 else if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_shop_flag == 1) {
                     worldModeAdmin.setMode(WORLD_MODE.SHOP_INIT);
                     tutorial_flag_saver.save();
                     tu_shop_flag = 0;
+                    soundAdmin.play("enter00");
                 }
                 break;
             case TU_SELL:
                 if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
                     worldModeAdmin.setMode(WORLD_MODE.SHOP_INIT);
+                    soundAdmin.play("enter00");
                     tutorial_flag_saver.save();
                 }
                 break;
@@ -567,9 +574,11 @@ public class WorldGameSystem {
             case TU_EQUIP:
                 if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_equip_flag == 0) {
                     tu_equip_flag = 1;
+                    soundAdmin.play("enter00");
                 }
                 else if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_equip_flag == 1) {
                     tu_equip_flag = 0;
+                    soundAdmin.play("enter00");
                     worldModeAdmin.setMode(WORLD_MODE.EQUIP_INIT);
                     tutorial_flag_saver.save();
                 }

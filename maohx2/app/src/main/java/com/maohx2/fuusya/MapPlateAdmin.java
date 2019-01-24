@@ -260,10 +260,6 @@ public class MapPlateAdmin {
             return;
         }
 
-        menuGroup.update();
-//        hitpoint.update();
-        inventry.updata();
-
         tutorialButtonGroup.update();
 
         dungeonSelectWindowAdmin.update();
@@ -275,6 +271,7 @@ public class MapPlateAdmin {
         Constants.Touch.TouchState touch_state = dungeon_user_interface.getTouchState();
         switch (displaying_content) {
             case 0://menu
+                menuGroup.update();
 
                 mapObjectAdmin.setPlayerAlpha(128);
                 int content = menuGroup.getTouchContentNum();
@@ -315,6 +312,7 @@ public class MapPlateAdmin {
                 break;
 
             case 2://[アイテム]
+                inventry.updata();
                 break;
 
             case 3://[リタイア]
@@ -541,7 +539,7 @@ public class MapPlateAdmin {
             if (touch_state == Constants.Touch.TouchState.UP && tutorial_count > 5) {
                 i_of_tutorial_bitmap++;
                 tutorial_count = 0;
-
+                sound_admin.play("enter00");
                 if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+4){
                     playerStatus.setTutorialInDungeon(1);
                     playerStatusSaver.save();

@@ -74,7 +74,7 @@ public class DemoManager {
         playerStatus.setMaohWinCount(0);//0
 
         //ダンジョンチュートリアルを行ったか
-        playerStatus.setTutorialInDungeon(1);//0
+        playerStatus.setTutorialInDungeon(0);//0
 
         //ダンジョンをすでに何周したか (1以上であるとき、自動的に全ての"ジオマップ"が解放されるので注意)
         playerStatus.setClearCount(0);//0

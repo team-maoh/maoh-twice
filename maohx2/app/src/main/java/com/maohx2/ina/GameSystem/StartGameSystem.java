@@ -154,8 +154,8 @@ public class StartGameSystem {
             alpha += up_down*2;
         }
 
-        equipmentInventry.updata();
-        expendInventry.updata();
+        //equipmentInventry.updata();
+        //expendInventry.updata();
         //palette_admin.update(false);
 
         //textBoxAdmin.update();
