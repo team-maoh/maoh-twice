@@ -8,10 +8,14 @@ import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.Saver.PlayerStatusSaver;
 import com.maohx2.kmhanko.Talking.TalkAdmin;
 import com.maohx2.kmhanko.Talking.TalkSaveDataAdmin;
+import com.maohx2.kmhanko.geonode.GeoSlot;
+import com.maohx2.kmhanko.geonode.GeoSlotAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlotAdminManager;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 import com.maohx2.horie.map.MapStatus;
+
+import java.util.List;
 
 /**
  * Created by user on 2019/01/24.
@@ -63,11 +67,11 @@ public class DemoManager {
         playerStatus.setBaseHP(22222 * 2);//22222
         playerStatus.setBaseAttack(22222 * 2);//22222
         playerStatus.setBaseDefence(2222 * 2);//2222
-        playerStatus.setBaseLuck(22222 * 2);//2222
+        playerStatus.setBaseLuck(22222 * 2);//22222
         playerStatus.setMoney(1000000);//10000
 
         //魔王勝利回数
-        playerStatus.setMaohWinCount(3);//0
+        playerStatus.setMaohWinCount(0);//0
 
         //ダンジョンチュートリアルを行ったか
         playerStatus.setTutorialInDungeon(1);//0
@@ -95,7 +99,7 @@ public class DemoManager {
 
     // 武器スロットへのセット
 
-    // 所持ジオ・ジオスロットへのセット
+    // 所持ジオ・ジオスロットへのセット・ジオスロットの解放
     private void geoInventryDemo(InventryS geoInventry, GeoSlotAdminManager geoSlotAdminManager) {
         GeoObjectData tempGeoObjectData;
         int[][] normalGeo = new int[][] {
@@ -185,11 +189,34 @@ public class DemoManager {
             }
         }
 
+        //ジオスロット解放
+        int[][][] geoSlotEvent = new int[][][] {
+                {{2, 1}, {8, 1}, {11, 1}, {12, 1}},
+                {{3, 1}, {4, 1}, {5, 1}, {8, 1}, {11, 1}},
+                {{4, 1}, {6, 1}, {8, 1}, {10, 1}, {12, 1}},
+                {{4, 1}, {6, 1}, {8, 1}, {10, 1}},
+                {{2, 1}, {4, 1}, {6, 1}, {9, 1}, {11, 1}},
+                {{3, 1}, {5, 1}, {7, 1}, {9, 1}, {11, 1}, {14, 1}},
+                {{4, 1}, {7, 1}, {8, 1}, {9, 1}, {10, 1}, {11, 1}, {12, 1}, {13, 1}, {14, 1}},
+                {{2, 1}, {3, 1}, {4, 1}, {5, 1}, {6, 1}, {7, 1},
+                        {8, 1}, {9, 1}, {10, 1}, {11, 1}, {12, 1}, {13, 1}, {14, 1}, {15, 1}, {16, 1}, {17, 1}},
+        };
+
+
+        for(int i = 0; i < geoSlotEvent.length; i++) {
+            slotName = geoSlotAdminManager.getSlotNameDemo(i);
+            List<GeoSlot> geoSlots = geoSlotAdminManager.getGeoSlotAdmin(slotName).getGeoSlots();
+            for (int j = 0; j < geoSlotEvent[i].length; j++) {
+                if (geoSlotEvent[i][j][1] == 1) {
+                    geoSlots.get(geoSlotEvent[i][j][0] - 1).setReleased(true);
+                }
+            }
+        }
+
         geoSlotAdminManager.setSlot();
         geoInventry.save();
         geoSlotAdminManager.calcPlayerStatus();
         geoSlotAdminManager.calcMaohMenosStatus();
-
         geoSlotAdminManager.saveGeoSlot();
     }
 
@@ -198,7 +225,7 @@ public class DemoManager {
         //"最新のループ回数としたとき"、どのダンジョンまで侵入可能な状態か？
         //ここで指定したダンジョンまで侵入可能
         //ループクリア回数が0である場合は、このダンジョンの一つ手前までジオマップに侵入可能
-        Constants.DungeonKind.DUNGEON_KIND canEnterDungeon = Constants.DungeonKind.DUNGEON_KIND.HAUNTED;
+        Constants.DungeonKind.DUNGEON_KIND canEnterDungeon = Constants.DungeonKind.DUNGEON_KIND.SWAMP;
 
         int i = 0;
         switch (canEnterDungeon) {
@@ -229,8 +256,6 @@ public class DemoManager {
         }
         mapStatusSaver.save();
     }
-
-    // ジオスロットの解放
 
     //オープニングのフラグ
     private void openingDemo(TalkSaveDataAdmin talkSaveDataAdmin) {

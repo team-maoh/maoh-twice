@@ -17,6 +17,7 @@ import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.UserInterface;
 import com.maohx2.kmhanko.itemdata.ExpendItemData;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
+import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import static com.maohx2.ina.Constants.Touch.TouchWay.*;
 import static com.maohx2.ina.Constants.Inventry.*;
@@ -58,6 +59,8 @@ public class Inventry {
     int width;
     int height;
 
+    static SoundAdmin soundAdmin;
+
 
     public Inventry() {
 
@@ -65,6 +68,10 @@ public class Inventry {
             //by kmhank　インスタンス引数追加
             inventry_datas[i] = new InventryData(null, 0, this);
         }
+    }
+
+    static public void setSoundAdmin(SoundAdmin _soundAdmin) {
+        soundAdmin = _soundAdmin;
     }
 
     public void init(UserInterface _user_interface, Graphic _graphic, int left, int top, int right, int bottom, int _contentNum) {
@@ -162,6 +169,8 @@ public class Inventry {
                         pageCheck = true;
                     }
                 }
+            } else {
+                soundAdmin.play("enter00");
             }
         }
 
@@ -183,6 +192,8 @@ public class Inventry {
                         pageCheck = true;
                     }
                 }
+            } else {
+                soundAdmin.play("enter00");
             }
         }
     }
