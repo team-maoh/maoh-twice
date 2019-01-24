@@ -260,7 +260,6 @@ public class GeoSlotAdminManager {
 
     public void update() {
         if (mode == MODE.WORLD_NORMAL) {
-            geoInventry.updata();
             if (activeGeoSlotAdmin != null) {
                 activeGeoSlotAdmin.updateInStatus();
             }
