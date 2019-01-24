@@ -289,7 +289,7 @@ public class DemoManager {
         int[][] normalGeo = new int[][] {
                 {5, 8, 10, 12, 15, 18, 20, 25, 30, 35},
                 {5, 8, 10, 12, 15, 18, 20, 25, 30, 35},
-                {5, 8, 10, 12, 15, 18, 20, 25, 30, 35},
+                {1, 1, 2, 2, 3, 3, 4, 4, 5, 5},
         };
         double[][] rateGeo = new double[][] {
                 {1.02, 1.04, 1.06, 1.08, 1.10, 1.15},
@@ -411,7 +411,7 @@ public class DemoManager {
         //"最新のループ回数としたとき"、どのダンジョンまで侵入可能な状態か？
         //ここで指定したダンジョンまで侵入可能
         //ループクリア回数が0である場合は、このダンジョンの一つ手前までジオマップに侵入可能
-        Constants.DungeonKind.DUNGEON_KIND canEnterDungeon = Constants.DungeonKind.DUNGEON_KIND.SWAMP;
+        Constants.DungeonKind.DUNGEON_KIND canEnterDungeon = Constants.DungeonKind.DUNGEON_KIND.HAUNTED;
 
         int i = 0;
         switch (canEnterDungeon) {

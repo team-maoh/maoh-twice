@@ -53,7 +53,7 @@ public final class Constants {
 
     public static final int STAGE_NUM = 7;
 
-    public static final String DEBUG_SAVE_MODE = "ns";
+    public static String DEBUG_SAVE_MODE = "ns";
 
 
     public static class SaveDataVersion {
