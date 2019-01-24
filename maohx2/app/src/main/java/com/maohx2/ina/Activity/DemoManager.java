@@ -57,7 +57,7 @@ public class DemoManager {
 
 
     //デモモードかどうか
-    final boolean demoMode = true;
+    static final boolean demoMode = true;
 
 
     boolean startGameDemoEndFlag = false;
@@ -509,6 +509,10 @@ public class DemoManager {
             }
         }
         talkSaveDataAdmin.save();
+    }
+
+    static public boolean getDemoMode() {
+        return demoMode;
     }
 
 

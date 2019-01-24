@@ -3,6 +3,7 @@ package com.maohx2.kmhanko.dungeonselect;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.horie.map.MapStatus;
 import com.maohx2.horie.map.MapStatusSaver;
+import com.maohx2.ina.Activity.DemoManager;
 import com.maohx2.ina.Activity.UnitedActivity;
 //import com.maohx2.ina.ActivityChange;
 import com.maohx2.ina.Constants;
@@ -222,6 +223,11 @@ public class DungeonSelectManager {
         switch(playerStatus.getMaohWinCount()) {
             case 1:
                 talkAdmin.start("AfterMaoh001", false);
+                break;
+            case 2:
+                if (DemoManager.getDemoMode()) {
+                    talkAdmin.start("AfterMaoh002forDEMO", true);
+                }
                 break;
             case 3:
                 talkAdmin.start("AfterMaoh003", false);
