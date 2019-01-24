@@ -62,14 +62,14 @@ public class BoxProductPlate extends BoxItemPlate {
         graphic.bookingDrawRect(left, up, right, down, button_paint);
 
         graphic.bookingDrawBitmapData(flameElement[0][0], position[0], position[1], 1.0f, 1.0f, 0, 255, true);
-        graphic.bookingDrawBitmapData(flameElement[1][0], position[0], position[1] + height / 3, 1.0f, ((float)(position[3]-position[1]-(int)((double)height*2.0/3.0)))/((float)height/3.0f), 0, 255, true);
+        graphic.bookingDrawBitmapData(flameElement[1][0], position[0], position[1] + height / 3, 1.0f, ((float)(position[3]-position[1]-(int)((double)height*2.0/3.0)))/((float)height/3.0f)*1.02f, 0, 255, true);
         graphic.bookingDrawBitmapData(flameElement[2][0], position[0], position[3] - height / 3, 1.0f, 1.0f, 0, 255, true);
 
         graphic.bookingDrawBitmapData(flameElement[0][1], position[0] + width / 3, position[1], ((float)(position[2]-position[0]-(int)((double)width*2.0/3.0)))/((float)width/3.0f), 1.0f, 0, 255, true);
         graphic.bookingDrawBitmapData(flameElement[2][1], position[0] + width / 3, position[3] - height / 3, ((float)(position[2]-position[0]-(int)((double)width*2.0/3.0)))/((float)width/3.0f), 1.0f, 0, 255, true);
 
         graphic.bookingDrawBitmapData(flameElement[0][2], position[2] - width / 3, position[1], 1.0f, 1.0f, 0, 255, true);
-        graphic.bookingDrawBitmapData(flameElement[1][2], position[2] - width / 3, position[1] + height / 3, 1.0f, ((float)(position[3]-position[1]-(int)((double)height*2.0/3.0)))/((float)height/3.0f), 0, 255, true);
+        graphic.bookingDrawBitmapData(flameElement[1][2], position[2] - width / 3, position[1] + height / 3, 1.0f, ((float)(position[3]-position[1]-(int)((double)height*2.0/3.0)))/((float)height/3.0f)*1.02f, 0, 255, true);
         graphic.bookingDrawBitmapData(flameElement[2][2], position[2] - width / 3, position[3] - height / 3, 1.0f, 1.0f, 0, 255, true);
 
 

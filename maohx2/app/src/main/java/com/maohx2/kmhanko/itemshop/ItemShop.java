@@ -411,12 +411,12 @@ public abstract class ItemShop {
 
 
     public void draw() {
-        buySelectPlateGroup.draw();
         productPlateGroup.draw();
         tutorialButtonGroup.draw();
         itemInventry.draw();
         backPlateGroup.draw();
         switchPlateGroup.draw();
+        buySelectPlateGroup.draw();
     }
 
     public void initUIs() {
