@@ -301,8 +301,8 @@ public class DemoManager {
         //{X, 0} = どこにもセットしないの意味。第一要素の数字は無視される
         int[][][] normalGeoSlot = new int[][][] {
                 {{0, 1}, {0, 4}, {0, 0}, {0, 0}},
-                {{1, 2}, {0, 0}, {0, 5}, {0, 6}},
-                {{0, 0}, {0, 0}, {0, 0}, {0, 0}},
+                {{1, 2}, {0, 8}, {0, 5}, {0, 6}},
+                {{1, 1}, {0, 0}, {0, 0}, {0, 0}},
         };
 
         int[][][] rateGeoSlot = new int[][][] {
@@ -365,7 +365,7 @@ public class DemoManager {
                     slotName = geoSlotAdminManager.getSlotNameDemo(rateGeoSlot[i][j][0]);
                     if (geoSlotAdminManager.getGeoSlotAdmin(slotName).getGeoSlots().size() >= rateGeoSlot[i][j][1]) {
                         tempGeoObjectData.setSlotSetName(slotName);
-                        tempGeoObjectData.setSlotSetID(rateGeoSlot[i][j][1]);
+                        tempGeoObjectData.setSlotSetID(rateGeoSlot[i][j][1] - 1);
                     }
                 }
 
@@ -393,6 +393,8 @@ public class DemoManager {
             for (int j = 0; j < geoSlotEvent[i].length; j++) {
                 if (geoSlotEvent[i][j][1] == 1) {
                     geoSlots.get(geoSlotEvent[i][j][0] - 1).setReleased(true);
+                } else {
+                    geoSlots.get(geoSlotEvent[i][j][0] - 1).setReleased(false);
                 }
             }
         }

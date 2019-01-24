@@ -44,9 +44,9 @@ public class PlayerStatusViewer extends StatusViewer {
 
     public void initPosition() {
         posX1 = 0;
-        posX2 = 1601;
+        posX2 = 1605;
         posY1 = 850;
-        posY2 = 901;
+        posY2 = 905;
 
         textXOffsetLeft1 = 65;
         textXOffsetLeft2 = 125;

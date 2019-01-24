@@ -636,6 +636,7 @@ public class WorldGameSystem {
                 backPlateGroup.update();
                 if(world_user_interface.getTouchState() == Constants.Touch.TouchState.UP){
                     credit_num = 3 - credit_num;
+                    soundAdmin.play("enter00");
                 }
                 break;
             case ENDING:
