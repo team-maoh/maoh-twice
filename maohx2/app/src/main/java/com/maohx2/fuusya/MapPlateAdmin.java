@@ -8,6 +8,7 @@ import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.ina.Activity.UnitedActivity;
 //import com.maohx2.ina.ActivityChange;
 import com.maohx2.ina.Arrange.Inventry;
+import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
@@ -123,8 +124,9 @@ public class MapPlateAdmin {
     String tutorial_name = "スライド";
 
     DungeonSelectWindowAdmin dungeonSelectWindowAdmin;
+    PaletteAdmin palette_admin;
 
-    public MapPlateAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, UnitedActivity _unitedActivity, DungeonModeManage _dungeon_mode_manage, SoundAdmin _sound_admin) {
+    public MapPlateAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, UnitedActivity _unitedActivity, DungeonModeManage _dungeon_mode_manage, SoundAdmin _sound_admin, PaletteAdmin _paletteAdmin) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
         //activityChange = _activityChange;
@@ -136,6 +138,8 @@ public class MapPlateAdmin {
         playerStatusSaver = globalData.getPlayerStatusSaver();
         dungeon_mode_manage = _dungeon_mode_manage;
         sound_admin = _sound_admin;
+
+        palette_admin = _paletteAdmin;
 
         inventry = new Inventry();
         inventry.init(dungeon_user_interface, graphic, ITEM_LEFT, ITEM_TOP, ITEM_RIGHT, ITEM_BOTTOM, ITEM_CONTENTS_NUM);
@@ -417,6 +421,7 @@ public class MapPlateAdmin {
         //map_inventry_admin.storageMapInventry();
         globalData.getExpendItemInventry().save();
         //activityChange.toWorldActivity();
+        palette_admin.resetDungeonUseNum();
         unitedActivity.getUnitedSurfaceView().toWorldGameMode();
     }
     // ***選択肢関係ここまで

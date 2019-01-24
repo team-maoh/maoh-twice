@@ -58,7 +58,13 @@ public class PaletteCenter extends PaletteElement{
             graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y+offset_equip,2.0f,2.0f,0,255,false);
             if(item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT) {
                 if(item_data.getName().equals("素手") == false && item_data.getName().equals("デバッグ盾") == false) {
-                    graphic.bookingDrawText(String.valueOf(((EquipmentItemData) (item_data)).getDungeonUseNum()), x + offset_x, y + offset_y, textPaint);
+                    if(element_num == 2 || element_num == 4) {
+                        textPaint.setARGB(255, 0,0,0);
+                        graphic.bookingDrawText(String.valueOf(((EquipmentItemData) (item_data)).getDungeonUseNum()), x + offset_x, y + offset_y, textPaint);
+                    }else{
+                        textPaint.setARGB(255, 255,255,255);
+                        graphic.bookingDrawText(String.valueOf(((EquipmentItemData) (item_data)).getDungeonUseNum()), x + offset_x, y + offset_y, textPaint);
+                    }
                 }
             }
         }
@@ -91,7 +97,13 @@ public class PaletteCenter extends PaletteElement{
             graphic.bookingDrawBitmapData(item_data.getItemImage(),x,y+offset_equip,2.0f,2.0f,0,255,false);
             if(item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT) {
                 if(item_data.getName().equals("素手") == false && item_data.getName().equals("デバッグ盾") == false) {
-                    graphic.bookingDrawText(String.valueOf(((EquipmentItemData) (item_data)).getDungeonUseNum()), x + offset_x, y + offset_y, textPaint);
+                    if(element_num == 3 || element_num == 5) {
+                        textPaint.setARGB(255, 0,0,0);
+                        graphic.bookingDrawText(String.valueOf(((EquipmentItemData) (item_data)).getDungeonUseNum()), x + offset_x, y + offset_y, textPaint);
+                    }else{
+                        textPaint.setARGB(255, 255,255,255);
+                        graphic.bookingDrawText(String.valueOf(((EquipmentItemData) (item_data)).getDungeonUseNum()), x + offset_x, y + offset_y, textPaint);
+                    }
                 }
             }
         }
@@ -116,7 +128,13 @@ public class PaletteCenter extends PaletteElement{
                 graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y+offset_equip, 2.0f, 2.0f, 0, 255, false);
                 if(item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT) {
                     if(item_data.getName().equals("素手") == false && item_data.getName().equals("デバッグ盾") == false) {
-                        graphic.bookingDrawText(String.valueOf(((EquipmentItemData) (item_data)).getDungeonUseNum()), x + offset_x, y + offset_y, textPaint);
+                        if(element_num == 2 || element_num == 4) {
+                            textPaint.setARGB(255, 0,0,0);
+                            graphic.bookingDrawText(String.valueOf(((EquipmentItemData) (item_data)).getDungeonUseNum()), x + offset_x, y + offset_y, textPaint);
+                        }else{
+                            textPaint.setARGB(255, 255,255,255);
+                            graphic.bookingDrawText(String.valueOf(((EquipmentItemData) (item_data)).getDungeonUseNum()), x + offset_x, y + offset_y, textPaint);
+                        }
                     }
                 }
             }
@@ -126,7 +144,13 @@ public class PaletteCenter extends PaletteElement{
                 graphic.bookingDrawBitmapData(item_data.getItemImage(), x, y+offset_equip, 2.0f, 2.0f, 0, 255, false);
                 if(item_data.getItemKind() == Constants.Item.ITEM_KIND.EQUIPMENT) {
                     if(item_data.getName().equals("素手") == false && item_data.getName().equals("デバッグ盾") == false) {
-                        graphic.bookingDrawText(String.valueOf(((EquipmentItemData) (item_data)).getDungeonUseNum()), x + offset_x, y + offset_y, textPaint);
+                        if(element_num == 2 || element_num == 4) {
+                            textPaint.setARGB(255, 0,0,0);
+                            graphic.bookingDrawText(String.valueOf(((EquipmentItemData) (item_data)).getDungeonUseNum()), x + offset_x, y + offset_y, textPaint);
+                        }else{
+                            textPaint.setARGB(255, 255,255,255);
+                            graphic.bookingDrawText(String.valueOf(((EquipmentItemData) (item_data)).getDungeonUseNum()), x + offset_x, y + offset_y, textPaint);
+                        }
                     }
                 }
             }

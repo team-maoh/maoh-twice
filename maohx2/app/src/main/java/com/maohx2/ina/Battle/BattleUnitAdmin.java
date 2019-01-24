@@ -145,6 +145,8 @@ public class BattleUnitAdmin {
     int resultButtonTimeCount;
     static final int RESULT_BUTTON_TIME = 15;
 
+    int cannot_count = 0;
+
     //by kmhanko BattleUnitDataAdmin追加
     public void init(
             Graphic _graphic,
@@ -668,12 +670,19 @@ public class BattleUnitAdmin {
                                             }
                                         }
                                     }
+                                }else{
+                                    if(cannot_count > 15) {
+                                        cannot_count = 0;
+                                        soundAdmin.play("cannot_exit_room");
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+
+            if(cannot_count < 100){cannot_count++;}
 
             if ((touch_state == TouchState.UP) || (touch_state == TouchState.AWAY)) {
                 first_attack_frag = false;

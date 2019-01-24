@@ -259,12 +259,12 @@ public class DemoManager {
 
         playerStatus.setBaseHP(60000);//22222
         playerStatus.setBaseAttack(67000);//22222
-        playerStatus.setBaseDefence(6500);//2222
+        playerStatus.setBaseDefence(6800);//2222
         playerStatus.setBaseLuck(22222 * 2);//2222
         playerStatus.setMoney(100000);//10000
 
         //魔王勝利回数
-        playerStatus.setMaohWinCount(0);//0
+        playerStatus.setMaohWinCount(1);//0
 
         //ダンジョンチュートリアルを行ったか
         playerStatus.setTutorialInDungeon(0);//0
