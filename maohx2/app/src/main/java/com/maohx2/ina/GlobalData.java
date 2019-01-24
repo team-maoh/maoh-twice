@@ -20,6 +20,7 @@ import com.maohx2.kmhanko.Saver.GeoPresentSaver;
 import com.maohx2.kmhanko.Saver.GeoSlotSaver;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.music.MusicAdmin;
+import com.maohx2.kmhanko.Talking.TalkAdmin;
 
 //by kmhanko
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
@@ -53,6 +54,7 @@ public class GlobalData extends Application {
     EquipmentItemDataAdmin equipmentItemDataAdmin;
 
     MusicAdmin musicAdmin;
+
 
     public void init(int disp_x, int disp_y) {
         g_my_database_admin = new MyDatabaseAdmin(this);

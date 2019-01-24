@@ -59,20 +59,25 @@ public class TalkAdmin {
 
     TalkSaveDataAdmin talkSaveDataAdmin;
 
-    public TalkAdmin(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, SoundAdmin _soundAdmin) {
+    public TalkAdmin(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin) {
         graphic = _graphic;
         userInterface = _userInterface;
         databaseAdmin = _databaseAdmin;
-        textBoxAdmin = _textBoxAdmin;
+        //textBoxAdmin = _textBoxAdmin;
         soundAdmin = _soundAdmin;
 
-        initTextBox();
+        //initTextBox();
         initDatabase();
 
         talkSaveDataAdmin = new TalkSaveDataAdmin(databaseAdmin);
         talkSaveDataAdmin.load();
 
         clear();//init群の後
+    }
+
+    public void setTextBoxAdmin(TextBoxAdmin _textBoxAdmin) {
+        textBoxAdmin = _textBoxAdmin;
+        initTextBox();
     }
 
     private void reset() {
@@ -210,8 +215,10 @@ public class TalkAdmin {
         talkCharaRight = null;
         talkContent = null;
 
-        textBoxAdmin.setTextBoxExists(textBoxID, false);
-        textBoxAdmin.resetTextBox(textBoxID);
+        if (textBoxAdmin != null) {
+            textBoxAdmin.setTextBoxExists(textBoxID, false);
+            textBoxAdmin.resetTextBox(textBoxID);
+        }
         reset();
     }
 

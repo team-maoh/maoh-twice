@@ -104,9 +104,6 @@ public class StartGameSystem {
         textBoxAdmin.updateText(itemExplainTextBoxID);
         */
 
-        TalkSaveDataAdmin talkSaveDataAdmin = new TalkSaveDataAdmin(my_database_admin);
-        talkSaveDataAdmin.load();
-        unitedActicity.getUnitedSurfaceView().getDemoManager().startGameDemo(talkSaveDataAdmin);
     }
 
 

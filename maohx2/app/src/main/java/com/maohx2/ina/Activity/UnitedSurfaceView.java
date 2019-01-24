@@ -1,6 +1,11 @@
 package com.maohx2.ina.Activity;
 
 import android.view.SurfaceHolder;
+
+import com.maohx2.horie.Tutorial.TutorialFlagData;
+import com.maohx2.horie.Tutorial.TutorialFlagSaver;
+import com.maohx2.horie.map.MapStatus;
+import com.maohx2.horie.map.MapStatusSaver;
 import com.maohx2.ina.Activity.BaseSurfaceView;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Constants;
@@ -19,6 +24,8 @@ import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.music.MusicAdmin;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 import com.maohx2.ina.Constants.DungeonKind.*;
+
+import com.maohx2.kmhanko.Talking.TalkAdmin;
 
 /**
  * Created by user on 2019/01/14.
@@ -43,6 +50,12 @@ public class UnitedSurfaceView extends BaseSurfaceView {
     GameModeChanger gameModeChanger;
 
     DemoManager demoManager;
+
+    TalkAdmin talkAdmin;
+    MapStatus mapStatus;
+    MapStatusSaver mapStatusSaver;
+    TutorialFlagData tutorialFlagData;
+    TutorialFlagSaver tutorialFlagSaver;
 
     enum GAME_SYSTEM_MODE {
         START,
@@ -71,6 +84,15 @@ public class UnitedSurfaceView extends BaseSurfaceView {
         dungeonUserInterface = null;
         gameModeChanger.release();
         gameModeChanger = null;
+        talkAdmin.release();
+        talkAdmin = null;
+        mapStatus.release();
+        mapStatus = null;
+        mapStatusSaver.release();
+        mapStatusSaver = null;
+        tutorialFlagData = null;
+        tutorialFlagSaver.release();
+        tutorialFlagSaver = null;
     }
 
     public UnitedSurfaceView(UnitedActivity _unitedActivity, BackSurfaceView _backSurfaceView) {
@@ -133,7 +155,19 @@ public class UnitedSurfaceView extends BaseSurfaceView {
         my_database_admin.addMyDatabase("StartDB", "LocalStartImage.db", 1, "r");
         graphic.loadLocalImages(my_database_admin.getMyDatabase("StartDB"), "Start");
 
+        talkAdmin = new TalkAdmin(graphic, userInterface, my_database_admin, soundAdmin);
+
+        mapStatus = new MapStatus(Constants.STAGE_NUM);
+        mapStatusSaver = new MapStatusSaver(my_database_admin, "MapSaveData", "MapSaveData.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE, mapStatus, 7);
+        mapStatusSaver.load();
+
+        tutorialFlagData = new TutorialFlagData();
+        tutorialFlagSaver = new TutorialFlagSaver(my_database_admin, "FlagSave", "FlagSave.db", Constants.SaveDataVersion.TUTORIAL, Constants.DEBUG_SAVE_MODE,tutorialFlagData);
+        tutorialFlagSaver.load();
+
         demoManager = new DemoManager();
+
+
 
         //Start画面への準備へ
         runStartGameSystem();
@@ -151,9 +185,9 @@ public class UnitedSurfaceView extends BaseSurfaceView {
         musicAdmin.loadMusic("openingbgm00",false);
         soundAdmin.loadSoundPack("basic");
 
-        TalkSaveDataAdmin talkSaveDataAdmin = new TalkSaveDataAdmin(my_database_admin);
-        talkSaveDataAdmin.load();
-        openingFlag = !(talkSaveDataAdmin.getTalkFlagByName("Opening_in_dungeon")||talkSaveDataAdmin.getTalkFlagByName("Opening_in_world")); //openingFlag = true ならOpeningを実行
+        this.getDemoManager().startGameDemo(talkAdmin.getTalkSaveDataAdmin());
+
+        openingFlag = !(talkAdmin.getTalkSaveDataAdmin().getTalkFlagByName("Opening_in_dungeon")||talkAdmin.getTalkSaveDataAdmin().getTalkFlagByName("Opening_in_world")); //openingFlag = true ならOpeningを実行
     }
 
     private void releaseStartGameSystem() {
@@ -187,7 +221,12 @@ public class UnitedSurfaceView extends BaseSurfaceView {
                 graphic,
                 my_database_admin,
                 soundAdmin,
-                unitedActivity
+                unitedActivity,
+                talkAdmin,
+                mapStatus,
+                mapStatusSaver,
+                tutorialFlagData,
+                tutorialFlagSaver
         );
 
     }
@@ -270,7 +309,10 @@ public class UnitedSurfaceView extends BaseSurfaceView {
                 userInterface,
                 unitedActivity,
                 my_database_admin,
-                dungeon_kind
+                dungeon_kind,
+                talkAdmin,
+                mapStatus,
+                mapStatusSaver
         );
 
         if(openingFlag == true){

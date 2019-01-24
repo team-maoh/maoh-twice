@@ -15,6 +15,7 @@ import com.maohx2.horie.map.MapAdmin;
 import com.maohx2.horie.map.MapStatus;
 import com.maohx2.horie.map.MapStatusSaver;
 import com.maohx2.horie.map.DungeonData;
+import com.maohx2.ina.Activity.DemoManager;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Arrange.PaletteCenter;
@@ -126,7 +127,7 @@ public class DungeonGameSystem {
     ChangeMovie changeMovie;
     boolean map_init = false;
 
-    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin _soundAdmin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, UnitedActivity _unitedActivity, MyDatabaseAdmin my_database_admin, Constants.DungeonKind.DUNGEON_KIND _dungeon_kind) {
+    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin _soundAdmin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, UnitedActivity _unitedActivity, MyDatabaseAdmin my_database_admin, Constants.DungeonKind.DUNGEON_KIND _dungeon_kind, TalkAdmin _talkAdmin, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver) {
         dungeon_user_interface = _dungeon_user_interface;
         battle_user_interface = _battle_user_interface;
         unitedActivity = _unitedActivity;
@@ -142,7 +143,9 @@ public class DungeonGameSystem {
         text_box_admin.init(dungeon_user_interface);
         //list_box_admin.init(dungeon_user_interface, graphic);
 
-        talkAdmin = new TalkAdmin(graphic, dungeon_user_interface, _myDatabaseAdmin, text_box_admin , soundAdmin);
+        //talkAdmin = new TalkAdmin(graphic, dungeon_user_interface, _myDatabaseAdmin, text_box_admin , soundAdmin);
+        talkAdmin = _talkAdmin;
+        talkAdmin.setTextBoxAdmin(text_box_admin);
 
         GlobalData globalData = (GlobalData)(unitedActivity.getApplication());
         musicAdmin = globalData.getMusicAdmin();
@@ -219,9 +222,12 @@ public class DungeonGameSystem {
 
         //activityChange = _activityChange;
 
-        map_status = new MapStatus(Constants.STAGE_NUM);//mapのクリア状況,チュートリアルを見たかどうかを記憶しておく
-        map_status_saver = new MapStatusSaver(_myDatabaseAdmin, "MapSaveData", "MapSaveData.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE, map_status, Constants.STAGE_NUM);
-        map_status_saver.load();
+        //map_status = new MapStatus(Constants.STAGE_NUM);//mapのクリア状況,チュートリアルを見たかどうかを記憶しておく
+        //map_status_saver = new MapStatusSaver(_myDatabaseAdmin, "MapSaveData", "MapSaveData.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE, map_status, Constants.STAGE_NUM);
+        //map_status_saver.load();
+        map_status = _mapStatus;
+        map_status_saver = _mapStatusSaver;
+
 //        for(int i = 0;i < 7;i++){
 //            System.out.println("before:stage_num = "+i+", is_clear = "+map_status.getTutorialFinishStatus(i));
 //        }
@@ -373,6 +379,10 @@ public class DungeonGameSystem {
         //
         //dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MAP_INIT);
 
+
+        if (DemoManager.getDemoMode() && Constants.DEBUG_SAVE_MODE.equals("ns")) {
+            Constants.DEBUG_SAVE_MODE = "s";
+        }
 
         unitedActivity.getUnitedSurfaceView().getDemoManager().dungeonGameDemo();
 
@@ -770,9 +780,7 @@ public class DungeonGameSystem {
         if (dungeon_data_admin != null) {
             dungeon_data_admin.release();
         }
-        if (talkAdmin != null) {
-            talkAdmin.release();
-        }
+
         if (effectAdmin != null) {
             effectAdmin.release();
         }
@@ -781,12 +789,14 @@ public class DungeonGameSystem {
             map_plate_admin.release();
         }
         //map_inventry_admin
+        /*
         if (map_status != null) {
             map_status.release();
         }
         if (map_status_saver != null) {
             map_status_saver.release();
         }
+        */
         if (paint != null) {
             paint.reset();
             paint = null;

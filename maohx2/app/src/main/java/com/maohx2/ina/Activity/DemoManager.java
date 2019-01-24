@@ -76,7 +76,7 @@ public class DemoManager {
     }
 
     public void worldGameDemo(Graphic graphic, InventryS equipmentInventry, PaletteAdmin paletteAdmin, InventryS expendItemInventry, ItemDataAdminManager itemDataAdminManager, PlayerStatus playerStatus, InventryS geoInventry, GeoSlotAdminManager geoSlotAdminManager, MapStatus mapStatus, MapStatusSaver mapStatusSaver, TalkSaveDataAdmin talkSaveDataAdmin, TutorialFlagData tutorialFlagData, TutorialFlagSaver tutorialFlagSaver) {
-        if (worldGameDemoEndFlag) {
+        if (worldGameDemoEndFlag || !demoMode) {
             return;
         }
         worldGameDemoEndFlag = true;

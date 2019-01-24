@@ -51,7 +51,19 @@ public class MyDatabaseAdmin {
             bufDatabase = databases.get(databases.size() - 1);
             bufDatabase.init(db_name, db_asset, db_version, load_mode);
         } else {
-            System.out.println("☆タカノ:" + "MyDatabaseAdmin#addMyDatabase DbName = " + db_name + " は既に存在するので追加しません");
+            //System.out.println("☆タカノ:" + "MyDatabaseAdmin#addMyDatabase DbName = " + db_name + " は既に存在するので追加しません");
+
+
+            System.out.println("☆タカノ:" + "MyDatabaseAdmin#addMyDatabase DbName = " + db_name + " は既に存在したので再読み込みします");
+            for (int i = 0; i < databases.size(); i++) {
+                if (databases.get(i).getDbName().equals(db_name)) {
+                    databases.set(i, new MyDatabase(mContext));
+                    bufDatabase = databases.get(i);
+                    bufDatabase.init(db_name, db_asset, db_version, load_mode);
+                    break;
+                }
+            }
+
         }
     }
 

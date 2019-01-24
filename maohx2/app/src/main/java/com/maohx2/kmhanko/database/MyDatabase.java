@@ -56,6 +56,8 @@ public class MyDatabase {
     }
 
     public boolean init(String _db_name, String _db_asset, int _db_version, String loadMode) {
+        System.out.println("init : MyDatabase " + _db_name + " " + loadMode);
+
         if (loadMode != "r" && loadMode != "s" && loadMode != "ds" && loadMode != "ns") {
             throw new Error("☆タカノ : MyDatabase#init " + "please set r or s or ds or ns");
         }

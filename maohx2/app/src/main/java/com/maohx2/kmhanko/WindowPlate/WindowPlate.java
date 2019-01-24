@@ -27,7 +27,7 @@ public class WindowPlate {
 
     protected float DENSITY;
 
-    protected float extendOffset = 0.985f;
+    protected float extendOffset = 0.99f;
 
 
     public WindowPlate(Graphic _graphic, int[] _position) {

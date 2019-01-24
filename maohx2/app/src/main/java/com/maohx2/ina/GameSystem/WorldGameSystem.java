@@ -161,7 +161,10 @@ public class WorldGameSystem {
 
     ChangeMovie changeMovie;
 
-    public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, UnitedActivity _unitedActivity) {
+    public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, UnitedActivity _unitedActivity, TalkAdmin _talkAdmin, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver, TutorialFlagData _tutorialFlagData, TutorialFlagSaver _tutorialFlagSaver) {
+
+        System.out.println("SAVEASAVE" + Constants.DEBUG_SAVE_MODE);
+
         graphic = _graphic;
         databaseAdmin = _databaseAdmin;
         soundAdmin = _soundAdmin;
@@ -178,17 +181,22 @@ public class WorldGameSystem {
         tu_equip_start_img = graphic.searchBitmap("t_equip_start");
 
         //mapセーブ関係
-        map_status = new MapStatus(Constants.STAGE_NUM);
-        map_status_saver = new MapStatusSaver(databaseAdmin, "MapSaveData", "MapSaveData.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE, map_status, 7);
-        map_status_saver.load();
+        //map_status = _mapStatus;
+        //map_status_saver = new MapStatusSaver(databaseAdmin, "MapSaveData", "MapSaveData.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE, map_status, 7);
+        //map_status_saver.load();
+        map_status = _mapStatus;
+        map_status_saver = _mapStatusSaver;
 
         //TutorialFlagセーブ関係
 //        equip_tutorial_save_data = new EquipTutorialSaveData();
 //        equip_tutorial_saver = new EquipTutorialSaver(databaseAdmin, "EquipTutorialSave", "EquipTutorialSave.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE,equip_tutorial_save_data);
 //        equip_tutorial_saver.load();
-        tutorial_flag_data = new TutorialFlagData();
-        tutorial_flag_saver = new TutorialFlagSaver(databaseAdmin, "FlagSave", "FlagSave.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE,tutorial_flag_data);
-        tutorial_flag_saver.load();
+        //tutorial_flag_data = new TutorialFlagData();
+        //tutorial_flag_saver = new TutorialFlagSaver(databaseAdmin, "FlagSave", "FlagSave.db", Constants.SaveDataVersion.TUTORIAL_SAVE_DATA, Constants.DEBUG_SAVE_MODE,tutorial_flag_data);
+        //tutorial_flag_saver.load();
+
+        tutorial_flag_data = _tutorialFlagData;
+        tutorial_flag_saver = _tutorialFlagSaver;
 
 //        /*tutorial_flagセーブ係デバッグ用*/
 //        for(int i = 0;i < 3;i++){
@@ -222,7 +230,9 @@ public class WorldGameSystem {
         text_box_admin = new TextBoxAdmin(graphic, soundAdmin);
         text_box_admin.init(world_user_interface);
 
-        talkAdmin = new TalkAdmin(graphic, world_user_interface, databaseAdmin, text_box_admin , soundAdmin);
+        //talkAdmin = new TalkAdmin(graphic, world_user_interface, databaseAdmin, text_box_admin , soundAdmin);
+        talkAdmin = _talkAdmin;
+        talkAdmin.setTextBoxAdmin(text_box_admin);
 
         itemDataAdminManager = globalData.getItemDataAdminManager();//new ItemDataAdminManager();
         itemShopAdmin = new ItemShopAdmin();
@@ -893,12 +903,14 @@ public class WorldGameSystem {
             palette_admin.release();
         }
 
+        /*
         if (map_status != null) {
             map_status.release();
         }
         if (map_status_saver != null) {
             map_status_saver.release();
         }
+        */
         if (playerStatusViewer != null) {
             playerStatusViewer.release();
         }
@@ -908,9 +920,7 @@ public class WorldGameSystem {
         if (text_box_admin != null) {
             text_box_admin.release();
         }
-        if (talkAdmin != null) {
-            talkAdmin.release();
-        }
+
         /*
         if (itemDataAdminManager != null) {
             itemDataAdminManager.release();
