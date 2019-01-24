@@ -149,8 +149,7 @@ public class UnitedSurfaceView extends BaseSurfaceView {
 
         TalkSaveDataAdmin talkSaveDataAdmin = new TalkSaveDataAdmin(my_database_admin);
         talkSaveDataAdmin.load();
-        //openingFlag = !(talkSaveDataAdmin.getTalkFlagByName("Opening_in_dungeon")||talkSaveDataAdmin.getTalkFlagByName("Opening_in_world")); //openingFlag = true ならOpeningを実行
-        openingFlag = false;
+        openingFlag = !(talkSaveDataAdmin.getTalkFlagByName("Opening_in_dungeon")||talkSaveDataAdmin.getTalkFlagByName("Opening_in_world")); //openingFlag = true ならOpeningを実行
     }
 
     private void releaseStartGameSystem() {

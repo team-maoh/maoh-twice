@@ -231,11 +231,11 @@ public class DemoManager {
     // プレイヤーステータス・魔王勝利回数・ダンジョンループクリア回数など
     private void playerStatusDemo(PlayerStatus playerStatus) {
         //プレイヤーステータス
-        playerStatus.setBaseHP(22222 * 2);//22222
-        playerStatus.setBaseAttack(22222 * 2);//22222
-        playerStatus.setBaseDefence(2222 * 2);//2222
+        playerStatus.setBaseHP(60000);//22222
+        playerStatus.setBaseAttack(67000);//22222
+        playerStatus.setBaseDefence(6500);//2222
         playerStatus.setBaseLuck(22222 * 2);//2222
-        playerStatus.setMoney(1000000);//10000
+        playerStatus.setMoney(100000);//10000
 
         //魔王勝利回数
         playerStatus.setMaohWinCount(3);//0
