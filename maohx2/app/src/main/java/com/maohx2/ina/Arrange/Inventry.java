@@ -218,14 +218,14 @@ public class Inventry {
     private void drawShare() {
         for (int i = 0; i < contentNum; i++) {
             graphic.bookingDrawBitmapData(flameElement[0][0], position[i][0], position[i][1], true);
-            graphic.bookingDrawBitmapData(flameElement[1][0], position[i][0], position[i][1] + height / 3, true);
+            graphic.bookingDrawBitmapData(flameElement[1][0], position[i][0], position[i][1] + height / 3, 1.0f, 1.0f, 0.0f, 255, true);
             graphic.bookingDrawBitmapData(flameElement[2][0], position[i][0], position[i][3] - height / 3, true);
 
             graphic.bookingDrawBitmapData(flameElement[0][1], position[i][0] + width / 3, position[i][1], ((float)(position[i][2]-position[i][0]-(int)((double)width*2.0/3.0)))/((float)width/3.0f), 1.0f, 0, 255, true);
             graphic.bookingDrawBitmapData(flameElement[2][1], position[i][0] + width / 3, position[i][3] - height / 3, ((float)(position[i][2]-position[i][0]-(int)((double)width*2.0/3.0)))/((float)width/3.0f), 1.0f, 0, 255, true);
 
             graphic.bookingDrawBitmapData(flameElement[0][2], position[i][2] - width / 3, position[i][1],true);
-            graphic.bookingDrawBitmapData(flameElement[1][2], position[i][2] - width / 3, position[i][1] + height / 3, true);
+            graphic.bookingDrawBitmapData(flameElement[1][2], position[i][2] - width / 3, position[i][1] + height / 3, 1.0f, 1.0f, 0.0f, 255, true);
             graphic.bookingDrawBitmapData(flameElement[2][2], position[i][2] - width / 3, position[i][3] - height / 3, true);
         }
 

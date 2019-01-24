@@ -15,6 +15,7 @@ import com.maohx2.horie.map.DungeonMonsterDataAdmin;
 import com.maohx2.horie.map.MapAdmin;
 //import com.maohx2.ina.ActivityChange;
 import com.maohx2.ina.Activity.UnitedActivity;
+import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Battle.BattleUnitAdmin;
 import com.maohx2.ina.Battle.BattleUnitDataAdmin;
 import com.maohx2.ina.Constants;
@@ -129,8 +130,9 @@ public class MapObjectAdmin {
     UnitedActivity unitedActivity;
 
     boolean initUIsFlag;
+    PaletteAdmin palette_admin;
 
-    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, UnitedActivity _unitedActivity, BattleUnitAdmin _battle_unit_admin, TextBoxAdmin _text_box_admin, BattleUnitDataAdmin _battleUnitDataAdmin, DungeonMonsterDataAdmin _dungeonMonsterDataAdmin, int _repeatCount, Constants.DungeonKind.DUNGEON_KIND _dungeonKind, DungeonData _dungeonData, EffectAdmin _effectAdmin, EffectAdmin _backEffectAdmin) {
+    public MapObjectAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, MapPlateAdmin _map_plate_admin, DungeonModeManage _dungeon_mode_manage, UnitedActivity _unitedActivity, BattleUnitAdmin _battle_unit_admin, TextBoxAdmin _text_box_admin, BattleUnitDataAdmin _battleUnitDataAdmin, DungeonMonsterDataAdmin _dungeonMonsterDataAdmin, int _repeatCount, Constants.DungeonKind.DUNGEON_KIND _dungeonKind, DungeonData _dungeonData, EffectAdmin _effectAdmin, EffectAdmin _backEffectAdmin, PaletteAdmin _paletteAdmin) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
         sound_admin = _sound_admin;
@@ -147,6 +149,8 @@ public class MapObjectAdmin {
 
         effectAdmin = _effectAdmin;
         backEffectAdmin = _backEffectAdmin;
+
+        palette_admin = _paletteAdmin;
 
         MapItem.setBackEffectAdmin(backEffectAdmin);
         MapItem.setEffectAdmin(effectAdmin);
@@ -709,6 +713,7 @@ public class MapObjectAdmin {
         map_inventry_admin.storageMapInventry();
         globalData.getExpendItemInventry().save();
         //activityChange.toWorldActivity();
+        palette_admin.resetDungeonUseNum();
         unitedActivity.getUnitedSurfaceView().toWorldGameMode();
     }
 

@@ -218,28 +218,6 @@ public class DungeonGameSystem {
 
 
         //activityChange = _activityChange;
-        dungeonModeManage = new DungeonModeManage();
-        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, unitedActivity, dungeonModeManage, soundAdmin);
-        map_object_admin = new MapObjectAdmin(
-                graphic,
-                dungeon_user_interface,
-                soundAdmin,
-                map_plate_admin,
-                dungeonModeManage,
-                unitedActivity,
-                battle_unit_admin,
-                text_box_admin,
-                battleUnitDataAdmin,
-                dungeonMonsterDataAdmin,
-                repeat_count,
-                dungeon_kind,
-                dungeonData,
-                effectAdmin,
-                backEffectAdmin
-        );
-        map_plate_admin.setMapObjectAdmin(map_object_admin);
-        map_inventry_admin = new MapInventryAdmin(globalData, map_plate_admin.getInventry(), map_object_admin, map_plate_admin);
-
 
         map_status = new MapStatus(Constants.STAGE_NUM);//mapのクリア状況,チュートリアルを見たかどうかを記憶しておく
         map_status_saver = new MapStatusSaver(_myDatabaseAdmin, "MapSaveData", "MapSaveData.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE, map_status, Constants.STAGE_NUM);
@@ -255,13 +233,6 @@ public class DungeonGameSystem {
 //            System.out.println("after:stage_num = "+i+", is_clear = "+map_status.getTutorialFinishStatus(i));
 //        }
 //      camera = new Camera(map_size, 64*4);
-
-        if (!(dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH)) {
-            dungeonData = dungeon_data_admin.getDungeon_data().get(dungeon_num);
-            map_size.set(dungeonData.getMap_size_x(), dungeonData.getMap_size_y());
-            map_admin = new MapAdmin(graphic,this, map_object_admin, dungeonData, dungeonMonsterDataAdmin.getDungeon_monster_data(), map_status, map_status_saver);
-            map_admin.goNextFloor();
-        }
 
 //        map_object_admin.getCamera(map_admin.getCamera());
 
@@ -285,6 +256,37 @@ public class DungeonGameSystem {
         palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipmentInventry, expendInventry, equipment_item_data_admin, soundAdmin);
         //palette_admin = new PaletteAdmin(battle_user_interface, graphic, equipment_item_data_admin);
         palette_admin.setMiningItems(miningItemDataAdmin);//TODO コンストラクタに入れて居ないためよくない
+
+
+        dungeonModeManage = new DungeonModeManage();
+        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, unitedActivity, dungeonModeManage, soundAdmin, palette_admin);
+        map_object_admin = new MapObjectAdmin(
+                graphic,
+                dungeon_user_interface,
+                soundAdmin,
+                map_plate_admin,
+                dungeonModeManage,
+                unitedActivity,
+                battle_unit_admin,
+                text_box_admin,
+                battleUnitDataAdmin,
+                dungeonMonsterDataAdmin,
+                repeat_count,
+                dungeon_kind,
+                dungeonData,
+                effectAdmin,
+                backEffectAdmin,
+                palette_admin
+        );
+        map_plate_admin.setMapObjectAdmin(map_object_admin);
+        map_inventry_admin = new MapInventryAdmin(globalData, map_plate_admin.getInventry(), map_object_admin, map_plate_admin);
+
+        if (!(dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH)) {
+            dungeonData = dungeon_data_admin.getDungeon_data().get(dungeon_num);
+            map_size.set(dungeonData.getMap_size_x(), dungeonData.getMap_size_y());
+            map_admin = new MapAdmin(graphic,this, map_object_admin, dungeonData, dungeonMonsterDataAdmin.getDungeon_monster_data(), map_status, map_status_saver);
+            map_admin.goNextFloor();
+        }
 
 
         playerStatusViewer = new PlayerStatusViewer(graphic, dungeon_user_interface, playerStatus);
@@ -484,6 +486,7 @@ public class DungeonGameSystem {
                 break;
 
             case TO_WORLD:
+                palette_admin.resetDungeonUseNum();
                 unitedActivity.getUnitedSurfaceView().toWorldGameMode();
                 break;
 
