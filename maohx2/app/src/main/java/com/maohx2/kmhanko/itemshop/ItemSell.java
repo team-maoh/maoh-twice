@@ -132,9 +132,9 @@ public class ItemSell {
                     */
                     parentInv = inventry.getInventryData(i).getParentInventry();
                     for (int j = 0; j < inventry.getInventryData(i).getSoldNum(); j++) {
-                        inventry.getInventryData(i).setSoldNum(0);
                         parentInv.subItemData(inventry.getItemData(i));//個数が0以下になるとシフトが発生するため、iに意味がなくなるので注意
                     }
+                    inventry.getInventryData(i).setSoldNum(0);
                 }
             }
         }
@@ -146,7 +146,12 @@ public class ItemSell {
         for (int i = 0; i < INVENTRY_DATA_MAX; i++) {
             if (sellItemInventry.getItemData(i) != null) {
                 if (sellItemInventry.getItemData(i).getPrice() > 0 && sellItemInventry.getItemNum(i) > 0) {
-                    tempSellMoney += sellItemInventry.getItemData(i).getPrice() * sellItemInventry.getItemNum(i);
+                    if (sellItemInventry.getItemData(i).getItemKind() == Constants.Item.ITEM_KIND.EXPEND) {
+                        ExpendItemData temp = (ExpendItemData)(sellItemInventry.getItemData(i));
+                        tempSellMoney += temp.getPriceByPlayerStatus(playerStatus) * sellItemInventry.getItemNum(i) / 2;
+                    } else {
+                        tempSellMoney += sellItemInventry.getItemData(i).getPrice() * sellItemInventry.getItemNum(i);
+                    }
                 }
             }
         }

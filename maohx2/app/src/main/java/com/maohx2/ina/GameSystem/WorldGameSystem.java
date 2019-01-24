@@ -48,6 +48,7 @@ import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.Saver.GeoSlotSaver;
 import com.maohx2.kmhanko.Saver.GeoPresentSaver;
 import com.maohx2.kmhanko.Talking.TalkAdmin;
+import com.maohx2.kmhanko.WindowPlate.WindowPlate;
 import com.maohx2.kmhanko.WindowPlate.WindowTextPlate;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.dungeonselect.DungeonSelectManager;
@@ -313,6 +314,7 @@ public class WorldGameSystem {
         initBackPlate();
         initTutorialButton();
 
+
         //OP判定。まだOPを流していないならOP会話イベントを発動する。
         talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される//堀江デバッグのためにコメントアウト
 
@@ -371,8 +373,15 @@ public class WorldGameSystem {
         //attackEffect = effectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, 1);
         */
 
+        /*
+        windowPlate = new WindowPlate(graphic, new int[] {0, 0, 1500, 800});
+        windowPlate.setDrawFlag(true);
+        windowPlate2 = new WindowPlate(graphic, new int[] {1500, 0, 1600, 800});
+        windowPlate2.setDrawFlag(true);
+        */
     }
-
+    //WindowPlate windowPlate;
+    //WindowPlate windowPlate2;
     /* エフェクトテスト用
     int damagedEffect;
     int attackEffect;
@@ -391,6 +400,7 @@ public class WorldGameSystem {
     int position_x = 800;
     int position_y = 400;
     */
+
 
 
     int count = 0;
@@ -445,9 +455,14 @@ public class WorldGameSystem {
             case GEO_MAP_SELECT_INIT:
                 backGround = graphic.searchBitmap("GeoMap");
                 worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT);
+                if(tutorial_flag_data.getIs_tutorial_finished(3) == 0){
+                    worldModeAdmin.setMode(WORLD_MODE.TU_GEO);
+                    tutorial_flag_data.setIs_tutorial_finished(1, 3);//チュートリアルフラグを立てる
+                }
             case GEO_MAP_SELECT:
                 if (!talkAdmin.isTalking()) {
                     dungeonSelectManager.update();
+                    playerStatusViewer.update();
                 }
                 break;
             case TU_GEO:
@@ -456,7 +471,7 @@ public class WorldGameSystem {
                 }
                 else if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_geo_flag == 1) {
                     tu_geo_flag = 0;
-                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
+                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT_INIT);
                     tutorial_flag_saver.save();
                 }
                 break;
@@ -464,10 +479,6 @@ public class WorldGameSystem {
                 backGround = graphic.searchBitmap("GeoMap");
                 worldModeAdmin.setMode(WORLD_MODE.GEO_MAP);
                 geoSlotAdminManager.start();
-                if(tutorial_flag_data.getIs_tutorial_finished(3) == 0){
-                    worldModeAdmin.setMode(WORLD_MODE.TU_GEO);
-                    tutorial_flag_data.setIs_tutorial_finished(1, 3);//チュートリアルフラグを立てる
-                }
             case GEO_MAP:
                 if (!talkAdmin.isTalking()) {
                     geoSlotAdminManager.update();
@@ -652,6 +663,7 @@ public class WorldGameSystem {
             case GEO_MAP_SELECT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 dungeonSelectManager.draw();
+                playerStatusViewer.draw();
                 break;
             case GEO_MAP_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
@@ -765,6 +777,12 @@ public class WorldGameSystem {
             effectAdmin.draw();
         }
 
+
+        //windowPlate.draw();
+        //windowPlate2.draw();
+        //graphic.bookingDrawBitmapData(graphic.searchBitmap("dungeonIconPlate00"),0,0,5.0f,15.0f,0.0f,255,true);
+        //graphic.bookingDrawBitmapData(graphic.searchBitmap("dungeonIconPlate00" +""),0,450,5.0f,15.0f,0.0f,255,true);
+
     }
 
     boolean updateStopFlag = false;
@@ -838,6 +856,7 @@ public class WorldGameSystem {
         tutorialButtonGroup.setUpdateFlag(false);
         tutorialButtonGroup.setDrawFlag(false);
     }
+
 
 
     public void release() {

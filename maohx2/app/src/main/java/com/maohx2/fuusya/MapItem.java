@@ -180,6 +180,8 @@ public class MapItem extends MapInanimate {
                 statusID = 2;
                 break;
         }
+        //System.out.println("aaaa" + statusMaxMin[statusID + 3][0] + " " + statusMaxMin[statusID + 3][1] + " " + parameter);
+
         float tempRate =  (float)(parameter - statusMaxMin[statusID + 3][1])/(float)(statusMaxMin[statusID + 3][0] - statusMaxMin[statusID + 3][1]);
         extend = tempRate * 1.45f + 0.05f;
         parameter *= 1.5f;
