@@ -9,6 +9,8 @@ import android.graphics.Typeface;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 
+import com.maohx2.kmhanko.WindowPlate.WindowPlate;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +34,9 @@ public class TextBox {
 
     int column_of_box;//箱の横幅
     int row_of_box;//箱の縦幅
+
+    WindowPlate windowPlate;
+    WindowPlate touchedWindowPlate;
 
 
     int MAX_QUEUE_TEXT = 500;//下のキューの容量
@@ -96,10 +101,12 @@ public class TextBox {
         update_text_by_touching = _update_text_by_touching;
         assign_sentence_id = _assign_sentence_id;
 
+
         box_left = (int) _box_left;
         box_top = (int) _box_top;
         box_right = (int) _box_right;
         box_down = (int) _box_down;
+
 
         column_of_box = box_right - box_left;
         row_of_box = _row_of_box;
@@ -143,6 +150,10 @@ public class TextBox {
 
         sound_admin = _sound_admin;
 
+        windowPlate = new WindowPlate(graphic, new int[] {box_left, box_top, box_right, box_down});
+        touchedWindowPlate = new WindowPlate(graphic, new int[] {box_left, box_top, box_right, box_down}, "baseButton01");
+        windowPlate.setDrawFlag(true);
+        touchedWindowPlate.setDrawFlag(true);
     }
 
     public void init() {
@@ -187,7 +198,7 @@ public class TextBox {
         }
     }
 
-    public void draw() {
+    public void draw(boolean touch_state) {
 
         //箱が存在する場合、
         if (exists == true) {
@@ -195,7 +206,13 @@ public class TextBox {
 
             //上のupdateで設定したpaintを使って箱を描画
 //        Rect rect = new Rect(box_left, box_top, box_right, box_down);
-            graphic.bookingDrawRect(box_left, box_top, box_right, box_down, box_paint);
+            //graphic.bookingDrawRect(box_left, box_top, box_right, box_down, box_paint);
+
+            if (touch_state == false) {//タッチしていない
+                windowPlate.draw();
+            } else {
+                touchedWindowPlate.draw();
+            }
 
             if (sentence_exists == true) {
                 if (queue[first].getSentence().equals("null")) {
@@ -351,7 +368,7 @@ public class TextBox {
     private void displayText() {
 
         for (int i = first; queue[i].isMOP() == false; i = (i + 1) % MAX_QUEUE_TEXT) {
-            graphic.bookingDrawText(queue[i].getSentence(), box_left + 5 + queue[i].getBeginColumn(), box_top + 45 + 40 * queue[i].getNumOfLines(), queue[i].getPaint());
+            graphic.bookingDrawText(queue[i].getSentence(), box_left + 12 + queue[i].getBeginColumn(), box_top + 12 + (int)(queue[i].getPaint().getTextSize()) + (int)(queue[i].getPaint().getTextSize()) * queue[i].getNumOfLines(), queue[i].getPaint());
 //            graphic.bookingDrawText(queue[i].getSentence(), box_left + 5 + queue[i].getBeginColumn(), box_top + 45 + (int)(box_paint.getTextSize()) * queue[i].getNumOfLines(), queue[i].getPaint());
 //            System.out.println("first");
         }
@@ -522,6 +539,10 @@ public class TextBox {
 //        return tmp_first ;
     }
 
+    public boolean isExist() {
+        return exists;
+    }
+
 
     public void release() {
         System.out.println("takanoRelease : TextBox");
@@ -543,6 +564,11 @@ public class TextBox {
         tmp_num_of_lines = null;
         tmp_begin_column = null;
         is_too_long = null;
+
+        windowPlate.release();
+        windowPlate = null;
+        touchedWindowPlate.release();
+        touchedWindowPlate = null;
     }
 
 }

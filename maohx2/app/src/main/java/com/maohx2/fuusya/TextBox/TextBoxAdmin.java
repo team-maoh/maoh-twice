@@ -25,7 +25,7 @@ public class TextBoxAdmin {
 
     int frame_count;
 
-    TextBox text_box[] = new TextBox[100];
+    TextBox text_box[] = new TextBox[16];
     int box_count;
     UserInterface user_interface;
     Graphic graphic;
@@ -220,13 +220,17 @@ public class TextBoxAdmin {
         //テスト用ここまで
 
         for (int i = 0; i < box_count; i++) {
-            text_box[i].update(user_interface.checkUI(text_box[i].getTouchID(), Constants.Touch.TouchWay.MOVE));
+            if (text_box[i].isExist()) {
+                text_box[i].update(user_interface.checkUI(text_box[i].getTouchID(), Constants.Touch.TouchWay.MOVE));
+            }
         }
     }
 
     public void draw() {
         for (int i = 0; i < box_count; i++) {
-            text_box[i].draw();
+            if (text_box[i].isExist()) {
+                text_box[i].draw(user_interface.checkUI(text_box[i].getTouchID(), Constants.Touch.TouchWay.MOVE));
+            }
         }
     }
 
@@ -327,6 +331,13 @@ public class TextBoxAdmin {
     public boolean isLastSentence(int _box_id) {
         return text_box[_box_id].isLastSentence();
 //        return true;
+    }
+
+    public boolean getTextBoxExists(int _box_id) {
+        if (text_box[_box_id] != null) {
+            return text_box[_box_id].isExist();
+        };
+        return false;
     }
 
 

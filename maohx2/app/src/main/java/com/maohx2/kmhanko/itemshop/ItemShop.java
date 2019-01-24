@@ -300,12 +300,14 @@ public abstract class ItemShop {
     }
 
     public void update() {
-        productUpdate();
         buySelectUpdate();
         backPlateGroup.update();
-        switchPlateGroup.update();
-        tutorialButtonGroup.update();
-        itemInventry.updata();
+        if (!textBoxAdmin.getTextBoxExists(buyTextBoxID)) {
+            itemInventry.updata();
+            tutorialButtonGroup.update();
+            switchPlateGroup.update();
+            productUpdate();
+        }
 
 
         /*
@@ -411,10 +413,10 @@ public abstract class ItemShop {
     public void draw() {
         buySelectPlateGroup.draw();
         productPlateGroup.draw();
-        backPlateGroup.draw();
-        switchPlateGroup.draw();
         tutorialButtonGroup.draw();
         itemInventry.draw();
+        backPlateGroup.draw();
+        switchPlateGroup.draw();
     }
 
     public void initUIs() {

@@ -1,5 +1,7 @@
 package com.maohx2.ina.Activity;
 
+import com.maohx2.horie.Tutorial.TutorialFlagData;
+import com.maohx2.horie.Tutorial.TutorialFlagSaver;
 import com.maohx2.ina.Arrange.PaletteAdmin;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
@@ -15,12 +17,14 @@ import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.Saver.PlayerStatusSaver;
 import com.maohx2.kmhanko.Talking.TalkAdmin;
 import com.maohx2.kmhanko.Talking.TalkSaveDataAdmin;
+import com.maohx2.kmhanko.geonode.GeoSlot;
+import com.maohx2.kmhanko.geonode.GeoSlotAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlotAdminManager;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 import com.maohx2.horie.map.MapStatus;
 
-
+import java.util.List;
 
 // 所持アイテム(消費)
 
@@ -43,6 +47,7 @@ import com.maohx2.horie.map.MapStatus;
 // 所持ジオ・ジオスロットへのセット
 
 // 献上ポイント
+
 
 /**
  * Created by user on 2019/01/24.
@@ -70,11 +75,13 @@ public class DemoManager {
         openingDemo(talkSaveDataAdmin);
     }
 
-    public void worldGameDemo(Graphic graphic, InventryS equipmentInventry, PaletteAdmin paletteAdmin, InventryS expendItemInventry, ItemDataAdminManager itemDataAdminManager, PlayerStatus playerStatus, InventryS geoInventry, GeoSlotAdminManager geoSlotAdminManager, MapStatus mapStatus, MapStatusSaver mapStatusSaver, TalkSaveDataAdmin talkSaveDataAdmin) {
+    public void worldGameDemo(Graphic graphic, InventryS equipmentInventry, PaletteAdmin paletteAdmin, InventryS expendItemInventry, ItemDataAdminManager itemDataAdminManager, PlayerStatus playerStatus, InventryS geoInventry, GeoSlotAdminManager geoSlotAdminManager, MapStatus mapStatus, MapStatusSaver mapStatusSaver, TalkSaveDataAdmin talkSaveDataAdmin, TutorialFlagData tutorialFlagData, TutorialFlagSaver tutorialFlagSaver) {
         if (worldGameDemoEndFlag) {
             return;
         }
         worldGameDemoEndFlag = true;
+
+        //武器・アイテムここから
 
         EquipmentItemData tmpEquipmentItemData = new EquipmentItemData();
 
@@ -189,8 +196,6 @@ public class DemoManager {
 
         equipmentInventry.save();
 
-
-
         ExpendItemData tempExpendItemData = ((ExpendItemData)(itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName("ポーション")));
         paletteAdmin.setDebugExpend(tempExpendItemData, 0);
         paletteAdmin.setDebugExpend(tempExpendItemData, 3);
@@ -213,11 +218,22 @@ public class DemoManager {
             expendItemInventry.addItemData(itemDataAdminManager.getExpendItemDataAdmin().getOneDataByName("エクスポーション"));
         }
 
+        //武器・アイテムここまで
+
+        //ジオ関係
         geoInventryDemo(geoInventry, geoSlotAdminManager);//playerStatusDemoより先に呼ぶ
+
+        //プレイヤーステータス関係
         playerStatusDemo(playerStatus);
+
+        //ダンジョンクリア関係
         mapClearDemo(mapStatus, mapStatusSaver);
+
+        //会話イベント関係
         talkDemo(talkSaveDataAdmin, playerStatus, mapStatus);//playerStatusDemo, mapClearDemoの後に呼ぶこと
 
+        //チュートリアル関係
+        tutorialDemo(tutorialFlagData, tutorialFlagSaver);
     }
 
     public void dungeonGameDemo() {
@@ -227,10 +243,20 @@ public class DemoManager {
         dungeonGameDemoEndFlag = true;
     }
 
+    //チュートリアル管理
+    private void tutorialDemo(TutorialFlagData tutorialFlagData, TutorialFlagSaver tutorialFlagSaver) {
+        //1でチュートリアルを表示しない
+        tutorialFlagData.setIs_tutorial_finished(1, 0);//装備画面
+        tutorialFlagData.setIs_tutorial_finished(1, 1);//ショップ購入
+        tutorialFlagData.setIs_tutorial_finished(1, 2);//ショップ売却
+        tutorialFlagData.setIs_tutorial_finished(1, 3);//ジオ画面
+        tutorialFlagSaver.save();
+    }
 
     // プレイヤーステータス・魔王勝利回数・ダンジョンループクリア回数など
     private void playerStatusDemo(PlayerStatus playerStatus) {
         //プレイヤーステータス
+
         playerStatus.setBaseHP(60000);//22222
         playerStatus.setBaseAttack(67000);//22222
         playerStatus.setBaseDefence(6800);//2222
@@ -241,7 +267,7 @@ public class DemoManager {
         playerStatus.setMaohWinCount(1);//0
 
         //ダンジョンチュートリアルを行ったか
-        playerStatus.setTutorialInDungeon(1);//0
+        playerStatus.setTutorialInDungeon(0);//0
 
         //ダンジョンをすでに何周したか (1以上であるとき、自動的に全ての"ジオマップ"が解放されるので注意)
         playerStatus.setClearCount(0);//0
@@ -257,7 +283,7 @@ public class DemoManager {
         playerStatus.setEffectFlag(false);
         playerStatus.save();
     }
-
+    
     private void geoInventryDemo(InventryS geoInventry, GeoSlotAdminManager geoSlotAdminManager) {
         GeoObjectData tempGeoObjectData;
         int[][] normalGeo = new int[][] {
@@ -347,11 +373,34 @@ public class DemoManager {
             }
         }
 
+        //ジオスロット解放
+        int[][][] geoSlotEvent = new int[][][] {
+                {{2, 1}, {8, 1}, {11, 0}, {12, 0}},
+                {{3, 1}, {4, 1}, {5, 1}, {8, 0}, {11, 0}},
+                {{4, 1}, {6, 1}, {8, 1}, {10, 0}, {12, 0}},
+                {{4, 1}, {6, 1}, {8, 0}, {10, 0}},
+                {{2, 1}, {4, 1}, {6, 1}, {9, 0}, {11, 0}},
+                {{3, 1}, {5, 1}, {7, 1}, {9, 0}, {11, 0}, {14, 0}},
+                {{4, 1}, {7, 1}, {8, 1}, {9, 1}, {10, 1}, {11, 0}, {12, 0}, {13, 0}, {14, 0}},
+                {{2, 1}, {3, 1}, {4, 1}, {5, 0}, {6, 0}, {7, 0},
+                        {8, 1}, {9, 1}, {10, 1}, {11, 1}, {12, 1}, {13, 0}, {14, 0}, {15, 0}, {16, 0}, {17, 0}},
+        };
+
+
+        for(int i = 0; i < geoSlotEvent.length; i++) {
+            slotName = geoSlotAdminManager.getSlotNameDemo(i);
+            List<GeoSlot> geoSlots = geoSlotAdminManager.getGeoSlotAdmin(slotName).getGeoSlots();
+            for (int j = 0; j < geoSlotEvent[i].length; j++) {
+                if (geoSlotEvent[i][j][1] == 1) {
+                    geoSlots.get(geoSlotEvent[i][j][0] - 1).setReleased(true);
+                }
+            }
+        }
+
         geoSlotAdminManager.setSlot();
         geoInventry.save();
         geoSlotAdminManager.calcPlayerStatus();
         geoSlotAdminManager.calcMaohMenosStatus();
-
         geoSlotAdminManager.saveGeoSlot();
     }
 
@@ -360,7 +409,7 @@ public class DemoManager {
         //"最新のループ回数としたとき"、どのダンジョンまで侵入可能な状態か？
         //ここで指定したダンジョンまで侵入可能
         //ループクリア回数が0である場合は、このダンジョンの一つ手前までジオマップに侵入可能
-        Constants.DungeonKind.DUNGEON_KIND canEnterDungeon = Constants.DungeonKind.DUNGEON_KIND.HAUNTED;
+        Constants.DungeonKind.DUNGEON_KIND canEnterDungeon = Constants.DungeonKind.DUNGEON_KIND.SWAMP;
 
         int i = 0;
         switch (canEnterDungeon) {

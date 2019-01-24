@@ -242,22 +242,21 @@ public class ItemSell {
     //***** update関係 *****
     public void update() {
 
-        // インベントリにおけるアイテムのタッチ
-        checkInventry();
 
 
         if (!sellSelectButtonGroup.getUpdateFlag()) {
+            checkInventry(); // インベントリにおけるアイテムのタッチ
             geoInventry.updata();
             expendItemInventry.updata();
             equipmentInventry.updata();
             sellItemInventry.updata();
+            switchPlateGroup.update();
+            sellEnterPlateGroup.update();
+            backPlateGroup.update();
         }
-        switchPlateGroup.update();
 
         //sellSelectButtonCheck();
-        sellEnterPlateGroup.update();
         sellSelectButtonGroup.update();
-        backPlateGroup.update();
     }
     //ui.getInventryData
     //***initUIs

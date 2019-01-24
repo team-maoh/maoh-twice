@@ -2,6 +2,7 @@ package com.maohx2.ina.Activity;
 
 import android.view.SurfaceHolder;
 import com.maohx2.ina.Activity.BaseSurfaceView;
+import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.GameSystem.StartGameSystem;
@@ -91,6 +92,9 @@ public class UnitedSurfaceView extends BaseSurfaceView {
 
         soundAdmin = new SoundAdmin(unitedActivity, my_database_admin);
         musicAdmin = global_data.getMusicAdmin();
+
+        Inventry.setSoundAdmin(soundAdmin);
+        InventryS.setSoundAdmin(soundAdmin);
 
         userInterface = new BattleUserInterface(global_data.getGlobalConstants(), graphic);
         userInterface.init();

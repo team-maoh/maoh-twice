@@ -439,9 +439,13 @@ public class GeoSlotAdmin {
 
 
     public void update(){
-        geoSlotGroup.update();
-        holdGeoPlateGroup.update();
+
         releasePlateGroup.update();
+        if (!textBoxAdmin.getTextBoxExists(releaseTextBoxID)) {
+            geoInventry.updata();
+            geoSlotGroup.update();
+            holdGeoPlateGroup.update();
+        }
 
         if (releasePlateGroup.getUpdateFlag()) {
             int content = releasePlateGroup.getTouchContentNum();
