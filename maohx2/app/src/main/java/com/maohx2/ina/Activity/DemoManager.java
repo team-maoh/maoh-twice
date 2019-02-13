@@ -57,7 +57,7 @@ public class DemoManager {
 
 
     //デモモードかどうか
-    static final boolean demoMode = true;
+    static final boolean demoMode = false;
 
 
     boolean startGameDemoEndFlag = false;
@@ -259,7 +259,7 @@ public class DemoManager {
 
         playerStatus.setBaseHP(60000);//22222
         //playerStatus.setBaseAttack(67000);//22222
-        playerStatus.setBaseAttack(0);//22222
+        playerStatus.setBaseAttack(67000);//22222
         playerStatus.setBaseDefence(6800);//2222
         playerStatus.setBaseLuck(22222 * 2);//2222
         playerStatus.setMoney(100000);//10000
@@ -375,6 +375,7 @@ public class DemoManager {
         }
 
         //ジオスロット解放
+        /*
         int[][][] geoSlotEvent = new int[][][] {
                 {{2, 1}, {8, 1}, {11, 0}, {12, 0}},
                 {{3, 1}, {4, 1}, {5, 1}, {8, 0}, {11, 0}},
@@ -385,6 +386,17 @@ public class DemoManager {
                 {{4, 1}, {7, 1}, {8, 1}, {9, 1}, {10, 1}, {11, 0}, {12, 0}, {13, 0}, {14, 0}},
                 {{2, 1}, {3, 1}, {4, 1}, {5, 0}, {6, 0}, {7, 0},
                         {8, 1}, {9, 1}, {10, 1}, {11, 1}, {12, 1}, {13, 0}, {14, 0}, {15, 0}, {16, 0}, {17, 0}},
+        };*/
+        int[][][] geoSlotEvent = new int[][][] {
+                {{2, 0}, {8, 0}, {11, 0}, {12, 0}},
+                {{3, 0}, {4, 0}, {5, 0}, {8, 0}, {11, 0}},
+                {{4, 0}, {6, 0}, {8, 0}, {10, 0}, {12, 0}},
+                {{4, 0}, {6, 0}, {8, 0}, {10, 0}},
+                {{2, 0}, {4, 0}, {6, 0}, {9, 0}, {11, 0}},
+                {{3, 0}, {5, 0}, {7, 0}, {9, 0}, {11, 0}, {14, 0}},
+                {{4, 0}, {7, 0}, {8, 0}, {9, 0}, {10, 0}, {11, 0}, {12, 0}, {13, 0}, {14, 0}},
+                {{2, 0}, {3, 0}, {4, 0}, {5, 0}, {6, 0}, {7, 0},
+                        {8, 0}, {9, 0}, {10, 0}, {11, 0}, {12, 0}, {13, 0}, {14, 0}, {15, 0}, {16, 0}, {17, 0}},
         };
 
 
