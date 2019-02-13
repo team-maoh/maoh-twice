@@ -153,9 +153,9 @@ public class DungeonGameSystem {
         playerStatus = globalData.getPlayerStatus();
         maohMenosStatus = globalData.getMaohMenosStatus();
 
-        effectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin);
+        effectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin, unitedActivity);
         battle_unit_admin.getEffectAdmin(effectAdmin);
-        backEffectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin);
+        backEffectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin, unitedActivity);
         battle_unit_admin.getEnemyBackEffectAdmin(backEffectAdmin);
 
         changeMovie = new ChangeMovie(graphic, soundAdmin);

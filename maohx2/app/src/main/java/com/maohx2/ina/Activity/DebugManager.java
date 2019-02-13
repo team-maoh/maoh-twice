@@ -32,7 +32,7 @@ public class DebugManager {
         paint.setTextSize(40);
         paint.setStrokeWidth(0);
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.GREEN);
+        paint.setColor(Color.RED);
 
         runtime = Runtime.getRuntime();
 
@@ -45,9 +45,9 @@ public class DebugManager {
     public void draw() {
         if (graphic != null && debugMode) {
             graphic.bookingDrawText("FPS[f/s]: " + String.valueOf((int)fps), 0, (int)paint.getTextSize() * 1, paint);
-            graphic.bookingDrawText("TotalMemory[KB]: " + String.valueOf((int)runtime.totalMemory()), 0, (int)paint.getTextSize() * 2, paint);
-            graphic.bookingDrawText("FreeMemory[KB]: " + String.valueOf((int)runtime.freeMemory()), 0, (int)paint.getTextSize() * 3, paint);
-            graphic.bookingDrawText("UsedMemory[KB]: " + String.valueOf((int)runtime.totalMemory() - runtime.freeMemory()), 0, (int)paint.getTextSize() * 4, paint);
+            graphic.bookingDrawText("TotalMemory[KB]: " + String.valueOf((int)runtime.totalMemory()/1024.0), 0, (int)paint.getTextSize() * 2, paint);
+            graphic.bookingDrawText("FreeMemory[KB]: " + String.valueOf((int)runtime.freeMemory()/1024.0), 0, (int)paint.getTextSize() * 3, paint);
+            graphic.bookingDrawText("UsedMemory[KB]: " + String.valueOf((int)(runtime.totalMemory() - runtime.freeMemory())/1024.0), 0, (int)paint.getTextSize() * 4, paint);
             graphic.bookingDrawText("MaxMemory[KB]: " + String.valueOf((int)runtime.maxMemory()/1024.0), 0, (int)paint.getTextSize() * 5, paint);
 
             for (int i = 0; i < debugText.length; i++) {

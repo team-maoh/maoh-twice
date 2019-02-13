@@ -259,7 +259,7 @@ public class BattleUnitAdmin {
 
         paint.setARGB(230, 0, 0, 0);
 
-        initEffect();
+        ///initEffect();
     }
 
     private void initEffect() {

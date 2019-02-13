@@ -237,7 +237,7 @@ public class WorldGameSystem {
         itemDataAdminManager = globalData.getItemDataAdminManager();//new ItemDataAdminManager();
         itemShopAdmin = new ItemShopAdmin();
 
-        effectAdmin = new EffectAdmin(graphic, databaseAdmin, soundAdmin);
+        effectAdmin = new EffectAdmin(graphic, databaseAdmin, soundAdmin, unitedActivity);
 
         itemDataAdminManager.init(databaseAdmin, graphic);
 
@@ -250,7 +250,7 @@ public class WorldGameSystem {
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin);
 
 
-        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, soundAdmin, unitedActivity, map_status,map_status_saver, talkAdmin);
+        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, soundAdmin, unitedActivity, map_status, map_status_saver, talkAdmin);
 
         geoSlotAdminManager.loadGeoSlot();
 
@@ -385,91 +385,13 @@ public class WorldGameSystem {
                 )
         );//kokomade
         */
-
-<<<<<<< HEAD:maohx2/app/src/main/java/com/maohx2/ina/GameSystem/WorldGameSystem.java
-
-        /* エフェクトテスト用
-=======
-        //エフェクトテスト用
-        /*
->>>>>>> kmhanko4:maohx2/app/src/main/java/com/maohx2/ina/WorldGameSystem.java
-        width = 120;
-        height = 150;
-        damagedExtendX = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
-        damagedExtendY = (float)(width+height)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
-        damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" , "bomb_effect", 5, 2, 1);
-
-<<<<<<< HEAD:maohx2/app/src/main/java/com/maohx2/ina/GameSystem/WorldGameSystem.java
-        /*
-        windowPlate = new WindowPlate(graphic, new int[] {0, 0, 1500, 800});
-        windowPlate.setDrawFlag(true);
-        windowPlate2 = new WindowPlate(graphic, new int[] {1500, 0, 1600, 800});
-        windowPlate2.setDrawFlag(true);
-        */
     }
-    //WindowPlate windowPlate;
-    //WindowPlate windowPlate2;
-    /* エフェクトテスト用
-=======
-*/
-    }
-/*
-    //エフェクトテスト用
->>>>>>> kmhanko4:maohx2/app/src/main/java/com/maohx2/ina/WorldGameSystem.java
-    int damagedEffect;
-    int width;
-    int height;
-    int damageEffectTime;
-    float damagedExtendX;
-    float damagedExtendY;
-    Random rnd = new Random();
-    double scale = 3.0f;
-    int position_x = 800;
-    int position_y = 400;
-<<<<<<< HEAD:maohx2/app/src/main/java/com/maohx2/ina/GameSystem/WorldGameSystem.java
-    */
 
-
-
-    int count = 0;
-=======
-*/
->>>>>>> kmhanko4:maohx2/app/src/main/java/com/maohx2/ina/WorldGameSystem.java
     public void update() {
         if (updateStopFlag) {
             return;
         }
 
-<<<<<<< HEAD:maohx2/app/src/main/java/com/maohx2/ina/GameSystem/WorldGameSystem.java
-
-        /* エフェクトテスト用
-=======
-        /*
-        //エフェクトテスト用
->>>>>>> kmhanko4:maohx2/app/src/main/java/com/maohx2/ina/WorldGameSystem.java
-        damageEffectTime++;
-        if (damageEffectTime >= 4 && worldModeAdmin.getMode() == Constants.GAMESYSTEN_MODE.WORLD_MODE.DUNGEON_SELECT) {
-            damagedEffect = effectAdmin.createEffect("enemy_damaged_effect", "bomb_effect", 5, 2, damagedExtendX, damagedExtendY, 1);
-            effectAdmin.getEffect(damagedEffect).setPosition((int) position_x + rnd.nextInt((int) (width * scale) + 1) - (int) (width * scale) / 2, (int) position_y + rnd.nextInt((int) (scale * height) + 1) - (int) (scale * height) / 2);
-            effectAdmin.getEffect(damagedEffect).start();
-            damageEffectTime = 0;
-        }
-        */
-
-
-/*
-        if (world_user_interface.getTouchState() == Constants.Touch.TouchState.DOWN) {
-            List<BitmapData> testBitmapData = new ArrayList<BitmapData>();
-            int testID = effectAdmin.createEffect("test2", "打撃01", 9,1);
-            effectAdmin.getEffect(testID).setPosition((int)world_user_interface.getTouchX(),(int)world_user_interface.getTouchY());
-            effectAdmin.getEffect(testID).start();
-        }
-*/
-/*
-        if (!talkAdmin.isTalking()) {
-            //talkAdmin.debug();//堀江デバッグのためにコメントアウト
-        }
-*/
         switch (worldModeAdmin.getMode()) {
             case DUNGEON_SELECT_INIT_START:
                 if(changeMovie.update(false, false) == true) {
@@ -983,6 +905,8 @@ public class WorldGameSystem {
         credit = null;
         System.gc();
     }
+
+
 
 /*
     int count = 0;

@@ -37,7 +37,6 @@ public class MapMine extends MapInanimate {
         if (exists == true) {
 
             if (player.isWithinReach(w_x, w_y, REACH_FOR_PLAYER) == true) {
-<<<<<<< HEAD
                 if (skipFlag == false) {
                     System.out.println("採掘スポットに接触");
                     if (dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE && dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT) {
@@ -47,21 +46,6 @@ public class MapMine extends MapInanimate {
                 }
             } else {
                 skipFlag = false;
-=======
-                System.out.println("採掘スポットに接触");
-                if (dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE && dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT) {
-                    //戦闘画面では「罠だ！」のTextBoxを出さない
-                    map_object_admin.eraseEffectBox();
-                    
-                    dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING_INIT);
-                    exists = false;
-                }
-
-//                sound_admin.play("getItem");
-//                exists = false;
-//            bag_Item_admin.setItemIdToBagItem(map_Item[i].getId());//アイテムidを引き渡す
-//            map_Item[i].setExists(false);
->>>>>>> kmhanko4
             }
 
         }

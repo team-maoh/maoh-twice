@@ -32,6 +32,8 @@ public class EffectBitmapData  {
         float extendX = 1.0f;
         float extendY = 1.0f;
 
+        int sizeCount = 0;
+
 
         //作成失敗チェック
         if ((effectData = effectDataAdmin.getEffectData(_effectDataName)) == null) {
@@ -54,6 +56,11 @@ public class EffectBitmapData  {
         }
         int count = 0;
 
+        Runtime runtime = Runtime.getRuntime();
+
+        System.out.println("Takano: EffectBitmapData: Make:"
+                + " , dataName = " + _effectDataName + " , imageName = " + _imageName);
+
         while(count < effectData.getSteps()) {
             if (!loadFlag[count]) {
                 extendX = effectData.getExtendX(count) * modiExtendX;
@@ -74,6 +81,14 @@ public class EffectBitmapData  {
                                 height / heightNum
                         );
                         loadFlag[i] = true;
+
+                        sizeCount = trimmedBitmapData[i].getBitmap().getByteCount();
+                        System.out.println("Takano: EffectBitmapData: Make: SizeOfBitmap[KB] = " + String.valueOf((float)sizeCount / 1024.0f));
+                        System.out.println(" Takano: EffectBitmapData: Make: TotalMemory[KB]: " + String.valueOf((int)runtime.totalMemory()/1024.0));
+                        System.out.println(" Takano: EffectBitmapData: Make: FreeMemory[KB]: " + String.valueOf((int)runtime.freeMemory()/1024.0));
+                        System.out.println(" Takano: EffectBitmapData: Make: UsedMemory[KB]: " + String.valueOf((int)(runtime.totalMemory() - runtime.freeMemory())/1024.0));
+                        System.out.println(" Takano: EffectBitmapData: Make: MaxMemory[KB]: " + String.valueOf((int)runtime.maxMemory()/1024.0));
+
                     }
                 }
             }
@@ -87,6 +102,7 @@ public class EffectBitmapData  {
             break;
         }
 
+
         exist = true;
         return;
     }
@@ -94,13 +110,25 @@ public class EffectBitmapData  {
     public void clear() {
         imageName = null;
         effectData = null;
-        trimmedBitmapData = null;
+        if (trimmedBitmapData != null) {
+            for (int i = 0; i < trimmedBitmapData.length; i++) {
+                if (trimmedBitmapData[i] != null) {
+                    trimmedBitmapData[i].releaseBitmap();
+                    trimmedBitmapData[i] = null;
+                }
+            }
+            trimmedBitmapData = null;
+        }
         exist = false;
     }
 
     public boolean equals(String _effectDataName, String _imageName) {
         if (!exist) { return false; }
         return _imageName.equals(imageName) && _effectDataName.equals(effectData.getName());
+    }
+
+    public String getEffectDataName() {
+        return effectData.getName();
     }
 
     public BitmapData[] getTrimmedBitmapData() {
@@ -120,7 +148,7 @@ public class EffectBitmapData  {
     }
 
     public void release() {
-        trimmedBitmapData = null;
+        clear(); trimmedBitmapData = null;
     }
 
 }

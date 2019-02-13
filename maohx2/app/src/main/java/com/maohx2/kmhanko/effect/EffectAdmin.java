@@ -4,6 +4,7 @@ package com.maohx2.kmhanko.effect;
  * Created by user on 2018/01/19.
  */
 
+import com.maohx2.ina.Activity.UnitedActivity;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.database.MyDatabaseAdmin;
@@ -30,6 +31,8 @@ public class EffectAdmin {
     int dataIndex = 0;
     int effectIndex = 0;
 
+    UnitedActivity unitedActivity;
+
 
     /*
     public EffectAdmin(Graphic _graphic) {
@@ -37,7 +40,7 @@ public class EffectAdmin {
     }
     */
 
-    public EffectAdmin(Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin) {
+    public EffectAdmin(Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, UnitedActivity _unitedActivity) {
         //this(_graphic);
         graphic = _graphic;
         Effect.staticInit(_graphic, _soundAdmin);
@@ -48,11 +51,12 @@ public class EffectAdmin {
         for (int i = 0; i < effectBitmapDatas.length; i++) {
             effectBitmapDatas[i] = new EffectBitmapData();
         }
+        unitedActivity = _unitedActivity;
 
         EffectBitmapData.setStatics(graphic, effectDataAdmin);
     }
 
-    public EffectAdmin(Graphic _graphic, EffectDataAdmin _effectDataAdmin, SoundAdmin _soundAdmin) {
+    public EffectAdmin(Graphic _graphic, EffectDataAdmin _effectDataAdmin, SoundAdmin _soundAdmin, UnitedActivity _unitedActivity) {
         //this(_graphic);
         graphic = _graphic;
         Effect.staticInit(_graphic, _soundAdmin);
@@ -62,6 +66,8 @@ public class EffectAdmin {
         for (int i = 0; i < effectBitmapDatas.length; i++) {
             effectBitmapDatas[i] = new EffectBitmapData();
         }
+        unitedActivity = _unitedActivity;
+
         effectDataAdmin = _effectDataAdmin;
         EffectBitmapData.setStatics(graphic, effectDataAdmin);
     }
@@ -136,6 +142,9 @@ public class EffectAdmin {
                 System.out.println("Takano: EffectAdmin: Effect用のBitmap格納個数の上限オーバーにより負荷が掛かっています.");
             }
             effectBitmapDatas[makeID].make(_dataName, _imageName, widthNum, heightNum, extendX, extendY);
+
+            System.out.println("Takano: EffectAdmin: NumOfActiveEffectBitmapData = " + String.valueOf(getNumOfActiveEffectBitmapData()));
+
             dataIndex = (dataIndex+1)%TRIMMED_BITMAP_MAX;
             return effectBitmapDatas[makeID];
         } else {
@@ -210,6 +219,22 @@ public class EffectAdmin {
         for (int i = 0; i < effects.length; i++) {
             effects[i].update();
         }
+
+        int count = getNumOfActiveEffectBitmapData();
+        unitedActivity.getUnitedSurfaceView().getDebugManager().updateDebugText(0,
+                "Num of EffectBitmapData: " + count + "/" + effectBitmapDatas.length);
+    }
+
+    public int getNumOfActiveEffectBitmapData() {
+        int count = 0;
+        for (int i = 0 ; i < effectBitmapDatas.length; i++) {
+            if (effectBitmapDatas[i] != null) {
+                if (effectBitmapDatas[i].isExist()) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     //全てのエフェクトを消す
@@ -256,6 +281,26 @@ public class EffectAdmin {
     public void restartAllEffect() {
         for (int i = 0; i < effects.length; i++) {
             effects[i].restart();
+        }
+    }
+
+    //effectBitmapDataのリリース関係
+
+    //dataNameを指定して手動リリース
+    public void clearEffectBitmapDataByDataName(String _dataName) {
+        for (int i = 0; i < effectBitmapDatas.length; i++) {
+            if (effectBitmapDatas[i] != null) {
+                if (effectBitmapDatas[i].getEffectDataName().equals(_dataName)) {
+                    effectBitmapDatas[i].clear();
+                }
+            }
+        }
+    }
+    public void clearEffectBitmapDataAll() {
+        for (int i = 0; i < effectBitmapDatas.length; i++) {
+            if (effectBitmapDatas[i] != null) {
+                effectBitmapDatas[i].clear();
+            }
         }
     }
 

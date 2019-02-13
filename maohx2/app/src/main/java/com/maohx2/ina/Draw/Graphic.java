@@ -314,6 +314,10 @@ public class Graphic {
 
 
     public void bookingDrawBitmapDataSimple(BitmapData draw_bitmap_data, int position_x, int position_y, boolean is_upleft){
+        if (draw_bitmap_data == null) {
+            System.out.println("draw_bitmap_data is null");
+            return;
+        }
 
         setting_point1.set(position_x, position_y);
         transrateNormalizedPositionToDispPosition(setting_point1);
