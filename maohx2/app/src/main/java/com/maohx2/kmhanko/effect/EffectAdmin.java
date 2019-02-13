@@ -86,12 +86,14 @@ public class EffectAdmin {
     }
 */
 
-    private int searchEffectBitmapDataID(String _dataName, String _imageName) {
+    private int searchEffectBitmapDataID(String _dataName, String _imageName, float _extendX, float _extendY) {
         int number = -1;
         for (int i = 0 ; i < effectBitmapDatas.length; i++) {
             if (effectBitmapDatas[i] != null) {
                 if (effectBitmapDatas[i].equals(_dataName, _imageName)) {
-                    number = i;
+                    if (effectBitmapDatas[i].getModifiX() == _extendX && effectBitmapDatas[i].getModifiY() == _extendY) {
+                        number = i;
+                    }
                 }
             }
         }
@@ -107,12 +109,13 @@ public class EffectAdmin {
         return createEffect(_dataName, _imageName, widthNum, heightNum, extendX, extendY, 0);
     }
 
+
     public int createEffect(String _dataName, String _imageName, int widthNum, int heightNum, int _kind) {
         return createEffect(_dataName, _imageName, widthNum, heightNum, 1.0f, 1.0f, _kind);
     }
 
     public int createEffect(String _dataName, String _imageName, int widthNum, int heightNum, float extendX, float extendY, int kind) {
-        int number = searchEffectBitmapDataID(_dataName, _imageName);
+        int number = searchEffectBitmapDataID(_dataName, _imageName, extendX, extendY);
         EffectBitmapData tempEffectBitmapData;
         if (number == -1) {
             tempEffectBitmapData = createEffectBitmapData(_dataName, _imageName, widthNum, heightNum, extendX, extendY);
@@ -122,7 +125,7 @@ public class EffectAdmin {
 
         int makeEffectID = effectIndex;
         if (effects[makeEffectID].isExist()) {
-            System.out.println("Takano: EffectAdmin: 表示Effect数の上限オーバーです.");
+            //System.out.println("Takano: EffectAdmin: 表示Effect数の上限オーバーです.");
             effects[makeEffectID].clear();
         }
         effects[makeEffectID].create(tempEffectBitmapData, kind);
@@ -135,7 +138,7 @@ public class EffectAdmin {
     }
 
     public EffectBitmapData createEffectBitmapData(String _dataName, String _imageName, int widthNum, int heightNum, float extendX, float extendY) {
-        int number = searchEffectBitmapDataID(_dataName, _imageName);
+        int number = searchEffectBitmapDataID(_dataName, _imageName, extendX, extendY);
         if (number == -1) {
             int makeID = dataIndex;
             if (effectBitmapDatas[makeID].isExist()) {//エフェクトが埋まっている
@@ -290,8 +293,10 @@ public class EffectAdmin {
     public void clearEffectBitmapDataByDataName(String _dataName) {
         for (int i = 0; i < effectBitmapDatas.length; i++) {
             if (effectBitmapDatas[i] != null) {
-                if (effectBitmapDatas[i].getEffectDataName().equals(_dataName)) {
-                    effectBitmapDatas[i].clear();
+                if (effectBitmapDatas[i].getEffectData() != null) {
+                    if (effectBitmapDatas[i].getEffectDataName().equals(_dataName)) {
+                        effectBitmapDatas[i].clear();
+                    }
                 }
             }
         }

@@ -314,6 +314,63 @@ public class BattleUnitAdmin {
 
     }
 
+    private void updateEffect() {
+
+        /*
+        effectAdmin.createEffectBitmapData("scoop_effect","scoop_effect", 5, 4);
+        effectAdmin.createEffectBitmapData("hammer_effect","hammer_effect", 5, 1);
+        effectAdmin.createEffectBitmapData("bomb_effect","bomb_effect", 5, 2);
+        effectAdmin.createEffectBitmapData("dynamite_effect","dynamite_effect", 5, 4);
+        effectAdmin.createEffectBitmapData("bunch_of_dynamite_effect","bunch_of_dynamite_effect", 5, 4);
+*/
+
+        EquipmentItemData attack_equipment = null;
+        if (mode == MODE.BATTLE || mode == MODE.MAOH || mode == MODE.BOSS || mode == MODE.OPENING) {
+            attack_equipment = palette_admin.getEquipmentItemData();
+            if (attack_equipment != null) {
+                switch (attack_equipment.getEquipmentKind()) {
+                    case AX:
+                        effectAdmin.createEffectBitmapData("axe_effect", "axe_effect", 3, 5);
+                        break;
+                    case BARE:
+                        effectAdmin.createEffectBitmapData("barehand_effect", "barehand_effect", 5, 3);
+                        break;
+                    case BOW:
+                        effectAdmin.createEffectBitmapData("bow_effect", "bow_effect", 5, 2);
+                        break;
+                    case WAND:
+                        effectAdmin.createEffectBitmapData("cane_effect", "cane_effect", 14, 1);
+                        break;
+                    case GUN:
+                        effectAdmin.createEffectBitmapData("gun_effect", "gun_effect", 5, 2);
+                        break;
+                    case FIST:
+                        effectAdmin.createEffectBitmapData("knuckle_effect", "knuckle_effect", 6, 3);
+                        break;
+                    case CLUB:
+                        effectAdmin.createEffectBitmapData("mace_effect", "mace_effect", 5, 1);
+                        break;
+                    case MUSIC:
+                        effectAdmin.createEffectBitmapData("musical_instrument_effect", "musical_instrument_effect", 1, 15);
+                        break;
+                    case SPEAR:
+                        effectAdmin.createEffectBitmapData("spear_effect", "spear_effect", 5, 3);
+                        break;
+                    case SWORD:
+                        effectAdmin.createEffectBitmapData("sword_effect", "sword_effect", 9, 1);
+                        break;
+                    case WHIP:
+                        effectAdmin.createEffectBitmapData("whip_effect", "whip_effect", 5, 5);
+                        break;
+                }
+            }
+        }
+        if (mode == MODE.MINING) {
+                attack_equipment = palette_admin.getMiningItemData();
+        }
+
+    }
+
     //by kmhanko
     public void reset(MODE _mode) {
         mode = _mode;
@@ -531,6 +588,8 @@ public class BattleUnitAdmin {
         double touch_x = battle_user_interface.getTouchX();
         double touch_y = battle_user_interface.getTouchY();
         TouchState touch_state = battle_user_interface.getTouchState();
+
+        updateEffect();
 
         if (!battleEndFlag) {
             //if (!battleEndFlag && !(mode == MODE.OPENING && text_mode)) {
@@ -1382,6 +1441,7 @@ public class BattleUnitAdmin {
         deleteEnemy();
         playerStatus.setNowHP(battle_units[0].getHitPoint());
         expendInventry.save();
+        deleteEffect();
 
 
         if (winFlag) {
@@ -1465,6 +1525,29 @@ public class BattleUnitAdmin {
     }
 
     // *** オープニング戦闘の会話文関係 ここまで ***
+
+
+    private void deleteEffect() {
+        effectAdmin.clearEffectBitmapDataByDataName("scoop_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("hammer_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("bomb_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("dynamite_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("bunch_of_dynamite_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("axe_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("barehand_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("bow_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("cane_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("gun_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("knuckle_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("mace_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("musical_instrument_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("spear_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("sword_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("whip_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("enemy_damaged_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("enemy_attack_effect");
+    }
+
 }
 
         /*

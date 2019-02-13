@@ -19,6 +19,9 @@ public class EffectBitmapData  {
 
     private boolean exist;
 
+    private float modifiX;
+    private float modifiY;
+
     public EffectBitmapData() {
         this.clear();
     }
@@ -28,9 +31,12 @@ public class EffectBitmapData  {
         effectDataAdmin = _effectDataAdmin;
     }
 
-    public void make(String _effectDataName, String _imageName, int widthNum, int heightNum, float modiExtendX, float modiExtendY) {
+    public void make(String _effectDataName, String _imageName, int widthNum, int heightNum, float _modiExtendX, float _modiExtendY) {
         float extendX = 1.0f;
         float extendY = 1.0f;
+
+        modifiX = _modiExtendX;
+        modifiY = _modiExtendY;
 
         int sizeCount = 0;
 
@@ -63,15 +69,15 @@ public class EffectBitmapData  {
 
         while(count < effectData.getSteps()) {
             if (!loadFlag[count]) {
-                extendX = effectData.getExtendX(count) * modiExtendX;
-                extendY = effectData.getExtendY(count) * modiExtendY;
+                extendX = effectData.getExtendX(count) * modifiX;
+                extendY = effectData.getExtendY(count) * modifiY;
                 BitmapData tempBitmapData = graphic.searchBitmapWithScale(imageName, extendX, extendY);
                 int width = tempBitmapData.getWidth();
                 int height = tempBitmapData.getHeight();
 
                 //該当する倍率のステップの画像を全て埋め込む
                 for (int i = count; i < effectData.getSteps(); i++) {
-                    if (extendX == effectData.getExtendX(i) && extendY == effectData.getExtendY(i)) {
+                    if (extendX == effectData.getExtendX(i) * modifiX && extendY == effectData.getExtendY(i) * modifiY) {
                         int imageID = effectData.getImageID(i);
                         trimmedBitmapData[i] = graphic.processTrimmingBitmapData(
                                 tempBitmapData,
@@ -145,6 +151,13 @@ public class EffectBitmapData  {
 
     public boolean isExist() {
         return exist;
+    }
+
+    public float getModifiX() {
+        return modifiX;
+    }
+    public float getModifiY() {
+        return modifiY;
     }
 
     public void release() {
