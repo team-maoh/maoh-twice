@@ -44,8 +44,12 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     public Graphic graphic;
     public boolean back_ground_flag = false;
 
+    protected DebugManager debugManager;
+
     public void release() {
         System.out.println("takanoRelease : BaseSurfaceView");
+        debugManager.release();
+        debugManager = null;
         paint = null;
         thread = null;
         //TODO ゲーム終了時に
@@ -68,6 +72,9 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
         BitmapFactory.Options options = new BitmapFactory.Options();
 //        options.inPurgeable = true; //再利用性のない画像を解放する
+
+        debugManager = new DebugManager(currentActivity);
+
     }
 
 
@@ -113,10 +120,9 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
             final long now_frame = System.currentTimeMillis();
             final double fps = 1000.0 / (now_frame - old_frame);
             old_frame = now_frame;
-
-
             //System.out.println("fps:"+fps);
 
+            debugManager.setFPS(fps);
         }
     }
 
@@ -172,5 +178,9 @@ public class BaseSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     }
     public void setTouchState(Constants.Touch.TouchState x) {
         touch_state = x;
+    }
+
+    public DebugManager getDebugManager() {
+        return debugManager;
     }
 }

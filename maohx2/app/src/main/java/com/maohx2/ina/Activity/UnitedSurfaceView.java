@@ -112,6 +112,8 @@ public class UnitedSurfaceView extends BaseSurfaceView {
         graphic = new Graphic(unitedActivity, holder);
         my_database_admin = new MyDatabaseAdmin(unitedActivity);
 
+        debugManager.setGraphic(graphic);
+
         soundAdmin = new SoundAdmin(unitedActivity, my_database_admin);
         musicAdmin = global_data.getMusicAdmin();
 
@@ -365,6 +367,7 @@ public class UnitedSurfaceView extends BaseSurfaceView {
                 break;
         }
 
+        debugManager.draw();
         graphic.draw();
         gameModeChanger.toChangeGameMode();
     }

@@ -45,8 +45,6 @@ public abstract class BaseActivity extends Activity {
         super.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         //MusicAdmin.setAudioService(this);
 
-
-
         /*
         backSurfaceView = new BackSurfaceView(this);
         layout.addView(backSurfaceView);
