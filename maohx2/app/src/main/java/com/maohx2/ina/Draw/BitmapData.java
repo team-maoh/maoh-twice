@@ -9,10 +9,13 @@ import com.maohx2.ina.Constants;
  * Created by ina on 2017/10/08.
  */
 
-public class BitmapData{
+public class BitmapData {
 
     Bitmap bitmap;
     String image_name;
+
+    float scaleX = 1.0f;
+    float scaleY = 1.0f;
 
 
 
@@ -40,7 +43,19 @@ public class BitmapData{
 
     public int getHeight(){return bitmap.getHeight();}
 
-    public void transBitmap(Matrix transMatrix){ bitmap = Bitmap.createBitmap(bitmap, 0,0, bitmap.getWidth(), bitmap.getHeight(), transMatrix, true); }
+    public float getScaleX(){return scaleX;}
+
+    public float getScaleY(){return scaleY;}
+
+    public void setScales(float _scaleX, float _scaleY) {
+        scaleX = _scaleX;
+        scaleY = _scaleY;
+    }
+
+    public void transBitmap(Matrix transMatrix, float _scaleX, float _scaleY){
+        bitmap = Bitmap.createBitmap(bitmap, 0,0, bitmap.getWidth(), bitmap.getHeight(), transMatrix, true);
+        setScales(_scaleX, _scaleY);
+    }
 
     //by kmhanko
     public void releaseBitmap() {
@@ -59,6 +74,8 @@ public class BitmapData{
     public void clear() {
         bitmap = null;
         image_name = "";
+        scaleX = 1.0f;
+        scaleY = 1.0f;
     }
 
 }

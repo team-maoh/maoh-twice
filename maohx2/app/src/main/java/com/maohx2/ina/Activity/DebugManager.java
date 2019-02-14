@@ -13,7 +13,7 @@ public class DebugManager {
     //デバッグのために必要な表示などを行うクラス
 
     //デバッグ表示するかどうか
-    static final boolean debugMode = true;
+    static final boolean debugMode = false;
 
     private final static int DEBUG_TEXT_MAX = 40;
     private Activity activity;
@@ -24,6 +24,8 @@ public class DebugManager {
     private Runtime runtime;
 
     private String[] debugText = new String[DEBUG_TEXT_MAX];
+    private int nowFpsID = 0;
+    private float fpsLog[] = new float[100];
 
     public DebugManager(Activity _activity) {
         activity = _activity;
@@ -32,7 +34,7 @@ public class DebugManager {
         paint.setTextSize(40);
         paint.setStrokeWidth(0);
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.GREEN);
+        paint.setColor(Color.WHITE);
 
         runtime = Runtime.getRuntime();
 
@@ -58,6 +60,13 @@ public class DebugManager {
                 }
             }
 
+            for (int i = 0; i < fpsLog.length; i++) {
+                if (fpsLog[i] != 0) {
+                    graphic.bookingDrawCircle(i * 1600/fpsLog.length, (int)(600.0f - fpsLog[i] * 10.0f), 5, paint);
+                }
+            }
+            graphic.bookingDrawRect(0, 299,1600,300, paint);
+            graphic.bookingDrawRect(0, 600,1600,601, paint);
         }
     }
 
@@ -69,12 +78,15 @@ public class DebugManager {
 
     public void setFPS(double _fps) {
         fps = _fps;
+        fpsLog[nowFpsID] = (float)fps;
+        nowFpsID = (nowFpsID+1)%fpsLog.length;
     }
 
     public void release() {
         paint = null;
         paintEdge = null;
         debugText = null;
+        fpsLog = null;
     }
 
 

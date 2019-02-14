@@ -116,14 +116,14 @@ public class BattleEnemy extends BattleUnit {
         width = getBattleDungeonUnitData().getBitmapDate().getWidth();
         height = getBattleDungeonUnitData().getBitmapDate().getHeight();
 
-        attackExtendX = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.5f;
-        attackExtendY = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.5f;
+        attackExtendX = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.3f;
+        attackExtendY = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.3f;
 
-        damagedExtendX = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
-        damagedExtendY = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
+        damagedExtendX = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.3f;
+        damagedExtendY = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.3f;
+        effectAdmin.createEffect("enemy_damaged_effect" , "bomb_effect", 5, 2, damagedExtendX, damagedExtendY, 1, EffectAdmin.EXTEND_MODE.BEFORE);
 
-        damagedEffect = effectAdmin.createEffect("enemy_damaged_effect" , "bomb_effect", 5, 2, 1);
-        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, 1);
+        backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, attackExtendX, attackExtendY, 1, EffectAdmin.EXTEND_MODE.BEFORE);
 
     }
     protected void damagedEffectStart() {
@@ -131,9 +131,9 @@ public class BattleEnemy extends BattleUnit {
             return;
         }
         if (damageEffectTime >= damageEffectInterval) {
-            damagedEffect = effectAdmin.createEffect("enemy_damaged_effect", "bomb_effect", 5, 2, 1);
+            effectAdmin.getEffect(damagedEffect).clear();
+            damagedEffect = effectAdmin.createEffect("enemy_damaged_effect", "bomb_effect", 5, 2, damagedExtendX, damagedExtendY, 1, EffectAdmin.EXTEND_MODE.BEFORE);
             effectAdmin.getEffect(damagedEffect).setPosition((int) position_x + rnd.nextInt((int)(width*scale) + 1) - (int)(width*scale)/2, (int) position_y + rnd.nextInt((int)(scale*height) + 1) - (int)(scale*height)/2);
-            effectAdmin.setExtends(damagedEffect, damagedExtendX, damagedExtendY);
             effectAdmin.getEffect(damagedEffect).start();
             damageEffectTime = 0;
         }
@@ -143,9 +143,9 @@ public class BattleEnemy extends BattleUnit {
         if (getUnitKind() != Constants.UnitKind.ENEMY) {
             return;
         }
-        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, 1);
+        backEnemyEffectAdmin.getEffect(attackEffect).clear();
+        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, attackExtendX, attackExtendY,  1, EffectAdmin.EXTEND_MODE.BEFORE);
         backEnemyEffectAdmin.getEffect(attackEffect).setPosition((int) position_x, (int) position_y);
-        backEnemyEffectAdmin.setExtends(attackEffect, attackExtendX, attackExtendY);
         backEnemyEffectAdmin.getEffect(attackEffect).start();
     }
     //エフェクト関係ここまで
