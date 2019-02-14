@@ -448,6 +448,7 @@ public class DungeonGameSystem {
 
             case BUTTLE_INIT:
                 if(changeMovie.update(true) == true) {
+                    battle_unit_admin.initEffectForEnemy();
                     dungeonModeManage.setMode(BUTTLE);
                     backGround = graphic.searchBitmap("firstBackground");
                     musicAdmin.loadMusic("battle00", true);

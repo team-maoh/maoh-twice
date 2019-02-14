@@ -116,15 +116,14 @@ public class BattleEnemy extends BattleUnit {
         width = getBattleDungeonUnitData().getBitmapDate().getWidth();
         height = getBattleDungeonUnitData().getBitmapDate().getHeight();
 
-        attackExtendX = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.5f;
-        attackExtendY = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.5f;
+        attackExtendX = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.3f;
+        attackExtendY = (float)(width+height)/2.0f/(768.0f/4.0f*2.0f)*1.3f;
 
-        damagedExtendX = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
-        damagedExtendY = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.5f;
-
-
+        damagedExtendX = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.3f;
+        damagedExtendY = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.3f;
         effectAdmin.createEffect("enemy_damaged_effect" , "bomb_effect", 5, 2, damagedExtendX, damagedExtendY, 1, EffectAdmin.EXTEND_MODE.BEFORE);
-        backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, attackExtendX, attackExtendY, 1, EffectAdmin.EXTEND_MODE.AFTER);
+
+        backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, attackExtendX, attackExtendY, 1, EffectAdmin.EXTEND_MODE.BEFORE);
 
     }
     protected void damagedEffectStart() {
@@ -145,9 +144,8 @@ public class BattleEnemy extends BattleUnit {
             return;
         }
         backEnemyEffectAdmin.getEffect(attackEffect).clear();
-        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, attackExtendX, attackExtendY,  1, EffectAdmin.EXTEND_MODE.AFTER);
+        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, attackExtendX, attackExtendY,  1, EffectAdmin.EXTEND_MODE.BEFORE);
         backEnemyEffectAdmin.getEffect(attackEffect).setPosition((int) position_x, (int) position_y);
-        backEnemyEffectAdmin.getEffect(attackEffect).setExtends(attackExtendX, attackExtendY);
         backEnemyEffectAdmin.getEffect(attackEffect).start();
     }
     //エフェクト関係ここまで

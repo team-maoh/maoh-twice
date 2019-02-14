@@ -493,6 +493,7 @@ public class Graphic {
 
         //画像の検索
         int draw_bitmap_num = -1;
+
         BitmapData hit_bitmap_data = null;
         if(global_bitmap_data_admin != null){
             draw_bitmap_num = global_bitmap_data_admin.getBitmapDataNum(bitmap_name);
@@ -527,11 +528,40 @@ public class Graphic {
         //画像の検索
         int draw_bitmap_num = -1;
         BitmapData hit_bitmap_data = null;
+
+
+        if(global_bitmap_data_admin != null){
+            draw_bitmap_num = global_bitmap_data_admin.getBitmapDataNum(bitmap_name, scale_x, scale_y);
+
+            if(draw_bitmap_num >= 0) {
+                return hit_bitmap_data = global_bitmap_data_admin.getBitmapData(draw_bitmap_num);
+            }
+        }
+
+
+        if(draw_bitmap_num < 0 && local_bitmap_data_admin != null){
+            draw_bitmap_num = local_bitmap_data_admin.getBitmapDataNum(bitmap_name, scale_x, scale_y);
+            if(draw_bitmap_num >= 0) {
+                return hit_bitmap_data = local_bitmap_data_admin.getBitmapData(draw_bitmap_num);
+            }
+        }
+
+        //拡大済みの画像がなかった
+
         if(global_bitmap_data_admin != null){
             draw_bitmap_num = global_bitmap_data_admin.getBitmapDataNum(bitmap_name);
 
             if(draw_bitmap_num >= 0) {
                 hit_bitmap_data = global_bitmap_data_admin.getBitmapData(draw_bitmap_num);
+
+                setting_matrix.reset();
+                setting_matrix.postScale(DENSITY * scale_x, DENSITY * scale_y);
+                return global_bitmap_data_admin.addBitmapData(
+                        hit_bitmap_data.getImageName(),
+                        Bitmap.createBitmap(hit_bitmap_data.getBitmap(), 0,0, hit_bitmap_data.getWidth(), hit_bitmap_data.getHeight(), setting_matrix, true),
+                        scale_x,
+                        scale_y
+                );
             }
         }
 
@@ -540,19 +570,21 @@ public class Graphic {
             draw_bitmap_num = local_bitmap_data_admin.getBitmapDataNum(bitmap_name);
             if(draw_bitmap_num >= 0) {
                 hit_bitmap_data = local_bitmap_data_admin.getBitmapData(draw_bitmap_num);
+                setting_matrix.reset();
+                setting_matrix.postScale(DENSITY * scale_x, DENSITY * scale_y);
+                return local_bitmap_data_admin.addBitmapData(
+                        hit_bitmap_data.getImageName(),
+                        Bitmap.createBitmap(hit_bitmap_data.getBitmap(), 0,0, hit_bitmap_data.getWidth(), hit_bitmap_data.getHeight(), setting_matrix, true),
+                        scale_x,
+                        scale_y
+                );
             }
         }
 
-        if(draw_bitmap_num < 0) {
-            throw new Error("%☆イナガキ：drawBooking:画像名「" + bitmap_name + "」がありません     " + "global: " + global_bitmap_data_admin + "local:" + local_bitmap_data_admin);
-        }
 
-        setting_matrix.reset();
-        setting_matrix.postScale(DENSITY * scale_x, DENSITY * scale_y);
+        throw new Error("%☆イナガキ：drawBooking:画像名「" + bitmap_name + "」がありません     " + "global: " + global_bitmap_data_admin + "local:" + local_bitmap_data_admin);
+        //hit_bitmap_data.transBitmap(setting_matrix);
 
-        hit_bitmap_data.transBitmap(setting_matrix);
-
-        return hit_bitmap_data;
     }
 
     public BitmapData resizeBitmap(BitmapData bitmapData, float scale_x, float scale_y){
@@ -560,7 +592,7 @@ public class Graphic {
         setting_matrix.reset();
         setting_matrix.postScale(DENSITY * scale_x, DENSITY * scale_y);
 
-        bitmapData.transBitmap(setting_matrix);
+        bitmapData.transBitmap(setting_matrix, scale_x, scale_y);
 
         return bitmapData;
     }

@@ -315,6 +315,12 @@ public class BattleUnitAdmin {
             }
         }
 
+
+        //固定値なのでここでも良い
+        float damagedExtendX = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.3f;
+        float damagedExtendY = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.3f;
+        effectAdmin.createEffect("enemy_damaged_effect" , "bomb_effect", 5, 2, damagedExtendX, damagedExtendY, 1, EffectAdmin.EXTEND_MODE.BEFORE);
+
     }
 /*
     private void updateEffect() {
@@ -445,12 +451,20 @@ public class BattleUnitAdmin {
                 }
 
                 //エフェクトの作成
-                ((BattleEnemy)battle_units[i]).initEffect(i);
+                //((BattleEnemy)battle_units[i]).initEffect(i);
 
                 return i;
             }
         }
         return -1;
+    }
+
+    public void initEffectForEnemy() {
+        for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
+            if (battle_units[i].isExist()) {
+                ((BattleEnemy) battle_units[i]).initEffect(i);
+            }
+        }
     }
 
     public void setPlayer(PlayerStatus playerStatus) {
@@ -1541,8 +1555,9 @@ public class BattleUnitAdmin {
         effectAdmin.clearEffectBitmapDataByDataName("sword_effect");
         effectAdmin.clearEffectBitmapDataByDataName("whip_effect");
         */
-        effectAdmin.clearEffectBitmapDataByDataName("enemy_damaged_effect");
+        //effectAdmin.clearEffectBitmapDataByDataName("enemy_damaged_effect");
         enemyBackEffectAdmin.clearEffectBitmapDataByDataName("enemy_attack_effect");
+        System.gc();
     }
 
 }
