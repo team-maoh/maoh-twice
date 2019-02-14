@@ -79,8 +79,9 @@ public class MapItem extends MapInanimate {
             default:
                 return;
         }
-        effectID = effectAdmin.createEffect("itemEffect" ,effectImageName, 5, 3, extend, extend);
+        effectID = effectAdmin.createEffect("itemEffect" ,effectImageName, 5, 3, 1.0f, 1.0f, EffectAdmin.EXTEND_MODE.AFTER);
         effectAdmin.getEffect(effectID).setPosition(camera.convertToNormCoordinateX((int)w_x), camera.convertToNormCoordinateY((int)w_y));
+        effectAdmin.getEffect(effectID).setExtends(extend, extend);
         effectAdmin.getEffect(effectID).start();
     }
 

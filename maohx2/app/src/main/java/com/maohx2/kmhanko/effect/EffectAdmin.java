@@ -33,6 +33,10 @@ public class EffectAdmin {
 
     UnitedActivity unitedActivity;
 
+    public enum EXTEND_MODE {
+        BEFORE,
+        AFTER
+    }
 
     /*
     public EffectAdmin(Graphic _graphic) {
@@ -86,13 +90,20 @@ public class EffectAdmin {
     }
 */
 
-    private int searchEffectBitmapDataID(String _dataName, String _imageName, float _extendX, float _extendY) {
+    private int searchEffectBitmapDataID(String _dataName, String _imageName, float _extendX, float _extendY, EXTEND_MODE extendMode) {
+        //extendMode == AFTERの場合は、_extendX, _extendYは無視し、素の大きさから探すことになる
+
         int number = -1;
         for (int i = 0 ; i < effectBitmapDatas.length; i++) {
             if (effectBitmapDatas[i] != null) {
                 if (effectBitmapDatas[i].equals(_dataName, _imageName)) {
-                    if (effectBitmapDatas[i].getModifiX() == _extendX && effectBitmapDatas[i].getModifiY() == _extendY) {
+                    if (effectBitmapDatas[i].getModifiX() == _extendX && effectBitmapDatas[i].getModifiY() == _extendY && extendMode == EXTEND_MODE.BEFORE && effectBitmapDatas[i].getExtendMode() == EXTEND_MODE.BEFORE) {
                         number = i;
+                        break;
+                    }
+                    if (extendMode == EXTEND_MODE.AFTER && effectBitmapDatas[i].getExtendMode() == EXTEND_MODE.AFTER) {
+                        number = i;
+                        break;
                     }
                 }
             }
@@ -101,24 +112,24 @@ public class EffectAdmin {
     }
 
     // *** createEffect ***
-    public int createEffect(String _dataName, String _imageName, int widthNum, int heightNum) {
-        return createEffect(_dataName, _imageName, widthNum, heightNum, 1.0f, 1.0f, 0);
+    public int createEffect(String _dataName, String _imageName, int widthNum, int heightNum, EXTEND_MODE extendMode) {
+        return createEffect(_dataName, _imageName, widthNum, heightNum, 1.0f, 1.0f, 0, extendMode);
     }
 
-    public int createEffect(String _dataName, String _imageName, int widthNum, int heightNum, float extendX, float extendY) {
-        return createEffect(_dataName, _imageName, widthNum, heightNum, extendX, extendY, 0);
+    public int createEffect(String _dataName, String _imageName, int widthNum, int heightNum, float extendX, float extendY, EXTEND_MODE extendMode) {
+        return createEffect(_dataName, _imageName, widthNum, heightNum, extendX, extendY, 0, extendMode);
     }
 
 
-    public int createEffect(String _dataName, String _imageName, int widthNum, int heightNum, int _kind) {
-        return createEffect(_dataName, _imageName, widthNum, heightNum, 1.0f, 1.0f, _kind);
+    public int createEffect(String _dataName, String _imageName, int widthNum, int heightNum, int _kind, EXTEND_MODE extendMode) {
+        return createEffect(_dataName, _imageName, widthNum, heightNum, 1.0f, 1.0f, _kind, extendMode);
     }
 
-    public int createEffect(String _dataName, String _imageName, int widthNum, int heightNum, float extendX, float extendY, int kind) {
-        int number = searchEffectBitmapDataID(_dataName, _imageName, extendX, extendY);
+    public int createEffect(String _dataName, String _imageName, int widthNum, int heightNum, float extendX, float extendY, int kind, EXTEND_MODE extendMode) {
+        int number = searchEffectBitmapDataID(_dataName, _imageName, extendX, extendY, extendMode);
         EffectBitmapData tempEffectBitmapData;
         if (number == -1) {
-            tempEffectBitmapData = createEffectBitmapData(_dataName, _imageName, widthNum, heightNum, extendX, extendY);
+            tempEffectBitmapData = createEffectBitmapData(_dataName, _imageName, widthNum, heightNum, extendX, extendY, extendMode);
         } else {
             tempEffectBitmapData = effectBitmapDatas[number];
         }
@@ -133,18 +144,18 @@ public class EffectAdmin {
 
         return makeEffectID;
     }
-    public EffectBitmapData createEffectBitmapData(String _dataName, String _imageName, int widthNum, int heightNum) {
-        return createEffectBitmapData(_dataName, _imageName, widthNum, heightNum,1.0f, 1.0f);
+    public EffectBitmapData createEffectBitmapData(String _dataName, String _imageName, int widthNum, int heightNum, EXTEND_MODE extendMode) {
+        return createEffectBitmapData(_dataName, _imageName, widthNum, heightNum,1.0f, 1.0f, extendMode);
     }
 
-    public EffectBitmapData createEffectBitmapData(String _dataName, String _imageName, int widthNum, int heightNum, float extendX, float extendY) {
-        int number = searchEffectBitmapDataID(_dataName, _imageName, extendX, extendY);
+    public EffectBitmapData createEffectBitmapData(String _dataName, String _imageName, int widthNum, int heightNum, float extendX, float extendY, EXTEND_MODE extendMode) {
+        int number = searchEffectBitmapDataID(_dataName, _imageName, extendX, extendY, extendMode);
         if (number == -1) {
             int makeID = dataIndex;
             if (effectBitmapDatas[makeID].isExist()) {//エフェクトが埋まっている
                 System.out.println("Takano: EffectAdmin: Effect用のBitmap格納個数の上限オーバーにより負荷が掛かっています.");
             }
-            effectBitmapDatas[makeID].make(_dataName, _imageName, widthNum, heightNum, extendX, extendY);
+            effectBitmapDatas[makeID].make(_dataName, _imageName, widthNum, heightNum, extendX, extendY, extendMode);
 
             System.out.println("Takano: EffectAdmin: NumOfActiveEffectBitmapData = " + String.valueOf(getNumOfActiveEffectBitmapData()));
 

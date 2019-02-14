@@ -1,13 +1,9 @@
 package com.maohx2.kmhanko.effect;
 
-import android.util.Base64InputStream;
-
-import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.sound.SoundAdmin;
-import java.util.ArrayList;
-import java.util.List;
+import com.maohx2.kmhanko.effect.EffectAdmin.EXTEND_MODE;
 
 /**
  * Created by user on 2018/01/19.
@@ -19,8 +15,6 @@ public class Effect {
     static private Graphic graphic;
     static private SoundAdmin soundAdmin;
 
-    //private List<String> soundName = new ArrayList<String>();
-    //private List<BitmapData> bitmapData = new ArrayList<BitmapData>();
     BitmapData[] bitmapData;
 
     private int steps;
@@ -33,16 +27,15 @@ public class Effect {
     private int original_x;
     private int original_y;
 
-    //private int imageID;
     private String soundName;
     private int x;
     private int y;
     private float r;
-    //private float extend_x;
-    //private float extend_y;
+    private float extend_x;
+    private float extend_y;
 
-    //private float setted_extend_x;
-    //private float setted_extend_y;
+    private float setted_extend_x;
+    private float setted_extend_y;
 
     private float original_angle;
     private float original_angle_deg;
@@ -57,6 +50,8 @@ public class Effect {
 
     private boolean exist;
     private boolean isDraw;
+
+    private EXTEND_MODE extendMode;
 
     public Effect() {
         exist = false;
@@ -85,6 +80,7 @@ public class Effect {
         exist = true;
         isDraw = false;
         is_pause = false;
+        extendMode = effectBitmapData.getExtendMode();
         effectData = effectBitmapData.getEffectData();
         bitmapData = effectBitmapData.getTrimmedBitmapData();
         kind = _kind;
@@ -98,8 +94,8 @@ public class Effect {
         effectData = null;
         original_angle = 0.0f;
         original_angle_deg = 0.0f;
-        //setted_extend_x = 1.0f;
-        //setted_extend_y = 1.0f;
+        setted_extend_x = 1.0f;
+        setted_extend_y = 1.0f;
         soundName = "";
     }
 
@@ -124,13 +120,12 @@ public class Effect {
         original_y = _original_y;
     }
 
-    /*
+
     public void setExtends(float _setted_extend_x, float _setted_extend_y) {
         //倍率の変更
         setted_extend_x = _setted_extend_x;
         setted_extend_y = _setted_extend_y;
     }
-    */
 
     public void setPosition(int _original_x, int _original_y, float _original_angle) {
         //基本座標の更新
@@ -233,10 +228,19 @@ public class Effect {
         //    graphic.bookingDrawBitmapData(bitmapData[step], original_x + (int) (r * Math.cos(anime_angle + original_angle)), original_y + (int) (r * Math.sin(anime_angle + original_angle)), 1.0f, 1.0f, angle + original_angle_deg, alpha, isUpLeft);
         //    System.out.println("Takano: Effect: 注意: bookingDrawBitmapDataが使用された");
         //} else {
-            graphic.bookingDrawBitmapDataSimple(bitmapData[step], original_x + (int) (r * Math.cos(anime_angle + original_angle)), original_y + (int) (r * Math.sin(anime_angle + original_angle)), isUpLeft);
+            //graphic.bookingDrawBitmapDataSimple(bitmapData[step], original_x + (int) (r * Math.cos(anime_angle + original_angle)), original_y + (int) (r * Math.sin(anime_angle + original_angle)), isUpLeft);
         //}
 
         //graphic.bookingDrawBitmapDataSimple(bitmapData[imageID], original_x + (int) (r * Math.cos(anime_angle + original_angle)), original_y + (int) (r * Math.sin(anime_angle + original_angle)), isUpLeft);
+
+        if (extendMode == EXTEND_MODE.BEFORE) {
+            graphic.bookingDrawBitmapDataSimple(bitmapData[step], original_x + (int) (r * Math.cos(anime_angle + original_angle)), original_y + (int) (r * Math.sin(anime_angle + original_angle)), isUpLeft);
+        }
+        if (extendMode == EXTEND_MODE.AFTER) {
+            graphic.bookingDrawBitmapData(bitmapData[step], original_x + (int) (r * Math.cos(anime_angle + original_angle)), original_y + (int) (r * Math.sin(anime_angle + original_angle)), extend_x, extend_y, angle + original_angle_deg, alpha, isUpLeft);
+        }
+
+
     }
     //drawしなければ遅くはならない(26-)
     //4fごとに1つ表示した時。三角関数計算なしで、254=17~20 255=23~
@@ -259,8 +263,13 @@ public class Effect {
         x = effectData.getX(_step);
         y = effectData.getY(_step);
         r = (float)Math.sqrt(x*x+y*y);
-        //extend_x = effectData.getExtendX(_step) * setted_extend_x;
-        //extend_y = effectData.getExtendY(_step) * setted_extend_y;
+        if (extendMode == EXTEND_MODE.AFTER) {
+            extend_x = effectData.getExtendX(_step) * setted_extend_x;
+            extend_y = effectData.getExtendY(_step) * setted_extend_y;
+        } else {
+            extend_x = 1.0f;
+            extend_y = 1.0f;
+        }
         angle = effectData.getAngle(_step);
         alpha = effectData.getAlpha(_step);
         anime_angle = (float)Math.atan2((double)y,(double)x);

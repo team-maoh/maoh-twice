@@ -385,7 +385,7 @@ public class GeoSlot extends CircleImagePlate {
                     for(int j = 0; j < dotNum; j++) {
 
                         geoSlotLineEffect.add(
-                                effectAdmin.createEffect(effectImageName, effectImageName, 3, 1)
+                                effectAdmin.createEffect(effectImageName, effectImageName, 3, 1, EffectAdmin.EXTEND_MODE.BEFORE)
                         );
                         id = geoSlotLineEffect.get(geoSlotLineEffect.size() - 1);
                         effectAdmin.setPosition(
