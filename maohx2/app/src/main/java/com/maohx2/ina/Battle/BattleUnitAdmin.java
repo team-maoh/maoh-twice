@@ -409,7 +409,7 @@ public class BattleUnitAdmin {
                 dropGeoObjectKind.clear();
                 deleteEnemy();
                 spawnRock();
-                timeLimitBar.reset(30 * 30);
+                timeLimitBar.reset(30 * 15);
             //}
 
             //採掘道具攻撃力算出
@@ -651,7 +651,7 @@ public class BattleUnitAdmin {
                                                 //エフェクト by Horie
                                                 if (mode == MODE.MINING) {
                                                     int attack;
-                                                    attack = battle_units[0].getAttack() + attack_equipment.getAttack();
+                                                    attack = (int)(battle_units[0].getAttack() * (float)attack_equipment.getAttack() / 100f);//採掘の場合は倍率でかける
 
                                                     touch_markers[i].generate((int) touch_x, (int) touch_y, attack_equipment.getRadius(), attack, attack_equipment.getDecayRate());
                                                     System.out.println("装備攻撃力:" + attack_equipment.getAttack());
@@ -913,16 +913,18 @@ public class BattleUnitAdmin {
                 battle_units[0].setHitPoint(new_hp);
             }
 
-            //敵の更新と攻撃処理
-            for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
-                if (battle_units[i].isExist() == true) {
-                    int damage_to_player = battle_units[i].update();
-                    if (damage_to_player > 0) {
-                        EquipmentItemData defense_equipment = palette_admin.getEquipmentItemData();
-                        float damage_rate = 1;
-                        if (defense_equipment != null) {
-                            damage_rate = (1 - (float) defense_equipment.getDefence() / 100.0f);
-                        }
+            if (!(mode == MODE.MINING)) {
+
+                //敵の更新と攻撃処理
+                for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
+                    if (battle_units[i].isExist() == true) {
+                        int damage_to_player = battle_units[i].update();
+                        if (damage_to_player > 0) {
+                            EquipmentItemData defense_equipment = palette_admin.getEquipmentItemData();
+                            float damage_rate = 1;
+                            if (defense_equipment != null) {
+                                damage_rate = (1 - (float) defense_equipment.getDefence() / 100.0f);
+                            }
 
                         /*
                         int heel_to_player = 0;
@@ -952,14 +954,14 @@ public class BattleUnitAdmin {
                         */
 
 
-                        double strong_ratio = (damage_to_player * 2222.0) / (battle_units[0].getDefence() * 1000.0 + 1.0);
-                        //strong_ratio = strong_ratio * strong_ratio * strong_ratio * strong_ratio * strong_ratio;
-                        //strong_ratio = strong_ratio * strong_ratio * strong_ratio;
-                        strong_ratio = Math.pow(strong_ratio, 7.0f);
+                            double strong_ratio = (damage_to_player * 2222.0) / (battle_units[0].getDefence() * 1000.0 + 1.0);
+                            //strong_ratio = strong_ratio * strong_ratio * strong_ratio * strong_ratio * strong_ratio;
+                            //strong_ratio = strong_ratio * strong_ratio * strong_ratio;
+                            strong_ratio = Math.pow(strong_ratio, 7.0f);
 
-                        //by kmhanko オーバーフローするので修正
-                        //double level_rate = battle_units[i].getAttack() / 1000.0 * battle_units[i].getDefence() / 100.0 * battle_units[i].getMaxHitPoint() / 1000.0;
-                        double level_rate = battle_units[i].getMaxHitPoint() / 1000.0;
+                            //by kmhanko オーバーフローするので修正
+                            //double level_rate = battle_units[i].getAttack() / 1000.0 * battle_units[i].getDefence() / 100.0 * battle_units[i].getMaxHitPoint() / 1000.0;
+                            double level_rate = battle_units[i].getMaxHitPoint() / 1000.0;
 
 //                        double level_rate = battle_units[0].getAttack() * battle_units[0].getDefence() * battle_units[0].getMaxHitPoint() / 22222.0 / 22222.0 / 2222.0;
 //                        System.out.println("damage_to_desuno_" + damage_to_player);
@@ -969,13 +971,13 @@ public class BattleUnitAdmin {
 //                        System.out.println("level_wa_MHP_1_" + battle_units[0].getMaxHitPoint());
 //
 //                        System.out.println("level_pl_1_" + level_rate);
-                        level_rate = Math.pow(level_rate, 0.4);//0.4だと、自他のStatusが定数倍になっても、敵を倒すための確定数はほぼ変化しない
+                            level_rate = Math.pow(level_rate, 0.4);//0.4だと、自他のStatusが定数倍になっても、敵を倒すための確定数はほぼ変化しない
 //                        System.out.println("level_pl_2_" + level_rate);
 
-                        int damage = (int) ((133.0 * strong_ratio) * level_rate * damage_rate);
+                            int damage = (int) ((133.0 * strong_ratio) * level_rate * damage_rate);
 
-                        int new_hp = battle_units[0].getHitPoint() - damage;
-                        //int new_hp = battle_units[0].getHitPoint() - (int) ((133.0 * strong_ratio) * level_rate * damage_rate - heel_to_player);
+                            int new_hp = battle_units[0].getHitPoint() - damage;
+                            //int new_hp = battle_units[0].getHitPoint() - (int) ((133.0 * strong_ratio) * level_rate * damage_rate - heel_to_player);
 //                        int new_hp = battle_units[0].getHitPoint() - (int) ((real_atk * exp * 0.295 / (real_def + 1) * damage_rate) + heel_to_player);
 
 //                        System.out.println("strong_ratio_pl" + strong_ratio);
@@ -983,46 +985,48 @@ public class BattleUnitAdmin {
 //                        System.out.println("damage_pl_desuyo_" + damage_to_player);//1000
 //                        System.out.println("def_pl_desuyo_" + battle_units[0].getDefence());//2222
 
-                        gameoverMes = "敵から" + String.valueOf((int)((float)(damage) / PlayerStatusViewer.EXPRESS_RATE)) + "ダメージを受けて";
+                            gameoverMes = "敵から" + String.valueOf((int) ((float) (damage) / PlayerStatusViewer.EXPRESS_RATE)) + "ダメージを受けて";
 
-                        if (new_hp > battle_units[0].getMaxHitPoint()) {
-                            new_hp = battle_units[0].getMaxHitPoint();
-                        }
+                            if (new_hp > battle_units[0].getMaxHitPoint()) {
+                                new_hp = battle_units[0].getMaxHitPoint();
+                            }
 
 
-                        //状態異常攻撃
-                        BattleBaseUnitData.ActionID actionID = ((BattleEnemy) (battle_units[i])).checkActionID();
-                        if (actionID != BattleBaseUnitData.ActionID.NORMAL_ATTACK) {
-                            if (actionID != BattleBaseUnitData.ActionID.CURSE) {
-                                //状態異常のカウントが長くなるようであれば，状態異常のカウントを更新
-                                if (battle_units[0].getAlimentCounts(actionID.ordinal() - 1) < ((BattleEnemy) (battle_units[i])).getAlimentTime(actionID)) {
-                                    battle_units[0].setAilmentCounts(actionID.ordinal() - 1, ((BattleEnemy) (battle_units[i])).getAlimentTime(actionID));
-                                }
-                            } else {
-                                //呪いに関してはカウントを自身につけて，誰か一人でもカウントが0になったら死亡とする
-                                if (battle_units[i].getAlimentCounts(actionID.ordinal() - 1) < 0) {
-                                    battle_units[i].setAilmentCounts(actionID.ordinal() - 1, ((BattleEnemy) (battle_units[i])).getAlimentTime(actionID));
+                            //状態異常攻撃
+                            BattleBaseUnitData.ActionID actionID = ((BattleEnemy) (battle_units[i])).checkActionID();
+                            if (actionID != BattleBaseUnitData.ActionID.NORMAL_ATTACK) {
+                                if (actionID != BattleBaseUnitData.ActionID.CURSE) {
+                                    //状態異常のカウントが長くなるようであれば，状態異常のカウントを更新
+                                    if (battle_units[0].getAlimentCounts(actionID.ordinal() - 1) < ((BattleEnemy) (battle_units[i])).getAlimentTime(actionID)) {
+                                        battle_units[0].setAilmentCounts(actionID.ordinal() - 1, ((BattleEnemy) (battle_units[i])).getAlimentTime(actionID));
+                                    }
+                                } else {
+                                    //呪いに関してはカウントを自身につけて，誰か一人でもカウントが0になったら死亡とする
+                                    if (battle_units[i].getAlimentCounts(actionID.ordinal() - 1) < 0) {
+                                        battle_units[i].setAilmentCounts(actionID.ordinal() - 1, ((BattleEnemy) (battle_units[i])).getAlimentTime(actionID));
+                                    }
                                 }
                             }
-                        }
 
 
-                        if (battle_units[i].getAlimentCounts(BattleBaseUnitData.ActionID.CURSE.ordinal() - 1) == 0) {
-                            new_hp = 0;
-                            gameoverMes = "呪いの状態異常で";
-                        }
+                            if (battle_units[i].getAlimentCounts(BattleBaseUnitData.ActionID.CURSE.ordinal() - 1) == 0) {
+                                new_hp = 0;
+                                gameoverMes = "呪いの状態異常で";
+                            }
 
-                        if (new_hp <= 0) {
-                            //負けたとき
-                            gameOver();
-                            resultOperatedFlag = true;
-                            battleEndFlag = true;
-                            new_hp = 0;
+                            if (new_hp <= 0) {
+                                //負けたとき
+                                gameOver();
+                                resultOperatedFlag = true;
+                                battleEndFlag = true;
+                                new_hp = 0;
+                            }
+                            battle_units[0].setDamagedFlag(true);
+                            battle_units[0].setHitPoint(new_hp);
                         }
-                        battle_units[0].setDamagedFlag(true);
-                        battle_units[0].setHitPoint(new_hp);
                     }
                 }
+
             }
         }
 

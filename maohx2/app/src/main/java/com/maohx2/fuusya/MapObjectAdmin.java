@@ -50,7 +50,7 @@ import static java.lang.Math.subtractExact;
 public class MapObjectAdmin {
 
     //int NUM_OF_ENEMY = 10;
-    int NUM_OF_ENEMY = 2;
+    int NUM_OF_ENEMY = 64;
     //int NUM_OF_TRAP = 64;//最大値
     int NUM_OF_TRAP = 0;//最大値
     int NUM_OF_MINE = 128;
@@ -497,7 +497,7 @@ public class MapObjectAdmin {
                 tmp_boss[0] = map_admin.getMonsterName(2)[0];
 
 //            name[0] = names;
-                map_boss[i].setName(tmp_boss);
+                map_boss[i].setName(tmp_boss[0]);
                 map_boss[i].setExists(true);
 //            System.out.println("boss_point.x ___ " + boss_point.x);
 //            System.out.println("boss_point.y ___ " + boss_point.y);
@@ -523,15 +523,25 @@ public class MapObjectAdmin {
 //            int local_i = 0;
 
 //            map_admin.getMonsterName(1)[local_i];
-            int un_null = 1;
-            for (int j = 0 ; j < 5; j++) {
-                if (map_admin.getMonsterName(1)[un_null % 5] == null) {
+
+            enemy_string = map_admin.getMonsterName(1);
+
+            int un_null = 0;
+            for (int j = 0 ; j < enemy_string.length; j++) {
+                if (enemy_string[j] == null) {
                     break;
                 }
+                System.out.println("MapObjectAdmin: SpawnEnemy: enemy_string = " + enemy_string[j]);
                 un_null++;
             }
 
-            for (int i = 0; i < NUM_OF_ENEMY; i++) {
+            System.out.println("MapObjectAdmin: SpawnEnemy: un_null = " + String.valueOf(un_null));
+            if (un_null == 0) {
+                System.out.println("MapObjectAdmin: SpawnEnemy: un_null = 0です");
+                return;
+            }
+
+            for (int i = 0; i < dungeonData.getEnemyNum(); i++) {
 
 //                tmp_enemy_name[0] = map_admin.getMonsterName(1)[local_i];
 //                if (i == 2 && map_mine[0].exists() == true) {
@@ -550,9 +560,10 @@ public class MapObjectAdmin {
 //                }
                 map_enemy[i].setExists(true);
 
-                tmp_enemy_name[0] = map_admin.getMonsterName(1)[i % un_null];
+                tmp_enemy_name[0] = enemy_string[i % un_null];
+                System.out.println("MapObjectAdmin: SpawnEnemy: " + tmp_enemy_name[0]);
 //                tmp_enemy_name[0] = "火山(1)";
-                map_enemy[i].setName(tmp_enemy_name);
+                map_enemy[i].setName(tmp_enemy_name[0]);
 
             }
         }

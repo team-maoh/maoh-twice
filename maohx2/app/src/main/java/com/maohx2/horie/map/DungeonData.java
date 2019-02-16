@@ -20,6 +20,7 @@ public class DungeonData {
     private float accessoryRate;
     private int itemNum;
     private int trapNum;
+    private int enemyNum;
 
     public DungeonData(){}
 
@@ -54,6 +55,7 @@ public class DungeonData {
     public float getAccessoryRate() {return accessoryRate;}
     public int getItemNum() {return itemNum;}
     public int getTrapNum() {return trapNum;}
+    public int getEnemyNum() {return enemyNum;}
 
     public void setDungeon_name(String _dungeon_name){
         dungeon_name = _dungeon_name;
@@ -87,6 +89,7 @@ public class DungeonData {
     public void setAccessoryRate(float x) { accessoryRate = x;}
     public void setItemNum(int x) { itemNum = x;}
     public void setTrapNum(int x) { trapNum = x;}
+    public void setEnemyNum(int x) { enemyNum = x;}
 
     public void release() {
         System.out.println("takanoRelease : DungeonData");

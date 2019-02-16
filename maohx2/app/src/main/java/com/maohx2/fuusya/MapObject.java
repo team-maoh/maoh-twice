@@ -46,7 +46,7 @@ abstract public class MapObject {
 
     Effect effect;
 
-    String[] name = new String[1];
+    protected String name;
 
 
     public MapObject(Graphic _graphic, MapObjectAdmin _map_object_admin, Camera _camera) {
@@ -143,7 +143,7 @@ abstract public class MapObject {
 
     }
 
-    public void setName(String[] _name) {
+    public void setName(String _name) {
         name = _name;
     }
 

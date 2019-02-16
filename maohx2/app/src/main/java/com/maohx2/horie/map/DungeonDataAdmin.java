@@ -38,6 +38,7 @@ public class DungeonDataAdmin {
         List<Float> accessoryRate = dungeon_database.getFloat(tableName, "accessoryRate");
         List<Integer> itemNum = dungeon_database.getInt(tableName, "itemNum");
         List<Integer> trapNum = dungeon_database.getInt(tableName, "trapNum");
+        List<Integer> enemyNum = dungeon_database.getInt(tableName, "enemyNum");
 
 
         for (int i = 0; i < size; i++) {
@@ -57,6 +58,7 @@ public class DungeonDataAdmin {
             dungeon_data.get(i).setAccessoryRate(accessoryRate.get(i));
             dungeon_data.get(i).setItemNum(itemNum.get(i));
             dungeon_data.get(i).setTrapNum(trapNum.get(i));
+            dungeon_data.get(i).setEnemyNum(enemyNum.get(i));
         }
     }
 

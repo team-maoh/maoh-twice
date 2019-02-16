@@ -57,7 +57,7 @@ public class MapBoss extends MapInanimate {
 //                tmp_boss[0] = map_admin.getMonsterName(2)[0];
 
                 battle_unit_admin.reset(BattleUnitAdmin.MODE.BOSS);
-                battle_unit_admin.spawnEnemy(name);
+                battle_unit_admin.spawnEnemy(new String[] { name });
                 dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE_INIT);
 
 //            bag_Item_admin.setItemIdToBagItem(map_Item[i].getId());//アイテムidを引き渡す
