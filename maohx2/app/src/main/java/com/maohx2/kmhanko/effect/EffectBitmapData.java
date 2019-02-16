@@ -81,7 +81,7 @@ public class EffectBitmapData  {
         Runtime runtime = Runtime.getRuntime();
 
         System.out.println("Takano: EffectBitmapData: Make:"
-                + " , dataName = " + _effectDataName + " , imageName = " + _imageName);
+                + " dataName = " + _effectDataName + " , imageName = " + _imageName);
 
         if (extendMode == EXTEND_MODE.BEFORE) {
             boolean continueFlag = true;
@@ -103,6 +103,7 @@ public class EffectBitmapData  {
                             System.out.println("Takano: EffectBitmapData: Make: i, imageID = " + String.valueOf(i) +","+String.valueOf(imageID));
                             System.out.println("Takano: EffectBitmapData: Make: width, height = " + String.valueOf(width / widthNum) +","+String.valueOf(height / heightNum));
                             System.out.println("Takano: EffectBitmapData: Make: ExX, ExY = " + String.valueOf(extendX) +","+String.valueOf(extendY));
+                            System.out.println("Takano: EffectBitmapData: Make: ModX, ModY = " + String.valueOf(modifiX) +","+String.valueOf(modifiY));
 
                             trimmedBitmapData[i] = graphic.processTrimmingBitmapData(
                                     tempBitmapData,

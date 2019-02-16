@@ -780,7 +780,8 @@ public class BattleUnitAdmin {
 
                                 double strong_ratio = (touch_markers[j].getDamage() * 100.0) / (battle_units[i].getDefence() * 22222.0 + 1);
                                 strong_ratio = Math.pow(strong_ratio, 7.0f);
-                                double level_rate = battle_units[i].getAttack() / 1000.0 * battle_units[i].getDefence() / 100.0 * battle_units[i].getMaxHitPoint() / 1000.0;
+                                //double level_rate = battle_units[i].getAttack() / 1000.0 * battle_units[i].getDefence() / 100.0 * battle_units[i].getMaxHitPoint() / 1000.0;
+                                double level_rate = battle_units[i].getMaxHitPoint() / 1000.0;
                                 level_rate = Math.pow(level_rate, 0.4);
                                 int new_hp = battle_units[i].getHitPoint() - (int) (20.0 * strong_ratio * level_rate);
 
@@ -940,12 +941,26 @@ public class BattleUnitAdmin {
                         */
 
 
+                        /*
+                        double strong_ratio = (touch_markers[j].getDamage() * 100.0) / (battle_units[i].getDefence() * 22222.0 + 1);
+                        strong_ratio = Math.pow(strong_ratio, 7.0f);
+                        //double level_rate = battle_units[i].getAttack() / 1000.0 * battle_units[i].getDefence() / 100.0 * battle_units[i].getMaxHitPoint() / 1000.0;
+                        double level_rate = battle_units[i].getMaxHitPoint() / 1000.0;
+                        level_rate = Math.pow(level_rate, 0.4);
+
+                        int new_hp = battle_units[i].getHitPoint() - (int) (20.0 * strong_ratio * level_rate);
+                        */
+
+
                         double strong_ratio = (damage_to_player * 2222.0) / (battle_units[0].getDefence() * 1000.0 + 1.0);
-                        strong_ratio = strong_ratio * strong_ratio * strong_ratio * strong_ratio * strong_ratio;
-                        strong_ratio = strong_ratio * strong_ratio * strong_ratio;
+                        //strong_ratio = strong_ratio * strong_ratio * strong_ratio * strong_ratio * strong_ratio;
+                        //strong_ratio = strong_ratio * strong_ratio * strong_ratio;
+                        strong_ratio = Math.pow(strong_ratio, 7.0f);
 
                         //by kmhanko オーバーフローするので修正
-                        double level_rate = battle_units[i].getAttack() / 1000.0 * battle_units[i].getDefence() / 100.0 * battle_units[i].getMaxHitPoint() / 1000.0;
+                        //double level_rate = battle_units[i].getAttack() / 1000.0 * battle_units[i].getDefence() / 100.0 * battle_units[i].getMaxHitPoint() / 1000.0;
+                        double level_rate = battle_units[i].getMaxHitPoint() / 1000.0;
+
 //                        double level_rate = battle_units[0].getAttack() * battle_units[0].getDefence() * battle_units[0].getMaxHitPoint() / 22222.0 / 22222.0 / 2222.0;
 //                        System.out.println("damage_to_desuno_" + damage_to_player);
 //

@@ -439,6 +439,7 @@ public class DungeonGameSystem {
                 }
                 break;
             case OPENING_BATTLE_INIT:
+                battle_unit_admin.initEffectForEnemy();
                 dungeonModeManage.setMode(BUTTLE);
                 backGround = graphic.searchBitmap("firstBackground");
                 musicAdmin.loadMusic("boss00",true);
