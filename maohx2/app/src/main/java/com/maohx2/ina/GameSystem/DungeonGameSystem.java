@@ -472,6 +472,7 @@ public class DungeonGameSystem {
                                 battleUnitDataAdmin.getMaohUnitNames().get(playerStatus.getMaohWinCount()%size)
                         }
                 );
+                battle_unit_admin.initEffectForEnemy();
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAOH);
                 musicAdmin.loadMusic("boss00",true);
 
