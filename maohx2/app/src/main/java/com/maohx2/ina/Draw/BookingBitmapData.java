@@ -6,9 +6,9 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 
-/**
- * Created by ina on 2017/10/13.
- */
+/*
+Created by ina on 2017/10/13.
+*/
 
 public class BookingBitmapData extends BookingTaskData {
 

@@ -49,6 +49,7 @@ import static java.lang.Math.subtractExact;
 
 public class MapObjectAdmin {
 
+    //int NUM_OF_ENEMY = 10;
     int NUM_OF_ENEMY = 2;
     //int NUM_OF_TRAP = 64;//最大値
     int NUM_OF_TRAP = 0;//最大値
