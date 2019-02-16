@@ -54,6 +54,94 @@ public class GeoSlotSaver extends SaveManager {
     public void dbinit() {
     }
 
+    @Override
+    public void onUpgrade(int oldVersion, int newVersion) {
+        if (oldVersion == 1 && newVersion == 2) {
+            database.delete("Forest", "ID == 2");
+            database.delete("Forest", "ID == 8");
+
+
+            database.delete("Lava", "ID == 3");
+            database.delete("Lava", "ID == 4");
+            database.delete("Lava", "ID == 5");
+
+            database.delete("Sea", "ID == 6");
+            database.delete("Sea", "ID == 8");
+
+            database.delete("Chess", "ID == 4");
+            database.delete("Chess", "ID == 6");
+
+            database.delete("Swamp", "ID == 2");
+            database.delete("Swamp", "ID == 4");
+            database.delete("Swamp", "ID == 6");
+
+            database.delete("Haunted", "ID == 7");
+
+            database.delete("Dragon", "ID == 4");
+            database.delete("Dragon", "ID == 7");
+            database.delete("Dragon", "ID == 8");
+
+            database.delete("Maoh", "ID == 12");
+            database.delete("Maoh", "ID == 13");
+            database.delete("Maoh", "ID == 14");
+            database.delete("Maoh", "ID == 15");
+        }
+    };
+
+    @Override
+    public void onDowngrade (int oldVersion, int newVersion) {
+        if (oldVersion == 1 && newVersion == 2) {
+            database.insertLineByArray("Forest", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(2), "false" });
+            database.insertLineByArray("Forest", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(8), "false" });
+
+
+            database.insertLineByArray("Lava", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(3), "false" });
+            database.insertLineByArray("Lava", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(4), "false" });
+            database.insertLineByArray("Lava", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(5), "false" });
+
+            database.insertLineByArray("Sea", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(6), "false" });
+            database.insertLineByArray("Sea", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(8), "false" });
+
+            database.insertLineByArray("Chess", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(4), "false" });
+            database.insertLineByArray("Chess", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(6), "false" });
+
+            database.insertLineByArray("Swamp", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(2), "false" });
+            database.insertLineByArray("Swamp", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(4), "false" });
+            database.insertLineByArray("Swamp", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(6), "false" });
+
+            database.insertLineByArray("Haunted", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(7), "false" });
+
+            database.insertLineByArray("Dragon", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(4), "false" });
+            database.insertLineByArray("Dragon", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(7), "false" });
+            database.insertLineByArray("Dragon", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(8), "false" });
+
+            database.insertLineByArray("Maoh", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(12), "false" });
+            database.insertLineByArray("Maoh", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(13), "false" });
+            database.insertLineByArray("Maoh", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(14), "false" });
+            database.insertLineByArray("Maoh", new String[] { "id", "release_flag"},
+                    new String[] { String.valueOf(15), "false" });
+        }
+    };
+
     //TODO データベースのアップデートがあった場合に良くない処理。
     public void makeTable() {
         //テーブルの生成
@@ -243,14 +331,7 @@ public class GeoSlotSaver extends SaveManager {
 
         //geoSlotAdminManager.setSlot();
 
+        super.load();
     }
 
-    @Override
-    public void onUpgrade(int oldVersion, int newVersion) {
-
-    };
-    @Override
-    public void onDowngrade (int oldVersion, int newVersion) {
-
-    };
 }

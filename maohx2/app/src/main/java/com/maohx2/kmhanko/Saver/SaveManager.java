@@ -29,19 +29,19 @@ public abstract class SaveManager {
             //
             System.out.println("SaveManager : " + database.getDbName() + " tables:" + database.getTables());
         }
+    }
 
+    public void init() {};
+    abstract public void dbinit();//DBがもともと存在せず、saveフォルダからセーブデータをコピーした時に呼ばれる。loadmode = dsの時は呼ばれない
+    abstract public void save();
+    public void load() {
         if (database.getNewVer() > database.getOldVer()) {
             onUpgrade(database.getOldVer(), database.getNewVer());
         }
         if (database.getNewVer() < database.getOldVer()) {
             onDowngrade(database.getOldVer(), database.getNewVer());
         }
-    }
-
-    public void init() {};
-    abstract public void dbinit();//DBがもともと存在せず、saveフォルダからセーブデータをコピーした時に呼ばれる。loadmode = dsの時は呼ばれない
-    abstract public void save();
-    abstract public void load();
+    };
 
     //セーブ対象クラスが必要な場合はセットタイミングに注意
     abstract public void onUpgrade(int oldVersion, int newVersion);

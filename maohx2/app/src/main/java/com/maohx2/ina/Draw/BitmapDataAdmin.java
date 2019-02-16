@@ -166,18 +166,56 @@ public class BitmapDataAdmin {
         }
     }
 
+    public BitmapData addBitmapData(String imageName, Bitmap bitmap, float scaleX, float scaleY) {
+        BitmapData tempBitmapData = null;
+        for(int k = 0; k < BITMAP_DATA_INSTANCE; k++) {
+            if (bitmap_data[next_load_point].getBitmap() == null) {
+                bitmap_data[next_load_point].setBitmap(bitmap);
+                bitmap_data[next_load_point].setScales(scaleX, scaleY);
+                bitmap_data[next_load_point].setImageName(imageName);
+                tempBitmapData = bitmap_data[next_load_point];
+                break;
+            } else {
+                next_load_point = (next_load_point + 1)%BITMAP_DATA_INSTANCE;
+            }
+            if (k == BITMAP_DATA_INSTANCE - 1) {
+                throw new Error("BitmapDataAdminがバンクしました");
+            }
+        }
+        return tempBitmapData;
+    }
+
 
     //bitmapを名前で検索して、番号を返す
     public int getBitmapDataNum(String bitmap_name) {
-
+        return getBitmapDataNum(bitmap_name, 1.0f, 1.0f);
+    }
+    public int getBitmapDataNum(String bitmap_name, float scale_x, float scale_y) {
         for (int i = 0; i < BITMAP_DATA_INSTANCE; i++) {
-            if (bitmap_data[i].getImageName().equals(bitmap_name) == true) {
-                return i;
+            if ( bitmap_data[i] != null) {
+                if (bitmap_data[i].getImageName().equals(bitmap_name) && bitmap_data[i].getScaleX() == scale_x && bitmap_data[i].getScaleY() == scale_y ) {
+                    return i;
+                }
             }
         }
         return -1;
     }
 
+    //bitmapを名前で検索して、BitmapDataを返す
+    public BitmapData getBitmapData(String bitmap_name) {
+        return getBitmapData(bitmap_name, 1.0f, 1.0f);
+    }
+    public BitmapData getBitmapData(String bitmap_name, float scale_x, float scale_y) {
+
+        for (int i = 0; i < BITMAP_DATA_INSTANCE; i++) {
+            if ( bitmap_data[i] != null) {
+                if (bitmap_data[i].getImageName().equals(bitmap_name) && bitmap_data[i].getScaleX() == scale_x && bitmap_data[i].getScaleY() == scale_y ) {
+                    return bitmap_data[i];
+                }
+            }
+        }
+        return null;
+    }
 
     //bitmap番号をもらって返す
     public BitmapData getBitmapData(int bitmap_data_num) {

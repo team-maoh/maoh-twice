@@ -100,6 +100,7 @@ public class BattleUserInterface extends UserInterface {
 
             if (battle_palette_mode == 2) {
                 selected_circle_num = select_circle_num;
+                System.out.println("BUI: 武器選択(戦闘)");
             }
             battle_palette_mode = 0;
         }

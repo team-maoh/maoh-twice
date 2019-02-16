@@ -3,6 +3,9 @@ package com.maohx2.ina.Battle;
 import android.app.Activity;
 import android.graphics.Paint;
 
+
+import com.maohx2.kmhanko.effect.EffectAdmin.EXTEND_MODE;
+
 import com.maohx2.fuusya.MapPlateAdmin;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 import com.maohx2.horie.map.DungeonMonsterDataAdmin;
@@ -264,11 +267,11 @@ public class BattleUnitAdmin {
 
     private void initEffect() {
 
-        effectAdmin.createEffectOnlyTrim("scoop_effect", 5, 4);
-        effectAdmin.createEffectOnlyTrim("hammer_effect", 5, 1);
-        effectAdmin.createEffectOnlyTrim("bomb_effect", 5, 2);
-        effectAdmin.createEffectOnlyTrim("dynamite_effect", 5, 4);
-        effectAdmin.createEffectOnlyTrim("bunch_of_dynamite_effect", 5, 4);
+        effectAdmin.createEffectBitmapData("scoop_effect","scoop_effect", 5, 4, EXTEND_MODE.AFTER);
+        effectAdmin.createEffectBitmapData("hammer_effect","hammer_effect", 5, 1, EXTEND_MODE.AFTER);
+        effectAdmin.createEffectBitmapData("bomb_effect","bomb_effect", 5, 2, EXTEND_MODE.AFTER);
+        effectAdmin.createEffectBitmapData("dynamite_effect","dynamite_effect", 5, 4, EXTEND_MODE.AFTER);
+        effectAdmin.createEffectBitmapData("bunch_of_dynamite_effect","bunch_of_dynamite_effect", 5, 4, EXTEND_MODE.AFTER);
 
         for (int i = 0; i < 8; i++) {
             ItemData itemData = palette_admin.getPalettes(0).getItemData(i);
@@ -276,43 +279,99 @@ public class BattleUnitAdmin {
             if (itemData != null) {
                 switch (equipmentItemData.getEquipmentKind()) {
                     case AX:
-                        effectAdmin.createEffect("axe_effect", "axe_effect", 3, 5, 1);
+                        effectAdmin.createEffectBitmapData("axe_effect", "axe_effect", 3, 5, EXTEND_MODE.AFTER);
                         break;
                     case BARE:
-                        effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3, 1);
+                        effectAdmin.createEffectBitmapData("barehand_effect", "barehand_effect", 5, 3, EXTEND_MODE.AFTER);
                         break;
                     case BOW:
-                        effectAdmin.createEffect("bow_effect", "bow_effect", 5, 2, 1);
+                        effectAdmin.createEffectBitmapData("bow_effect", "bow_effect", 5, 2, EXTEND_MODE.AFTER);
                         break;
                     case WAND:
-                        effectAdmin.createEffect("cane_effect", "cane_effect", 14, 1, 1);
+                        effectAdmin.createEffectBitmapData("cane_effect", "cane_effect", 14, 1, EXTEND_MODE.AFTER);
                         break;
                     case GUN:
-                        effectAdmin.createEffect("gun_effect", "gun_effect", 5, 2, 1);
+                        effectAdmin.createEffectBitmapData("gun_effect", "gun_effect", 5, 2, EXTEND_MODE.AFTER);
                         break;
                     case FIST:
-                        effectAdmin.createEffect("knuckle_effect", "knuckle_effect", 6, 3, 1);
+                        effectAdmin.createEffectBitmapData("knuckle_effect", "knuckle_effect", 6, 3, EXTEND_MODE.AFTER);
                         break;
                     case CLUB:
-                        effectAdmin.createEffect("mace_effect", "mace_effect", 5, 1, 1);
+                        effectAdmin.createEffectBitmapData("mace_effect", "mace_effect", 5, 1, EXTEND_MODE.AFTER);
                         break;
                     case MUSIC:
-                        effectAdmin.createEffect("musical_instrument_effect", "musical_instrument_effect", 1, 15, 1);
+                        effectAdmin.createEffectBitmapData("musical_instrument_effect", "musical_instrument_effect", 1, 15, EXTEND_MODE.AFTER);
                         break;
                     case SPEAR:
-                        effectAdmin.createEffect("spear_effect", "spear_effect", 5, 3, 1);
+                        effectAdmin.createEffectBitmapData("spear_effect", "spear_effect", 5, 3, EXTEND_MODE.AFTER);
                         break;
                     case SWORD:
-                        effectAdmin.createEffect("sword_effect", "sword_effect", 9, 1, 1);
+                        effectAdmin.createEffectBitmapData("sword_effect", "sword_effect", 9, 1, EXTEND_MODE.AFTER);
                         break;
                     case WHIP:
-                        effectAdmin.createEffect("whip_effect", "whip_effect", 5, 5, 1);
+                        effectAdmin.createEffectBitmapData("whip_effect", "whip_effect", 5, 5, EXTEND_MODE.AFTER);
                         break;
                 }
             }
         }
 
+
+        //固定値なのでここでも良い
+        float damagedExtendX = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.3f;
+        float damagedExtendY = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.3f;
+        effectAdmin.createEffect("enemy_damaged_effect" , "bomb_effect", 5, 2, damagedExtendX, damagedExtendY, 1, EffectAdmin.EXTEND_MODE.BEFORE);
+
     }
+/*
+    private void updateEffect() {
+
+        EquipmentItemData attack_equipment = null;
+        if (mode == MODE.BATTLE || mode == MODE.MAOH || mode == MODE.BOSS || mode == MODE.OPENING) {
+            attack_equipment = palette_admin.getEquipmentItemData();
+            if (attack_equipment != null) {
+                switch (attack_equipment.getEquipmentKind()) {
+                    case AX:
+                        effectAdmin.createEffectBitmapData("axe_effect", "axe_effect", 3, 5);
+                        break;
+                    case BARE:
+                        effectAdmin.createEffectBitmapData("barehand_effect", "barehand_effect", 5, 3);
+                        break;
+                    case BOW:
+                        effectAdmin.createEffectBitmapData("bow_effect", "bow_effect", 5, 2);
+                        break;
+                    case WAND:
+                        effectAdmin.createEffectBitmapData("cane_effect", "cane_effect", 14, 1);
+                        break;
+                    case GUN:
+                        effectAdmin.createEffectBitmapData("gun_effect", "gun_effect", 5, 2);
+                        break;
+                    case FIST:
+                        effectAdmin.createEffectBitmapData("knuckle_effect", "knuckle_effect", 6, 3);
+                        break;
+                    case CLUB:
+                        effectAdmin.createEffectBitmapData("mace_effect", "mace_effect", 5, 1);
+                        break;
+                    case MUSIC:
+                        effectAdmin.createEffectBitmapData("musical_instrument_effect", "musical_instrument_effect", 1, 15);
+                        break;
+                    case SPEAR:
+                        effectAdmin.createEffectBitmapData("spear_effect", "spear_effect", 5, 3);
+                        break;
+                    case SWORD:
+                        effectAdmin.createEffectBitmapData("sword_effect", "sword_effect", 9, 1);
+                        break;
+                    case WHIP:
+                        effectAdmin.createEffectBitmapData("whip_effect", "whip_effect", 5, 5);
+                        break;
+                }
+            }
+        }
+        if (mode == MODE.MINING) {
+                attack_equipment = palette_admin.getMiningItemData();
+        }
+
+    }
+    */
 
     //by kmhanko
     public void reset(MODE _mode) {
@@ -392,12 +451,20 @@ public class BattleUnitAdmin {
                 }
 
                 //エフェクトの作成
-                ((BattleEnemy)battle_units[i]).initEffect(i);
+                //((BattleEnemy)battle_units[i]).initEffect(i);
 
                 return i;
             }
         }
         return -1;
+    }
+
+    public void initEffectForEnemy() {
+        for (int i = 1; i < BATTLE_UNIT_MAX; i++) {
+            if (battle_units[i].isExist()) {
+                ((BattleEnemy) battle_units[i]).initEffect(i);
+            }
+        }
     }
 
     public void setPlayer(PlayerStatus playerStatus) {
@@ -532,6 +599,7 @@ public class BattleUnitAdmin {
         double touch_y = battle_user_interface.getTouchY();
         TouchState touch_state = battle_user_interface.getTouchState();
 
+
         if (!battleEndFlag) {
             //if (!battleEndFlag && !(mode == MODE.OPENING && text_mode)) {
 
@@ -591,19 +659,19 @@ public class BattleUnitAdmin {
 
                                                     switch (attack_equipment.getName()) {
                                                         case "スコップ":
-                                                            mine_effect_ID = effectAdmin.createEffect("scoop_effect", "scoop_effect", 5, 4, 1);
+                                                            mine_effect_ID = effectAdmin.createEffect("scoop_effect", "scoop_effect", 5, 4, 1, EXTEND_MODE.AFTER);
                                                             break;
                                                         case "ハンマー":
-                                                            mine_effect_ID = effectAdmin.createEffect("hammer_effect", "hammer_effect", 5, 1, 1);
+                                                            mine_effect_ID = effectAdmin.createEffect("hammer_effect", "hammer_effect", 5, 1, 1, EXTEND_MODE.AFTER);
                                                             break;
                                                         case "爆弾":
-                                                            mine_effect_ID = effectAdmin.createEffect("bomb_effect", "bomb_effect", 5, 2, 1);
+                                                            mine_effect_ID = effectAdmin.createEffect("bomb_effect", "bomb_effect", 5, 2, 1, EXTEND_MODE.AFTER);
                                                             break;
                                                         case "ダイナマイト":
-                                                            mine_effect_ID = effectAdmin.createEffect("dynamite_effect", "dynamite_effect", 5, 4, 1);
+                                                            mine_effect_ID = effectAdmin.createEffect("dynamite_effect", "dynamite_effect", 5, 4, 1, EXTEND_MODE.AFTER);
                                                             break;
                                                         case "ダイナマイト束":
-                                                            mine_effect_ID = effectAdmin.createEffect("bunch_of_dynamite_effect", "bunch_of_dynamite_effect", 5, 4, 1);
+                                                            mine_effect_ID = effectAdmin.createEffect("bunch_of_dynamite_effect", "bunch_of_dynamite_effect", 5, 4, 1, EXTEND_MODE.AFTER);
                                                             break;
                                                     }
                                                     effectAdmin.getEffect(mine_effect_ID).setPosition((int) touch_x, (int) touch_y);
@@ -618,37 +686,37 @@ public class BattleUnitAdmin {
 
                                                     switch (attack_equipment.getEquipmentKind()) {
                                                         case AX:
-                                                            battle_effect_ID = effectAdmin.createEffect("axe_effect", "axe_effect", 3, 5, 1);
+                                                            battle_effect_ID = effectAdmin.createEffect("axe_effect", "axe_effect", 3, 5, 1, EXTEND_MODE.AFTER);
                                                             break;
                                                         case BARE:
-                                                            battle_effect_ID = effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3, 1);
+                                                            battle_effect_ID = effectAdmin.createEffect("barehand_effect", "barehand_effect", 5, 3, 1, EXTEND_MODE.AFTER);
                                                             break;
                                                         case BOW:
-                                                            battle_effect_ID = effectAdmin.createEffect("bow_effect", "bow_effect", 5, 2, 1);
+                                                            battle_effect_ID = effectAdmin.createEffect("bow_effect", "bow_effect", 5, 2, 1, EXTEND_MODE.AFTER);
                                                             break;
                                                         case WAND:
-                                                            battle_effect_ID = effectAdmin.createEffect("cane_effect", "cane_effect", 14, 1, 1);
+                                                            battle_effect_ID = effectAdmin.createEffect("cane_effect", "cane_effect", 14, 1, 1, EXTEND_MODE.AFTER);
                                                             break;
                                                         case GUN:
-                                                            battle_effect_ID = effectAdmin.createEffect("gun_effect", "gun_effect", 5, 2, 1);
+                                                            battle_effect_ID = effectAdmin.createEffect("gun_effect", "gun_effect", 5, 2, 1, EXTEND_MODE.AFTER);
                                                             break;
                                                         case FIST:
-                                                            battle_effect_ID = effectAdmin.createEffect("knuckle_effect", "knuckle_effect", 6, 3, 1);
+                                                            battle_effect_ID = effectAdmin.createEffect("knuckle_effect", "knuckle_effect", 6, 3, 1, EXTEND_MODE.AFTER);
                                                             break;
                                                         case CLUB:
-                                                            battle_effect_ID = effectAdmin.createEffect("mace_effect", "mace_effect", 5, 1, 1);
+                                                            battle_effect_ID = effectAdmin.createEffect("mace_effect", "mace_effect", 5, 1, 1, EXTEND_MODE.AFTER);
                                                             break;
                                                         case MUSIC:
-                                                            battle_effect_ID = effectAdmin.createEffect("musical_instrument_effect", "musical_instrument_effect", 1, 15, 1);
+                                                            battle_effect_ID = effectAdmin.createEffect("musical_instrument_effect", "musical_instrument_effect", 1, 15, 1, EXTEND_MODE.AFTER);
                                                             break;
                                                         case SPEAR:
-                                                            battle_effect_ID = effectAdmin.createEffect("spear_effect", "spear_effect", 5, 3, 1);
+                                                            battle_effect_ID = effectAdmin.createEffect("spear_effect", "spear_effect", 5, 3, 1, EXTEND_MODE.AFTER);
                                                             break;
                                                         case SWORD:
-                                                            battle_effect_ID = effectAdmin.createEffect("sword_effect", "sword_effect", 9, 1, 1);
+                                                            battle_effect_ID = effectAdmin.createEffect("sword_effect", "sword_effect", 9, 1, 1, EXTEND_MODE.AFTER);
                                                             break;
                                                         case WHIP:
-                                                            battle_effect_ID = effectAdmin.createEffect("whip_effect", "whip_effect", 5, 5, 1);
+                                                            battle_effect_ID = effectAdmin.createEffect("whip_effect", "whip_effect", 5, 5, 1, EXTEND_MODE.AFTER);
                                                             break;
 
 //                                                    case MONSTER:
@@ -712,7 +780,8 @@ public class BattleUnitAdmin {
 
                                 double strong_ratio = (touch_markers[j].getDamage() * 100.0) / (battle_units[i].getDefence() * 22222.0 + 1);
                                 strong_ratio = Math.pow(strong_ratio, 7.0f);
-                                double level_rate = battle_units[i].getAttack() / 1000.0 * battle_units[i].getDefence() / 100.0 * battle_units[i].getMaxHitPoint() / 1000.0;
+                                //double level_rate = battle_units[i].getAttack() / 1000.0 * battle_units[i].getDefence() / 100.0 * battle_units[i].getMaxHitPoint() / 1000.0;
+                                double level_rate = battle_units[i].getMaxHitPoint() / 1000.0;
                                 level_rate = Math.pow(level_rate, 0.4);
                                 int new_hp = battle_units[i].getHitPoint() - (int) (20.0 * strong_ratio * level_rate);
 
@@ -872,12 +941,26 @@ public class BattleUnitAdmin {
                         */
 
 
+                        /*
+                        double strong_ratio = (touch_markers[j].getDamage() * 100.0) / (battle_units[i].getDefence() * 22222.0 + 1);
+                        strong_ratio = Math.pow(strong_ratio, 7.0f);
+                        //double level_rate = battle_units[i].getAttack() / 1000.0 * battle_units[i].getDefence() / 100.0 * battle_units[i].getMaxHitPoint() / 1000.0;
+                        double level_rate = battle_units[i].getMaxHitPoint() / 1000.0;
+                        level_rate = Math.pow(level_rate, 0.4);
+
+                        int new_hp = battle_units[i].getHitPoint() - (int) (20.0 * strong_ratio * level_rate);
+                        */
+
+
                         double strong_ratio = (damage_to_player * 2222.0) / (battle_units[0].getDefence() * 1000.0 + 1.0);
-                        strong_ratio = strong_ratio * strong_ratio * strong_ratio * strong_ratio * strong_ratio;
-                        strong_ratio = strong_ratio * strong_ratio * strong_ratio;
+                        //strong_ratio = strong_ratio * strong_ratio * strong_ratio * strong_ratio * strong_ratio;
+                        //strong_ratio = strong_ratio * strong_ratio * strong_ratio;
+                        strong_ratio = Math.pow(strong_ratio, 7.0f);
 
                         //by kmhanko オーバーフローするので修正
-                        double level_rate = battle_units[i].getAttack() / 1000.0 * battle_units[i].getDefence() / 100.0 * battle_units[i].getMaxHitPoint() / 1000.0;
+                        //double level_rate = battle_units[i].getAttack() / 1000.0 * battle_units[i].getDefence() / 100.0 * battle_units[i].getMaxHitPoint() / 1000.0;
+                        double level_rate = battle_units[i].getMaxHitPoint() / 1000.0;
+
 //                        double level_rate = battle_units[0].getAttack() * battle_units[0].getDefence() * battle_units[0].getMaxHitPoint() / 22222.0 / 22222.0 / 2222.0;
 //                        System.out.println("damage_to_desuno_" + damage_to_player);
 //
@@ -1382,6 +1465,7 @@ public class BattleUnitAdmin {
         deleteEnemy();
         playerStatus.setNowHP(battle_units[0].getHitPoint());
         expendInventry.save();
+        deleteEffect();
 
 
         if (winFlag) {
@@ -1465,6 +1549,32 @@ public class BattleUnitAdmin {
     }
 
     // *** オープニング戦闘の会話文関係 ここまで ***
+
+
+    private void deleteEffect() {
+        /*
+        effectAdmin.clearEffectBitmapDataByDataName("scoop_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("hammer_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("bomb_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("dynamite_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("bunch_of_dynamite_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("axe_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("barehand_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("bow_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("cane_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("gun_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("knuckle_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("mace_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("musical_instrument_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("spear_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("sword_effect");
+        effectAdmin.clearEffectBitmapDataByDataName("whip_effect");
+        */
+        //effectAdmin.clearEffectBitmapDataByDataName("enemy_damaged_effect");
+        enemyBackEffectAdmin.clearEffectBitmapDataByDataName("enemy_attack_effect");
+        System.gc();
+    }
+
 }
 
         /*

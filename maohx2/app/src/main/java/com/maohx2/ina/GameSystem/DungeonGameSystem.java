@@ -153,9 +153,9 @@ public class DungeonGameSystem {
         playerStatus = globalData.getPlayerStatus();
         maohMenosStatus = globalData.getMaohMenosStatus();
 
-        effectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin);
+        effectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin, unitedActivity);
         battle_unit_admin.getEffectAdmin(effectAdmin);
-        backEffectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin);
+        backEffectAdmin = new EffectAdmin(graphic, _myDatabaseAdmin, soundAdmin, unitedActivity);
         battle_unit_admin.getEnemyBackEffectAdmin(backEffectAdmin);
 
         changeMovie = new ChangeMovie(graphic, soundAdmin);
@@ -439,6 +439,7 @@ public class DungeonGameSystem {
                 }
                 break;
             case OPENING_BATTLE_INIT:
+                battle_unit_admin.initEffectForEnemy();
                 dungeonModeManage.setMode(BUTTLE);
                 backGround = graphic.searchBitmap("firstBackground");
                 musicAdmin.loadMusic("boss00",true);
@@ -448,6 +449,7 @@ public class DungeonGameSystem {
 
             case BUTTLE_INIT:
                 if(changeMovie.update(true) == true) {
+                    battle_unit_admin.initEffectForEnemy();
                     dungeonModeManage.setMode(BUTTLE);
                     backGround = graphic.searchBitmap("firstBackground");
                     musicAdmin.loadMusic("battle00", true);
