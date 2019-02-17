@@ -134,7 +134,7 @@ public class WorldGameSystem {
     BitmapData tu_shop_img, tu_shop_start_img;
     BitmapData tu_sell_img;
     BitmapData tu_geo_img, tu_geo_start_img;
-    int tu_geo_flag, tu_shop_flag, tu_equip_flag;
+    int tu_geo_flag, tu_shop_flag, tu_equip_flag, tu_dungeon_flag;
 
     BitmapData[] credit = new BitmapData[2];
 
@@ -161,6 +161,11 @@ public class WorldGameSystem {
 
     ChangeMovie changeMovie;
 
+    String dungeonTutoName[] = new String[] {
+            "t_dungeon_start", "スライド1", "スライド2", "スライド3", "t_battle_start", "t_battle", "t_mine_start", "t_mine"
+    };
+    BitmapData[] tuDungeonImage = new BitmapData[dungeonTutoName.length];
+
     public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, UnitedActivity _unitedActivity, TalkAdmin _talkAdmin, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver, TutorialFlagData _tutorialFlagData, TutorialFlagSaver _tutorialFlagSaver) {
 
         System.out.println("SAVEASAVE" + Constants.DEBUG_SAVE_MODE);
@@ -179,6 +184,10 @@ public class WorldGameSystem {
         tu_geo_start_img = graphic.searchBitmap("t_geo_start");
         tu_shop_start_img = graphic.searchBitmap("t_shop_start");
         tu_equip_start_img = graphic.searchBitmap("t_equip_start");
+
+        for (int i = 0; i < dungeonTutoName.length; i++){
+            tuDungeonImage[i] = graphic.searchBitmap(dungeonTutoName[i]);
+        }
 
         //mapセーブ関係
         //map_status = _mapStatus;
@@ -410,6 +419,17 @@ public class WorldGameSystem {
                 }
                 playerStatusViewer.update();
                 break;
+            case TU_DUNGEON:
+                if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
+                    soundAdmin.play("enter00");
+                    if (tu_dungeon_flag >= 0 && tu_dungeon_flag < dungeonTutoName.length - 1){
+                        tu_dungeon_flag++;
+                    } else {
+                        tu_dungeon_flag = 0;
+                        worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT_INIT);
+                    }
+                }
+                break;
             case GEO_MAP_SELECT_INIT:
                 backGround = graphic.searchBitmap("GeoMap");
                 worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT);
@@ -601,7 +621,6 @@ public class WorldGameSystem {
         //activityChange.toChangeActivity();
     }
 
-
     public void draw() {
 
         if (drawStopFlag) {
@@ -621,6 +640,11 @@ public class WorldGameSystem {
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 dungeonSelectManager.draw();
                 playerStatusViewer.draw();
+                break;
+            case TU_DUNGEON:
+                if (tu_dungeon_flag >= 0 && tu_dungeon_flag < dungeonTutoName.length) {
+                    graphic.bookingDrawBitmapData(tuDungeonImage[tu_dungeon_flag], 0, 0, 0.983f, 0.983f, 0, 255, true);
+                }
                 break;
             case DUNGEON_SELECT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
@@ -831,6 +855,9 @@ public class WorldGameSystem {
 
     public void release() {
         System.out.println("takanoRelease : WorldGameSystem");
+        dungeonTutoName = null;
+        tuDungeonImage = null;
+
         if (palette_admin != null) {
             palette_admin.release();
         }

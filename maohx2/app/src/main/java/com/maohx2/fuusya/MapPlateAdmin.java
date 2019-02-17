@@ -254,8 +254,8 @@ public class MapPlateAdmin {
                             }
                         }
                 });
-        tutorialButtonGroup.setUpdateFlag(true);
-        tutorialButtonGroup.setDrawFlag(true);
+        tutorialButtonGroup.setUpdateFlag(false);
+        tutorialButtonGroup.setDrawFlag(false);
     }
 
     public void update() {

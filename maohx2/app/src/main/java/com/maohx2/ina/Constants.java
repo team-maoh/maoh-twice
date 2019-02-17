@@ -216,7 +216,8 @@ public final class Constants {
             TU_SHOP,
             TU_SHOP_SELL,
             TU_GEO,
-            TU_SELL
+            TU_SELL,
+            TU_DUNGEON
         }
     }
 
@@ -247,6 +248,11 @@ public final class Constants {
         public static final int UNDER_RIGHT = 350;
         public static final int UNDER_UP = 770;
         public static final int UNDER_BOTTOM = 845;
+
+        public static final int ABOVE_LEFT = 50;
+        public static final int ABOVE_RIGHT = 350;
+        public static final int ABOVE_UP = 5;
+        public static final int ABOVE_BOTTOM = 80;
 
         public static final int LEFT = 50;
         public static final int RIGHT = 350;
