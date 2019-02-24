@@ -196,7 +196,7 @@ public class MapItem extends MapInanimate {
 
         float rateTable[] = new float[] { 0.7f, 0.85f, 1.0f, 1.15f, 1.3f };
 
-        int tempRate = (size - number - 1) * rateTable.length / size;
+        int tempRate = number * rateTable.length / size;
 
         if (tempRate < 0) {
             System.out.println("MapItem: settingParameter: 不適切なtempRate: " + tempRate);
