@@ -614,6 +614,7 @@ public class MapObjectAdmin {
 
         for (int i = 0; i < NUM_OF_ITEM; i++) {
             map_item[i].setExists(false);
+            map_item[i].deleteEffect();
         }
 
         if (map_admin.getNow_floor_num() != map_admin.getBoss_floor_num()) {

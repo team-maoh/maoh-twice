@@ -450,6 +450,29 @@ public class BattleUnitDataAdmin {
         return battle_base_unit_datas.get(i);
     }
 
+    public int[][] getAllBonusStatusExceptBoss(DungeonMonsterDataAdmin dungeonMonsterDataAdmin, int repeatCount) {
+        List<DungeonMonsterData> dungeonMonsterData = dungeonMonsterDataAdmin.getDungeon_monster_data();
+        List<DungeonMonsterData> tempDungeonMonsterData = new ArrayList<>();
+        for(int i = 0 ; i < dungeonMonsterData.size(); i++) {
+            if (dungeonMonsterData.get(i).getType() == 0) {
+                tempDungeonMonsterData.add(dungeonMonsterData.get(i));
+            }
+        }
+        if (tempDungeonMonsterData.size() == 0) {
+            return null;
+        }
+
+
+        int[][] bonusStatus = new int[tempDungeonMonsterData.size()][NUM_OF_BONUS_STATUS.ordinal()];
+
+        for(int i = 0 ; i < tempDungeonMonsterData.size(); i++) {
+            bonusStatus[i] = getBattleUnitDataNum(tempDungeonMonsterData.get(i).getMonsterName()).getBonusStatus(repeatCount, 5.024);
+        }
+
+        return bonusStatus;
+    }
+
+
     public BattleBaseUnitData getRandomBattleBaseUnitDataExceptBoss(DungeonMonsterDataAdmin dungeonMonsterDataAdmin) {
         List<DungeonMonsterData> dungeonMonsterData = dungeonMonsterDataAdmin.getDungeon_monster_data();
         List<DungeonMonsterData> tempDungeonMonsterData = new ArrayList<>();

@@ -12,6 +12,7 @@ import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.effect.EffectAdmin;
+import com.maohx2.kmhanko.myavail.MyAvail;
 
 import java.io.PrintStream;
 import java.util.Random;
@@ -29,7 +30,7 @@ public class MapItem extends MapInanimate {
     double REACH_FOR_PLAYER = 150;
 
     int parameter = 0;
-    float extend = 0.0f;
+    float extend = 1.0f;
     static int repeatCount;
 
     int effectID;
@@ -79,7 +80,7 @@ public class MapItem extends MapInanimate {
             default:
                 return;
         }
-        effectID = effectAdmin.createEffect("itemEffect" ,effectImageName, 5, 3, 1.0f, 1.0f, EffectAdmin.EXTEND_MODE.AFTER);
+        effectID = effectAdmin.createEffect("itemEffect" ,effectImageName, 5, 3, extend, extend, EffectAdmin.EXTEND_MODE.AFTER);
         effectAdmin.getEffect(effectID).setPosition(camera.convertToNormCoordinateX((int)w_x), camera.convertToNormCoordinateY((int)w_y));
         effectAdmin.getEffect(effectID).setExtends(extend, extend);
         effectAdmin.getEffect(effectID).start();
@@ -156,40 +157,70 @@ public class MapItem extends MapInanimate {
     }
 
     public void settingParameter() {
-        int bonus_status[] = new int[NUM_OF_BONUS_STATUS.ordinal()];
-        BattleBaseUnitData tempBattleBaseUnitData = battleUnitDataAdmin.getRandomBattleBaseUnitDataExceptBoss(dungeonMonsterDataAdmin);
-        if ( tempBattleBaseUnitData == null) {
-            parameter = 0;
-            return;
-        }
-        bonus_status = tempBattleBaseUnitData.getBonusStatus(repeatCount, 5.024);
-        int[][] statusMaxMin = battleUnitDataAdmin.getStatusMinMaxExceptBoss(dungeonMonsterDataAdmin, repeatCount, 5.024);
+        int bonus_status[][] = battleUnitDataAdmin.getAllBonusStatusExceptBoss(dungeonMonsterDataAdmin, repeatCount);
+
+        int size = bonus_status.length;
+
         int statusID = 0;
 
         switch (name) {
             case ("HpUp"):
-                parameter = bonus_status[Constants.UnitStatus.BonusStatus.BONUS_HP.ordinal()];
-                statusID = 0;
+                statusID = Constants.UnitStatus.BonusStatus.BONUS_HP.ordinal();
                 break;
             case ("AtkUp"):
-                parameter = bonus_status[Constants.UnitStatus.BonusStatus.BONUS_ATTACK.ordinal()];
-                statusID = 1;
+                statusID = Constants.UnitStatus.BonusStatus.BONUS_ATTACK.ordinal();
                 break;
             case ("DefUp"):
-                parameter = bonus_status[Constants.UnitStatus.BonusStatus.BONUS_DEFENSE.ordinal()];
-                statusID = 2;
+                statusID = Constants.UnitStatus.BonusStatus.BONUS_DEFENSE.ordinal();
                 break;
         }
-        //System.out.println("aaaa" + statusMaxMin[statusID + 3][0] + " " + statusMaxMin[statusID + 3][1] + " " + parameter);
 
-        float tempRate =  (float)(parameter - statusMaxMin[statusID + 3][1])/(float)(statusMaxMin[statusID + 3][0] - statusMaxMin[statusID + 3][1]);
-        extend = tempRate * 1.45f + 0.05f;
-        parameter *= 1.5f;
-
-        if ( parameter <= 0) {
-            exists = false;
+        int tempStatus[] = new int[size];
+        for (int i = 0; i < size; i++) {
+            tempStatus[i] = bonus_status[i][statusID];
         }
 
+        int[] statusRaw = MyAvail.sort(tempStatus);
+
+        int number;
+        while(true) {
+            number = random.nextInt(size);
+            parameter = (int) (statusRaw[number] * 1.5f);
+            if (parameter <= 0) {
+                System.out.println("MapItem: settingParameter: 生成失敗: " + parameter);
+                exists = false;
+            } else {
+                break;
+            }
+        }
+
+        float rateTable[] = new float[] { 0.7f, 0.85f, 1.0f, 1.15f, 1.3f };
+
+        int tempRate = (size - number - 1) * rateTable.length / size;
+
+        if (tempRate < 0) {
+            System.out.println("MapItem: settingParameter: 不適切なtempRate: " + tempRate);
+            tempRate = 0;
+        }
+        if (tempRate >= rateTable.length) {
+            System.out.println("MapItem: settingParameter: 不適切なtempRate: " + tempRate);
+            tempRate = rateTable.length - 1;
+        }
+
+        extend = rateTable[tempRate];
+
+        /*
+        新大きさ決定
+        敵のパラメータを昇順に並べる(同一値は別物として区別)
+        そこからランダムにパラメータを取得する。
+        ピースの大きさは上から何番目か、で決める。
+        大きさはy通りとする。大きさは番目*y/sizeの商(0~y-1のy通り)に等しい
+         */
+
+    }
+
+    public void deleteEffect() {
+        effectAdmin.getEffect(effectID).clear();
     }
 
 

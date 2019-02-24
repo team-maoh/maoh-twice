@@ -43,8 +43,50 @@ public class MyAvail {
         }
 
         return raw;
-
     }
+
+    static public int[] sort(int[] raw) {
+
+        int temp = 0, t = 0;
+
+        for (int i = 0; i < (raw.length - 1); i++) {
+            for (int j = (raw.length - 1); j > i; j--) {
+                if (raw[j-1] > raw[j]) {
+                    temp = raw[j - 1];
+                    raw[j - 1] = raw[j];
+                    raw[j] = temp;
+                }
+            }
+        }
+
+        return raw;
+    }
+
+    static public int[][] sort2(int[] _raw) {
+
+        int raw[][] = new int[2][_raw.length];
+
+        for (int i = 0; i < raw[0].length ; i++) {
+            raw[0][i] = i;
+        }
+
+        int temp = 0, t = 0;
+
+        for (int i = 0; i < (raw[0].length - 1); i++) {
+            for (int j = (raw[0].length - 1); j > i; j--) {
+                if (raw[1][j-1] > raw[1][j]) {
+                    for (int k = 0; k < 2; k++) {
+                        temp = raw[k][j - 1];
+                        raw[k][j - 1] = raw[k][j];
+                        raw[k][j] = temp;
+                    }
+                }
+            }
+        }
+
+        return raw;
+    }
+
 
     static public double distance(int x1, int y1, int x2, int y2) {
         return Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
