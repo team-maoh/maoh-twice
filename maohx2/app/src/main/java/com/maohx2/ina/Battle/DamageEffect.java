@@ -79,8 +79,8 @@ public class DamageEffect {
     void draw(){
 
         if(exist == true){
-            graphic.bookingDrawText(String.valueOf(damage),position_x,position_y,paint);
             graphic.bookingDrawText(String.valueOf(damage),position_x,position_y,paintEdge);
+            graphic.bookingDrawText(String.valueOf(damage),position_x,position_y,paint);
         }
     }
 
