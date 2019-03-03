@@ -31,6 +31,8 @@ public class TouchMarker {
 
         paint = new Paint();
         paint.setARGB(255,0,0,0);
+        paint.setTextSize(35);
+
 
     }
 
