@@ -96,7 +96,9 @@ public class BattleUnitAdmin {
     int battle_palette_mode;
     CalcUnitStatus calc_unit_status;
     Activity battle_activity;
-    int MAKER_NUM = 1000;
+    int MAKER_NUM = 100;
+    int DAMAGE_EFFECT_NUM = 200;
+    DamageEffect[] damage_effects = new DamageEffect[DAMAGE_EFFECT_NUM];
     TouchMarker[] touch_markers = new TouchMarker[MAKER_NUM];
     DungeonModeManage dungeonModeManage;
 
@@ -149,6 +151,8 @@ public class BattleUnitAdmin {
     static final int RESULT_BUTTON_TIME = 15;
 
     int cannot_count = 0;
+    int damageToEnemy = 0;
+    Random rnd = new Random();
 
     //by kmhanko BattleUnitDataAdmin追加
     public void init(
@@ -237,6 +241,10 @@ public class BattleUnitAdmin {
 
         for (int i = 0; i < MAKER_NUM; i++) {
             touch_markers[i] = new TouchMarker(graphic);
+        }
+
+        for (int i = 0; i < DAMAGE_EFFECT_NUM; i++) {
+            damage_effects[i] = new DamageEffect(graphic);
         }
 
         //CalcUnitStatusのインスタンス化・初期化
@@ -783,7 +791,17 @@ public class BattleUnitAdmin {
                                 //double level_rate = battle_units[i].getAttack() / 1000.0 * battle_units[i].getDefence() / 100.0 * battle_units[i].getMaxHitPoint() / 1000.0;
                                 double level_rate = battle_units[i].getMaxHitPoint() / 1000.0;
                                 level_rate = Math.pow(level_rate, 0.4);
-                                int new_hp = battle_units[i].getHitPoint() - (int) (20.0 * strong_ratio * level_rate);
+                                damageToEnemy = (int) (20.0 * strong_ratio * level_rate);
+                                damageToEnemy += 0.2*damageToEnemy * (rnd.nextDouble() - 0.5);
+                                int new_hp = battle_units[i].getHitPoint() - damageToEnemy;
+
+                                for (int k = 0; k < DAMAGE_EFFECT_NUM; k++) {
+                                    if(damage_effects[k].isExist() == false){
+                                        damage_effects[k].generate((int)battle_units[i].getPositionX(),(int)battle_units[i].getPositionY(),damageToEnemy);
+                                        break;
+                                    }
+                                }
+
 
                                 if (((BattleEnemy) (battle_units[i])).isSpecialAction() == false) {
                                     //敵が特殊行動していないなら
@@ -900,6 +918,13 @@ public class BattleUnitAdmin {
                     touch_markers[i].update();
                 }
             }
+
+            for (int k = 0; k < DAMAGE_EFFECT_NUM; k++) {
+                if(damage_effects[k].isExist() == true){
+                    damage_effects[k].update();
+                }
+            }
+
 
             //ポーションなどの使用の処
             if (palette_admin.checkSelectedExpendItemData() != null) {
@@ -1164,6 +1189,13 @@ public class BattleUnitAdmin {
                 touch_markers[i].draw();
             }
         }
+
+        for (int k = 0; k < DAMAGE_EFFECT_NUM; k++) {
+            if(damage_effects[k].isExist() == true){
+                damage_effects[k].draw();
+            }
+        }
+
 
         //デバッグ用 プレイヤーのステータスを表示
         //debugPlayerStatusDraw();
