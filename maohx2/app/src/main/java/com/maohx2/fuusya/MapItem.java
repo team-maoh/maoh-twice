@@ -66,6 +66,9 @@ public class MapItem extends MapInanimate {
     }
 
     public void makeEffect() {//settingParaより後、nameより後、IDより後
+        if (!exists) {
+            return;
+        }
         String effectImageName = "";
         switch (name) {
             case "HpUp":

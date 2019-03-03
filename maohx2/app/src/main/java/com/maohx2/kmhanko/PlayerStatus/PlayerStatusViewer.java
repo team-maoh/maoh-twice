@@ -183,6 +183,7 @@ public class PlayerStatusViewer extends StatusViewer {
     }
 
     public void makeGeoStatusEffect(int statusID, String statusName, float parameter, boolean decimalFlag) {
+        /*
         String text = "";
         Paint tempPaint = new Paint();
         if (decimalFlag) {
@@ -218,5 +219,6 @@ public class PlayerStatusViewer extends StatusViewer {
                 break;
             }
         }
+        */
     }
 }
