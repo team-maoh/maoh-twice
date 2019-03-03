@@ -54,6 +54,7 @@ public class BattleEnemy extends BattleUnit {
     int uiid;
     int attackCount;
     int attack_frame;
+    int next_attack_frame;
     int specialActionCount;
 
     float[] actionRate = new float[BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()];
@@ -74,6 +75,7 @@ public class BattleEnemy extends BattleUnit {
         uiid = 0;
         attackCount = 0;
         attack_frame = 0;
+        next_attack_frame = 0;
         specialActionCount = 0;
         specialActionFlag = false;
         scale = NORMAL_SCALE;
@@ -121,9 +123,11 @@ public class BattleEnemy extends BattleUnit {
 
         damagedExtendX = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.3f;
         damagedExtendY = (float)(300.0f)/2.0f/(960.0f/5.0f*2.0f)*1.3f;
-        effectAdmin.createEffect("enemy_damaged_effect" , "bomb_effect", 5, 2, damagedExtendX, damagedExtendY, 1, EffectAdmin.EXTEND_MODE.BEFORE);
+        //effectAdmin.createEffect("enemy_damaged_effect" , "bomb_effect", 5, 2, damagedExtendX, damagedExtendY, 1, EffectAdmin.EXTEND_MODE.BEFORE);
+        effectAdmin.createEffect("enemy_damaged_effect" , "bomb_effect", 5, 2, damagedExtendX, damagedExtendY, 1, EffectAdmin.EXTEND_MODE.AFTER);
 
-        backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, attackExtendX, attackExtendY, 1, EffectAdmin.EXTEND_MODE.BEFORE);
+        //backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, attackExtendX, attackExtendY, 1, EffectAdmin.EXTEND_MODE.BEFORE);
+        backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, attackExtendX, attackExtendY, 1, EffectAdmin.EXTEND_MODE.AFTER);
 
     }
     protected void damagedEffectStart() {
@@ -132,7 +136,8 @@ public class BattleEnemy extends BattleUnit {
         }
         if (damageEffectTime >= damageEffectInterval) {
             effectAdmin.getEffect(damagedEffect).clear();
-            damagedEffect = effectAdmin.createEffect("enemy_damaged_effect", "bomb_effect", 5, 2, damagedExtendX, damagedExtendY, 1, EffectAdmin.EXTEND_MODE.BEFORE);
+            //damagedEffect = effectAdmin.createEffect("enemy_damaged_effect", "bomb_effect", 5, 2, damagedExtendX, damagedExtendY, 1, EffectAdmin.EXTEND_MODE.BEFORE);
+            damagedEffect = effectAdmin.createEffect("enemy_damaged_effect", "bomb_effect", 5, 2, damagedExtendX, damagedExtendY, 1, EffectAdmin.EXTEND_MODE.AFTER);
             effectAdmin.getEffect(damagedEffect).setPosition((int) position_x + rnd.nextInt((int)(width*scale) + 1) - (int)(width*scale)/2, (int) position_y + rnd.nextInt((int)(scale*height) + 1) - (int)(scale*height)/2);
             effectAdmin.getEffect(damagedEffect).start();
             damageEffectTime = 0;
@@ -144,7 +149,8 @@ public class BattleEnemy extends BattleUnit {
             return;
         }
         backEnemyEffectAdmin.getEffect(attackEffect).clear();
-        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, attackExtendX, attackExtendY,  1, EffectAdmin.EXTEND_MODE.BEFORE);
+        //attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, attackExtendX, attackExtendY,  1, EffectAdmin.EXTEND_MODE.BEFORE);
+        attackEffect = backEnemyEffectAdmin.createEffect("enemy_attack_effect", "enemy_attack", 4, 2, attackExtendX, attackExtendY,  1, EffectAdmin.EXTEND_MODE.AFTER);
         backEnemyEffectAdmin.getEffect(attackEffect).setPosition((int) position_x, (int) position_y);
         backEnemyEffectAdmin.getEffect(attackEffect).start();
     }
@@ -155,6 +161,7 @@ public class BattleEnemy extends BattleUnit {
     protected void statusInit() {
         super.statusInit();
         attack_frame = battleDungeonUnitData.getStatus(ATTACK_FRAME);
+        next_attack_frame = attack_frame + rnd.nextInt(2*attack_frame);
 
         specialAction = getSpecialAction();
         actionRate = getActionRate();
@@ -162,13 +169,7 @@ public class BattleEnemy extends BattleUnit {
         specialActionWidth = getSpecialActionWidth();
         alimentTime = getAlimentTime();
 
-        if (attack_frame > 0 ) {
-            attackCount = -15;
-            //attackCount = rnd.nextInt((int) (getAttackFrame() / 2));
-        } else {
-            attackCount = -15;
-            //attackCount = 0;
-        }
+        attackCount = -15;
     }
 
     @Override
@@ -237,22 +238,17 @@ public class BattleEnemy extends BattleUnit {
         }
 
         //attackFlameに達したらUnitを対象として攻撃
-        if(attackCount == attack_frame){
-            //if(attack_frame >= 10) {
-                scale = ATTACK_SCALE;
-            //}
+        if(attackCount == next_attack_frame){
+            scale = ATTACK_SCALE;
             attackCount = 0;
-
+            next_attack_frame = attack_frame + rnd.nextInt(2*attack_frame);
             //敵の攻撃エフェクト
             this.attackEffectStart();
-
             return attack;
         }
 
         if(attackCount == Math.min(attack_frame/2, 5)){
-            //if(attack_frame >= 10) {
-                scale = NORMAL_SCALE;
-            //}
+            scale = NORMAL_SCALE;
         }
 
         return 0;
@@ -318,8 +314,8 @@ public class BattleEnemy extends BattleUnit {
 
         if (attack_frame > 0) {
             paint.setARGB(255, 255, 0, 0);
-            if(attackCount >= 0){ graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 1.2), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) attackCount / (double) attack_frame))), (int) (position_y + radius * 1.3), paint);}
-            else{graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 1.2), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double)0 / (double) attack_frame))), (int) (position_y + radius * 1.3), paint);}
+            if(attackCount >= 0){ graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 1.2), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double) attackCount / (double) next_attack_frame))), (int) (position_y + radius * 1.3), paint);}
+            else{graphic.bookingDrawRect((int) (position_x - radius * 0.8), (int) (position_y + radius * 1.2), (int) (((double) position_x - (double) radius * 0.8 + (double) radius * 1.6 * ((double)0 / (double) next_attack_frame))), (int) (position_y + radius * 1.3), paint);}
         }
     }
 
