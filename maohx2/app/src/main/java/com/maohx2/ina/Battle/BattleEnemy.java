@@ -161,7 +161,11 @@ public class BattleEnemy extends BattleUnit {
     protected void statusInit() {
         super.statusInit();
         attack_frame = battleDungeonUnitData.getStatus(ATTACK_FRAME);
-        next_attack_frame = attack_frame + rnd.nextInt(2*attack_frame);
+        if (attack_frame > 0) {
+            next_attack_frame = attack_frame + rnd.nextInt(2 * attack_frame);
+        } else {
+            next_attack_frame = attack_frame;
+        }
 
         specialAction = getSpecialAction();
         actionRate = getActionRate();
@@ -241,7 +245,11 @@ public class BattleEnemy extends BattleUnit {
         if(attackCount == next_attack_frame){
             scale = ATTACK_SCALE;
             attackCount = 0;
-            next_attack_frame = attack_frame + rnd.nextInt(2*attack_frame);
+            if (attack_frame > 0) {
+                next_attack_frame = attack_frame + rnd.nextInt(2 * attack_frame);
+            } else {
+                next_attack_frame = attack_frame;
+            }
             //敵の攻撃エフェクト
             this.attackEffectStart();
             return attack;
