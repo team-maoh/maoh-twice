@@ -465,32 +465,42 @@ public class DungeonSelectManager {
 
         //newマーク
 
-            for (int i = Constants.STAGE_NUM - 1; i >= 0; i--) {
-                if (mapStatus.getMapClearStatus(i) == 1) {
-                    //侵入できる中で最も難しいもの
-                    for (int j = 0; j < dungeonNumber.size(); i++) {
-                        if (dungeonNumber.get(j) != null) {
-                            if (dungeonNumber.get(j) == i) {
-                                int centerX = x.get(j) - 50;
-                                int centerY = y.get(j) - 50;
-                                newEffectID = effectAdmin.createEffect("newEffect", "new", 1, 1, 1.0f, 1.0f, EffectAdmin.EXTEND_MODE.AFTER);
-                                newEffect = effectAdmin.getEffect(newEffectID);
-                                newEffect.setPosition(centerX, centerY);
-                                newEffect.setExtends(2.0f, 2.0f);
-                                if (playerStatus.getClearCount() == playerStatus.getNowClearCount()) {
-                                    newEffect.start();
-                                } else {
-                                    newEffect.hide();
-                                }
-                                break;
-                            }
-                        }
-                    }
-                    break;
+        int dungeonMax = 0;
+        int dungeonID = 0;
+        for (int i = Constants.STAGE_NUM - 1; i >= 0; i--) {
+            if (mapStatus.getMapClearStatus(i) == 1) {
+                if (dungeonMax <= dungeonNumber.get(i)) {
+                    dungeonMax = dungeonNumber.get(i);
+                    dungeonID = i;
                 }
             }
+        }
+        int temp = 0;
+        for (int i = 0; i < mapIconPlateList.size(); i++) {
+            if (dungeonNumber.get(i) == dungeonID) {
+               temp = i;
+               break;
+            }
+        }
+
+                    //侵入できる中で最も難しいもの
+        int centerX = x.get(temp) - 50;
+        int centerY = y.get(temp) - 50;
+
+        /*
+        newEffectID = effectAdmin.createEffect("newEffect", "new", 2, 1, 1.0f, 1.0f, EffectAdmin.EXTEND_MODE.AFTER);
+        newEffect = effectAdmin.getEffect(newEffectID);
+        newEffect.setPosition(centerX, centerY);
+        newEffect.setExtends(2.0f, 2.0f);
+        if (playerStatus.getClearCount() == playerStatus.getNowClearCount()) {
+            newEffect.start();
+        } else {
+            newEffect.hide();
+        }
+        */
 
     }
+
 
     public void mapIconPlateListUpdate() {
         int size = database.getSize(DUNGEON_SELECT_BUTTON_TABLE_NAME);
@@ -1300,6 +1310,10 @@ public class DungeonSelectManager {
         if (tutorialButtonGroupForDungeon != null) {
             tutorialButtonGroupForDungeon.release();
             tutorialButtonGroupForDungeon = null;
+        }
+
+        if (newEffect != null) {
+            newEffect.clear();
         }
 
     }
