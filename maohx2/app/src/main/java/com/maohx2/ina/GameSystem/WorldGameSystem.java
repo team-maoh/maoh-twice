@@ -259,7 +259,7 @@ public class WorldGameSystem {
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin);
 
 
-        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, soundAdmin, unitedActivity, map_status, map_status_saver, talkAdmin);
+        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, soundAdmin, unitedActivity, map_status, map_status_saver, talkAdmin, effectAdmin);
 
         geoSlotAdminManager.loadGeoSlot();
 

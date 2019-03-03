@@ -863,7 +863,7 @@ public class BattleUnitAdmin {
                                         new_hp = battle_units[0].getHitPoint() - damage;
                                         if (new_hp <= 0) {
                                             //負けたとき
-                                            gameoverMes = "敵のカウンター攻撃で" + String.valueOf((int)((float)(damage) / PlayerStatusViewer.EXPRESS_RATE)) +"ダメージを受けて";
+                                            gameoverMes = "敵のカウンター攻撃で" + String.valueOf((int)Math.ceil(((float)(damage) / PlayerStatusViewer.EXPRESS_RATE))) +"ダメージを受けて";
                                             gameOver();
                                             resultOperatedFlag = true;
                                             battleEndFlag = true;
@@ -985,7 +985,7 @@ public class BattleUnitAdmin {
 //                        System.out.println("damage_pl_desuyo_" + damage_to_player);//1000
 //                        System.out.println("def_pl_desuyo_" + battle_units[0].getDefence());//2222
 
-                            gameoverMes = "敵から" + String.valueOf((int) ((float) (damage) / PlayerStatusViewer.EXPRESS_RATE)) + "ダメージを受けて";
+                            gameoverMes = "敵から" + String.valueOf((int) Math.ceil((float) (damage) / PlayerStatusViewer.EXPRESS_RATE)) + "ダメージを受けて";
 
                             if (new_hp > battle_units[0].getMaxHitPoint()) {
                                 new_hp = battle_units[0].getMaxHitPoint();
@@ -1191,7 +1191,7 @@ public class BattleUnitAdmin {
         BattleBaseUnitData bBUDforRock = ((BattleEnemy) tempBattleUnit).getBattleBaseUnitDataForRock();
         int[] status = bBUDforRock.getStatus(repeat_count, 5.042);
         //このジオは何ジオか決定する
-        if (Math.random() < 0.7) {
+        if (Math.random() < 1.0) {
             //NormalGeo
             GEO_PARAM_KIND_NORMAL kindNormal = GeoObjectDataCreater.getRandKindNormal();
             switch (kindNormal) {
@@ -1256,11 +1256,14 @@ public class BattleUnitAdmin {
                 }
                 if (parameter > 0) {
                     geoObjectData = GeoObjectDataCreater.getGeoObjectData(parameter, dropGeoObjectKind.get(i - 1));
+                    if (geoObjectData != null) {
+                        mapPlateAdmin.getInventry().addItemData(geoObjectData);
+                        dropItemNames.add(geoObjectData.getName());
+                    }
+                } else {
+                    dropItemNames.add("ダメージが大きすぎてジオオブジェクトが壊れてしまった");
                 }
-                if (geoObjectData != null) {
-                    mapPlateAdmin.getInventry().addItemData(geoObjectData);
-                    dropItemNames.add(geoObjectData.getName());
-                }
+
             }
         }
         resultTextBoxUpdateItems(dropItemNames);

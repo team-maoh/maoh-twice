@@ -23,6 +23,8 @@ import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.geonode.GeoSlotAdmin;
 import com.maohx2.kmhanko.plate.BoxImageTextPlate;
 
+import com.maohx2.kmhanko.effect.*;
+
 import com.maohx2.ina.Constants.POPUP_WINDOW;
 
 import com.maohx2.ina.Text.CircleImagePlate;
@@ -76,6 +78,7 @@ public class DungeonSelectManager {
     Paint loopCountTextPaint;
 
     Paint dungeonNotEnterPaint;
+    Paint dungeonInfoPaint;
 
     Graphic graphic;
     UserInterface userInterface;
@@ -85,6 +88,7 @@ public class DungeonSelectManager {
     TextBoxAdmin textBoxAdmin;
 
     MyDatabase database;
+    MyDatabase dungeonDataDatabase;
 
     SoundAdmin soundAdmin;
 
@@ -104,6 +108,7 @@ public class DungeonSelectManager {
     WindowTextPlate dungeonEnterNamePlate;
     WindowTextPlate loopCountWindowPlate;
     WindowTextPlate dungeonNotEnterPlate;
+    WindowTextPlate dungeonInfoPlate;
 
     WindowTextPlate dungeonIconName[];
     WindowTextPlate dungeonIconNumber[];
@@ -111,6 +116,7 @@ public class DungeonSelectManager {
     //PlateGroup<CircleImagePlate> menuButtonGroup;
 
     static final String DB_NAME = "dungeonselectDB";
+    static final String DUNGEON_DATA_DB_NAME = "DungeonData";
     static final String DB_ASSET = "dungeonselectDB.db";
 
 
@@ -134,10 +140,15 @@ public class DungeonSelectManager {
 
     TalkAdmin talkAdmin;
 
+    EffectAdmin effectAdmin;
+
     List<Integer> x;
     List<Integer> y;
 
-    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, SoundAdmin _soundAdmin, UnitedActivity _unitedActivity, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver, TalkAdmin _talkAdmin) {
+    int newEffectID;
+    Effect newEffect = null;
+
+    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, SoundAdmin _soundAdmin, UnitedActivity _unitedActivity, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver, TalkAdmin _talkAdmin, EffectAdmin _effectAdmin) {
         graphic = _graphic;
         userInterface = _userInterface;
         textBoxAdmin = _textBoxAdmin;
@@ -145,6 +156,7 @@ public class DungeonSelectManager {
         geoSlotAdminManager = _geoSlotAdminManager;
         worldModeAdmin = _worldModeAdmin;
         unitedActivity = _unitedActivity;
+        effectAdmin = _effectAdmin;
 
         //playerStatus = _playerStatus;
         soundAdmin = _soundAdmin;
@@ -274,11 +286,15 @@ public class DungeonSelectManager {
 
         mapIconPlateListUpdate();
 
+        switchNewEffect(true);
+
     }
 
     private void setDatabase(MyDatabaseAdmin databaseAdmin) {
         databaseAdmin.addMyDatabase(DB_NAME, DB_ASSET, 1, "r");
         database = databaseAdmin.getMyDatabase(DB_NAME);
+        databaseAdmin.addMyDatabase(DUNGEON_DATA_DB_NAME, "DungeonData.db", 1, "r");
+        dungeonDataDatabase = databaseAdmin.getMyDatabase(DUNGEON_DATA_DB_NAME);
     }
 
     PlateGroup<BoxImageTextPlate> tutorialButtonGroup;
@@ -353,6 +369,7 @@ public class DungeonSelectManager {
             tutorialButtonGroupForDungeon.setUpdateFlag(false);
         }
     }
+
 
     //***** Buttonのinit関係 *****
     private void initMapIconPlate(){
@@ -446,7 +463,32 @@ public class DungeonSelectManager {
             }
         }
 
+        //newマーク
 
+            for (int i = Constants.STAGE_NUM - 1; i >= 0; i--) {
+                if (mapStatus.getMapClearStatus(i) == 1) {
+                    //侵入できる中で最も難しいもの
+                    for (int j = 0; j < dungeonNumber.size(); i++) {
+                        if (dungeonNumber.get(j) != null) {
+                            if (dungeonNumber.get(j) == i) {
+                                int centerX = x.get(j) - 50;
+                                int centerY = y.get(j) - 50;
+                                newEffectID = effectAdmin.createEffect("newEffect", "new", 1, 1, 1.0f, 1.0f, EffectAdmin.EXTEND_MODE.AFTER);
+                                newEffect = effectAdmin.getEffect(newEffectID);
+                                newEffect.setPosition(centerX, centerY);
+                                newEffect.setExtends(2.0f, 2.0f);
+                                if (playerStatus.getClearCount() == playerStatus.getNowClearCount()) {
+                                    newEffect.start();
+                                } else {
+                                    newEffect.hide();
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
 
     }
 
@@ -713,6 +755,7 @@ public class DungeonSelectManager {
         dungeonEnterNamePlate.draw();
         loopCountWindowPlate.draw();
         dungeonNotEnterPlate.draw();
+        dungeonInfoPlate.draw();
 
         tutorialButtonGroup.draw();
         tutorialButtonGroupForDungeon.draw();
@@ -736,6 +779,11 @@ public class DungeonSelectManager {
         dungeonNotEnterPaint = new Paint();
         dungeonNotEnterPaint.setTextSize(60);
         dungeonNotEnterPaint.setColor(Color.WHITE);
+
+        dungeonInfoPlate = new WindowTextPlate(graphic, new int[]{SELECT_WINDOW_PLATE.MESS_RIGHT - 250, SELECT_WINDOW_PLATE.MESS_UP - 25, SELECT_WINDOW_PLATE.MESS_RIGHT + 50, SELECT_WINDOW_PLATE.MESS_UP + 75 }, "baseButton00");
+        dungeonInfoPaint = new Paint();
+        dungeonInfoPaint.setTextSize(60);
+        dungeonInfoPaint.setColor(Color.WHITE);
     }
 
 
@@ -802,6 +850,12 @@ public class DungeonSelectManager {
                         dungeonEnterNamePlate.setDrawFlag(true);//ダンジョン名表示
                         dungeonEnterSelectButtonGroup.setUpdateFlag(true);
                         dungeonEnterSelectButtonGroup.setDrawFlag(true);
+                        dungeonInfoPlateUpdate(
+                                dungeonDataDatabase.getOneInt("DungeonData", "floor_num", "id = " + String.valueOf(dungeonNumber.get(focusDungeonButtonID)-1))
+                        );
+
+                        dungeonInfoPlate.setDrawFlag(true);
+                        switchNewEffect(false);
                     };
                 }
                 if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
@@ -811,12 +865,16 @@ public class DungeonSelectManager {
                         worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
                         geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_NORMAL);
                         initUIsFlag = true;
+
+                        switchNewEffect(false);
                     } else {
                         soundAdmin.play("enter00");
                         geoSlotAdminManager.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
                         worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
                         geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_SEE_ONLY);
                         initUIsFlag = true;
+
+                        switchNewEffect(false);
                     }
                 }
             }
@@ -826,11 +884,15 @@ public class DungeonSelectManager {
                 worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.SHOP_INIT);
                 initUIsFlag = true;
 
+                switchNewEffect(false);
+
             }
             if (event.get(focusDungeonButtonID).equals("present")) {
                 soundAdmin.play("enter00");
                 worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.PRESENT_INIT);
                 initUIsFlag = true;
+
+                switchNewEffect(false);
             }
             if (event.get(focusDungeonButtonID).equals("maoh")) {
                 soundAdmin.play("enter00");
@@ -842,6 +904,8 @@ public class DungeonSelectManager {
                         dungeonEnterNamePlate.setDrawFlag(true);//ダンジョン名表示
                         maohEnterSelectButtonGroup.setUpdateFlag(true);
                         maohEnterSelectButtonGroup.setDrawFlag(true);
+
+                        switchNewEffect(false);
                     }
                 }
                 if (worldModeAdmin.getMode() == WORLD_MODE.GEO_MAP_SELECT) {
@@ -851,6 +915,8 @@ public class DungeonSelectManager {
                         worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
                         geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_NORMAL);
                         initUIsFlag = true;
+
+                        switchNewEffect(false);
                     } else {
                         //soundAdmin.play("cannot_exit_room");
                         soundAdmin.play("enter00");
@@ -858,6 +924,8 @@ public class DungeonSelectManager {
                         worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
                         geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_SEE_ONLY);
                         initUIsFlag = true;
+
+                        switchNewEffect(false);
                     }
                 }
             }
@@ -870,15 +938,21 @@ public class DungeonSelectManager {
                 soundAdmin.play("enter00");
                 initUIsFlag = true;
                 worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.EQUIP_INIT);
+
+                switchNewEffect(false);
             }
             if (event.get(focusDungeonButtonID).equals("option")) {
                 soundAdmin.play("enter00");
                 initUIsFlag = true;
+
+                switchNewEffect(false);
             }
             if (event.get(focusDungeonButtonID).equals("credit")) {
                 soundAdmin.play("enter00");
                 initUIsFlag = true;
                 worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.CREDIT);//TODO : 0612先輩、遷移先のMODEを指定
+
+                switchNewEffect(false);
             }
             if (event.get(focusDungeonButtonID).equals("loop")) {
                 soundAdmin.play("enter00");
@@ -890,6 +964,8 @@ public class DungeonSelectManager {
                 OkButtonGroup.setDrawFlag(true);
                 OkButtonGroup.setUpdateFlag(true);
                 //initUIsFlag = true;
+
+                switchNewEffect(false);
             }
         }
     }
@@ -913,6 +989,8 @@ public class DungeonSelectManager {
             enterTextBoxUpdateInventryMax(Constants.Item.ITEM_KIND.GEO);
             OkButtonGroup.setUpdateFlag(true);
             OkButtonGroup.setDrawFlag(true);
+
+            switchNewEffect(false);
             return false;
         }
         System.out.println("takano expend : " + expendItemInventry.getInventryNum());
@@ -920,6 +998,8 @@ public class DungeonSelectManager {
             enterTextBoxUpdateInventryMax(Constants.Item.ITEM_KIND.EXPEND);
             OkButtonGroup.setUpdateFlag(true);
             OkButtonGroup.setDrawFlag(true);
+
+            switchNewEffect(false);
             return false;
         }
         System.out.println("takano equipment : " + equipmentInventry.getInventryNum());
@@ -927,6 +1007,8 @@ public class DungeonSelectManager {
             enterTextBoxUpdateInventryMax(Constants.Item.ITEM_KIND.EQUIPMENT);
             OkButtonGroup.setUpdateFlag(true);
             OkButtonGroup.setDrawFlag(true);
+
+            switchNewEffect(false);
             return false;
         }
 
@@ -938,6 +1020,8 @@ public class DungeonSelectManager {
             dungeonNotEnterPlate.setDrawFlag(true);
             OkButtonGroup.setUpdateFlag(true);
             OkButtonGroup.setDrawFlag(true);
+
+            switchNewEffect(false);
             return false;
         }
         return true;
@@ -976,6 +1060,7 @@ public class DungeonSelectManager {
         if (buttonID == 1 ) { //やめる
             soundAdmin.play("cancel00");
             initUIsFlag = true;
+            switchNewEffect(true);
         }
     }
 
@@ -997,6 +1082,7 @@ public class DungeonSelectManager {
         if (buttonID == 1 ) { //やめる
             soundAdmin.play("cancel00");
             initUIsFlag = true;
+            switchNewEffect(true);
         }
     }
 
@@ -1049,6 +1135,9 @@ public class DungeonSelectManager {
     }
     public void dungeonEnterNamePlateUpdateNotAccept() {
         dungeonNotEnterPlate.setText("未開放", dungeonNotEnterPaint, WindowTextPlate.TextPosition.CENTER);
+    }
+    public void dungeonInfoPlateUpdate(int stairs) {
+        dungeonInfoPlate.setText("階層数 " + String.valueOf(stairs), dungeonInfoPaint, WindowTextPlate.TextPosition.CENTER);
     }
 
     public void dungeonEnterNamePlateUpdateMaoh() {
@@ -1118,10 +1207,20 @@ public class DungeonSelectManager {
         dungeonEnterNamePlate.setDrawFlag(false);
         loopCountWindowPlate.setDrawFlag(false);
         dungeonNotEnterPlate.setDrawFlag(false);
+        dungeonInfoPlate.setDrawFlag(false);
 
         //menuButtonGroup.setUpdateFlag(true);
         mapIconPlateGroup.setUpdateFlag(true);
 
+    }
+    private void switchNewEffect(boolean flag) {
+        if (newEffect != null) {
+            if (flag && playerStatus.getClearCount() == playerStatus.getNowClearCount()) {
+                newEffect.restart();
+            } else {
+                newEffect.hide();
+            }
+        }
     }
 
     PlateGroup<BoxImageTextPlate> OkButtonGroup;
@@ -1140,6 +1239,7 @@ public class DungeonSelectManager {
                                 //OKが押された時の処理
                                 soundAdmin.play("enter00");
                                 initUIs();
+                                switchNewEffect(true);
                             }
                         }
                 });

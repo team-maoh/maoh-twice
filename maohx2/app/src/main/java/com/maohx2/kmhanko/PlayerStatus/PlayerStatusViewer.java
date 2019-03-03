@@ -89,7 +89,7 @@ public class PlayerStatusViewer extends StatusViewer {
                                         case 0:
                                             statusName = "HP";
                                             statusFigure = String.format("%.1f",playerStatus.getHP()/EXPRESS_RATE);
-                                            paint.setARGB(255,128,255,255);
+                                            paint.setARGB(255,255,255,128);
                                             break;
                                         case 1:
                                             statusName = "Atk";
@@ -137,15 +137,19 @@ public class PlayerStatusViewer extends StatusViewer {
             System.out.println("StatusEffectFlag = True");
             if ((parameter = playerStatus.getHP() - hp) != 0 && hp != 0) {
                 makeStatusEffect(0, parameter/EXPRESS_RATE, true);
+                makeGeoStatusEffect(0, "HP", parameter/EXPRESS_RATE, true);
             }
             if ((parameter = playerStatus.getAttack() - attack) != 0 && attack != 0) {
                 makeStatusEffect(1, parameter/EXPRESS_RATE, true);
+                makeGeoStatusEffect(1, "Atk", parameter/EXPRESS_RATE, true);
             }
             if ((parameter = playerStatus.getDefence() - defence) != 0 && defence != 0) {
                 makeStatusEffect(2, parameter/EXPRESS_RATE2, true);
+                makeGeoStatusEffect(2, "Def", parameter/EXPRESS_RATE2, true);
             }
             if ((parameter = playerStatus.getLuck() - luck) != 0 && luck != 0) {
                 makeStatusEffect(3, parameter/EXPRESS_RATE, true);
+                makeGeoStatusEffect(3, "Luc", parameter/EXPRESS_RATE, true);
             }
             if ((parameter = playerStatus.getMoney() - money) != 0 && money != 0) {
                 makeStatusEffect(4, parameter, false);
@@ -176,5 +180,43 @@ public class PlayerStatusViewer extends StatusViewer {
     @Override
     public void release() {
         super.release();
+    }
+
+    public void makeGeoStatusEffect(int statusID, String statusName, float parameter, boolean decimalFlag) {
+        String text = "";
+        Paint tempPaint = new Paint();
+        if (decimalFlag) {
+            if (parameter > 0) {
+                text = "+" + String.format("%.2f", parameter);
+                tempPaint.setColor(Color.rgb(255,0,0));
+            }
+            if (parameter <= 0) {
+                text = String.format("%.2f", parameter);
+                tempPaint.setColor(Color.rgb(0,0,255));
+            }
+        } else {
+            if (parameter > 0) {
+                text = "+" + String.valueOf((int)parameter);
+                tempPaint.setColor(Color.rgb(255,128,128));
+
+            }
+            if (parameter <= 0) {
+                text = String.valueOf((int)parameter);
+                tempPaint.setColor(Color.rgb(0,0,255));
+            }
+        }
+        text = statusName + " " + text;
+
+        for (int i = 0; i < statusEffect.length; i++) {
+            if (!statusEffect[i].isExist()) {
+                statusEffect[i].start(
+                        text,
+                        (int)(posX1 + sizeX * statusID + textXOffsetLeft1),
+                        (int)(posY1),// + (int)((sizeY + sizeY * TEXT_SIZE_RATE)/2.0f)),
+                        tempPaint
+                );
+                break;
+            }
+        }
     }
 }
