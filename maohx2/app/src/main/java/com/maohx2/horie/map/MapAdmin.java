@@ -1709,13 +1709,13 @@ public class MapAdmin {
         if (map_data[worldToMap(x)][worldToMap(y)].isRoom()) {
             section_admin.getNowRoom(worldToMap(x), worldToMap(y)).setDispflag(true);
         }
-        blue_paint.setARGB(192, 64, 64, 255);
+        blue_paint.setARGB(128, 64, 64, 255);
         section_admin.drawAllRoom(graphic, blue_paint, small_map_mag, small_map_offset);
         for (int i = 0; i < this.getMap_size_x(); i++) {
             for (int j = 0; j < this.getMap_size_y(); j++) {
                 //通路
                 if (!isWall(i, j) && !isStairs(i, j) && !isRoom(i, j) && !isGate(i, j) && isDisp(i, j)) {
-                    red_paint.setARGB(192, 255, 64, 64);
+                    red_paint.setARGB(128, 255, 64, 64);
                     graphic.bookingDrawRect(small_map_mag * i + small_map_offset.x, small_map_mag * j + small_map_offset.y, small_map_mag * (i + 1) + small_map_offset.x, small_map_mag * (j + 1) + small_map_offset.y, red_paint);
 //                    countMiniDrawRect++;
                 }
