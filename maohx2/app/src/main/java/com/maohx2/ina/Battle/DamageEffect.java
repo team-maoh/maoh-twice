@@ -84,7 +84,7 @@ public class DamageEffect {
         }
     }
 
-    private void clear(){
+    void clear(){
         exist = false;
         count = 0;
         position_x = 0;

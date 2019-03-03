@@ -1506,8 +1506,12 @@ public class BattleUnitAdmin {
         expendInventry.save();
         deleteEffect();
 
+        for(int i = 0; i < BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal()-1; i++) {
+            battle_units[0].setAilmentCounts(i,0);
+        }
 
-        if (winFlag) {
+
+                if (winFlag) {
             switch (mode) {
                 case BATTLE:
                     dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT_FROM_BATTLE);
@@ -1554,6 +1558,13 @@ public class BattleUnitAdmin {
                 touch_markers[i].clear();
             }
         }
+
+        for (int k = 0; k < DAMAGE_EFFECT_NUM; k++) {
+            if(damage_effects[k].isExist() == true){
+                damage_effects[k].clear();
+            }
+        }
+
 
         effectAdmin.clearKindEffect(1);
         enemyBackEffectAdmin.clearKindEffect(1);

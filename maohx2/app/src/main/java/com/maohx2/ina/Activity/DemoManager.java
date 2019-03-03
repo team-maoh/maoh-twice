@@ -260,7 +260,7 @@ public class DemoManager {
         playerStatus.setBaseHP(60000);//22222
         //playerStatus.setBaseAttack(67000);//22222
         playerStatus.setBaseAttack(80000);//22222
-        playerStatus.setBaseDefence(5000);//2222
+        playerStatus.setBaseDefence(5700);//2222
         playerStatus.setBaseLuck(22222 * 2);//2222
         playerStatus.setMoney(100000);//10000
 
