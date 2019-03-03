@@ -16,11 +16,9 @@ public class DebugManager {
     static final boolean debugMode = false;
 
     private final static int DEBUG_TEXT_MAX = 40;
-    private Activity activity;
     private Graphic graphic;
     private double fps;
     private Paint paint;
-    private Paint paintEdge;
     private Runtime runtime;
 
     private String[] debugText = new String[DEBUG_TEXT_MAX];
@@ -28,7 +26,6 @@ public class DebugManager {
     private float fpsLog[] = new float[100];
 
     public DebugManager(Activity _activity) {
-        activity = _activity;
 
         paint = new Paint();
         paint.setTextSize(40);
@@ -47,9 +44,9 @@ public class DebugManager {
     public void draw() {
         if (graphic != null && debugMode) {
             graphic.bookingDrawText("FPS[f/s]: " + String.valueOf((int)fps), 0, (int)paint.getTextSize() * 1, paint);
-            graphic.bookingDrawText("TotalMemory[KB]: " + String.valueOf((int)runtime.totalMemory()/1024.0), 0, (int)paint.getTextSize() * 2, paint);
+            graphic.bookingDrawText("ThisAppMemory[KB]: " + String.valueOf((int)runtime.totalMemory()/1024.0), 0, (int)paint.getTextSize() * 2, paint);
             graphic.bookingDrawText("FreeMemory[KB]: " + String.valueOf((int)runtime.freeMemory()/1024.0), 0, (int)paint.getTextSize() * 3, paint);
-            graphic.bookingDrawText("UsedMemory[KB]: " + String.valueOf((int)(runtime.totalMemory() - runtime.freeMemory())/1024.0), 0, (int)paint.getTextSize() * 4, paint);
+            graphic.bookingDrawText("TotalMemory[KB]: " + String.valueOf((int)(runtime.totalMemory() - runtime.freeMemory())/1024.0), 0, (int)paint.getTextSize() * 4, paint);
             graphic.bookingDrawText("MaxMemory[KB]: " + String.valueOf((int)runtime.maxMemory()/1024.0), 0, (int)paint.getTextSize() * 5, paint);
 
             for (int i = 0; i < debugText.length; i++) {
@@ -84,7 +81,6 @@ public class DebugManager {
 
     public void release() {
         paint = null;
-        paintEdge = null;
         debugText = null;
         fpsLog = null;
     }

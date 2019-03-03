@@ -103,13 +103,14 @@ public class Palette {
         judge_x *= judge_x;
         judge_y *= judge_y;
 
-        if (touch_state != Constants.Touch.TouchState.AWAY && battle_palette_mode == 0 && judge_x + judge_y < 30 * 30) {
+        //if (touch_state != Constants.Touch.TouchState.AWAY && battle_palette_mode == 0 && judge_x + judge_y < 30 * 30) {
+        if (touch_state != Constants.Touch.TouchState.AWAY && battle_palette_mode == 0 && battle_user_interface.checkUI(palette_center.getTouchID(), Constants.Touch.TouchWay.MOVE) == true) {
             battle_palette_mode = 1;
             //展開→方向的大、大きな円からはみ出た
-        } else if (touch_state != Constants.Touch.TouchState.AWAY && battle_palette_mode == 1 && judge_x + judge_y >= 70 * 70) {
+        } else if (touch_state != Constants.Touch.TouchState.AWAY && battle_palette_mode == 1 && battle_user_interface.checkUI(palette_center.getTouchID(), Constants.Touch.TouchWay.MOVE) == false) {
             battle_palette_mode = 2;
             //方向的大→展開、大きな円に戻った
-        } else if (touch_state != Constants.Touch.TouchState.AWAY && battle_palette_mode == 2 && judge_x + judge_y < 70 * 70) {
+        } else if (touch_state != Constants.Touch.TouchState.AWAY && battle_palette_mode == 2 && battle_user_interface.checkUI(palette_center.getTouchID(), Constants.Touch.TouchWay.MOVE) == true) {
             battle_palette_mode = 1;
         }
 
