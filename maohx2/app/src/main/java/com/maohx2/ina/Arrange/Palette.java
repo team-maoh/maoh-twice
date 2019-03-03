@@ -87,7 +87,7 @@ public class Palette {
             int center_y = position_y - (int) (PALETTE_ARRANGE_RADIUS * SIN[i]);
             palette_elements[i].setPosition(center_x, center_y, battle_user_interface.setCircleTouchUI(center_x, center_y, PALETTE_ELEMENT_RADIUS_BIG));
         }
-        palette_center.setPosition(position_x, position_y, battle_user_interface.setCircleTouchUI(position_x, position_y, PALETTE_ELEMENT_RADIUS_BIG));
+        palette_center.setPosition(position_x, position_y, battle_user_interface.setCircleTouchUI(position_x, position_y, PALETTE_CENTER_RADIUS_BIG));
     }
 
     public void update() {
