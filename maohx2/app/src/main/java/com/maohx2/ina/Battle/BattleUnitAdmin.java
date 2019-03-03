@@ -1191,7 +1191,7 @@ public class BattleUnitAdmin {
         BattleBaseUnitData bBUDforRock = ((BattleEnemy) tempBattleUnit).getBattleBaseUnitDataForRock();
         int[] status = bBUDforRock.getStatus(repeat_count, 5.042);
         //このジオは何ジオか決定する
-        if (Math.random() < 1.0) {
+        if (Math.random() < 0.9) {
             //NormalGeo
             GEO_PARAM_KIND_NORMAL kindNormal = GeoObjectDataCreater.getRandKindNormal();
             switch (kindNormal) {
