@@ -32,6 +32,7 @@ public class PaletteAdmin {
     EquipmentItemDataAdmin equipmentItemDataAdmin;
 
     InventryS expendInventry;
+    Graphic graphic;
 
     /*
     public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic){
@@ -49,6 +50,7 @@ public class PaletteAdmin {
         palettes[2] = new Palette(_battle_user_interface, _graphic, PALETTE_DEFAULT_X_RIGHT,PALETTE_DEFAULT_Y_RIGHT,2, _soundAdmin);
 
         expendInventry = _expendInventry;
+        graphic = _graphic;
 
         for(int i = 0; i < INVENTRY_DATA_MAX; i++){
             EquipmentItemData checkEquipmentItem = ((EquipmentItemData)(equipmentInventry.getItemData(i)));
@@ -172,6 +174,17 @@ public class PaletteAdmin {
     public void draw(){
         for (int i = 0; i < palettes.length; i++) {
             if (palettesFlag[i]) { palettes[i].draw(); }
+        }
+
+        if (palettesFlag[2]) {
+            //強さゲージの表示
+            graphic.bookingDrawBitmapName(
+                    "miningArrow",
+                    palettes[2].getPositionX(),
+                    palettes[2].getPositionY() - 100,
+                    1.35f, 1.35f, 0.0f,
+                    255, false
+            );
         }
     }
 

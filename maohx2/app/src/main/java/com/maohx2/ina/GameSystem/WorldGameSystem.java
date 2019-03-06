@@ -258,9 +258,6 @@ public class WorldGameSystem {
         geoSlotSaver = new GeoSlotSaver(databaseAdmin, "GeoSlotSave", "GeoSlotSave.db", Constants.SaveDataVersion.GEO_SLOT, Constants.DEBUG_SAVE_MODE, graphic);
         geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin);
 
-
-        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, soundAdmin, unitedActivity, map_status, map_status_saver, talkAdmin, effectAdmin);
-
         geoSlotAdminManager.loadGeoSlot();
 
         itemShopAdmin.init(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager, expendItemInventry, geoInventry, playerStatus, soundAdmin);
@@ -350,6 +347,9 @@ public class WorldGameSystem {
                 tutorial_flag_saver
         );
 
+        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, soundAdmin, unitedActivity, map_status, map_status_saver, talkAdmin, effectAdmin);
+
+
         //OP判定。まだOPを流していないならOP会話イベントを発動する。
         talkAdmin.start("Opening_in_world", false);//セーブデータ関係を内包しており、ゲーム中一度のみ実行される//堀江デバッグのためにコメントアウト
 
@@ -437,6 +437,12 @@ public class WorldGameSystem {
                     worldModeAdmin.setMode(WORLD_MODE.TU_GEO);
                     tutorial_flag_data.setIs_tutorial_finished(1, 3);//チュートリアルフラグを立てる
                 }
+                if (playerStatus.getClearCount() == 0) {
+                    dungeonSelectManager.switchNewEffect(true);
+                } else {
+                    dungeonSelectManager.switchNewEffect(false);
+                }
+
             case GEO_MAP_SELECT:
                 if (!talkAdmin.isTalking()) {
                     dungeonSelectManager.update();

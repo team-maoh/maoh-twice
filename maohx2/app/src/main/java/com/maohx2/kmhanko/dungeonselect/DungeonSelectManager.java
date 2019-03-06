@@ -286,6 +286,7 @@ public class DungeonSelectManager {
 
         mapIconPlateListUpdate();
 
+        updateNew();
         switchNewEffect(true);
 
     }
@@ -361,6 +362,8 @@ public class DungeonSelectManager {
             tutorialButtonGroup.setUpdateFlag(false);
             tutorialButtonGroupForDungeon.setDrawFlag(true);
             tutorialButtonGroupForDungeon.setUpdateFlag(true);
+
+            switchNewEffect(true);
         } else {
             worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT_INIT);
             tutorialButtonGroup.setDrawFlag(true);
@@ -372,7 +375,7 @@ public class DungeonSelectManager {
 
 
     //***** Buttonのinit関係 *****
-    private void initMapIconPlate(){
+    private void initMapIconPlate() {
         int size = database.getSize(DUNGEON_SELECT_BUTTON_TABLE_NAME);
 
         dungeonName = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "name");
@@ -394,9 +397,9 @@ public class DungeonSelectManager {
                     graphic, userInterface,
                     Constants.Touch.TouchWay.UP_MOMENT,
                     Constants.Touch.TouchWay.MOVE,
-                    new int[] { x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_TOURH_R },
-                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale.get(i), scale.get(i), 0.0f, 255, false),
-                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale_feed.get(i), scale_feed.get(i), 0.0f, 255, false),
+                    new int[]{x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_TOURH_R},
+                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)), x.get(i), y.get(i), scale.get(i), scale.get(i), 0.0f, 255, false),
+                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)), x.get(i), y.get(i), scale_feed.get(i), scale_feed.get(i), 0.0f, 255, false),
                     dungeonName.get(i),
                     dungeonNameExpress.get(i),
                     event.get(i)
@@ -430,7 +433,7 @@ public class DungeonSelectManager {
                 }
                 int width = 230;
                 int height = 40;
-                dungeonIconName[count] = new WindowTextPlate(graphic, new int[]{ centerX-width/2, centerY-height/2, centerX+width/2, centerY+height/2 },dungeonNameExpress.get(i),dungeonIconNamePaint, WindowTextPlate.TextPosition.CENTER, "dungeonIconPlate00");
+                dungeonIconName[count] = new WindowTextPlate(graphic, new int[]{centerX - width / 2, centerY - height / 2, centerX + width / 2, centerY + height / 2}, dungeonNameExpress.get(i), dungeonIconNamePaint, WindowTextPlate.TextPosition.CENTER, "dungeonIconPlate00");
                 dungeonIconName[count].setDrawFlag(true);
                 dungeonIconName[count].setExtendOffset(1.01f);
                 count++;
@@ -462,43 +465,55 @@ public class DungeonSelectManager {
                 }
             }
         }
+    }
 
+    public void updateNew() {
         //newマーク
 
         int dungeonMax = 0;
         int dungeonID = 0;
-        for (int i = Constants.STAGE_NUM - 1; i >= 0; i--) {
+
+        for (int j = 0; j < dungeonNumber.size(); j++) {
+            if (dungeonNumber.get(j) == 1) {
+                dungeonMax = -1;
+                dungeonID = j;
+                break;
+            }
+        }
+
+        for (int i = 0; i < Constants.STAGE_NUM-1; i++) {
             if (mapStatus.getMapClearStatus(i) == 1) {
-                if (dungeonMax <= dungeonNumber.get(i)) {
-                    dungeonMax = dungeonNumber.get(i);
-                    dungeonID = i;
+                for (int j = 0; j < dungeonNumber.size(); j++) {
+                    if (dungeonNumber.get(j) - 1 - 1 == i) {
+                        if (dungeonMax <= i) {
+                            dungeonMax = i;
+                            dungeonID = j;
+                        }
+                        break;
+                    }
                 }
             }
         }
-        int temp = 0;
-        for (int i = 0; i < mapIconPlateList.size(); i++) {
-            if (dungeonNumber.get(i) == dungeonID) {
-               temp = i;
-               break;
+        //侵入できる中で最も難しいもの
+        int centerX = x.get(dungeonID) - 50;
+        int centerY = y.get(dungeonID) - 50;
+        if (newEffect == null) {
+            makeNewEffect(centerX, centerY);
+        } else {
+            if (newEffect.isExist()) {
+                newEffect.setPosition(centerX, centerY);
+            } else {
+                makeNewEffect(centerX, centerY);
             }
         }
+    }
 
-                    //侵入できる中で最も難しいもの
-        int centerX = x.get(temp) - 50;
-        int centerY = y.get(temp) - 50;
-
-        /*
+    private void makeNewEffect(int centerX, int centerY) {
         newEffectID = effectAdmin.createEffect("newEffect", "new", 2, 1, 1.0f, 1.0f, EffectAdmin.EXTEND_MODE.AFTER);
         newEffect = effectAdmin.getEffect(newEffectID);
-        newEffect.setPosition(centerX, centerY);
         newEffect.setExtends(2.0f, 2.0f);
-        if (playerStatus.getClearCount() == playerStatus.getNowClearCount()) {
-            newEffect.start();
-        } else {
-            newEffect.hide();
-        }
-        */
-
+        newEffect.setPosition(centerX, centerY);
+        newEffect.start();
     }
 
 
@@ -671,56 +686,6 @@ public class DungeonSelectManager {
         loopCountSelectButtonGroup.setUpdateFlag(false);
         loopCountSelectButtonGroup.setDrawFlag(false);
     }
-
-    /*
-    PlateGroup<BoxImageTextPlate> loopCountSelectButtonGroup;
-    private void initLoopCountSelectButton(){
-        Paint textPaint = new Paint();
-        textPaint.setTextSize(LOOP_WINDOW.TEXT_SIZE);
-        textPaint.setARGB(255,255,255,255);
-
-        loopCountSelectButtonGroup = new PlateGroup<BoxImageTextPlate>(
-                new BoxImageTextPlate[]{
-                        new BoxImageTextPlate(
-                                graphic, userInterface,
-                                Constants.Touch.TouchWay.UP_MOMENT,
-                                Constants.Touch.TouchWay.MOVE,
-                                new int[]{ LOOP_WINDOW.MENOS_LEFT, LOOP_WINDOW.MENOS_UP, LOOP_WINDOW.MENOS_RIGHT, LOOP_WINDOW.MENOS_BOTTOM },
-                                "-",
-                                textPaint
-                        ) {
-                            @Override
-                            public void callBackEvent() {
-                                //-ボタンが押された時の処理
-                                soundAdmin.play("enter00");
-                                playerStatus.subNowClearCountLoop();
-                                loopCountTextBoxUpdate();
-                                mapIconPlateListUpdate();
-                            }
-                        },
-                        new BoxImageTextPlate(
-                                graphic, userInterface,
-                                Constants.Touch.TouchWay.UP_MOMENT,
-                                Constants.Touch.TouchWay.MOVE,
-                                new int[]{ LOOP_WINDOW.PLUS_LEFT, LOOP_WINDOW.PLUS_UP, LOOP_WINDOW.PLUS_RIGHT, LOOP_WINDOW.PLUS_BOTTOM },
-                                "+",
-                                textPaint
-                        ) {
-                            @Override
-                            public void callBackEvent() {
-                                //-ボタンが押された時の処理
-                                soundAdmin.play("enter00");
-                                playerStatus.addNowClearCountLoop();
-                                loopCountTextBoxUpdate();
-                                mapIconPlateListUpdate();
-                            }
-                        }
-                }
-        );
-        loopCountSelectButtonGroup.setUpdateFlag(false);
-        loopCountSelectButtonGroup.setDrawFlag(false);
-    }
-    */
 
     private void initTextBox() {
         enterTextBoxID = textBoxAdmin.createTextBox(SELECT_WINDOW.MESS_LEFT, SELECT_WINDOW.MESS_UP, SELECT_WINDOW.MESS_RIGHT, SELECT_WINDOW.MESS_BOTTOM, SELECT_WINDOW.MESS_ROW);
@@ -1223,7 +1188,7 @@ public class DungeonSelectManager {
         mapIconPlateGroup.setUpdateFlag(true);
 
     }
-    private void switchNewEffect(boolean flag) {
+    public void switchNewEffect(boolean flag) {
         if (newEffect != null) {
             if (flag && playerStatus.getClearCount() == playerStatus.getNowClearCount()) {
                 newEffect.restart();

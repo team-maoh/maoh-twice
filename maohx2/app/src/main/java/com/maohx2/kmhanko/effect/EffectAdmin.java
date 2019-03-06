@@ -17,7 +17,7 @@ import java.util.List;
 //Effectの実体を持つ。外部からの依頼でEffectを生成したりする。Effectのupdate,drawを呼ぶ。
 public class EffectAdmin {
 
-    static final int EFFECT_MAX = 128;
+    static final int EFFECT_MAX = 256;
     static final int TRIMMED_BITMAP_MAX= 128;
 
     //private List<Effect> effect = new ArrayList<Effect>();
@@ -135,10 +135,18 @@ public class EffectAdmin {
         }
 
         int makeEffectID = effectIndex;
-        if (effects[makeEffectID].isExist()) {
-            //System.out.println("Takano: EffectAdmin: 表示Effect数の上限オーバーです.");
-            effects[makeEffectID].clear();
+        for(int i = 0; i < effects.length; i++) {
+            if (!effects[(makeEffectID + i) % effects.length].isExist()) {
+                makeEffectID = (makeEffectID + i) % effects.length;
+                break;
+            }
+            if (i == effects.length - 1) {
+                System.out.println("Takano: EffectAdmin: 表示Effect数の上限オーバーです.");
+                makeEffectID = effectIndex;
+                effects[makeEffectID].clear();
+            }
         }
+
         effects[makeEffectID].create(tempEffectBitmapData, kind);
         effectIndex = (effectIndex+1)%EFFECT_MAX;
 
