@@ -659,6 +659,8 @@ public class WorldGameSystem {
                 break;
             case GEO_MAP_SELECT_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
+                dungeonSelectManager.draw();
+                playerStatusViewer.draw();
                 break;
             case GEO_MAP_SELECT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
@@ -667,6 +669,8 @@ public class WorldGameSystem {
                 break;
             case GEO_MAP_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
+                geoSlotAdminManager.draw();
+                playerStatusViewer.draw();
                 break;
             case GEO_MAP:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
@@ -687,6 +691,7 @@ public class WorldGameSystem {
                 break;
             case SHOP_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
+                playerStatusViewer.draw();
                 break;
             case SHOP:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
@@ -741,6 +746,7 @@ public class WorldGameSystem {
                 break;
             case SELL_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
+                playerStatusViewer.draw();
                 break;
             case SELL:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);

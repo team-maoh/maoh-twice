@@ -467,7 +467,9 @@ public class GeoPresentManager {
 
 
     public void draw() {
-        graphic.bookingDrawBitmapData(gaiaImage);
+        if (gaiaImage != null) {
+            graphic.bookingDrawBitmapData(gaiaImage);
+        }
         scoreTitle.draw();
         for(int i = 0; i < scoreWindow.length; i++) {
             scoreWindow[i].draw();
