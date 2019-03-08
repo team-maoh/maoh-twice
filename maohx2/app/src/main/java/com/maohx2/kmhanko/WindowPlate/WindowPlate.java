@@ -10,6 +10,7 @@ public class WindowPlate {
     Graphic graphic;
 
     static final String DEFAULT_WINDOW_NAME = "baseButton00";
+    static WindowPlateBitmapAdmin windowPlateBitmapAdmin = new WindowPlateBitmapAdmin();
 
     protected String windowImageName = null;
 
@@ -49,20 +50,9 @@ public class WindowPlate {
     public void setWindowImage(String _windowImageName) {
         windowImageName = _windowImageName;
 
-        windowElement = new BitmapData[3][3];
-        windowImageWidth = (float)graphic.searchBitmap(windowImageName).getWidth();
-        windowImageHeight = (float)graphic.searchBitmap(windowImageName).getHeight();
-
-        for(int i = 0; i < 3; i++) {
-            for(int j = 0; j < 3; j++) {
-                windowElement[i][j] = graphic.processTrimmingBitmapData(
-                        graphic.searchBitmap(windowImageName),
-                        (int)((float)j*(float)windowImageWidth/3.0f),
-                        (int)((float)i*(float)windowImageHeight/3.0f),
-                        (int)((float)windowImageWidth/3.0f),
-                        (int)((float)windowImageHeight/3.0f));
-            }
-        }
+        windowElement = windowPlateBitmapAdmin.addWindowElement(graphic, windowImageName);
+        windowImageWidth = windowElement[0][0].getWidth() * 3;
+        windowImageHeight = windowElement[0][0].getHeight() * 3;
     }
 
     public void draw() {
@@ -113,12 +103,18 @@ public class WindowPlate {
         extendOffset = x;
     }
 
+    static public WindowPlateBitmapAdmin getWindowPlateBitmapAdmin() {
+        return windowPlateBitmapAdmin;
+    }
+
     public void release() {
+        /*
         for(int i = 0; i <3; i++) {
             for (int j = 0; j < 3; j++) {
                 windowElement[i][j].release();
             }
         }
+        */
     }
 
 }

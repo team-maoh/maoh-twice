@@ -850,10 +850,18 @@ public class MapObjectAdmin {
             map_player = null;
         }
 
+        if (mapObjectBitmapAdmin != null) {
+            mapObjectBitmapAdmin.release();
+        }
+
+        /*
         if ( map_player_bitmap != null ) {
             map_player_bitmap.release();
             map_player_bitmap = null;
         }
+        */
+
+
         random = null;
         if (map_trap != null) {
             for (int i = 0; i < map_trap.length; i++) {
@@ -863,6 +871,7 @@ public class MapObjectAdmin {
             }
             map_trap = null;
         }
+        /*
         if (map_trap_bitmap != null) {
             for (int i = 0; i < map_trap_bitmap.length; i++) {
                 if (map_trap_bitmap[i] != null) {
@@ -870,7 +879,7 @@ public class MapObjectAdmin {
                 }
             }
             map_trap_bitmap = null;
-        }
+        }*/
         if (map_mine != null) {
             for (int i = 0; i < map_mine.length; i++) {
                 if (map_mine[i] != null) {
@@ -880,6 +889,7 @@ public class MapObjectAdmin {
             map_mine = null;
         }
 
+        /*
         if (map_mine_bitmap != null) {
             for (int i = 0; i < map_mine_bitmap.length; i++) {
                 if (map_mine_bitmap[i] != null) {
@@ -888,6 +898,7 @@ public class MapObjectAdmin {
             }
             map_mine_bitmap = null;
         }
+        */
         if (map_item != null) {
             for (int i = 0; i < map_item.length; i++) {
                 if (map_item[i] != null) {
@@ -897,6 +908,7 @@ public class MapObjectAdmin {
             map_item = null;
         }
 
+        /*
         if (map_item_bitmap != null) {
             for (int i = 0; i < map_item_bitmap.length; i++) {
                 if (map_item_bitmap[i] != null) {
@@ -905,6 +917,7 @@ public class MapObjectAdmin {
             }
             map_item_bitmap = null;
         }
+        */
 
         if (map_boss != null) {
             for (int i = 0; i < map_boss.length; i++) {
@@ -915,6 +928,7 @@ public class MapObjectAdmin {
             map_boss = null;
         }
 
+        /*
         if (map_boss_bitmap != null) {
             for (int i = 0; i < map_boss_bitmap.length; i++) {
                 if (map_boss_bitmap[i] != null) {
@@ -923,6 +937,8 @@ public class MapObjectAdmin {
             }
             map_boss_bitmap = null;
         }
+        */
+
         if (map_enemy != null) {
             for (int i = 0; i < map_enemy.length; i++) {
                 if (map_enemy[i] != null) {
@@ -931,6 +947,7 @@ public class MapObjectAdmin {
             }
             map_enemy = null;
         }
+        /*
         if (map_enemy_bitmap != null) {
             for (int i = 0; i < map_enemy_bitmap.length; i++) {
                 if (map_enemy_bitmap[i] != null) {
@@ -939,6 +956,8 @@ public class MapObjectAdmin {
             }
             map_enemy_bitmap = null;
         }
+        */
+
         if ( bag_item_admin != null) {
             bag_item_admin.release();
         }
