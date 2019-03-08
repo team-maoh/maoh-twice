@@ -205,8 +205,6 @@ public class MapObjectAdmin {
         for (int i = 0; i < NUM_OF_ITEM; i++) {
             map_item[i] = new MapItem(graphic, this, i, camera, playerStatus, _battleUnitDataAdmin, _dungeonMonsterDataAdmin);
             map_item[i].init();
-            map_item_bitmap[i] = mapObjectBitmapAdmin.addMapObjectBitmap(1, graphic, randomItemName());
-            map_item_bitmap[i].init();
         }
 
         for (int i = 0; i < NUM_OF_BOSS; i++) {
@@ -441,6 +439,8 @@ public class MapObjectAdmin {
         String[] debug_item_name = new String[NUM_OF_ITEM];//by kmhanko
         for (int i = 0; i < NUM_OF_ITEM; i++) {
             debug_item_name[i] = randomItemName();
+            map_item_bitmap[i] = mapObjectBitmapAdmin.addMapObjectBitmap(1, graphic, debug_item_name[i]);
+            map_item_bitmap[i].init();
         }
 
         //

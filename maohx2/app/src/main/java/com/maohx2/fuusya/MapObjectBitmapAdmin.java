@@ -26,9 +26,10 @@ public class MapObjectBitmapAdmin {
         }
 
         mapObjectBitmap[mapObjectBitmapIndex] = new MapObjectBitmap(_total_dirs, _graphic, _object_name);
+        tempMapObjectBitmap = mapObjectBitmap[mapObjectBitmapIndex];
         mapObjectBitmapIndex++;
 
-        return mapObjectBitmap[mapObjectBitmapIndex];
+        return tempMapObjectBitmap;
     }
 
     public MapObjectBitmap searchMapObjectBitmap(String objectName) {
