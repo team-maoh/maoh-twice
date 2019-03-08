@@ -13,7 +13,7 @@ public class DebugManager {
     //デバッグのために必要な表示などを行うクラス
 
     //デバッグ表示するかどうか
-    static final boolean debugMode = true;
+    static final boolean debugMode = false;
 
     private final static int DEBUG_TEXT_MAX = 40;
     private Graphic graphic;
