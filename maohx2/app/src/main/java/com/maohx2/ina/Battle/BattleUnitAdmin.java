@@ -158,6 +158,7 @@ public class BattleUnitAdmin {
     int damageToEnemy = 0;
     Random rnd = new Random();
     EquipmentItemData attack_equipment;
+    int maxDamage = -999;
 
     //by kmhanko BattleUnitDataAdmin追加
     public void init(
@@ -219,6 +220,7 @@ public class BattleUnitAdmin {
 
         textPaint.setARGB(0,255,100,100);
         textPaint.setTextSize(150);
+        maxDamage = -999;
 
         //by kmhanko
         // *** equipItemDataCreaterのインスタンス化 ***
@@ -616,7 +618,7 @@ public class BattleUnitAdmin {
         TouchState touch_state = battle_user_interface.getTouchState();
         noAtackCount++;
 
-        if(noAtackCount > 150){
+        if(noAtackCount > 230){
             if(noAtackAlpha > 320 || noAtackAlpha < 255 - 320) { addNoAtackAlpha *= -1;}
             noAtackAlpha += addNoAtackAlpha;
             textPaint.setAlpha(noAtackAlpha);
@@ -649,11 +651,11 @@ public class BattleUnitAdmin {
                 if (palette_admin.doUsePalette() == false) {
                     //プレイヤーの攻撃によるマーカーの設置
                     if (!resultOperatedFlag) {
+                        attack_equipment = null;
+                        if (mode == MODE.BATTLE || mode == MODE.MAOH || mode == MODE.BOSS || mode == MODE.OPENING) {
+                            attack_equipment = palette_admin.getEquipmentItemData();
+                        }
                         if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
-                            attack_equipment = null;
-                            if (mode == MODE.BATTLE || mode == MODE.MAOH || mode == MODE.BOSS || mode == MODE.OPENING) {
-                                attack_equipment = palette_admin.getEquipmentItemData();
-                            }
                             if (mode == MODE.MINING) {
                                 attack_equipment = palette_admin.getMiningItemData();
                             }
@@ -1026,6 +1028,8 @@ public class BattleUnitAdmin {
 //                        System.out.println("damage_pl_desuyo_" + damage_to_player);//1000
 //                        System.out.println("def_pl_desuyo_" + battle_units[0].getDefence());//2222
 
+                            if(damage > maxDamage){maxDamage = damage;}
+
                             gameoverMes = "敵から" + String.valueOf((int) Math.ceil((float) (damage) / PlayerStatusViewer.EXPRESS_RATE)) + "ダメージを受けて";
 
                             if (new_hp > battle_units[0].getMaxHitPoint()) {
@@ -1113,19 +1117,22 @@ public class BattleUnitAdmin {
         playerStatus.setMoney(playerStatus.getMoney() / 2);
         musicAdmin.loadMusic("gameover00",true);
 
+        double damageRate = ((double)maxDamage) / ((double)battle_units[0].getMaxHitPoint());
+
+
         switch (mode) {
             case BATTLE:
             case BOSS:
-                gameoverMessage();
-                //battleEnd();
+                if(damageRate > 0.33) { gameoverMessage(false, true); }
+                else{ gameoverMessage(false, false); }
                 break;
             case MINING:
                 //ここには来ない
                 battleEnd();
                 break;
             case MAOH:
-                gameoverMessage();
-                //battleEnd();
+                if(damageRate > 0.33) { gameoverMessage(true, true); }
+                else{ gameoverMessage(true, false); }
                 break;
             case OPENING:
                 break;
@@ -1221,7 +1228,7 @@ public class BattleUnitAdmin {
                 } else {
                     graphic.bookingDrawText("パレット選択で", 100, 300, textPaint);
                     graphic.bookingDrawText("武器を変更！", 500, 500, textPaint);
-                    graphic.bookingDrawBitmapData(graphic.searchBitmap("arrow"),1230,610,2.0f,2.0f,0, noAtackAlpha,false);
+                    graphic.bookingDrawBitmapData(graphic.searchBitmap("arrowMark00"),1230,610,2.0f,2.0f,0, noAtackAlpha,false);
                 }
             }else{ graphic.bookingDrawText("画面タッチで攻撃！", 150, 450, textPaint); }
         }
@@ -1459,14 +1466,46 @@ public class BattleUnitAdmin {
         }
     }
 
-    private void gameoverMessage() {
-        resultTextBoxUpdate(
-                new String[]{
-                        "あなたは",
-                        gameoverMes,
-                        "やられてしまった！"
-                })
-        ;
+    private void gameoverMessage(boolean isMaoh, boolean isTooDamage) {
+        if(isMaoh == true) {
+            if(isTooDamage == true) {
+                resultTextBoxUpdate(
+                        new String[]{
+                                "あなたは",
+                                gameoverMes,
+                                "やられてしまった！",
+                                "まだ挑むには早すぎたようだ"
+                        });
+            }else{
+                resultTextBoxUpdate(
+                        new String[]{
+                                "あなたは",
+                                gameoverMes,
+                                "やられてしまった！",
+                        });
+            }
+
+        }else{
+            if(isTooDamage == true) {
+                resultTextBoxUpdate(
+                        new String[]{
+                                "あなたは",
+                                gameoverMes,
+                                "やられてしまった！",
+                                "まだ挑むには早すぎたようだ",
+                                "入手したアイテムをすべて落とした！！"
+                        });
+            }else{
+                resultTextBoxUpdate(
+                        new String[]{
+                                "あなたは",
+                                gameoverMes,
+                                "やられてしまった！",
+                                "入手したアイテムをすべて落とした！！"
+                        });
+            }
+        }
+
         resultButtonGroup.setUpdateFlag(true);
         resultButtonGroup.setDrawFlag(true);
         return;
