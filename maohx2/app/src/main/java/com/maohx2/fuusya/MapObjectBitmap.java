@@ -273,6 +273,10 @@ public class MapObjectBitmap {
 
     }
 
+    public String getObjectName() {
+        return object_name;
+    }
+
     public void release() {
         System.out.println("takanoRelease : MapObjectBitmap");
         /*
