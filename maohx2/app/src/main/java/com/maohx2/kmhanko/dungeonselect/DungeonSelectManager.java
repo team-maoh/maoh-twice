@@ -188,6 +188,8 @@ public class DungeonSelectManager {
         //TODO : Loopselect
     }
 
+    MapIconPlate mapIconPlateMap, mapIconPlateGeoMap;
+
     public void start() {
 
 
@@ -363,6 +365,11 @@ public class DungeonSelectManager {
             tutorialButtonGroupForDungeon.setDrawFlag(true);
             tutorialButtonGroupForDungeon.setUpdateFlag(true);
 
+            mapIconPlateGeoMap.setUpdateFlag(true);
+            mapIconPlateGeoMap.setDrawFlag(true);
+            mapIconPlateMap.setUpdateFlag(false);
+            mapIconPlateMap.setDrawFlag(false);
+
             switchNewEffect(true);
         } else {
             worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT_INIT);
@@ -370,6 +377,11 @@ public class DungeonSelectManager {
             tutorialButtonGroup.setUpdateFlag(true);
             tutorialButtonGroupForDungeon.setDrawFlag(false);
             tutorialButtonGroupForDungeon.setUpdateFlag(false);
+
+            mapIconPlateGeoMap.setUpdateFlag(false);
+            mapIconPlateGeoMap.setDrawFlag(false);
+            mapIconPlateMap.setUpdateFlag(true);
+            mapIconPlateMap.setDrawFlag(true);
         }
     }
 
@@ -465,6 +477,20 @@ public class DungeonSelectManager {
                 }
             }
         }
+
+        for (int i = 0; i < size; i++) {
+            if (mapIconPlates[i].getMapIconName().equals("マップ")) {
+                mapIconPlateMap = mapIconPlates[i];
+            }
+            if (mapIconPlates[i].getMapIconName().equals("ジオマップ")) {
+                mapIconPlateGeoMap = mapIconPlates[i];
+            }
+        }
+
+        mapIconPlateGeoMap.setUpdateFlag(true);
+        mapIconPlateGeoMap.setDrawFlag(true);
+        mapIconPlateMap.setUpdateFlag(false);
+        mapIconPlateMap.setDrawFlag(false);
     }
 
     public void updateNew() {

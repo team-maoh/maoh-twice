@@ -24,6 +24,7 @@ import com.maohx2.kmhanko.database.MyDatabaseAdmin;
 import com.maohx2.kmhanko.music.MusicAdmin;
 import com.maohx2.kmhanko.sound.SoundAdmin;
 import com.maohx2.ina.Constants.DungeonKind.*;
+import com.maohx2.kmhanko.WindowPlate.*;
 
 import com.maohx2.kmhanko.Talking.TalkAdmin;
 
@@ -93,6 +94,7 @@ public class UnitedSurfaceView extends BaseSurfaceView {
         tutorialFlagData = null;
         tutorialFlagSaver.release();
         tutorialFlagSaver = null;
+        WindowPlate.getWindowPlateBitmapAdmin().release();
     }
 
     public UnitedSurfaceView(UnitedActivity _unitedActivity, BackSurfaceView _backSurfaceView) {
