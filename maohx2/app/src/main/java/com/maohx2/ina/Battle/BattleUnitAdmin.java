@@ -105,6 +105,7 @@ public class BattleUnitAdmin {
     //by kmhanko
     BattleUnitDataAdmin battleUnitDataAdmin;
     Paint paint = new Paint();
+    Paint textPaint = new Paint();
     MyDatabaseAdmin databaseAdmin;
     TimeLimitBar timeLimitBar;
 
@@ -149,10 +150,14 @@ public class BattleUnitAdmin {
 
     int resultButtonTimeCount;
     static final int RESULT_BUTTON_TIME = 15;
+    int noAtackCount = 0;
+    int noAtackAlpha = 0;
+    int addNoAtackAlpha = 15;
 
     int cannot_count = 0;
     int damageToEnemy = 0;
     Random rnd = new Random();
+    EquipmentItemData attack_equipment;
 
     //by kmhanko BattleUnitDataAdmin追加
     public void init(
@@ -211,6 +216,9 @@ public class BattleUnitAdmin {
         playerStatus = _playerStatus;
 
         timeLimitBar = new TimeLimitBar(graphic);
+
+        textPaint.setARGB(0,255,100,100);
+        textPaint.setTextSize(150);
 
         //by kmhanko
         // *** equipItemDataCreaterのインスタンス化 ***
@@ -606,7 +614,13 @@ public class BattleUnitAdmin {
         double touch_x = battle_user_interface.getTouchX();
         double touch_y = battle_user_interface.getTouchY();
         TouchState touch_state = battle_user_interface.getTouchState();
+        noAtackCount++;
 
+        if(noAtackCount > 150){
+            if(noAtackAlpha > 320 || noAtackAlpha < 255 - 320) { addNoAtackAlpha *= -1;}
+            noAtackAlpha += addNoAtackAlpha;
+            textPaint.setAlpha(noAtackAlpha);
+        }
 
         if (!battleEndFlag) {
             //if (!battleEndFlag && !(mode == MODE.OPENING && text_mode)) {
@@ -636,7 +650,7 @@ public class BattleUnitAdmin {
                     //プレイヤーの攻撃によるマーカーの設置
                     if (!resultOperatedFlag) {
                         if ((touch_state == TouchState.DOWN) || (touch_state == TouchState.DOWN_MOVE) || (touch_state == TouchState.MOVE)) {
-                            EquipmentItemData attack_equipment = null;
+                            attack_equipment = null;
                             if (mode == MODE.BATTLE || mode == MODE.MAOH || mode == MODE.BOSS || mode == MODE.OPENING) {
                                 attack_equipment = palette_admin.getEquipmentItemData();
                             }
@@ -650,6 +664,8 @@ public class BattleUnitAdmin {
                                         if (mode == MODE.BATTLE || mode == MODE.MAOH || mode == MODE.BOSS || mode == MODE.OPENING) {
                                             attack_equipment.setDungeonUseNum(attack_equipment.getDungeonUseNum() - 1);
                                         }
+                                        noAtackCount = 0;
+                                        noAtackAlpha = 0;
                                         first_attack_frag = true;
                                         marker_flag = true;
                                         attack_count = 0;
@@ -1194,6 +1210,20 @@ public class BattleUnitAdmin {
             if(damage_effects[k].isExist() == true){
                 damage_effects[k].draw();
             }
+        }
+
+        if(noAtackAlpha > 0){
+            if(noAtackAlpha > 255){textPaint.setAlpha(255);}
+            if(noAtackAlpha < 0){textPaint.setAlpha(0);}
+            if(attack_equipment != null) {
+                if (attack_equipment.getDungeonUseNum() > 0) {
+                    graphic.bookingDrawText("画面タッチで攻撃！", 150, 450, textPaint);
+                } else {
+                    graphic.bookingDrawText("パレット選択で", 100, 300, textPaint);
+                    graphic.bookingDrawText("武器を変更！", 500, 500, textPaint);
+                    graphic.bookingDrawBitmapData(graphic.searchBitmap("arrow"),1230,610,2.0f,2.0f,0, noAtackAlpha,false);
+                }
+            }else{ graphic.bookingDrawText("画面タッチで攻撃！", 150, 450, textPaint); }
         }
 
 

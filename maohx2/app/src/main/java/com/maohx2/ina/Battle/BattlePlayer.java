@@ -39,21 +39,26 @@ public class BattlePlayer extends BattleUnit {
             switch (direction){
                 case 0:
                     graphic.bookingDrawRect(200+shake_x, 20+shake_y, (int) (200 + 1200 * ((double) hit_point / (double) max_hit_point))+shake_x, 40+shake_y, paint);
+                    graphic.bookingDrawBitmapData(graphic.searchBitmap("player_icon"),140+shake_x,35+shake_y,2.5f,2.5f,0,255,false);
                     break;
                 case 1:
                     graphic.bookingDrawRect(200+shake_x, 20-shake_y, (int) (200 + 1200 * ((double) hit_point / (double) max_hit_point))+shake_x, 40-shake_y, paint);
+                    graphic.bookingDrawBitmapData(graphic.searchBitmap("player_icon"),140+shake_x,35-shake_y,2.5f,2.5f,0,255,false);
                     break;
                 case 2:
                     graphic.bookingDrawRect(200-shake_x, 20+shake_y, (int) (200 + 1200 * ((double) hit_point / (double) max_hit_point))-shake_x, 40+shake_y, paint);
+                    graphic.bookingDrawBitmapData(graphic.searchBitmap("player_icon"),140-shake_x,35+shake_y,2.5f,2.5f,0,255,false);
                     break;
                 case 3:
                     graphic.bookingDrawRect(200-shake_x, 20-shake_y, (int) (200 + 1200 * ((double) hit_point / (double) max_hit_point))-shake_x, 40-shake_y, paint);
+                    graphic.bookingDrawBitmapData(graphic.searchBitmap("player_icon"),140-shake_x,35-shake_y,2.5f,2.5f,0,255,false);
                     break;
             }
-        }
-        else{
+        }else{
             graphic.bookingDrawRect(200, 20, (int) (200 + 1200 * ((double) hit_point / (double) max_hit_point)), 40, paint);
+            graphic.bookingDrawBitmapData(graphic.searchBitmap("player_icon"),140,35,2.5f,2.5f,0,255,false);
         }
+
 
         for(int i = 0; i < BattleBaseUnitData.ActionID.ACTION_ID_NUM.ordinal() -1; i++) {
             if (alimentCounts[i] > 0) {

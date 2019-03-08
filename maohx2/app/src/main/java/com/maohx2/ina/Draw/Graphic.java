@@ -349,6 +349,9 @@ public class Graphic {
     public void bookingDrawBitmapData(BitmapData bitmap_data, int position_x, int position_y, float scale_x, float scale_y, float degree, int alpha, boolean is_upleft){
         Point position = new Point(position_x, position_y);
 
+        if(alpha < 0){alpha = 0;}
+        if(alpha > 255){alpha = 255;}
+
         if(degree == 0 && alpha == 255) {
             bookingDrawBitmapData(bitmap_data, position, scale_x, scale_y, is_upleft);
         }else{
