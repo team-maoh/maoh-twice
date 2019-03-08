@@ -81,8 +81,8 @@ public class MapPlayer extends MapUnit {
     int menu_count;
 
     int dungeonEnterEncountWaitTime;//階層移動後するにはエンカウントしないための変数
-    //static final int ENCOUNT_START_TIME = 30 * 3;
-    static final int ENCOUNT_START_TIME = 30 * 3;
+    //static final int ENCOUNT_START_TIME = 90;
+    static final int ENCOUNT_START_TIME = 300;
     Paint paint;
 
     public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, MapPlateAdmin _map_plate_admin, BattleUnitAdmin _battle_unit_admin, DungeonModeManage _dungeon_mode_manage, boolean _avoid_battle_for_debug) {
