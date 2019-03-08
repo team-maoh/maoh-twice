@@ -283,7 +283,7 @@ public class MapPlayer extends MapUnit {
 
                     encount_steps++;
 
-                    if (encount_steps >= th_encount_steps && avoid_battle_for_debug == false && dungeonEnterEncountWaitTime >= ENCOUNT_START_TIME) {
+                    if (encount_steps >= 2 * th_encount_steps && avoid_battle_for_debug == false && dungeonEnterEncountWaitTime >= ENCOUNT_START_TIME) {
                         touch_mode = false;
                         move_mode = false;
                         System.out.println("◆一定歩数 歩いたので敵と遭遇");
