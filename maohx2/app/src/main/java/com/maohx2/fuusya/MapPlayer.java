@@ -183,7 +183,7 @@ public class MapPlayer extends MapUnit {
                 }
 
 
-                if (isWithinReach(touch_w_x, touch_w_y, 80) == false) {
+                if (isWithinReach(touch_w_x, touch_w_y, 80) == false || (isWithinReach(touch_w_x, touch_w_y, 80) == true && touch_state == TouchState.MOVE)) {
                     touch_draw = true;
                     if (touch_mode == false && (touch_state == TouchState.DOWN || touch_state == TouchState.DOWN_MOVE || touch_state == TouchState.MOVE)) {
                         touch_mode = true;
@@ -324,14 +324,18 @@ public class MapPlayer extends MapUnit {
                 }
             }
 
+
+
+            sound_steps = (sound_steps + 1) % SOUND_STEPS_PERIOD;
+            if (sound_steps == 0 && move_mode == true) {
+                sound_admin.play("step07");//足音SE
+            }
+            /*
             if (has_touched_within_player == false) {
-                sound_steps = (sound_steps + 1) % SOUND_STEPS_PERIOD;
                 //壁にぶつかり続けてるときに音がなり続けるのはおかしいので、
                 //if(has_touched_within_player == false) の中に入れる
-                if (sound_steps == 0 && move_mode == true) {
-                    sound_admin.play("step07");//足音SE
-                }
             }
+            */
 
         } else {//moving == false のとき
             touching_frame_count = 0;
