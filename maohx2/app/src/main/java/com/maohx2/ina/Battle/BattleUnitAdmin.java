@@ -1219,7 +1219,8 @@ public class BattleUnitAdmin {
             }
         }
 
-        if(noAtackAlpha > 0){
+
+        if(noAtackAlpha > 0 && battleEndFlag == false){
             if(noAtackAlpha > 255){textPaint.setAlpha(255);}
             if(noAtackAlpha < 0){textPaint.setAlpha(0);}
             if(attack_equipment != null) {
