@@ -386,6 +386,14 @@ public class Palette {
         return palette_elements[_paletteIndex].getItemData();
     }
 
+    public int getPositionX() {
+        return position_x;
+    }
+    public int getPositionY() {
+        return position_y;
+    }
+
+
     public void release() {
         System.out.println("takanoRelease : Pallete");
         direction_section_check = null;
