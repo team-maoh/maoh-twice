@@ -61,6 +61,9 @@ public class Inventry {
 
     static SoundAdmin soundAdmin;
 
+    boolean updateFlag;
+    boolean drawFlag;
+
 
     public Inventry() {
 
@@ -80,6 +83,9 @@ public class Inventry {
         graphic = _graphic;
 
         paint = new Paint();
+
+        updateFlag = true;
+        drawFlag = true;
 
         inventry_item_plates = new BoxInventryPlate[contentNum];
         position = new int[contentNum][4];
@@ -137,6 +143,9 @@ public class Inventry {
     boolean listBoxSoundFlag = false;
 
     public void updata() {
+        if (!updateFlag) {
+            return;
+        }
 
         //System.out.println(inventry_datas[0].getItemNum());
 
@@ -206,11 +215,17 @@ public class Inventry {
     }
 
     public void draw() {
+        if (!drawFlag) {
+            return;
+        }
         operate_inventry_list_box.draw();
         drawShare();
     }
 
     public void drawExceptEquip() {
+        if (!drawFlag) {
+            return;
+        }
         operate_inventry_list_box.drawExceptEquip();
         drawShare();
     }
@@ -234,6 +249,9 @@ public class Inventry {
     }
 
     public void drawOnly() {
+        if (!drawFlag) {
+            return;
+        }
         operate_inventry_list_box.draw();
     }
 
@@ -435,6 +453,17 @@ public class Inventry {
                 }
             }
         }
+    }
+
+    public void setDrawFlag(boolean x) {
+        drawFlag = x;
+    }
+    public void setUpdateFlag(boolean x) {
+        updateFlag = x;
+    }
+    public void setDrawAndUpdateFlag(boolean x) {
+        updateFlag = x;
+        drawFlag = x;
     }
 
 }

@@ -58,7 +58,7 @@ import com.maohx2.kmhanko.sound.SoundAdmin;
 TextBoxを使用するのをやめる
 
 
- */
+*/
 
 public class GeoSlotAdminManager {
     static final String DB_NAME_GEOSLOTMAP = "GeoSlotMapDB";
@@ -87,7 +87,7 @@ public class GeoSlotAdminManager {
     SoundAdmin soundAdmin;
 
     EffectAdmin effectAdmin;
-    PlateGroup<MapIconPlate> mapIconPlateGroup;
+    //PlateGroup<MapIconPlate> mapIconPlateGroup;
 
     DungeonModeManage dungeonModeManage;
 
@@ -110,10 +110,12 @@ public class GeoSlotAdminManager {
             geoSlotAdmins = null;
         }
         mode = null;
+        /*
         if (mapIconPlateGroup != null) {
             mapIconPlateGroup.release();
             mapIconPlateGroup = null;
         }
+        */
         if (backPlateGroup != null) {
             backPlateGroup.release();
             backPlateGroup = null;
@@ -151,7 +153,7 @@ public class GeoSlotAdminManager {
         setSlot();
         //initStatusTextBox();
         initBackPlate();
-        initMapIconPlate();
+        //initMapIconPlate();
 
     }
 
@@ -207,56 +209,6 @@ public class GeoSlotAdminManager {
         );
     }
 
-
-    private void initMapIconPlate(){
-        databaseAdmin.addMyDatabase(DB_NAME, DB_ASSET, 1, "r");
-        MyDatabase database = databaseAdmin.getMyDatabase(DB_NAME);
-
-        String w_script = "event = " + MyDatabase.s_quo("dungeon");
-
-        dungeonName = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "name", w_script);
-        List<String> dungeonNameExpress = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "dungeonName", w_script);
-        List<String> imageName = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "image_name", w_script);
-        List<Integer> x = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "statusX", w_script);
-        List<Integer> y = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "statusY", w_script);
-        List<Integer> scale = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "scale", w_script);
-        List<Integer> scale_feed = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "scale_feed", w_script);
-
-        int size = dungeonName.size();
-
-        List<MapIconPlate> mapIconPlateList = new ArrayList<MapIconPlate>();
-
-        //インスタンス化
-        for (int i = 0; i < size; i++) {
-            mapIconPlateList.add(new MapIconPlate(
-                    graphic, userInterface,
-                    Constants.Touch.TouchWay.UP_MOMENT,
-                    Constants.Touch.TouchWay.MOVE,
-                    new int[] { x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_TOURH_R },
-                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale.get(i), scale.get(i), 0.0f, 255, false),
-                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale_feed.get(i), scale_feed.get(i), 0.0f, 255, false),
-                    dungeonName.get(i),
-                    dungeonNameExpress.get(i),
-                    "dungeon"
-            ));
-        }
-
-
-        MapIconPlate[] mapIconPlates = new MapIconPlate[mapIconPlateList.size()];
-        mapIconPlateGroup = new PlateGroup<MapIconPlate>(mapIconPlateList.toArray(mapIconPlates));
-    }
-
-    public void mapIconPlateCheck() {
-        int buttonID = mapIconPlateGroup.getTouchContentNum();
-        if (buttonID != -1 ) {
-            soundAdmin.play("enter00");
-            if ( activeGeoSlotAdmin != null) {
-                activeGeoSlotAdmin.clearGeoSlotLineEffect();
-            }
-            this.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
-            //statusTextBoxUpdate();
-        }
-    }
 
     public void update() {
         if (mode == MODE.WORLD_NORMAL) {
@@ -315,14 +267,6 @@ public class GeoSlotAdminManager {
             }
         }
         throw new Error("☆タカノ:GeoSlotAdminManager#setActiveGeoSlotAdmin : There is no GeoSlotAdmin you request by name : " + name);
-    }
-
-    public void setNullToActiveGeoSlotAdmin() {
-        activeGeoSlotAdmin = null;
-    }
-
-    public void closeGeoSlotAdmin() {
-        activeGeoSlotAdmin = null;
     }
 
     public void addDatabase() {
@@ -467,48 +411,6 @@ public class GeoSlotAdminManager {
         return false;
     }
 
-    //ステータス表示関係
-/*
-    int statusTextBoxID;
-
-    public void initStatusTextBox() {
-        statusTextBoxID = textBoxAdmin.createTextBox(0,600,300,900,7);
-        textBoxAdmin.setTextBoxUpdateTextByTouching(statusTextBoxID,false);
-        textBoxAdmin.setTextBoxExists(statusTextBoxID,false);
-        statusTextBoxUpdate();
-    }
-
-    public void statusTextBoxUpdate() {
-        if (activeGeoSlotAdmin == null) {
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "Status");
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "HP " + playerStatus.getHP());
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "Attack " + playerStatus.getAttack());
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "Deffence " + playerStatus.getDefence());
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "Luck " + playerStatus.getLuck());
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "所持金 " + playerStatus.getMoney());
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "クリア回数 " + playerStatus.getNowClearCount() + "/" + playerStatus.getClearCount());
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "MOP");
-        } else if (activeGeoSlotAdmin.getName().equals("Maoh")) {
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "Maoh Weaken");
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "HP " + maohMenosStatus.getGeoHP());
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "Attack " + maohMenosStatus.getGeoAttack());
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "Deffence " + maohMenosStatus.getGeoDefence());
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "\n");
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "Luck " + maohMenosStatus.getGeoLuck());
-            textBoxAdmin.bookingDrawText(statusTextBoxID, "MOP");
-        }
-        textBoxAdmin.updateText(statusTextBoxID);
-    }
-*/
     public MODE getMode() {
         return mode;
     }
@@ -550,7 +452,65 @@ public class GeoSlotAdminManager {
     public DungeonModeManage getDungeonModeManage() {
         return dungeonModeManage;
     }
-/*
+
+
+    //SeeOnlyの時
+    /*
+    priate void initMapIconPlate(){
+        databaseAdmin.addMyDatabase(DB_NAME, DB_ASSET, 1, "r");
+        MyDatabase database = databaseAdmin.getMyDatabase(DB_NAME);
+
+        String w_script = "event = " + MyDatabase.s_quo("dungeon");
+
+        dungeonName = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "name", w_script);
+        List<String> dungeonNameExpress = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "dungeonName", w_script);
+        List<String> imageName = database.getString(DUNGEON_SELECT_BUTTON_TABLE_NAME, "image_name", w_script);
+        List<Integer> x = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "statusX", w_script);
+        List<Integer> y = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "statusY", w_script);
+        List<Integer> scale = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "scale", w_script);
+        List<Integer> scale_feed = database.getInt(DUNGEON_SELECT_BUTTON_TABLE_NAME, "scale_feed", w_script);
+
+        int size = dungeonName.size();
+
+        List<MapIconPlate> mapIconPlateList = new ArrayList<MapIconPlate>();
+
+        //インスタンス化
+        for (int i = 0; i < size; i++) {
+            mapIconPlateList.add(new MapIconPlate(
+                    graphic, userInterface,
+                    Constants.Touch.TouchWay.UP_MOMENT,
+                    Constants.Touch.TouchWay.MOVE,
+                    new int[] { x.get(i), y.get(i), DUNGEON_SELECT_BUTTON_RATE_TOURH_R },
+                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale.get(i), scale.get(i), 0.0f, 255, false),
+                    graphic.makeImageContext(graphic.searchBitmap(imageName.get(i)),x.get(i), y.get(i), scale_feed.get(i), scale_feed.get(i), 0.0f, 255, false),
+                    dungeonName.get(i),
+                    dungeonNameExpress.get(i),
+                    "dungeon"
+            ));
+        }
+
+
+        MapIconPlate[] mapIconPlates = new MapIconPlate[mapIconPlateList.size()];
+        mapIconPlateGroup = new PlateGroup<MapIconPlate>(mapIconPlateList.toArray(mapIconPlates));
+    }
+
+    public void mapIconPlateCheck() {
+        int buttonID = mapIconPlateGroup.getTouchContentNum();
+        if (buttonID != -1 ) {
+            soundAdmin.play("enter00");
+            if ( activeGeoSlotAdmin != null) {
+                activeGeoSlotAdmin.clearGeoSlotLineEffect();
+            }
+            this.setActiveGeoSlotAdmin(dungeonName.get(buttonID));
+            //statusTextBoxUpdate();
+        }
+    }
+    */
+
+
+
+
+    /*
     public void setStatusTextBoxFlag(boolean flag) {
         textBoxAdmin.setTextBoxExists(statusTextBoxID,flag);
     }

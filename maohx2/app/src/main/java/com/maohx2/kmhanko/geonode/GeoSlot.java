@@ -178,9 +178,12 @@ public class GeoSlot extends CircleImagePlate {
         return true;
     }
 
-    //TODO:あるGeoObjectを設置できるか返す関数。引数はGeoObject。GeoObjectができてから作る
     public boolean isPushThisObject(GeoObjectData geoObjectData) {
-        return true;
+        if (geoObjectData != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //イベントがクリアされているか返す関数。
@@ -498,11 +501,15 @@ public class GeoSlot extends CircleImagePlate {
     //タッチされた時の処理
     public void callBackEvent() {
         if (geoSlotAdmin.getMode() == GeoSlotAdminManager.MODE.WORLD_NORMAL) {
-            geoSlotAdmin.setFocusGeoSlot(this);
-            geoSlotAdmin.geoSlotReleaseChoice();
-            if (isEventClearAll()) {
-                setGeoObjectFromHold();
-                geoSlotAdmin.calcStatus();
+            geoSlotAdmin.setFocusGeoSlot(this);//FocusGeoSlotをgeoSlotAdminに知らせる
+            geoSlotAdmin.geoSlotReleaseChoice();//解放が必要なジオスロットならばメッセージを表示(表示するだけ)
+
+            if (isEventClearAll()) {//解放が必要ではない場合
+                //setGeoObjectFromHold(); ホールドされたジオをセットする
+
+                //ジオインベントリを呼び出す
+                geoSlotAdmin.geoSlotTouched();
+
             } else {
                 if (this.isEventClear()) {
                     soundAdmin.play("cannot_exit_room");
@@ -513,54 +520,41 @@ public class GeoSlot extends CircleImagePlate {
         }
     }
 
+    /*
     public void setGeoObjectFromHold() {
+        this.setGeoObject(geoSlotAdmin.getHoldGeoObject());
+    }
+    */
 
-        if (isPushThisObject(geoSlotAdmin.getHoldGeoObject())) {
-            if (geoSlotAdmin.isHoldGeoObject()) {
+    public void setGeoObject(GeoObjectData selectedGeoObjectData) {
+
+        if (isPushThisObject(selectedGeoObjectData)) {
+            if (true) {
                 if (!isInGeoObject()) {
-                    //Holdしており、Geoが入っていない時　→そのままセット
+                    //Geoが入っていない時　→そのままセット
 
                     //この辺りは書き方の順序に注意。nullにしてからセットしようとしてしまったりするため
 
                     //Geoをセットする
-                    pushGeoObject(geoSlotAdmin.getHoldGeoObject());
+                    pushGeoObject(selectedGeoObjectData);
 
-                    //GeoをInventryとHoldから消す
-                    //geoSlotAdmin.deleteFromInventry(geoObjectData);
-                    geoSlotAdmin.setSlotData(geoObjectData, id);
-
-                    geoSlotAdmin.setHoldGeoObject(null);
+                    geoSlotAdmin.setSlotData(selectedGeoObjectData, id);
+                    geoSlotAdmin.initUIs();
 
                 } else {
-
-                    //Holdしており、Geoが入っている時　→　入れ替え
-                    GeoObjectData tempGeoObjectData = geoSlotAdmin.getHoldGeoObject();
+                    //Geoが入っている時　→　入れ替え
 
                     //geoSlotAdmin.addToInventry(geoObjectData);
                     geoSlotAdmin.popSlotData(geoObjectData);
-                    geoSlotAdmin.setHoldGeoObject(geoObjectData);
 
                     //Geoを上書きセットする
-                    pushGeoObject(tempGeoObjectData);
-
-                    //GeoをInventryからけす。
-                    //geoSlotAdmin.deleteFromInventry(tempGeoObjectData);
+                    pushGeoObject(selectedGeoObjectData);
                     geoSlotAdmin.setSlotData(geoObjectData, id);
+
                 }
                 soundAdmin.play("equip00");
                 geoSlotAdmin.geoUpdate();
-            } else {
-                if (!isInGeoObject()) {
-                    //Holdしておらず、Geoも入っていない時　→　何もしない
-                } else {
-                    //Holdしておらず、Geoが入っている時　→　Holdにセット
-                    //geoSlotAdmin.addToInventry(geoObjectData);
-                    geoSlotAdmin.popSlotData(geoObjectData);
-
-                    geoSlotAdmin.setHoldGeoObject(geoObjectData);
-                    popGeoObject();
-                    geoSlotAdmin.geoUpdate();
-                }
+                geoSlotAdmin.calcStatus(); //パラメータの再計算
             }
         }
     }
@@ -602,6 +596,9 @@ public class GeoSlot extends CircleImagePlate {
                 }
             }
             if (eventGroupName.equals("GeoObject")) {
+                //TODO holdが消えたため新たに作る
+
+                /*
                 if (geoSlotAdmin.getHoldGeoObject() != null) {
                     if (GeoObjectDataCreater.compare(
                             geoSlotAdmin.getHoldGeoObject(),
@@ -625,6 +622,7 @@ public class GeoSlot extends CircleImagePlate {
                         return true;
                     }
                 }
+                */
             }
         }
 
