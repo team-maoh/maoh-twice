@@ -57,7 +57,7 @@ public class DemoManager {
 
 
     //デモモードかどうか
-    static final boolean demoMode = true;
+    static final boolean demoMode = false;
 
 
     boolean startGameDemoEndFlag = false;

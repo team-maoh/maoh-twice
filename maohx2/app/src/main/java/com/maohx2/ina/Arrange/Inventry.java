@@ -464,4 +464,8 @@ public class Inventry {
         drawFlag = x;
     }
 
+    public boolean getDrawFlag() {
+        return drawFlag;
+    }
+
 }

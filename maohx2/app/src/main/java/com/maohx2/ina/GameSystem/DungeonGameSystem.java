@@ -436,6 +436,7 @@ public class DungeonGameSystem {
                     map_object_admin.update();
                     map_plate_admin.update();
                     playerStatusViewer.update();
+                    map_admin.update();
                 }
                 break;
             case OPENING_BATTLE_INIT:

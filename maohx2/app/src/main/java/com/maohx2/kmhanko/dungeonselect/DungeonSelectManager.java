@@ -145,8 +145,14 @@ public class DungeonSelectManager {
     List<Integer> x;
     List<Integer> y;
 
+    boolean geoMapGideMessageFlag = false;
+
     int newEffectID;
     Effect newEffect = null;
+
+    TextFlashAndArrow geoMapGideTextAndArrow;
+    TextFlashEffect geoMapTextEffect;
+
 
     public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, SoundAdmin _soundAdmin, UnitedActivity _unitedActivity, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver, TalkAdmin _talkAdmin, EffectAdmin _effectAdmin) {
         graphic = _graphic;
@@ -173,6 +179,19 @@ public class DungeonSelectManager {
         equipmentInventry = globalData.getEquipmentInventry();
 
         setDatabase(databaseAdmin);
+
+
+        geoMapTextEffect = new TextFlashEffect(
+                graphic,
+                "ジオオブジェクトをセットしよう！",
+                40,
+                350,
+                820,
+                5.0f
+        );
+
+
+
         initMapIconPlate();
         initDungeonEnterSelectButton();
         initMaohEnterSelectButton();
@@ -208,6 +227,22 @@ public class DungeonSelectManager {
                     switch(i) {
                         case 0:
                             talkAdmin.start("ClearForest", false);
+
+                            if (playerStatus.getClearCount() == 0) {
+                                //ジオ配置のアレをやる。
+                                geoMapGideMessageFlag = true;
+                                geoMapGideTextAndArrow = new TextFlashAndArrow(graphic);
+                                geoMapGideTextAndArrow.setParameter(
+                                        "",
+                                        60,
+                                        800, 450,
+                                        10,
+                                        1380, 220,
+                                        270
+                                );
+                                geoMapGideTextAndArrow.setText("ジオマップに行ってジオオブジェクトをセットしよう！");
+                                geoMapGideTextAndArrow.start();
+                            }
                             break;
                         case 1:
                             talkAdmin.start("ClearLava", false);
@@ -370,6 +405,15 @@ public class DungeonSelectManager {
             mapIconPlateMap.setUpdateFlag(false);
             mapIconPlateMap.setDrawFlag(false);
 
+            if (geoMapGideMessageFlag) {
+                if (geoMapGideTextAndArrow != null) {
+                    geoMapGideTextAndArrow.setText("ジオマップに行ってジオオブジェクトをセットしよう！");
+                    geoMapGideTextAndArrow.setPositionArrow(1380, 220);
+                    geoMapGideTextAndArrow.setDegree(270);
+                }
+            }
+            geoMapTextEffect.stop();
+
             switchNewEffect(true);
         } else {
             worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT_INIT);
@@ -382,6 +426,16 @@ public class DungeonSelectManager {
             mapIconPlateGeoMap.setDrawFlag(false);
             mapIconPlateMap.setUpdateFlag(true);
             mapIconPlateMap.setDrawFlag(true);
+
+            if (geoMapGideMessageFlag) {
+                if (geoMapGideTextAndArrow != null) {
+                    geoMapGideTextAndArrow.setText("ジオマップとして解放されたダンジョンを選ぼう！");
+                    geoMapGideTextAndArrow.setPositionArrow(150, 150);
+                    geoMapGideTextAndArrow.setDegree(0);
+                }
+            }
+            geoMapTextEffect.start();
+
         }
     }
 
@@ -747,6 +801,20 @@ public class DungeonSelectManager {
         }
 
 
+        tutorialButtonGroup.draw();
+        tutorialButtonGroupForDungeon.draw();
+
+        if (geoMapGideMessageFlag
+                && !maohEnterSelectButtonGroup.getDrawFlag()
+                && !dungeonEnterSelectButtonGroup.getDrawFlag()
+                ) {
+            if (geoMapGideTextAndArrow != null) {
+                geoMapGideTextAndArrow.draw();
+            }
+        }
+
+        geoMapTextEffect.draw();
+
         dungeonEnterSelectButtonGroup.draw();
         //menuButtonGroup.draw();
 
@@ -757,9 +825,6 @@ public class DungeonSelectManager {
         loopCountWindowPlate.draw();
         dungeonNotEnterPlate.draw();
         dungeonInfoPlate.draw();
-
-        tutorialButtonGroup.draw();
-        tutorialButtonGroupForDungeon.draw();
 
         OkButtonGroup.draw();
     }
@@ -822,6 +887,14 @@ public class DungeonSelectManager {
         //modeSelectButtonCheck();
         //menuButtonGroup.update();
 
+        if (geoMapGideMessageFlag) {
+            if (geoMapGideTextAndArrow != null) {
+                geoMapGideTextAndArrow.update();
+            }
+        }
+
+        geoMapTextEffect.update();
+
         if (initUIsFlag) {
             initUIs();
             initUIsFlag = false;
@@ -866,6 +939,8 @@ public class DungeonSelectManager {
                         worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_INIT);
                         geoSlotAdminManager.setMode(GeoSlotAdminManager.MODE.WORLD_NORMAL);
                         initUIsFlag = true;
+
+                        geoMapGideMessageFlag = false;
 
                         switchNewEffect(false);
                     } else {
@@ -1025,6 +1100,16 @@ public class DungeonSelectManager {
             switchNewEffect(false);
             return false;
         }
+
+        if ((mapStatus.getMapClearStatus(DUNGEON_KIND.FOREST.ordinal()) == 0 && (playerStatus.getClearCount() == 0)) && event.get(focusDungeonButtonID).equals("maoh")) {
+            //最初の最初は魔王に挑めない
+            enterTextBoxUpdateNotAcceptMaoh();
+            OkButtonGroup.setUpdateFlag(true);
+            OkButtonGroup.setDrawFlag(true);
+
+            return false;
+        }
+
         return true;
     }
 
@@ -1155,6 +1240,17 @@ public class DungeonSelectManager {
         textBoxAdmin.updateText(enterTextBoxID);
     }
 */
+
+    public void enterTextBoxUpdateNotAcceptMaoh() {
+        textBoxAdmin.setTextBoxExists(enterTextBoxID, true);
+        textBoxAdmin.resetTextBox(enterTextBoxID);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "いきなり魔王に挑んでも勝てない！", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "\n", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "まずは「シンシン森林」のダンジョンをクリアしよう！", enterTextPaint);
+        textBoxAdmin.bookingDrawText(enterTextBoxID, "MOP", enterTextPaint);
+
+        textBoxAdmin.updateText(enterTextBoxID);
+    }
 
     public void enterTextBoxUpdateInventryMax(Constants.Item.ITEM_KIND inventryKind) {
         textBoxAdmin.setTextBoxExists(enterTextBoxID, true);
@@ -1305,6 +1401,12 @@ public class DungeonSelectManager {
 
         if (newEffect != null) {
             newEffect.clear();
+        }
+        if (geoMapGideTextAndArrow != null) {
+            geoMapGideTextAndArrow.release();
+        }
+        if (geoMapTextEffect != null) {
+            geoMapTextEffect.release();
         }
 
     }

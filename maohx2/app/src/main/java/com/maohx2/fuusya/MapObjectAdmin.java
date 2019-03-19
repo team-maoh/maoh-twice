@@ -310,23 +310,31 @@ public class MapObjectAdmin {
 //        }
         for (int i = 0; i < NUM_OF_TRAP; i++) {
             if (map_trap[i].exists() == true && map_trap[i].isVisible() == true) {
-                map_trap_bitmap[i].draw(map_trap[i].getDirOnMap(), map_trap[i].getNormX(), map_trap[i].getNormY(),false);
+                if (map_trap_bitmap[i] != null) {
+                    map_trap_bitmap[i].draw(map_trap[i].getDirOnMap(), map_trap[i].getNormX(), map_trap[i].getNormY(), false);
+                }
             }
         }
         for (int i = 0; i < NUM_OF_ITEM; i++) {
             if (map_item[i].exists()) {
+                if (map_item_bitmap[i] != null) {
                 map_item_bitmap[i].draw(map_item[i].getDirOnMap(), map_item[i].getNormX(), map_item[i].getNormY(), 192, map_item[i].getExtend(), false);
+                }
             }
         }
         for (int i = 0; i < NUM_OF_MINE; i++) {
             if (map_mine[i].exists() == true) {
+                if (map_mine_bitmap[i] != null) {
                 map_mine_bitmap[i].draw(map_mine[i].getDirOnMap(), map_mine[i].getNormX(), map_mine[i].getNormY(),false);
+                }
             }
         }
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
             if (map_enemy[i].exists() == true && playerStatus.getTutorialInDungeon() == 1) {
-                map_enemy_bitmap[i].draw(map_enemy[i].getDirOnMap(), map_enemy[i].getNormX(), map_enemy[i].getNormY(),map_enemy[i].getHasFoundPlayer());
+                if ( map_enemy_bitmap[i] != null) {
+                    map_enemy_bitmap[i].draw(map_enemy[i].getDirOnMap(), map_enemy[i].getNormX(), map_enemy[i].getNormY(), map_enemy[i].getHasFoundPlayer());
+                }
             }
         }
 

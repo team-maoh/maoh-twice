@@ -21,6 +21,7 @@ import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.kmhanko.effect.Effect;
 import com.maohx2.kmhanko.effect.EffectAdmin;
+import com.maohx2.kmhanko.effect.TextFlashEffect;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.myavail.MyAvail;
 import com.maohx2.kmhanko.plate.BackPlate;
@@ -113,6 +114,8 @@ public class GeoSlotAdmin {
 
     EffectAdmin effectAdmin;
 
+    TextFlashEffect geoTouchTextEffect;
+
     public enum INVENTRY_MODE {
         SET,
         RELEASE
@@ -154,6 +157,9 @@ public class GeoSlotAdmin {
         if (cancelButtonGroup != null) {
             cancelButtonGroup.release();
         }
+        if ( geoTouchTextEffect != null) {
+            geoTouchTextEffect.release();
+        }
     }
 
     //Rewrite by kmhanko
@@ -169,6 +175,19 @@ public class GeoSlotAdmin {
         effectAdmin = _effectAdmin;
 
         //初期化
+
+
+        geoTouchTextEffect = new TextFlashEffect(
+                graphic,
+                "スロットをタッチしてジオを選択！",
+                40,
+                350,
+                820,
+                5.0f
+        );
+        geoTouchTextEffect.start();
+
+
         initTextBox();
         initReleasePlate();
         initGeoRemoveButton();
@@ -494,6 +513,11 @@ public class GeoSlotAdmin {
             geoRemoveButton.update();
             cancelButtonGroup.update();
         }
+
+        if (!geoInventry.getDrawFlag()) {
+            geoTouchTextEffect.update();
+        }
+
         okButtonGroup.update();
 
         this.checkReleasePlateGroup();
@@ -511,6 +535,9 @@ public class GeoSlotAdmin {
         okButtonGroup.draw();
         geoReleaseNamePlate.draw();
         cancelButtonGroup.draw();
+        if (!geoInventry.getDrawFlag()) {
+            geoTouchTextEffect.draw();
+        }
     }
 
     public void drawInStatus() {

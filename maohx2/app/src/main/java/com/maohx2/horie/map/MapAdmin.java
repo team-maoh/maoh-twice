@@ -12,6 +12,7 @@ import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.BitmapData;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.GameSystem.DungeonGameSystem;
+import com.maohx2.kmhanko.effect.TextFlashEffect;
 import com.maohx2.kmhanko.myavail.MyAvail;
 
 import java.util.ArrayList;
@@ -55,6 +56,9 @@ public class MapAdmin {
     int mine_min_num;
     int mine_max_num;
     int animation_num;//アニメーション回数
+
+    int stairMapX;
+    int stairMapY;
 
     int accessoryNum;
     float accessoryRate;
@@ -106,6 +110,8 @@ public class MapAdmin {
     BitmapData stair_tile_div[] = new BitmapData[4];//階段の画像を4分割
 
     DungeonGameSystem dungeonGameSystem;
+
+    TextFlashEffect stairTextEffect;
 
     public int getMap_size_x() {
         return map_size.x;
@@ -199,6 +205,18 @@ public class MapAdmin {
             createAutoTileImg();
         }
         getHolder();
+
+        //TODO 階段用(仮)
+        stairTextEffect = new TextFlashEffect(
+                graphic,
+                "次の階へ",
+                70,
+                -200,
+                -200,
+                10.0f
+        );
+        stairTextEffect.start();
+
     }
 
     //auto_tile生成
@@ -432,6 +450,17 @@ public class MapAdmin {
                 }
             }
         }
+
+        //階段保存しとく
+        for (int i = 0; i < map_size.x; i++) {
+            for (int j = 0; j < map_size.y; j++) {
+                if (map_data[i][j].isStairs()) {
+                    stairMapX = i;
+                    stairMapY = j;
+                }
+            }
+        }
+
     }
     public void resetMapObject() {
         //map_object_admin初期化
@@ -659,6 +688,8 @@ public class MapAdmin {
 
 
     public void goNextFloorPrepare() {
+        stairTextEffect.setPosition(-200, -200);
+        stairTextEffect.stop();
         dungeonGameSystem.getDungeonModeManage().setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT_FROM_BEFORE_FLOOR);
     }
 
@@ -677,6 +708,7 @@ public class MapAdmin {
 
             //中ボスだけあとでやる
             map_object_admin.spawnEnemy();
+            stairTextEffect.start();
         } else {
             goBossFloor();
         }
@@ -1122,6 +1154,20 @@ public class MapAdmin {
 //        for(int i = 0;i < 47;i++){
 //            graphic.bookingDrawBitmapData(at_wall[0].big_auto_tile[i],128+(i%8)*128 +5*(i%8),64+(i/8)*128+5*(i/8),2,2,0,255,true);
 //        }
+
+        //階段の上に表示(とりあえず
+
+        stairTextEffect.draw();
+    }
+
+    public void update() {
+        stairTextEffect.setPosition(
+                camera.convertToNormCoordinateXForMap(stairMapX * magnification + magnification/2),
+                camera.convertToNormCoordinateYForMap(stairMapY * magnification + magnification/2)
+        );
+        stairTextEffect.update();
+
+        //System.out.println("aaaa " + camera.convertToWorldCoordinateX(stairMapX) + "/" + camera.convertToWorldCoordinateX(stairMapY)+ " " + stairMapX + " " + stairMapY);
     }
 
     public void drawSmallMap() {
@@ -1946,6 +1992,10 @@ public class MapAdmin {
         stair_tile = null;
         gate_tile = null;
         stair_tile_div = null;
+
+        if (stairTextEffect != null) {
+            stairTextEffect.release();
+        }
     }
 
     //過去関数
