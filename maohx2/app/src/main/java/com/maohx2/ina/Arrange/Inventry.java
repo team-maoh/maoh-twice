@@ -61,8 +61,8 @@ public class Inventry {
 
     static SoundAdmin soundAdmin;
 
-    boolean updateFlag;
-    boolean drawFlag;
+    boolean updateFlag = true;
+    boolean drawFlag = true;
 
 
     public Inventry() {
@@ -71,6 +71,7 @@ public class Inventry {
             //by kmhank　インスタンス引数追加
             inventry_datas[i] = new InventryData(null, 0, this);
         }
+
     }
 
     static public void setSoundAdmin(SoundAdmin _soundAdmin) {
@@ -83,9 +84,6 @@ public class Inventry {
         graphic = _graphic;
 
         paint = new Paint();
-
-        updateFlag = true;
-        drawFlag = true;
 
         inventry_item_plates = new BoxInventryPlate[contentNum];
         position = new int[contentNum][4];

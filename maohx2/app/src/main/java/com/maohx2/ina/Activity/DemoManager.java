@@ -57,7 +57,7 @@ public class DemoManager {
 
 
     //デモモードかどうか
-    static final boolean demoMode = false;
+    static final boolean demoMode = true;
 
 
     boolean startGameDemoEndFlag = false;
@@ -262,7 +262,7 @@ public class DemoManager {
         playerStatus.setBaseAttack(80000);//22222
         playerStatus.setBaseDefence(5700);//2222
         playerStatus.setBaseLuck(22222 * 2);//2222
-        playerStatus.setMoney(100000);//10000
+        playerStatus.setMoney(10000000);//10000
 
         //魔王勝利回数
         playerStatus.setMaohWinCount(1);//0
@@ -285,7 +285,7 @@ public class DemoManager {
         int[][] normalGeo = new int[][] {
                 {5, 5, 8, 8, 10, 10, 30, 30, 30, 30},
                 {5, 5, 8, 8, 10, 10, 12, 12, 15, 15},
-                {1, 1, 2, 2, 3, 3, 4, 4, 5, 5},
+                {1, 1, 2, 2, 3, 3, 4, 4, 5, 10},
         };
         double[][] rateGeo = new double[][] {
                 {1.02, 1.04, 1.06, 1.08, 1.10, 1.5},

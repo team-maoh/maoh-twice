@@ -168,11 +168,15 @@ public class GeoSlot extends CircleImagePlate {
     }
 
     //GeoObjectをGeoSlotから抜き取る。
-    public boolean popGeoObject() {
-        if (!is_exist) {
+    private boolean popGeoObject() {
+        if (!is_exist ) {
+            return false;
+        }
+        if (geoObjectData == null) {
             return false;
         }
         is_in_geoObjectData = false;
+        geoSlotAdmin.popSlotData(geoObjectData);
         geoObjectData = null;
         geoImageContext = null;
         return true;
@@ -502,7 +506,7 @@ public class GeoSlot extends CircleImagePlate {
     public void callBackEvent() {
         if (geoSlotAdmin.getMode() == GeoSlotAdminManager.MODE.WORLD_NORMAL) {
             geoSlotAdmin.setFocusGeoSlot(this);//FocusGeoSlotをgeoSlotAdminに知らせる
-            geoSlotAdmin.geoSlotReleaseChoice();//解放が必要なジオスロットならばメッセージを表示(表示するだけ)
+            geoSlotAdmin.geoSlotReleaseChoiceMessage();//解放が必要なジオスロットならばメッセージを表示(表示するだけ)
 
             if (isEventClearAll()) {//解放が必要ではない場合
                 //setGeoObjectFromHold(); ホールドされたジオをセットする
@@ -559,15 +563,29 @@ public class GeoSlot extends CircleImagePlate {
         }
     }
 
+    public void outGeoObject() {
+        if (this.popGeoObject()) {
+            soundAdmin.play("equip00");
+            geoSlotAdmin.geoUpdate();
+            geoSlotAdmin.calcStatus(); //パラメータの再計算
+        } else {
+            soundAdmin.play("cannot_exit_room");
+        }
+    }
+
     //GeoSlot解放のデータ的処理
-    public boolean geoSlotRelease() {
+
+
+
+
+    public void geoSlotRelease() {
         if (!isEventClear()) {
             //GeoSlotEvent.DBを参照し、release_eventと一致するものを探し、そのTable名で分岐して処理
             List<String> tableName = geoSlotEventDB.getTables();
 
             int rowid;
             String eventGroupName = null;
-            for(int i = 0; i < tableName.size(); i++) {
+            for (int i = 0; i < tableName.size(); i++) {
                 rowid = geoSlotEventDB.getOneRowID(tableName.get(i), "name = " + MyDatabase.s_quo(release_event));
                 if (rowid > 0) {
                     //該当イベントが存在した
@@ -587,45 +605,51 @@ public class GeoSlot extends CircleImagePlate {
                     isReleased = true;
                     geoSlotAdmin.calcStatus();
                     updateGeoBaseTileImageContext();
-
-
+                    geoSlotAdmin.geoReleasedEvent(true);
                     System.out.println("GeoSlot#geoSlotRelease　金を支払う　" + release_event);
-                    return true;
+
                 } else {
-                    return false;
+                    //お金が足りませんウィンドウ+OK
+                    geoSlotAdmin.notEnoughMaonMessage();
                 }
             }
             if (eventGroupName.equals("GeoObject")) {
                 //TODO holdが消えたため新たに作る
 
-                /*
-                if (geoSlotAdmin.getHoldGeoObject() != null) {
-                    if (GeoObjectDataCreater.compare(
-                            geoSlotAdmin.getHoldGeoObject(),
-                            new GeoObjectData(
-                                    "", null,
-                                    geoSlotEventDB.getOneInt(eventGroupName, "hp", "name = " + MyDatabase.s_quo(release_event)),
-                                    geoSlotEventDB.getOneInt(eventGroupName, "attack", "name = " + MyDatabase.s_quo(release_event)),
-                                    geoSlotEventDB.getOneInt(eventGroupName, "defence", "name = " + MyDatabase.s_quo(release_event)),
-                                    geoSlotEventDB.getOneInt(eventGroupName, "luck", "name = " + MyDatabase.s_quo(release_event)),
-                                    geoSlotEventDB.getOneDouble(eventGroupName, "hp_rate", "name = " + MyDatabase.s_quo(release_event)),
-                                    geoSlotEventDB.getOneDouble(eventGroupName, "attack_rate", "name = " + MyDatabase.s_quo(release_event)),
-                                    geoSlotEventDB.getOneDouble(eventGroupName, "defence_rate", "name = " + MyDatabase.s_quo(release_event)),
-                                    geoSlotEventDB.getOneDouble(eventGroupName, "luck_rate", "name = " + MyDatabase.s_quo(release_event))
-                            )
-                    )) {
-                        geoInventry.deleteItemData(geoSlotAdmin.getHoldGeoObject().getName());
-                        geoSlotAdmin.setHoldGeoObject(null);
-                        isReleased = true;
-                        updateGeoBaseTileImageContext();
-                        System.out.println("GeoSlot#geoSlotRelease　ジオオブジェクトを支払う　" + release_event);
-                        return true;
-                    }
-                }
-                */
+                //ジオインベントリを表示する
+                geoSlotAdmin.removeTouched();
+
+                //条件のジオオブジェクトを示すウィンドウを表示する
+                geoSlotAdmin.geoReleaseNameWindow(this.getReleaseEvent());
             }
         }
+    }
 
+    public boolean releaseByGeoObject(GeoObjectData tempGeoObjectData) {
+        if (tempGeoObjectData != null) {
+            String eventGroupName = "GeoObject";
+
+            if (GeoObjectDataCreater.compare(
+                    tempGeoObjectData,
+                    new GeoObjectData(
+                            "", null,
+                            geoSlotEventDB.getOneInt(eventGroupName, "hp", "name = " + MyDatabase.s_quo(release_event)),
+                            geoSlotEventDB.getOneInt(eventGroupName, "attack", "name = " + MyDatabase.s_quo(release_event)),
+                            geoSlotEventDB.getOneInt(eventGroupName, "defence", "name = " + MyDatabase.s_quo(release_event)),
+                            geoSlotEventDB.getOneInt(eventGroupName, "luck", "name = " + MyDatabase.s_quo(release_event)),
+                            geoSlotEventDB.getOneDouble(eventGroupName, "hp_rate", "name = " + MyDatabase.s_quo(release_event)),
+                            geoSlotEventDB.getOneDouble(eventGroupName, "attack_rate", "name = " + MyDatabase.s_quo(release_event)),
+                            geoSlotEventDB.getOneDouble(eventGroupName, "defence_rate", "name = " + MyDatabase.s_quo(release_event)),
+                            geoSlotEventDB.getOneDouble(eventGroupName, "luck_rate", "name = " + MyDatabase.s_quo(release_event))
+                    )
+            )) {
+                geoInventry.deleteItemData(tempGeoObjectData.getName());
+                isReleased = true;
+                updateGeoBaseTileImageContext();
+                System.out.println("GeoSlot#geoSlotRelease　ジオオブジェクトを支払う　" + release_event);
+                return true;
+            }
+        }
         return false;
     }
 

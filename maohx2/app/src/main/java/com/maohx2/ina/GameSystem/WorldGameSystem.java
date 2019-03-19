@@ -422,6 +422,9 @@ public class WorldGameSystem {
             case TU_DUNGEON:
                 if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
                     soundAdmin.play("enter00");
+                    if (tu_dungeon_flag == 0) {
+                        dungeonSelectManager.switchNewEffect(false);
+                    }
                     if (tu_dungeon_flag >= 0 && tu_dungeon_flag < dungeonTutoName.length - 1){
                         tu_dungeon_flag++;
                     } else {
@@ -669,7 +672,7 @@ public class WorldGameSystem {
                 break;
             case GEO_MAP_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
-                geoSlotAdminManager.draw();
+                //geoSlotAdminManager.draw();
                 playerStatusViewer.draw();
                 break;
             case GEO_MAP:
