@@ -183,9 +183,9 @@ public class DungeonSelectManager {
 
         geoMapTextEffect = new TextFlashEffect(
                 graphic,
-                "ジオオブジェクトをセットしよう！",
+                "クリアしたダンジョンを選択して、ジオオブジェクトをセットしよう！",
                 40,
-                350,
+                700,
                 820,
                 5.0f
         );

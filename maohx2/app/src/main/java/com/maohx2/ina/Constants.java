@@ -65,7 +65,7 @@ public final class Constants {
         public static final int MAP_SAVE_DATA = 1;
         public static final int PLAYER_STATUS = 1;
         public static final int TALK = 1;
-        public static final int TUTORIAL = 1;
+        public static final int TUTORIAL = 2;
     }
 
 

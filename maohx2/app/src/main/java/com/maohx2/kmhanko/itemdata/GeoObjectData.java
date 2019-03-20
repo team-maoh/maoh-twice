@@ -49,6 +49,7 @@ public class GeoObjectData extends ItemData {
         slotSetID = _slotSetID;
 
         setItemKind(Constants.Item.ITEM_KIND.GEO);
+        setGeoKindAuto();
     }
 
 
@@ -74,6 +75,7 @@ public class GeoObjectData extends ItemData {
         setStatus(_hp, _attack, _defence, _luck, _hp_rate, _attack_rate, _defence_rate, _luck_rate);
         //setGeoImage();
         setItemKind(Constants.Item.ITEM_KIND.GEO);
+        setGeoKindAuto();
     }
 
     public void setSlotSetName(String _slotSetName) {
@@ -91,6 +93,33 @@ public class GeoObjectData extends ItemData {
 
     public GEO_KIND_ALL getGeoKind() {
         return geoKind;
+    }
+
+    public void setGeoKindAuto() {
+        if (hp > 0) {
+            this.setGeoKind(GEO_KIND_ALL.HP);
+        }
+        if (hp_rate > 0) {
+            this.setGeoKind(GEO_KIND_ALL.HP_RATE);
+        }
+        if (attack > 0) {
+            this.setGeoKind(GEO_KIND_ALL.ATTACK);
+        }
+        if (attack_rate > 0) {
+            this.setGeoKind(GEO_KIND_ALL.ATTACK_RATE);
+        }
+        if (defence > 0) {
+            this.setGeoKind(GEO_KIND_ALL.DEFENCE);
+        }
+        if (defence_rate > 0) {
+            this.setGeoKind(GEO_KIND_ALL.DEFENCE_RATE);
+        }
+        if (luck > 0) {
+            this.setGeoKind(GEO_KIND_ALL.LUCK);
+        }
+        if (luck_rate > 0) {
+            this.setGeoKind(GEO_KIND_ALL.LUCK_RATE);
+        }
     }
 
     public void setStatusAuto(float x) {
@@ -267,5 +296,12 @@ public class GeoObjectData extends ItemData {
 
     public void setGeoKind(GEO_KIND_ALL _geoKind) {
         geoKind = _geoKind;
+    }
+
+    public static boolean compareGeoObject(GeoObjectData temp1, GeoObjectData temp2) {
+        if (temp1.getGeoKind().ordinal() == temp2.getGeoKind().ordinal()) {
+            return temp1.getStatusAuto() > temp2.getStatusAuto();
+        }
+        return temp1.getGeoKind().ordinal() > temp2.getGeoKind().ordinal();
     }
 }

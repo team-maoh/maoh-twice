@@ -45,8 +45,37 @@ public class TutorialFlagSaver extends SaveManager {
 
     @Override
     public void onUpgrade(int oldVersion, int newVersion) {
+        if (oldVersion == 1 && newVersion == 2) {
+            database.insertLineByArray(
+                    "TutorialFlag",
+                    new String[]{"flag_name", "tutorial_flag"},
+                    new String[] { "geoLava", "false" }
+            );
+            database.insertLineByArray(
+                    "TutorialFlag",
+                    new String[]{"flag_name", "tutorial_flag"},
+                    new String[] { "dungeon", "false" }
+            );
+            database.insertLineByArray(
+                    "TutorialFlag",
+                    new String[]{"flag_name", "tutorial_flag"},
+                    new String[] { "battle", "false" }
+            );
+            database.insertLineByArray(
+                    "TutorialFlag",
+                    new String[]{"flag_name", "tutorial_flag"},
+                    new String[] { "mining", "false" }
+            );
+
+        }
     };
     @Override
     public void onDowngrade (int oldVersion, int newVersion) {
-    };
+        if (oldVersion == 1 && newVersion == 2) {
+            database.delete("TutorialFlag", "flag_name == geoLava");
+            database.delete("TutorialFlag", "flag_name == dungeon");
+            database.delete("TutorialFlag", "flag_name == battle");
+            database.delete("TutorialFlag", "flag_name == mining");
+        }
+    }
 }

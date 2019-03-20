@@ -505,18 +505,21 @@ public class GeoSlot extends CircleImagePlate {
     //タッチされた時の処理
     public void callBackEvent() {
         if (geoSlotAdmin.getMode() == GeoSlotAdminManager.MODE.WORLD_NORMAL) {
-            geoSlotAdmin.setFocusGeoSlot(this);//FocusGeoSlotをgeoSlotAdminに知らせる
-            geoSlotAdmin.geoSlotReleaseChoiceMessage();//解放が必要なジオスロットならばメッセージを表示(表示するだけ)
 
             if (isEventClearAll()) {//解放が必要ではない場合
-                //setGeoObjectFromHold(); ホールドされたジオをセットする
+                geoSlotAdmin.setFocusGeoSlot(this);//FocusGeoSlotをgeoSlotAdminに知らせる
 
                 //ジオインベントリを呼び出す
+                soundAdmin.play("enter00");
                 geoSlotAdmin.geoSlotTouched();
-
             } else {
-                if (this.isEventClear()) {
+                if (this.isEventClear()) {//女神が乗ってないけど赤いマス
                     soundAdmin.play("cannot_exit_room");
+                } else {
+                    //女神が乗ってる赤いマス
+                    geoSlotAdmin.setFocusGeoSlot(this);//FocusGeoSlotをgeoSlotAdminに知らせる
+                    geoSlotAdmin.geoGaiaSlotTouched();//解放が必要なジオスロットならばメッセージを表示(表示するだけ)
+
                 }
             }
         } else {
