@@ -250,9 +250,13 @@ public class DemoManager {
         tutorialFlagData.setIs_tutorial_finished(1, 1);//ショップ購入
         tutorialFlagData.setIs_tutorial_finished(1, 2);//ショップ売却
         tutorialFlagData.setIs_tutorial_finished(1, 3);//ジオ画面
+        tutorialFlagData.setIs_tutorial_finished(1, 4);//
+        tutorialFlagData.setIs_tutorial_finished(1, 5);//
+        tutorialFlagData.setIs_tutorial_finished(1, 6);//
+        tutorialFlagData.setIs_tutorial_finished(1, 7);//
 
         //チュートを表示する
-        tutorialFlagData.tutorialResetAll();
+        //tutorialFlagData.tutorialResetAll();
 
         tutorialFlagSaver.save();
     }

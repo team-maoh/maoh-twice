@@ -232,7 +232,7 @@ public class DungeonSelectManager {
                         case 0:
                             talkAdmin.start("ClearForest", false);
 
-                            if (playerStatus.getClearCount() == 0 && !tutorialManager.getTutorialFlagData().getIsTutorialFinishedByName("geoLava")) {
+                            if (playerStatus.getClearCount() == 0 && mapStatus.getMapClearStatus(i+1) == 0 && !tutorialManager.getTutorialFlagData().getIsTutorialFinishedByName("geoLava")) {
                                 //ジオ配置のアレをやる。
                                 geoMapGideMessageFlag = true;
                                 geoMapGideTextAndArrow = new TextFlashAndArrow(graphic);
