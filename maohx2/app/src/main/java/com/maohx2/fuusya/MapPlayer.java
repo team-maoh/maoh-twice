@@ -85,9 +85,20 @@ public class MapPlayer extends MapUnit {
     static final int ENCOUNT_START_TIME = 300;
     Paint paint;
 
+    boolean initialFlag = true;
+    int guideCiount = 0;
+    int guideAlpha = 0;
+    int guideAlphaAdd = 15;
+    Paint textPaint = new Paint();
+    boolean guideDraw = false;
+
+
+
     public MapPlayer(Graphic graphic, MapObjectAdmin _map_object_admin, DungeonUserInterface _dungeon_user_interface, SoundAdmin _sound_admin, Camera _camera, MapPlateAdmin _map_plate_admin, BattleUnitAdmin _battle_unit_admin, DungeonModeManage _dungeon_mode_manage, boolean _avoid_battle_for_debug) {
         super(graphic, _map_object_admin, _camera);
 
+        textPaint.setARGB(0,255, 255,255);
+        textPaint.setTextSize(150);
 
         dungeon_user_interface = _dungeon_user_interface;
         map_plate_admin = _map_plate_admin;
@@ -141,6 +152,18 @@ public class MapPlayer extends MapUnit {
     @Override
     public void update() {
         super.update();
+
+        guideCiount++;
+        if(initialFlag == true || guideCiount > 230){
+            guideDraw = true;
+            if(guideAlpha > 320 || guideAlpha < 0) { guideAlphaAdd *= -1;}
+            guideAlpha += guideAlphaAdd;
+
+            if(guideAlpha < 0){textPaint.setAlpha(0);}
+            else if(guideAlpha > 255){textPaint.setAlpha(255);}
+            else{textPaint.setAlpha(guideAlpha);}
+        }
+
 
         has_touched_within_player = false;
 
@@ -329,6 +352,10 @@ public class MapPlayer extends MapUnit {
             sound_steps = (sound_steps + 1) % SOUND_STEPS_PERIOD;
             if (sound_steps == 0 && move_mode == true) {
                 sound_admin.play("step07");//足音SE
+                guideCiount = 0;
+                guideAlpha = 0;
+                initialFlag = false;
+                guideDraw = false;
             }
             /*
             if (has_touched_within_player == false) {
@@ -392,6 +419,16 @@ public class MapPlayer extends MapUnit {
     }
 
     public void draw(){
+
+        if(guideDraw == true) {
+            graphic.bookingDrawText("スライドして移動", 100, 400, textPaint);
+            graphic.bookingDrawText("階段を探そう!", 500, 600, textPaint);
+            if(guideAlphaAdd > 0) {
+                graphic.bookingDrawBitmapData(graphic.searchBitmap("finger00"), 1230 + (int)(guideAlpha * 0.7), 610 - (int)(guideAlpha * 0.4), 0.5f, 0.5f, 0, 255, false);
+            }
+        }
+
+
         if(touch_draw == true) {
             paint.setARGB( 150,255,255,255);
             graphic.bookingDrawCircle((int) touch_down_n_x, (int) touch_down_n_y, 40, paint);
