@@ -27,7 +27,7 @@ public class MapObjectBitmap {
     BitmapData bitmap_data[][] = new BitmapData[MAX_BITMAP_DIR][MAX_FRAME];
     BitmapData bitmap_data_find[][] = new BitmapData[MAX_BITMAP_DIR][MAX_FRAME];
     int FRAME_QUICK_PERIODS = 5;//画像の更新周期(値が小さいほどfpsが上がる)
-    int FRAME_SLOW_PERIODS = 10;
+    int FRAME_SLOW_PERIODS = 10;//10
     int frame_periods;
 
     int time_count;//画像の更新周期を数える
@@ -109,6 +109,7 @@ public class MapObjectBitmap {
             case 8:
                 //フレームの番号
                 time_count = (time_count + 1) % frame_periods;
+                //System.out.println("MapObjectBitmap: " + time_count);
                 if (time_count == 0) {
 
                     if (is_increasing_frame == true) {

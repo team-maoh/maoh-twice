@@ -19,9 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static android.content.Context.BIND_EXTERNAL_SERVICE;
 import static android.content.Context.SYSTEM_HEALTH_SERVICE;
 import static android.content.Context.WINDOW_SERVICE;
 import static java.lang.Math.abs;
+
+import com.maohx2.kmhanko.effect.EffectAdmin;
+import com.maohx2.kmhanko.effect.Effect;
 
 /**
  * Created by horie on 2017/08/30.
@@ -59,6 +63,9 @@ public class MapAdmin {
 
     int stairMapX;
     int stairMapY;
+
+    int gateMapX;
+    int gateMapY;
 
     int accessoryNum;
     float accessoryRate;
@@ -111,7 +118,11 @@ public class MapAdmin {
 
     DungeonGameSystem dungeonGameSystem;
 
-    TextFlashEffect stairTextEffect;
+    //TextFlashEffect stairTextEffect;
+
+    EffectAdmin effectAdmin;
+    int nextEffect;
+    int returnEffect;
 
     public int getMap_size_x() {
         return map_size.x;
@@ -145,13 +156,14 @@ public class MapAdmin {
         return boss_floor_num;
     }
 
-    public MapAdmin(Graphic m_graphic, DungeonGameSystem _dungeonGameSystem, MapObjectAdmin m_map_object_admin, DungeonData m_dungeon_data, List<DungeonMonsterData> m_dungeon_monster_data, MapStatus _map_status, MapStatusSaver _map_status_saver) {
+    public MapAdmin(Graphic m_graphic, DungeonGameSystem _dungeonGameSystem, MapObjectAdmin m_map_object_admin, DungeonData m_dungeon_data, List<DungeonMonsterData> m_dungeon_monster_data, MapStatus _map_status, MapStatusSaver _map_status_saver, EffectAdmin _effectAdmin) {
         graphic = m_graphic;
         map_object_admin = m_map_object_admin;
         map_player = map_object_admin.getPlayer();
         dungeon_data = m_dungeon_data;
         dungeon_monster_data = m_dungeon_monster_data;
         dungeonGameSystem = _dungeonGameSystem;
+        effectAdmin = _effectAdmin;
 
         //データベースからマップ情報の読み込み
         dungeon_name = dungeon_data.getDungeon_name();
@@ -194,7 +206,7 @@ public class MapAdmin {
 
         //ゲート画像読み込み
         BitmapData gate_tile_tmp = graphic.searchBitmap("Gate03");
-        gate_tile = graphic.processTrimmingBitmapData(gate_tile_tmp, 0, 64*2, 64, 64);
+        gate_tile = graphic.processTrimmingBitmapData(gate_tile_tmp, 0, 64 * 2, 64, 64);
 
         //オートタイル生成
         auto_tile_admin = new AutoTileAdmin(graphic);
@@ -207,6 +219,7 @@ public class MapAdmin {
         getHolder();
 
         //TODO 階段用(仮)
+        /*
         stairTextEffect = new TextFlashEffect(
                 graphic,
                 "次の階へ",
@@ -216,7 +229,17 @@ public class MapAdmin {
                 10.0f
         );
         stairTextEffect.start();
+        */
+    }
 
+    private void makeNextAndReturnEffect() {
+        nextEffect = effectAdmin.createEffect("nextFloorEffect", "next00", 6, 1, 1.0f, 1.0f, EffectAdmin.EXTEND_MODE.BEFORE);
+        effectAdmin.getEffect(nextEffect).start();
+        effectAdmin.getEffect(nextEffect).hide();
+
+        returnEffect = effectAdmin.createEffect("nextFloorEffect", "next01", 6, 1, 1.0f, 1.0f, EffectAdmin.EXTEND_MODE.BEFORE);
+        effectAdmin.getEffect(returnEffect).start();
+        effectAdmin.getEffect(returnEffect).hide();
     }
 
     //auto_tile生成
@@ -458,6 +481,10 @@ public class MapAdmin {
                     stairMapX = i;
                     stairMapY = j;
                 }
+                if (map_data[i][j].isGate()) {
+                    gateMapX = i;
+                    gateMapY = j;
+                }
             }
         }
 
@@ -688,8 +715,10 @@ public class MapAdmin {
 
 
     public void goNextFloorPrepare() {
-        stairTextEffect.setPosition(-200, -200);
-        stairTextEffect.stop();
+        //stairTextEffect.setPosition(-200, -200);
+        //stairTextEffect.stop();
+        effectAdmin.getEffect(nextEffect).hide();
+        effectAdmin.getEffect(returnEffect).hide();
         dungeonGameSystem.getDungeonModeManage().setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT_FROM_BEFORE_FLOOR);
     }
 
@@ -699,7 +728,7 @@ public class MapAdmin {
         if (now_floor_num < boss_floor_num) {
             createMap();
 
-            resetMapObject();//中ボス以外
+            resetMapObject();//中ボス以外 //ここでエフェクトが消えるので注意
             //スタート地点を探す
             searchStartPoint();
             camera.setCameraOffset(start_point.x, start_point.y);
@@ -708,7 +737,13 @@ public class MapAdmin {
 
             //中ボスだけあとでやる
             map_object_admin.spawnEnemy();
-            stairTextEffect.start();
+            //stairTextEffect.start();
+
+            this.makeNextAndReturnEffect();
+            effectAdmin.getEffect(nextEffect).setPosition(-200, -200);
+            effectAdmin.getEffect(nextEffect).restart();
+            effectAdmin.getEffect(returnEffect).setPosition(-200, -200);
+            effectAdmin.getEffect(returnEffect).restart();
         } else {
             goBossFloor();
         }
@@ -1157,17 +1192,30 @@ public class MapAdmin {
 
         //階段の上に表示(とりあえず
 
-        stairTextEffect.draw();
+        //stairTextEffect.draw();
     }
 
     public void update() {
+        /*
         stairTextEffect.setPosition(
                 camera.convertToNormCoordinateXForMap(stairMapX * magnification + magnification/2),
                 camera.convertToNormCoordinateYForMap(stairMapY * magnification + magnification/2)
         );
         stairTextEffect.update();
+        */
+        effectAdmin.getEffect(nextEffect).setPosition(
+                camera.convertToNormCoordinateXForMap(stairMapX * magnification + magnification/2),
+                camera.convertToNormCoordinateYForMap(stairMapY * magnification + magnification/2)
+        );
+        effectAdmin.getEffect(returnEffect).setPosition(
+                camera.convertToNormCoordinateXForMap(gateMapX * magnification + magnification/2),
+                camera.convertToNormCoordinateYForMap(gateMapY * magnification + magnification/2)
+        );
 
-        //System.out.println("aaaa " + camera.convertToWorldCoordinateX(stairMapX) + "/" + camera.convertToWorldCoordinateX(stairMapY)+ " " + stairMapX + " " + stairMapY);
+        System.out.println("aaaa " + camera.convertToNormCoordinateXForMap(stairMapX * magnification + magnification/2) + "/" + camera.convertToNormCoordinateYForMap(stairMapY * magnification + magnification/2));
+        System.out.println("aaaa " + effectAdmin.getEffect(nextEffect).isExist());
+        System.out.println("aaaa " + effectAdmin.getEffect(nextEffect).isDraw());
+        System.out.println("aaaa " + effectAdmin.getEffect(nextEffect).isPause());
     }
 
     public void drawSmallMap() {
@@ -1993,9 +2041,11 @@ public class MapAdmin {
         gate_tile = null;
         stair_tile_div = null;
 
+        /*
         if (stairTextEffect != null) {
             stairTextEffect.release();
         }
+        */
     }
 
     //過去関数

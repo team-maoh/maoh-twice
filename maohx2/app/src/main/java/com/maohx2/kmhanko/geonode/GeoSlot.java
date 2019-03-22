@@ -23,6 +23,7 @@ import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 import com.maohx2.kmhanko.myavail.MyAvail;
 import com.maohx2.kmhanko.sound.SoundAdmin;
+import com.maohx2.kmhanko.effect.Effect;
 
 /**
  * Created by ina on 2017/10/08.
@@ -93,12 +94,16 @@ public class GeoSlot extends CircleImagePlate {
     ImageContext slotHoleImageContextRed;
     ImageContext slotHoleImageContextGreen;
 
+    int rockonEffectID;
+    Effect rockonEffect;
+
     //TODO:デバッグ用。セーブデータの用意が必要
     boolean isReleased = false;
 
     //GeoCalcSaverAdmin thisGeoCalcSaverAdmin;
 
     static EffectAdmin effectAdmin;
+    static EffectAdmin aboveEffectAdmin;
     //static int[] geoSlotLineEffect;
 
     /*
@@ -120,14 +125,32 @@ public class GeoSlot extends CircleImagePlate {
         geoSlotAdmin = _geoSlotAdmin;
     }
 
+    public void makeEffect() {
+        rockonEffectID = aboveEffectAdmin.createEffect("rockonEffect", "rockon00", 5, 1, 2.0f, 2.0f, EffectAdmin.EXTEND_MODE.BEFORE);
+        rockonEffect = aboveEffectAdmin.getEffect(rockonEffectID);
+        rockonEffect.setPosition(x, y);
+        rockonEffect.start();
+        rockonEffect.hide();
+    }
 
+    public void effectStart() {
+        if (rockonEffect != null) {
+            rockonEffect.start();
+        }
+    }
+    public void effectHide() {
+        if (rockonEffect != null) {
+            rockonEffect.hide();
+        }
+    }
 
-    static public void staticInit(TextBoxAdmin _textBoxAdmin, MyDatabase _geoSlotEventDB, InventryS _geoInventry, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin) {
+    static public void staticInit(TextBoxAdmin _textBoxAdmin, MyDatabase _geoSlotEventDB, InventryS _geoInventry, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin, EffectAdmin _aboveEffectAdmin) {
         textBoxAdmin = _textBoxAdmin;
         geoSlotEventDB = _geoSlotEventDB;
         geoInventry = _geoInventry;
         soundAdmin = _soundAdmin;
         effectAdmin = _effectAdmin;
+        aboveEffectAdmin = _aboveEffectAdmin;
     }
 
     /*
@@ -712,6 +735,8 @@ public class GeoSlot extends CircleImagePlate {
 
         geoImageContext = null;
         updateGeoBaseTileImageContext();
+
+        this.makeEffect();
     }
 
     //** Created by ina **//

@@ -239,14 +239,14 @@ public class MapObjectAdmin {
     public void openingUpdate(boolean boss_is_running) {
 
         map_player.openingUpdate();
-        map_player_bitmap.update();
+        //map_player_bitmap.update();
 
         if (boss_is_running) {
-
             map_boss[0].openingUpdate();
-            map_boss_bitmap[0].update();
-
+            //map_boss_bitmap[0].update();
         }
+
+        mapObjectBitmapAdmin.update();
     }
 
     public void update() {
@@ -264,7 +264,7 @@ public class MapObjectAdmin {
         if ((map_plate_admin.getDisplayingContent() == -1 && !map_plate_admin.getDungeonSelectWindowAdmin().isActive())) {
 
             map_player.update();
-            map_player_bitmap.update();
+            //map_player_bitmap.update();
             player_x = map_player.getWorldX();
             player_y = map_player.getWorldY();
 //        System.out.println("player_x_desu" + player_x);
@@ -276,24 +276,26 @@ public class MapObjectAdmin {
 //        }
             for (int i = 0; i < NUM_OF_TRAP; i++) {
                 map_trap[i].update();
-                map_trap_bitmap[i].update();
+                //map_trap_bitmap[i].update();
             }
             for (int i = 0; i < NUM_OF_MINE; i++) {
                 map_mine[i].update();
-                map_mine_bitmap[i].update();
+                //map_mine_bitmap[i].update();
             }
             for (int i = 0; i < NUM_OF_ENEMY; i++) {
                 map_enemy[i].update();
-                map_enemy_bitmap[i].update();
+                //map_enemy_bitmap[i].update();
             }
             for (int i = 0; i < NUM_OF_ITEM; i++) {//by kmhanko
                 map_item[i].update();
-                map_item_bitmap[i].update();
+                //map_item_bitmap[i].update();
             }
             for (int i = 0; i < NUM_OF_BOSS; i++) {
                 map_boss[i].update();
-                map_boss_bitmap[i].update();
+                //map_boss_bitmap[i].update();
             }
+
+            mapObjectBitmapAdmin.update();
         }
     }
 

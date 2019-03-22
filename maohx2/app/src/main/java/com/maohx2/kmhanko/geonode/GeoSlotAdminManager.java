@@ -87,6 +87,7 @@ public class GeoSlotAdminManager {
     SoundAdmin soundAdmin;
 
     EffectAdmin effectAdmin;
+    EffectAdmin aboveEffectAdmin;
     //PlateGroup<MapIconPlate> mapIconPlateGroup;
 
     DungeonModeManage dungeonModeManage;
@@ -126,14 +127,14 @@ public class GeoSlotAdminManager {
         }
     }
 
-    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver, MaohMenosStatus _maohMenosStatus, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin, DungeonModeManage _dungeonModeManage) {
-        this(_graphic, _userInterface, null, _databaseAdmin, _textBoxAdmin, _playerStatus, _geoInventry, _geoSlotSaver,_maohMenosStatus,_soundAdmin, _effectAdmin);
+    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver, MaohMenosStatus _maohMenosStatus, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin, EffectAdmin _aboveEffectAdmin, DungeonModeManage _dungeonModeManage) {
+        this(_graphic, _userInterface, null, _databaseAdmin, _textBoxAdmin, _playerStatus, _geoInventry, _geoSlotSaver,_maohMenosStatus,_soundAdmin, _effectAdmin, _aboveEffectAdmin);
         dungeonModeManage = _dungeonModeManage;
         mode = MODE.DUNGEON;
     }
 
 
-    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver, MaohMenosStatus _maohMenosStatus, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin) {
+    public GeoSlotAdminManager(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, PlayerStatus _playerStatus, InventryS _geoInventry, GeoSlotSaver _geoSlotSaver, MaohMenosStatus _maohMenosStatus, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin, EffectAdmin _aboveEffectAdmin) {
         graphic = _graphic;
         userInterface = _userInterface;
         databaseAdmin = _databaseAdmin;
@@ -145,6 +146,7 @@ public class GeoSlotAdminManager {
         maohMenosStatus = _maohMenosStatus;
         soundAdmin = _soundAdmin;
         effectAdmin = _effectAdmin;
+        aboveEffectAdmin = _aboveEffectAdmin;
 
         addDatabase();
         this.loadGeoSlotDatabase();
@@ -186,14 +188,10 @@ public class GeoSlotAdminManager {
                                 soundAdmin.play("cancel00");
 
                                 if ( activeGeoSlotAdmin != null) {
-                                    activeGeoSlotAdmin.clearGeoSlotLineEffect();
+                                    activeGeoSlotAdmin.end();
                                 }
 
                                 if (getMode() == GeoSlotAdminManager.MODE.WORLD_NORMAL || getMode() == GeoSlotAdminManager.MODE.WORLD_SEE_ONLY) {
-                                    if (activeGeoSlotAdmin !=null) {
-                                        activeGeoSlotAdmin.initUIs();
-                                    }
-
                                     calcStatus();
                                     saveGeoInventry();
                                     saveGeoSlot();
@@ -289,7 +287,7 @@ public class GeoSlotAdminManager {
         GeoSlotAdmin.setGeoSlotEventDB(geoSlotEventDB);
 
         for (int i = 0; i < t_names.size(); i++) {
-            GeoSlotAdmin new_geo_slot_admin = new GeoSlotAdmin(graphic, userInterface, worldModeAdmin, textBoxAdmin, this, playerStatus, geoInventry, soundAdmin, effectAdmin);
+            GeoSlotAdmin new_geo_slot_admin = new GeoSlotAdmin(graphic, userInterface, worldModeAdmin, textBoxAdmin, this, playerStatus, geoInventry, soundAdmin, effectAdmin, aboveEffectAdmin);
             new_geo_slot_admin.loadDatabase(t_names.get(i));
             geoSlotAdmins.add(new_geo_slot_admin);
         }

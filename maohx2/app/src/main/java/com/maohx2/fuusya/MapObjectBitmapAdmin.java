@@ -45,6 +45,14 @@ public class MapObjectBitmapAdmin {
         return null;
     }
 
+    public void update() {
+        for (int i = 0; i < mapObjectBitmap.length; i++) {
+            if (mapObjectBitmap[i] != null) {
+                mapObjectBitmap[i].update();
+            }
+        }
+    }
+
     public void release() {
         for (int i = 0; i < mapObjectBitmap.length; i++) {
             if (mapObjectBitmap[i] != null) {
