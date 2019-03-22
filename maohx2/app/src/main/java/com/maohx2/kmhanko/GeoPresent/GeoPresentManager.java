@@ -134,6 +134,7 @@ public class GeoPresentManager {
 
     public void start() {
         geoInventry.setPosition(SIDE_INVENTRY.INV_LEFT, SIDE_INVENTRY.INV_UP, SIDE_INVENTRY.INV_RIGHT,SIDE_INVENTRY.INV_BOTTOM,SIDE_INVENTRY.INV_CONTENT_NUM);
+        geoInventry.setDrawAndUpdateFlag(true);
         gaiaImage = graphic.makeImageContext(graphic.searchBitmap("gaia0r"), 300, 450, 2.7f, 2.7f, 0, 255, false);
         scoreWindowUpdate();
         updateTextBox();

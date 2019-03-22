@@ -113,6 +113,7 @@ public class GeoSlotAdmin {
     SoundAdmin soundAdmin;
 
     EffectAdmin effectAdmin;
+    EffectAdmin aboveEffectAdmin;
 
     TextFlashEffect geoTouchTextEffect;
 
@@ -163,7 +164,7 @@ public class GeoSlotAdmin {
     }
 
     //Rewrite by kmhanko
-    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, TextBoxAdmin _textBoxAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, InventryS _geoInventry, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin) {
+    public GeoSlotAdmin(Graphic _graphic, UserInterface _user_interface, WorldModeAdmin _worldModeAdmin, TextBoxAdmin _textBoxAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, InventryS _geoInventry, SoundAdmin _soundAdmin, EffectAdmin _effectAdmin, EffectAdmin _aboveEffectAdmin) {
         graphic = _graphic;
         userInterface = _user_interface;
         textBoxAdmin = _textBoxAdmin;
@@ -173,9 +174,10 @@ public class GeoSlotAdmin {
         geoInventry = _geoInventry;
         soundAdmin = _soundAdmin;
         effectAdmin = _effectAdmin;
+        aboveEffectAdmin = _aboveEffectAdmin;
 
         //初期化
-
+        GeoSlot.staticInit(textBoxAdmin, geoSlotEventDB, geoInventry, soundAdmin, effectAdmin, aboveEffectAdmin);
 
         geoTouchTextEffect = new TextFlashEffect(
                 graphic,
@@ -185,8 +187,6 @@ public class GeoSlotAdmin {
                 820,
                 5.0f
         );
-        geoTouchTextEffect.start();
-
 
         initTextBox();
         initReleasePlate();
@@ -201,12 +201,23 @@ public class GeoSlotAdmin {
         for(int i = 0; i < geoSlots.size(); i++) {
             geoSlots.get(i).updateGeoBaseTileImageContext();
         }
-        this.initUIs();
+        this.resetUIs();
+    }
+
+    public void end() {
+        this.resetUIs();
+        this.clearGeoSlotLineEffect();
+        this.geoRockonEffectHideAll();
     }
 
     //ジオスロットの並びを表すツリーコードを用いて、GeoSlotのインスタンス化を行う。
     public void loadDatabase(String _t_name) {
+
         t_name = _t_name;
+
+        if (!t_name.equals("Maoh")) {
+            geoTouchTextEffect.start();
+        }
 
         //DBからツリーコードを取得する関数
         tree_code = this.getTreeCode();
@@ -238,7 +249,6 @@ public class GeoSlotAdmin {
         //GeoSlotの管理のため、GeoSlotのインスタンスをコピーしてくるメソッド。
         geoSlots = grand_geo_slot.getGeoSlots();
 
-        GeoSlot.staticInit(textBoxAdmin, geoSlotEventDB, geoInventry, soundAdmin, effectAdmin);
 
         for(int i = 0; i < geoSlots.size(); i++) {
             if ( i == 0 ) {
@@ -312,7 +322,7 @@ public class GeoSlotAdmin {
                             public void callBackEvent() {
                                 //OKが押された時の処理
                                 soundAdmin.play("enter00");
-                                initUIs();
+                                resetUIs();
                             }
                         }
                 });
@@ -335,7 +345,7 @@ public class GeoSlotAdmin {
                             public void callBackEvent() {
                                 //OKが押された時の処理
                                 soundAdmin.play("enter00");
-                                initUIs();
+                                resetUIs();
                             }
                         }
                 });
@@ -388,6 +398,24 @@ public class GeoSlotAdmin {
         calcGeoSlot();
         for(int i = 0; i < geoSlots.size(); i++) {
             geoSlots.get(i).drawLine();
+        }
+    }
+
+    public void geoRockonEffectHideAll() {
+        for(int i = 0; i < geoSlots.size(); i++) {
+            geoSlots.get(i).effectHide();
+        }
+    }
+    public void geoRockonEffectRestartAll() {
+        for(int i = 0; i < geoSlots.size(); i++) {
+            geoSlots.get(i).effectStart();
+        }
+    }
+    public void geoRockonEffectRestartReleased() {
+        for(int i = 0; i < geoSlots.size(); i++) {
+            if (geoSlots.get(i).isAbleToPutGeo()) {
+                geoSlots.get(i).effectStart();
+            }
         }
     }
 
@@ -460,6 +488,8 @@ public class GeoSlotAdmin {
         geoRemoveButton.setUpdateFlag(true);
         geoRemoveButton.setDrawFlag(true);
         //選択しているジオスロットをマークする
+        this.geoRockonEffectHideAll();
+        focusGeoSlot.effectStart();
     }
 
     //ジオスロットがタッチされた場合であって、女神のマスの場合の処理
@@ -470,6 +500,8 @@ public class GeoSlotAdmin {
         geoRemoveButton.setUpdateFlag(false);
         geoRemoveButton.setDrawFlag(false);
         this.geoSlotReleaseChoiceMessage();
+
+        this.geoRockonEffectHideAll();
     }
 
     //解放する、が選ばれた場合の処理
@@ -491,14 +523,14 @@ public class GeoSlotAdmin {
             case SET:
                 if (focusGeoSlot != null) {
                     focusGeoSlot.setGeoObject(geoObjectData);
-                    this.initUIs();
+                    this.resetUIs();
                 }
                 break;
             case RELEASE:
                 if (focusGeoSlot != null) {
                     if (focusGeoSlot.releaseByGeoObject(geoObjectData)) {
                         this.geoReleasedEvent(true);
-                        this.initUIs();
+                        this.resetUIs();
                     } else {
                         soundAdmin.play("cannot_exit_room");
                     }
@@ -510,7 +542,7 @@ public class GeoSlotAdmin {
     public void removeGeoObject() {
         if (focusGeoSlot != null) {
             focusGeoSlot.outGeoObject();
-            this.initUIs();
+            this.resetUIs();
         }
     }
 
@@ -565,8 +597,10 @@ public class GeoSlotAdmin {
                 if (inventryData.getItemData().getItemKind() == Constants.Item.ITEM_KIND.GEO) {
                     GeoObjectData tmp = (GeoObjectData) inventryData.getItemData();
                     if (inventryData.getItemNum() > 0 && tmp.getName() != null && tmp.getSlotSetName().equals("noSet")) {
-                        this.setGeoObject((GeoObjectData)inventryData.getItemData());
+                        this.setGeoObject((GeoObjectData) inventryData.getItemData());
                         userInterface.setInventryData(null);
+                    } else {
+                        soundAdmin.play("cannot_exit_room");
                     }
                 }
             }
@@ -587,10 +621,7 @@ public class GeoSlotAdmin {
                     break;
                 case (1)://やめる
                     soundAdmin.play("cancel00");
-                    releasePlateGroup.setDrawFlag(false);
-                    releasePlateGroup.setUpdateFlag(false);
-                    textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
-                    geoSlotGroup.setUpdateFlag(true);
+                    resetUIs();
                     break;
             }
         }
@@ -614,6 +645,24 @@ public class GeoSlotAdmin {
         }
     }
 
+    public void resetUIs() {
+        textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
+        releasePlateGroup.setDrawFlag(false);
+        releasePlateGroup.setUpdateFlag(false);
+        geoRemoveButton.setDrawFlag(false);
+        geoRemoveButton.setUpdateFlag(false);
+        geoInventry.setDrawAndUpdateFlag(false);
+        okButtonGroup.setDrawFlag(false);
+        okButtonGroup.setUpdateFlag(false);
+        geoReleaseNamePlate.setDrawFlag(false);
+        focusGeoSlot = null;
+        geoSlotGroup.setUpdateFlag(true);
+        geoSlotGroup.setDrawFlag(true);
+        cancelButtonGroup.setDrawFlag(false);
+        cancelButtonGroup.setUpdateFlag(false);
+        this.geoRockonEffectRestartReleased();
+    }
+
     public void initUIs() {
         textBoxAdmin.setTextBoxExists(releaseTextBoxID, false);
         releasePlateGroup.setDrawFlag(false);
@@ -625,10 +674,6 @@ public class GeoSlotAdmin {
         okButtonGroup.setUpdateFlag(false);
         geoReleaseNamePlate.setDrawFlag(false);
         focusGeoSlot = null;
-        if (geoSlotGroup != null) {
-            geoSlotGroup.setUpdateFlag(true);
-            geoSlotGroup.setDrawFlag(true);
-        }
         cancelButtonGroup.setDrawFlag(false);
         cancelButtonGroup.setUpdateFlag(false);
     }

@@ -97,6 +97,7 @@ public class WorldGameSystem {
     ItemSell itemSell;
 
     EffectAdmin effectAdmin;
+    EffectAdmin aboveEffectAdmin;
     SoundAdmin soundAdmin;
 
     BattleUserInterface world_user_interface;
@@ -258,6 +259,7 @@ public class WorldGameSystem {
         itemShopAdmin = new ItemShopAdmin();
 
         effectAdmin = new EffectAdmin(graphic, databaseAdmin, soundAdmin, unitedActivity);
+        aboveEffectAdmin = new EffectAdmin(graphic, databaseAdmin, soundAdmin, unitedActivity);
 
         itemDataAdminManager.init(databaseAdmin, graphic);
 
@@ -267,7 +269,7 @@ public class WorldGameSystem {
         expendItemInventry = globalData.getExpendItemInventry();
 
         geoSlotSaver = new GeoSlotSaver(databaseAdmin, "GeoSlotSave", "GeoSlotSave.db", Constants.SaveDataVersion.GEO_SLOT, Constants.DEBUG_SAVE_MODE, graphic);
-        geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin);
+        geoSlotAdminManager = new GeoSlotAdminManager(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, playerStatus, geoInventry, geoSlotSaver, maohMenosStatus, soundAdmin, effectAdmin, aboveEffectAdmin);
 
         geoSlotAdminManager.loadGeoSlot();
 
@@ -601,9 +603,7 @@ public class WorldGameSystem {
         talkAdmin.update();
         text_box_admin.update();
         effectAdmin.update();
-        //musicAdmin.update();
-
-        //activityChange.toChangeActivity();
+        aboveEffectAdmin.update();
     }
 
     public void draw() {
@@ -657,6 +657,7 @@ public class WorldGameSystem {
                 if (geoSlotAdminManager.isMaohGeoMap()) {
                     maohMenosStatusViewer.draw();
                 }
+                aboveEffectAdmin.draw();
                 break;
             case TU_GEO:
                 tutorialManager.draw();
@@ -858,6 +859,9 @@ public class WorldGameSystem {
         }
         if (effectAdmin != null) {
             effectAdmin.release();
+        }
+        if (aboveEffectAdmin != null) {
+            aboveEffectAdmin.release();
         }
         if (geoSlotSaver != null) {
             geoSlotSaver.release();

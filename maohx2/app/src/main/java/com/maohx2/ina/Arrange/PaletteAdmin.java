@@ -34,6 +34,8 @@ public class PaletteAdmin {
     InventryS expendInventry;
     Graphic graphic;
 
+    BattleUserInterface battleUserInterface;
+
     /*
     public PaletteAdmin(BattleUserInterface _battle_user_interface, Graphic _graphic){
         palettes[0] = new Palette(_battle_user_interface, _graphic, 1400,750,0);
@@ -49,6 +51,7 @@ public class PaletteAdmin {
         //by kmhanko ジオ採掘パレット
         palettes[2] = new Palette(_battle_user_interface, _graphic, PALETTE_DEFAULT_X_RIGHT,PALETTE_DEFAULT_Y_RIGHT,2, _soundAdmin);
 
+        battleUserInterface = _battle_user_interface;
         expendInventry = _expendInventry;
         graphic = _graphic;
 
@@ -178,13 +181,25 @@ public class PaletteAdmin {
 
         if (palettesFlag[2]) {
             //強さゲージの表示
-            graphic.bookingDrawBitmapName(
-                    "miningArrow01",
-                    palettes[2].getPositionX(),
-                    palettes[2].getPositionY() - 100,
-                    1.35f, 1.35f, 0.0f,
-                    255, false
-            );
+            if (palettes[2].getBattlePaletteMode() == 1 || palettes[2].getBattlePaletteMode() == 2) {
+                //タッチされてる
+                graphic.bookingDrawBitmapName(
+                        "miningArrow01",
+                        palettes[2].getPositionX(),
+                        palettes[2].getPositionY() - 100,
+                        1.40f, 1.40f, 0.0f,
+                        255, false
+                );
+            } else {
+                //タッチされてない
+                graphic.bookingDrawBitmapName(
+                        "miningArrow00",
+                        palettes[2].getPositionX(),
+                        palettes[2].getPositionY() - 50,
+                        1.0f, 1.0f, 0.0f,
+                        255, false
+                );
+            }
         }
     }
 

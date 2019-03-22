@@ -393,6 +393,9 @@ public class Palette {
         return position_y;
     }
 
+    public int getBattlePaletteMode() {
+        return battle_palette_mode;
+    }
 
     public void release() {
         System.out.println("takanoRelease : Pallete");

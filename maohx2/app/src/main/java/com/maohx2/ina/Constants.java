@@ -53,7 +53,7 @@ public final class Constants {
 
     public static final int STAGE_NUM = 7;
 
-    public static String DEBUG_SAVE_MODE = "s";
+    public static String DEBUG_SAVE_MODE = "ns";
 
 
     public static class SaveDataVersion {
@@ -65,7 +65,7 @@ public final class Constants {
         public static final int MAP_SAVE_DATA = 1;
         public static final int PLAYER_STATUS = 1;
         public static final int TALK = 1;
-        public static final int TUTORIAL = 2;
+        public static final int TUTORIAL = 3;
     }
 
 
@@ -244,18 +244,18 @@ public final class Constants {
     public static class TUTRIAL_BUTTON {
         public static final int DUNGEON_LEFT = 20;
         public static final int DUNGEON_RIGHT = 320;
-        public static final int DUNGEON_UP = 50;
-        public static final int DUNGEON_BOTTOM = 125;
+        public static final int DUNGEON_UP = 5;
+        public static final int DUNGEON_BOTTOM = 80;
 
         public static final int BATTLE_LEFT = 330;
         public static final int BATTLE_RIGHT = 630;
-        public static final int BATTLE_UP = 50;
-        public static final int BATTLE_BOTTOM = 125;
+        public static final int BATTLE_UP = 5;
+        public static final int BATTLE_BOTTOM = 80;
 
         public static final int MINING_LEFT = 640;
         public static final int MINING_RIGHT = 940;
-        public static final int MINING_UP = 50;
-        public static final int MINING_BOTTOM = 125;
+        public static final int MINING_UP = 5;
+        public static final int MINING_BOTTOM = 80;
 
         public static final int UNDER_LEFT = 50;
         public static final int UNDER_RIGHT = 350;
