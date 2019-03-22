@@ -154,7 +154,7 @@ public class MapPlayer extends MapUnit {
         super.update();
 
         guideCiount++;
-        if(initialFlag == true || guideCiount > 230){
+        if(initialFlag == true || guideCiount > 180){
             guideDraw = true;
             if(guideAlpha > 320 || guideAlpha < 0) { guideAlphaAdd *= -1;}
             guideAlpha += guideAlphaAdd;
@@ -421,10 +421,14 @@ public class MapPlayer extends MapUnit {
     public void draw(){
 
         if(guideDraw == true) {
-            graphic.bookingDrawText("スライドして移動", 100, 400, textPaint);
-            graphic.bookingDrawText("階段を探そう!", 500, 600, textPaint);
+            graphic.bookingDrawText("スライドして移動", 100, 350, textPaint);
+            graphic.bookingDrawText("階段を探そう!", 500, 550, textPaint);
             if(guideAlphaAdd > 0) {
-                graphic.bookingDrawBitmapData(graphic.searchBitmap("finger00"), 1230 + (int)(guideAlpha * 0.7), 610 - (int)(guideAlpha * 0.4), 0.5f, 0.5f, 0, 255, false);
+                if(guideAlpha < 255) {
+                    graphic.bookingDrawBitmapData(graphic.searchBitmap("finger00"), 1230 + (int) (guideAlpha * 0.7), 760 - (int) (guideAlpha * 0.4), 0.5f, 0.5f, 0, 255, false);
+                }else{
+                    graphic.bookingDrawBitmapData(graphic.searchBitmap("finger00"), 1230 + (int) (255 * 0.7), 760 - (int) (255 * 0.4), 0.5f, 0.5f, 0, 255, false);
+                }
             }
         }
 
