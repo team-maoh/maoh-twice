@@ -994,7 +994,9 @@ public class DungeonSelectManager {
 
                         geoMapGideMessageFlag = false;
 
-                        geoMapGideTextAndArrow.stop();
+                        if (geoMapGideTextAndArrow != null) {
+                            geoMapGideTextAndArrow.stop();
+                        }
                         switchNewEffect(false);
                     } else {
                         soundAdmin.play("enter00");
