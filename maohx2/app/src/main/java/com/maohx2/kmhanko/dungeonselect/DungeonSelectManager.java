@@ -237,14 +237,13 @@ public class DungeonSelectManager {
                                 geoMapGideMessageFlag = true;
                                 geoMapGideTextAndArrow = new TextFlashAndArrow(graphic);
                                 geoMapGideTextAndArrow.setParameter(
-                                        "",
-                                        60,
+                                        "", 60,
                                         800, 450,
                                         10,
                                         1380, 220,
                                         270
                                 );
-                                geoMapGideTextAndArrow.setText("ジオマップに行ってジオオブジェクトをセットしよう！");
+                                geoMapGideTextAndArrow.setText("ジオマップに行ってジオをセットしよう！");
                                 geoMapGideTextAndArrow.start();
                                 tutorialManager.getTutorialFlagData().setIsTutorialFinishedByName(1, "geoLava");
                                 tutorialManager.save();
@@ -454,7 +453,7 @@ public class DungeonSelectManager {
 
             if (geoMapGideMessageFlag) {
                 if (geoMapGideTextAndArrow != null) {
-                    geoMapGideTextAndArrow.setText("ジオマップに行ってジオオブジェクトをセットしよう！");
+                    geoMapGideTextAndArrow.setText("ジオマップに行ってジオをセットしよう！");
                     geoMapGideTextAndArrow.setPositionArrow(1380, 220);
                     geoMapGideTextAndArrow.setDegree(270);
                 }

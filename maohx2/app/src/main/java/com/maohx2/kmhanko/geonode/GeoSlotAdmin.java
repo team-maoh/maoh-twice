@@ -519,6 +519,9 @@ public class GeoSlotAdmin {
 
     //インベントリのジオがタッチされた場合の処理
     public void setGeoObject(GeoObjectData geoObjectData) {
+        if (inventryMode == null) {
+            return;
+        }
         switch (inventryMode) {
             case SET:
                 if (focusGeoSlot != null) {
