@@ -4,6 +4,7 @@ import android.view.SurfaceHolder;
 
 import com.maohx2.horie.Tutorial.TutorialFlagData;
 import com.maohx2.horie.Tutorial.TutorialFlagSaver;
+import com.maohx2.horie.Tutorial.TutorialManager;
 import com.maohx2.horie.map.MapStatus;
 import com.maohx2.horie.map.MapStatusSaver;
 import com.maohx2.ina.Activity.BaseSurfaceView;
@@ -55,8 +56,7 @@ public class UnitedSurfaceView extends BaseSurfaceView {
     TalkAdmin talkAdmin;
     MapStatus mapStatus;
     MapStatusSaver mapStatusSaver;
-    TutorialFlagData tutorialFlagData;
-    TutorialFlagSaver tutorialFlagSaver;
+    TutorialManager tutorialManager;
 
     enum GAME_SYSTEM_MODE {
         START,
@@ -91,9 +91,8 @@ public class UnitedSurfaceView extends BaseSurfaceView {
         mapStatus = null;
         mapStatusSaver.release();
         mapStatusSaver = null;
-        tutorialFlagData = null;
-        tutorialFlagSaver.release();
-        tutorialFlagSaver = null;
+        tutorialManager.release();
+        tutorialManager = null;
         WindowPlate.getWindowPlateBitmapAdmin().release();
     }
 
@@ -165,9 +164,7 @@ public class UnitedSurfaceView extends BaseSurfaceView {
         mapStatusSaver = new MapStatusSaver(my_database_admin, "MapSaveData", "MapSaveData.db", Constants.SaveDataVersion.MAP_SAVE_DATA, Constants.DEBUG_SAVE_MODE, mapStatus, 7);
         mapStatusSaver.load();
 
-        tutorialFlagData = new TutorialFlagData();
-        tutorialFlagSaver = new TutorialFlagSaver(my_database_admin, "FlagSave", "FlagSave.db", Constants.SaveDataVersion.TUTORIAL, Constants.DEBUG_SAVE_MODE,tutorialFlagData);
-        tutorialFlagSaver.load();
+        tutorialManager = new TutorialManager(graphic, my_database_admin, userInterface, soundAdmin);
 
         demoManager = new DemoManager();
 
@@ -229,8 +226,7 @@ public class UnitedSurfaceView extends BaseSurfaceView {
                 talkAdmin,
                 mapStatus,
                 mapStatusSaver,
-                tutorialFlagData,
-                tutorialFlagSaver
+                tutorialManager
         );
 
     }
@@ -316,7 +312,8 @@ public class UnitedSurfaceView extends BaseSurfaceView {
                 dungeon_kind,
                 talkAdmin,
                 mapStatus,
-                mapStatusSaver
+                mapStatusSaver,
+                tutorialManager
         );
 
         if(openingFlag == true){

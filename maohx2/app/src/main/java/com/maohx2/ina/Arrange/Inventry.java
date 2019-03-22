@@ -399,11 +399,13 @@ public class Inventry {
     }
 
     public Constants.Item.ITEM_KIND getItemKind() {
-        Constants.Item.ITEM_KIND tempItemKind = null;
+        Constants.Item.ITEM_KIND tempItemKind = Constants.Item.ITEM_KIND.NOTHING;
         for (int i = 0; i < INVENTRY_DATA_MAX - 1; i++) {
             if (inventry_datas[i] != null) {
-                tempItemKind = inventry_datas[0].getItemData().getItemKind();
-                break;
+                if (inventry_datas[i].getItemData() != null) {
+                    tempItemKind = inventry_datas[i].getItemData().getItemKind();
+                    break;
+                }
             }
         }
         return tempItemKind;

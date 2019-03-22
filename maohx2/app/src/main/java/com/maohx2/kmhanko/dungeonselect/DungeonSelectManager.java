@@ -1,6 +1,7 @@
 package com.maohx2.kmhanko.dungeonselect;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.horie.Tutorial.TutorialManager;
 import com.maohx2.horie.map.MapStatus;
 import com.maohx2.horie.map.MapStatusSaver;
 import com.maohx2.ina.Activity.DemoManager;
@@ -153,8 +154,10 @@ public class DungeonSelectManager {
     TextFlashAndArrow geoMapGideTextAndArrow;
     TextFlashEffect geoMapTextEffect;
 
+    TutorialManager tutorialManager;
 
-    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, SoundAdmin _soundAdmin, UnitedActivity _unitedActivity, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver, TalkAdmin _talkAdmin, EffectAdmin _effectAdmin) {
+
+    public DungeonSelectManager(Graphic _graphic, UserInterface _userInterface, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, GeoSlotAdminManager _geoSlotAdminManager, PlayerStatus _playerStatus, SoundAdmin _soundAdmin, UnitedActivity _unitedActivity, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver, TalkAdmin _talkAdmin, EffectAdmin _effectAdmin, TutorialManager _tutorialManager) {
         graphic = _graphic;
         userInterface = _userInterface;
         textBoxAdmin = _textBoxAdmin;
@@ -163,6 +166,7 @@ public class DungeonSelectManager {
         worldModeAdmin = _worldModeAdmin;
         unitedActivity = _unitedActivity;
         effectAdmin = _effectAdmin;
+        tutorialManager = _tutorialManager;
 
         //playerStatus = _playerStatus;
         soundAdmin = _soundAdmin;
@@ -183,9 +187,9 @@ public class DungeonSelectManager {
 
         geoMapTextEffect = new TextFlashEffect(
                 graphic,
-                "クリアしたダンジョンを選択して、ジオオブジェクトをセットしよう！",
+                "クリアしたダンジョンを選択して、ジオをセット！",
                 40,
-                700,
+                500,
                 820,
                 5.0f
         );
@@ -228,7 +232,7 @@ public class DungeonSelectManager {
                         case 0:
                             talkAdmin.start("ClearForest", false);
 
-                            if (playerStatus.getClearCount() == 0) {
+                            if (playerStatus.getClearCount() == 0 && !tutorialManager.getTutorialFlagData().getIsTutorialFinishedByName("geoLava")) {
                                 //ジオ配置のアレをやる。
                                 geoMapGideMessageFlag = true;
                                 geoMapGideTextAndArrow = new TextFlashAndArrow(graphic);
@@ -242,6 +246,8 @@ public class DungeonSelectManager {
                                 );
                                 geoMapGideTextAndArrow.setText("ジオマップに行ってジオオブジェクトをセットしよう！");
                                 geoMapGideTextAndArrow.start();
+                                tutorialManager.getTutorialFlagData().setIsTutorialFinishedByName(1, "geoLava");
+                                tutorialManager.save();
                             }
                             break;
                         case 1:
@@ -349,7 +355,7 @@ public class DungeonSelectManager {
                 new BoxImageTextPlate[]{
                         new BoxImageTextPlate(
                                 graphic, userInterface, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE,
-                                new int[]{Constants.TUTRIAL_BUTTON.ABOVE_LEFT,Constants.TUTRIAL_BUTTON.ABOVE_UP,Constants.TUTRIAL_BUTTON.ABOVE_RIGHT,Constants.TUTRIAL_BUTTON.ABOVE_BOTTOM},
+                                new int[]{Constants.TUTRIAL_BUTTON.ABOVE1_LEFT,Constants.TUTRIAL_BUTTON.ABOVE1_UP,Constants.TUTRIAL_BUTTON.ABOVE1_RIGHT,Constants.TUTRIAL_BUTTON.ABOVE1_BOTTOM},
                                 new String[] { "チュートリアル", "- ジオ -"},
                                 new Paint[] { textPaint1, textPaint2},
                                 new WindowTextPlate.TextPosition[] { WindowTextPlate.TextPosition.UP, WindowTextPlate.TextPosition.DOWN }
@@ -359,7 +365,9 @@ public class DungeonSelectManager {
                                 //OKが押された時の処理
                                 soundAdmin.play("enter00");
                                 //チュートリアル表示
-                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.TU_GEO);
+                                if (tutorialManager.start("geo", true)) {
+                                    worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.TU_GEO);
+                                }
                             }
                         }
                 });
@@ -371,7 +379,7 @@ public class DungeonSelectManager {
                 new BoxImageTextPlate[]{
                         new BoxImageTextPlate(
                                 graphic, userInterface, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE,
-                                new int[]{Constants.TUTRIAL_BUTTON.ABOVE_LEFT,Constants.TUTRIAL_BUTTON.ABOVE_UP,Constants.TUTRIAL_BUTTON.ABOVE_RIGHT,Constants.TUTRIAL_BUTTON.ABOVE_BOTTOM},
+                                new int[]{Constants.TUTRIAL_BUTTON.ABOVE1_LEFT,Constants.TUTRIAL_BUTTON.ABOVE1_UP,Constants.TUTRIAL_BUTTON.ABOVE1_RIGHT,Constants.TUTRIAL_BUTTON.ABOVE1_BOTTOM},
                                 new String[] { "チュートリアル", "- ダンジョン -"},
                                 new Paint[] { textPaint1, textPaint2},
                                 new WindowTextPlate.TextPosition[] { WindowTextPlate.TextPosition.UP, WindowTextPlate.TextPosition.DOWN }
@@ -381,7 +389,46 @@ public class DungeonSelectManager {
                                 //OKが押された時の処理
                                 soundAdmin.play("enter00");
                                 //チュートリアル表示
-                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.TU_DUNGEON);
+                                if (tutorialManager.start("dungeon", true)) {
+                                    worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.TU_DUNGEON);
+                                }
+                                switchNewEffect(false);
+                            }
+                        },
+                        new BoxImageTextPlate(
+                                graphic, userInterface, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE,
+                                new int[]{Constants.TUTRIAL_BUTTON.ABOVE2_LEFT,Constants.TUTRIAL_BUTTON.ABOVE2_UP,Constants.TUTRIAL_BUTTON.ABOVE2_RIGHT,Constants.TUTRIAL_BUTTON.ABOVE2_BOTTOM},
+                                new String[] { "チュートリアル", "- バトル -"},
+                                new Paint[] { textPaint1, textPaint2},
+                                new WindowTextPlate.TextPosition[] { WindowTextPlate.TextPosition.UP, WindowTextPlate.TextPosition.DOWN }
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //OKが押された時の処理
+                                soundAdmin.play("enter00");
+                                //チュートリアル表示
+                                if (tutorialManager.start("battle", true)) {
+                                    worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.TU_DUNGEON);
+                                }
+                                switchNewEffect(false);
+                            }
+                        },
+                        new BoxImageTextPlate(
+                                graphic, userInterface, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE,
+                                new int[]{Constants.TUTRIAL_BUTTON.ABOVE3_LEFT,Constants.TUTRIAL_BUTTON.ABOVE3_UP,Constants.TUTRIAL_BUTTON.ABOVE3_RIGHT,Constants.TUTRIAL_BUTTON.ABOVE3_BOTTOM},
+                                new String[] { "チュートリアル", "- 採掘 -"},
+                                new Paint[] { textPaint1, textPaint2},
+                                new WindowTextPlate.TextPosition[] { WindowTextPlate.TextPosition.UP, WindowTextPlate.TextPosition.DOWN }
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //OKが押された時の処理
+                                soundAdmin.play("enter00");
+                                //チュートリアル表示
+                                if (tutorialManager.start("mining", true)) {
+                                    worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.TU_DUNGEON);
+                                }
+                                switchNewEffect(false);
                             }
                         }
                 });
@@ -417,6 +464,7 @@ public class DungeonSelectManager {
             switchNewEffect(true);
         } else {
             worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT_INIT);
+
             tutorialButtonGroup.setDrawFlag(true);
             tutorialButtonGroup.setUpdateFlag(true);
             tutorialButtonGroupForDungeon.setDrawFlag(false);
@@ -809,7 +857,9 @@ public class DungeonSelectManager {
                 && !dungeonEnterSelectButtonGroup.getDrawFlag()
                 ) {
             if (geoMapGideTextAndArrow != null) {
-                geoMapGideTextAndArrow.draw();
+                if (!talkAdmin.isTalking()) {
+                    geoMapGideTextAndArrow.draw();
+                }
             }
         }
 
@@ -889,7 +939,9 @@ public class DungeonSelectManager {
 
         if (geoMapGideMessageFlag) {
             if (geoMapGideTextAndArrow != null) {
-                geoMapGideTextAndArrow.update();
+                if (!talkAdmin.isTalking()) {
+                    geoMapGideTextAndArrow.update();
+                }
             }
         }
 

@@ -11,6 +11,7 @@ import java.util.List;
 
 public class TutorialFlagSaver extends SaveManager {
    TutorialFlagData tutorial_flag_data;
+   int size;
 
     public TutorialFlagSaver(MyDatabaseAdmin _databaseAdmin, String dbName, String dbAsset, int version, String _loadMode, TutorialFlagData _tutorial_flag_data) {
         super(_databaseAdmin, dbName, dbAsset, version, _loadMode);
@@ -25,7 +26,8 @@ public class TutorialFlagSaver extends SaveManager {
     public void load() {
         List<String> flag_name = database.getString("TutorialFlag", "flag_name");
         List<Integer> is_tutorial_finished = database.getInt("TutorialFlag", "tutorial_flag");
-        for(int i = 0;i < 4;i++) {
+        size = flag_name.size();
+        for(int i = 0; i < size; i++) {
             tutorial_flag_data.setFlag_name(flag_name.get(i), i);
             tutorial_flag_data.setIs_tutorial_finished(is_tutorial_finished.get(i), i);
         }
@@ -34,7 +36,7 @@ public class TutorialFlagSaver extends SaveManager {
     @Override
     public void save() {
         deleteAll();
-        for(int i = 0;i < 4;i++) {
+        for(int i = 0;i < size;i++) {
             database.insertLineByArray(
                     "TutorialFlag",
                     new String[]{"flag_name", "tutorial_flag"},

@@ -1,6 +1,7 @@
 package com.maohx2.kmhanko.itemshop;
 
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.horie.Tutorial.TutorialManager;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.ItemData.ItemData;
@@ -18,8 +19,8 @@ import com.maohx2.kmhanko.sound.SoundAdmin;
 
 public class ExpendItemShop extends ItemShop {
 
-    public ExpendItemShop(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, InventryS _itemInventry, PlayerStatus _playerStatus, ItemShopAdmin _itemShopAdmin, SoundAdmin _soundAdmin) {
-        super(_userInterface, _graphic, _databaseAdmin, _textBoxAdmin, _worldModeAdmin, _itemInventry, _playerStatus, _itemShopAdmin, _soundAdmin);
+    public ExpendItemShop(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, InventryS _itemInventry, PlayerStatus _playerStatus, ItemShopAdmin _itemShopAdmin, SoundAdmin _soundAdmin, TutorialManager _tutorialManager) {
+        super(_userInterface, _graphic, _databaseAdmin, _textBoxAdmin, _worldModeAdmin, _itemInventry, _playerStatus, _itemShopAdmin, _soundAdmin, _tutorialManager);
     }
 
     @Override

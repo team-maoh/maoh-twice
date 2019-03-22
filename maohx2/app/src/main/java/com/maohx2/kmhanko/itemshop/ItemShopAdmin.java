@@ -3,6 +3,7 @@ package com.maohx2.kmhanko.itemshop;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import com.maohx2.horie.Tutorial.TutorialManager;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Constants.SIDE_INVENTRY;
@@ -64,6 +65,7 @@ public class ItemShopAdmin {
 
     SoundAdmin soundAdmin;
 
+    TutorialManager tutorialManager;
     //int moneyTextBoxID;
 
 
@@ -73,7 +75,7 @@ public class ItemShopAdmin {
         ITEM_KIND_NUM
     }
 
-    public void init(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, ItemDataAdminManager itemDataAdminManager, InventryS _expendItemInventry, InventryS _geoInventry, PlayerStatus _playerStatus, SoundAdmin _soundAdmin) {
+    public void init(Graphic _graphic, UserInterface _userInterface, WorldModeAdmin _worldModeAdmin, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, ItemDataAdminManager itemDataAdminManager, InventryS _expendItemInventry, InventryS _geoInventry, PlayerStatus _playerStatus, SoundAdmin _soundAdmin, TutorialManager _tutorialManager) {
         userInterface = _userInterface;
         graphic = _graphic;
         textBoxAdmin = _textBoxAdmin;
@@ -83,6 +85,7 @@ public class ItemShopAdmin {
         databaseAdmin = _databaseAdmin;
         playerStatus = _playerStatus;
         soundAdmin = _soundAdmin;
+        tutorialManager = _tutorialManager;
 
         expendItemShopData = new ExpendItemShopData(graphic, databaseAdmin);
         expendItemShopData.setExpendItemDataAdmin(itemDataAdminManager.getExpendItemDataAdmin());
@@ -95,7 +98,6 @@ public class ItemShopAdmin {
 
     public void start() {
         expendItemInventry.setPosition(SIDE_INVENTRY.INV_LEFT, SIDE_INVENTRY.INV_UP, SIDE_INVENTRY.INV_RIGHT,SIDE_INVENTRY.INV_BOTTOM,SIDE_INVENTRY.INV_CONTENT_NUM);
-
         //geoInventry.setPosition(1200, 100 , 1600, 600,10);
         //moneyTextBoxUpdate();
     }
@@ -105,12 +107,12 @@ public class ItemShopAdmin {
         boolean itemKindFlag = false;
 
         if (_itemKind == ITEM_KIND.EXPEND) {
-            itemShop = new ExpendItemShop(userInterface, graphic, databaseAdmin, textBoxAdmin, worldModeAdmin, expendItemInventry, playerStatus, this, soundAdmin);
+            itemShop = new ExpendItemShop(userInterface, graphic, databaseAdmin, textBoxAdmin, worldModeAdmin, expendItemInventry, playerStatus, this, soundAdmin, tutorialManager);
             itemShop.setItemShopData(expendItemShopData);
             itemKindFlag = true;
         }
         if (_itemKind == ITEM_KIND.GEO_OBJECT) {
-            itemShop = new GeoObjectShop(userInterface, graphic, databaseAdmin, textBoxAdmin, worldModeAdmin, geoInventry, playerStatus, this, soundAdmin);
+            itemShop = new GeoObjectShop(userInterface, graphic, databaseAdmin, textBoxAdmin, worldModeAdmin, geoInventry, playerStatus, this, soundAdmin, tutorialManager);
             itemShop.setItemShopData(geoObjectShopData);
             itemKindFlag = true;
         }
