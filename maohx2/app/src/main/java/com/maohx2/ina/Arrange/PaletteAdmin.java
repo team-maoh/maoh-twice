@@ -181,13 +181,13 @@ public class PaletteAdmin {
 
         if (palettesFlag[2]) {
             //強さゲージの表示
-            if (battleUserInterface.getPaletteElement() == palettes[2].getPaletteCenter()) {
+            if (palettes[2].getBattlePaletteMode() == 1 || palettes[2].getBattlePaletteMode() == 2) {
                 //タッチされてる
                 graphic.bookingDrawBitmapName(
                         "miningArrow01",
                         palettes[2].getPositionX(),
                         palettes[2].getPositionY() - 100,
-                        1.35f, 1.35f, 0.0f,
+                        1.40f, 1.40f, 0.0f,
                         255, false
                 );
             } else {

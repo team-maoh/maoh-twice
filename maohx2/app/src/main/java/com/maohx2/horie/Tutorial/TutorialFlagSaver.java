@@ -70,6 +70,13 @@ public class TutorialFlagSaver extends SaveManager {
             );
 
         }
+        if (oldVersion <= 2 && newVersion == 3) {
+            database.insertLineByArray(
+                    "TutorialFlag",
+                    new String[]{"flag_name", "tutorial_flag"},
+                    new String[] { "tutorialButtonGideAfterBattle", "false" }
+            );
+        }
     };
     @Override
     public void onDowngrade (int oldVersion, int newVersion) {
@@ -78,6 +85,10 @@ public class TutorialFlagSaver extends SaveManager {
             database.delete("TutorialFlag", "flag_name == dungeon");
             database.delete("TutorialFlag", "flag_name == battle");
             database.delete("TutorialFlag", "flag_name == mining");
+        }
+
+        if (oldVersion <= 2 && newVersion == 3) {
+            database.delete("TutorialFlag", "flag_name == tutorialButtonGideAfterBattle");
         }
     }
 }

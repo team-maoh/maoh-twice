@@ -257,7 +257,7 @@ public class MapObjectAdmin {
             }
         }
 
-        if(map_plate_admin.getDungeonSelectWindowAdmin().isActive() == true){map_player.restMove();}
+        if(map_plate_admin.getDungeonSelectWindowAdmin().isActive() ){map_player.restMove();}
 
         map_player.nonactiveMenuCheck();
 

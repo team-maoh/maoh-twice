@@ -57,7 +57,7 @@ public class DemoManager {
 
 
     //デモモードかどうか
-    static final boolean demoMode = false;
+    static final boolean demoMode = true;
 
 
     boolean startGameDemoEndFlag = false;
@@ -254,10 +254,10 @@ public class DemoManager {
         tutorialFlagData.setIs_tutorial_finished(1, 5);//
         tutorialFlagData.setIs_tutorial_finished(1, 6);//
         tutorialFlagData.setIs_tutorial_finished(1, 7);//
+        tutorialFlagData.setIs_tutorial_finished(1, 8);//
 
         //チュートを表示する
-        //tutorialFlagData.tutorialResetAll();
-
+        tutorialFlagData.tutorialResetAll();
         tutorialFlagSaver.save();
     }
 

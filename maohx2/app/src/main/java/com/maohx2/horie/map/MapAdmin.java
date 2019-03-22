@@ -1211,11 +1211,6 @@ public class MapAdmin {
                 camera.convertToNormCoordinateXForMap(gateMapX * magnification + magnification/2),
                 camera.convertToNormCoordinateYForMap(gateMapY * magnification + magnification/2)
         );
-
-        System.out.println("aaaa " + camera.convertToNormCoordinateXForMap(stairMapX * magnification + magnification/2) + "/" + camera.convertToNormCoordinateYForMap(stairMapY * magnification + magnification/2));
-        System.out.println("aaaa " + effectAdmin.getEffect(nextEffect).isExist());
-        System.out.println("aaaa " + effectAdmin.getEffect(nextEffect).isDraw());
-        System.out.println("aaaa " + effectAdmin.getEffect(nextEffect).isPause());
     }
 
     public void drawSmallMap() {

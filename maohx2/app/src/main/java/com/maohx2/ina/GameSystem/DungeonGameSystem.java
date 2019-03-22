@@ -408,10 +408,15 @@ public class DungeonGameSystem {
             case MAP_INIT_FROM_BATTLE:
                 if(changeMovie.update(false, true) == true) {
                     playMapBGM();
-                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
                     if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.DRAGON) {
                         backGround = graphic.searchBitmap("firstBackground");
                     }
+
+                    if (!tutorialManager.getTutorialFlagData().getIsTutorialFinishedByName("tutorialButtonGideAfterBattle")) {
+                        //真ん中にメッセ。
+                        map_plate_admin.tutorialGide();
+                    }
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
                 }
                 break;
             case MAP_INIT_FROM_BEFORE_FLOOR:
