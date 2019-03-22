@@ -179,7 +179,7 @@ public class PaletteAdmin {
         if (palettesFlag[2]) {
             //強さゲージの表示
             graphic.bookingDrawBitmapName(
-                    "miningArrow",
+                    "miningArrow01",
                     palettes[2].getPositionX(),
                     palettes[2].getPositionY() - 100,
                     1.35f, 1.35f, 0.0f,
