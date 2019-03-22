@@ -1,5 +1,6 @@
 package com.maohx2.kmhanko.itemshop;
 
+import com.maohx2.horie.Tutorial.TutorialManager;
 import com.maohx2.ina.Constants;
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.ina.Constants.SELECT_WINDOW;
@@ -75,7 +76,9 @@ public abstract class ItemShop {
 
     ExpendItemDataAdmin expendItemDataAdmin;
 
-    public ItemShop(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, InventryS _itemInventry, PlayerStatus _playerStatus, ItemShopAdmin _itemShopAdmin, SoundAdmin _soundAdmin) {
+    TutorialManager tutorialManager;
+
+    public ItemShop(UserInterface _userInterface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, TextBoxAdmin _textBoxAdmin, WorldModeAdmin _worldModeAdmin, InventryS _itemInventry, PlayerStatus _playerStatus, ItemShopAdmin _itemShopAdmin, SoundAdmin _soundAdmin, TutorialManager _tutorialManager) {
         userInterface = _userInterface;
         graphic = _graphic;
         textBoxAdmin = _textBoxAdmin;
@@ -85,6 +88,7 @@ public abstract class ItemShop {
         itemShopAdmin = _itemShopAdmin;
         playerStatus = _playerStatus;
         soundAdmin = _soundAdmin;
+        tutorialManager = _tutorialManager;
     }
 
 
@@ -214,7 +218,10 @@ public abstract class ItemShop {
                                 //OKが押された時の処理
                                 soundAdmin.play("enter00");
                                 //チュートリアル表示
-                                worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.TU_SHOP_SELL);
+                                if (tutorialManager.start("shop", true)) {
+                                    worldModeAdmin.setMode(Constants.GAMESYSTEN_MODE.WORLD_MODE.TU_SHOP);
+                                }
+
                                 initUIs();
                             }
                         }

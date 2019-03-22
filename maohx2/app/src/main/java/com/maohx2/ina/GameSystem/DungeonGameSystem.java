@@ -8,6 +8,7 @@ import android.graphics.Point;
 import com.maohx2.fuusya.MapObjectAdmin;
 import com.maohx2.fuusya.MapPlateAdmin;
 import com.maohx2.fuusya.TextBox.TextBoxAdmin;
+import com.maohx2.horie.Tutorial.TutorialManager;
 import com.maohx2.horie.map.Camera;
 import com.maohx2.horie.map.DungeonDataAdmin;
 import com.maohx2.horie.map.DungeonMonsterDataAdmin;
@@ -57,6 +58,8 @@ import com.maohx2.ina.GlobalData;
 import java.util.List;
 
 import static com.maohx2.ina.Constants.GAMESYSTEN_MODE.DUNGEON_MODE.BUTTLE;
+import static com.maohx2.ina.Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING;
+import static com.maohx2.ina.Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP;
 
 
 /**
@@ -127,13 +130,16 @@ public class DungeonGameSystem {
     ChangeMovie changeMovie;
     boolean map_init = false;
 
-    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin _soundAdmin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, UnitedActivity _unitedActivity, MyDatabaseAdmin my_database_admin, Constants.DungeonKind.DUNGEON_KIND _dungeon_kind, TalkAdmin _talkAdmin, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver) {
+    TutorialManager tutorialManager;
+
+    public void init(DungeonUserInterface _dungeon_user_interface, Graphic _graphic, SoundAdmin _soundAdmin, MyDatabaseAdmin _myDatabaseAdmin, BattleUserInterface _battle_user_interface, UnitedActivity _unitedActivity, MyDatabaseAdmin my_database_admin, Constants.DungeonKind.DUNGEON_KIND _dungeon_kind, TalkAdmin _talkAdmin, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver, TutorialManager _tutorialManager) {
         dungeon_user_interface = _dungeon_user_interface;
         battle_user_interface = _battle_user_interface;
         unitedActivity = _unitedActivity;
         graphic = _graphic;
         dungeon_kind = _dungeon_kind;
 
+        tutorialManager = _tutorialManager;
         soundAdmin = _soundAdmin;
 
         dungeon_data_admin = new DungeonDataAdmin(_myDatabaseAdmin);
@@ -265,7 +271,7 @@ public class DungeonGameSystem {
 
 
         dungeonModeManage = new DungeonModeManage();
-        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, unitedActivity, dungeonModeManage, soundAdmin, palette_admin);
+        map_plate_admin = new MapPlateAdmin(graphic, dungeon_user_interface, unitedActivity, dungeonModeManage, soundAdmin, palette_admin, tutorialManager);
         map_object_admin = new MapObjectAdmin(
                 graphic,
                 dungeon_user_interface,
@@ -425,9 +431,17 @@ public class DungeonGameSystem {
                 map_object_admin.getPlayer().resetCamera();
                 if(changeMovie.update(false, false) == true) {
                     playMapBGM();
-                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
                     if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.DRAGON) {
                         backGround = graphic.searchBitmap("firstBackground");
+                    }
+
+                    if (tutorialManager.start("dungeon", false)) {
+                        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TU_DUNGEON);
+                        System.out.println("DungeonGameSystem: goto TU_DUNGEON");
+                        break;
+                    } else {
+                        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
+                        System.out.println("DungeonGameSystem: goto MAP");
                     }
                 }
                 break;
@@ -451,9 +465,14 @@ public class DungeonGameSystem {
             case BUTTLE_INIT:
                 if(changeMovie.update(true) == true) {
                     battle_unit_admin.initEffectForEnemy();
-                    dungeonModeManage.setMode(BUTTLE);
                     backGround = graphic.searchBitmap("firstBackground");
                     musicAdmin.loadMusic("battle00", true);
+                    if (tutorialManager.start("battle", false)) {
+                        dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TU_BATTLE);
+                        break;
+                    } else {
+                        dungeonModeManage.setMode(BUTTLE);
+                    }
                 }
                 break;
             case BUTTLE:
@@ -490,6 +509,10 @@ public class DungeonGameSystem {
                 dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.GEO_MINING);
                 backGround = graphic.searchBitmap("miningBack");
                 musicAdmin.loadMusic("battle00",true);
+                if (tutorialManager.start("mining", false)) {
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TU_MINING);
+                    break;
+                }
 
             case GEO_MINING:
                 if (!talkAdmin.isTalking()) {
@@ -550,6 +573,30 @@ public class DungeonGameSystem {
                     playerStatusViewer.update();
                 }
                 break;
+            case TU_BATTLE:
+                tutorialManager.update();
+                if (!tutorialManager.isTutorialActive()) {
+                    dungeonModeManage.setMode(BUTTLE);
+                }
+                break;
+            case TU_DUNGEON:
+                tutorialManager.update();
+                if (!tutorialManager.isTutorialActive()) {
+                    dungeonModeManage.setMode(MAP);
+                }
+                break;
+            case TU_MINING:
+                tutorialManager.update();
+                if (!tutorialManager.isTutorialActive()) {
+                    dungeonModeManage.setMode(GEO_MINING);
+                }
+                break;
+            case TU_ALL_FORMAP:
+                tutorialManager.update();
+                if (!tutorialManager.isTutorialActive()) {
+                    dungeonModeManage.setMode(MAP);
+                }
+                break;
 
         }
         if (updateStopFlag) {
@@ -581,7 +628,7 @@ public class DungeonGameSystem {
                 map_object_admin.draw();
                 map_admin.drawSmallMap();
                 map_plate_admin.draw();
-                if (playerStatus.getTutorialInDungeon() == 1) {
+                if (!tutorialManager.isTutorialActive()) {
                     playerStatusViewer.draw();
                 }
                 changeMovie.draw();
@@ -591,7 +638,7 @@ public class DungeonGameSystem {
                 map_object_admin.draw();
                 map_admin.drawSmallMap();
                 map_plate_admin.draw();
-                if (playerStatus.getTutorialInDungeon() == 1) {
+                if (!tutorialManager.isTutorialActive()) {
                     playerStatusViewer.draw();
                 }
                 changeMovie.draw();
@@ -606,7 +653,7 @@ public class DungeonGameSystem {
                 map_admin.drawSmallMap();
                 effectAdmin.draw();
                 map_plate_admin.draw();
-                if (playerStatus.getTutorialInDungeon() == 1) {
+                if (!tutorialManager.isTutorialActive()) {
                     playerStatusViewer.draw();
                 }
                 break;
@@ -694,7 +741,18 @@ public class DungeonGameSystem {
                 graphic.bookingDrawBitmapData(backGround,0,0,1,1,0,255,true);
                 battle_unit_admin.draw();
                 break;
-
+            case TU_BATTLE:
+                tutorialManager.draw();
+                break;
+            case TU_DUNGEON:
+                tutorialManager.draw();
+                break;
+            case TU_MINING:
+                tutorialManager.draw();
+                break;
+            case TU_ALL_FORMAP:
+                tutorialManager.draw();
+                break;
 
         }
 

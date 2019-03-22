@@ -65,7 +65,7 @@ public final class Constants {
         public static final int MAP_SAVE_DATA = 1;
         public static final int PLAYER_STATUS = 1;
         public static final int TALK = 1;
-        public static final int TUTORIAL = 1;
+        public static final int TUTORIAL = 2;
     }
 
 
@@ -188,6 +188,10 @@ public final class Constants {
             ITEM,
             GEO_MAP_INIT,
             GEO_MAP,
+            TU_DUNGEON,
+            TU_BATTLE,
+            TU_MINING,
+            TU_ALL_FORMAP
         }
 
         public enum WORLD_MODE {
@@ -214,7 +218,6 @@ public final class Constants {
             CREDIT,
             ENDING,
             TU_SHOP,
-            TU_SHOP_SELL,
             TU_GEO,
             TU_SELL,
             TU_DUNGEON
@@ -239,20 +242,40 @@ public final class Constants {
     }
 
     public static class TUTRIAL_BUTTON {
-        public static final int DUNGEON_LEFT = 50;
-        public static final int DUNGEON_RIGHT = 350;
+        public static final int DUNGEON_LEFT = 20;
+        public static final int DUNGEON_RIGHT = 320;
         public static final int DUNGEON_UP = 50;
         public static final int DUNGEON_BOTTOM = 125;
+
+        public static final int BATTLE_LEFT = 330;
+        public static final int BATTLE_RIGHT = 630;
+        public static final int BATTLE_UP = 50;
+        public static final int BATTLE_BOTTOM = 125;
+
+        public static final int MINING_LEFT = 640;
+        public static final int MINING_RIGHT = 940;
+        public static final int MINING_UP = 50;
+        public static final int MINING_BOTTOM = 125;
 
         public static final int UNDER_LEFT = 50;
         public static final int UNDER_RIGHT = 350;
         public static final int UNDER_UP = 770;
         public static final int UNDER_BOTTOM = 845;
 
-        public static final int ABOVE_LEFT = 50;
-        public static final int ABOVE_RIGHT = 350;
-        public static final int ABOVE_UP = 5;
-        public static final int ABOVE_BOTTOM = 80;
+        public static final int ABOVE1_LEFT = 20;
+        public static final int ABOVE1_RIGHT = 320;
+        public static final int ABOVE1_UP = 5;
+        public static final int ABOVE1_BOTTOM = 80;
+
+        public static final int ABOVE2_LEFT = 330;
+        public static final int ABOVE2_RIGHT = 630;
+        public static final int ABOVE2_UP = 5;
+        public static final int ABOVE2_BOTTOM = 80;
+
+        public static final int ABOVE3_LEFT = 640;
+        public static final int ABOVE3_RIGHT = 940;
+        public static final int ABOVE3_UP = 5;
+        public static final int ABOVE3_BOTTOM = 80;
 
         public static final int LEFT = 50;
         public static final int RIGHT = 350;
@@ -363,6 +386,7 @@ public final class Constants {
             EQUIPMENT,
             GEO,
             MINING,
+            NOTHING
         }
 
         public enum EQUIPMENT_KIND {

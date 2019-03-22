@@ -355,14 +355,14 @@ public class GeoSlotAdmin {
     PlateGroup<BoxImageTextPlate> geoRemoveButton;
     private void initGeoRemoveButton() {
         Paint textPaint1 = new Paint();
-        textPaint1.setTextSize(50);
+        textPaint1.setTextSize(35);
         textPaint1.setARGB(255, 255, 255, 255);
 
         geoRemoveButton = new PlateGroup<>(
                 new BoxImageTextPlate[]{
                         new BoxImageTextPlate(
                                 graphic, userInterface, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE,
-                                new int[]{ 1200, 100, 1400, 200 },
+                                new int[]{ 1200, 115, 1400, 190 },
                                 new String[] { "外す"},
                                 new Paint[] { textPaint1 },
                                 new WindowTextPlate.TextPosition[] { WindowTextPlate.TextPosition.CENTER }
@@ -403,7 +403,6 @@ public class GeoSlotAdmin {
 
     //GeoSlotを解放しますか？的なメッセージ
     public void geoSlotReleaseChoiceMessage() {
-
         if (!focusGeoSlot.isEventClear()) {
             //TextBox表示「ここを解放するためには　？？？　が必要」
             textBoxAdmin.setTextBoxExists(releaseTextBoxID, true);
@@ -454,6 +453,8 @@ public class GeoSlotAdmin {
     //ジオスロットがタッチされた場合の処理
     public void geoSlotTouched() {
         //GeoInventryの呼び出し
+        geoInventry.sortItemDataByGeoKind();
+        geoInventry.sortItemDataByEquip();
         geoInventry.setDrawAndUpdateFlag(true);
         inventryMode = INVENTRY_MODE.SET;
         geoRemoveButton.setUpdateFlag(true);
@@ -461,9 +462,21 @@ public class GeoSlotAdmin {
         //選択しているジオスロットをマークする
     }
 
+    //ジオスロットがタッチされた場合であって、女神のマスの場合の処理
+    public void geoGaiaSlotTouched() {
+        //GeoInventryを強制的に消す
+        geoInventry.setDrawAndUpdateFlag(false);
+        inventryMode = INVENTRY_MODE.SET;
+        geoRemoveButton.setUpdateFlag(false);
+        geoRemoveButton.setDrawFlag(false);
+        this.geoSlotReleaseChoiceMessage();
+    }
+
     //解放する、が選ばれた場合の処理
     public void removeTouched() {
         //GeoInventryの呼び出し
+        geoInventry.sortItemDataByGeoKind();
+        geoInventry.sortItemDataByEquip();
         geoInventry.setDrawAndUpdateFlag(true);
         inventryMode = INVENTRY_MODE.RELEASE;
         cancelButtonGroup.setDrawFlag(true);

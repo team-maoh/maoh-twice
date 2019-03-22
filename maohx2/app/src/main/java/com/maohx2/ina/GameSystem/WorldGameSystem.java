@@ -11,6 +11,7 @@ import com.maohx2.fuusya.TextBox.TextBoxAdmin;
 //import com.maohx2.horie.EquipTutorial.EquipTutorialSaver;
 import com.maohx2.horie.Tutorial.TutorialFlagData;
 import com.maohx2.horie.Tutorial.TutorialFlagSaver;
+import com.maohx2.horie.Tutorial.TutorialManager;
 import com.maohx2.ina.Activity.UnitedActivity;
 import com.maohx2.ina.Arrange.Inventry;
 import com.maohx2.ina.Arrange.PaletteAdmin;
@@ -130,11 +131,13 @@ public class WorldGameSystem {
     InventryS equipmentInventry;
 
     BitmapData backGround;
+    /*
     BitmapData tu_equip_img, tu_equip_start_img;
     BitmapData tu_shop_img, tu_shop_start_img;
     BitmapData tu_sell_img;
     BitmapData tu_geo_img, tu_geo_start_img;
     int tu_geo_flag, tu_shop_flag, tu_equip_flag, tu_dungeon_flag;
+    */
 
     BitmapData[] credit = new BitmapData[2];
 
@@ -154,19 +157,24 @@ public class WorldGameSystem {
 
     TalkAdmin talkAdmin;
 
-    boolean is_equip_tutorial = true;
+    //boolean is_equip_tutorial = true;
     BattleUnitDataAdmin battleUnitDataAdmin;
 
     Credits credits;
 
     ChangeMovie changeMovie;
 
+    /*
     String dungeonTutoName[] = new String[] {
             "t_dungeon_start", "スライド1", "スライド2", "スライド3", "t_battle_start", "t_battle", "t_mine_start", "t_mine"
     };
-    BitmapData[] tuDungeonImage = new BitmapData[dungeonTutoName.length];
 
-    public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, UnitedActivity _unitedActivity, TalkAdmin _talkAdmin, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver, TutorialFlagData _tutorialFlagData, TutorialFlagSaver _tutorialFlagSaver) {
+    BitmapData[] tuDungeonImage = new BitmapData[dungeonTutoName.length];
+    */
+
+    TutorialManager tutorialManager;
+
+    public void init(BattleUserInterface _world_user_interface, Graphic _graphic, MyDatabaseAdmin _databaseAdmin, SoundAdmin _soundAdmin, UnitedActivity _unitedActivity, TalkAdmin _talkAdmin, MapStatus _mapStatus, MapStatusSaver _mapStatusSaver, TutorialManager _tutorialManager) {
 
         System.out.println("SAVEASAVE" + Constants.DEBUG_SAVE_MODE);
 
@@ -177,6 +185,7 @@ public class WorldGameSystem {
         //activityChange = _activityChange;
         unitedActivity = _unitedActivity;
 
+        /*
         tu_equip_img = graphic.searchBitmap("t_equip");
         tu_shop_img = graphic.searchBitmap("t_shop");
         tu_sell_img = graphic.searchBitmap("t_sell");
@@ -188,6 +197,7 @@ public class WorldGameSystem {
         for (int i = 0; i < dungeonTutoName.length; i++){
             tuDungeonImage[i] = graphic.searchBitmap(dungeonTutoName[i]);
         }
+        */
 
         //mapセーブ関係
         //map_status = _mapStatus;
@@ -204,8 +214,9 @@ public class WorldGameSystem {
         //tutorial_flag_saver = new TutorialFlagSaver(databaseAdmin, "FlagSave", "FlagSave.db", Constants.SaveDataVersion.TUTORIAL_SAVE_DATA, Constants.DEBUG_SAVE_MODE,tutorial_flag_data);
         //tutorial_flag_saver.load();
 
-        tutorial_flag_data = _tutorialFlagData;
-        tutorial_flag_saver = _tutorialFlagSaver;
+        tutorialManager = _tutorialManager;
+        tutorial_flag_data = tutorialManager.getTutorialFlagData();
+        tutorial_flag_saver = tutorialManager.getTutorialFlagSaver();
 
 //        /*tutorial_flagセーブ係デバッグ用*/
 //        for(int i = 0;i < 3;i++){
@@ -260,7 +271,7 @@ public class WorldGameSystem {
 
         geoSlotAdminManager.loadGeoSlot();
 
-        itemShopAdmin.init(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager, expendItemInventry, geoInventry, playerStatus, soundAdmin);
+        itemShopAdmin.init(graphic, world_user_interface, worldModeAdmin, databaseAdmin, text_box_admin, itemDataAdminManager, expendItemInventry, geoInventry, playerStatus, soundAdmin, tutorialManager);
         itemShopAdmin.makeAndOpenItemShop(ItemShopAdmin.ITEM_KIND.EXPEND, "expendBasic");
 
         itemSell = new ItemSell(graphic, world_user_interface, unitedActivity, text_box_admin, worldModeAdmin, soundAdmin);
@@ -347,7 +358,7 @@ public class WorldGameSystem {
                 tutorial_flag_saver
         );
 
-        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, soundAdmin, unitedActivity, map_status, map_status_saver, talkAdmin, effectAdmin);
+        dungeonSelectManager = new DungeonSelectManager(graphic, world_user_interface, text_box_admin, worldModeAdmin, databaseAdmin, geoSlotAdminManager, playerStatus, soundAdmin, unitedActivity, map_status, map_status_saver, talkAdmin, effectAdmin, tutorialManager);
 
 
         //OP判定。まだOPを流していないならOP会話イベントを発動する。
@@ -420,32 +431,28 @@ public class WorldGameSystem {
                 playerStatusViewer.update();
                 break;
             case TU_DUNGEON:
-                if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
-                    soundAdmin.play("enter00");
-                    if (tu_dungeon_flag == 0) {
-                        dungeonSelectManager.switchNewEffect(false);
-                    }
-                    if (tu_dungeon_flag >= 0 && tu_dungeon_flag < dungeonTutoName.length - 1){
-                        tu_dungeon_flag++;
-                    } else {
-                        tu_dungeon_flag = 0;
-                        worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT_INIT);
-                    }
+                tutorialManager.update();
+                if (!tutorialManager.isTutorialActive()) {
+                    worldModeAdmin.setMode(WORLD_MODE.DUNGEON_SELECT);
+                    dungeonSelectManager.switchNewEffect(true);
                 }
                 break;
             case GEO_MAP_SELECT_INIT:
                 backGround = graphic.searchBitmap("GeoMap");
                 worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT);
-                if(tutorial_flag_data.getIs_tutorial_finished(3) == 0){
-                    worldModeAdmin.setMode(WORLD_MODE.TU_GEO);
-                    tutorial_flag_data.setIs_tutorial_finished(1, 3);//チュートリアルフラグを立てる
-                }
+
                 if (playerStatus.getClearCount() == 0) {
                     dungeonSelectManager.switchNewEffect(true);
                 } else {
                     dungeonSelectManager.switchNewEffect(false);
                 }
 
+                if (tutorialManager.start("geo", false)) {
+                    worldModeAdmin.setMode(WORLD_MODE.TU_GEO);
+                    break;
+                } else {
+                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT);
+                }
             case GEO_MAP_SELECT:
                 if (!talkAdmin.isTalking()) {
                     dungeonSelectManager.update();
@@ -453,15 +460,9 @@ public class WorldGameSystem {
                 }
                 break;
             case TU_GEO:
-                if(world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_geo_flag == 0) {
-                    tu_geo_flag = 1;
-                    soundAdmin.play("enter00");
-                }
-                else if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_geo_flag == 1) {
-                    tu_geo_flag = 0;
-                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT_INIT);
-                    soundAdmin.play("enter00");
-                    tutorial_flag_saver.save();
+                tutorialManager.update();
+                if (!tutorialManager.isTutorialActive()) {
+                    worldModeAdmin.setMode(WORLD_MODE.GEO_MAP_SELECT);
                 }
                 break;
             case GEO_MAP_INIT:
@@ -480,14 +481,11 @@ public class WorldGameSystem {
             case SHOP_INIT:
                 itemShopAdmin.start();
                 backGround = graphic.searchBitmap("City");
-                worldModeAdmin.setMode(WORLD_MODE.SHOP);
-                if(tutorial_flag_data.getIs_tutorial_finished(1) == 0) {//shopチュートリアル
+                if (tutorialManager.start("shop", false)) {
                     worldModeAdmin.setMode(WORLD_MODE.TU_SHOP);
-                    tutorial_flag_data.setIs_tutorial_finished(1, 1);//チュートリアルフラグを立てる
-                }
-                else if(tutorial_flag_data.getIs_tutorial_finished(2) == 0){//sellチュートリアル
-                    worldModeAdmin.setMode(WORLD_MODE.TU_SELL);
-                    tutorial_flag_data.setIs_tutorial_finished(1, 2);
+                    break;
+                } else {
+                    worldModeAdmin.setMode(WORLD_MODE.SHOP);
                 }
             case SHOP:
                 if (!talkAdmin.isTalking()) {
@@ -495,34 +493,17 @@ public class WorldGameSystem {
                 }
                 playerStatusViewer.update();
                 break;
-            case TU_SHOP_SELL:
-                if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_shop_flag == 0) {
-                    tu_shop_flag = 1;
-                    soundAdmin.play("enter00");
-                }
-                else if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_shop_flag == 1) {
-                    worldModeAdmin.setMode(WORLD_MODE.TU_SELL);
-                    tu_shop_flag = 0;
-                    soundAdmin.play("enter00");
-                }
-                break;
             case TU_SHOP:
-                if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_shop_flag == 0) {
-                    tu_shop_flag = 1;
-                    soundAdmin.play("enter00");
-                }
-                else if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_shop_flag == 1) {
-                    worldModeAdmin.setMode(WORLD_MODE.SHOP_INIT);
-                    tutorial_flag_saver.save();
-                    tu_shop_flag = 0;
-                    soundAdmin.play("enter00");
+                tutorialManager.update();
+                if (!tutorialManager.isTutorialActive()) {
+                    tutorialManager.start("sell", true);
+                    worldModeAdmin.setMode(WORLD_MODE.TU_SELL);
                 }
                 break;
             case TU_SELL:
-                if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP) {
-                    worldModeAdmin.setMode(WORLD_MODE.SHOP_INIT);
-                    soundAdmin.play("enter00");
-                    tutorial_flag_saver.save();
+                tutorialManager.update();
+                if (!tutorialManager.isTutorialActive()) {
+                    worldModeAdmin.setMode(WORLD_MODE.SHOP);
                 }
                 break;
             case EQUIP_INIT:
@@ -531,13 +512,14 @@ public class WorldGameSystem {
                 equipmentInventry.setPosition(825,100,1225,708, 7);
                 expendItemInventry.setPosition(375,100,775,708, 7);
                 worldModeAdmin.setMode(WORLD_MODE.EQUIP);
-                if(tutorial_flag_data.getIs_tutorial_finished(0) == 0){
-                    worldModeAdmin.setMode(WORLD_MODE.TU_EQUIP);
-                    tutorial_flag_data.setIs_tutorial_finished(1, 0);
-                }
                 tutorialButtonGroup.setUpdateFlag(true);
                 tutorialButtonGroup.setDrawFlag(true);
-
+                if (tutorialManager.start("equip", false)) {
+                    worldModeAdmin.setMode(WORLD_MODE.TU_EQUIP);
+                    break;
+                } else {
+                    worldModeAdmin.setMode(WORLD_MODE.EQUIP);
+                }
             case EQUIP:
                 if (!talkAdmin.isTalking()) {
                     equipmentInventry.updata();
@@ -550,15 +532,9 @@ public class WorldGameSystem {
                 }
                 break;
             case TU_EQUIP:
-                if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_equip_flag == 0) {
-                    tu_equip_flag = 1;
-                    soundAdmin.play("enter00");
-                }
-                else if (world_user_interface.getTouchState() == Constants.Touch.TouchState.UP && tu_equip_flag == 1) {
-                    tu_equip_flag = 0;
-                    soundAdmin.play("enter00");
-                    worldModeAdmin.setMode(WORLD_MODE.EQUIP_INIT);
-                    tutorial_flag_saver.save();
+                tutorialManager.update();
+                if (!tutorialManager.isTutorialActive()) {
+                    worldModeAdmin.setMode(WORLD_MODE.EQUIP);
                 }
                 break;
             case PRESENT_INIT:
@@ -651,9 +627,7 @@ public class WorldGameSystem {
                 playerStatusViewer.draw();
                 break;
             case TU_DUNGEON:
-                if (tu_dungeon_flag >= 0 && tu_dungeon_flag < dungeonTutoName.length) {
-                    graphic.bookingDrawBitmapData(tuDungeonImage[tu_dungeon_flag], 0, 0, 0.983f, 0.983f, 0, 255, true);
-                }
+                tutorialManager.draw();
                 break;
             case DUNGEON_SELECT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
@@ -685,12 +659,7 @@ public class WorldGameSystem {
                 }
                 break;
             case TU_GEO:
-                if(tu_geo_flag == 0) {
-                    graphic.bookingDrawBitmapData(tu_geo_start_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
-                }
-                else{
-                    graphic.bookingDrawBitmapData(tu_geo_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
-                }
+                tutorialManager.draw();
                 break;
             case SHOP_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
@@ -701,35 +670,17 @@ public class WorldGameSystem {
                 itemShopAdmin.draw();
                 playerStatusViewer.draw();
                 break;
-            case TU_SHOP_SELL:
-                if(tu_shop_flag == 0) {
-                    graphic.bookingDrawBitmapData(tu_shop_start_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
-                }
-                else{
-                    graphic.bookingDrawBitmapData(tu_shop_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
-                }
-                break;
             case TU_SHOP:
-                if(tu_shop_flag == 0) {
-                    graphic.bookingDrawBitmapData(tu_shop_start_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
-                }
-                else{
-                    graphic.bookingDrawBitmapData(tu_shop_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
-                }
+                tutorialManager.draw();
                 break;
             case TU_SELL:
-                graphic.bookingDrawBitmapData(tu_sell_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
+                tutorialManager.draw();
                 break;
             case EQUIP_INIT:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
                 break;
             case TU_EQUIP:
-                if(tu_equip_flag == 0) {
-                    graphic.bookingDrawBitmapData(tu_equip_start_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
-                }
-                else{
-                    graphic.bookingDrawBitmapData(tu_equip_img, 0, 0, 0.983f, 0.983f, 0, 255, true);
-                }
+                tutorialManager.draw();
                 break;
             case EQUIP:
                 graphic.bookingDrawBitmapData(backGround, 0, 0, true);
@@ -858,7 +809,9 @@ public class WorldGameSystem {
                                 //OKが押された時の処理
                                 soundAdmin.play("enter00");
                                 //チュートリアル表示
-                                worldModeAdmin.setMode(WORLD_MODE.TU_EQUIP);
+                                if (tutorialManager.start("equip", true)) {
+                                    worldModeAdmin.setMode(WORLD_MODE.TU_EQUIP);
+                                }
                             }
                         }
                 });
@@ -870,8 +823,8 @@ public class WorldGameSystem {
 
     public void release() {
         System.out.println("takanoRelease : WorldGameSystem");
-        dungeonTutoName = null;
-        tuDungeonImage = null;
+        //dungeonTutoName = null;
+        //tuDungeonImage = null;
 
         if (palette_admin != null) {
             palette_admin.release();

@@ -251,10 +251,6 @@ public class MapObjectAdmin {
 
     public void update() {
 
-        //チュートリアル中と選択肢出現中は時が停止する
-        //if (playerStatus.getTutorialInDungeon() == 1 && !dungeonEscapeSelectButtonGroup.getDrawFlag() && map_plate_admin.getDisplayingContent() != 1) {
-        //if (playerStatus.getTutorialInDungeon() == 1 && !map_plate_admin.getDungeonSelectWindowAdmin().isActive() && map_plate_admin.getDisplayingContent() == -1) {
-
         if(map_boss[0].exists() == true){
             for (int i = 0; i < NUM_OF_ENEMY; i++) {
                 map_enemy[i].setExists(false);
@@ -265,7 +261,7 @@ public class MapObjectAdmin {
 
         map_player.nonactiveMenuCheck();
 
-        if (playerStatus.getTutorialInDungeon() == 1 && (map_plate_admin.getDisplayingContent() == -1 && !map_plate_admin.getDungeonSelectWindowAdmin().isActive())) {
+        if ((map_plate_admin.getDisplayingContent() == -1 && !map_plate_admin.getDungeonSelectWindowAdmin().isActive())) {
 
             map_player.update();
             map_player_bitmap.update();

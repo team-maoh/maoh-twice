@@ -15,6 +15,7 @@ import com.maohx2.ina.Text.BoxInventryPlate;
 import com.maohx2.ina.Text.BoxItemPlate;
 import com.maohx2.ina.Text.PlateGroup;
 import com.maohx2.ina.UI.UserInterface;
+import com.maohx2.kmhanko.Saver.GeoInventrySaver;
 import com.maohx2.kmhanko.itemdata.ExpendItemData;
 import com.maohx2.kmhanko.itemdata.GeoObjectData;
 import com.maohx2.kmhanko.sound.SoundAdmin;
@@ -24,6 +25,7 @@ import static com.maohx2.ina.Constants.Inventry.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.maohx2.ina.Constants.Item.GEO_KIND_ALL;
 
 
 /**
@@ -395,6 +397,70 @@ public class Inventry {
             operate_inventry_list_box.setInventryData(inventry_datas[page * contentNum + i], i);
         }
     }
+
+    public Constants.Item.ITEM_KIND getItemKind() {
+        Constants.Item.ITEM_KIND tempItemKind = Constants.Item.ITEM_KIND.NOTHING;
+        for (int i = 0; i < INVENTRY_DATA_MAX - 1; i++) {
+            if (inventry_datas[i] != null) {
+                if (inventry_datas[i].getItemData() != null) {
+                    tempItemKind = inventry_datas[i].getItemData().getItemKind();
+                    break;
+                }
+            }
+        }
+        return tempItemKind;
+    }
+
+    public void sortItemDataByGeoKind() {
+        if (this.getItemKind() == Constants.Item.ITEM_KIND.GEO) {
+            page = 0;
+            for (int i = 0; i < INVENTRY_DATA_MAX - 1; i++) {
+                for (int j = 1; j < INVENTRY_DATA_MAX - i; j++) {
+                    if (inventry_datas[j].getItemData() != null && inventry_datas[j - 1].getItemData() != null) {
+                        GeoObjectData temp1 = (GeoObjectData)(inventry_datas[j].getItemData());
+                        GeoObjectData temp2 = (GeoObjectData)(inventry_datas[j - 1].getItemData());
+
+                        if (GeoObjectData.compareGeoObject(temp1, temp2)) {
+                            InventryData tmpInventryData = inventry_datas[j];
+                            inventry_datas[j] = inventry_datas[j - 1];
+                            inventry_datas[j - 1] = tmpInventryData;
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < contentNum; i++) {
+                operate_inventry_list_box.setInventryData(inventry_datas[page * contentNum + i], i);
+            }
+        }
+    }
+    public void sortItemDataByEquip() {
+
+        switch (this.getItemKind()) {
+            case GEO:
+                //ジオの場合
+                page = 0;
+                for (int i = 0; i < INVENTRY_DATA_MAX - 1; i++) {
+                    for (int j = 1; j < INVENTRY_DATA_MAX - i; j++) {
+                        if (inventry_datas[j].getItemData() != null && inventry_datas[j - 1].getItemData() != null) {
+                            GeoObjectData temp1 = (GeoObjectData)(inventry_datas[j].getItemData());
+                            GeoObjectData temp2 = (GeoObjectData)(inventry_datas[j - 1].getItemData());
+                            if (temp1.getSlotSetName().equals("noSet") && !temp2.getSlotSetName().equals("noSet")) {
+                                InventryData tmpInventryData = inventry_datas[j];
+                                inventry_datas[j] = inventry_datas[j - 1];
+                                inventry_datas[j - 1] = tmpInventryData;
+                            }
+                        }
+                    }
+                }
+                for (int i = 0; i < contentNum; i++) {
+                    operate_inventry_list_box.setInventryData(inventry_datas[page * contentNum + i], i);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
 
     public void sortItemDatabyKind() {
         page = 0;

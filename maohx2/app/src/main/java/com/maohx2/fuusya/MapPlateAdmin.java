@@ -33,6 +33,7 @@ import com.maohx2.kmhanko.sound.SoundAdmin;
 
 import static com.maohx2.ina.Constants.Touch.TouchWay.MOVE;
 import static com.maohx2.ina.Constants.Touch.TouchWay.UP_MOMENT;
+import com.maohx2.horie.Tutorial.TutorialManager;
 //import com.maohx2.ina.Constants.Item.*;//こう書かないとswitchの比較時に赤線が出る
 
 //Constants.Touch.TouchWay.MOVE
@@ -126,13 +127,16 @@ public class MapPlateAdmin {
     DungeonSelectWindowAdmin dungeonSelectWindowAdmin;
     PaletteAdmin palette_admin;
 
-    public MapPlateAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, UnitedActivity _unitedActivity, DungeonModeManage _dungeon_mode_manage, SoundAdmin _sound_admin, PaletteAdmin _paletteAdmin) {
+    TutorialManager tutorialManager;
+
+    public MapPlateAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, UnitedActivity _unitedActivity, DungeonModeManage _dungeon_mode_manage, SoundAdmin _sound_admin, PaletteAdmin _paletteAdmin, TutorialManager _tutorialManager) {
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
         //activityChange = _activityChange;
         //globalData = _globalData;
         unitedActivity = _unitedActivity;
         globalData = (GlobalData)unitedActivity.getApplication();
+        tutorialManager = _tutorialManager;
 
         playerStatus = globalData.getPlayerStatus();
         playerStatusSaver = globalData.getPlayerStatusSaver();
@@ -249,20 +253,57 @@ public class MapPlateAdmin {
                                 //OKが押された時の処理
                                 sound_admin.play("enter00");
                                 //チュートリアル表示
-                                i_of_tutorial_bitmap = 0;
-                                playerStatus.setTutorialInDungeon(0);
+                                //i_of_tutorial_bitmap = 0;
+                                //playerStatus.setTutorialInDungeon(0);
+                                if (tutorialManager.start("dungeon", true)) {
+                                    dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TU_ALL_FORMAP);
+                                }
+                            }
+                        },
+                        new BoxImageTextPlate(
+                                graphic, dungeon_user_interface, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE,
+                                new int[]{Constants.TUTRIAL_BUTTON.BATTLE_LEFT,Constants.TUTRIAL_BUTTON.BATTLE_UP,Constants.TUTRIAL_BUTTON.BATTLE_RIGHT,Constants.TUTRIAL_BUTTON.BATTLE_BOTTOM},
+                                new String[] { "チュートリアル", "- バトル -"},
+                                new Paint[] { textPaint1, textPaint2},
+                                new WindowTextPlate.TextPosition[] { WindowTextPlate.TextPosition.UP, WindowTextPlate.TextPosition.DOWN }
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //OKが押された時の処理
+                                sound_admin.play("enter00");
+                                //チュートリアル表示
+                                //i_of_tutorial_bitmap = 0;
+                                //playerStatus.setTutorialInDungeon(0);
+                                if (tutorialManager.start("battle", true)) {
+                                    dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TU_ALL_FORMAP);
+                                }
+                            }
+                        },
+                        new BoxImageTextPlate(
+                                graphic, dungeon_user_interface, Constants.Touch.TouchWay.UP_MOMENT, Constants.Touch.TouchWay.MOVE,
+                                new int[]{Constants.TUTRIAL_BUTTON.MINING_LEFT,Constants.TUTRIAL_BUTTON.MINING_UP,Constants.TUTRIAL_BUTTON.MINING_RIGHT,Constants.TUTRIAL_BUTTON.MINING_BOTTOM},
+                                new String[] { "チュートリアル", "- 採掘 -"},
+                                new Paint[] { textPaint1, textPaint2},
+                                new WindowTextPlate.TextPosition[] { WindowTextPlate.TextPosition.UP, WindowTextPlate.TextPosition.DOWN }
+                        ) {
+                            @Override
+                            public void callBackEvent() {
+                                //OKが押された時の処理
+                                sound_admin.play("enter00");
+                                //チュートリアル表示
+                                //i_of_tutorial_bitmap = 0;
+                                //playerStatus.setTutorialInDungeon(0);
+                                if (tutorialManager.start("mining", true)) {
+                                    dungeon_mode_manage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.TU_ALL_FORMAP);
+                                }
                             }
                         }
                 });
-        tutorialButtonGroup.setUpdateFlag(false);
-        tutorialButtonGroup.setDrawFlag(false);
+        tutorialButtonGroup.setUpdateFlag(true);
+        tutorialButtonGroup.setDrawFlag(true);
     }
 
     public void update() {
-        if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+4 || playerStatus.getTutorialInDungeon() != 0) {
-        } else {
-            return;
-        }
 
         tutorialButtonGroup.update();
 
@@ -365,17 +406,16 @@ public class MapPlateAdmin {
 //        hitpoint.draw();
 //        hitpoint.draw();
 
-        drawTutorialImage();
+        //drawTutorialImage();
 
-        if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+4 || playerStatus.getTutorialInDungeon() != 0) {
+        //if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+4 || playerStatus.getTutorialInDungeon() != 0) {
             drawFloorAndHP();
             dungeonSelectWindowAdmin.draw();
 
             if (dungeon_mode_manage.getMode() != Constants.GAMESYSTEN_MODE.DUNGEON_MODE.EQUIP_EXPEND) {
                 tutorialButtonGroup.draw();
             }
-
-        }
+        //}
 
 
     }
@@ -502,6 +542,7 @@ public class MapPlateAdmin {
         map_inventry_admin = _map_inventry_admin;
     }
 
+    /*
     private void drawTutorialImage() {
 
         if (playerStatus.getTutorialInDungeon() == 0) {
@@ -553,6 +594,7 @@ public class MapPlateAdmin {
             tutorial_count++;
         }
     }
+    */
 
     public MapInventryAdmin getMapInventryAdmin() {
         return map_inventry_admin;
