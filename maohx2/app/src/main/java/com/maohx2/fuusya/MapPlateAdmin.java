@@ -304,10 +304,6 @@ public class MapPlateAdmin {
     }
 
     public void update() {
-        if(i_of_tutorial_bitmap > NUM_OF_TUTORIAL_BITMAP+4 || playerStatus.getTutorialInDungeon() != 0) {
-        } else {
-            return;
-        }
 
         tutorialButtonGroup.update();
 
