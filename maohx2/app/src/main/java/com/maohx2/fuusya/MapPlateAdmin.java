@@ -89,8 +89,8 @@ public class MapPlateAdmin {
 
     int ITEM_BOTTOM_WITH_SWITCH = ITEM_BOTTOM + 100;
     //
-    int HP_RIGHT = 200;
-    int HP_LEFT = 1400;
+    int HP_RIGHT = 300;
+    int HP_LEFT = 1500;
     int HP_HEIGHT = 20;
     int HP_TOP = HP_BG_TOP + ((HP_BG_BOTTOM - HP_BG_TOP) - HP_HEIGHT) / 2;
 
@@ -128,7 +128,13 @@ public class MapPlateAdmin {
 
     TextFlashAndArrow tutorialGideTextAndArrow;
 
+    Paint hpPaint = new Paint();
+
     public MapPlateAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, UnitedActivity _unitedActivity, DungeonModeManage _dungeon_mode_manage, SoundAdmin _sound_admin, PaletteAdmin _paletteAdmin, TutorialManager _tutorialManager) {
+
+        hpPaint.setARGB(255,255, 255,255);
+        hpPaint.setTextSize(23);
+
         graphic = _graphic;
         dungeon_user_interface = _dungeon_user_interface;
         //activityChange = _activityChange;
@@ -654,6 +660,9 @@ public class MapPlateAdmin {
         //graphic.bookingDrawRect(HP_BG_LEFT, HP_BG_TOP, HP_BG_RIGHT, HP_BG_BOTTOM, blue_paint);
         graphic.bookingDrawRect(HP_LEFT, HP_TOP, right_of_green, HP_TOP + HP_HEIGHT, red_paint);
         graphic.bookingDrawRect(right_of_green, HP_TOP, HP_RIGHT, HP_TOP + HP_HEIGHT, green_paint);
+
+        graphic.bookingDrawBitmapData(graphic.searchBitmap("player_icon"),240,(int)(HP_TOP + HP_HEIGHT * 0.5),2.5f,2.5f,0,255,false);
+        graphic.bookingDrawText("H   P", 220, HP_TOP + HP_HEIGHT + 35, hpPaint);
 
         if (map_admin != null) {
             String now_floor = String.valueOf(map_admin.getNow_floor_num()) + "F";
