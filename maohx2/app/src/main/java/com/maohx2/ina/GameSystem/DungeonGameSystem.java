@@ -296,7 +296,7 @@ public class DungeonGameSystem {
         if (!(dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.MAOH)) {
             dungeonData = dungeon_data_admin.getDungeon_data().get(dungeon_num);
             map_size.set(dungeonData.getMap_size_x(), dungeonData.getMap_size_y());
-            map_admin = new MapAdmin(graphic,this, map_object_admin, dungeonData, dungeonMonsterDataAdmin.getDungeon_monster_data(), map_status, map_status_saver);
+            map_admin = new MapAdmin(graphic,this, map_object_admin, dungeonData, dungeonMonsterDataAdmin.getDungeon_monster_data(), map_status, map_status_saver, effectAdmin);
             map_admin.goNextFloor();
         }
 
@@ -408,10 +408,15 @@ public class DungeonGameSystem {
             case MAP_INIT_FROM_BATTLE:
                 if(changeMovie.update(false, true) == true) {
                     playMapBGM();
-                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
                     if (dungeon_kind == Constants.DungeonKind.DUNGEON_KIND.DRAGON) {
                         backGround = graphic.searchBitmap("firstBackground");
                     }
+
+                    if (!tutorialManager.getTutorialFlagData().getIsTutorialFinishedByName("tutorialButtonGideAfterBattle")) {
+                        //真ん中にメッセ。
+                        map_plate_admin.tutorialGide();
+                    }
+                    dungeonModeManage.setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP);
                 }
                 break;
             case MAP_INIT_FROM_BEFORE_FLOOR:

@@ -66,16 +66,6 @@ public class Effect {
         soundAdmin = _soundAdmin;
     }
 
-    /*
-    public void create(EffectData _effectData, int _kind) {
-        exist = true;
-        isDraw = false;
-        is_pause = false;
-        effectData = _effectData;
-        kind = _kind;
-    }
-    */
-
     public void create(EffectBitmapData effectBitmapData, int _kind) {
         exist = true;
         isDraw = false;
@@ -97,17 +87,22 @@ public class Effect {
         setted_extend_x = 1.0f;
         setted_extend_y = 1.0f;
         soundName = "";
+        //System.out.println("Takano: Effect: clear()");
     }
 
     public void start() {
-        time = 0;
-        step = 0;
-        is_start = true;
-        isDraw = true;
-        is_pause = false;
-        steps = effectData.getSteps();
-        soundName = "";
-        toStep(0);
+        if (exist) {
+            time = 0;
+            step = 0;
+            is_start = true;
+            isDraw = true;
+            is_pause = false;
+            steps = effectData.getSteps();
+            soundName = "";
+            toStep(0);
+        } else {
+            System.out.println("Takano: Effect: start(): exist == false のエフェクト");
+        }
     }
     public void hide() {
         isDraw = false;

@@ -9,8 +9,8 @@ public class TutorialFlagData {
     int is_tutorial_finished[];
 
     public TutorialFlagData(){
-        flag_name = new String[8];
-        is_tutorial_finished = new int[8];
+        flag_name = new String[9];
+        is_tutorial_finished = new int[9];
     }
 
     //getter
@@ -60,7 +60,7 @@ public class TutorialFlagData {
     }
 
     public void tutorialResetAll() {
-        for (int i = 0; i < flag_name.length; i++) {
+        for (int i = 0; i < is_tutorial_finished.length; i++) {
             is_tutorial_finished[i] = 0;
         }
 

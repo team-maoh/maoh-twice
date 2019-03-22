@@ -25,6 +25,7 @@ import com.maohx2.kmhanko.PlayerStatus.PlayerStatus;
 import com.maohx2.kmhanko.PlayerStatus.PlayerStatusViewer;
 import com.maohx2.kmhanko.Saver.PlayerStatusSaver;
 import com.maohx2.kmhanko.WindowPlate.WindowTextPlate;
+import com.maohx2.kmhanko.effect.TextFlashAndArrow;
 import com.maohx2.kmhanko.itemdata.GeoObjectDataCreater;
 
 import com.maohx2.ina.Constants.Touch.TouchWay.*;
@@ -67,13 +68,13 @@ public class MapPlateAdmin {
 
     int LEFT_COORD = 1100;
     int RIGHT_COORD = 1600;
-    int UP_COORD = 50;
+    int UP_COORD = 130;
     int BUTTON_HEIGHT = 100;
     //
-    int HP_BG_TOP = 15;
+    int HP_BG_TOP = 100;
     int HP_BG_RIGHT = 110;
     int HP_BG_LEFT = 1570;
-    int HP_BG_BOTTOM = 35;
+    int HP_BG_BOTTOM = 120;
     //
 //    int ITEM_LEFT = 1200;
 //    int ITEM_TOP = 50;
@@ -82,7 +83,7 @@ public class MapPlateAdmin {
 //    int ITEM_CONTENTS_NUM = 10;
     int ITEM_CONTENTS_NUM = 8;
     int ITEM_LEFT = LEFT_COORD;
-    int ITEM_TOP = UP_COORD + 150;
+    int ITEM_TOP = UP_COORD + 70;
     int ITEM_RIGHT = RIGHT_COORD;
     int ITEM_BOTTOM = ITEM_TOP + 70 * ITEM_CONTENTS_NUM;
 
@@ -119,15 +120,13 @@ public class MapPlateAdmin {
 
     UnitedActivity unitedActivity;
 
-    int NUM_OF_TUTORIAL_BITMAP = 3;
-    int tutorial_count = 0;
-    int i_of_tutorial_bitmap;
-    String tutorial_name = "スライド";
 
     DungeonSelectWindowAdmin dungeonSelectWindowAdmin;
     PaletteAdmin palette_admin;
 
     TutorialManager tutorialManager;
+
+    TextFlashAndArrow tutorialGideTextAndArrow;
 
     public MapPlateAdmin(Graphic _graphic, DungeonUserInterface _dungeon_user_interface, UnitedActivity _unitedActivity, DungeonModeManage _dungeon_mode_manage, SoundAdmin _sound_admin, PaletteAdmin _paletteAdmin, TutorialManager _tutorialManager) {
         graphic = _graphic;
@@ -205,8 +204,6 @@ public class MapPlateAdmin {
 //                //↑　HPバー
 //                new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_LEFT, hp_top + HP_HEIGHT, HP_BG_RIGHT, HP_BG_BOTTOM}, " ", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_LEFT, hp_top, HP_LEFT, hp_top + HP_HEIGHT}, " ", text_paint), new BoxTextPlate(graphic, dungeon_user_interface, hp_bg_paint, UP_MOMENT, MOVE, new int[]{HP_BG_RIGHT, hp_top, HP_RIGHT, hp_top + HP_HEIGHT}, " ", text_paint)});
 
-        i_of_tutorial_bitmap = 0;
-        tutorial_count = 0;
 
         max_hp = playerStatus.getHP();
         blue_paint.setColor(Color.BLUE);
@@ -220,6 +217,30 @@ public class MapPlateAdmin {
 
         initTutorialButton();
 
+    }
+
+    public void tutorialGide() {
+        dungeonSelectWindowAdmin.setDungeonPlateMode(DungeonSelectWindowAdmin.DUNGEON_PLATE_MODE.TUTORIAL_GIDE);
+        dungeonSelectWindowAdmin.dungeonPlateUpdate();
+        dungeonSelectWindowAdmin.activateOk();
+
+        tutorialGideTextAndArrow = new TextFlashAndArrow(graphic);
+        tutorialGideTextAndArrow.setParameter(
+                "",
+                60,
+                0, 0,
+                10,
+                420, 200,
+                270
+        );
+        tutorialGideTextAndArrow.setText("");
+        tutorialGideTextAndArrow.start();
+
+    }
+    public void tutorialGideEnd() {
+        tutorialGideTextAndArrow.stop();
+        tutorialManager.getTutorialFlagData().setIsTutorialFinishedByName(1, "tutorialButtonGideAfterBattle");
+        tutorialManager.save();
     }
 
     public void setMapObjectAdmin(MapObjectAdmin _mapObjectAdmin) {
@@ -306,6 +327,10 @@ public class MapPlateAdmin {
     public void update() {
 
         tutorialButtonGroup.update();
+
+        if (tutorialGideTextAndArrow != null) {
+            tutorialGideTextAndArrow.update();
+        }
 
         dungeonSelectWindowAdmin.update();
 
@@ -416,6 +441,10 @@ public class MapPlateAdmin {
                 tutorialButtonGroup.draw();
             }
         //}
+
+        if (tutorialGideTextAndArrow != null) {
+            tutorialGideTextAndArrow.draw();
+        }
 
 
     }
@@ -630,7 +659,7 @@ public class MapPlateAdmin {
             String now_floor = String.valueOf(map_admin.getNow_floor_num()) + "F";
 
             //graphic.bookingDrawRect(5, 5, 100, 50, floor_bg);
-            graphic.bookingDrawText(now_floor, 70, 45, text_paint);
+            graphic.bookingDrawText(now_floor, 70, 130, text_paint);
         }
 
     }
@@ -658,6 +687,11 @@ public class MapPlateAdmin {
         if (tutorialButtonGroup != null) {
             tutorialButtonGroup.release();
             tutorialButtonGroup = null;
+        }
+
+        if (tutorialGideTextAndArrow != null ) {
+            tutorialGideTextAndArrow.release();
+            tutorialGideTextAndArrow = null;
         }
 
 

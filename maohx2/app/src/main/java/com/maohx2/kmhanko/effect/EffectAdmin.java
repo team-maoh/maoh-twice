@@ -149,7 +149,7 @@ public class EffectAdmin {
 
         effects[makeEffectID].create(tempEffectBitmapData, kind);
         effectIndex = (effectIndex+1)%EFFECT_MAX;
-
+        System.out.println("Takano: EffectAdmin: 作成成功: " + String.valueOf(makeEffectID));
         return makeEffectID;
     }
     public EffectBitmapData createEffectBitmapData(String _dataName, String _imageName, int widthNum, int heightNum, EXTEND_MODE extendMode) {
