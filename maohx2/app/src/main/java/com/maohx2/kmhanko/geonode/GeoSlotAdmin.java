@@ -601,10 +601,10 @@ public class GeoSlotAdmin {
                     GeoObjectData tmp = (GeoObjectData) inventryData.getItemData();
                     if (inventryData.getItemNum() > 0 && tmp.getName() != null && tmp.getSlotSetName().equals("noSet")) {
                         this.setGeoObject((GeoObjectData) inventryData.getItemData());
-                        userInterface.setInventryData(null);
                     } else {
                         soundAdmin.play("cannot_exit_room");
                     }
+                    userInterface.setInventryData(null);
                 }
             }
         }
