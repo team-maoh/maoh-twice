@@ -64,6 +64,11 @@ public class StartGameSystem {
     UnitedActivity unitedActicity;
 
     Credits credis;
+    int skipAlpha = 0;
+    int skipCount = 0;
+    int addSkipAlpha = 3;
+    Paint skipPaint = new Paint();
+
 
     public void init(SurfaceHolder _holder, Graphic _graphic, BattleUserInterface _start_user_interface, UnitedActivity _unitedActicity, MyDatabaseAdmin my_database_admin) {
 
@@ -75,6 +80,8 @@ public class StartGameSystem {
         PaletteCenter.initStatic(graphic);
         PaletteElement.initStatic(graphic);
 
+        skipPaint.setARGB(255,120, 120,120);
+        skipPaint.setTextSize(40);
 
         GlobalData globalData = (GlobalData)(unitedActicity.getApplication());
         equipmentInventry = globalData.getEquipmentInventry();
@@ -108,6 +115,7 @@ public class StartGameSystem {
 
 
     public void updata() {
+
         if (updateStopFlag) {
             return;
         }
@@ -144,12 +152,14 @@ public class StartGameSystem {
         }
 
 
-        paint.setARGB(alpha,255,255,255);
         alpha += up_down;
         if(alpha < 0 || alpha > 255){
+            if(alpha > 255){alpha = 255;}
             up_down *= -1;
             alpha += up_down*2;
         }
+        if(alpha < 255){paint.setARGB(alpha,255,255,255);}
+        else{ paint.setARGB(255,255,255,255);}
 
         //equipmentInventry.updata();
         //expendInventry.updata();
@@ -180,45 +190,61 @@ public class StartGameSystem {
             return;
         }
 
+
+        /*
+        if(skipAlpha > 230 || skipAlpha < 25) { addSkipAlpha *= -1;}
+        skipAlpha += addSkipAlpha;
+        skipPaint.setAlpha(skipAlpha);
+        */
+
         paint.setARGB(255,0,0,0);
-        graphic.bookingDrawRect(0,0,1600,900,paint);
+        graphic.bookingDrawRect(0,0,1650,900,paint);
 
+        if(alpha < 255){paint.setARGB(alpha,255,255,255);}
+        else{ paint.setARGB(255,255,255,255);}
 
-        paint.setARGB(alpha,255,255,255);
         alpha += up_down;
-        if(alpha < 0 || alpha > 255){
+        if(alpha < 0 || alpha > 500){
             if(alpha < 0){
                 messageNum++;
-                if(messageNum == 6){
+                if(messageNum == 5){
+                    alpha  = 0;
                     unitedActicity.getUnitedSurfaceView().setDownCount(1);
                     unitedActicity.getUnitedSurfaceView().setTouchWaitcount(0);
                 }
             }
             up_down *= -1;
-            alpha += up_down*2;
+            alpha += up_down*4;
         }
         count++;
 
         switch (messageNum) {
             case 0:
                 graphic.bookingDrawText("地脈を流れるエネルギー，ジオエネルギー．",100,480, paint);
+                graphic.bookingDrawText("タッチでスキップできます．",1050,850, skipPaint);
                 break;
             case 1:
                 graphic.bookingDrawText("その加護を受ける者がいた．",350,480, paint);
+                graphic.bookingDrawText("タッチでスキップできます．",1050,850, skipPaint);
                 break;
             case 2:
                 graphic.bookingDrawText("いま，地上は異次元からやってくる",100,440, paint);
                 graphic.bookingDrawText("魔王によって平穏が脅かされていた．",350,520, paint);
+                graphic.bookingDrawText("タッチでスキップできます．",1050,850, skipPaint);
                 break;
             case 3:
                 graphic.bookingDrawText("際限なく強くなって地上を支配しにくる魔王．",75,480, paint);
+                graphic.bookingDrawText("タッチでスキップできます．",1050,850, skipPaint);
                 break;
             case 4:
                 graphic.bookingDrawText("これは，ジオをつかさどる女神",30,320, paint);
                 graphic.bookingDrawText("ガイアと結託し，魔王の脅威を退け，",55,480, paint);
                 graphic.bookingDrawText("平穏を取り戻すことを決意した者の物語である．",80,640, paint);
+                graphic.bookingDrawText("タッチでスキップできます．",1050,850, skipPaint);
                 break;
         }
+
+
     }
 
     public void release() {
