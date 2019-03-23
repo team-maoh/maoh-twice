@@ -1,5 +1,7 @@
 package com.maohx2.ina.Battle;
 
+import android.graphics.Paint;
+
 import com.maohx2.ina.Draw.Graphic;
 import com.maohx2.kmhanko.effect.EffectAdmin;
 
@@ -14,9 +16,14 @@ public class BattlePlayer extends BattleUnit {
     boolean is_damaged = false;
     int shake_count = 0;
 
+    Paint hpPaint = new Paint();
+
+
     BattlePlayer(Graphic _graphic, EffectAdmin _effectAdmin, EffectAdmin _backEnemyEffectAdmin){
         super(_graphic, null, null);
         paint.setARGB(255,0,255,0);
+        hpPaint.setARGB(255,255, 255,255);
+        hpPaint.setTextSize(23);
         max_hit_point = 10000;
         hit_point = max_hit_point;
         exist = true; //todo::消す
@@ -26,6 +33,7 @@ public class BattlePlayer extends BattleUnit {
     public void drawStatus(){
         //HPバー
         if(is_damaged || shake_count > 0) {
+            hpPaint.setARGB(255,255, 0,0);
             Random rnd = new Random();
             if(is_damaged){
                 shake_count = 5;
@@ -40,23 +48,29 @@ public class BattlePlayer extends BattleUnit {
                 case 0:
                     graphic.bookingDrawRect(200+shake_x, 20+shake_y, (int) (200 + 1200 * ((double) hit_point / (double) max_hit_point))+shake_x, 40+shake_y, paint);
                     graphic.bookingDrawBitmapData(graphic.searchBitmap("player_icon"),140+shake_x,35+shake_y,2.5f,2.5f,0,255,false);
+                    graphic.bookingDrawText("H   P",120+shake_x,73+shake_y,hpPaint);
                     break;
                 case 1:
                     graphic.bookingDrawRect(200+shake_x, 20-shake_y, (int) (200 + 1200 * ((double) hit_point / (double) max_hit_point))+shake_x, 40-shake_y, paint);
                     graphic.bookingDrawBitmapData(graphic.searchBitmap("player_icon"),140+shake_x,35-shake_y,2.5f,2.5f,0,255,false);
+                    graphic.bookingDrawText("H   P",120+shake_x,73-shake_y,hpPaint);
                     break;
                 case 2:
                     graphic.bookingDrawRect(200-shake_x, 20+shake_y, (int) (200 + 1200 * ((double) hit_point / (double) max_hit_point))-shake_x, 40+shake_y, paint);
                     graphic.bookingDrawBitmapData(graphic.searchBitmap("player_icon"),140-shake_x,35+shake_y,2.5f,2.5f,0,255,false);
+                    graphic.bookingDrawText("H   P",120-shake_x,73+shake_y,hpPaint);
                     break;
                 case 3:
                     graphic.bookingDrawRect(200-shake_x, 20-shake_y, (int) (200 + 1200 * ((double) hit_point / (double) max_hit_point))-shake_x, 40-shake_y, paint);
                     graphic.bookingDrawBitmapData(graphic.searchBitmap("player_icon"),140-shake_x,35-shake_y,2.5f,2.5f,0,255,false);
+                    graphic.bookingDrawText("H   P",120-shake_x,73-shake_y,hpPaint);
                     break;
             }
         }else{
+            hpPaint.setARGB(255,255, 255,255);
             graphic.bookingDrawRect(200, 20, (int) (200 + 1200 * ((double) hit_point / (double) max_hit_point)), 40, paint);
             graphic.bookingDrawBitmapData(graphic.searchBitmap("player_icon"),140,35,2.5f,2.5f,0,255,false);
+            graphic.bookingDrawText("H   P", 122, 78, hpPaint);
         }
 
 

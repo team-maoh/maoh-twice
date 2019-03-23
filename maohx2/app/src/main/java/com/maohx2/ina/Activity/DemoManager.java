@@ -65,6 +65,8 @@ public class DemoManager {
     boolean dungeonGameDemoEndFlag = false;
     Graphic graphic;
 
+    Constants.DungeonKind.DUNGEON_KIND canEnterDungeon = Constants.DungeonKind.DUNGEON_KIND.FOREST;
+
     public DemoManager() {}
 
     public void startGameDemo(TalkSaveDataAdmin talkSaveDataAdmin) {
@@ -272,6 +274,15 @@ public class DemoManager {
         playerStatus.setBaseLuck(22222 * 2);//2222
         playerStatus.setMoney(10000000);//10000
 
+        if(canEnterDungeon == Constants.DungeonKind.DUNGEON_KIND.FOREST){
+            playerStatus.setBaseHP(22222);//22222
+            //playerStatus.setBaseAttack(67000);//22222
+            playerStatus.setBaseAttack(22222);//22222
+            playerStatus.setBaseDefence(2222);//2222
+            playerStatus.setBaseLuck(2222);//2222
+            playerStatus.setMoney(10000000);//10000
+        }
+
         //魔王勝利回数
         playerStatus.setMaohWinCount(1);//0
         //ダンジョンチュートリアルを行ったか
@@ -427,8 +438,6 @@ public class DemoManager {
         //"最新のループ回数としたとき"、どのダンジョンまで侵入可能な状態か？
         //ここで指定したダンジョンまで侵入可能
         //ループクリア回数が0である場合は、このダンジョンの一つ手前までジオマップに侵入可能
-        Constants.DungeonKind.DUNGEON_KIND canEnterDungeon = Constants.DungeonKind.DUNGEON_KIND.HAUNTED;
-
         int i = 0;
         switch (canEnterDungeon) {
             case FOREST:
