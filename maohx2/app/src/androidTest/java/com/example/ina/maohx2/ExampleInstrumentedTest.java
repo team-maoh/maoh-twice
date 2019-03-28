@@ -1,4 +1,4 @@
-package com.example.ina.maohx2;
+package com.example.ina.maohX2;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
