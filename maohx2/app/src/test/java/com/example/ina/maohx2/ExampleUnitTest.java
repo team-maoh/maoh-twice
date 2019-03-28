@@ -1,4 +1,4 @@
-package com.example.ina.maohx2;
+package com.example.ina.maohX2;
 
 import org.junit.Test;
 
