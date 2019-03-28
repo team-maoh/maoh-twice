@@ -329,7 +329,7 @@ public class MapObjectAdmin {
         }
 
         for (int i = 0; i < NUM_OF_ENEMY; i++) {
-            if (map_enemy[i].exists() == true && playerStatus.getTutorialInDungeon() == 1) {
+            if (map_enemy[i].exists() == true) {
                 if ( map_enemy_bitmap[i] != null) {
                     map_enemy_bitmap[i].draw(map_enemy[i].getDirOnMap(), map_enemy[i].getNormX(), map_enemy[i].getNormY(), map_enemy[i].getHasFoundPlayer());
                 }
