@@ -4,11 +4,11 @@ android {
     compileSdkVersion 26
     buildToolsVersion '27.0.3'
     defaultConfig {
-        applicationId "com.maohx2.ina.test"
+        applicationId "com.maohX2.ina.test"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 15
-        versionName "1.91"
+        versionCode 3
+        versionName "2.00"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
