@@ -192,11 +192,20 @@ public class PaletteAdmin {
                 );
             } else {
                 //タッチされてない
+                /*
                 graphic.bookingDrawBitmapName(
                         "miningArrow00",
                         palettes[2].getPositionX(),
                         palettes[2].getPositionY() - 50,
                         1.0f, 1.0f, 0.0f,
+                        255, false
+                );
+                */
+                graphic.bookingDrawBitmapName(
+                        "miningArrow02",
+                        palettes[2].getPositionX(),
+                        palettes[2].getPositionY() - 180,
+                        0.75f, 0.75f, 0.0f,
                         255, false
                 );
             }
