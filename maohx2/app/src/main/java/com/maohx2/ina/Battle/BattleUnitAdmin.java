@@ -278,6 +278,11 @@ public class BattleUnitAdmin {
             }
         }
 
+        //採掘
+        palette_admin.getPaletteCenter(2).changeElement(3);
+        palette_admin.getPaletteCenter(2).setItemData(palette_admin.getPalettes(2).getItemData(2), 2, false);
+
+
         paint.setARGB(230, 0, 0, 0);
 
         initEffect();

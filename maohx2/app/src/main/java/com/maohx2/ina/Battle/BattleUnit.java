@@ -203,7 +203,7 @@ abstract public class BattleUnit {
 
 
         //TODO : 敵の出現位置決定
-        setPositionX(rnd.nextInt(1200)+200);
+        setPositionX(rnd.nextInt(900)+350);
         setPositionY(rnd.nextInt(500)+200);
 
         battleDungeonUnitData = new BattleDungeonUnitData();

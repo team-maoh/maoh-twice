@@ -122,7 +122,7 @@ public class MapAdmin {
 
     EffectAdmin effectAdmin;
     int nextEffect;
-    int returnEffect;
+    //int returnEffect;
 
     public int getMap_size_x() {
         return map_size.x;
@@ -233,13 +233,16 @@ public class MapAdmin {
     }
 
     private void makeNextAndReturnEffect() {
-        nextEffect = effectAdmin.createEffect("nextFloorEffect", "next00", 6, 1, 1.0f, 1.0f, EffectAdmin.EXTEND_MODE.BEFORE);
+        //nextEffect = effectAdmin.createEffect("nextFloorEffect", "next00", 6, 1, 1.0f, 1.0f, EffectAdmin.EXTEND_MODE.BEFORE);
+        nextEffect = effectAdmin.createEffect("nextCloud", "cloudNEXTanime", 2, 1, 1.0f, 1.0f, EffectAdmin.EXTEND_MODE.BEFORE);
         effectAdmin.getEffect(nextEffect).start();
         effectAdmin.getEffect(nextEffect).hide();
 
+        /*
         returnEffect = effectAdmin.createEffect("nextFloorEffect", "next01", 6, 1, 1.0f, 1.0f, EffectAdmin.EXTEND_MODE.BEFORE);
         effectAdmin.getEffect(returnEffect).start();
         effectAdmin.getEffect(returnEffect).hide();
+        */
     }
 
     //auto_tile生成
@@ -718,7 +721,7 @@ public class MapAdmin {
         //stairTextEffect.setPosition(-200, -200);
         //stairTextEffect.stop();
         effectAdmin.getEffect(nextEffect).hide();
-        effectAdmin.getEffect(returnEffect).hide();
+        //effectAdmin.getEffect(returnEffect).hide();
         dungeonGameSystem.getDungeonModeManage().setMode(Constants.GAMESYSTEN_MODE.DUNGEON_MODE.MAP_INIT_FROM_BEFORE_FLOOR);
     }
 
@@ -742,8 +745,8 @@ public class MapAdmin {
             this.makeNextAndReturnEffect();
             effectAdmin.getEffect(nextEffect).setPosition(-200, -200);
             effectAdmin.getEffect(nextEffect).restart();
-            effectAdmin.getEffect(returnEffect).setPosition(-200, -200);
-            effectAdmin.getEffect(returnEffect).restart();
+            //effectAdmin.getEffect(returnEffect).setPosition(-200, -200);
+            //effectAdmin.getEffect(returnEffect).restart();
         } else {
             goBossFloor();
         }
@@ -1203,14 +1206,24 @@ public class MapAdmin {
         );
         stairTextEffect.update();
         */
+        /*
         effectAdmin.getEffect(nextEffect).setPosition(
                 camera.convertToNormCoordinateXForMap(stairMapX * magnification + magnification/2),
                 camera.convertToNormCoordinateYForMap(stairMapY * magnification + magnification/2)
         );
+        */
+        effectAdmin.getEffect(nextEffect).setPosition(
+                camera.convertToNormCoordinateXForMap(stairMapX * magnification),
+                camera.convertToNormCoordinateYForMap(stairMapY * magnification)
+        );
+
+
+        /*
         effectAdmin.getEffect(returnEffect).setPosition(
                 camera.convertToNormCoordinateXForMap(gateMapX * magnification + magnification/2),
                 camera.convertToNormCoordinateYForMap(gateMapY * magnification + magnification/2)
         );
+        */
     }
 
     public void drawSmallMap() {
